@@ -1,0 +1,19 @@
+{
+	"name": "prestashop/ps_themecusto",
+	"description": "PrestaShop module ps_mbo",
+	"homepage": "https://github.com/PrestaShop/ps_mbo",
+	"license": "AFL-3.0",
+	"authors": [
+		{
+			"name": "PrestaShop SA",
+			"email": "contact@prestashop.com"
+		}
+	],
+	"require": {
+		"php": ">=5.6.0"
+	},
+	"config": {
+		"preferred-install": "dist"
+	},
+	"type": "prestashop-module"
+} 
