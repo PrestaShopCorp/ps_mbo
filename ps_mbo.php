@@ -28,7 +28,7 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class psmbo extends Module
+class ps_mbo extends Module
 {
 	public $tabs = array(
 		array(
@@ -47,7 +47,7 @@ class psmbo extends Module
 	
     public function __construct()
     {
-        $this->name = 'psmbo';
+        $this->name = 'ps_mbo';
         $this->version = '0.0.1';
         $this->author = 'PrestaShop';
         $this->bootstrap = true;
