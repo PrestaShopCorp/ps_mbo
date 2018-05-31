@@ -1,0 +1,196 @@
+#content.bootstrap .module-item-wrapper-grid .module-item-heading-grid h3.module-name-grid {
+	position: relative;
+	text-align: center;
+	font-weight: bolder;
+	margin: 1rem 0 .5rem;
+	min-height: 24px;
+	font-family: Open Sans,Helvetica,Arial,sans-serif;
+	line-height: 1.2;
+	color: #363a41;
+	text-transform: none;
+	border-bottom: none;
+	height: inherit;
+}
+
+.bootstrap #search-input-group.input-group {
+	position: relative;
+    display: flex;
+    -webkit-box-align: stretch;
+    align-items: stretch;
+    width: 100%;
+}
+
+#search-input-group.input-group .pstaggerAddTagInput:hover, 
+#search-input-group.input-group .pstaggerAddTagInput:active, 
+#search-input-group.input-group .pstaggerAddTagInput:focus {
+	z-index: 2
+}
+
+.bootstrap #search-input-group.input-group .btn-primary {
+    color: #fff;
+    background-color: #25b9d7;
+    border-color: #25b9d7;
+    box-shadow: none;
+	border-width: 1px;
+    padding: .585rem .838rem;
+    font-weight: 600;
+    border-radius: .063rem;
+    white-space: nowrap;
+	text-transform: none;
+}
+
+#modules-list-container-all .module-item-wrapper-grid .module-quick-action-grid .light-button, .bootstrap #modules-list-container-all .btn {
+	height: 32px;
+	font-size: .625rem;
+	padding: .5rem;
+	width: 92%;
+	float: none;
+	margin: 0 auto;
+	color: #25b9d7;
+	background-color: transparent;
+	background-image: none;
+	border-color: #25b9d7;
+	border-width: 1px;
+	font-weight: 600;
+	border-radius: .063rem;
+	white-space: nowrap;
+	display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+	user-select: none;
+	text-transform: none;
+}
+
+#modules-list-container-all .btn-outline-primary:not([disabled]):not(.disabled):active, #modules-list-container-all .btn-outline-primary:not([disabled]):not(.disabled):hover {
+	color: #fff;
+	background-color: #19a9c6;
+	border-color: #19a9c6;
+	box-shadow: none;
+}
+
+.bootstrap #modules-list-container-all hr {
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid #bbcdd2;
+	box-sizing: content-box;
+    height: 0;
+    overflow: visible;
+}
+
+#psmbo .custom-select, .bootstrap #psmbo select {
+	height: 2.188rem;
+	width: 100%;
+	display: inline-block;
+	max-width: 100%;
+	padding: .375rem 1.75rem .375rem .75rem;
+	line-height: 1.5;
+	color: #363a41;
+	vertical-align: middle;
+	background: #fff url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23363a41' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E") no-repeat right .75rem center;
+	background-size: 8px 10px;
+    border: 1px solid #bbcdd2;
+    border-radius: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+	font-size: .875rem;
+}
+
+#content.bootstrap #psmbo h3.popover-title, #content.bootstrap #psmbo .popover-header {
+	padding: .625rem 1.25rem;
+    margin-bottom: 0;
+	font-size: .875rem;
+    color: #363a41;
+    background-color: #fafbfc;
+    border-bottom: 1px solid #eaeef2;
+	display: block;
+	-webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+	font-family: Open Sans,Helvetica,Arial,sans-serif;
+    font-weight: 700;
+    line-height: 1.2;
+	text-align: start;
+    text-decoration: none;
+    text-shadow: none;
+    text-transform: none;
+    letter-spacing: normal;
+    word-break: normal;
+    word-spacing: normal;
+    white-space: normal;
+    line-break: auto;
+	font-style: normal;
+	height: inherit;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.bootstrap #psmbo .popover-content, #psmbo .popover-body {
+	padding: .625rem 1.25rem;
+	color: #363a41;
+	font-family: Open Sans,Helvetica,Arial,sans-serif;
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1.5;
+	text-align: start;
+	text-decoration: none;
+	text-shadow: none;
+	text-transform: none;
+	letter-spacing: normal;
+	word-break: normal;
+	word-spacing: normal;
+	white-space: normal;
+	line-break: auto;
+	font-size: .75rem;
+    word-wrap: break-word;
+}
+
+.bootstrap #psmbo hr {
+	margin-top: 1.875rem;
+	margin-bottom: 1.875rem;
+	border: 0;
+    border-top: 1px solid #bbcdd2;
+}
+
+#psmbo .form-action-button-container {
+	display: initial;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.bootstrap #psmbo .dropdown-item {
+    /*display: block;*/
+    width: 100%;
+    clear: both;
+    font-weight: 400;
+    color: #6c868e;
+    text-align: inherit;
+    white-space: nowrap;
+    background: none;
+    border: 0;
+	margin: .625em 0;
+	padding: .3125rem 1.25rem;
+	font-size: .875rem;
+}
+
+.bootstrap #psmbo .dropdown-menu {
+/*    border: 1px solid #bbcdd2;
+    box-shadow: 1px 1px 2px 0 rgba(0,0,0,.3);*/
+    color: #576c72;
+    padding: .313rem 0;
+    min-width: 15.625rem;
+}
+
+.bootstrap #psmbo .ps-dropdown>.ps-dropdown-menu .items-list .dropdown-item:hover {
+    background-color: #25b9d7;
+    color: #fff;
+	text-decoration: none;
+}
+
+.bootstrap #psmbo .module-price { right: 25px; }
+
+.link-leveltwo>.link,
+.menu .main-tab .submenu a,
+#nav-sidebar ul.menu li.maintab ul.submenu li a { font-size: .75rem!important; }
