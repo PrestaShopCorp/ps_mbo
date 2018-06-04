@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 
 require_once(dirname(__FILE__) . '../../../classes/Addons.php');
@@ -59,6 +60,13 @@ class AdminPsMboModuleController extends ModuleAdminController
 		$admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 		
+		$container = SymfonyContainer::getInstance();
+		$install_url = $container->get('router')->generate('admin_module_import', [], UrlGeneratorInterface::ABSOLUTE_URL);
+		
+		$parts = parse_url($install_url);
+		parse_str($parts['query'], $query);
+		$moduleControllerToken = $query['_token'];
+		
 		$this->context->smarty->assign(array(
             'bootstrap'         =>  1,
             'configure_type'    => $this->controller_quick_name,
@@ -66,7 +74,9 @@ class AdminPsMboModuleController extends ModuleAdminController
 			'admin_module_controller_psmbo'  => $this->module->controller_name[0],
             'admin_module_ajax_url_psmbo'    => $this->module->front_controller[0],
 			'currency_symbol' => Context::getContext()->currency->sign,
-			'bo_img' => __PS_BASE_URI__ . $admin_webpath . '/themes/default/img/'
+			'bo_img' => __PS_BASE_URI__ . $admin_webpath . '/themes/default/img/',
+			'install_url' => $install_url,
+			'module_controller_token' => $moduleControllerToken
 		));
 
 		$aJsDef = $aJs = array();
@@ -75,6 +85,7 @@ class AdminPsMboModuleController extends ModuleAdminController
 		// TODO, call vue.min.js
 		$aJs = array(
 			$this->module->js_path . 'vue.js',
+			$this->module->js_path . 'controllers/module/dropzone.min.js',
 			$this->module->js_path . 'controllers/module/jquery.pstagger.js',
 			$this->module->js_path . 'controllers/module/module.js',
 			$this->module->js_path . 'controllers/module/search.js',

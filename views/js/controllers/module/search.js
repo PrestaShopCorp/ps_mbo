@@ -432,7 +432,7 @@ var AdminModuleController = function() {
 
   this.initAddonsConnect = function () {
     var self = this;
-
+	
     // Make addons connect modal ready to be clicked
     if ($(this.addonsConnectModalBtnSelector).attr('href') == '#') {
       $(this.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
@@ -521,6 +521,7 @@ var AdminModuleController = function() {
     body.on('click', this.moduleImportSelectFileManualSelector, function(event) {
       event.stopPropagation();
       event.preventDefault();
+	  
       // Trigger click on hidden file input, and pass extra data to .dropzone click handler fro it to notice it comes from here
       $('.dz-hidden-input').trigger('click', ["manual_select"]);
     });
@@ -547,38 +548,48 @@ var AdminModuleController = function() {
     });
 
     // @see: dropzone.js
-//    var dropzoneOptions = {
-//      url: 'import' + window.location.search,
-//      acceptedFiles: '.zip, .tar',
-//      // The name that will be used to transfer the file
-//      paramName: 'file_uploaded',
-//      maxFilesize: 50, // can't be greater than 50Mb because it's an addons limitation
-//      uploadMultiple: false,
-//      addRemoveLinks: true,
-//      dictDefaultMessage: '',
-//      hiddenInputContainer: self.dropZoneImportZoneSelector,
-//      addedfile: function() {
-//        self.animateStartUpload();
-//      },
-//      processing: function () {
-//        // Leave it empty since we don't require anything while processing upload
-//      },
-//      error: function (file, message) {
-//        self.displayOnUploadError(message);
-//      },
-//      complete: function (file) {
-//        if (file.status !== 'error') {
-//          var responseObject = jQuery.parseJSON(file.xhr.response);
-//          if (typeof responseObject.is_configurable === 'undefined') responseObject.is_configurable = null;
-//          if (typeof responseObject.module_name === 'undefined') responseObject.module_name = null;
-//
-//          self.displayOnUploadDone(responseObject);
-//        }
-//        // State that we have finish the process to unlock some actions
-//        self.isUploadStarted = false;
-//      }
-//    };
-//    dropzone.dropzone($.extend(dropzoneOptions));
+    var dropzoneOptions = {
+      url: $('#install_url').val(),
+      acceptedFiles: '.zip, .tar',
+      // The name that will be used to transfer the file
+      paramName: 'file_uploaded',
+      maxFilesize: 50, // can't be greater than 50Mb because it's an addons limitation
+      uploadMultiple: false,
+      addRemoveLinks: true,
+      dictDefaultMessage: '',
+      hiddenInputContainer: self.dropZoneImportZoneSelector,
+      addedfile: function() {
+        self.animateStartUpload();
+      },
+      processing: function () {
+        // Leave it empty since we don't require anything while processing upload
+      },
+	  sending: function() {
+		// Prevent JS errors
+	  },
+	  uploadprogress: function() {
+		// Prevent JS errors
+	  },
+	  success: function() {
+		// Prevent JS errors
+	  },
+      error: function (file, message) {
+		self.displayOnUploadError(message);
+      },
+      complete: function (file) {
+        if (file.status !== 'error') {
+          var responseObject = jQuery.parseJSON(file.xhr.response);
+          if (typeof responseObject.is_configurable === 'undefined') responseObject.is_configurable = null;
+          if (typeof responseObject.module_name === 'undefined') responseObject.module_name = null;
+
+          self.displayOnUploadDone(responseObject);
+        }
+        // State that we have finish the process to unlock some actions
+        self.isUploadStarted = false;
+      }
+    };
+    dropzone.dropzone($.extend(dropzoneOptions));
+	console.log(dropzone);
     
     this.animateStartUpload = function() {
         // State that we start module upload
@@ -602,7 +613,7 @@ var AdminModuleController = function() {
         self.animateEndUpload(function() {
             if (result.status === true) {
               if (result.is_configurable === true) {
-                var configureLink = self.baseAdminDir + 'module/manage/action/configure/' + result.module_name + window.location.search;
+                var configureLink = self.baseAdminDir + 'module/manage/action/configure/' + result.module_name + '?_token=' + $('#module_controller_token').val();
                 $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
                 $(self.moduleImportSuccessConfigureBtnSelector).show();
               }

@@ -55,8 +55,6 @@ $(document).ready(function() {
 			window.vApp.modules = parsedData.modules;
 			window.vApp.categories = parsedData.categories;
 			
-			console.log(window.vApp.categories);
-			
 			if (typeof filterCategoryTab !== 'undefined') {
 				$.each(window.vApp.modules, function (key, value) {
 					if (value.attributes.tab == filterCategoryTab) {

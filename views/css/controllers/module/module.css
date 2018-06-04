@@ -194,3 +194,42 @@
 .link-leveltwo>.link,
 .menu .main-tab .submenu a,
 #nav-sidebar ul.menu li.maintab ul.submenu li a { font-size: .75rem!important; }
+
+.bootstrap .btn {
+	border-width: 1px;
+	font-weight: 600;
+	white-space: nowrap;
+	display: inline-block;
+	text-align: center;
+	vertical-align: middle;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	border: 1px solid transparent;
+	padding: .375rem .838rem;
+	font-size: .875rem;
+	line-height: 1.5;
+	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+	border-radius: .063rem;
+}
+
+.bootstrap .btn.btn-primary {
+	color: #fff;
+    background-color: #25b9d7;
+    border-color: #25b9d7;
+    box-shadow: none;
+	text-transform: none;
+	margin-right: 10px;
+}
+
+.bootstrap .btn-outline-secondary {
+	color: #6c868e!important;
+    background-color: transparent;
+    background-image: none;
+    border-color: #6c868e;
+	margin-right: 10px;
+}
+
+.bootstrap #toolbar-nav { margin-top: 30px; }
+.modal-backdrop.fade { opacity: .5!important; }

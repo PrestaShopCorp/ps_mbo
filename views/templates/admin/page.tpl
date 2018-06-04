@@ -24,6 +24,8 @@
  *}
 <script>
 	var admin_module_ajax_url_psmbo = '{$admin_module_ajax_url_psmbo}';
+	$('#product_form_open_help').attr('href', $('#toolbar-nav li a.btn-help').attr('href'));
+	$('#toolbar-nav li a.btn-help').hide();
 </script>
 
 {if isset($filterCategoryTab)}
@@ -143,6 +145,12 @@
 				
 		</div>
 	</div>
+			
+	<input type="hidden" id="install_url" value="{(isset($install_url)) ? $install_url : ''}" >
+	<input type="hidden" id="module_controller_token" value="{(isset($module_controller_token)) ? $module_controller_token : ''}" >
+					
+	{include file="./include/modal_import.tpl"}
+					
 </div>
 
 

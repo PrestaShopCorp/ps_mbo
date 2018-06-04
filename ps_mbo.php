@@ -28,6 +28,10 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 class ps_mbo extends Module
 {
 	public $tabs = array(
@@ -45,10 +49,9 @@ class ps_mbo extends Module
 		)
 	);
 	
-    public function __construct()
-    {
+    public function __construct() {
         $this->name = 'ps_mbo';
-        $this->version = '0.0.1';
+        $this->version = '1.0.1';
         $this->author = 'PrestaShop';
         $this->bootstrap = true;
         parent::__construct();
@@ -75,8 +78,7 @@ class ps_mbo extends Module
      * @param none
      * @return bool
      */
-    public function install()
-    {
+    public function install() {
         if (parent::install() 
 				&& $this->registerHook('backOfficeHeader')
 				&& $this->registerHook('displayDashboardToolbarTopMenu')
@@ -129,6 +131,16 @@ class ps_mbo extends Module
 	}
 	
 	public function hookDisplayAdminEndContent() {
+		if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
+			$addonsConnect = $this->getAddonsConnectToolbar();
+			
+			$this->context->smarty->assign(array(
+				'addons_connect' => $addonsConnect,
+			));
+			
+			return $this->context->smarty->fetch($this->template_dir . '/include/modal_addons_connect.tpl');
+		}
+		
 		$controller = Tools::getValue('controller');
 		if ($controller == 'AdminThemes') {
 			$this->context->smarty->assign(array(
@@ -147,14 +159,19 @@ class ps_mbo extends Module
 		return $content;
 	}
 	
-	
 	public function hookDisplayDashboardToolbarTopMenu() {
-		
+		if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
+			$addonsConnect = $this->getAddonsConnectToolbar();
+			
+			$this->context->smarty->assign(array(
+				'addons_connect' => $addonsConnect,
+			));
+			
+			return $this->context->smarty->fetch($this->template_dir . '/module-toolbar.tpl');
+		}
 		
 		if (!$this->isSymfonyContext()) {
-		return '<div style="width:100px; height:100px; background-color: red">HEYCOUCOU</div>';
 			$this->context->smarty->assign(array(
-//				'admin_module_ajax_url_psmbo'    => $this->front_controller[0],
 				'admin_module_ajax_url_psmbo'    => $this->context->link->getAdminLink('AdminPsMboModule'),
 				'controller' => Tools::getValue('controller')
 			));
@@ -163,6 +180,27 @@ class ps_mbo extends Module
 		}
 	}
 	
+	private function getAddonsConnectToolbar() {
+		$container = SymfonyContainer::getInstance();
+        $addonsProvider = $container->get('prestashop.core.admin.data_provider.addons_interface');
+        $addonsConnect = array();
+
+		$authenticated = $addonsProvider->isAddonsAuthenticated();
+		
+        if ($addonsProvider->isAddonsAuthenticated()) {
+            $addonsEmail = $addonsProvider->getAddonsEmail();
+			return array(
+				'connected' => true,
+				'email' => $addonsEmail['username_addons'],
+				'logout_url' => $container->get('router')->generate('admin_addons_logout', [], UrlGeneratorInterface::ABSOLUTE_URL)
+			);
+        } else {
+			return array(
+				'connected' => false,
+				'login_url' => $container->get('router')->generate('admin_addons_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
+			);
+        }
+    }
 	
 	private function installTab() {
         $tab = new Tab();
@@ -196,8 +234,7 @@ class ps_mbo extends Module
      * @param none
      * @return bool
      */
-    public function uninstall()
-    {
+    public function uninstall() {
         // unregister hook
         if (parent::uninstall()) {
             return true;
@@ -214,8 +251,7 @@ class ps_mbo extends Module
      * @param none
      * @return none
      */
-    public function setMedia($aJsDef, $aJs, $aCss)
-    {
+    public function setMedia($aJsDef, $aJs, $aCss) {
         Media::addJsDef($aJsDef);
         $this->context->controller->addCSS($aCss);
         $this->context->controller->addJS($aJs);
@@ -249,10 +285,6 @@ class ps_mbo extends Module
 		$all_modules = Module::getModulesOnDisk(true);
 		$modules_list = array();
 		
-		// TODO REMOVE THESE LINES $filter_modules_list
-		$filter_modules_list[] = 'export2bizrate';
-		$filter_modules_list[] = 'cappasity3d';
-		
 		foreach ($all_modules as $module) {
             $perm = true;
             if ($module->id) {
@@ -284,9 +316,6 @@ class ps_mbo extends Module
 		$active_list = array();
 		$unactive_list = array();
 		foreach ($modulesList as $key => $module) {
-//			if (in_array($module->name, $this->list_partners_modules)) {
-//				$modulesList[$key]->type = 'addonsPartner';
-//			}
 			if (isset($module->description_full) && trim($module->description_full) != '') {
 				$module->show_quick_view = true;
 			}
@@ -315,8 +344,7 @@ class ps_mbo extends Module
 		
 	}
 	
-	public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false)
-    {
+	public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false) {
         /** @var Module $obj */
         $obj = null;
         if ($module->onclick_option) {
@@ -369,8 +397,7 @@ class ps_mbo extends Module
      * @param string|bool $install_source_tracking
      * @return string|array
      */
-    public function displayModuleOptions($module, $output_type = 'link', $back = null, $install_source_tracking = false)
-    {
+    public function displayModuleOptions($module, $output_type = 'link', $back = null, $install_source_tracking = false) {
         if (!isset($module->enable_device)) {
             $module->enable_device = Context::DEVICE_COMPUTER | Context::DEVICE_TABLET | Context::DEVICE_MOBILE;
         }
