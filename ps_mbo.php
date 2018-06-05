@@ -55,7 +55,7 @@ class ps_mbo extends Module
         $this->author = 'PrestaShop';
         $this->bootstrap = true;
         parent::__construct();
-        $this->displayName = $this->l('Module Back Office');
+        $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
         $this->description = $this->l('Get all your addons modules !');
 		
 		$this->controller_name = array('AdminPsMboModule', 'AdminPsMboTheme');

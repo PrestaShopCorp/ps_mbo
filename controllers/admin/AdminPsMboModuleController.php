@@ -62,6 +62,7 @@ class AdminPsMboModuleController extends ModuleAdminController
 		
 		$container = SymfonyContainer::getInstance();
 		$install_url = $container->get('router')->generate('admin_module_import', [], UrlGeneratorInterface::ABSOLUTE_URL);
+		$notification_count_url = $container->get('router')->generate('admin_module_notification_count', [], UrlGeneratorInterface::ABSOLUTE_URL);
 		
 		$parts = parse_url($install_url);
 		parse_str($parts['query'], $query);
@@ -76,7 +77,8 @@ class AdminPsMboModuleController extends ModuleAdminController
 			'currency_symbol' => Context::getContext()->currency->sign,
 			'bo_img' => __PS_BASE_URI__ . $admin_webpath . '/themes/default/img/',
 			'install_url' => $install_url,
-			'module_controller_token' => $moduleControllerToken
+			'module_controller_token' => $moduleControllerToken,
+			'notification_count_url' => $notification_count_url
 		));
 
 		$aJsDef = $aJs = array();

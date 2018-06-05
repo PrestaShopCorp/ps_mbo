@@ -39,6 +39,19 @@ $(document).ready(function() {
 			},
 			getAvgRateClass: function(avg_rate) {
 				return 'module-stars module-star-ranking-grid-' + Math.round(avg_rate) + ' small';
+			},
+			visibleModules: function() {
+				var visibleModules = 0;
+				
+				if (typeof window.vApp !== 'undefined' && typeof window.vApp.modules !== 'undefined') {
+					$.each(window.vApp.modules, function(index, value) {
+						if (value.attributes.visible === true) {
+							visibleModules++;
+						}
+					});
+				}
+				
+				return visibleModules;
 			}
 		}
     });
@@ -87,5 +100,22 @@ $(document).ready(function() {
 		var name = $(this).attr('data-module-name');
 		return true;
 	});
+	
+	var urlToCall = $('#notification_count_url').val();
+	if (urlToCall !== '') {
+		var destinationTab = $("#subtab-AdminModulesNotifications");
+		if (destinationTab.length === 0) {
+			return;
+		}
+		
+		$.getJSON(urlToCall, function(badge) {
+	        destinationTab.append('<span class="notification-container">\
+	            <span class="notification-counter">'+badge.count+'</span>\
+	          </span>\
+	        ');
+		}).fail(function() {
+			console.error('Could not retrieve module notifications count.');
+		});
+	}
 	
 });

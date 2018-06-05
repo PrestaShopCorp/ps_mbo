@@ -274,3 +274,28 @@ h4.modal-title {
 }
 
 .modal-content { border-radius: 0px; }
+
+.notification-container {
+	line-height: 1.5rem;
+	height: 1.5rem;
+	vertical-align: middle;
+	cursor: pointer;
+	color: #6c868e;
+	float: right;
+	position: relative;
+}
+
+.notification-counter {
+	display: inline-block;
+	line-height: .875rem;
+	height: .875rem;
+	vertical-align: middle;
+	position: absolute;
+	color: #fff;
+	background: #cd9321;
+	font-size: .5625rem;
+	padding: 0 .25rem;
+	border-radius: 1rem;
+	top: -.063rem;
+	right: auto;
+}
