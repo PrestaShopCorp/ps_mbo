@@ -299,3 +299,5 @@ h4.modal-title {
 	top: -.063rem;
 	right: auto;
 }
+
+#help-container .page-wrap { margin-top: 30px; }

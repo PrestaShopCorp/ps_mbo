@@ -138,7 +138,7 @@
 							<img src="{$bo_img}preston.png?1.7.0" alt="{l s='Exit to PrestaShop Addons Marketplace'}">
 						</div>
 						{l s='See all results for your search on'}<br>
-						<a class="url" href="#">{l s='PrestaShop Addons Marketplace'}</a>
+						<a class="url" href="#" target="_blank">{l s='PrestaShop Addons Marketplace'}</a>
 					</div>
 				</div>
 			</div>
