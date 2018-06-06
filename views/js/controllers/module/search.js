@@ -508,22 +508,23 @@ var AdminModuleController = function() {
 
     // Change the way Dropzone.js lib handle file input trigger
     body.on(
-      'click', '.dropzone:not('+this.moduleImportSelectFileManualSelector+', '+this.moduleImportSuccessConfigureBtnSelector+')',
-      function(event, manual_select) {
-        // if click comes from .module-import-start-select-manual, stop everything
-        if (typeof manual_select == "undefined") {
-          event.stopPropagation();
-          event.preventDefault();
-        }
-      }
+		'click', '.dropzone:not('+this.moduleImportSelectFileManualSelector+', '+this.moduleImportSuccessConfigureBtnSelector+')',
+		function(event, manual_select) {
+			// if click comes from .module-import-start-select-manual, stop everything
+			if (typeof manual_select == "undefined") {
+				event.stopPropagation();
+				event.preventDefault();
+			}
+		}
     );
 
     body.on('click', this.moduleImportSelectFileManualSelector, function(event) {
-      event.stopPropagation();
-      event.preventDefault();
-	  
-      // Trigger click on hidden file input, and pass extra data to .dropzone click handler fro it to notice it comes from here
-      $('.dz-hidden-input').trigger('click', ["manual_select"]);
+		event.stopPropagation();
+		event.preventDefault();
+
+		// Trigger click on hidden file input, and pass extra data to .dropzone click handler fro it to notice it comes from here
+		$('#importDropzone').trigger('click', ["manual_select"]);
+//      $('.dz-hidden-input').trigger('click', ["manual_select"]);
     });
 
     // Handle modal closure

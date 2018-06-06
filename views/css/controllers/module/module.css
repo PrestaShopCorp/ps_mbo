@@ -300,4 +300,5 @@ h4.modal-title {
 	right: auto;
 }
 
-#help-container .page-wrap { margin-top: 30px; }
+#help-container .page-wrap, #main-nav { margin-top: 30px!important; }
+.pstaggerTagsWrapper { padding: 0.3rem 0.4rem!important; }
