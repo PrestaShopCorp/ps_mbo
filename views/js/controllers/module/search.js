@@ -617,7 +617,9 @@ var AdminModuleController = function() {
                 var configureLink = self.baseAdminDir + 'module/manage/action/configure/' + result.module_name + '?_token=' + $('#module_controller_token').val();
                 $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
                 $(self.moduleImportSuccessConfigureBtnSelector).show();
-              }
+              } else {
+				  $('.module-import-success-configure').hide();
+			  }
               $(self.moduleImportSuccessSelector).fadeIn();
             } else if (typeof result.confirmation_subject !== 'undefined') {
                 self.displayPrestaTrustStep(result);

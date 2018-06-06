@@ -151,6 +151,7 @@
 	<input type="hidden" id="notification_count_url" value="{(isset($notification_count_url)) ? $notification_count_url : ''}" >
 					
 	{include file="./include/modal_import.tpl"}
+	{include file="./include/modal_confirm_prestatrust.tpl"}
 					
 </div>
 
