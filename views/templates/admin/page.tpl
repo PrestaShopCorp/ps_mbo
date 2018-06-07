@@ -24,6 +24,8 @@
  *}
 <script>
 	var admin_module_ajax_url_psmbo = '{$admin_module_ajax_url_psmbo}';
+	$('#product_form_open_help').attr('href', $('#toolbar-nav li a.btn-help').attr('href'));
+	$('#toolbar-nav li a.btn-help').hide();
 </script>
 
 {if isset($filterCategoryTab)}
@@ -136,13 +138,21 @@
 							<img src="{$bo_img}preston.png?1.7.0" alt="{l s='Exit to PrestaShop Addons Marketplace'}">
 						</div>
 						{l s='See all results for your search on'}<br>
-						<a class="url" href="#">{l s='PrestaShop Addons Marketplace'}</a>
+						<a class="url" href="#" target="_blank">{l s='PrestaShop Addons Marketplace'}</a>
 					</div>
 				</div>
 			</div>
 				
 		</div>
 	</div>
+			
+	<input type="hidden" id="install_url" value="{(isset($install_url)) ? $install_url : ''}" >
+	<input type="hidden" id="module_controller_token" value="{(isset($module_controller_token)) ? $module_controller_token : ''}" >
+	<input type="hidden" id="notification_count_url" value="{(isset($notification_count_url)) ? $notification_count_url : ''}" >
+					
+	{include file="./include/modal_import.tpl"}
+	{include file="./include/modal_confirm_prestatrust.tpl"}
+					
 </div>
 
 
