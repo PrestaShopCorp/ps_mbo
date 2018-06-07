@@ -36,13 +36,13 @@ class ps_mbo extends Module
 {
 	public $tabs = array(
 		array(
-			'name' => 'Module catalog MBO', // One name for all langs
+			'name' => 'Module catalog', // One name for all langs
 			'class_name' => 'AdminPsMboModule',
 			'visible' => true,
 			'parent_class_name' => 'AdminModulesSf',
 		),
 		array(
-			'name' => 'Theme catalog MBO 1', // One name for all langs
+			'name' => 'Theme catalog', // One name for all langs
 			'class_name' => 'AdminPsMboTheme',
 			'visible' => true,
 			'parent_class_name' => 'AdminParentThemes',
@@ -56,7 +56,7 @@ class ps_mbo extends Module
         $this->bootstrap = true;
         parent::__construct();
         $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
-        $this->description = $this->l('Get all your addons modules !');
+        $this->description = $this->l('Discover the best PrestaShop modules to optimize your online store.');
 		
 		$this->controller_name = array('AdminPsMboModule', 'AdminPsMboTheme');
 		$this->front_controller =  array(
