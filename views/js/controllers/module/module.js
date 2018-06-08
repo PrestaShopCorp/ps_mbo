@@ -63,6 +63,13 @@ $(document).ready(function() {
 			ajax : true,
 			action : 'GetModulesList',
 		},
+		beforeSend: function() {
+			$('#psmbo .btn-primary-reverse.spinner').css({
+				'background-color': 'inherit'
+			});
+			$('#psmbo .btn-primary-reverse.spinner').removeClass('hide');
+			
+		},
 		success : function(data) {
 			var parsedData = JSON.parse(data);
 			window.vApp.modules = parsedData.modules;
@@ -78,6 +85,7 @@ $(document).ready(function() {
 				}); 
 			}
 			$('[data-toggle="popover"]').popover();
+			$('#psmbo .btn-primary-reverse.spinner').addClass('hide');
 		},
 	});
 	

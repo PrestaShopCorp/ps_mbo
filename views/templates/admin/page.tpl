@@ -35,9 +35,15 @@
 {/if}
 
 <div id="psmbo" class="row justify-content-center">
+	
 	<div class="col-lg-10 module-catalog-page">
 		{include file="./include/menu_top.tpl"}
 		<div id="modules-list-container-all" class="row modules-list">
+			
+			<div class="col-sm-12 text-center">
+				<button class="btn-primary-reverse onclick unbind spinner hide"></button>
+			</div>
+			
 			<div
 				v-for="module in modules"
 				v-show="module.attributes.visible"
