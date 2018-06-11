@@ -40,15 +40,15 @@ var AdminModuleCard = function () {
     /* Selectors for module action links (uninstall, reset, etc...) to add a confirm popin */
 //    this.moduleActionMenuLinkSelector = 'button.module_action_menu_';
     this.moduleActionMenuInstallLinkSelector = 'button.module_action_menu_install';
-//    this.moduleActionMenuEnableLinkSelector = 'button.module_action_menu_enable';
-//    this.moduleActionMenuUninstallLinkSelector = 'button.module_action_menu_uninstall';
-//    this.moduleActionMenuDisableLinkSelector = 'button.module_action_menu_disable';
-//    this.moduleActionMenuEnableMobileLinkSelector = 'button.module_action_menu_enable_mobile';
-//    this.moduleActionMenuDisableMobileLinkSelector = 'button.module_action_menu_disable_mobile';
-//    this.moduleActionMenuResetLinkSelector = 'button.module_action_menu_reset';
-//    this.moduleActionMenuUpdateLinkSelector = 'button.module_action_menu_upgrade';
-//    this.moduleItemListSelector = '.module-item-list';
-//    this.moduleItemGridSelector = '.module-item-grid';
+    this.moduleActionMenuEnableLinkSelector = 'button.module_action_menu_enable';
+    this.moduleActionMenuUninstallLinkSelector = 'button.module_action_menu_uninstall';
+    this.moduleActionMenuDisableLinkSelector = 'button.module_action_menu_disable';
+    this.moduleActionMenuEnableMobileLinkSelector = 'button.module_action_menu_enable_mobile';
+    this.moduleActionMenuDisableMobileLinkSelector = 'button.module_action_menu_disable_mobile';
+    this.moduleActionMenuResetLinkSelector = 'button.module_action_menu_reset';
+    this.moduleActionMenuUpdateLinkSelector = 'button.module_action_menu_upgrade';
+    this.moduleItemListSelector = '.module-item-list';
+    this.moduleItemGridSelector = '.module-item-grid';
 
     /* Selectors only for modal buttons */
     this.moduleActionModalDisableLinkSelector = 'a.module_action_modal_disable';
@@ -161,46 +161,46 @@ var AdminModuleCard = function () {
             }
             return _this.dispatchPreEvent('install', this) && _this.confirmAction('install', this) && _this.requestToController('install', $(this));
         });
-//        $(document).on('click', this.moduleActionMenuEnableLinkSelector, function () {
-//            return _this.dispatchPreEvent('enable', this) && _this.confirmAction('enable', this) && _this.requestToController('enable', $(this));
-//        });
-//        $(document).on('click', this.moduleActionMenuUninstallLinkSelector, function () {
-//            return _this.dispatchPreEvent('uninstall', this) && _this.confirmAction('uninstall', this) && _this.requestToController('uninstall', $(this));
-//        });
-//        $(document).on('click', this.moduleActionMenuDisableLinkSelector, function () {
-//            return _this.dispatchPreEvent('disable', this) && _this.confirmAction('disable', this) && _this.requestToController('disable', $(this));
-//        });
-//        $(document).on('click', this.moduleActionMenuEnableMobileLinkSelector, function () {
-//            return _this.dispatchPreEvent('enable_mobile', this) && _this.confirmAction('enable_mobile', this) && _this.requestToController('enable_mobile', $(this));
-//        });
-//        $(document).on('click', this.moduleActionMenuDisableMobileLinkSelector, function () {
-//            return _this.dispatchPreEvent('disable_mobile', this) && _this.confirmAction('disable_mobile', this) && _this.requestToController('disable_mobile', $(this));
-//        });
-//        $(document).on('click', this.moduleActionMenuResetLinkSelector, function () {
-//            return _this.dispatchPreEvent('reset', this) && _this.confirmAction('reset', this) && _this.requestToController('reset', $(this));
-//        });
-//        $(document).on('click', this.moduleActionMenuUpdateLinkSelector, function () {
-//            return _this.dispatchPreEvent('update', this) && _this.confirmAction('update', this) && _this.requestToController('update', $(this));
-//        });
-//
-//        $(document).on('click', this.moduleActionModalDisableLinkSelector, function () {
-//            return _this.requestToController('disable', $(_this.moduleActionMenuDisableLinkSelector, $("div.module-item-list[data-tech-name='" + $(this).attr("data-tech-name") + "']")));
-//        });
-//        $(document).on('click', this.moduleActionModalResetLinkSelector, function () {
-//            return _this.requestToController('reset', $(_this.moduleActionMenuResetLinkSelector, $("div.module-item-list[data-tech-name='" + $(this).attr("data-tech-name") + "']")));
-//        });
-//        $(document).on('click', this.moduleActionModalUninstallLinkSelector, function (e) {
-//            $(e.target).parents('.modal').on('hidden.bs.modal', function(event) {
-//                return _this.requestToController(
-//                    'uninstall',
-//                    $(
-//                        _this.moduleActionMenuUninstallLinkSelector,
-//                        $("div.module-item-list[data-tech-name='" + $(e.target).attr("data-tech-name") + "']")
-//                    ),
-//                    $(e.target).attr("data-deletion")
-//                );
-//            }.bind(e));
-//        });
+        $(document).on('click', this.moduleActionMenuEnableLinkSelector, function () {
+            return _this.dispatchPreEvent('enable', this) && _this.confirmAction('enable', this) && _this.requestToController('enable', $(this));
+        });
+        $(document).on('click', this.moduleActionMenuUninstallLinkSelector, function () {
+            return _this.dispatchPreEvent('uninstall', this) && _this.confirmAction('uninstall', this) && _this.requestToController('uninstall', $(this));
+        });
+        $(document).on('click', this.moduleActionMenuDisableLinkSelector, function () {
+            return _this.dispatchPreEvent('disable', this) && _this.confirmAction('disable', this) && _this.requestToController('disable', $(this));
+        });
+        $(document).on('click', this.moduleActionMenuEnableMobileLinkSelector, function () {
+            return _this.dispatchPreEvent('enable_mobile', this) && _this.confirmAction('enable_mobile', this) && _this.requestToController('enable_mobile', $(this));
+        });
+        $(document).on('click', this.moduleActionMenuDisableMobileLinkSelector, function () {
+            return _this.dispatchPreEvent('disable_mobile', this) && _this.confirmAction('disable_mobile', this) && _this.requestToController('disable_mobile', $(this));
+        });
+        $(document).on('click', this.moduleActionMenuResetLinkSelector, function () {
+            return _this.dispatchPreEvent('reset', this) && _this.confirmAction('reset', this) && _this.requestToController('reset', $(this));
+        });
+        $(document).on('click', this.moduleActionMenuUpdateLinkSelector, function () {
+            return _this.dispatchPreEvent('update', this) && _this.confirmAction('update', this) && _this.requestToController('update', $(this));
+        });
+
+        $(document).on('click', this.moduleActionModalDisableLinkSelector, function () {
+            return _this.requestToController('disable', $(_this.moduleActionMenuDisableLinkSelector, $("div.module-item-list[data-tech-name='" + $(this).attr("data-tech-name") + "']")));
+        });
+        $(document).on('click', this.moduleActionModalResetLinkSelector, function () {
+            return _this.requestToController('reset', $(_this.moduleActionMenuResetLinkSelector, $("div.module-item-list[data-tech-name='" + $(this).attr("data-tech-name") + "']")));
+        });
+        $(document).on('click', this.moduleActionModalUninstallLinkSelector, function (e) {
+            $(e.target).parents('.modal').on('hidden.bs.modal', function(event) {
+                return _this.requestToController(
+                    'uninstall',
+                    $(
+                        _this.moduleActionMenuUninstallLinkSelector,
+                        $("div.module-item-list[data-tech-name='" + $(e.target).attr("data-tech-name") + "']")
+                    ),
+                    $(e.target).attr("data-deletion")
+                );
+            }.bind(e));
+        });
     };
 
     this.requestToController = function (action, element, forceDeletion) {
@@ -244,28 +244,29 @@ var AdminModuleCard = function () {
                             mainElement = jqElementObj.parents('.' + alteredSelector).first();
                             mainElement.remove();
                         });
-                        BOEvent.emitEvent("Module Uninstalled", "CustomEvent");
+//                        BOEvent.emitEvent("Module Uninstalled", "CustomEvent");
                     } else if (action == "disable") {
                         alteredSelector = _this.getModuleItemSelector().replace('.', '');
                         mainElement = jqElementObj.parents('.' + alteredSelector).first();
                         mainElement.addClass(alteredSelector + '-isNotActive');
                         mainElement.attr('data-active', '0');
-                        BOEvent.emitEvent("Module Disabled", "CustomEvent");
+//                        BOEvent.emitEvent("Module Disabled", "CustomEvent");
                     } else if (action == "enable") {
                         alteredSelector = _this.getModuleItemSelector().replace('.', '');
                         mainElement = jqElementObj.parents('.' + alteredSelector).first();
                         mainElement.removeClass(alteredSelector + '-isNotActive');
                         mainElement.attr('data-active', '1');
-                        BOEvent.emitEvent("Module Enabled", "CustomEvent");
+//                        BOEvent.emitEvent("Module Enabled", "CustomEvent");
                     }
 
                     jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
 
 					$('#psmbo .form-action-button').css({'width': '75%'});
-					$('#psmbo .module_action_menu_configure').css({'width': '100%'});
+					$('#psmbo .form-action-button > button').css({'width': '100%'});
 					$('#psmbo .dropdown-toggle').css({'width': '25%'});
 					$('#psmbo .dropdown-toggle .caret').css({'display': 'none'});
-					$('#modules-list-container-all .module-item-wrapper-grid .module-quick-action-grid .light-button, .bootstrap #modules-list-container-all .btn').css({'width': '100%'});
+//					$('#modules-list-container-all .module-item-wrapper-grid .module-quick-action-grid .light-button, .bootstrap #modules-list-container-all .btn').css({'width': '100%'});					
+					
                 }
             }
         }).always(function () {
