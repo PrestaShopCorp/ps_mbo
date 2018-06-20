@@ -86,6 +86,15 @@ class ps_mbo extends Module
 				&& $this->registerHook('displayDashboardToolbarIcons')
 				&& $this->registerHook('displayAdminEndContent')
 			) {
+			
+			$idTab = Tab::getIdFromClassName('AdminModulesCatalog');
+		
+			if ($idTab !== false) {
+				$catalogTab = new Tab($idTab);
+				$catalogTab->active = false;
+				$catalogTab->save();
+			}
+			
             return true;
         } else { // if something wrong return false
             $this->_errors[] = $this->l('There was an error during the installation.');
@@ -237,6 +246,15 @@ class ps_mbo extends Module
     public function uninstall() {
         // unregister hook
         if (parent::uninstall()) {
+			
+			$idTab = Tab::getIdFromClassName('AdminModulesCatalog');
+		
+			if ($idTab !== false) {
+				$catalogTab = new Tab($idTab);
+				$catalogTab->active = true;
+				$catalogTab->save();
+			}
+			
             return true;
         } else {
             $this->_errors[] = $this->l('There was an error during the desinstallation.');
