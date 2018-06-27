@@ -22,28 +22,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<li>
+<li style="display:none;">
 	<a id="page-header-desc-carrier-new_carrier" class="toolbar_btn  pointer" href="" title="{l s='Recommended Modules and Services'}">
 		<i class="process-icon-modules-list"></i>
 		<div>{l s='Recommended Modules and Services'}</div>
 	</a>
 </li>
-{*<div class="modal fade" id="modules_list_container">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">TODO IN MY MODULE
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h3 class="modal-title">{l s='Recommended Modules and Services'}</h3>
-			</div>
-			<div class="modal-body">
-				<div id="modules_list_container_tab_modal" style="display:none;"></div>
-				<div id="modules_list_loader"><i class="icon-refresh icon-spin"></i></div>
-			</div>
-		</div>
-	</div>
-</div>*}
+
 <script>
-	$(document).ready(function(){
+	$(document).ready(function() {
 		$('.fancybox-quick-view').fancybox({
 			type: 'ajax',
 			autoDimensions: false,
@@ -56,6 +43,12 @@
 				}
 			}
 		});
+	});
+	
+	$(document).on('click', '#page-header-desc-configuration-modules-list', function(event) {
+		event.preventDefault();
+		$('#modules_list_container').modal('show');
+		openModulesList();
 	});
 	
 	$('.process-icon-modules-list').parent('a').unbind().bind('click', function (event) {
@@ -74,7 +67,6 @@ function openModulesList() {
 	$.ajax({
 		type: 'POST',
 		url: admin_module_ajax_url_psmbo,
-{*		url: admin_module_ajax_url_psmbo + '&token=' + '{getAdminToken tab="AdminPsMboModule"}',*}
 		data: {
 			ajax : true,
 			action : 'GetTabModulesList',
@@ -89,11 +81,3 @@ function openModulesList() {
 	
 	
 </script>
-
-{*<style>
-	.modal-backdrop.in {
-		opacity: .5;
-		z-index: 400;
-	}
-	
-</style>*}

@@ -64,7 +64,6 @@ class ps_mbo extends Module
 			'index.php?controller=' . $this->controller_name[1] . '&token=' . Tools::getAdminTokenLite($this->controller_name[1]),
 		);
 		
-		// apparemment _ps_module_dir_ c'est un non ... 
         $this->template_dir = '../../../../modules/' . $this->name . '/views/templates/admin/';
 		
 		$this->css_path = $this->_path . 'views/css/';
@@ -85,6 +84,7 @@ class ps_mbo extends Module
 				&& $this->registerHook('displayAdminNavBarBeforeEnd')
 				&& $this->registerHook('displayDashboardToolbarIcons')
 				&& $this->registerHook('displayAdminEndContent')
+				&& $this->registerHook('actionObjectTabCoreAddAfter')
 			) {
 			
 			$idTab = Tab::getIdFromClassName('AdminModulesCatalog');
@@ -101,6 +101,25 @@ class ps_mbo extends Module
             return false;
         }
     }
+	
+	public function hookActionObjectTabCoreAddAfter() {
+		// handle tab position
+		$idTab = Tab::getIdFromClassName('AdminModulesCatalog');
+		
+		if ($idTab !== false) {
+			$catalogTab = new Tab($idTab);
+			
+			$mboTabId = Tab::getIdFromClassName('AdminPsMboModule');
+			
+			if ($mboTabId !== false) {
+				$mboTab = new Tab($mboTabId);
+				$mboTab->position = $catalogTab->position;
+				$mboTab->save();
+			}
+			
+			unset($idTab, $catalogTab, $mboTabId, $mboTab);
+		}		
+	}
 	
 	public function fetchModulesByController($ajax = false) {
 		$controller = ($ajax === true) ? Tools::getValue('controllerName') : Tools::getValue('controller');
