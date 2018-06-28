@@ -69,6 +69,24 @@ class ps_mbo extends Module
 		$this->css_path = $this->_path . 'views/css/';
 		$this->js_path = $this->_path . 'views/js/';
 		
+		// TODO, in future versions, put that in the correct hook
+		// handle tab position
+		$idTab = Tab::getIdFromClassName('AdminModulesCatalog');
+		
+		if ($idTab !== false) {
+			$catalogTab = new Tab($idTab);
+			
+			$mboTabId = Tab::getIdFromClassName('AdminPsMboModule');
+			
+			if ($mboTabId !== false) {
+				$mboTab = new Tab($mboTabId);
+				$mboTab->position = $catalogTab->position;
+				$mboTab->save();
+			}
+			
+			unset($idTab, $catalogTab, $mboTabId, $mboTab);
+		}	
+		
     }
 
     /**
@@ -84,7 +102,6 @@ class ps_mbo extends Module
 				&& $this->registerHook('displayAdminNavBarBeforeEnd')
 				&& $this->registerHook('displayDashboardToolbarIcons')
 				&& $this->registerHook('displayAdminEndContent')
-				&& $this->registerHook('actionObjectTabCoreAddAfter')
 			) {
 			
 			$idTab = Tab::getIdFromClassName('AdminModulesCatalog');
@@ -101,25 +118,6 @@ class ps_mbo extends Module
             return false;
         }
     }
-	
-	public function hookActionObjectTabCoreAddAfter() {
-		// handle tab position
-		$idTab = Tab::getIdFromClassName('AdminModulesCatalog');
-		
-		if ($idTab !== false) {
-			$catalogTab = new Tab($idTab);
-			
-			$mboTabId = Tab::getIdFromClassName('AdminPsMboModule');
-			
-			if ($mboTabId !== false) {
-				$mboTab = new Tab($mboTabId);
-				$mboTab->position = $catalogTab->position;
-				$mboTab->save();
-			}
-			
-			unset($idTab, $catalogTab, $mboTabId, $mboTab);
-		}		
-	}
 	
 	public function fetchModulesByController($ajax = false) {
 		$controller = ($ajax === true) ? Tools::getValue('controllerName') : Tools::getValue('controller');
