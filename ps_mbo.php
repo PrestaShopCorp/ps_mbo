@@ -51,7 +51,7 @@ class ps_mbo extends Module
 	
     public function __construct() {
         $this->name = 'ps_mbo';
-        $this->version = '1.0.4';
+        $this->version = '1.0.5';
         $this->author = 'PrestaShop';
         $this->bootstrap = true;
         parent::__construct();
@@ -64,11 +64,28 @@ class ps_mbo extends Module
 			'index.php?controller=' . $this->controller_name[1] . '&token=' . Tools::getAdminTokenLite($this->controller_name[1]),
 		);
 		
-		// apparemment _ps_module_dir_ c'est un non ... 
         $this->template_dir = '../../../../modules/' . $this->name . '/views/templates/admin/';
 		
 		$this->css_path = $this->_path . 'views/css/';
 		$this->js_path = $this->_path . 'views/js/';
+		
+		// TODO, in future versions, put that in the correct hook
+		// handle tab position
+		$idTab = Tab::getIdFromClassName('AdminModulesCatalog');
+		
+		if ($idTab !== false) {
+			$catalogTab = new Tab($idTab);
+			
+			$mboTabId = Tab::getIdFromClassName('AdminPsMboModule');
+			
+			if ($mboTabId !== false) {
+				$mboTab = new Tab($mboTabId);
+				$mboTab->position = $catalogTab->position;
+				$mboTab->save();
+			}
+			
+			unset($idTab, $catalogTab, $mboTabId, $mboTab);
+		}	
 		
     }
 
