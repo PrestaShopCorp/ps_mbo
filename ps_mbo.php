@@ -123,7 +123,7 @@ class ps_mbo extends Module
 		$controller = ($ajax === true) ? Tools::getValue('controllerName') : Tools::getValue('controller');
 		$allowed_controllers = array('AdminCarriers', 'AdminPayment');
 		
-		if (isset($controller) && $controller != '' && in_array($controller, $allowed_controllers)) {
+		if (isset($controller) && $controller != '') {
 			$panel_id = '';
 			$modules = array();
 			switch ($controller) {
@@ -136,6 +136,12 @@ class ps_mbo extends Module
 				case 'AdminPayment':
 					$modules = $this->getPaymentMboModules();
 					break;
+				default: 
+					$filter_modules_list = $this->getFilterList($controller);
+					$tracking_source = 'back-office, ' . $controller;
+					$modules = $this->getModules($filter_modules_list, $tracking_source);
+					break;
+					
 			}
 
 			$data = array(
