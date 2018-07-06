@@ -80,50 +80,15 @@ class ps_mbo extends Module
     public function install()
     {
         if (!parent::install()
-                || !$this->registerHook('backOfficeHeader')
-                || !$this->registerHook('displayDashboardToolbarTopMenu')
-                || !$this->registerHook('displayAdminNavBarBeforeEnd')
-                || !$this->registerHook('displayDashboardToolbarIcons')
-                || !$this->registerHook('displayAdminEndContent')
-            ) {
+            || !$this->registerHook('backOfficeHeader')
+            || !$this->registerHook('displayDashboardToolbarTopMenu')
+            || !$this->registerHook('displayAdminNavBarBeforeEnd')
+            || !$this->registerHook('displayDashboardToolbarIcons')
+            || !$this->registerHook('displayAdminEndContent')
+            || !$this->installTabs()
+        ) {
             $this->_errors[] = $this->l('There was an error during the installation.');
             return false;
-        }
-
-        // @TODO, in future versions, put that in the correct hook
-        // handle tab position
-        $idTab = Tab::getIdFromClassName('AdminModulesCatalog');
-
-        if ($idTab !== false) {
-            $catalogTab = new Tab($idTab);
-            $catalogTab->active = false;
-            $catalogTab->save();
-
-            $mboTabId = Tab::getIdFromClassName('AdminPsMboModule');
-
-            if ($mboTabId !== false) {
-                $mboTab = new Tab($mboTabId);
-                $mboTab->position = $catalogTab->position;
-                $mboTab->active = true;
-                $mboTab->save();
-            }
-        }
-
-        $idTab = Tab::getIdFromClassName('AdminThemesCatalog');
-
-        if ($idTab !== false) {
-            $catalogTab = new Tab($idTab);
-            $catalogTab->active = false;
-            $catalogTab->save();
-
-            $mboTabId = Tab::getIdFromClassName('AdminPsMboTheme');
-
-            if ($mboTabId !== false) {
-                $mboTab = new Tab($mboTabId);
-                $mboTab->position = $catalogTab->position;
-                $mboTab->active = true;
-                $mboTab->save();
-            }
         }
 
         return true;
@@ -136,12 +101,12 @@ class ps_mbo extends Module
 
         if (isset($controller) && $controller != '') {
             $panel_id = '';
-            $modules = array();
+            $modules = [];
             switch ($controller) {
                 case 'AdminCarriers':
                     $modules = $this->getCarriersMboModules();
                     $panel_id = 'recommended-carriers-panel';
-                    $this->context->smarty->assign('panel_title', $this->trans('Use one of our recommended carrier modules', array(), 'Admin.Shipping.Feature'));
+                    $this->context->smarty->assign('panel_title', $this->trans('Use one of our recommended carrier modules', [], 'Admin.Shipping.Feature'));
 
                     break;
                 case 'AdminPayment':
@@ -228,7 +193,7 @@ class ps_mbo extends Module
     {
         $container = SymfonyContainer::getInstance();
         $addonsProvider = $container->get('prestashop.core.admin.data_provider.addons_interface');
-        $addonsConnect = array();
+        $addonsConnect = [];
 
         $authenticated = $addonsProvider->isAddonsAuthenticated();
 
@@ -247,31 +212,51 @@ class ps_mbo extends Module
         );
     }
 
-    private function installTab()
+    private function installTabs()
     {
-        $tab = new Tab();
-        $tab->active = true;
-        $tab->class_name = 'AdminPsMboModule';
-        $tab->name = array();
-        foreach (Language::getLanguages(true) as $lang) {
-            $tab->name[$lang['id_lang']] = $this->displayName;
-        }
-        unset($lang);
-        $tab->id_parent = -1;
-        $tab->module = $this->name;
-        $tab->add();
+        // @TODO, in future versions, put that in the correct hook
+        // handle tab position
+        $idTab = Tab::getIdFromClassName('AdminModulesCatalog');
 
-        $tab = new Tab();
-        $tab->active = true;
-        $tab->class_name = 'AdminPsMboTheme';
-        $tab->name = array();
-        foreach (Language::getLanguages(true) as $lang) {
-            $tab->name[$lang['id_lang']] = $this->displayName;
+        if ($idTab !== false) {
+            $catalogTab = new Tab($idTab);
+            $catalogTab->active = false;
+            $catalogTab->save();
+
+            $tab = new Tab();
+            $tab->active = true;
+            $tab->class_name = 'AdminPsMboModule';
+            $tab->name = [];
+            foreach (Language::getLanguages(true) as $lang) {
+                $tab->name[$lang['id_lang']] = $this->displayName;
+            }
+            unset($lang);
+            $tab->id_parent = -1;
+            $tab->module = $this->name;
+            $tab->add();
         }
-        unset($lang);
-        $tab->id_parent = -1;
-        $tab->module = $this->name;
-        $tab->add();
+
+        $idTab = Tab::getIdFromClassName('AdminThemesCatalog');
+
+        if ($idTab !== false) {
+            $catalogTab = new Tab($idTab);
+            $catalogTab->active = false;
+            $catalogTab->save();
+
+            $tab = new Tab();
+            $tab->active = true;
+            $tab->class_name = 'AdminPsMboTheme';
+            $tab->name = [];
+            foreach (Language::getLanguages(true) as $lang) {
+                $tab->name[$lang['id_lang']] = $this->displayName;
+            }
+            unset($lang);
+            $tab->id_parent = -1;
+            $tab->module = $this->name;
+            $tab->add();
+        }
+
+        return true;
     }
 
     /**
@@ -327,7 +312,7 @@ class ps_mbo extends Module
             WHERE t.class_name LIKE "' . pSQL($className) . '"');
 
         $tab_modules_list = Tab::getTabModulesList($idTab);
-        $filter_modules_list = array();
+        $filter_modules_list = [];
 
         if (is_array($tab_modules_list['default_list']) && count($tab_modules_list['default_list'])) {
             $filter_modules_list = $tab_modules_list['default_list'];
@@ -341,7 +326,7 @@ class ps_mbo extends Module
     public function getModules($filter_modules_list, $tracking_source)
     {
         $all_modules = Module::getModulesOnDisk(true);
-        $modules_list = array();
+        $modules_list = [];
 
         foreach ($all_modules as $module) {
             $perm = true;
@@ -373,8 +358,8 @@ class ps_mbo extends Module
         $tracking_source = 'back-office,AdminPayment,index';
         $modulesList = $this->getModules($filter_modules_list, $tracking_source);
 
-        $active_list = array();
-        $unactive_list = array();
+        $active_list = [];
+        $unactive_list = [];
         foreach ($modulesList as $key => $module) {
             if (isset($module->description_full) && trim($module->description_full) != '') {
                 $module->show_quick_view = true;
@@ -385,12 +370,12 @@ class ps_mbo extends Module
             if (($module->installed && $module->active) || !$module->installed) {
                 // Unfortunately installed but disabled module will have $module->installed = false
                 if (strstr($module->optionsHtml[0], 'enable=1')) {
-                    $module->optionsHtml = array();
+                    $module->optionsHtml = [];
                 } else {
                     $module->optionsHtml = array($module->optionsHtml[0]);
                 }
             } else {
-                $module->optionsHtml = array();
+                $module->optionsHtml = [];
             }
 
             if ($module->active) {
@@ -487,7 +472,7 @@ class ps_mbo extends Module
         }
 
         $link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
-        $modules_options = array();
+        $modules_options = [];
 
         $configure_module = array(
             'href' => $link_admin_modules.'&configure='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
@@ -680,7 +665,7 @@ class ps_mbo extends Module
                     $return .= ' onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog').'"></i>&nbsp;'.$option['text'].'</a></li>';
                 } elseif ($output_type == 'array') {
                     if (!is_array($return)) {
-                        $return = array();
+                        $return = [];
                     }
 
                     $html = '<a class="';
