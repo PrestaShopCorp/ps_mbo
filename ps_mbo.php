@@ -223,7 +223,12 @@ class ps_mbo extends Module
             $catalogTab->active = false;
             $catalogTab->save();
 
-            $tab = new Tab();
+            $idTab = Tab::getIdFromClassName('AdminPsMboModule');
+            if (empty($idTab)) {
+                $tab = new Tab();
+            } else {
+                $tab = new Tab($idTab);
+            }
             $tab->active = true;
             $tab->class_name = 'AdminPsMboModule';
             $tab->name = [];
@@ -237,15 +242,20 @@ class ps_mbo extends Module
         }
 
         $idTab = Tab::getIdFromClassName('AdminThemesCatalog');
-
         if ($idTab !== false) {
             $catalogTab = new Tab($idTab);
             $catalogTab->active = false;
             $catalogTab->save();
 
-            $tab = new Tab();
-            $tab->active = true;
+            $idTab = Tab::getIdFromClassName('AdminPsMboTheme');
+            if (empty($idTab)) {
+                $tab = new Tab();
+            } else {
+                $tab = new Tab($idTab);
+            }
+
             $tab->class_name = 'AdminPsMboTheme';
+            $tab->active = true;
             $tab->name = [];
             foreach (Language::getLanguages(true) as $lang) {
                 $tab->name[$lang['id_lang']] = $this->displayName;
@@ -274,10 +284,30 @@ class ps_mbo extends Module
         }
 
         $idTab = Tab::getIdFromClassName('AdminModulesCatalog');
-
         if ($idTab !== false) {
             $catalogTab = new Tab($idTab);
             $catalogTab->active = true;
+            $catalogTab->save();
+        }
+
+        $idTab = Tab::getIdFromClassName('AdminThemesCatalog');
+        if ($idTab !== false) {
+            $catalogTab = new Tab($idTab);
+            $catalogTab->active = true;
+            $catalogTab->save();
+        }
+
+        $idTab = Tab::getIdFromClassName('AdminPsMboTheme');
+        if ($idTab !== false) {
+            $catalogTab = new Tab($idTab);
+            $catalogTab->active = false;
+            $catalogTab->save();
+        }
+
+        $idTab = Tab::getIdFromClassName('AdminPsMboModule');
+        if ($idTab !== false) {
+            $catalogTab = new Tab($idTab);
+            $catalogTab->active = false;
             $catalogTab->save();
         }
 
