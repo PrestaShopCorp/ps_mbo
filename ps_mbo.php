@@ -49,7 +49,8 @@ class ps_mbo extends Module
         )
     );
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->name = 'ps_mbo';
         $this->version = '1.0.6';
         $this->author = 'PrestaShop';
@@ -95,7 +96,8 @@ class ps_mbo extends Module
      * @param none
      * @return bool
      */
-    public function install() {
+    public function install()
+    {
         if (parent::install()
                 && $this->registerHook('backOfficeHeader')
                 && $this->registerHook('displayDashboardToolbarTopMenu')
@@ -103,7 +105,6 @@ class ps_mbo extends Module
                 && $this->registerHook('displayDashboardToolbarIcons')
                 && $this->registerHook('displayAdminEndContent')
             ) {
-
             $idTab = Tab::getIdFromClassName('AdminModulesCatalog');
 
             if ($idTab !== false) {
@@ -119,7 +120,8 @@ class ps_mbo extends Module
         }
     }
 
-    public function fetchModulesByController($ajax = false) {
+    public function fetchModulesByController($ajax = false)
+    {
         $controller = ($ajax === true) ? Tools::getValue('controllerName') : Tools::getValue('controller');
         $allowed_controllers = array('AdminCarriers', 'AdminPayment');
 
@@ -141,7 +143,6 @@ class ps_mbo extends Module
                     $tracking_source = 'back-office, ' . $controller;
                     $modules = $this->getModules($filter_modules_list, $tracking_source);
                     break;
-
             }
 
             $data = array(
@@ -155,14 +156,15 @@ class ps_mbo extends Module
 
             if ($ajax === true) {
                 return $data;
-            } else {
-                return $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
             }
+
+            return $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
         }
         return false;
     }
 
-    public function hookDisplayAdminEndContent() {
+    public function hookDisplayAdminEndContent()
+    {
         if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
             $addonsConnect = $this->getAddonsConnectToolbar();
 
@@ -191,7 +193,8 @@ class ps_mbo extends Module
         return $content;
     }
 
-    public function hookDisplayDashboardToolbarTopMenu() {
+    public function hookDisplayDashboardToolbarTopMenu()
+    {
         if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
             $addonsConnect = $this->getAddonsConnectToolbar();
 
@@ -212,7 +215,8 @@ class ps_mbo extends Module
         }
     }
 
-    private function getAddonsConnectToolbar() {
+    private function getAddonsConnectToolbar()
+    {
         $container = SymfonyContainer::getInstance();
         $addonsProvider = $container->get('prestashop.core.admin.data_provider.addons_interface');
         $addonsConnect = array();
@@ -226,15 +230,16 @@ class ps_mbo extends Module
                 'email' => $addonsEmail['username_addons'],
                 'logout_url' => $container->get('router')->generate('admin_addons_logout', [], UrlGeneratorInterface::ABSOLUTE_URL)
             );
-        } else {
-            return array(
-                'connected' => false,
-                'login_url' => $container->get('router')->generate('admin_addons_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
-            );
         }
+
+        return array(
+            'connected' => false,
+            'login_url' => $container->get('router')->generate('admin_addons_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
+        );
     }
 
-    private function installTab() {
+    private function installTab()
+    {
         $tab = new Tab();
         $tab->active = 1;
         $tab->class_name = 'AdminPsMboModule';
@@ -266,24 +271,23 @@ class ps_mbo extends Module
      * @param none
      * @return bool
      */
-    public function uninstall() {
+    public function uninstall()
+    {
         // unregister hook
-        if (parent::uninstall()) {
-
-            $idTab = Tab::getIdFromClassName('AdminModulesCatalog');
-
-            if ($idTab !== false) {
-                $catalogTab = new Tab($idTab);
-                $catalogTab->active = true;
-                $catalogTab->save();
-            }
-
-            return true;
-        } else {
+        if (!parent::uninstall()) {
             $this->_errors[] = $this->l('There was an error during the desinstallation.');
             return false;
         }
-        return parent::uninstall();
+
+        $idTab = Tab::getIdFromClassName('AdminModulesCatalog');
+
+        if ($idTab !== false) {
+            $catalogTab = new Tab($idTab);
+            $catalogTab->active = true;
+            $catalogTab->save();
+        }
+
+        return true;
     }
 
     /**
@@ -298,13 +302,15 @@ class ps_mbo extends Module
         $this->context->controller->addJS($aJs);
     }
 
-    public function getCarriersMboModules() {
+    public function getCarriersMboModules()
+    {
         $filter_modules_list = $this->getFilterList('AdminCarriers');
         $tracking_source = 'back-office,AdminCarriers,new';
         return $this->getModules($filter_modules_list, $tracking_source);
     }
 
-    public function getFilterList($className) {
+    public function getFilterList($className)
+    {
         $idTab = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
             SELECT t.id_tab
             FROM ' . _DB_PREFIX_ . 'tab t
@@ -322,7 +328,8 @@ class ps_mbo extends Module
         return $filter_modules_list;
     }
 
-    public function getModules($filter_modules_list, $tracking_source) {
+    public function getModules($filter_modules_list, $tracking_source)
+    {
         $all_modules = Module::getModulesOnDisk(true);
         $modules_list = array();
 
@@ -343,11 +350,13 @@ class ps_mbo extends Module
                 $modules_list[array_search($module->name, $filter_modules_list)] = $module;
             }
         }
+
         ksort($modules_list);
         return $modules_list;
     }
 
-    protected function getPaymentMboModules() {
+    protected function getPaymentMboModules()
+    {
         // fillModuleData back-office,AdminPayment,index
         $filter_modules_list = $this->getFilterList('AdminPayment');
 
@@ -382,10 +391,10 @@ class ps_mbo extends Module
         }
 
         return $unactive_list;
-
     }
 
-    public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false) {
+    public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false)
+    {
         /** @var Module $obj */
         $obj = null;
         if ($module->onclick_option) {
@@ -438,7 +447,8 @@ class ps_mbo extends Module
      * @param string|bool $install_source_tracking
      * @return string|array
      */
-    public function displayModuleOptions($module, $output_type = 'link', $back = null, $install_source_tracking = false) {
+    public function displayModuleOptions($module, $output_type = 'link', $back = null, $install_source_tracking = false)
+    {
         if (!isset($module->enable_device)) {
             $module->enable_device = Context::DEVICE_COMPUTER | Context::DEVICE_TABLET | Context::DEVICE_MOBILE;
         }
@@ -705,5 +715,4 @@ class ps_mbo extends Module
 
         return $return;
     }
-
 }
