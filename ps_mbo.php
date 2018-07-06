@@ -217,7 +217,6 @@ class ps_mbo extends Module
         // @TODO, in future versions, put that in the correct hook
         // handle tab position
         $idTab = Tab::getIdFromClassName('AdminModulesCatalog');
-
         if ($idTab !== false) {
             $catalogTab = new Tab($idTab);
             $catalogTab->active = false;
@@ -231,6 +230,7 @@ class ps_mbo extends Module
             }
             $tab->active = true;
             $tab->class_name = 'AdminPsMboModule';
+            $tab->position = $catalogTab->position;
             $tab->name = [];
             foreach (Language::getLanguages(true) as $lang) {
                 $tab->name[$lang['id_lang']] = $this->displayName;
@@ -255,6 +255,7 @@ class ps_mbo extends Module
             }
 
             $tab->class_name = 'AdminPsMboTheme';
+            $tab->position = $catalogTab->position;
             $tab->active = true;
             $tab->name = [];
             foreach (Language::getLanguages(true) as $lang) {
