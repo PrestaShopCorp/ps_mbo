@@ -34,6 +34,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ps_mbo extends Module
 {
+    const POSITION_CHECKED = 'MBO_POSITION_CHECKED';
+
     public $tabs = array(
         array(
             'name' => 'Module catalog', // One name for all langs
@@ -69,6 +71,8 @@ class ps_mbo extends Module
 
         $this->css_path = $this->_path . 'views/css/';
         $this->js_path = $this->_path . 'views/js/';
+
+        $this->checkTabsPositions();
     }
 
     /**
@@ -212,6 +216,30 @@ class ps_mbo extends Module
         );
     }
 
+    private function checkTabsPositions()
+    {
+        if (!Configuration::get(self::POSITION_CHECKED)) {
+            $tabs = [
+                'AdminPsMboModule' => 'AdminModulesCatalog',
+                'AdminPsMboTheme' => 'AdminThemesCatalog',
+            ];
+            $updated = false;
+            foreach ($tabs as $new => $old) {
+                $newTabId = Tab::getIdFromClassName($new);
+                if (!empty($newTabId)) {
+                    $oldTabId = Tab::getIdFromClassName($old);
+                    if ($oldTabId !== false) {
+                        $catalogTab = new Tab($oldTabId);
+                        $tab = new Tab($newTabId);
+                        $tab->position = $catalogTab->position;
+                        $tab->save();
+                        $updated = true;
+                    }
+                }
+            }
+            Configuration::updateValue(self::POSITION_CHECKED, $updated);
+        }
+    }
     private function installTabs()
     {
         // @TODO, in future versions, put that in the correct hook
@@ -221,24 +249,6 @@ class ps_mbo extends Module
             $catalogTab = new Tab($idTab);
             $catalogTab->active = false;
             $catalogTab->save();
-
-            $idTab = Tab::getIdFromClassName('AdminPsMboModule');
-            if (empty($idTab)) {
-                $tab = new Tab();
-            } else {
-                $tab = new Tab($idTab);
-            }
-            $tab->active = true;
-            $tab->class_name = 'AdminPsMboModule';
-            $tab->position = $catalogTab->position;
-            $tab->name = [];
-            foreach (Language::getLanguages(true) as $lang) {
-                $tab->name[$lang['id_lang']] = $this->displayName;
-            }
-            unset($lang);
-            $tab->id_parent = -1;
-            $tab->module = $this->name;
-            $tab->add();
         }
 
         $idTab = Tab::getIdFromClassName('AdminThemesCatalog');
@@ -246,25 +256,6 @@ class ps_mbo extends Module
             $catalogTab = new Tab($idTab);
             $catalogTab->active = false;
             $catalogTab->save();
-
-            $idTab = Tab::getIdFromClassName('AdminPsMboTheme');
-            if (empty($idTab)) {
-                $tab = new Tab();
-            } else {
-                $tab = new Tab($idTab);
-            }
-
-            $tab->class_name = 'AdminPsMboTheme';
-            $tab->position = $catalogTab->position;
-            $tab->active = true;
-            $tab->name = [];
-            foreach (Language::getLanguages(true) as $lang) {
-                $tab->name[$lang['id_lang']] = $this->displayName;
-            }
-            unset($lang);
-            $tab->id_parent = -1;
-            $tab->module = $this->name;
-            $tab->add();
         }
 
         return true;
@@ -301,17 +292,16 @@ class ps_mbo extends Module
         $idTab = Tab::getIdFromClassName('AdminPsMboTheme');
         if ($idTab !== false) {
             $catalogTab = new Tab($idTab);
-            $catalogTab->active = false;
-            $catalogTab->save();
+            $catalogTab->delete();
         }
 
         $idTab = Tab::getIdFromClassName('AdminPsMboModule');
         if ($idTab !== false) {
             $catalogTab = new Tab($idTab);
-            $catalogTab->active = false;
-            $catalogTab->save();
+            $catalogTab->delete();
         }
 
+        Configuration::deleteByName(self::POSITION_CHECKED);
         return true;
     }
 
