@@ -292,7 +292,7 @@ var AdminModuleController = function() {
     var self = this;
 
     if (self.currentSorting) {
-		
+
 		// Modules sorting
 		var order = 'asc';
 		var key = self.currentSorting;
@@ -313,7 +313,7 @@ var AdminModuleController = function() {
 		if (order == 'desc') {
 			window.vApp.modules.reverse();
 		}
-		  
+
 //		  self.modulesList.sort(currentCompare);
 //		if (order == 'desc') {
 //		  self.modulesList.reverse();
@@ -323,7 +323,7 @@ var AdminModuleController = function() {
     // Modules visibility management
     for (var i = 0; i < window.vApp.modules.length; i++) {
 		var currentModule = window.vApp.modules[i];
-		  
+
 		var isVisible = true;
 		if (this.currentRefCategory !== null) {
 			isVisible = currentModule.attributes.categories === this.currentRefCategory;
@@ -331,12 +331,12 @@ var AdminModuleController = function() {
 		if (self.currentRefStatus !== null) {
 			isVisible = currentModule.attributes.active === this.currentRefStatus;
 		}
-		
+
 		var tagExists = false;
 		if (self.currentTagsList.length) {
 			$.each(self.currentTagsList, function(index, value) {
 				value = value.toLowerCase();
-				
+
 				tagExists = (
 					currentModule.attributes.displayName.toLowerCase().indexOf(value) != -1
 					|| currentModule.attributes.description.toLowerCase().indexOf(value) != -1
@@ -346,28 +346,28 @@ var AdminModuleController = function() {
 			});
 			isVisible = tagExists;
 		}
-		
+
 		if (isVisible) {
 			window.vApp.modules[i].attributes.visible = true;
 		} else {
 			window.vApp.modules[i].attributes.visible = false;
 		}
-		
+
 	}
-	
+
 	if (self.currentTagsList.length) {
 		var urlString = '';
 		$.each(self.currentTagsList, function(index, value) {
 			value = value.toLowerCase();
 			urlString = urlString + ' ' + value;
 		});
-		
+
 		$('#see-results-addons a.url').attr('href', 'https://addons.prestashop.com/en/search?search_query=' + urlString);
 		$('#see-results-addons').removeClass('hidden');
 	} else {
 		$('#see-results-addons').addClass('hidden');
 	}
-	
+
   };
 
   this.initPageChangeProtection = function() {
@@ -432,7 +432,7 @@ var AdminModuleController = function() {
 
   this.initAddonsConnect = function () {
     var self = this;
-	
+
     // Make addons connect modal ready to be clicked
     if ($(this.addonsConnectModalBtnSelector).attr('href') == '#') {
       $(this.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
@@ -480,7 +480,7 @@ var AdminModuleController = function() {
     var self = this;
     var body = $('body');
     var dropzone = $('.dropzone');
-    
+
     // Reset modal when click on Retry in case of failure
     body.on('click', this.moduleImportFailureRetrySelector, function() {
       $(self.moduleImportSuccessSelector + ', ' + self.moduleImportFailureSelector + ', ' + self.moduleImportProcessingSelector).fadeOut(function() {
@@ -530,7 +530,7 @@ var AdminModuleController = function() {
     // Handle modal closure
     body.on('click', this.moduleImportModalCloseBtn, function() {
       if (self.isUploadStarted === true) {
-        // TODO: Display tooltip saying you can't escape at this stage
+        // @TODO: Display tooltip saying you can't escape at this stage
       } else {
         $(self.dropZoneModalSelector).modal('hide');
       }
@@ -591,7 +591,7 @@ var AdminModuleController = function() {
     };
     dropzone.dropzone($.extend(dropzoneOptions));
 	console.log(dropzone);
-    
+
     this.animateStartUpload = function() {
         // State that we start module upload
         self.isUploadStarted = true;
@@ -599,14 +599,14 @@ var AdminModuleController = function() {
         dropzone.css('border', 'none');
         $(self.moduleImportProcessingSelector).fadeIn();
     };
-    
+
     this.animateEndUpload = function(callback) {
         $(self.moduleImportProcessingSelector).finish().fadeOut(callback);
     };
-    
+
     /**
      * Method to call for upload modal, when the ajax call went well.
-     * 
+     *
      * @param object result containing the server response
      */
     this.displayOnUploadDone = function(result) {
@@ -633,7 +633,7 @@ var AdminModuleController = function() {
     /**
      * Method to call for upload modal, when the ajax call went wrong or when the action requested could not
      * succeed for some reason.
-     * 
+     *
      * @param string message explaining the error.
      */
     this.displayOnUploadError = function(message) {
@@ -647,7 +647,7 @@ var AdminModuleController = function() {
      * If PrestaTrust needs to be confirmed, we ask for the confirmation modal content and we display it in the
      * currently displayed one. We also generate the ajax call to trigger once we confirm we want to install
      * the module.
-     * 
+     *
      * @param Previous server response result
      */
     this.displayPrestaTrustStep = function (result) {
@@ -657,11 +657,11 @@ var AdminModuleController = function() {
           $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
           $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
           $(this.dropZoneModalFooterSelector).find(".pstrust-install").off('click').on('click', function() {
-            
+
             $(self.moduleImportConfirmSelector).hide();
             $(self.dropZoneModalFooterSelector).html('');
             self.animateStartUpload();
-            
+
             // Install ajax call
             $.post(result.module.attributes.urls.install, { 'actionParams[confirmPrestaTrust]': "1"})
               .done(function(data) {
@@ -860,10 +860,10 @@ var AdminModuleController = function() {
 
   this.initCategorySelect = function () {
     var body = $('body');
-	
+
     body.on('click', this.categoryItemSelector, function () {
 		var selectedCategory = $(this).attr('data-category-display-ref');
-		
+
 		$.each(window.vApp.modules, function(index, value) {
 			if (value.attributes.categoryName == selectedCategory || value.attributes.categoryParent == selectedCategory) {
 				value.attributes.visible = true;

@@ -69,25 +69,6 @@ class ps_mbo extends Module
 
         $this->css_path = $this->_path . 'views/css/';
         $this->js_path = $this->_path . 'views/js/';
-
-        // TODO, in future versions, put that in the correct hook
-        // handle tab position
-        $idTab = Tab::getIdFromClassName('AdminModulesCatalog');
-
-        if ($idTab !== false) {
-            $catalogTab = new Tab($idTab);
-
-            $mboTabId = Tab::getIdFromClassName('AdminPsMboModule');
-
-            if ($mboTabId !== false) {
-                $mboTab = new Tab($mboTabId);
-                $mboTab->position = $catalogTab->position;
-                $mboTab->save();
-            }
-
-            unset($idTab, $catalogTab, $mboTabId, $mboTab);
-        }
-
     }
 
     /**
@@ -98,26 +79,54 @@ class ps_mbo extends Module
      */
     public function install()
     {
-        if (parent::install()
-                && $this->registerHook('backOfficeHeader')
-                && $this->registerHook('displayDashboardToolbarTopMenu')
-                && $this->registerHook('displayAdminNavBarBeforeEnd')
-                && $this->registerHook('displayDashboardToolbarIcons')
-                && $this->registerHook('displayAdminEndContent')
+        if (!parent::install()
+                || !$this->registerHook('backOfficeHeader')
+                || !$this->registerHook('displayDashboardToolbarTopMenu')
+                || !$this->registerHook('displayAdminNavBarBeforeEnd')
+                || !$this->registerHook('displayDashboardToolbarIcons')
+                || !$this->registerHook('displayAdminEndContent')
             ) {
-            $idTab = Tab::getIdFromClassName('AdminModulesCatalog');
-
-            if ($idTab !== false) {
-                $catalogTab = new Tab($idTab);
-                $catalogTab->active = false;
-                $catalogTab->save();
-            }
-
-            return true;
-        } else { // if something wrong return false
             $this->_errors[] = $this->l('There was an error during the installation.');
             return false;
         }
+
+        // @TODO, in future versions, put that in the correct hook
+        // handle tab position
+        $idTab = Tab::getIdFromClassName('AdminModulesCatalog');
+
+        if ($idTab !== false) {
+            $catalogTab = new Tab($idTab);
+            $catalogTab->active = false;
+            $catalogTab->save();
+
+            $mboTabId = Tab::getIdFromClassName('AdminPsMboModule');
+
+            if ($mboTabId !== false) {
+                $mboTab = new Tab($mboTabId);
+                $mboTab->position = $catalogTab->position;
+                $mboTab->active = true;
+                $mboTab->save();
+            }
+        }
+
+        $idTab = Tab::getIdFromClassName('AdminThemesCatalog');
+
+        if ($idTab !== false) {
+            $catalogTab = new Tab($idTab);
+            $catalogTab->active = false;
+            $catalogTab->save();
+
+            $mboTabId = Tab::getIdFromClassName('AdminPsMboTheme');
+
+            if ($mboTabId !== false) {
+                $mboTab = new Tab($mboTabId);
+                $mboTab->position = $catalogTab->position;
+                $mboTab->active = true;
+                $mboTab->save();
+            }
+        }
+
+        return true;
     }
 
     public function fetchModulesByController($ajax = false)
@@ -241,7 +250,7 @@ class ps_mbo extends Module
     private function installTab()
     {
         $tab = new Tab();
-        $tab->active = 1;
+        $tab->active = true;
         $tab->class_name = 'AdminPsMboModule';
         $tab->name = array();
         foreach (Language::getLanguages(true) as $lang) {
@@ -253,7 +262,7 @@ class ps_mbo extends Module
         $tab->add();
 
         $tab = new Tab();
-        $tab->active = 1;
+        $tab->active = true;
         $tab->class_name = 'AdminPsMboTheme';
         $tab->name = array();
         foreach (Language::getLanguages(true) as $lang) {
@@ -296,7 +305,8 @@ class ps_mbo extends Module
      * @param none
      * @return none
      */
-    public function setMedia($aJsDef, $aJs, $aCss) {
+    public function setMedia($aJsDef, $aJs, $aCss)
+    {
         Media::addJsDef($aJsDef);
         $this->context->controller->addCSS($aCss);
         $this->context->controller->addJS($aJs);
