@@ -54,7 +54,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '1.0.6';
+        $this->version = '1.0.7';
         $this->author = 'PrestaShop';
         $this->bootstrap = true;
         parent::__construct();
