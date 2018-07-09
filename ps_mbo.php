@@ -34,22 +34,25 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ps_mbo extends Module
 {
-	public $tabs = array(
-		array(
-			'name' => 'Module catalog', // One name for all langs
-			'class_name' => 'AdminPsMboModule',
-			'visible' => true,
-			'parent_class_name' => 'AdminModulesSf',
-		),
-		array(
-			'name' => 'Theme catalog', // One name for all langs
-			'class_name' => 'AdminPsMboTheme',
-			'visible' => true,
-			'parent_class_name' => 'AdminParentThemes',
-		)
-	);
-	
-    public function __construct() {
+    const POSITION_CHECKED = 'MBO_POSITION_CHECKED';
+
+    public $tabs = array(
+        array(
+            'name' => 'Module catalog', // One name for all langs
+            'class_name' => 'AdminPsMboModule',
+            'visible' => true,
+            'parent_class_name' => 'AdminModulesSf',
+        ),
+        array(
+            'name' => 'Theme catalog', // One name for all langs
+            'class_name' => 'AdminPsMboTheme',
+            'visible' => true,
+            'parent_class_name' => 'AdminParentThemes',
+        )
+    );
+
+    public function __construct()
+    {
         $this->name = 'ps_mbo';
         $this->version = '1.0.6';
         $this->author = 'PrestaShop';
@@ -57,36 +60,19 @@ class ps_mbo extends Module
         parent::__construct();
         $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
         $this->description = $this->l('Discover the best PrestaShop modules to optimize your online store.');
-		
-		$this->controller_name = array('AdminPsMboModule', 'AdminPsMboTheme');
-		$this->front_controller =  array(
-			'index.php?controller=' . $this->controller_name[0] . '&token=' . Tools::getAdminTokenLite($this->controller_name[0]),
-			'index.php?controller=' . $this->controller_name[1] . '&token=' . Tools::getAdminTokenLite($this->controller_name[1]),
-		);
-		
+
+        $this->controller_name = array('AdminPsMboModule', 'AdminPsMboTheme');
+        $this->front_controller =  array(
+            'index.php?controller=' . $this->controller_name[0] . '&token=' . Tools::getAdminTokenLite($this->controller_name[0]),
+            'index.php?controller=' . $this->controller_name[1] . '&token=' . Tools::getAdminTokenLite($this->controller_name[1]),
+        );
+
         $this->template_dir = '../../../../modules/' . $this->name . '/views/templates/admin/';
-		
-		$this->css_path = $this->_path . 'views/css/';
-		$this->js_path = $this->_path . 'views/js/';
-		
-		// TODO, in future versions, put that in the correct hook
-		// handle tab position
-		$idTab = Tab::getIdFromClassName('AdminModulesCatalog');
-		
-		if ($idTab !== false) {
-			$catalogTab = new Tab($idTab);
-			
-			$mboTabId = Tab::getIdFromClassName('AdminPsMboModule');
-			
-			if ($mboTabId !== false) {
-				$mboTab = new Tab($mboTabId);
-				$mboTab->position = $catalogTab->position;
-				$mboTab->save();
-			}
-			
-			unset($idTab, $catalogTab, $mboTabId, $mboTab);
-		}	
-		
+
+        $this->css_path = $this->_path . 'views/css/';
+        $this->js_path = $this->_path . 'views/js/';
+
+        $this->checkTabsPositions();
     }
 
     /**
@@ -95,169 +81,184 @@ class ps_mbo extends Module
      * @param none
      * @return bool
      */
-    public function install() {
-        if (parent::install() 
-				&& $this->registerHook('backOfficeHeader')
-				&& $this->registerHook('displayDashboardToolbarTopMenu')
-				&& $this->registerHook('displayAdminNavBarBeforeEnd')
-				&& $this->registerHook('displayDashboardToolbarIcons')
-				&& $this->registerHook('displayAdminEndContent')
-			) {
-			
-			$idTab = Tab::getIdFromClassName('AdminModulesCatalog');
-		
-			if ($idTab !== false) {
-				$catalogTab = new Tab($idTab);
-				$catalogTab->active = false;
-				$catalogTab->save();
-			}
-			
-            return true;
-        } else { // if something wrong return false
+    public function install()
+    {
+        if (!parent::install()
+            || !$this->registerHook('backOfficeHeader')
+            || !$this->registerHook('displayDashboardToolbarTopMenu')
+            || !$this->registerHook('displayAdminNavBarBeforeEnd')
+            || !$this->registerHook('displayDashboardToolbarIcons')
+            || !$this->registerHook('displayAdminEndContent')
+            || !$this->installTabs()
+        ) {
             $this->_errors[] = $this->l('There was an error during the installation.');
             return false;
         }
+
+        return true;
     }
-	
-	public function fetchModulesByController($ajax = false) {
-		$controller = ($ajax === true) ? Tools::getValue('controllerName') : Tools::getValue('controller');
-		$allowed_controllers = array('AdminCarriers', 'AdminPayment');
-		
-		if (isset($controller) && $controller != '') {
-			$panel_id = '';
-			$modules = array();
-			switch ($controller) {
-				case 'AdminCarriers':
-					$modules = $this->getCarriersMboModules();
-					$panel_id = 'recommended-carriers-panel';
-					$this->context->smarty->assign('panel_title', $this->trans('Use one of our recommended carrier modules', array(), 'Admin.Shipping.Feature'));
 
-					break;	
-				case 'AdminPayment':
-					$modules = $this->getPaymentMboModules();
-					break;
-				default: 
-					$filter_modules_list = $this->getFilterList($controller);
-					$tracking_source = 'back-office, ' . $controller;
-					$modules = $this->getModules($filter_modules_list, $tracking_source);
-					break;
-					
-			}
+    public function fetchModulesByController($ajax = false)
+    {
+        $controller = ($ajax === true) ? Tools::getValue('controllerName') : Tools::getValue('controller');
+        $allowed_controllers = array('AdminCarriers', 'AdminPayment');
 
-			$data = array(
-				'modules_list' => $modules,
-				'panel_id' => $panel_id,
-				'controller_name' => $controller,
-				'admin_module_ajax_url_psmbo' => $this->front_controller[0],
-				'from' => 'footer'
-			);
-			$this->context->smarty->assign($data);
+        if (isset($controller) && $controller != '') {
+            $panel_id = '';
+            $modules = [];
+            switch ($controller) {
+                case 'AdminCarriers':
+                    $modules = $this->getCarriersMboModules();
+                    $panel_id = 'recommended-carriers-panel';
+                    $this->context->smarty->assign('panel_title', $this->trans('Use one of our recommended carrier modules', [], 'Admin.Shipping.Feature'));
 
-			if ($ajax === true) {
-				return $data;
-			} else {
-				return $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
-			}
-		}
-		return false;
-	}
-	
-	public function hookDisplayAdminEndContent() {
-		if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
-			$addonsConnect = $this->getAddonsConnectToolbar();
-			
-			$this->context->smarty->assign(array(
-				'addons_connect' => $addonsConnect,
-			));
-			
-			return $this->context->smarty->fetch($this->template_dir . '/include/modal_addons_connect.tpl');
-		}
-		
-		$controller = Tools::getValue('controller');
-		if ($controller == 'AdminThemes') {
-			$this->context->smarty->assign(array(
-						'admin_module_ajax_url_psmbo' => $this->front_controller[0]
-			));
-			return $this->context->smarty->fetch($this->template_dir . '/admin-end-content-theme.tpl');
-		}
-		
-		$content = '';
-		$content .= $this->context->smarty->fetch($this->template_dir . '/modal.tpl');
-		
-		if ($this->fetchModulesByController() !== false) {
-			$content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
-		}
-		
-		return $content;
-	}
-	
-	public function hookDisplayDashboardToolbarTopMenu() {
-		if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
-			$addonsConnect = $this->getAddonsConnectToolbar();
-			
-			$this->context->smarty->assign(array(
-				'addons_connect' => $addonsConnect,
-			));
-			
-			return $this->context->smarty->fetch($this->template_dir . '/module-toolbar.tpl');
-		}
-		
-		if (!$this->isSymfonyContext()) {
-			$this->context->smarty->assign(array(
-				'admin_module_ajax_url_psmbo'    => $this->context->link->getAdminLink('AdminPsMboModule'),
-				'controller' => Tools::getValue('controller')
-			));
+                    break;
+                case 'AdminPayment':
+                    $modules = $this->getPaymentMboModules();
+                    break;
+                default:
+                    $filter_modules_list = $this->getFilterList($controller);
+                    $tracking_source = 'back-office, ' . $controller;
+                    $modules = $this->getModules($filter_modules_list, $tracking_source);
+                    break;
+            }
 
-			return $this->context->smarty->fetch($this->template_dir . '/toolbar.tpl');
-		}
-	}
-	
-	private function getAddonsConnectToolbar() {
-		$container = SymfonyContainer::getInstance();
+            $data = array(
+                'modules_list' => $modules,
+                'panel_id' => $panel_id,
+                'controller_name' => $controller,
+                'admin_module_ajax_url_psmbo' => $this->front_controller[0],
+                'from' => 'footer'
+            );
+            $this->context->smarty->assign($data);
+
+            if ($ajax === true) {
+                return $data;
+            }
+
+            return $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
+        }
+        return false;
+    }
+
+    public function hookDisplayAdminEndContent()
+    {
+        if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
+            $addonsConnect = $this->getAddonsConnectToolbar();
+
+            $this->context->smarty->assign(array(
+                'addons_connect' => $addonsConnect,
+            ));
+
+            return $this->context->smarty->fetch($this->template_dir . '/include/modal_addons_connect.tpl');
+        }
+
+        $controller = Tools::getValue('controller');
+        if ($controller == 'AdminThemes') {
+            $this->context->smarty->assign(array(
+                        'admin_module_ajax_url_psmbo' => $this->front_controller[0]
+            ));
+            return $this->context->smarty->fetch($this->template_dir . '/admin-end-content-theme.tpl');
+        }
+
+        $content = '';
+        $content .= $this->context->smarty->fetch($this->template_dir . '/modal.tpl');
+
+        if ($this->fetchModulesByController() !== false) {
+            $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
+        }
+
+        return $content;
+    }
+
+    public function hookDisplayDashboardToolbarTopMenu()
+    {
+        if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
+            $addonsConnect = $this->getAddonsConnectToolbar();
+
+            $this->context->smarty->assign(array(
+                'addons_connect' => $addonsConnect,
+            ));
+
+            return $this->context->smarty->fetch($this->template_dir . '/module-toolbar.tpl');
+        }
+
+        if (!$this->isSymfonyContext()) {
+            $this->context->smarty->assign(array(
+                'admin_module_ajax_url_psmbo'    => $this->context->link->getAdminLink('AdminPsMboModule'),
+                'controller' => Tools::getValue('controller')
+            ));
+
+            return $this->context->smarty->fetch($this->template_dir . '/toolbar.tpl');
+        }
+    }
+
+    private function getAddonsConnectToolbar()
+    {
+        $container = SymfonyContainer::getInstance();
         $addonsProvider = $container->get('prestashop.core.admin.data_provider.addons_interface');
-        $addonsConnect = array();
+        $addonsConnect = [];
 
-		$authenticated = $addonsProvider->isAddonsAuthenticated();
-		
+        $authenticated = $addonsProvider->isAddonsAuthenticated();
+
         if ($addonsProvider->isAddonsAuthenticated()) {
             $addonsEmail = $addonsProvider->getAddonsEmail();
-			return array(
-				'connected' => true,
-				'email' => $addonsEmail['username_addons'],
-				'logout_url' => $container->get('router')->generate('admin_addons_logout', [], UrlGeneratorInterface::ABSOLUTE_URL)
-			);
-        } else {
-			return array(
-				'connected' => false,
-				'login_url' => $container->get('router')->generate('admin_addons_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
-			);
+            return array(
+                'connected' => true,
+                'email' => $addonsEmail['username_addons'],
+                'logout_url' => $container->get('router')->generate('admin_addons_logout', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            );
+        }
+
+        return array(
+            'connected' => false,
+            'login_url' => $container->get('router')->generate('admin_addons_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
+        );
+    }
+
+    private function checkTabsPositions()
+    {
+        if (!Configuration::get(self::POSITION_CHECKED)) {
+            $tabs = [
+                'AdminPsMboModule' => 'AdminModulesCatalog',
+                'AdminPsMboTheme' => 'AdminThemesCatalog',
+            ];
+            $updated = false;
+            foreach ($tabs as $new => $old) {
+                $newTabId = Tab::getIdFromClassName($new);
+                if (!empty($newTabId)) {
+                    $oldTabId = Tab::getIdFromClassName($old);
+                    if ($oldTabId !== false) {
+                        $catalogTab = new Tab($oldTabId);
+                        $tab = new Tab($newTabId);
+                        $tab->position = $catalogTab->position;
+                        $tab->save();
+                        $updated = true;
+                    }
+                }
+            }
+            Configuration::updateValue(self::POSITION_CHECKED, $updated);
         }
     }
-	
-	private function installTab() {
-        $tab = new Tab();
-        $tab->active = 1;
-        $tab->class_name = 'AdminPsMboModule';
-        $tab->name = array();
-        foreach (Language::getLanguages(true) as $lang) {
-            $tab->name[$lang['id_lang']] = $this->displayName;
+    private function installTabs()
+    {
+        // @TODO, in future versions, put that in the correct hook
+        // handle tab position
+        $idTab = Tab::getIdFromClassName('AdminModulesCatalog');
+        if ($idTab !== false) {
+            $catalogTab = new Tab($idTab);
+            $catalogTab->active = false;
+            $catalogTab->save();
         }
-        unset($lang);
-        $tab->id_parent = -1;
-        $tab->module = $this->name;
-        $tab->add();
-		
-        $tab = new Tab();
-        $tab->active = 1;
-        $tab->class_name = 'AdminPsMboTheme';
-        $tab->name = array();
-        foreach (Language::getLanguages(true) as $lang) {
-            $tab->name[$lang['id_lang']] = $this->displayName;
+
+        $idTab = Tab::getIdFromClassName('AdminThemesCatalog');
+        if ($idTab !== false) {
+            $catalogTab = new Tab($idTab);
+            $catalogTab->active = false;
+            $catalogTab->save();
         }
-        unset($lang);
-        $tab->id_parent = -1;
-        $tab->module = $this->name;
-        $tab->add();
+
+        return true;
     }
 
     /**
@@ -266,24 +267,42 @@ class ps_mbo extends Module
      * @param none
      * @return bool
      */
-    public function uninstall() {
+    public function uninstall()
+    {
         // unregister hook
-        if (parent::uninstall()) {
-			
-			$idTab = Tab::getIdFromClassName('AdminModulesCatalog');
-		
-			if ($idTab !== false) {
-				$catalogTab = new Tab($idTab);
-				$catalogTab->active = true;
-				$catalogTab->save();
-			}
-			
-            return true;
-        } else {
+        if (!parent::uninstall()) {
             $this->_errors[] = $this->l('There was an error during the desinstallation.');
             return false;
         }
-        return parent::uninstall();
+
+        $idTab = Tab::getIdFromClassName('AdminModulesCatalog');
+        if ($idTab !== false) {
+            $catalogTab = new Tab($idTab);
+            $catalogTab->active = true;
+            $catalogTab->save();
+        }
+
+        $idTab = Tab::getIdFromClassName('AdminThemesCatalog');
+        if ($idTab !== false) {
+            $catalogTab = new Tab($idTab);
+            $catalogTab->active = true;
+            $catalogTab->save();
+        }
+
+        $idTab = Tab::getIdFromClassName('AdminPsMboTheme');
+        if ($idTab !== false) {
+            $catalogTab = new Tab($idTab);
+            $catalogTab->delete();
+        }
+
+        $idTab = Tab::getIdFromClassName('AdminPsMboModule');
+        if ($idTab !== false) {
+            $catalogTab = new Tab($idTab);
+            $catalogTab->delete();
+        }
+
+        Configuration::deleteByName(self::POSITION_CHECKED);
+        return true;
     }
 
     /**
@@ -292,41 +311,45 @@ class ps_mbo extends Module
      * @param none
      * @return none
      */
-    public function setMedia($aJsDef, $aJs, $aCss) {
+    public function setMedia($aJsDef, $aJs, $aCss)
+    {
         Media::addJsDef($aJsDef);
         $this->context->controller->addCSS($aCss);
         $this->context->controller->addJS($aJs);
     }
-	
-	public function getCarriersMboModules() {
-		$filter_modules_list = $this->getFilterList('AdminCarriers');
-		$tracking_source = 'back-office,AdminCarriers,new';
-		return $this->getModules($filter_modules_list, $tracking_source);
-	}
-	
-	public function getFilterList($className) {
-		$idTab = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT t.id_tab
-			FROM ' . _DB_PREFIX_ . 'tab t
-			WHERE t.class_name LIKE "' . pSQL($className) . '"');
 
-		$tab_modules_list = Tab::getTabModulesList($idTab);
-		$filter_modules_list = array();
-		
-		if (is_array($tab_modules_list['default_list']) && count($tab_modules_list['default_list'])) {
-			$filter_modules_list = $tab_modules_list['default_list'];
-		} elseif (is_array($tab_modules_list['slider_list']) && count($tab_modules_list['slider_list'])) {
-			$filter_modules_list = $tab_modules_list['slider_list'];
-		}
-		
-		return $filter_modules_list;
-	}
-	
-	public function getModules($filter_modules_list, $tracking_source) {
-		$all_modules = Module::getModulesOnDisk(true);
-		$modules_list = array();
-		
-		foreach ($all_modules as $module) {
+    public function getCarriersMboModules()
+    {
+        $filter_modules_list = $this->getFilterList('AdminCarriers');
+        $tracking_source = 'back-office,AdminCarriers,new';
+        return $this->getModules($filter_modules_list, $tracking_source);
+    }
+
+    public function getFilterList($className)
+    {
+        $idTab = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            SELECT t.id_tab
+            FROM ' . _DB_PREFIX_ . 'tab t
+            WHERE t.class_name LIKE "' . pSQL($className) . '"');
+
+        $tab_modules_list = Tab::getTabModulesList($idTab);
+        $filter_modules_list = [];
+
+        if (is_array($tab_modules_list['default_list']) && count($tab_modules_list['default_list'])) {
+            $filter_modules_list = $tab_modules_list['default_list'];
+        } elseif (is_array($tab_modules_list['slider_list']) && count($tab_modules_list['slider_list'])) {
+            $filter_modules_list = $tab_modules_list['slider_list'];
+        }
+
+        return $filter_modules_list;
+    }
+
+    public function getModules($filter_modules_list, $tracking_source)
+    {
+        $all_modules = Module::getModulesOnDisk(true);
+        $modules_list = [];
+
+        foreach ($all_modules as $module) {
             $perm = true;
             if ($module->id) {
                 $perm &= Module::getPermissionStatic($module->id, 'configure');
@@ -337,55 +360,57 @@ class ps_mbo extends Module
                     $perm &= false;
                 }
             }
-			
+
             if (in_array($module->name, $filter_modules_list) && $perm) {
                 $this->fillModuleData($module, 'array', null, 'back-office,AdminCarriers,new');
                 $modules_list[array_search($module->name, $filter_modules_list)] = $module;
             }
         }
+
         ksort($modules_list);
-		return $modules_list;
-	}
-	
-	protected function getPaymentMboModules() {
-		// fillModuleData back-office,AdminPayment,index
-		$filter_modules_list = $this->getFilterList('AdminPayment');
-		
-		$tracking_source = 'back-office,AdminPayment,index';
-		$modulesList = $this->getModules($filter_modules_list, $tracking_source);
-		
-		$active_list = array();
-		$unactive_list = array();
-		foreach ($modulesList as $key => $module) {
-			if (isset($module->description_full) && trim($module->description_full) != '') {
-				$module->show_quick_view = true;
-			}
+        return $modules_list;
+    }
 
-			// Remove all options but 'configure' and install
-			// All other operation should take place in new Module page
-			if (($module->installed && $module->active) || !$module->installed) {
-				// Unfortunately installed but disabled module will have $module->installed = false
-				if (strstr($module->optionsHtml[0], 'enable=1')) {
-					$module->optionsHtml = array();
-				} else {
-					$module->optionsHtml = array($module->optionsHtml[0]);
-				}
-			} else {
-				$module->optionsHtml = array();
-			}
+    protected function getPaymentMboModules()
+    {
+        // fillModuleData back-office,AdminPayment,index
+        $filter_modules_list = $this->getFilterList('AdminPayment');
 
-			if ($module->active) {
-				$active_list[] = $module;
-			} else {
-				$unactive_list[] = $module;
-			}
-		}
-		
-		return $unactive_list;
-		
-	}
-	
-	public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false) {
+        $tracking_source = 'back-office,AdminPayment,index';
+        $modulesList = $this->getModules($filter_modules_list, $tracking_source);
+
+        $active_list = [];
+        $unactive_list = [];
+        foreach ($modulesList as $key => $module) {
+            if (isset($module->description_full) && trim($module->description_full) != '') {
+                $module->show_quick_view = true;
+            }
+
+            // Remove all options but 'configure' and install
+            // All other operation should take place in new Module page
+            if (($module->installed && $module->active) || !$module->installed) {
+                // Unfortunately installed but disabled module will have $module->installed = false
+                if (strstr($module->optionsHtml[0], 'enable=1')) {
+                    $module->optionsHtml = [];
+                } else {
+                    $module->optionsHtml = array($module->optionsHtml[0]);
+                }
+            } else {
+                $module->optionsHtml = [];
+            }
+
+            if ($module->active) {
+                $active_list[] = $module;
+            } else {
+                $unactive_list[] = $module;
+            }
+        }
+
+        return $unactive_list;
+    }
+
+    public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false)
+    {
         /** @var Module $obj */
         $obj = null;
         if ($module->onclick_option) {
@@ -404,8 +429,8 @@ class ps_mbo extends Module
         }
 
         $link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
-		
-		$module->options['install_url'] = $this->context->link->getAdminLink('AdminModules') . '&install=' . $module->name . '&module_name=' . $module->name . '&tab_module=' . $module->tab;
+
+        $module->options['install_url'] = $this->context->link->getAdminLink('AdminModules') . '&install=' . $module->name . '&module_name=' . $module->name . '&tab_module=' . $module->tab;
         $module->options['update_url'] = $this->context->link->getAdminLink('AdminModules') . '&checkAndUpdate=1&module_name=' . $module->name;
         $module->options['uninstall_url'] = $this->context->link->getAdminLink('AdminModules') . '&module_name=' . $module->name . '&uninstall=' . $module->name . '&tab_module=' . $module->tab;
 
@@ -428,8 +453,8 @@ class ps_mbo extends Module
             unset($obj);
         }
     }
-	
-	/**
+
+    /**
      * Display modules list
      *
      * @param Module $module
@@ -438,7 +463,8 @@ class ps_mbo extends Module
      * @param string|bool $install_source_tracking
      * @return string|array
      */
-    public function displayModuleOptions($module, $output_type = 'link', $back = null, $install_source_tracking = false) {
+    public function displayModuleOptions($module, $output_type = 'link', $back = null, $install_source_tracking = false)
+    {
         if (!isset($module->enable_device)) {
             $module->enable_device = Context::DEVICE_COMPUTER | Context::DEVICE_TABLET | Context::DEVICE_MOBILE;
         }
@@ -467,7 +493,7 @@ class ps_mbo extends Module
         }
 
         $link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
-        $modules_options = array();
+        $modules_options = [];
 
         $configure_module = array(
             'href' => $link_admin_modules.'&configure='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.urlencode($module->name),
@@ -660,7 +686,7 @@ class ps_mbo extends Module
                     $return .= ' onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog').'"></i>&nbsp;'.$option['text'].'</a></li>';
                 } elseif ($output_type == 'array') {
                     if (!is_array($return)) {
-                        $return = array();
+                        $return = [];
                     }
 
                     $html = '<a class="';
@@ -705,5 +731,4 @@ class ps_mbo extends Module
 
         return $return;
     }
-	
 }

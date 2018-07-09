@@ -28,15 +28,16 @@ require_once(dirname(__FILE__) . '../../../classes/Addons.php');
 
 class AdminPsMboThemeController extends ModuleAdminController
 {
-	
-	public function __construct() {
-		$this->controller_quick_name = 'theme';
-		$this->bootstrap = true;
-		parent::__construct();
+
+    public function __construct()
+    {
+        $this->controller_quick_name = 'theme';
+        $this->bootstrap = true;
+        parent::__construct();
     }
 
-    public function initContent() {
-		
+    public function initContent()
+    {
         $parent_domain = Tools::getHttpHost(true).substr($_SERVER['REQUEST_URI'], 0, -1 * strlen(basename($_SERVER['REQUEST_URI'])));
         $iso_lang = $this->context->language->iso_code;
         $iso_currency = $this->context->currency->iso_code;
@@ -54,9 +55,6 @@ class AdminPsMboThemeController extends ModuleAdminController
             'parent_domain' => $parent_domain,
         ));
 
-//        parent::initContent();
-		$this->setTemplate($this->module->template_dir . 'theme.tpl');
+        $this->setTemplate($this->module->template_dir . 'theme.tpl');
     }
-	
-	
 }
