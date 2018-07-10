@@ -102,57 +102,55 @@ class ps_mbo extends Module
     public function fetchModulesByController($ajax = false)
     {
         $controller = ($ajax === true) ? Tools::getValue('controllerName') : Tools::getValue('controller');
-        $controllerWhiteList = array('AdminCarriers', 'AdminPayment');
-        
-        $doTheCall = false;
-        if ($ajax === true || in_array($controller, $controllerWhiteList)) {
-            $doTheCall = true;
+        $controllerWhiteList = [
+            'AdminCarriers',
+            'AdminPayment'
+        ];
+
+        if (empty($controller) || ($ajax === false && !in_array($controller, $controllerWhiteList))) {
+            return false;
         }
-        
-        if (!empty($controller) && $doTheCall === true) {
-            $panel_id = '';
-            $modules = [];
-            switch ($controller) {
-                case 'AdminCarriers':
-                    $modules = $this->getCarriersMboModules();
-                    $panel_id = 'recommended-carriers-panel';
-                    $this->context->smarty->assign(
-                        'panel_title',
-                        $this->trans('Use one of our recommended carrier modules', [], 'Admin.Shipping.Feature')
-                    );
+        $panel_id = '';
+        $modules = [];
+        switch ($controller) {
+            case 'AdminCarriers':
+                $modules = $this->getCarriersMboModules();
+                $panel_id = 'recommended-carriers-panel';
+                $this->context->smarty->assign(
+                    'panel_title',
+                    $this->trans('Use one of our recommended carrier modules', [], 'Admin.Shipping.Feature')
+                );
 
-                    break;
-                case 'AdminPayment':
-                    $modules = $this->getPaymentMboModules();
-                    break;
-                default:
-                    $filter_modules_list = $this->getFilterList($controller);
-                    $tracking_source = 'back-office, ' . $controller;
-                    $modules = $this->getModules($filter_modules_list, $tracking_source);
-                    break;
-            }
-
-            if (empty($modules)) {
-                return false;
-            }
-
-            $data = array(
-                'panel_id' => $panel_id,
-                'controller_name' => $controller,
-                'admin_module_ajax_url_psmbo' => $this->front_controller[0],
-                'from' => 'footer',
-                'modules_list' => $modules,
-            );
-
-            $this->context->smarty->assign($data);
-
-            if ($ajax === true) {
-                return $data;
-            }
-
-            return $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
+                break;
+            case 'AdminPayment':
+                $modules = $this->getPaymentMboModules();
+                break;
+            default:
+                $filter_modules_list = $this->getFilterList($controller);
+                $tracking_source = 'back-office, ' . $controller;
+                $modules = $this->getModules($filter_modules_list, $tracking_source);
+                break;
         }
-        return false;
+
+        if (empty($modules)) {
+            return false;
+        }
+
+        $data = array(
+            'panel_id' => $panel_id,
+            'controller_name' => $controller,
+            'admin_module_ajax_url_psmbo' => $this->front_controller[0],
+            'from' => 'footer',
+            'modules_list' => $modules,
+        );
+
+        $this->context->smarty->assign($data);
+
+        if ($ajax === true) {
+            return $data;
+        }
+
+        return $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
     }
 
     public function hookDisplayAdminEndContent()
