@@ -56,6 +56,7 @@ class ps_mbo extends Module
         $this->name = 'ps_mbo';
         $this->version = '1.0.7';
         $this->author = 'PrestaShop';
+        $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
         $this->bootstrap = true;
         parent::__construct();
         $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
@@ -122,21 +123,27 @@ class ps_mbo extends Module
                     $modules = $this->getModules($filter_modules_list, $tracking_source);
                     break;
             }
-
+			
             $data = array(
-                'modules_list' => $modules,
                 'panel_id' => $panel_id,
                 'controller_name' => $controller,
                 'admin_module_ajax_url_psmbo' => $this->front_controller[0],
                 'from' => 'footer'
             );
+			
+			if (!empty($modules)) {
+				$data['modules_list'] = $modules;
+			}
+			
             $this->context->smarty->assign($data);
 
             if ($ajax === true) {
                 return $data;
             }
-
-            return $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
+			
+			if (!empty($modules)) {
+                return $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
+			}
         }
         return false;
     }
