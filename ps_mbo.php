@@ -102,7 +102,14 @@ class ps_mbo extends Module
     public function fetchModulesByController($ajax = false)
     {
         $controller = ($ajax === true) ? Tools::getValue('controllerName') : Tools::getValue('controller');
-        if (!empty($controller)) {
+        $controllerWhiteList = array('AdminCarriers', 'AdminPayment');
+        
+        $doTheCall = false;
+        if ($ajax === true || in_array($controller, $controllerWhiteList)) {
+            $doTheCall = true;
+        }
+        
+        if (!empty($controller) && $doTheCall === true) {
             $panel_id = '';
             $modules = [];
             switch ($controller) {
