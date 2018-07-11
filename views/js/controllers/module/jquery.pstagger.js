@@ -163,8 +163,6 @@
         config.originalInput.after(formHtml);
         // Save tagify input in our object
         pstaggerInput = $('.' + immutableConfig.tagInputClass);
-        // Add placeholder on tagify's input
-        pstaggerInput.attr('placeholder',  config.inputPlaceholder);
         return true;
     };
 

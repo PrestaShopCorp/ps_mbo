@@ -38,13 +38,17 @@ class ps_mbo extends Module
 
     public $tabs = array(
         array(
-            'name' => 'Module catalog', // One name for all langs
+            'name' => array(
+                'en' => 'Selection'
+            ),
             'class_name' => 'AdminPsMboModule',
             'visible' => true,
             'parent_class_name' => 'AdminModulesSf',
         ),
         array(
-            'name' => 'Theme catalog', // One name for all langs
+            'name' => array(
+                'en' => 'Theme catalog'
+            ),
             'class_name' => 'AdminPsMboTheme',
             'visible' => true,
             'parent_class_name' => 'AdminParentThemes',
@@ -95,7 +99,7 @@ class ps_mbo extends Module
             $this->_errors[] = $this->l('There was an error during the installation.');
             return false;
         }
-
+        
         return true;
     }
 
@@ -242,6 +246,8 @@ class ps_mbo extends Module
                     $oldTabId = Tab::getIdFromClassName($old);
                     if ($oldTabId !== false) {
                         $catalogTab = new Tab($oldTabId);
+                        $this->handleTabLang($catalogTab, $new);
+                        
                         $tab = new Tab($newTabId);
                         $tab->position = $catalogTab->position;
                         $tab->save();
@@ -252,6 +258,22 @@ class ps_mbo extends Module
             Configuration::updateValue(self::POSITION_CHECKED, $updated);
         }
     }
+    
+    private function handleTabLang($catalogTab, $newTab) {
+        foreach ($catalogTab->name as $id_lang => $value) {
+            if (!Language::getIsoById($id_lang)) {
+                return false;
+            }
+
+            foreach ($this->tabs as &$pTab) {
+                if ($pTab['class_name'] == $newTab) {
+                    $pTab['name'][Language::getIsoById($id_lang)] = $value;
+                }
+            }
+
+        }
+    }
+    
     private function installTabs()
     {
         // @TODO, in future versions, put that in the correct hook
