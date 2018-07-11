@@ -205,15 +205,10 @@ class ps_mbo extends Module
             return $this->context->smarty->fetch($this->template_dir . '/module-toolbar.tpl');
         }
 
-        $data = array();
-        $isSymfonyContext = true;
-        if (!$this->isSymfonyContext()) {
-            $isSymfonyContext = false;
-        }
-        
+        $data = array();     
         $data['controller'] = Tools::getValue('controller');
         $data['admin_module_ajax_url_psmbo'] = $this->context->link->getAdminLink('AdminPsMboModule');
-        $data['isSymfonyContext'] = $isSymfonyContext;
+        $data['isSymfonyContext'] = $this->isSymfonyContext();
         $this->context->smarty->assign($data);
         
         return $this->context->smarty->fetch($this->template_dir . '/toolbar.tpl');
