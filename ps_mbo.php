@@ -94,7 +94,6 @@ class ps_mbo extends Module
             || !$this->registerHook('displayAdminNavBarBeforeEnd')
             || !$this->registerHook('displayDashboardToolbarIcons')
             || !$this->registerHook('displayAdminEndContent')
-            || !$this->installTabs()
         ) {
             $this->_errors[] = $this->l('There was an error during the installation.');
             return false;
@@ -106,17 +105,17 @@ class ps_mbo extends Module
     public function fetchModulesByController($ajax = false)
     {
         $controller = Tools::getValue('controllerName');
-        
+
         // if controller is false, we try to get the other method
         if ($controller === false) {
             $controller = Tools::getValue('controller');
         }
-        
+
         $controllerWhiteList = [
             'AdminCarriers',
             'AdminPayment'
         ];
-        
+
         if (empty($controller) || ($ajax === false && !in_array($controller, $controllerWhiteList))) {
             return false;
         }
@@ -205,12 +204,12 @@ class ps_mbo extends Module
             return $this->context->smarty->fetch($this->template_dir . '/module-toolbar.tpl');
         }
 
-        $data = array();     
+        $data = array();
         $data['controller'] = Tools::getValue('controller');
         $data['admin_module_ajax_url_psmbo'] = $this->context->link->getAdminLink('AdminPsMboModule');
         $data['isSymfonyContext'] = $this->isSymfonyContext();
         $this->context->smarty->assign($data);
-        
+
         return $this->context->smarty->fetch($this->template_dir . '/toolbar.tpl');
     }
 
@@ -251,8 +250,10 @@ class ps_mbo extends Module
                     $oldTabId = Tab::getIdFromClassName($old);
                     if ($oldTabId !== false) {
                         $catalogTab = new Tab($oldTabId);
+                        $catalogTab->active = false;
+                        $catalogTab->save();
                         $this->handleTabLang($catalogTab, $new);
-                        
+
                         $tab = new Tab($newTabId);
                         $tab->position = $catalogTab->position;
                         $tab->save();
@@ -263,40 +264,21 @@ class ps_mbo extends Module
             Configuration::updateValue(self::POSITION_CHECKED, $updated);
         }
     }
-    
-    private function handleTabLang($catalogTab, $newTab) {
+
+    private function handleTabLang($catalogTab, $newTab)
+    {
         foreach ($catalogTab->name as $id_lang => $value) {
-            if (!Language::getIsoById($id_lang)) {
+            $iso = Language::getIsoById($id_lang);
+            if (!$iso) {
                 return false;
             }
 
             foreach ($this->tabs as &$pTab) {
                 if ($pTab['class_name'] == $newTab) {
-                    $pTab['name'][Language::getIsoById($id_lang)] = $value;
+                    $pTab['name'][$iso] = $value;
                 }
             }
         }
-    }
-    
-    private function installTabs()
-    {
-        // @TODO, in future versions, put that in the correct hook
-        // handle tab position
-        $idTab = Tab::getIdFromClassName('AdminModulesCatalog');
-        if ($idTab !== false) {
-            $catalogTab = new Tab($idTab);
-            $catalogTab->active = false;
-            $catalogTab->save();
-        }
-
-        $idTab = Tab::getIdFromClassName('AdminThemesCatalog');
-        if ($idTab !== false) {
-            $catalogTab = new Tab($idTab);
-            $catalogTab->active = false;
-            $catalogTab->save();
-        }
-
-        return true;
     }
 
     /**
