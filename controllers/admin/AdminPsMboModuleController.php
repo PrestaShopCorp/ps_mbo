@@ -136,7 +136,10 @@ class AdminPsMboModuleController extends ModuleAdminController
             ->setStatus(~AddonListFilterStatus::INSTALLED);
 
         $container = SymfonyContainer::getInstance();
+        $container->set('translator', Context::getContext()->getTranslator());
+        
         $modulesProvider = $container->get('prestashop.core.admin.data_provider.module_interface');
+      
         $moduleRepository = $container->get('prestashop.core.admin.module.repository');
 
         $filteredList = $moduleRepository->getFilteredList($filters);

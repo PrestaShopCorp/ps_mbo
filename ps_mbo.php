@@ -105,12 +105,18 @@ class ps_mbo extends Module
 
     public function fetchModulesByController($ajax = false)
     {
-        $controller = ($ajax === true) ? Tools::getValue('controllerName') : Tools::getValue('controller');
+        $controller = Tools::getValue('controllerName');
+        
+        // if controller is false, we try to get the other method
+        if ($controller === false) {
+            $controller = Tools::getValue('controller');
+        }
+        
         $controllerWhiteList = [
             'AdminCarriers',
             'AdminPayment'
         ];
-
+        
         if (empty($controller) || ($ajax === false && !in_array($controller, $controllerWhiteList))) {
             return false;
         }
@@ -199,14 +205,18 @@ class ps_mbo extends Module
             return $this->context->smarty->fetch($this->template_dir . '/module-toolbar.tpl');
         }
 
+        $data = array();
+        $isSymfonyContext = true;
         if (!$this->isSymfonyContext()) {
-            $this->context->smarty->assign(array(
-                'admin_module_ajax_url_psmbo'    => $this->context->link->getAdminLink('AdminPsMboModule'),
-                'controller' => Tools::getValue('controller')
-            ));
-
-            return $this->context->smarty->fetch($this->template_dir . '/toolbar.tpl');
+            $isSymfonyContext = false;
         }
+        
+        $data['controller'] = Tools::getValue('controller');
+        $data['admin_module_ajax_url_psmbo'] = $this->context->link->getAdminLink('AdminPsMboModule');
+        $data['isSymfonyContext'] = $isSymfonyContext;
+        $this->context->smarty->assign($data);
+        
+        return $this->context->smarty->fetch($this->template_dir . '/toolbar.tpl');
     }
 
     private function getAddonsConnectToolbar()

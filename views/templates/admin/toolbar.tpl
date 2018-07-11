@@ -22,62 +22,74 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<li style="display:none;">
-	<a id="page-header-desc-carrier-new_carrier" class="toolbar_btn  pointer" href="" title="{l s='Recommended Modules and Services'}">
-		<i class="process-icon-modules-list"></i>
-		<div>{l s='Recommended Modules and Services'}</div>
-	</a>
-</li>
+ 
+{if !$isSymfonyContext}
+    <li style="display:none;">
+        <a id="page-header-desc-carrier-new_carrier" class="toolbar_btn  pointer" href="" title="{l s='Recommended Modules and Services'}">
+            <i class="process-icon-modules-list"></i>
+            <div>{l s='Recommended Modules and Services'}</div>
+        </a>
+    </li>
+{/if}
 
 <script>
-	$(document).ready(function() {
-		$('.fancybox-quick-view').fancybox({
-			type: 'ajax',
-			autoDimensions: false,
-			autoSize: false,
-			width: 600,
-			height: 'auto',
-			helpers: {
-				overlay: {
-					locked: false
-				}
-			}
-		});
-	});
+    
+    var isSymfonyContext = {if $isSymfonyContext}true{else}false{/if};
+    var admin_module_ajax_url_psmbo = '{$admin_module_ajax_url_psmbo}';
+    var controller = '{$controller}';
+    
+    if (isSymfonyContext === false) {
+        $(document).ready(function() {
+            $('.fancybox-quick-view').fancybox({
+                type: 'ajax',
+                autoDimensions: false,
+                autoSize: false,
+                width: 600,
+                height: 'auto',
+                helpers: {
+                    overlay: {
+                        locked: false
+                    }
+                }
+            });
+        });
+    }
 	
 	$(document).on('click', '#page-header-desc-configuration-modules-list', function(event) {
 		event.preventDefault();
-		$('#modules_list_container').modal('show');
-		openModulesList();
+		openModalOrRedirect(isSymfonyContext);
 	});
 	
 	$('.process-icon-modules-list').parent('a').unbind().bind('click', function (event) {
 		event.preventDefault();
-		$('#modules_list_container').modal('show');
-		openModulesList();
+		openModalOrRedirect(isSymfonyContext);
 	});
-</script>
-
-<script>
+    
+    function openModalOrRedirect(isSymfonyContext) {
+        if (isSymfonyContext === false) {
+            $('#modules_list_container').modal('show');
+            openModulesList();
+        } else {
+            console.log(admin_module_ajax_url_psmbo);
+            window.location.href = admin_module_ajax_url_psmbo;
+        }
+    }
 	
-	var admin_module_ajax_url_psmbo = '{$admin_module_ajax_url_psmbo}';
-	var controller = '{$controller}';
-	
-function openModulesList() {
-	$.ajax({
-		type: 'POST',
-		url: admin_module_ajax_url_psmbo,
-		data: {
-			ajax : true,
-			action : 'GetTabModulesList',
-			controllerName: controller
-		},
-		success : function(data) {
-			$('#modules_list_container_tab_modal').html(data).slideDown();
-			$('#modules_list_loader').hide();
-		},
-	});
-}
+    function openModulesList() {
+        $.ajax({
+            type: 'POST',
+            url: admin_module_ajax_url_psmbo,
+            data: {
+                ajax : true,
+                action : 'GetTabModulesList',
+                controllerName: controller
+            },
+            success : function(data) {
+                $('#modules_list_container_tab_modal').html(data).slideDown();
+                $('#modules_list_loader').hide();
+            },
+        });
+    }
 	
 	
 </script>
