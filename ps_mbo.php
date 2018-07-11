@@ -99,7 +99,7 @@ class ps_mbo extends Module
             $this->_errors[] = $this->l('There was an error during the installation.');
             return false;
         }
-        
+
         return true;
     }
 
@@ -280,7 +280,6 @@ class ps_mbo extends Module
                     $pTab['name'][Language::getIsoById($id_lang)] = $value;
                 }
             }
-
         }
     }
     
