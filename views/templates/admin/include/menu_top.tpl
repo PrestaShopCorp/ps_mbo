@@ -49,7 +49,7 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="module-sorting-search-wording">
-                <span id="selected_modules" class="module-search-result-wording"><span v-html="visibleModules()"></span> {l s='modules and services selected for you' d='Admin.Modules.Feature'}</span>
+                <span id="selected_modules" class="module-search-result-wording"><span v-html="visibleModules()"></span> {l s='%nbModules% modules and services selected for you' d='Admin.Modules.Feature' sprintf=['%nbModules%' => '']}</span>
                 <span class="help-box" data-toggle="popover"
                     data-title="{l s='Selection' d='Admin.Modules.Feature'}"
                     data-content="{l s='Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules.' d='Admin.Modules.Help'}">
