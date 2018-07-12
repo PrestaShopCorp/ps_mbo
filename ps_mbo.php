@@ -36,22 +36,24 @@ class ps_mbo extends Module
 {
     const POSITION_CHECKED = 'MBO_POSITION_CHECKED';
 
-    public $tabs = array(
+    public $mytabs = array(
         array(
             'name' => array(
                 'en' => 'Selection'
             ),
-            'class_name' => 'AdminPsMboModule',
             'visible' => true,
+            'class_name' => 'AdminPsMboModule',
             'parent_class_name' => 'AdminModulesSf',
+            'core_reference' => 'AdminModulesCatalog',
         ),
         array(
             'name' => array(
                 'en' => 'Theme catalog'
             ),
-            'class_name' => 'AdminPsMboTheme',
             'visible' => true,
+            'class_name' => 'AdminPsMboTheme',
             'parent_class_name' => 'AdminParentThemes',
+            'core_reference' => 'AdminThemesCatalog',
         )
     );
 
@@ -76,8 +78,6 @@ class ps_mbo extends Module
 
         $this->css_path = $this->_path . 'views/css/';
         $this->js_path = $this->_path . 'views/js/';
-
-        $this->checkTabsPositions();
     }
 
     /**
@@ -94,9 +94,45 @@ class ps_mbo extends Module
             || !$this->registerHook('displayAdminNavBarBeforeEnd')
             || !$this->registerHook('displayDashboardToolbarIcons')
             || !$this->registerHook('displayAdminEndContent')
+            || !$this->installTabs()
         ) {
             $this->_errors[] = $this->l('There was an error during the installation.');
             return false;
+        }
+
+        return true;
+    }
+
+    protected function installTabs()
+    {
+        foreach ($this->mytabs as $data) {
+            $names = array();
+            foreach (Language::getLanguages(false) as $lang) {
+                $names[(int) $lang['id_lang']] = reset($data['name']);
+            }
+            $position = 0;
+
+            $oldTabId = Tab::getIdFromClassName($data['core_reference']);
+            if ($oldTabId !== false) {
+                $catalogTab = new Tab($oldTabId);
+                $names = $catalogTab->name;
+                $position = $catalogTab->position;
+                $catalogTab->active = false;
+                $catalogTab->save();
+            }
+
+            $tab = new Tab();
+            $tab->module = $this->name;
+            $tab->class_name = $data['class_name'];
+            $tab->position = (int) $position;
+            $tab->visible = true;
+            $tab->id_parent = Tab::getIdFromClassName($data['parent_class_name']);
+            $tab->name = $names;
+            $tab->save();
+
+            // Second save only for position
+            $tab->position = (int) $position;
+            $tab->save();
         }
 
         return true;
@@ -234,51 +270,6 @@ class ps_mbo extends Module
             'connected' => false,
             'login_url' => $container->get('router')->generate('admin_addons_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
         );
-    }
-
-    private function checkTabsPositions()
-    {
-        if (!Configuration::get(self::POSITION_CHECKED)) {
-            $tabs = [
-                'AdminPsMboModule' => 'AdminModulesCatalog',
-                'AdminPsMboTheme' => 'AdminThemesCatalog',
-            ];
-            $updated = false;
-            foreach ($tabs as $new => $old) {
-                $newTabId = Tab::getIdFromClassName($new);
-                if (!empty($newTabId)) {
-                    $oldTabId = Tab::getIdFromClassName($old);
-                    if ($oldTabId !== false) {
-                        $catalogTab = new Tab($oldTabId);
-                        $catalogTab->active = false;
-                        $catalogTab->save();
-                        $this->handleTabLang($catalogTab, $new);
-
-                        $tab = new Tab($newTabId);
-                        $tab->position = $catalogTab->position;
-                        $tab->save();
-                        $updated = true;
-                    }
-                }
-            }
-            Configuration::updateValue(self::POSITION_CHECKED, $updated);
-        }
-    }
-
-    private function handleTabLang($catalogTab, $newTab)
-    {
-        foreach ($catalogTab->name as $id_lang => $value) {
-            $iso = Language::getIsoById($id_lang);
-            if (!$iso) {
-                return false;
-            }
-
-            foreach ($this->tabs as &$pTab) {
-                if ($pTab['class_name'] == $newTab) {
-                    $pTab['name'][$iso] = $value;
-                }
-            }
-        }
     }
 
     /**
