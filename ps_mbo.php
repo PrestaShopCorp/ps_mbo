@@ -155,6 +155,7 @@ class ps_mbo extends Module
         if (empty($controller) || ($ajax === false && !in_array($controller, $controllerWhiteList))) {
             return false;
         }
+
         $panel_id = '';
         $modules = [];
         switch ($controller) {
@@ -213,7 +214,7 @@ class ps_mbo extends Module
         $controller = Tools::getValue('controller');
         if ($controller == 'AdminThemes') {
             $this->context->smarty->assign(array(
-                        'admin_module_ajax_url_psmbo' => $this->front_controller[0]
+                'admin_module_ajax_url_psmbo' => $this->front_controller[0]
             ));
             return $this->context->smarty->fetch($this->template_dir . '/admin-end-content-theme.tpl');
         }
@@ -390,8 +391,7 @@ class ps_mbo extends Module
         $tracking_source = 'back-office,AdminPayment,index';
         $modulesList = $this->getModules($filter_modules_list, $tracking_source);
 
-        $active_list = [];
-        $unactive_list = [];
+        $modules = [];
         foreach ($modulesList as $key => $module) {
             if (isset($module->description_full) && trim($module->description_full) != '') {
                 $module->show_quick_view = true;
@@ -410,14 +410,12 @@ class ps_mbo extends Module
                 $module->optionsHtml = [];
             }
 
-            if ($module->active) {
-                $active_list[] = $module;
-            } else {
-                $unactive_list[] = $module;
+            if (!$module->active) {
+                $modules[] = $module;
             }
         }
 
-        return $unactive_list;
+        return $modules;
     }
 
     public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false)
