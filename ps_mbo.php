@@ -34,8 +34,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ps_mbo extends Module
 {
-    const POSITION_CHECKED = 'MBO_POSITION_CHECKED';
-
     public $mytabs = array(
         array(
             'name' => array(
@@ -313,7 +311,6 @@ class ps_mbo extends Module
             $catalogTab->delete();
         }
 
-        Configuration::deleteByName(self::POSITION_CHECKED);
         return true;
     }
 
