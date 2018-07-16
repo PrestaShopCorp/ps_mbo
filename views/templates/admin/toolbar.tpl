@@ -39,7 +39,11 @@
     var controller = '{$controller}';
     
     if (isSymfonyContext === false) {
+        
         $(document).ready(function() {
+            
+            $('.process-icon-modules-list').parent('a').prop('href', admin_module_ajax_url_psmbo);
+            
             $('.fancybox-quick-view').fancybox({
                 type: 'ajax',
                 autoDimensions: false,
@@ -70,7 +74,6 @@
             $('#modules_list_container').modal('show');
             openModulesList();
         } else {
-            console.log(admin_module_ajax_url_psmbo);
             window.location.href = admin_module_ajax_url_psmbo;
         }
     }
