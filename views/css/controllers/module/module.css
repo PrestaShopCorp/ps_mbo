@@ -302,3 +302,9 @@ h4.modal-title {
 
 #help-container .page-wrap, #main-nav { margin-top: 30px!important; }
 .pstaggerTagsWrapper { padding: 0.3rem 0.4rem!important; }
+
+#header_infos .dropdown-toggle:not(.dropdown-toggle-split):after { display: none; }
+#header_infos #quick_select {
+    font-size: .8125rem;
+    font-weight: 400;
+}
