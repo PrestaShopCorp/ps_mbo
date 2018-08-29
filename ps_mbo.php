@@ -135,6 +135,42 @@ class ps_mbo extends Module
 
         return true;
     }
+    
+    public function fetchModules($controller) {
+        $controllerWhiteList = array('AdminCarriers', 'AdminPayment');
+        if (!in_array($controller, $controllerWhiteList)) {
+            return false;
+        }
+        
+        $panel_id = '';
+        $modules = array();
+        $data = array();
+        
+        switch ($controller) {
+            case 'AdminCarriers':
+                $modules = $this->getCarriersMboModules();
+                $data['panel_id'] = 'recommended-carriers-panel';
+                $data['panel_title'] = $this->trans('Use one of our recommended carrier modules', [], 'Admin.Shipping.Feature');
+                break;
+            case 'AdminPayment':
+                $modules = $this->getPaymentMboModules();
+                break;
+            default: // should never happen
+                exit;
+        }
+
+        if (empty($modules)) {
+            return false;
+        }
+
+        $data['controller_name'] = $controller;
+        $data['admin_module_ajax_url_psmbo'] = $this->front_controller[0];
+        $data['from'] = 'footer';
+        $data['modules_list'] = $modules;
+
+        $this->context->smarty->assign($data);
+        return $this->context->smarty->fetch($this->template_dir . '/include/admin-end-content-footer.tpl');
+    }
 
     public function fetchModulesByController($ajax = false)
     {
@@ -194,11 +230,11 @@ class ps_mbo extends Module
             return $data;
         }
 
-        return $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
+        return $this->context->smarty->fetch($this->template_dir . '/include/admin-end-content-footer.tpl');
     }
-
-    public function hookDisplayAdminEndContent()
-    {
+    
+    protected function _handleAddonsConnectWithMbo() {
+        $return = false;
         if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
             $addonsConnect = $this->getAddonsConnectToolbar();
 
@@ -206,21 +242,48 @@ class ps_mbo extends Module
                 'addons_connect' => $addonsConnect,
             ));
 
-            return $this->context->smarty->fetch($this->template_dir . '/include/modal_addons_connect.tpl');
+            $return = $this->context->smarty->fetch($this->template_dir . '/include/modal_addons_connect.tpl');
         }
-
+        
+        return $return;
+    }
+    
+    protected function _handleTheme() {
+        $return = false;
+        
         $controller = Tools::getValue('controller');
         if ($controller == 'AdminThemes') {
             $this->context->smarty->assign(array(
                 'admin_module_ajax_url_psmbo' => $this->front_controller[0]
             ));
-            return $this->context->smarty->fetch($this->template_dir . '/admin-end-content-theme.tpl');
+            $return = $this->context->smarty->fetch($this->template_dir . '/admin-end-content-theme.tpl');
         }
+        
+        return $return;
+    }
 
+    public function hookDisplayAdminEndContent()
+    {
+        $connectWithMbo = $this->_handleAddonsConnectWithMbo();
+        if ($connectWithMbo !== false) {
+            return $connectWithMbo;
+        }
+        
+        $handleTheme = $this->_handleTheme();
+        if ($handleTheme !== false) {
+            return $handleTheme;
+        }
+        
         $content = '';
         $content .= $this->context->smarty->fetch($this->template_dir . '/modal.tpl');
-
-        if ($this->fetchModulesByController() !== false) {
+        
+        $controller_page = (Tools::getIsset('controller')) ? Tools::getValue('controller') : '';
+        $controllerWhiteList = array('AdminCarriers', 'AdminPayment');            
+        if (in_array($controller_page, $controllerWhiteList)) {
+            $this->context->smarty->assign(array(
+                'admin_module_ajax_url_psmbo' => $this->front_controller[0],
+                'controller_page' => $controller_page
+            ));
             $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
         }
 

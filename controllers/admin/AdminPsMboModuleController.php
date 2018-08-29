@@ -245,10 +245,15 @@ class AdminPsMboModuleController extends ModuleAdminController
                 'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
                 'from' => 'tab'
             ));
-            $this->smartyOutputContent($this->module->template_dir . '/admin-end-content.tpl');
+            $this->smartyOutputContent($this->module->template_dir . '/include/admin-end-content-footer.tpl');
         }
 
         exit;
+    }
+    
+    public function ajaxProcessFetchModules() {
+        $result = $this->module->fetchModules(Tools::getValue('controller_page'));
+        die($result);
     }
 
     public function getModulesByInstallation($tab_modules_list = null, $install_source_tracking = false)
