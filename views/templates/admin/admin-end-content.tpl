@@ -48,8 +48,8 @@
                 $('#admin-end-content-footer').html(data);
             }
         });
-        
-        
+
+
 		$('.controller-quick-view').each(function() {
             $(this).fancybox({
                 type: 'ajax',

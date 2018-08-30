@@ -142,7 +142,6 @@ class ps_mbo extends Module
             return false;
         }
         
-        $panel_id = '';
         $modules = array();
         $data = array();
         
@@ -155,8 +154,6 @@ class ps_mbo extends Module
             case 'AdminPayment':
                 $modules = $this->getPaymentMboModules();
                 break;
-            default: // should never happen
-                exit;
         }
 
         if (empty($modules)) {
@@ -234,7 +231,10 @@ class ps_mbo extends Module
     }
     
     protected function _handleAddonsConnectWithMbo() {
-        $return = false;
+        if (Tools::getIsset('controller') && Tools::getValue('controller') != 'AdminPsMboModule') {
+            return false;
+        }
+        
         if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
             $addonsConnect = $this->getAddonsConnectToolbar();
 
@@ -242,10 +242,10 @@ class ps_mbo extends Module
                 'addons_connect' => $addonsConnect,
             ));
 
-            $return = $this->context->smarty->fetch($this->template_dir . '/include/modal_addons_connect.tpl');
+            return $this->context->smarty->fetch($this->template_dir . '/include/modal_addons_connect.tpl');
         }
         
-        return $return;
+        return false;
     }
     
     protected function _handleTheme() {
