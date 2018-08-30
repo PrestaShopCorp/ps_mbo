@@ -151,6 +151,11 @@ class AdminPsMboModuleController extends ModuleAdminController
 
         $categories = $container->get('prestashop.categories_provider')->getCategoriesMenu($modules);
 
+        // In newest versions of PrestaShop, a AddonsCollection can be returned.
+        // We check that we deal with an array, as the class may not exist.
+        if (!is_array($modules)) {
+            $modules = $modules->toArray();
+        }
         shuffle($modules);
 
         $modules = $this->getPresentedProducts($modules);
