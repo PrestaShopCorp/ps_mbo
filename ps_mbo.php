@@ -231,10 +231,6 @@ class ps_mbo extends Module
     }
     
     protected function _handleAddonsConnectWithMbo() {
-        if (Tools::getIsset('controller') && Tools::getValue('controller') != 'AdminPsMboModule') {
-            return false;
-        }
-        
         if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
             $addonsConnect = $this->getAddonsConnectToolbar();
 
@@ -245,7 +241,7 @@ class ps_mbo extends Module
             return $this->context->smarty->fetch($this->template_dir . '/include/modal_addons_connect.tpl');
         }
         
-        return false;
+        return false; // i like to keep a return value nonetheless
     }
     
     protected function _handleTheme() {
