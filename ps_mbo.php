@@ -135,21 +135,24 @@ class ps_mbo extends Module
 
         return true;
     }
-    
-    public function fetchModules($controller) {
+
+    public function fetchModules($controller)
+    {
         $controllerWhiteList = array('AdminCarriers', 'AdminPayment');
         if (!in_array($controller, $controllerWhiteList)) {
             return false;
         }
-        
-        $modules = array();
+
         $data = array();
-        
         switch ($controller) {
             case 'AdminCarriers':
                 $modules = $this->getCarriersMboModules();
                 $data['panel_id'] = 'recommended-carriers-panel';
-                $data['panel_title'] = $this->trans('Use one of our recommended carrier modules', [], 'Admin.Shipping.Feature');
+                $data['panel_title'] = $this->trans(
+                    'Use one of our recommended carrier modules',
+                    [],
+                    'Admin.Shipping.Feature'
+                );
                 break;
             case 'AdminPayment':
                 $modules = $this->getPaymentMboModules();
@@ -229,52 +232,51 @@ class ps_mbo extends Module
 
         return $this->context->smarty->fetch($this->template_dir . '/include/admin-end-content-footer.tpl');
     }
-    
-    protected function _handleAddonsConnectWithMbo() {
-        if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
-            $addonsConnect = $this->getAddonsConnectToolbar();
 
-            $this->context->smarty->assign(array(
-                'addons_connect' => $addonsConnect,
-            ));
-
-            return $this->context->smarty->fetch($this->template_dir . '/include/modal_addons_connect.tpl');
+    protected function handleAddonsConnectWithMbo()
+    {
+        if (Tools::getValue('controller') !== 'AdminPsMboModule') {
+            return false;
         }
-        
-        return false; // i like to keep a return value nonetheless
+
+        $addonsConnect = $this->getAddonsConnectToolbar();
+
+        $this->context->smarty->assign(array(
+            'addons_connect' => $addonsConnect,
+        ));
+
+        return $this->context->smarty->fetch($this->template_dir . '/include/modal_addons_connect.tpl');
     }
-    
-    protected function _handleTheme() {
-        $return = false;
-        
-        $controller = Tools::getValue('controller');
-        if ($controller == 'AdminThemes') {
-            $this->context->smarty->assign(array(
-                'admin_module_ajax_url_psmbo' => $this->front_controller[0]
-            ));
-            $return = $this->context->smarty->fetch($this->template_dir . '/admin-end-content-theme.tpl');
+
+    protected function handleTheme()
+    {
+        if (Tools::getValue('controller') !== 'AdminThemes') {
+            return false;
         }
-        
-        return $return;
+
+        $this->context->smarty->assign([
+            'admin_module_ajax_url_psmbo' => $this->front_controller[0]
+        ]);
+        return $this->context->smarty->fetch($this->template_dir . '/admin-end-content-theme.tpl');
     }
 
     public function hookDisplayAdminEndContent()
     {
-        $connectWithMbo = $this->_handleAddonsConnectWithMbo();
+        $connectWithMbo = $this->handleAddonsConnectWithMbo();
         if ($connectWithMbo !== false) {
             return $connectWithMbo;
         }
-        
-        $handleTheme = $this->_handleTheme();
+
+        $handleTheme = $this->handleTheme();
         if ($handleTheme !== false) {
             return $handleTheme;
         }
-        
+
         $content = '';
         $content .= $this->context->smarty->fetch($this->template_dir . '/modal.tpl');
-        
+
         $controller_page = (Tools::getIsset('controller')) ? Tools::getValue('controller') : '';
-        $controllerWhiteList = array('AdminCarriers', 'AdminPayment');            
+        $controllerWhiteList = array('AdminCarriers', 'AdminPayment');
         if (in_array($controller_page, $controllerWhiteList)) {
             $this->context->smarty->assign(array(
                 'admin_module_ajax_url_psmbo' => $this->front_controller[0],
@@ -288,7 +290,7 @@ class ps_mbo extends Module
 
     public function hookDisplayDashboardToolbarTopMenu()
     {
-        if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
+        if (Tools::getValue('controller') === 'AdminPsMboModule') {
             $addonsConnect = $this->getAddonsConnectToolbar();
 
             $this->context->smarty->assign(array(
@@ -320,13 +322,21 @@ class ps_mbo extends Module
             return array(
                 'connected' => true,
                 'email' => $addonsEmail['username_addons'],
-                'logout_url' => $container->get('router')->generate('admin_addons_logout', [], UrlGeneratorInterface::ABSOLUTE_URL)
+                'logout_url' => $container->get('router')->generate(
+                    'admin_addons_logout',
+                    [],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                )
             );
         }
 
         return array(
             'connected' => false,
-            'login_url' => $container->get('router')->generate('admin_addons_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            'login_url' => $container->get('router')->generate(
+                'admin_addons_login',
+                [],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            )
         );
     }
 
