@@ -249,7 +249,7 @@ class AdminPsMboModuleController extends ModuleAdminController
     public function ajaxProcessGetTabModulesList()
     {
         $result = $this->module->fetchModulesByController(true);
-
+        ob_start();
         if ($result !== false) {
             $this->context->smarty->assign(array(
                 'controller_name' => $result['controller_name'],
@@ -263,7 +263,7 @@ class AdminPsMboModuleController extends ModuleAdminController
             $this->smartyOutputContent($this->module->template_dir . '/include/admin-end-content-footer.tpl');
         }
 
-        $this->ajaxRender('');
+        $this->ajaxRender(ob_get_clean());
     }
 
     public function ajaxProcessFetchModules()
