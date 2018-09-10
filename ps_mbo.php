@@ -163,13 +163,26 @@ class ps_mbo extends Module
             return false;
         }
 
+        if ((int) Tools::getValue('legacy') == 0) {
+            foreach ($modules as &$module) {
+                if (isset($module->optionsHtml) && count($module->optionsHtml) > 0) {
+                    $module->optionsHtml[0] = str_replace('btn btn-success', 'btn btn-primary-reverse btn-outline-primary light-button', $module->optionsHtml[0]);
+                }
+            }
+        }
+        
         $data['controller_name'] = $controller;
         $data['admin_module_ajax_url_psmbo'] = $this->front_controller[0];
         $data['from'] = 'footer';
         $data['modules_list'] = $modules;
-
+        
         $this->context->smarty->assign($data);
-        return $this->context->smarty->fetch($this->template_dir . '/include/admin-end-content-footer.tpl');
+        
+        if ((int) Tools::getValue('legacy') == 1) {
+            return $this->context->smarty->fetch($this->template_dir . '/include/admin-end-content-footer-legacy.tpl');
+        } else {
+            return $this->context->smarty->fetch($this->template_dir . '/include/admin-end-content-footer.tpl');
+        }
     }
 
     public function fetchModulesByController($ajax = false)
@@ -282,7 +295,13 @@ class ps_mbo extends Module
                 'admin_module_ajax_url_psmbo' => $this->front_controller[0],
                 'controller_page' => $controller_page
             ));
-            $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
+            
+            if (ADMIN_LEGACY_CONTEXT === true) {
+                $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content-legacy.tpl');
+            } else {
+                $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
+            }
+            
         }
 
         return $content;

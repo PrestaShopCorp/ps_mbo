@@ -22,8 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
- 
- <div id="admin-end-content-footer" class="container">
+ <div id="admin-end-content-footer">
      
  </div>
 
@@ -41,7 +40,7 @@
                 ajax: '1',
                 action:'fetchModules',
                 controller_page: '{$controller_page}',
-                legacy: '0'
+                legacy: '1'
             },
             beforeSend: function() {
                 $('#admin-end-content-footer').html('<i class="icon-refresh icon-spin"></i>');
