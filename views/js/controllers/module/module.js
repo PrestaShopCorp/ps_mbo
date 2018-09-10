@@ -111,14 +111,24 @@ $(document).ready(function() {
 	
 	var urlToCall = $('#notification_count_url').val();
 	if (urlToCall !== '') {
-		var destinationTab = $("#subtab-AdminModulesNotifications");
-		if (destinationTab.length === 0) {
+		var tabToUpdate = $("#subtab-AdminModulesUpdates");
+		if (tabToUpdate.length === 0) {
+			return;
+		}
+        
+		var tabToConfigure = $("#subtab-AdminModulesNotifications");
+		if (tabToConfigure.length === 0) {
 			return;
 		}
 		
 		$.getJSON(urlToCall, function(badge) {
-	        destinationTab.append('<span class="notification-container">\
-	            <span class="notification-counter">'+badge.count+'</span>\
+	        tabToUpdate.append('<span class="notification-container">\
+	            <span class="notification-counter">'+badge.to_update+'</span>\
+	          </span>\
+	        ');
+            
+	        tabToConfigure.append('<span class="notification-container">\
+	            <span class="notification-counter">'+badge.to_configure+'</span>\
 	          </span>\
 	        ');
 		}).fail(function() {

@@ -260,13 +260,7 @@ var AdminModuleCard = function () {
                     }
 
                     jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
-
-					$('#psmbo .form-action-button').css({'width': '75%'});
-					$('#psmbo .form-action-button > button').css({'width': '100%'});
-					$('#psmbo .dropdown-toggle').css({'width': '25%'});
 					$('#psmbo .dropdown-toggle .caret').css({'display': 'none'});
-//					$('#modules-list-container-all .module-item-wrapper-grid .module-quick-action-grid .light-button, .bootstrap #modules-list-container-all .btn').css({'width': '100%'});					
-					
                 }
             }
         }).always(function () {

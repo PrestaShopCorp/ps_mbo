@@ -77,7 +77,6 @@ class AdminPsMboModuleController extends ModuleAdminController
             $moduleControllerToken = $query['_token'];
         }
 
-
         $this->context->smarty->assign(array(
             'shop_name' => Configuration::get('PS_SHOP_NAME'),
             'img_dir' => _PS_IMG_,

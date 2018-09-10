@@ -59,6 +59,7 @@
     vertical-align: middle;
 	user-select: none;
 	text-transform: none;
+    border-left: 1px solid #25b9d7;
 }
 
 #modules-list-container-all .btn-outline-primary:not([disabled]):not(.disabled):active, #modules-list-container-all .btn-outline-primary:not([disabled]):not(.disabled):hover {
@@ -155,9 +156,16 @@
 }
 
 #psmbo .form-action-button-container {
-	display: initial;
+/*	display: initial;
     padding-left: 10px;
-    padding-right: 10px;
+    padding-right: 10px;*/
+    display: flex;
+    -webkit-box-pack: end;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    left: 0;
 }
 
 .bootstrap #psmbo .dropdown-item {
@@ -276,17 +284,23 @@ h4.modal-title {
 .modal-content { border-radius: 0px; }
 
 .notification-container {
-	line-height: 1.5rem;
+/*	line-height: 1.5rem;
 	height: 1.5rem;
 	vertical-align: middle;
 	cursor: pointer;
 	color: #6c868e;
 	float: right;
-	position: relative;
+	position: relative;*/
+    height: 1.5rem;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #6c868e;
+    position: relative;
+    line-height: 1.5rem;
 }
 
 .notification-counter {
-	display: inline-block;
+/*	display: inline-block;
 	line-height: .875rem;
 	height: .875rem;
 	vertical-align: middle;
@@ -297,7 +311,18 @@ h4.modal-title {
 	padding: 0 .25rem;
 	border-radius: 1rem;
 	top: -.063rem;
-	right: auto;
+	right: auto;*/
+    display: inline-block;
+    position: absolute;
+    color: #fff;
+    background: #f1b746;
+    font-size: .625rem;
+    line-height: .75rem;
+    padding: 0 .1875rem;
+    border-radius: 1rem;
+    border: .125rem solid #fff;
+    top: -.5625rem;
+    right: -.9375rem;
 }
 
 #help-container .page-wrap, #main-nav { margin-top: 30px!important; }
@@ -307,4 +332,33 @@ h4.modal-title {
 #header_infos #quick_select {
     font-size: .8125rem;
     font-weight: 400;
+}
+
+.bootstrap #modules-list-container-all .btn.dropdown-toggle-split:after { 
+    margin-left: 0px; 
+    font-family: Material Icons;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.5rem;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "liga";
+    content: "expand_more";
+    border: none;
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+    line-height: 0;
+}
+.bootstrap #modules-list-container-all .btn.dropdown-toggle-split[class*=outline] { margin-left: -1px; }
+.bootstrap #modules-list-container-all .btn.dropdown-toggle-split {
+    padding-right: .6285rem!important;
+    padding-left: .6285rem!important;
+    width: auto!important;
+    cursor: pointer;
 }
