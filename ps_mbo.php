@@ -41,7 +41,7 @@ class ps_mbo extends Module
             ),
             'visible' => true,
             'class_name' => 'AdminPsMboModule',
-            'parent_class_name' => 'AdminModulesSf',
+            'parent_class_name' => 'AdminParentModulesCatalog',
             'core_reference' => 'AdminModulesCatalog',
         ),
         array(
