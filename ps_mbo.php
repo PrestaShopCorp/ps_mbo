@@ -175,14 +175,14 @@ class ps_mbo extends Module
         $data['admin_module_ajax_url_psmbo'] = $this->front_controller[0];
         $data['from'] = 'footer';
         $data['modules_list'] = $modules;
-        
+
         $this->context->smarty->assign($data);
-        
+
         if ((int) Tools::getValue('legacy') == 1) {
             return $this->context->smarty->fetch($this->template_dir . '/include/admin-end-content-footer-legacy.tpl');
-        } else {
-            return $this->context->smarty->fetch($this->template_dir . '/include/admin-end-content-footer.tpl');
         }
+        
+        return $this->context->smarty->fetch($this->template_dir . '/include/admin-end-content-footer.tpl');
     }
 
     public function fetchModulesByController($ajax = false)

@@ -23,12 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
  <div id="admin-end-content-footer">
-     
+
  </div>
 
 <script type="text/javascript">
-	$(document).ready(function(){
-        
+    $(document).ready(function(){
+
         $.ajax({
             type: 'POST',
             headers: { "cache-control": "no-cache" },
@@ -51,7 +51,7 @@
         });
 
 
-		$('.controller-quick-view').each(function() {
+        $('.controller-quick-view').each(function() {
             $(this).fancybox({
                 type: 'ajax',
                 autoDimensions: false,
@@ -66,5 +66,5 @@
                 href: $(this).attr('href') + '&action=GetModuleQuickView&module_name=' + $(this).attr('data-name') + '&ajax=1'
             });
         });
-	});
+    });
 </script>

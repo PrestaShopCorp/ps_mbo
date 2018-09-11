@@ -22,14 +22,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
- 
+
  <div id="admin-end-content-footer" class="container">
-     
+
  </div>
 
 <script type="text/javascript">
-	$(document).ready(function(){
-        
+    $(document).ready(function(){
+
         $.ajax({
             type: 'POST',
             headers: { "cache-control": "no-cache" },
@@ -52,7 +52,7 @@
         });
 
 
-		$('.controller-quick-view').each(function() {
+        $('.controller-quick-view').each(function() {
             $(this).fancybox({
                 type: 'ajax',
                 autoDimensions: false,
@@ -67,5 +67,5 @@
                 href: $(this).attr('href') + '&action=GetModuleQuickView&module_name=' + $(this).attr('data-name') + '&ajax=1'
             });
         });
-	});
+    });
 </script>

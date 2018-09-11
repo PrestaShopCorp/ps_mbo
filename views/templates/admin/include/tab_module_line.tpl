@@ -23,12 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div class="row module-item-wrapper-list border-bottom mb-sm-3">
-	<div class="col-12 col-sm-2 col-md-1 col-lg-1">
+    <div class="col-12 col-sm-2 col-md-1 col-lg-1">
         <div class="module-logo-thumb-list text-center">
             <img alt="{$module->name}" src="{if isset($module->image)}../../../{$module->image}{else}{$smarty.const._MODULE_DIR_}{$module->name}/{$module->logo}{/if}" />
         </div>
-	</div>
-	<div class="col-12 col-sm-6 col-md-8 col-lg-9 pl-0">
+    </div>
+    <div class="col-12 col-sm-6 col-md-8 col-lg-9 pl-0">
         <p class="mb-0">
             <span style="display:none">{$module->name}</span>
             {$module->displayName}
@@ -54,55 +54,55 @@
             {/if}
         </p>
         {if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>{$module->message}</div>{/if}
-	</div>
-	{if isset($module->type) && $module->type == 'addonsMustHave'}
-		<div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
-			<div class="text-center">
-				<a href="{$module->addons_buy_url|replace:' ':'+'|escape:'html':'UTF-8'}" onclick="return !window.open(this.href, '_blank');" class="btn btn-primary-reverse btn-outline-primary light-button _blank">
-					<span>
-						<i class="icon-shopping-cart"></i>{if isset($module->price)}{if $module->price|floatval == 0}{l s='Free'}{elseif isset($module->id_currency)} &nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}{/if}{/if}
-					</span>
-				</a>
-			</div>
-		</div>
-	{elseif !isset($module->not_on_disk)}
-		<div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
-			<div class="text-center">
-				{if $module->optionsHtml|count > 0}
-				<div class="btn-group">
-					{assign var=option value=$module->optionsHtml[0]}
-					{$option}
-					{if $module->optionsHtml|count > 1}
-					<button type="button" class="btn btn-primary-reverse btn-outline-primary light-button dropdown-toggle" data-toggle="dropdown" >
-						<span class="caret">&nbsp;</span>
-					</button>
-					<ul class="dropdown-menu pull-right">
+    </div>
+    {if isset($module->type) && $module->type == 'addonsMustHave'}
+        <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <div class="text-center">
+                <a href="{$module->addons_buy_url|replace:' ':'+'|escape:'html':'UTF-8'}" onclick="return !window.open(this.href, '_blank');" class="btn btn-primary-reverse btn-outline-primary light-button _blank">
+                    <span>
+                        <i class="icon-shopping-cart"></i>{if isset($module->price)}{if $module->price|floatval == 0}{l s='Free'}{elseif isset($module->id_currency)} &nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}{/if}{/if}
+                    </span>
+                </a>
+            </div>
+        </div>
+    {elseif !isset($module->not_on_disk)}
+        <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <div class="text-center">
+                {if $module->optionsHtml|count > 0}
+                <div class="btn-group">
+                    {assign var=option value=$module->optionsHtml[0]}
+                    {$option}
+                    {if $module->optionsHtml|count > 1}
+                    <button type="button" class="btn btn-primary-reverse btn-outline-primary light-button dropdown-toggle" data-toggle="dropdown" >
+                        <span class="caret">&nbsp;</span>
+                    </button>
+                    <ul class="dropdown-menu pull-right">
 
-					{foreach $module->optionsHtml key=key item=option}
-						{if $key != 0}
-							{if strpos($option, 'title="divider"') !== false}
-								<li class="divider">BB</li>
-							{else}
-								<li>AAA{$option}</li>
-							{/if}
-						{/if}
-					{/foreach}
-					</ul>
-					{/if}
-				</div>
-				{/if}
-			</div>
-		</div>
-	{else}
-		<div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
-			<div class="text-center">
-				<form method="POST" action="{$module->options.install_url|escape:'html':'UTF-8'}">
-					<a href="{$module->options.install_url|escape:'html':'UTF-8'}" class="btn btn-primary-reverse btn-outline-primary light-button ">
-						<i class="icon-plus-sign-alt"></i>
-						{l s='Install'}
-					</a>
-				</form>
-			</div>
-		</div>
-	{/if}
+                    {foreach $module->optionsHtml key=key item=option}
+                        {if $key != 0}
+                            {if strpos($option, 'title="divider"') !== false}
+                                <li class="divider">BB</li>
+                            {else}
+                                <li>AAA{$option}</li>
+                            {/if}
+                        {/if}
+                    {/foreach}
+                    </ul>
+                    {/if}
+                </div>
+                {/if}
+            </div>
+        </div>
+    {else}
+        <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
+            <div class="text-center">
+                <form method="POST" action="{$module->options.install_url|escape:'html':'UTF-8'}">
+                    <a href="{$module->options.install_url|escape:'html':'UTF-8'}" class="btn btn-primary-reverse btn-outline-primary light-button ">
+                        <i class="icon-plus-sign-alt"></i>
+                        {l s='Install'}
+                    </a>
+                </form>
+            </div>
+        </div>
+    {/if}
 </div>
