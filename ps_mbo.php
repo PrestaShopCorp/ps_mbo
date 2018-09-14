@@ -41,7 +41,7 @@ class ps_mbo extends Module
             ),
             'visible' => true,
             'class_name' => 'AdminPsMboModule',
-            'parent_class_name' => 'AdminModulesSf',
+            'parent_class_name' => 'AdminParentModulesCatalog',
             'core_reference' => 'AdminModulesCatalog',
         ),
         array(
@@ -136,6 +136,55 @@ class ps_mbo extends Module
         return true;
     }
 
+    public function fetchModules($controller)
+    {
+        $controllerWhiteList = array('AdminCarriers', 'AdminPayment');
+        if (!in_array($controller, $controllerWhiteList)) {
+            return false;
+        }
+
+        $data = array();
+        switch ($controller) {
+            case 'AdminCarriers':
+                $modules = $this->getCarriersMboModules();
+                $data['panel_id'] = 'recommended-carriers-panel';
+                $data['panel_title'] = $this->trans(
+                    'Use one of our recommended carrier modules',
+                    [],
+                    'Admin.Shipping.Feature'
+                );
+                break;
+            case 'AdminPayment':
+                $modules = $this->getPaymentMboModules();
+                break;
+        }
+
+        if (empty($modules)) {
+            return false;
+        }
+
+        if ((int) Tools::getValue('legacy') == 0) {
+            foreach ($modules as &$module) {
+                if (isset($module->optionsHtml) && count($module->optionsHtml) > 0) {
+                    $module->optionsHtml[0] = str_replace('btn btn-success', 'btn btn-primary-reverse btn-outline-primary light-button', $module->optionsHtml[0]);
+                }
+            }
+        }
+        
+        $data['controller_name'] = $controller;
+        $data['admin_module_ajax_url_psmbo'] = $this->front_controller[0];
+        $data['from'] = 'footer';
+        $data['modules_list'] = $modules;
+
+        $this->context->smarty->assign($data);
+
+        if ((int) Tools::getValue('legacy') == 1) {
+            return $this->context->smarty->fetch($this->template_dir . '/include/admin-end-content-footer-legacy.tpl');
+        }
+        
+        return $this->context->smarty->fetch($this->template_dir . '/include/admin-end-content-footer.tpl');
+    }
+
     public function fetchModulesByController($ajax = false)
     {
         $controller = Tools::getValue('controllerName');
@@ -194,34 +243,65 @@ class ps_mbo extends Module
             return $data;
         }
 
-        return $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
+        return $this->context->smarty->fetch($this->template_dir . '/include/admin-end-content-footer.tpl');
+    }
+
+    protected function handleAddonsConnectWithMbo()
+    {
+        if (Tools::getValue('controller') !== 'AdminPsMboModule') {
+            return false;
+        }
+
+        $addonsConnect = $this->getAddonsConnectToolbar();
+
+        $this->context->smarty->assign(array(
+            'addons_connect' => $addonsConnect,
+        ));
+
+        return $this->context->smarty->fetch($this->template_dir . '/include/modal_addons_connect.tpl');
+    }
+
+    protected function handleTheme()
+    {
+        if (Tools::getValue('controller') !== 'AdminThemes') {
+            return false;
+        }
+
+        $this->context->smarty->assign([
+            'admin_module_ajax_url_psmbo' => $this->front_controller[0]
+        ]);
+        return $this->context->smarty->fetch($this->template_dir . '/admin-end-content-theme.tpl');
     }
 
     public function hookDisplayAdminEndContent()
     {
-        if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
-            $addonsConnect = $this->getAddonsConnectToolbar();
-
-            $this->context->smarty->assign(array(
-                'addons_connect' => $addonsConnect,
-            ));
-
-            return $this->context->smarty->fetch($this->template_dir . '/include/modal_addons_connect.tpl');
+        $connectWithMbo = $this->handleAddonsConnectWithMbo();
+        if ($connectWithMbo !== false) {
+            return $connectWithMbo;
         }
 
-        $controller = Tools::getValue('controller');
-        if ($controller == 'AdminThemes') {
-            $this->context->smarty->assign(array(
-                'admin_module_ajax_url_psmbo' => $this->front_controller[0]
-            ));
-            return $this->context->smarty->fetch($this->template_dir . '/admin-end-content-theme.tpl');
+        $handleTheme = $this->handleTheme();
+        if ($handleTheme !== false) {
+            return $handleTheme;
         }
 
         $content = '';
         $content .= $this->context->smarty->fetch($this->template_dir . '/modal.tpl');
 
-        if ($this->fetchModulesByController() !== false) {
-            $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
+        $controller_page = (Tools::getIsset('controller')) ? Tools::getValue('controller') : '';
+        $controllerWhiteList = array('AdminCarriers', 'AdminPayment');
+        if (in_array($controller_page, $controllerWhiteList)) {
+            $this->context->smarty->assign(array(
+                'admin_module_ajax_url_psmbo' => $this->front_controller[0],
+                'controller_page' => $controller_page
+            ));
+            
+            if (ADMIN_LEGACY_CONTEXT === true) {
+                $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content-legacy.tpl');
+            } else {
+                $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
+            }
+            
         }
 
         return $content;
@@ -229,7 +309,7 @@ class ps_mbo extends Module
 
     public function hookDisplayDashboardToolbarTopMenu()
     {
-        if (Tools::getIsset('controller') && Tools::getValue('controller') == 'AdminPsMboModule') {
+        if (Tools::getValue('controller') === 'AdminPsMboModule') {
             $addonsConnect = $this->getAddonsConnectToolbar();
 
             $this->context->smarty->assign(array(
@@ -261,13 +341,21 @@ class ps_mbo extends Module
             return array(
                 'connected' => true,
                 'email' => $addonsEmail['username_addons'],
-                'logout_url' => $container->get('router')->generate('admin_addons_logout', [], UrlGeneratorInterface::ABSOLUTE_URL)
+                'logout_url' => $container->get('router')->generate(
+                    'admin_addons_logout',
+                    [],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                )
             );
         }
 
         return array(
             'connected' => false,
-            'login_url' => $container->get('router')->generate('admin_addons_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            'login_url' => $container->get('router')->generate(
+                'admin_addons_login',
+                [],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            )
         );
     }
 

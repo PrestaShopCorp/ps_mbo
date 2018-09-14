@@ -40,6 +40,11 @@ class AdminPsMboModuleController extends ModuleAdminController
         $this->bootstrap = true;
         parent::__construct();
         $this->controller_quick_name = 'module';
+        if ($this->ajax) {
+            $this->display_header = false;
+            $this->display_header_javascript = false;
+            $this->display_footer = false;
+        }
     }
 
     /**
@@ -72,8 +77,10 @@ class AdminPsMboModuleController extends ModuleAdminController
             $moduleControllerToken = $query['_token'];
         }
 
-
         $this->context->smarty->assign(array(
+            'shop_name' => Configuration::get('PS_SHOP_NAME'),
+            'img_dir' => _PS_IMG_,
+            'iso' => $this->context->language->iso_code,
             'bootstrap'         =>  1,
             'configure_type'    => $this->controller_quick_name,
             'template_dir' => $this->module->template_dir,
@@ -137,9 +144,9 @@ class AdminPsMboModuleController extends ModuleAdminController
 
         $container = SymfonyContainer::getInstance();
         $container->set('translator', Context::getContext()->getTranslator());
-        
+
         $modulesProvider = $container->get('prestashop.core.admin.data_provider.module_interface');
-      
+
         $moduleRepository = $container->get('prestashop.core.admin.module.repository');
 
         $filteredList = $moduleRepository->getFilteredList($filters);
@@ -151,15 +158,25 @@ class AdminPsMboModuleController extends ModuleAdminController
 
         $categories = $container->get('prestashop.categories_provider')->getCategoriesMenu($modules);
 
+        // In newest versions of PrestaShop, a AddonsCollection can be returned.
+        // We check that we deal with an array, as the class may not exist.
+        if (!is_array($modules)) {
+            $modules = $modules->toArray();
+        }
         shuffle($modules);
 
         $modules = $this->getPresentedProducts($modules);
         foreach ($modules as $key => &$module) {
             $module['attributes']['description'] = html_entity_decode($module['attributes']['description']);
-            $module['attributes']['description'] = htmlspecialchars_decode($module['attributes']['description'], ENT_QUOTES);
+            $module['attributes']['description'] = htmlspecialchars_decode(
+                $module['attributes']['description'],
+                ENT_QUOTES
+            );
 
             $module['attributes']['visible'] = true;
-            $module['attributes']['price'] = (isset($module['attributes']['price'][Context::getContext()->currency->iso_code])) ? $module['attributes']['price'][Context::getContext()->currency->iso_code] : '';
+            $module['attributes']['price'] = isset($module['attributes']['price'][Context::getContext()->currency->iso_code]) ?
+                                           $module['attributes']['price'][Context::getContext()->currency->iso_code] :
+                                           '';
 
             // only one badge to display
             $i = 0;
@@ -172,12 +189,14 @@ class AdminPsMboModuleController extends ModuleAdminController
             }
         }
 
-        die(json_encode(
-            [
-                'modules' => $modules,
-                'categories' => $categories['categories']
-            ]
-        ));
+        $this->ajaxRender(
+            json_encode(
+                [
+                    'modules' => $modules,
+                    'categories' => $categories['categories']
+                ]
+            )
+        );
     }
 
     private function getPresentedProducts(array &$modules)
@@ -223,27 +242,28 @@ class AdminPsMboModuleController extends ModuleAdminController
             'id_currency' => Context::getContext()->currency->id
         ));
 
-        die($this->context->smarty->fetch($this->module->template_dir . '/quickview.tpl'));
+        $this->ajaxRender($this->context->smarty->fetch($this->module->template_dir . '/quickview.tpl'));
     }
 
     public function ajaxProcessGetTabModulesList()
     {
         $result = $this->module->fetchModulesByController(true);
+        
+        $this->context->smarty->assign(array(
+            'controller_name' => $result['controller_name'],
+            'currentIndex' => self::$currentIndex,
+            'modules_list' => $result['modules_list'],
+            'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
+            'lang_iso' => $this->context->language->iso_code,
+            'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
+            'from' => 'tab'
+        ));
+        $this->smartyOutputContent($this->module->template_dir . '/include/admin-end-content-footer-legacy.tpl');
+    }
 
-        if ($result !== false) {
-            $this->context->smarty->assign(array(
-                'controller_name' => $result['controller_name'],
-                'currentIndex' => self::$currentIndex,
-                'modules_list' => $result['modules_list'],
-                'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
-                'lang_iso' => $this->context->language->iso_code,
-                'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
-                'from' => 'tab'
-            ));
-            $this->smartyOutputContent($this->module->template_dir . '/admin-end-content.tpl');
-        }
-
-        exit;
+    public function ajaxProcessFetchModules()
+    {
+        $this->ajaxRender($this->module->fetchModules(Tools::getValue('controller_page')));
     }
 
     public function getModulesByInstallation($tab_modules_list = null, $install_source_tracking = false)
@@ -300,6 +320,6 @@ class AdminPsMboModuleController extends ModuleAdminController
         $activity = Configuration::get('PS_SHOP_ACTIVITY');
         $addons_url = Tools::getCurrentUrlProtocolPrefix() . 'addons.prestashop.com/iframe/search-1.7.php?psVersion=' . _PS_VERSION_ . '&onlyThemes=1&isoLang=' . pSQL($iso_lang) . '&isoCurrency=' . pSQL($iso_currency) . '&isoCountry=' . pSQL($iso_country) . '&activity=' . (int) $activity . '&parentUrl=' . pSQL($parent_domain);
 
-        die(Tools::file_get_contents($addons_url));
+        $this->ajaxRender(Tools::file_get_contents($addons_url));
     }
- }
+}
