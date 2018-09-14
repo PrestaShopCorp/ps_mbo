@@ -248,21 +248,17 @@ class AdminPsMboModuleController extends ModuleAdminController
     public function ajaxProcessGetTabModulesList()
     {
         $result = $this->module->fetchModulesByController(true);
-        ob_start();
-        if ($result !== false) {
-            $this->context->smarty->assign(array(
-                'controller_name' => $result['controller_name'],
-                'currentIndex' => self::$currentIndex,
-                'modules_list' => $result['modules_list'],
-                'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
-                'lang_iso' => $this->context->language->iso_code,
-                'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
-                'from' => 'tab'
-            ));
-            $this->smartyOutputContent($this->module->template_dir . '/include/admin-end-content-footer-legacy.tpl');
-        }
-
-        $this->ajaxRender(ob_get_clean());
+        
+        $this->context->smarty->assign(array(
+            'controller_name' => $result['controller_name'],
+            'currentIndex' => self::$currentIndex,
+            'modules_list' => $result['modules_list'],
+            'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
+            'lang_iso' => $this->context->language->iso_code,
+            'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
+            'from' => 'tab'
+        ));
+        $this->smartyOutputContent($this->module->template_dir . '/include/admin-end-content-footer-legacy.tpl');
     }
 
     public function ajaxProcessFetchModules()
