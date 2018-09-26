@@ -362,3 +362,6 @@ h4.modal-title {
     width: auto!important;
     cursor: pointer;
 }
+
+.form-action-button { width: 100%; }
+.module-item-wrapper-grid .module-quick-action-grid .module-actions { bottom: -20px!important; }
