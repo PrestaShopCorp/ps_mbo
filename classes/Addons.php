@@ -53,32 +53,20 @@ class Addons
 
         switch ($request) {
             case 'categories':
-                $protocols[] = 'http';
-                $post_data .= '&method=listing&action=categories';
-                break;
             case 'native':
-                $protocols[] = 'http';
-                $post_data .= '&method=listing&action=native';
-                break;
             case 'partner':
-                $protocols[] = 'http';
-                $post_data .= '&method=listing&action=partner';
-                break;
             case 'service':
+            case 'must-have':
+            case 'must-have-themes':
                 $protocols[] = 'http';
-                $post_data .= '&method=listing&action=service';
+                $post_data .= sprintf(
+                    '&method=listing&action=%s',
+                    $request
+                );
                 break;
             case 'native_all':
                 $protocols[] = 'http';
                 $post_data .= '&method=listing&action=native&iso_code=all';
-                break;
-            case 'must-have':
-                $protocols[] = 'http';
-                $post_data .= '&method=listing&action=must-have';
-                break;
-            case 'must-have-themes':
-                $protocols[] = 'http';
-                $post_data .= '&method=listing&action=must-have-themes';
                 break;
             case 'customer':
                 $post_data .= '&method=listing&action=customer&username='.urlencode(trim(Context::getContext()->cookie->username_addons))
