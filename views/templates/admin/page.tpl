@@ -34,6 +34,12 @@
     </script>
 {/if}
 
+{if isset($javascript_urls)}
+    <script>
+      var mboJavascriptUrls = {$javascript_urls};
+    </script>
+{/if}
+
 <div id="psmbo" class="row justify-content-center">
 
     <div class="col-lg-10 module-catalog-page">

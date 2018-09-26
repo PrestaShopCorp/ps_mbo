@@ -549,8 +549,10 @@ var AdminModuleController = function() {
       self.animateEndUpload(function() {
         if (result.status === true) {
           if (result.is_configurable === true) {
-            var configureLink = self.baseAdminDir + 'improve/modules/manage/action/configure/' + result.module_name + '?_token=' + $('#module_controller_token').val();
-            $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
+            $(self.moduleImportSuccessConfigureBtnSelector).attr(
+              'href',
+              window.mboJavascriptUrls['configure'].replace('%module_name%', result.module_name)
+            );
             $(self.moduleImportSuccessConfigureBtnSelector).show();
           } else {
 			$('.module-import-success-configure').hide();
@@ -719,9 +721,6 @@ var AdminModuleController = function() {
       'bulk-reset': 'reset'
     };
 
-    // char is used only to be easy to replace by the end of this function
-    var baseActionUrl = this.baseAdminDir + 'module/manage/action/@/';
-
     // Note no grid selector used yet since we do not needed it at dev time
     // Maybe useful to implement this kind of things later if intended to
     // use this functionality elsewhere but "manage my module" section
@@ -748,7 +747,6 @@ var AdminModuleController = function() {
         var moduleTechName = data.techName;
 
         var urlActionSegment = bulkActionToUrl[requestedBulkAction];
-        baseActionUrl.replace('@', urlActionSegment);
 
         if (typeof module_card_controller !== 'undefined') {
           // We use jQuery to get the specific link for this action. If found, we send it.

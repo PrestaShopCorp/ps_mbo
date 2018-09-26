@@ -90,7 +90,15 @@ class AdminPsMboModuleController extends ModuleAdminController
             'bo_img' => __PS_BASE_URI__ . $admin_webpath . '/themes/default/img/',
             'install_url' => $install_url,
             'module_controller_token' => $moduleControllerToken,
-            'notification_count_url' => $notification_count_url
+            'notification_count_url' => $notification_count_url,
+            'javascript_urls' => json_encode(
+                [
+                    'configure' => $container->get('router')->generate(
+                        'admin_module_configure_action',
+                        ['module_name' => '%module_name%']
+                    )
+                ]
+            ),
         ));
 
         // @TODO, call vue.min.js
