@@ -24,10 +24,11 @@
 * International Registered Trademark & Property of PrestaShop SA
 **/
 
-class Addons {
-	
-	protected static $is_addons_up = true;
-	public static function addonsRequest($request, $params = array()) {
+class Addons
+{
+    protected static $is_addons_up = true;
+    public static function addonsRequest($request, $params = array())
+    {
         if (!self::$is_addons_up) {
             return false;
         }
@@ -125,26 +126,25 @@ class Addons {
                 'timeout' => 5,
             )
         ));
-		
+
         foreach ($protocols as $protocol) {
             if ($content = Tools::file_get_contents($protocol.'://'.$end_point, false, $context)) {
                 return $content;
             }
         }
 
-		
-// $back_link = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
-// $hook_link = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
-// $trad_link = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
-// $rtl_link = 'index.php?tab=AdminModules&token='.Tools::getAdminTokenLite('AdminModules').'&configure='.$module->name.'&generate_rtl=1';
-// $disable_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&enable=0&tab_module='.$module->tab;
-// $uninstall_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&uninstall='.$module->name.'&tab_module='.$module->tab;
-// $reset_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&reset&tab_module='.$module->tab;
-// $update_link = $this->context->link->getAdminLink('AdminModules').'&checkAndUpdate=1&module_name='.$module->name;
-		
+
+        // $back_link = self::$currentIndex.'&token='.$this->token.'&tab_module='.$module->tab.'&module_name='.$module->name;
+        // $hook_link = 'index.php?tab=AdminModulesPositions&token='.Tools::getAdminTokenLite('AdminModulesPositions').'&show_modules='.(int)$module->id;
+        // $trad_link = 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&lang=';
+        // $rtl_link = 'index.php?tab=AdminModules&token='.Tools::getAdminTokenLite('AdminModules').'&configure='.$module->name.'&generate_rtl=1';
+        // $disable_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&enable=0&tab_module='.$module->tab;
+        // $uninstall_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&uninstall='.$module->name.'&tab_module='.$module->tab;
+        // $reset_link = $this->context->link->getAdminLink('AdminModules').'&module_name='.$module->name.'&reset&tab_module='.$module->tab;
+        // $update_link = $this->context->link->getAdminLink('AdminModules').'&checkAndUpdate=1&module_name='.$module->name;
+
         self::$is_addons_up = false;
+
         return false;
     }
-	
-	
 }

@@ -93,9 +93,6 @@ class AdminPsMboModuleController extends ModuleAdminController
             'notification_count_url' => $notification_count_url
         ));
 
-        $aJsDef = $aJs = array();
-
-
         // @TODO, call vue.min.js
         $aJs = array(
             $this->module->js_path . 'vue.js',
@@ -123,7 +120,7 @@ class AdminPsMboModuleController extends ModuleAdminController
     protected function addonsList($request)
     {
         $results = Addons::addonsRequest($request, array('format' => 'json'));
-        $results = json_decode($results, TRUE);
+        $results = json_decode($results, true);
 
         if (!isset($results['modules'])) {
             return json_encode(array());
@@ -248,7 +245,7 @@ class AdminPsMboModuleController extends ModuleAdminController
     public function ajaxProcessGetTabModulesList()
     {
         $result = $this->module->fetchModulesByController(true);
-        
+
         $this->context->smarty->assign(array(
             'controller_name' => $result['controller_name'],
             'currentIndex' => self::$currentIndex,

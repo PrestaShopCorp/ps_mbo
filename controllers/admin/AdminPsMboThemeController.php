@@ -28,7 +28,6 @@ require_once(dirname(__FILE__) . '../../../classes/Addons.php');
 
 class AdminPsMboThemeController extends ModuleAdminController
 {
-
     public function __construct()
     {
         $this->controller_quick_name = 'theme';

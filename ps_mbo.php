@@ -301,7 +301,6 @@ class ps_mbo extends Module
             } else {
                 $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
             }
-            
         }
 
         return $content;
