@@ -259,7 +259,12 @@ var AdminModuleCard = function () {
 //                        BOEvent.emitEvent("Module Enabled", "CustomEvent");
                     }
 
-                    jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
+                    if (jqElementObj.length > 0) {
+                        jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
+                    } else {
+                        element.closest("div.module-actions").replaceWith(result[moduleTechName].action_menu_html);;
+                    }
+                    
 					$('#psmbo .dropdown-toggle .caret').css({'display': 'none'});
                 }
             }
