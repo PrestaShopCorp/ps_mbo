@@ -125,7 +125,6 @@ var AdminModuleController = function() {
    * @memberof AdminModule
    */
   this.init = function () {
-//    this.initBOEventRegistering();
     this.loadVariables();
     this.initSortingDisplaySwitch();
     this.initSortingDropdown();
@@ -198,61 +197,6 @@ var AdminModuleController = function() {
     });
   };
 
-//  this.ajaxLoadPage = function() {
-//    var token = window.location.search;
-//    var urlToCall = this.baseAdminDir+'module/catalog/refresh' + token;
-//    var self = this;
-//
-//    $.ajax({
-//      method: 'GET',
-//      url: urlToCall
-//    }).done(function (response) {
-//      if (response.status === true) {
-//        if (typeof response.domElements === 'undefined') response.domElements = null;
-//        if (typeof response.msg === 'undefined') response.msg = null;
-//
-//        var stylesheet = document.styleSheets[0];
-//        var stylesheetRule = '{display: none}';
-//        var moduleGlobalSelector = '.modules-list';
-//        var requiredSelectorCombination = moduleGlobalSelector + ', .module-sorting-menu ';
-//
-//        if (stylesheet.insertRule) {
-//          stylesheet.insertRule(
-//            requiredSelectorCombination +
-//            stylesheetRule, stylesheet.cssRules.length
-//          );
-//        } else if (stylesheet.addRule) {
-//          stylesheet.addRule(
-//            requiredSelectorCombination,
-//            stylesheetRule,
-//            -1
-//          );
-//        }
-//
-//        $(self.placeholderGlobalSelector).fadeOut(800, function() {
-//          $.each(response.domElements, function(index, element){
-//            $(element.selector).append(element.content);
-//          });
-//          $(requiredSelectorCombination).fadeIn(800);
-//          $('[data-toggle="popover"]').popover();
-//          self.initCurrentDisplay();
-//          self.fetchModulesList();
-//        });
-//
-//      } else {
-//        $(self.placeholderGlobalSelector).fadeOut(800, function() {
-//          $(self.placeholderFailureMsgSelector).text(response.msg);
-//          $(self.placeholderFailureGlobalSelector).fadeIn(800);
-//        });
-//      }
-//    }).fail(function(response) {
-//      $(self.placeholderGlobalSelector).fadeOut(800, function() {
-//        $(self.placeholderFailureMsgSelector).text(response.statusText);
-//        $(self.placeholderFailureGlobalSelector).fadeIn(800);
-//      });
-//    });
-//  };
-
   this.fetchModulesList = function() {
     var self = this;
     self.modulesList = [];
@@ -279,13 +223,10 @@ var AdminModuleController = function() {
           display: $this.hasClass('module-item-list') ? 'list' : 'grid',
           container: container
         });
-//        $this.remove();
       });
     });
     self.addonsCardGrid = $(this.addonItemGridSelector);
     self.addonsCardList = $(this.addonItemListSelector);
-//    this.updateModuleVisibility();
-//    $('body').trigger('moduleCatalogLoaded');
   };
 
   this.updateModuleVisibility = function() {
@@ -293,79 +234,74 @@ var AdminModuleController = function() {
 
     if (self.currentSorting) {
 
-		// Modules sorting
-		var order = 'asc';
-		var key = self.currentSorting;
-		if (key.split('-').length > 1) {
-		  key = key.split('-')[0];
-		}
-		if (self.currentSorting.indexOf('-desc') != -1) {
-		  order = 'desc';
-		}
+	  // Modules sorting
+	  var order = 'asc';
+	  var key = self.currentSorting;
+	  if (key.split('-').length > 1) {
+		key = key.split('-')[0];
+	  }
+	  if (self.currentSorting.indexOf('-desc') != -1) {
+		order = 'desc';
+	  }
 
-		function currentCompare(a, b) {
-		  if (a['attributes'][key] < b['attributes'][key]) return -1;
-		  if (a['attributes'][key] > b['attributes'][key]) return 1;
-		  return 0;
-		}
+	  function currentCompare(a, b) {
+		if (a['attributes'][key] < b['attributes'][key]) return -1;
+		if (a['attributes'][key] > b['attributes'][key]) return 1;
+		return 0;
+	  }
 
-		window.vApp.modules.sort(currentCompare);
-		if (order == 'desc') {
-			window.vApp.modules.reverse();
-		}
-
-//		  self.modulesList.sort(currentCompare);
-//		if (order == 'desc') {
-//		  self.modulesList.reverse();
-//		}
+	  window.vApp.modules.sort(currentCompare);
+	  if (order == 'desc') {
+		window.vApp.modules.reverse();
+	  }
     }
 
     // Modules visibility management
     for (var i = 0; i < window.vApp.modules.length; i++) {
-		var currentModule = window.vApp.modules[i];
+	  var currentModule = window.vApp.modules[i];
 
-		var isVisible = true;
-		if (this.currentRefCategory !== null) {
-			isVisible = currentModule.attributes.categories === this.currentRefCategory;
-		}
-		if (self.currentRefStatus !== null) {
-			isVisible = currentModule.attributes.active === this.currentRefStatus;
-		}
+	  var isVisible = true;
+	  if (this.currentRefCategory !== null) {
+		isVisible = currentModule.attributes.categories === this.currentRefCategory;
+	  }
+	  if (self.currentRefStatus !== null) {
+		isVisible = currentModule.attributes.active === this.currentRefStatus;
+	  }
 
-		var tagExists = false;
-		if (self.currentTagsList.length) {
-			$.each(self.currentTagsList, function(index, value) {
-				value = value.toLowerCase();
+	  var tagExists = false;
+	  if (self.currentTagsList.length) {
+		$.each(self.currentTagsList, function(index, value) {
+		  value = value.toLowerCase();
 
-				tagExists = (
-					currentModule.attributes.displayName.toLowerCase().indexOf(value) != -1
-					|| currentModule.attributes.description.toLowerCase().indexOf(value) != -1
-					|| currentModule.attributes.author.toLowerCase().indexOf(value) != -1
-					|| currentModule.attributes.name.toLowerCase().indexOf(value) != -1
-				);
-			});
-			isVisible = tagExists;
-		}
+		  tagExists = (
+			currentModule.attributes.displayName.toLowerCase().indexOf(value) != -1
+			|| currentModule.attributes.description.toLowerCase().indexOf(value) != -1
+			|| currentModule.attributes.author.toLowerCase().indexOf(value) != -1
+			|| currentModule.attributes.name.toLowerCase().indexOf(value) != -1
+		  );
+		});
+		isVisible = tagExists;
+	  }
 
-		if (isVisible) {
-			window.vApp.modules[i].attributes.visible = true;
-		} else {
-			window.vApp.modules[i].attributes.visible = false;
-		}
+	  if (isVisible) {
+		window.vApp.modules[i].attributes.visible = true;
+	  } else {
+		window.vApp.modules[i].attributes.visible = false;
+	  }
 
 	}
 
 	if (self.currentTagsList.length) {
-		var urlString = '';
-		$.each(self.currentTagsList, function(index, value) {
-			value = value.toLowerCase();
-			urlString = urlString + ' ' + value;
-		});
+	  var urlString = '';
+	  $.each(self.currentTagsList, function(index, value) {
+		value = value.toLowerCase();
+		urlString = urlString + ' ' + value;
+	  });
 
-		$('#see-results-addons a.url').attr('href', 'https://addons.prestashop.com/en/search?search_query=' + urlString);
-		$('#see-results-addons').removeClass('hidden');
+	  $('#see-results-addons a.url').attr('href', 'https://addons.prestashop.com/en/search?search_query=' + urlString);
+	  $('#see-results-addons').removeClass('hidden');
 	} else {
-		$('#see-results-addons').addClass('hidden');
+	  $('#see-results-addons').addClass('hidden');
 	}
 
   };
@@ -386,8 +322,8 @@ var AdminModuleController = function() {
 
     body.on('change', this.bulkActionDropDownSelector, function() {
       if (0 === $(self.getBulkCheckboxesCheckedSelector()).length) {
-          $.growl.warning({message: translate_javascripts['Bulk Action - One module minimum']});
-          return;
+        $.growl.warning({message: translate_javascripts['Bulk Action - One module minimum']});
+        return;
       }
       self.lastBulkAction = $(this).find(':checked').attr('value');
       var modulesListString = self.buildBulkActionModuleList();
@@ -508,23 +444,22 @@ var AdminModuleController = function() {
 
     // Change the way Dropzone.js lib handle file input trigger
     body.on(
-		'click', '.dropzone:not('+this.moduleImportSelectFileManualSelector+', '+this.moduleImportSuccessConfigureBtnSelector+')',
-		function(event, manual_select) {
-			// if click comes from .module-import-start-select-manual, stop everything
-			if (typeof manual_select == "undefined") {
-				event.stopPropagation();
-				event.preventDefault();
-			}
+	  'click', '.dropzone:not('+this.moduleImportSelectFileManualSelector+', '+this.moduleImportSuccessConfigureBtnSelector+')',
+	  function(event, manual_select) {
+		// if click comes from .module-import-start-select-manual, stop everything
+		if (typeof manual_select == "undefined") {
+		  event.stopPropagation();
+		  event.preventDefault();
 		}
+	  }
     );
 
     body.on('click', this.moduleImportSelectFileManualSelector, function(event) {
-		event.stopPropagation();
-		event.preventDefault();
+	  event.stopPropagation();
+	  event.preventDefault();
 
-		// Trigger click on hidden file input, and pass extra data to .dropzone click handler fro it to notice it comes from here
-		$('#importDropzone').trigger('click', ["manual_select"]);
-//      $('.dz-hidden-input').trigger('click', ["manual_select"]);
+	  // Trigger click on hidden file input, and pass extra data to .dropzone click handler fro it to notice it comes from here
+	  $('#importDropzone').trigger('click', ["manual_select"]);
     });
 
     // Handle modal closure
@@ -593,15 +528,15 @@ var AdminModuleController = function() {
 	console.log(dropzone);
 
     this.animateStartUpload = function() {
-        // State that we start module upload
-        self.isUploadStarted = true;
-        $(self.moduleImportStartSelector).hide(0);
-        dropzone.css('border', 'none');
-        $(self.moduleImportProcessingSelector).fadeIn();
+      // State that we start module upload
+      self.isUploadStarted = true;
+      $(self.moduleImportStartSelector).hide(0);
+      dropzone.css('border', 'none');
+      $(self.moduleImportProcessingSelector).fadeIn();
     };
 
     this.animateEndUpload = function(callback) {
-        $(self.moduleImportProcessingSelector).finish().fadeOut(callback);
+      $(self.moduleImportProcessingSelector).finish().fadeOut(callback);
     };
 
     /**
@@ -610,24 +545,24 @@ var AdminModuleController = function() {
      * @param object result containing the server response
      */
     this.displayOnUploadDone = function(result) {
-        var self = this;
-        self.animateEndUpload(function() {
-            if (result.status === true) {
-              if (result.is_configurable === true) {
-                var configureLink = self.baseAdminDir + 'improve/modules/manage/action/configure/' + result.module_name + '?_token=' + $('#module_controller_token').val();
-                $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
-                $(self.moduleImportSuccessConfigureBtnSelector).show();
-              } else {
-				  $('.module-import-success-configure').hide();
-			  }
-              $(self.moduleImportSuccessSelector).fadeIn();
-            } else if (typeof result.confirmation_subject !== 'undefined') {
-                self.displayPrestaTrustStep(result);
-            } else {
-              $(self.moduleImportFailureMsgDetailsSelector).html(result.msg);
-              $(self.moduleImportFailureSelector).fadeIn();
-            }
-          });
+      var self = this;
+      self.animateEndUpload(function() {
+        if (result.status === true) {
+          if (result.is_configurable === true) {
+            var configureLink = self.baseAdminDir + 'improve/modules/manage/action/configure/' + result.module_name + '?_token=' + $('#module_controller_token').val();
+            $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
+            $(self.moduleImportSuccessConfigureBtnSelector).show();
+          } else {
+			$('.module-import-success-configure').hide();
+		  }
+          $(self.moduleImportSuccessSelector).fadeIn();
+        } else if (typeof result.confirmation_subject !== 'undefined') {
+          self.displayPrestaTrustStep(result);
+        } else {
+          $(self.moduleImportFailureMsgDetailsSelector).html(result.msg);
+          $(self.moduleImportFailureSelector).fadeIn();
+        }
+      });
     };
 
     /**
@@ -637,10 +572,10 @@ var AdminModuleController = function() {
      * @param string message explaining the error.
      */
     this.displayOnUploadError = function(message) {
-        self.animateEndUpload(function() {
-            $(self.moduleImportFailureMsgDetailsSelector).html(message);
-            $(self.moduleImportFailureSelector).fadeIn();
-        });
+      self.animateEndUpload(function() {
+        $(self.moduleImportFailureMsgDetailsSelector).html(message);
+        $(self.moduleImportFailureSelector).fadeIn();
+      });
     };
 
     /**
@@ -651,50 +586,50 @@ var AdminModuleController = function() {
      * @param Previous server response result
      */
     this.displayPrestaTrustStep = function (result) {
-          var self = this;
-          var modal = module_card_controller.replacePrestaTrustPlaceholders(result);
-          var moduleName = result.module.attributes.name;
-          $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
-          $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
-          $(this.dropZoneModalFooterSelector).find(".pstrust-install").off('click').on('click', function() {
+      var self = this;
+      var modal = module_card_controller.replacePrestaTrustPlaceholders(result);
+      var moduleName = result.module.attributes.name;
+      $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
+      $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
+      $(this.dropZoneModalFooterSelector).find(".pstrust-install").off('click').on('click', function() {
 
-            $(self.moduleImportConfirmSelector).hide();
-            $(self.dropZoneModalFooterSelector).html('');
-            self.animateStartUpload();
+        $(self.moduleImportConfirmSelector).hide();
+        $(self.dropZoneModalFooterSelector).html('');
+        self.animateStartUpload();
 
-            // Install ajax call
-            $.post(result.module.attributes.urls.install, { 'actionParams[confirmPrestaTrust]': "1"})
-              .done(function(data) {
-                self.displayOnUploadDone(data[moduleName]);
-              })
-              .fail(function(data) {
-                self.displayOnUploadError(data[moduleName]);
-              })
-              .always(function() {
-                  self.isUploadStarted = false;
-              });
-          });
+        // Install ajax call
+        $.post(result.module.attributes.urls.install, { 'actionParams[confirmPrestaTrust]': "1"})
+         .done(function(data) {
+           self.displayOnUploadDone(data[moduleName]);
+         })
+         .fail(function(data) {
+           self.displayOnUploadError(data[moduleName]);
+         })
+         .always(function() {
+           self.isUploadStarted = false;
+         });
+      });
     };
   };
 
   this.getBulkCheckboxesSelector = function () {
     return this.currentDisplay == 'grid'
-      ? this.bulkActionCheckboxGridSelector
-      : this.bulkActionCheckboxListSelector;
+         ? this.bulkActionCheckboxGridSelector
+         : this.bulkActionCheckboxListSelector;
   };
 
 
   this.getBulkCheckboxesCheckedSelector = function () {
     return this.currentDisplay == 'grid'
-      ? this.checkedBulkActionGridSelector
-      : this.checkedBulkActionListSelector;
+         ? this.checkedBulkActionGridSelector
+         : this.checkedBulkActionListSelector;
   };
 
   this.loadVariables = function () {
     this.initCurrentDisplay();
 
     // If index.php found in the current URL, we need it also in the baseAdminDir
-    //noinspection JSUnresolvedVariable
+    // noinspection JSUnresolvedVariable
     this.baseAdminDir = baseAdminDir;
     if (window.location.href.indexOf('index.php') != -1) {
       this.baseAdminDir += 'index.php/';
@@ -703,8 +638,8 @@ var AdminModuleController = function() {
 
   this.getModuleItemSelector = function () {
     return this.currentDisplay == 'grid'
-      ? this.moduleItemGridSelector
-      : this.moduleItemListSelector;
+         ? this.moduleItemGridSelector
+         : this.moduleItemListSelector;
   };
 
   this.initAddonsSearch = function () {
@@ -823,8 +758,8 @@ var AdminModuleController = function() {
             module_card_controller.requestToController(urlActionSegment, urlElement, forceDeletion);
           } else {
             $.growl.error({message: translate_javascripts["Bulk Action - Request not available for module"]
-                        .replace('[1]', urlActionSegment)
-                        .replace('[2]', moduleTechName)});
+              .replace('[1]', urlActionSegment)
+              .replace('[2]', moduleTechName)});
           }
         }
       });
@@ -853,8 +788,8 @@ var AdminModuleController = function() {
     // "Upgrade All" button handler
     var that = this;
     $('body').on('click', this.upgradeAllSource, function(event) {
-        event.preventDefault();
-        $(that.upgradeAllTargets).click();
+      event.preventDefault();
+      $(that.upgradeAllTargets).click();
     });
   };
 
@@ -862,23 +797,23 @@ var AdminModuleController = function() {
     var body = $('body');
 
     body.on('click', this.categoryItemSelector, function () {
-		var selectedCategory = $(this).attr('data-category-display-ref');
+	  var selectedCategory = $(this).attr('data-category-display-ref');
 
-		$.each(window.vApp.modules, function(index, value) {
-			if (value.attributes.categoryName == selectedCategory || value.attributes.categoryParent == selectedCategory) {
-				value.attributes.visible = true;
-			} else {
-				value.attributes.visible = false;
-			}
-		});
-		$('.module-category-reset').show();
+	  $.each(window.vApp.modules, function(index, value) {
+		if (value.attributes.categoryName == selectedCategory || value.attributes.categoryParent == selectedCategory) {
+		  value.attributes.visible = true;
+		} else {
+		  value.attributes.visible = false;
+		}
+	  });
+	  $('.module-category-reset').show();
     });
 
     body.on('click', this.categoryResetBtnSelector, function () {
-		$.each(window.vApp.modules, function(index, value) {
-			value.attributes.visible = true;
-			$('.module-category-reset').hide();
-		});
+	  $.each(window.vApp.modules, function(index, value) {
+		value.attributes.visible = true;
+		$('.module-category-reset').hide();
+	  });
     });
   };
 
