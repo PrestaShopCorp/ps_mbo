@@ -614,7 +614,7 @@ var AdminModuleController = function() {
         self.animateEndUpload(function() {
             if (result.status === true) {
               if (result.is_configurable === true) {
-                var configureLink = self.baseAdminDir + 'module/manage/action/configure/' + result.module_name + '?_token=' + $('#module_controller_token').val();
+                var configureLink = self.baseAdminDir + 'improve/modules/manage/action/configure/' + result.module_name + '?_token=' + $('#module_controller_token').val();
                 $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
                 $(self.moduleImportSuccessConfigureBtnSelector).show();
               } else {
