@@ -24,8 +24,9 @@
  */
 
 $(document).ready(function() {
-  var controller = new AdminModuleController();
-  controller.init();
+    window.catLabel = $('#catDropdown').find('.module-category-selector-label').text();
+    var controller = new AdminModuleController();
+    controller.init();
 });
 
 /**
@@ -274,7 +275,6 @@ var AdminModuleController = function() {
 
         var tagExists = false;
         if (self.currentTagsList.length) {
-
             $.each(self.currentTagsList, function(index, value) {
                 value = value.toLowerCase();
 
@@ -285,7 +285,8 @@ var AdminModuleController = function() {
                   || currentModule.attributes.name.toLowerCase().indexOf(value) != -1
                 );
             });
-            isVisible = tagExists;
+            
+            isVisible = (tagExists && currentModule.attributes.visible);
         }
 
         if (isVisible) {
@@ -811,6 +812,7 @@ var AdminModuleController = function() {
 	  $('.module-category-reset').show();
       
       window.currentRefCategory = selectedCategory;
+      $('#catDropdown').find('.module-category-selector-label').text(selectedCategory);
       
     });
 
@@ -822,6 +824,9 @@ var AdminModuleController = function() {
             value.attributes.visible = true;
             $('.module-category-reset').hide();
         });
+
+        $('#catDropdown').find('.module-category-selector-label').text(window.catLabel);
+
     });
   };
 
