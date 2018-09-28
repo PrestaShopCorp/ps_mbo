@@ -37,8 +37,8 @@ var AdminModuleController = function() {
   this.currentDisplay = '';
   this.isCategoryGridDisplayed = false;
   this.currentTagsList = [];
-  this.currentRefCategory = null;
-  this.currentRefStatus = null;
+  window.currentRefCategory = null;
+  window.currentRefStatus = null;
   this.currentSorting = null;
   this.baseAddonsUrl = 'https://addons.prestashop.com/';
   this.pstaggerInput = null;
@@ -148,7 +148,7 @@ var AdminModuleController = function() {
     var body = $('body');
     body.on('click', this.statusItemSelector, function () {
       // Get data from li DOM input
-      self.currentRefStatus = parseInt($(this).attr('data-status-ref'));
+      window.currentRefStatus = parseInt($(this).attr('data-status-ref'));
       var statusSelectedDisplayName = $(this).find('a:first').text();
       // Change dropdown label to set it to the current status' displayname
       $(self.statusSelectorLabelSelector).text(statusSelectedDisplayName);
@@ -161,7 +161,7 @@ var AdminModuleController = function() {
       var text = $(this).find('a').text();
       $(self.statusSelectorLabelSelector).text(text);
       $(this).hide();
-      self.currentRefStatus = null;
+      window.currentRefStatus = null;
       self.updateModuleVisibility();
     });
   };
@@ -258,50 +258,55 @@ var AdminModuleController = function() {
 
     // Modules visibility management
     for (var i = 0; i < window.vApp.modules.length; i++) {
-	  var currentModule = window.vApp.modules[i];
 
-	  var isVisible = true;
-	  if (this.currentRefCategory !== null) {
-		isVisible = currentModule.attributes.categories === this.currentRefCategory;
-	  }
-	  if (self.currentRefStatus !== null) {
-		isVisible = currentModule.attributes.active === this.currentRefStatus;
-	  }
+        var currentModule = window.vApp.modules[i];
 
-	  var tagExists = false;
-	  if (self.currentTagsList.length) {
-		$.each(self.currentTagsList, function(index, value) {
-		  value = value.toLowerCase();
+        var isVisible = true;
+        if (window.currentRefCategory !== null) {
+            if (currentModule.attributes.categoryName != window.currentRefCategory && currentModule.attributes.categoryParent != window.currentRefCategory) {
+                isVisible = false;
+            }
+        }
 
-		  tagExists = (
-			currentModule.attributes.displayName.toLowerCase().indexOf(value) != -1
-			|| currentModule.attributes.description.toLowerCase().indexOf(value) != -1
-			|| currentModule.attributes.author.toLowerCase().indexOf(value) != -1
-			|| currentModule.attributes.name.toLowerCase().indexOf(value) != -1
-		  );
-		});
-		isVisible = tagExists;
-	  }
+        if (window.currentRefStatus !== null) {
+            isVisible = currentModule.attributes.visible === window.currentRefStatus;
+        }
 
-	  if (isVisible) {
-		window.vApp.modules[i].attributes.visible = true;
-	  } else {
-		window.vApp.modules[i].attributes.visible = false;
-	  }
+        var tagExists = false;
+        if (self.currentTagsList.length) {
+
+            $.each(self.currentTagsList, function(index, value) {
+                value = value.toLowerCase();
+
+                tagExists = (
+                  currentModule.attributes.displayName.toLowerCase().indexOf(value) != -1
+                  || currentModule.attributes.description.toLowerCase().indexOf(value) != -1
+                  || currentModule.attributes.author.toLowerCase().indexOf(value) != -1
+                  || currentModule.attributes.name.toLowerCase().indexOf(value) != -1
+                );
+            });
+            isVisible = tagExists;
+        }
+
+        if (isVisible) {
+            window.vApp.modules[i].attributes.visible = true;
+        } else {
+            window.vApp.modules[i].attributes.visible = false;
+        }
 
 	}
 
 	if (self.currentTagsList.length) {
-	  var urlString = '';
-	  $.each(self.currentTagsList, function(index, value) {
-		value = value.toLowerCase();
-		urlString = urlString + ' ' + value;
-	  });
+        var urlString = '';
+        $.each(self.currentTagsList, function(index, value) {
+          value = value.toLowerCase();
+          urlString = urlString + ' ' + value;
+        });
 
-	  $('#see-results-addons a.url').attr('href', 'https://addons.prestashop.com/en/search?search_query=' + urlString);
-	  $('#see-results-addons').removeClass('hidden');
+        $('#see-results-addons a.url').attr('href', 'https://addons.prestashop.com/en/search?search_query=' + urlString);
+        $('#see-results-addons').removeClass('hidden');
 	} else {
-	  $('#see-results-addons').addClass('hidden');
+        $('#see-results-addons').addClass('hidden');
 	}
 
   };
@@ -525,7 +530,6 @@ var AdminModuleController = function() {
       }
     };
     dropzone.dropzone($.extend(dropzoneOptions));
-	console.log(dropzone);
 
     this.animateStartUpload = function() {
       // State that we start module upload
@@ -805,13 +809,19 @@ var AdminModuleController = function() {
 		}
 	  });
 	  $('.module-category-reset').show();
+      
+      window.currentRefCategory = selectedCategory;
+      
     });
 
     body.on('click', this.categoryResetBtnSelector, function () {
-	  $.each(window.vApp.modules, function(index, value) {
-		value.attributes.visible = true;
-		$('.module-category-reset').hide();
-	  });
+        window.currentRefCategory = null;
+        window.currentRefStatus = null;
+        
+        $.each(window.vApp.modules, function(index, value) {
+            value.attributes.visible = true;
+            $('.module-category-reset').hide();
+        });
     });
   };
 
