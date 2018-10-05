@@ -42,6 +42,7 @@
 				v-bind:data-category-id="category.id_category"
 				v-bind:data-category-display-ref="category.name"
 				v-bind:data-category-display-name="category.name"
+				v-bind:data-category-display-ref-menu="category.refMenu"
 			>
 				<a  class="dropdown-item" href="#">
 					[[ category.name ]]<span class="float-right">[[ category.modules.length ]]</span>
