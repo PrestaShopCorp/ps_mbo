@@ -24,6 +24,9 @@
  */
 
 $(document).ready(function() {
+    window.catLabel = $('#catDropdown')
+        .find('.module-category-selector-label')
+        .text();
     var controller = new AdminModuleController();
     controller.init();
 });
@@ -36,8 +39,8 @@ var AdminModuleController = function() {
     this.currentDisplay = '';
     this.isCategoryGridDisplayed = false;
     this.currentTagsList = [];
-    this.currentRefCategory = null;
-    this.currentRefStatus = null;
+    window.currentRefCategory = null;
+    window.currentRefStatus = null;
     this.currentSorting = null;
     this.baseAddonsUrl = 'https://addons.prestashop.com/';
     this.pstaggerInput = null;
@@ -159,7 +162,7 @@ var AdminModuleController = function() {
         var body = $('body');
         body.on('click', this.statusItemSelector, function() {
             // Get data from li DOM input
-            self.currentRefStatus = parseInt($(this).attr('data-status-ref'));
+            window.currentRefStatus = parseInt($(this).attr('data-status-ref'));
             var statusSelectedDisplayName = $(this)
                 .find('a:first')
                 .text();
@@ -176,7 +179,7 @@ var AdminModuleController = function() {
                 .text();
             $(self.statusSelectorLabelSelector).text(text);
             $(this).hide();
-            self.currentRefStatus = null;
+            window.currentRefStatus = null;
             self.updateModuleVisibility();
         });
     };
@@ -297,14 +300,21 @@ var AdminModuleController = function() {
             var currentModule = window.vApp.modules[i];
 
             var isVisible = true;
-            if (this.currentRefCategory !== null) {
-                isVisible =
-                    currentModule.attributes.categories ===
-                    this.currentRefCategory;
+            if (window.currentRefCategory !== null) {
+                if (
+                    currentModule.attributes.categoryName !=
+                        window.currentRefCategory &&
+                    currentModule.attributes.categoryParent !=
+                        window.currentRefCategory
+                ) {
+                    isVisible = false;
+                }
             }
-            if (self.currentRefStatus !== null) {
+
+            if (window.currentRefStatus !== null) {
                 isVisible =
-                    currentModule.attributes.active === this.currentRefStatus;
+                    currentModule.attributes.visible ===
+                    window.currentRefStatus;
             }
 
             var tagExists = false;
@@ -326,7 +336,8 @@ var AdminModuleController = function() {
                             .toLowerCase()
                             .indexOf(value) != -1;
                 });
-                isVisible = tagExists;
+
+                isVisible = tagExists && currentModule.attributes.visible;
             }
 
             if (isVisible) {
@@ -621,7 +632,6 @@ var AdminModuleController = function() {
             }
         };
         dropzone.dropzone($.extend(dropzoneOptions));
-        console.log(dropzone);
 
         this.animateStartUpload = function() {
             // State that we start module upload
@@ -954,23 +964,49 @@ var AdminModuleController = function() {
             var selectedCategory = $(this).attr('data-category-display-ref');
 
             $.each(window.vApp.modules, function(index, value) {
+                value.attributes.visible = false;
+            });
+
+            $.each(window.vApp.modules, function(index, value) {
                 if (
                     value.attributes.categoryName == selectedCategory ||
                     value.attributes.categoryParent == selectedCategory
                 ) {
                     value.attributes.visible = true;
-                } else {
-                    value.attributes.visible = false;
                 }
+
+                if (selectedCategory == 'Other') {
+                    console.log('-> ' + value.attributes.categoryName + ' -> ' + value.attributes.categoryParent);
+                }
+
+                if (selectedCategory == 'Other' && (
+                    value.attributes.categoryName == '' ||
+                    value.attributes.categoryParent == ''
+                )) {
+                    value.attributes.visible = true;
+                }
+
             });
             $('.module-category-reset').show();
+
+            window.currentRefCategory = selectedCategory;
+            $('#catDropdown')
+                .find('.module-category-selector-label')
+                .text(selectedCategory);
         });
 
         body.on('click', this.categoryResetBtnSelector, function() {
+            window.currentRefCategory = null;
+            window.currentRefStatus = null;
+
             $.each(window.vApp.modules, function(index, value) {
                 value.attributes.visible = true;
                 $('.module-category-reset').hide();
             });
+
+            $('#catDropdown')
+                .find('.module-category-selector-label')
+                .text(window.catLabel);
         });
     };
 
