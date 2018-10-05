@@ -77,6 +77,7 @@ $(document).ready(function() {
 			
 			if (typeof filterCategoryTab !== 'undefined') {
 				$.each(window.vApp.modules, function (key, value) {
+					// /!\ we filter by tab, and not by category, that's why the results might differ					
 					if (value.attributes.tab == filterCategoryTab) {
 						value.attributes.visible = true;
 					} else {
