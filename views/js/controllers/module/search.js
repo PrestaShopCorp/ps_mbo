@@ -301,7 +301,13 @@ var AdminModuleController = function() {
 
             var isVisible = true;
             if (window.currentRefCategory !== null) {
-                if (
+                if (window.currentRefCategory == 'Other' && 
+                    currentModule.attributes.categoryName != '' &&
+                    currentModule.attributes.categoryParent != ''
+                ) {
+                    console.log(currentModule.attributes.categoryName);
+                    isVisible = false;
+                } else if (
                     currentModule.attributes.categoryName !=
                         window.currentRefCategory &&
                     currentModule.attributes.categoryParent !=
@@ -309,6 +315,14 @@ var AdminModuleController = function() {
                 ) {
                     isVisible = false;
                 }
+            }
+
+            if (window.currentRefCategory == 'Other' && (
+                currentModule.attributes.categoryName == '' ||
+                    currentModule.attributes.categoryParent == ''
+            )) {
+                isVisible = true;
+                window.vApp.modules[i].attributes.visible = true;
             }
 
             if (window.currentRefStatus !== null) {
@@ -973,10 +987,6 @@ var AdminModuleController = function() {
                     value.attributes.categoryParent == selectedCategory
                 ) {
                     value.attributes.visible = true;
-                }
-
-                if (selectedCategory == 'Other') {
-                    console.log('-> ' + value.attributes.categoryName + ' -> ' + value.attributes.categoryParent);
                 }
 
                 if (selectedCategory == 'Other' && (
