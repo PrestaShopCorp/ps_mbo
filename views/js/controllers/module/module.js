@@ -76,25 +76,10 @@ $(document).ready(function() {
 			window.vApp.categories = parsedData.categories;
 			
 			if (typeof filterCategoryTab !== 'undefined') {
-
-				$.each(window.vApp.modules, function (key, value) {
-					if (
-						value.attributes.categoryId == filterCategoryTab ||
-						value.attributes.categoryParentId == filterCategoryTab
-					) {
-						value.attributes.visible = true;
-					} else {
-						value.attributes.visible = false;
-					}
-				}); 
-
 				// should use a promise, to improve
 				setTimeout(function () {
-					$('#catDropdown').find('.module-category-selector-label').text(
-						$('.module-category-menu[data-category-display-ref-menu=' + filterCategoryTab + ']').attr('data-category-display-name')
-					);
+					$('.module-category-menu[data-category-display-ref-menu=' + filterCategoryTab + ']').trigger('click');
 				}, 300);
-
 			}
 			$('[data-toggle="popover"]').popover();
 			$('#psmbo .btn-primary-reverse.spinner').addClass('hide');
