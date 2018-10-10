@@ -27,7 +27,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title module-modal-title">{l s='Upload a module' mod='Admin.Modules.Feature'}</h4>
+                <h4 class="modal-title module-modal-title">{l s='Upload a module' d='Admin.Modules.Feature'}</h4>
                 <button id="module-modal-import-closing-cross" type="button" class="close">&times;</button>
             </div>
             <div class="modal-body">
@@ -48,36 +48,36 @@
                                 <div class="module-import-start">
                                     <i class="module-import-start-icon material-icons">cloud_upload</i><br/>
                                     <p class=module-import-start-main-text>
-										{l s='Drop your module archive here or' mod='Admin.Modules.Feature'}
-										<a href="#" class="module-import-start-select-manual">{l s='select file' mod='Admin.Modules.Feature'}</a>
+										{l s='Drop your module archive here or' d='Admin.Modules.Feature'}
+										<a href="#" class="module-import-start-select-manual">{l s='select file' d='Admin.Modules.Feature'}</a>
                                     </p>
                                     <p class=module-import-start-footer-text>
-										{l s='Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).' mod='Admin.Modules.Help'}
-										{l s='Your module will be installed right after that.' mod='Admin.Modules.Help'}
+										{l s='Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).' d='Admin.Modules.Help'}
+										{l s='Your module will be installed right after that.' d='Admin.Modules.Help'}
                                     </p>
                                 </div>
                                 <div class='module-import-processing'>
                                     <!-- Loader -->
                                     <div class="spinner"></div>
                                     <p class=module-import-processing-main-text>
-										{l s='Installing module...' mod='Admin.Modules.Notification'}
+										{l s='Installing module...' d='Admin.Modules.Notification'}
 									</p>
                                     <p class=module-import-processing-footer-text>
-										{l s='It will close as soon as the module is installed. It won\'t be long!' mod='Admin.Modules.Notification'}
+										{l s='It will close as soon as the module is installed. It won\'t be long!' d='Admin.Modules.Notification'}
                                     </p>
                                 </div>
                                 <div class='module-import-success'>
                                     <i class="module-import-success-icon material-icons">done</i><br/>
-                                    <p class='module-import-success-msg'>{l s='Module installed!' mod='Admin.Modules.Notification'}</p>
+                                    <p class='module-import-success-msg'>{l s='Module installed!' d='Admin.Modules.Notification'}</p>
                                     <p class="module-import-success-details"></p>
-                                    <a class="module-import-success-configure btn btn-primary-reverse btn-outline-primary light-button" href='#'>{l s='Configure' mod='Admin.Actions'}</a>
+                                    <a class="module-import-success-configure btn btn-primary-reverse btn-outline-primary light-button" href='#'>{l s='Configure' d='Admin.Actions'}</a>
                                 </div>
                                 <div class='module-import-failure'>
                                     <i class="module-import-failure-icon material-icons">error</i><br/>
-                                    <p class='module-import-failure-msg'>{l s='Oops... Upload failed.' mod='Admin.Modules.Notification'}</p>
-                                    <a href="#" class="module-import-failure-details-action">{l s='What happened?' mod='Admin.Modules.Help'}</a>
+                                    <p class='module-import-failure-msg'>{l s='Oops... Upload failed.' d='Admin.Modules.Notification'}</p>
+                                    <a href="#" class="module-import-failure-details-action">{l s='What happened?' d='Admin.Modules.Help'}</a>
                                     <div class='module-import-failure-details'></div>
-                                    <a class="module-import-failure-retry btn btn-tertiary" href='#'>{l s='Try again' mod='Admin.Actions'}</a>
+                                    <a class="module-import-failure-retry btn btn-tertiary" href='#'>{l s='Try again' d='Admin.Actions'}</a>
                                 </div>
                                 <div class='module-import-confirm'>
                                 </div>
