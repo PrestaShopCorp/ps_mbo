@@ -7,14 +7,14 @@
 
 		{if isset($addons_connect)}
 			{if $addons_connect['connected'] === true}
-			<a class="btn btn-primary pointer" id="page-header-desc-configuration-addons_logout" href="#" title="" data-toggle="modal" data-placement="bottom" data-original-title="{l s='Synchronized with Addons marketplace' mod='Admin.Modules.Notification'}" data-target="#module-modal-addons-logout">
+			<a class="btn btn-primary pointer" id="page-header-desc-configuration-addons_logout" href="#" title="" data-toggle="modal" data-placement="bottom" data-original-title="{l s='Synchronized with Addons marketplace' d='Admin.Modules.Notification'}" data-target="#module-modal-addons-logout">
 				<i class="material-icons">exit_to_app</i>
 				{$addons_connect['email']}
 			</a>
 			{else}
-				<a class="btn btn-primary pointer" id="page-header-desc-configuration-addons_connect" href="#" title="" data-toggle="modal" data-placement="bottom" data-original-title="{l s='Connect to Addons marketplace' mod='Admin.Modules.Feature'}" data-target="#module-modal-addons-connect">
+				<a class="btn btn-primary pointer" id="page-header-desc-configuration-addons_connect" href="#" title="" data-toggle="modal" data-placement="bottom" data-original-title="{l s='Connect to Addons marketplace' d='Admin.Modules.Feature'}" data-target="#module-modal-addons-connect">
 					<i class="material-icons">vpn_key</i>
-					{l s='Connect to Addons marketplace' mod='Admin.Modules.Feature'}
+					{l s='Connect to Addons marketplace' d='Admin.Modules.Feature'}
 				</a>
 			{/if}
 		{/if}
