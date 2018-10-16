@@ -29,7 +29,7 @@
 		<!-- Modal content-->
 		<div class="modal-content">
 			<div class="modal-header">
-			  <h4 class="modal-title module-modal-title">{l s='Connect to Addons marketplace' mod='Admin.Modules.Feature'}</h4>
+			  <h4 class="modal-title module-modal-title">{l s='Connect to Addons marketplace' d='Admin.Modules.Feature'}</h4>
 			  <button type="button" class="close" data-dismiss="modal">&times;</button>
 			</div>
 			<div class="modal-body">
@@ -47,29 +47,29 @@
 				<div class="row">
 					<div class="col-md-12">
 						<p>
-							{l s='Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don\'t have an account yet?' mod='Admin.Modules.Feature'}
-							<a href="https://addons.prestashop.com/authentication.php" target="_blank">{l s='Sign up now' mod='Admin.Modules.Feature'}</a>
+							{l s='Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don\'t have an account yet?' d='Admin.Modules.Feature'}
+							<a href="https://addons.prestashop.com/authentication.php" target="_blank">{l s='Sign up now' d='Admin.Modules.Feature'}</a>
 						</p>
 						{* /prestashop17/admin-dev/index.php/addons/login?_token=4xDZLkW-GyILZheADOFUaFc64RW5FrgiYbJLIpPlWXQ *}
 						<form id="addons-connect-form"  action="{$addons_connect['login_url']}" method="POST">
 							<div class="form-group">
-							  <label for="module-addons-connect-email">{l s='Email address' mod='Admin.Global'}</label>
+							  <label for="module-addons-connect-email">{l s='Email address' d='Admin.Global'}</label>
 							  <input name="username_addons" type="email" class="form-control" id="module-addons-connect-email" placeholder="Email">
 							</div>
 							<div class="form-group">
-							  <label for="module-addons-connect-password">{l s='Password' mod='Admin.Global'}</label>
+							  <label for="module-addons-connect-password">{l s='Password' d='Admin.Global'}</label>
 							  <input name="password_addons" type="password" class="form-control" id="module-addons-connect-password" placeholder="Password">
 							</div>
 							<div class="checkbox">
 							  <label>
-								<input name="addons_remember_me" type="checkbox"> {l s='Remember me' mod='Admin.Global'}
+								<input name="addons_remember_me" type="checkbox"> {l s='Remember me' d='Admin.Global'}
 							  </label>
 							</div>
-							<button type="submit" class="btn btn-primary">{l s='Let\'s go!' mod='Admin.Actions'}</button>
+							<button type="submit" class="btn btn-primary">{l s='Let\'s go!' d='Admin.Actions'}</button>
 							<div id="addons_login_btn" class="spinner" style="display:none;"></div>
 						</form>
 						<p>
-							<a href="https://addons.prestashop.com/password.php" target="_blank">{l s='Forgot your password?' mod='Admin.Global'}</a>
+							<a href="https://addons.prestashop.com/password.php" target="_blank">{l s='Forgot your password?' d='Admin.Global'}</a>
 						</p>
 					</div>
 			  </div>
@@ -85,21 +85,21 @@
 			<div class="modal-content">
 				<div class="modal-header">
 				  <button type="button" class="close" data-dismiss="modal">&times;</button>
-				  <h4 class="modal-title module-modal-title">{l s='Confirm logout' mod='Admin.Modules.Feature'}</h4>
+				  <h4 class="modal-title module-modal-title">{l s='Confirm logout' d='Admin.Modules.Feature'}</h4>
 				</div>
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-md-12">
 							<p>
-								{l s='You are about to log out your Addons account. You might miss important updates of Addons you\'ve bought.' mod='Admin.Modules.Notification'}
+								{l s='You are about to log out your Addons account. You might miss important updates of Addons you\'ve bought.' d='Admin.Modules.Notification'}
 							</p>
 						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
-					<input type="button" class="btn btn-default uppercase" data-dismiss="modal" value="{l s='Cancel' mod='Admin.Actions'}">
+					<input type="button" class="btn btn-default uppercase" data-dismiss="modal" value="{l s='Cancel' d='Admin.Actions'}">
 					{* path('admin_addons_logout') *}
-					<a class="btn btn-primary uppercase" href="{$addons_connect['logout_url']}" id="module-modal-addons-logout-ack">{l s='Yes, log out' mod='Admin.Modules.Feature'}</a>
+					<a class="btn btn-primary uppercase" href="{$addons_connect['logout_url']}" id="module-modal-addons-logout-ack">{l s='Yes, log out' d='Admin.Modules.Feature'}</a>
 				</div>
 			</div>
 		</div>
