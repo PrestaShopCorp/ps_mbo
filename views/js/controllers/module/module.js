@@ -76,13 +76,10 @@ $(document).ready(function() {
 			window.vApp.categories = parsedData.categories;
 			
 			if (typeof filterCategoryTab !== 'undefined') {
-				$.each(window.vApp.modules, function (key, value) {
-					if (value.attributes.tab == filterCategoryTab) {
-						value.attributes.visible = true;
-					} else {
-						value.attributes.visible = false;
-					}
-				}); 
+				// should use a promise, to improve
+				setTimeout(function () {
+					$('.module-category-menu[data-category-display-ref-menu=' + filterCategoryTab + ']').trigger('click');
+				}, 300);
 			}
 			$('[data-toggle="popover"]').popover();
 			$('#psmbo .btn-primary-reverse.spinner').addClass('hide');
