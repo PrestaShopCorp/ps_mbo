@@ -305,7 +305,6 @@ var AdminModuleController = function() {
                     currentModule.attributes.categoryName != '' &&
                     currentModule.attributes.categoryParent != ''
                 ) {
-                    console.log(currentModule.attributes.categoryName);
                     isVisible = false;
                 } else if (
                     currentModule.attributes.categoryName !=
