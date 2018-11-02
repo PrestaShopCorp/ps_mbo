@@ -85,7 +85,7 @@ class AdminPsMboModuleController extends ModuleAdminController
             'configure_type'    => $this->controller_quick_name,
             'template_dir' => $this->module->template_dir,
             'admin_module_controller_psmbo'  => $this->module->controller_name[0],
-            'admin_module_ajax_url_psmbo'    => $this->module->front_controller[0],
+            'admin_module_ajax_url_psmbo'    => $this->module->getControllerLink('AdminPsMboModule'),
             'currency_symbol' => Context::getContext()->currency->sign,
             'bo_img' => __PS_BASE_URI__ . $admin_webpath . '/themes/default/img/',
             'install_url' => $install_url,
@@ -113,7 +113,7 @@ class AdminPsMboModuleController extends ModuleAdminController
 
         $aJsDef = array(
             'admin_module_controller_psmbo'  => $this->module->controller_name[0],
-            'admin_module_ajax_url_psmbo'    => $this->module->front_controller[0]
+            'admin_module_ajax_url_psmbo'    => $this->module->getControllerLink('AdminPsMboModule')
         );
 
         $aCss = array(
