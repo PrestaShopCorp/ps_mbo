@@ -24,9 +24,6 @@
   *#}
 
 {% block catalog_category_empty %}
-
-{{ category }}
-
   <div class="modules-list module-list-empty" data-name="{{ category.refMenu }}">
     <p>
       {{ 'You do not have module in « %categoryName% ».' | trans({'%categoryName%': category.name}, 'Admin.Modules.Feature') }}<br/>
