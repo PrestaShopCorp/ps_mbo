@@ -55,6 +55,11 @@ class ps_mbo extends Module
         )
     );
 
+    /**
+     * Links to the admin controllers created by the module
+     */
+    protected $front_controller = null;
+
     public function __construct()
     {
         $this->name = 'ps_mbo';
@@ -67,10 +72,6 @@ class ps_mbo extends Module
         $this->description = $this->l('Discover the best PrestaShop modules to optimize your online store.');
 
         $this->controller_name = array('AdminPsMboModule', 'AdminPsMboTheme');
-        $this->front_controller =  array(
-            'index.php?controller=' . $this->controller_name[0] . '&token=' . Tools::getAdminTokenLite($this->controller_name[0]),
-            'index.php?controller=' . $this->controller_name[1] . '&token=' . Tools::getAdminTokenLite($this->controller_name[1]),
-        );
 
         $this->template_dir = '../../../../modules/' . $this->name . '/views/templates/admin/';
 
@@ -172,7 +173,7 @@ class ps_mbo extends Module
         }
 
         $data['controller_name'] = $controller;
-        $data['admin_module_ajax_url_psmbo'] = $this->front_controller[0];
+        $data['admin_module_ajax_url_psmbo'] = $this->getControllerLink('AdminPsMboModule');
         $data['from'] = 'footer';
         $data['modules_list'] = $modules;
 
@@ -232,7 +233,7 @@ class ps_mbo extends Module
         $data = array(
             'panel_id' => $panel_id,
             'controller_name' => $controller,
-            'admin_module_ajax_url_psmbo' => $this->front_controller[0],
+            'admin_module_ajax_url_psmbo' => $this->getControllerLink('AdminPsMboModule'),
             'from' => 'footer',
             'modules_list' => $modules,
         );
@@ -244,6 +245,26 @@ class ps_mbo extends Module
         }
 
         return $this->context->smarty->fetch($this->template_dir . '/include/admin-end-content-footer.tpl');
+    }
+
+    /**
+     * @param string $tab The controller we want a link for.
+     * 
+     * @return string Admin link with token
+     */
+    public function getControllerLink($tab)
+    {
+        if (null === $this->front_controller) {
+            $this->front_controller =  array();
+            foreach ($this->controller_name as $name) {
+                $this->front_controller[$name] = 'index.php?controller=' . $name . '&token=' . Tools::getAdminTokenLite($name);
+            }
+        }
+
+        if (isset($this->front_controller[$tab])) {
+            return $this->front_controller[$tab];
+        }
+        throw new Exception('Unknown controller requested.');
     }
 
     protected function handleAddonsConnectWithMbo()
@@ -268,7 +289,7 @@ class ps_mbo extends Module
         }
 
         $this->context->smarty->assign([
-            'admin_module_ajax_url_psmbo' => $this->front_controller[0]
+            'admin_module_ajax_url_psmbo' => $this->getControllerLink('AdminPsMboModule')
         ]);
         return $this->context->smarty->fetch($this->template_dir . '/admin-end-content-theme.tpl');
     }
@@ -292,7 +313,7 @@ class ps_mbo extends Module
         $controllerWhiteList = array('AdminCarriers', 'AdminPayment');
         if (in_array($controller_page, $controllerWhiteList)) {
             $this->context->smarty->assign(array(
-                'admin_module_ajax_url_psmbo' => $this->front_controller[0],
+                'admin_module_ajax_url_psmbo' => $this->getControllerLink('AdminPsMboModule'),
                 'controller_page' => $controller_page
             ));
 
