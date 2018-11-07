@@ -670,10 +670,11 @@ var AdminModuleController = function() {
             self.animateEndUpload(function() {
                 if (result.status === true) {
                     if (result.is_configurable === true) {
+
                         $(self.moduleImportSuccessConfigureBtnSelector).attr(
                             'href',
                             window.mboJavascriptUrls['configure'].replace(
-                                '%25module_name%25',
+                                '%25module_name%25', // not ideal but json_encode changes the '%' to '%25'
                                 result.module_name
                             )
                         );
