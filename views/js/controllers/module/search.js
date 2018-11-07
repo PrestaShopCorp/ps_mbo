@@ -673,7 +673,7 @@ var AdminModuleController = function() {
                         $(self.moduleImportSuccessConfigureBtnSelector).attr(
                             'href',
                             window.mboJavascriptUrls['configure'].replace(
-                                '%module_name%',
+                                '%25module_name%25',
                                 result.module_name
                             )
                         );
