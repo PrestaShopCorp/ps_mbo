@@ -20,8 +20,8 @@
     width: 100%;
 }
 
-#search-input-group.input-group .pstaggerAddTagInput:hover, 
-#search-input-group.input-group .pstaggerAddTagInput:active, 
+#search-input-group.input-group .pstaggerAddTagInput:hover,
+#search-input-group.input-group .pstaggerAddTagInput:active,
 #search-input-group.input-group .pstaggerAddTagInput:focus {
 	z-index: 2
 }
@@ -154,11 +154,11 @@
 	border: 0;
     border-top: 1px solid #bbcdd2;
 }
+.bootstrap #psmbo .module-container hr {
+    margin-bottom: 20px;
+}
 
 #psmbo .form-action-button-container {
-/*	display: initial;
-    padding-left: 10px;
-    padding-right: 10px;*/
     display: flex;
     -webkit-box-pack: end;
     justify-content: flex-end;
@@ -166,6 +166,10 @@
     bottom: 10px;
     width: 100%;
     left: 0;
+}
+
+.bootstrap #psmbo .module-stars {
+    bottom: auto;
 }
 
 .bootstrap #psmbo .dropdown-item {
@@ -197,7 +201,12 @@
 	text-decoration: none;
 }
 
-.bootstrap #psmbo .module-price { right: 25px; }
+.bootstrap #psmbo .module-price {
+    right: auto;
+    bottom: auto;
+    position: relative;
+    margin-right: 5px;
+}
 
 .link-leveltwo>.link,
 .menu .main-tab .submenu a,
@@ -334,8 +343,8 @@ h4.modal-title {
     font-weight: 400;
 }
 
-.bootstrap #modules-list-container-all .btn.dropdown-toggle-split:after { 
-    margin-left: 0px; 
+.bootstrap #modules-list-container-all .btn.dropdown-toggle-split:after {
+    margin-left: 0px;
     font-family: Material Icons;
     font-weight: 400;
     font-style: normal;
@@ -364,4 +373,3 @@ h4.modal-title {
 }
 
 .form-action-button { width: 100%; }
-.module-item-wrapper-grid .module-quick-action-grid .module-actions { bottom: -45px!important; }

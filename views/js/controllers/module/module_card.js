@@ -84,7 +84,7 @@ var AdminModuleCard = function () {
 
     /**
      * Update the content of a modal asking a confirmation for PrestaTrust and open it
-     * 
+     *
      * @param {array} result containing module data
      * @return {void}
      */
@@ -105,16 +105,16 @@ var AdminModuleCard = function () {
         });
         modal.modal();
     };
-    
+
     this.replacePrestaTrustPlaceholders = function replacePrestaTrustPlaceholders(result) {
         var modal = $("#modal-prestatrust");
         var module = result.module.attributes;
         if (result.confirmation_subject !== 'PrestaTrust' || !modal.length) {
             return;
         }
-        
+
         var alertClass = module.prestatrust.status ? 'success' : 'warning';
-        
+
         if (module.prestatrust.check_list.property) {
             modal.find("#pstrust-btn-property-ok").show();
             modal.find("#pstrust-btn-property-nok").hide();
@@ -123,14 +123,14 @@ var AdminModuleCard = function () {
             modal.find("#pstrust-btn-property-nok").show();
             modal.find("#pstrust-buy").attr("href", module.url).toggle(module.url !== null);
         }
-        
+
         modal.find("#pstrust-img").attr({src: module.img, alt: module.name});
         modal.find("#pstrust-name").text(module.displayName);
         modal.find("#pstrust-author").text(module.author);
         modal.find("#pstrust-label").attr("class", "text-" + alertClass).text(module.prestatrust.status ? 'OK' : 'KO');
         modal.find("#pstrust-message").attr("class", "alert alert-"+alertClass);
         modal.find("#pstrust-message > p").text(module.prestatrust.message);
-        
+
         return modal;
     }
 
@@ -259,12 +259,13 @@ var AdminModuleCard = function () {
 //                        BOEvent.emitEvent("Module Enabled", "CustomEvent");
                     }
 
+                    var actionsBar = $(result[moduleTechName].action_menu_html).addClass('form-action-button-container');
                     if (jqElementObj.length > 0) {
-                        jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
+                        jqElementObj.replaceWith(actionsBar);
                     } else {
-                        element.closest("div.module-actions").replaceWith(result[moduleTechName].action_menu_html);;
+                        element.closest("div.module-actions").replaceWith(actionsBar);
                     }
-                    
+
 					$('#psmbo .dropdown-toggle .caret').css({'display': 'none'});
                 }
             }

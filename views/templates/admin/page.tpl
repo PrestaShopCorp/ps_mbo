@@ -110,27 +110,25 @@
 
                     <div class="module-container module-quick-action-grid clearfix">
                         <div class="badges-container">
-
-                            <div class="float-right module-price">
-                                <span v-if="module.attributes.price === 0" class="pt-2" >
-                                    {l s='Free'}
-                                </span>
-                                <span v-else>
-                                    [[ module.attributes.price ]] {$currency_symbol}
-                                </span>
-                            </div>
-
                             <div v-for="badge in module.attributes.badges">
                                 <img v-bind:src="badge.img" v-bind:alt="badge.label"/>
                                 <span>[[ badge.label ]]</span>
                             </div>
-                            {*<img v-if="module.attributes.badges[0].img && module.attributes.badges[0].label" v-bind:src="module.attributes.badges[0].img" v-bind:alt="module.attributes.badges[0].label"/>
-                               <span v-if="module.attributes.badges[0].img && module.attributes.badges[0].label">[[ module.attributes.badges[0].label ]]</span>*}
                         </div>
                         <hr v-if="module.attributes.badges" />
-                        <div v-if="module.attributes.nbRates > 0" v-bind:class="getAvgRateClass(module.attributes.avgRate)">
+                        <div v-if="module.attributes.nbRates > 0" class="float-left" v-bind:class="getAvgRateClass(module.attributes.avgRate)">
                             ([[ module.attributes.nbRates ]])
                         </div>
+
+                        <div class="float-right module-price">
+                            <span v-if="module.attributes.price === 0" class="pt-2" >
+                                {l s='Free'}
+                            </span>
+                            <span v-else>
+                                [[ module.attributes.price ]] {$currency_symbol}
+                            </span>
+                        </div>
+
                         {if isset($requireBulkActions) && $requireBulkActions == true}
                             <div class="float-right module-checkbox-bulk-grid">
                                 <input type="checkbox" v-bind:data-name="module.attributes.displayName" v-bind:data-tech-name="module.attributes.name" />
