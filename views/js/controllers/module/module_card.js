@@ -259,11 +259,11 @@ var AdminModuleCard = function () {
 //                        BOEvent.emitEvent("Module Enabled", "CustomEvent");
                     }
 
-                    var actionsBar = $(result[moduleTechName].action_menu_html).addClass('form-action-button-container');
+                    var actionsBar = $(result[moduleTechName].action_menu_html);
                     if (jqElementObj.length > 0) {
-                        jqElementObj.replaceWith(actionsBar);
+                        jqElementObj.html(actionsBar);
                     } else {
-                        element.closest("div.module-actions").replaceWith(actionsBar);
+                        element.closest("div.module-actions").html(actionsBar);
                     }
 
 					$('#psmbo .dropdown-toggle .caret').css({'display': 'none'});

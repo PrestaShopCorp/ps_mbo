@@ -168,6 +168,11 @@
     left: 0;
 }
 
+#psmbo .form-action-button-container .module-actions {
+    width: 92%;
+    margin: auto 4%;
+}
+
 .bootstrap #psmbo .module-stars {
     bottom: auto;
 }
