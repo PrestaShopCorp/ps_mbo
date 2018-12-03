@@ -141,7 +141,7 @@ class AdminPsMboModuleController extends ModuleAdminController
         return json_encode($results);
     }
 
-    public function ajaxProcessGetModulesList()
+    public function displayAjaxGetModulesList()
     {
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
@@ -216,7 +216,7 @@ class AdminPsMboModuleController extends ModuleAdminController
         return $presentedProducts;
     }
 
-    public function ajaxProcessGetModuleQuickView()
+    public function displayAjaxGetModuleQuickView()
     {
         $modules = Module::getModulesOnDisk();
 
@@ -250,7 +250,7 @@ class AdminPsMboModuleController extends ModuleAdminController
         $this->ajaxRender($this->context->smarty->fetch($this->module->template_dir . '/quickview.tpl'));
     }
 
-    public function ajaxProcessGetTabModulesList()
+    public function displayAjaxGetTabModulesList()
     {
         $result = $this->module->fetchModulesByController(true);
 
@@ -266,7 +266,7 @@ class AdminPsMboModuleController extends ModuleAdminController
         $this->smartyOutputContent($this->module->template_dir . '/include/admin-end-content-footer-legacy.tpl');
     }
 
-    public function ajaxProcessFetchModules()
+    public function displayAjaxFetchModules()
     {
         $this->ajaxRender($this->module->fetchModules(Tools::getValue('controller_page')));
     }
@@ -316,7 +316,7 @@ class AdminPsMboModuleController extends ModuleAdminController
         return $modules_list;
     }
 
-    public function ajaxProcessGetMboAddonsThemes()
+    public function displayAjaxGetMboAddonsThemes()
     {
         $parent_domain = Tools::getHttpHost(true) . substr($_SERVER['REQUEST_URI'], 0, -1 * strlen(basename($_SERVER['REQUEST_URI'])));
         $iso_lang = Context::getContext()->language->iso_code;
