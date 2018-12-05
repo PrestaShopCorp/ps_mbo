@@ -216,7 +216,7 @@ class AdminPsMboModuleController extends ModuleAdminController
         return $presentedProducts;
     }
 
-    public function displayAjaxGetModuleQuickView()
+    public function displayAjaxGetMboModuleQuickView()
     {
         $modules = Module::getModulesOnDisk();
 

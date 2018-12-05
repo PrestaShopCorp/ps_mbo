@@ -35,7 +35,7 @@ $(document).ready(function() {
         },
 		methods: {
 			getHref: function(module_name) {
-				return window.vApp.admin_module_ajax_url_psmbo + '&action=GetModuleQuickView&module_name=' + module_name + '&ajax=1';
+				return window.vApp.admin_module_ajax_url_psmbo + '&action=GetMboModuleQuickView&module_name=' + module_name + '&ajax=1';
 			},
 			getAvgRateClass: function(avg_rate) {
 				return 'module-stars module-star-ranking-grid-' + Math.round(avg_rate) + ' small';
