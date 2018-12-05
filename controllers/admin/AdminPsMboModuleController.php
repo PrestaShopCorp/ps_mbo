@@ -172,6 +172,7 @@ class AdminPsMboModuleController extends ModuleAdminController
 
         $modules = $this->getPresentedProducts($modules);
         foreach ($modules as $key => &$module) {
+            $module['attributes']['displayName'] = html_entity_decode($module['attributes']['displayName']);
             $module['attributes']['description'] = html_entity_decode($module['attributes']['description']);
             $module['attributes']['description'] = htmlspecialchars_decode(
                 $module['attributes']['description'],
