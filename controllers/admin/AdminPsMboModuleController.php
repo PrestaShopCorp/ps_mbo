@@ -164,7 +164,7 @@ class AdminPsMboModuleController extends ModuleAdminController
         $categories = $container->get('prestashop.categories_provider')->getCategoriesMenu($modules);
 
         foreach ($categories['categories']->subMenu as &$category) {
-            $category->name = $this->trans($category->name, array(), 'Admin.Modules.Feature');
+            $category->name = html_entity_decode($this->trans($category->name, array(), 'Admin.Modules.Feature'));
         }
 
         // In newest versions of PrestaShop, a AddonsCollection can be returned.
