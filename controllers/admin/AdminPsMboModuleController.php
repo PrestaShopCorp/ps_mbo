@@ -163,6 +163,10 @@ class AdminPsMboModuleController extends ModuleAdminController
 
         $categories = $container->get('prestashop.categories_provider')->getCategoriesMenu($modules);
 
+        foreach ($categories['categories']->subMenu as &$category) {
+            $category->name = html_entity_decode($this->trans($category->name, array(), 'Admin.Modules.Feature'));
+        }
+
         // In newest versions of PrestaShop, a AddonsCollection can be returned.
         // We check that we deal with an array, as the class may not exist.
         if (!is_array($modules)) {
@@ -172,6 +176,7 @@ class AdminPsMboModuleController extends ModuleAdminController
 
         $modules = $this->getPresentedProducts($modules);
         foreach ($modules as $key => &$module) {
+            $module['attributes']['displayName'] = html_entity_decode($module['attributes']['displayName']);
             $module['attributes']['description'] = html_entity_decode($module['attributes']['description']);
             $module['attributes']['description'] = htmlspecialchars_decode(
                 $module['attributes']['description'],
@@ -216,7 +221,7 @@ class AdminPsMboModuleController extends ModuleAdminController
         return $presentedProducts;
     }
 
-    public function displayAjaxGetModuleQuickView()
+    public function displayAjaxGetMboModuleQuickView()
     {
         $modules = Module::getModulesOnDisk();
 
