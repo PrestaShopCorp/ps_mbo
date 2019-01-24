@@ -9,7 +9,7 @@
 {/if}
             <div class="card-block">
                 <div class="module-item-list">
-                    {if count($modules_list)}
+                    {if !empty($modules_list)}
                         {counter start=1  assign="count"}
                             {foreach from=$modules_list item=module}
                                 {include file='./tab_module_line.tpl' class_row={cycle values=",row alt"}}
