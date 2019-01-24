@@ -7,7 +7,7 @@
 	{/if}
     <div class="modules_list_container_tab row">
         <div class="col-lg-12">
-            {if count($modules_list)}
+            {if !empty($modules_list)}
                 <table class="table">
                     {counter start=1  assign="count"}
                         {foreach from=$modules_list item=module}
