@@ -96,6 +96,19 @@ var mbo = {};
     };
 
     /**
+     * Remove core-generated buttons in PS < 1.7.6.0
+     * @return this
+     */
+    this.removePreviousButton = function() {
+      // default theme
+      $('#page-header-desc-category-modules-list').parent().remove();
+      // new theme
+      $('#page-header-desc-configuration-modules-list').remove();
+
+      return this;
+    };
+
+    /**
      * Inserts the provided button in the toolbar
      *
      * @param {RecommendedModulesButton} button
@@ -226,6 +239,7 @@ var mbo = {};
     var button = new RecommendedModulesButton(config.lang, isNewTheme, config.recommendedModulesButtonUrl);
 
     new Page(pageMap)
+      .removePreviousButton()
       .insertToolbarButton(button);
 
     if (!isNewTheme) {
