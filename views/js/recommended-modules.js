@@ -30,6 +30,7 @@ var mbo = {};
 (function() {
   var pageMapDefault = {
     toolbarButtonsContainer: '#toolbar-nav',
+    toolbarButtons: '#toolbar-nav > li > a.toolbar_btn',
     toolbarHelpButton: '#toolbar-nav li:last-of-type > a.btn-help',
     toolbarLastElement: '#toolbar-nav li:last-of-type',
     recommendedModulesButton: '#recommended-modules-button',
@@ -44,6 +45,7 @@ var mbo = {};
     toolbarHelpButton: '.toolbar-icons a.btn-help',
     toolbarLastElement: '.toolbar-icons a:last-of-type',
     recommendedModulesButton: '#recommended-modules-button',
+    oldButton: '#page-header-desc-configuration-modules-list',
   };
 
   /**
@@ -96,14 +98,25 @@ var mbo = {};
     };
 
     /**
-     * Remove core-generated buttons in PS < 1.7.6.0
+     * Remove core-generated "recommended module" button in PS < 1.7.6.0
      * @return this
      */
-    this.removePreviousButton = function() {
-      // default theme
-      $('#page-header-desc-category-modules-list').parent().remove();
-      // new theme
-      $('#page-header-desc-configuration-modules-list').remove();
+    this.removeOldButton = function() {
+      if (pageMap.toolbarButtons) {
+        // default theme
+        $(pageMap.toolbarButtons).filter(
+          function() {
+            var buttonIdPattern = /^page-header-desc-[a-z-]+-modules-list$/;
+            return String($(this).attr('id'))
+              .match(buttonIdPattern);
+          }
+        ).parent().remove();
+      }
+
+      if (pageMap.oldButton) {
+        // new theme
+        $(pageMap.oldButton).remove();
+      }
 
       return this;
     };
@@ -239,7 +252,7 @@ var mbo = {};
     var button = new RecommendedModulesButton(config.lang, isNewTheme, config.recommendedModulesButtonUrl);
 
     new Page(pageMap)
-      .removePreviousButton()
+      .removeOldButton()
       .insertToolbarButton(button);
 
     if (!isNewTheme) {
