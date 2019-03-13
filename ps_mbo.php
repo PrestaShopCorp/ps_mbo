@@ -344,15 +344,7 @@ class ps_mbo extends Module
      */
     public function hookDisplayDashboardTop()
     {
-        $exceptions = [
-            'AdminPsMboModule',
-            'AdminModulesManage',
-            'AdminModulesCatalog',
-            'AdminAddonsCatalog',
-            'AdminModules',
-        ];
-
-        if (!in_array($this->context->controller->controller_name, $exceptions)) {
+        if ($this->shouldAttachRecommendedModulesButton()) {
             $this->context->smarty->assign([
                 'mbo_recommended_modules_ajax_url' => $this->context->link->getAdminLink('AdminPsMboModule'),
                 'mbo_current_controller_name' => Tools::getValue('controller'),
@@ -384,6 +376,43 @@ class ps_mbo extends Module
         }
 
         return '';
+    }
+
+    /**
+     * Indicates if the recommended modules button should be attached in this page
+     *
+     * @return bool
+     */
+    private function shouldAttachRecommendedModulesButton()
+    {
+        $controllerExceptions = [
+            'AdminPsMboModule',
+            'AdminModulesManage',
+            'AdminModulesCatalog',
+            'AdminAddonsCatalog',
+            'AdminModules',
+        ];
+
+        if (in_array($this->context->controller->controller_name, $controllerExceptions)) {
+            return false;
+        }
+
+        $routeExceptions = [
+            '#/improve/international/languages/(?:new$|[\d]+/edit)#',
+            '#/configure/shop/seo-urls/(?:new|edit/[\d]+)$#',
+            '#/sell/catalog/categories/(?:new$|[\d]+/edit)#',
+            '#/sell/customers/(?:new$|[\d]+/edit)#',
+        ];
+
+        if (isset($_SERVER['PATH_INFO'])) {
+            foreach ($routeExceptions as $routePattern) {
+                if (preg_match($routePattern, $_SERVER['PATH_INFO'])) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     private function getAddonsConnectToolbar()
