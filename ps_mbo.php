@@ -63,7 +63,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '1.1.1';
+        $this->version = '1.2.0';
         $this->author = 'PrestaShop';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
         $this->bootstrap = true;
@@ -89,7 +89,9 @@ class ps_mbo extends Module
     {
         if (!parent::install()
             || !$this->registerHook('backOfficeHeader')
+            || !$this->registerHook('actionAdminControllerSetMedia')
             || !$this->registerHook('displayDashboardToolbarTopMenu')
+            || !$this->registerHook('displayDashboardTop')
             || !$this->registerHook('displayAdminNavBarBeforeEnd')
             || !$this->registerHook('displayDashboardToolbarIcons')
             || !$this->registerHook('displayAdminEndContent')
@@ -249,7 +251,7 @@ class ps_mbo extends Module
 
     /**
      * @param string $tab The controller we want a link for.
-     * 
+     *
      * @return string Admin link with token
      */
     public function getControllerLink($tab)
@@ -327,6 +329,40 @@ class ps_mbo extends Module
         return $content;
     }
 
+    public function hookActionAdminControllerSetMedia()
+    {
+        // has to be loaded in header to prevent flash of content
+        $this->context->controller->addJs($this->_path . 'views/js/recommended-modules.js?v=' . $this->version);
+    }
+
+    /**
+     * Includes content just below the toolbar
+     *
+     * @return string
+     * @throws PrestaShopException
+     * @throws SmartyException
+     */
+    public function hookDisplayDashboardTop()
+    {
+        if ($this->shouldAttachRecommendedModulesButton()) {
+            $this->context->smarty->assign([
+                'mbo_recommended_modules_ajax_url' => $this->context->link->getAdminLink('AdminPsMboModule'),
+                'mbo_current_controller_name' => Tools::getValue('controller'),
+                'isSymfonyContext' => $this->isSymfonyContext(),
+            ]);
+
+            return $this->context->smarty->fetch($this->template_dir . '/recommended-modules.tpl');
+        }
+
+        return '';
+    }
+
+    /**
+     * Includes content before the toolbar buttons
+     * @return string
+     * @throws PrestaShopException
+     * @throws SmartyException
+     */
     public function hookDisplayDashboardToolbarTopMenu()
     {
         if (Tools::getValue('controller') === 'AdminPsMboModule') {
@@ -339,13 +375,44 @@ class ps_mbo extends Module
             return $this->context->smarty->fetch($this->template_dir . '/module-toolbar.tpl');
         }
 
-        $data = array();
-        $data['controller'] = Tools::getValue('controller');
-        $data['admin_module_ajax_url_psmbo'] = $this->context->link->getAdminLink('AdminPsMboModule');
-        $data['isSymfonyContext'] = $this->isSymfonyContext();
-        $this->context->smarty->assign($data);
+        return '';
+    }
 
-        return $this->context->smarty->fetch($this->template_dir . '/toolbar.tpl');
+    /**
+     * Indicates if the recommended modules button should be attached in this page
+     *
+     * @return bool
+     */
+    private function shouldAttachRecommendedModulesButton()
+    {
+        $controllerExceptions = [
+            'AdminPsMboModule',
+            'AdminModulesManage',
+            'AdminModulesCatalog',
+            'AdminAddonsCatalog',
+            'AdminModules',
+        ];
+
+        if (in_array($this->context->controller->controller_name, $controllerExceptions)) {
+            return false;
+        }
+
+        $routeExceptions = [
+            '#/improve/international/languages/(?:new$|[\d]+/edit)#',
+            '#/configure/shop/seo-urls/(?:new|edit/[\d]+)$#',
+            '#/sell/catalog/categories/(?:new$|[\d]+/edit)#',
+            '#/sell/customers/(?:new$|[\d]+/edit)#',
+        ];
+
+        if (isset($_SERVER['PATH_INFO'])) {
+            foreach ($routeExceptions as $routePattern) {
+                if (preg_match($routePattern, $_SERVER['PATH_INFO'])) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     private function getAddonsConnectToolbar()
