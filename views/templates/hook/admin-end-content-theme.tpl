@@ -1,10 +1,9 @@
-<?php
-/**
+{**
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
+ * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
@@ -22,13 +21,29 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+ *}
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+{**
+<div class="panel clearfix" id="prestastore-content"></div>
+<script type="text/javascript">
+	$.ajax({
+		type: 'POST',
+		headers: { "cache-control": "no-cache" },
+		url: '{$admin_module_ajax_url_psmbo}',
+		async: true,
+		cache: false,
+		dataType : "html",
+		data: {
+			ajax: '1',
+			action:'getMboAddonsThemes',
+		},
+		success: function(htmlData) {
+			$("#prestastore-content").html("<h3><i class='icon-picture-o'></i> {l s='Live from PrestaShop Addons!'}</h3>"+htmlData);
+		}
+	});
 
-header('Location: ../');
-exit;
+	// These variable will move the form to another location
+	var formToMove = "appearance";
+	var formDestination = "js_theme_form_container";
+</script>
+*}

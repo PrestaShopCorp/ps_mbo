@@ -1,10 +1,9 @@
-<?php
-/**
+{**
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
+ * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
@@ -22,13 +21,20 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
-
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
-
-header('Location: ../');
-exit;
+ *}
+{**
+<div class="modal fade" id="modules_list_container">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 class="modal-title">{l s='Recommended Modules and Services'}</h3>
+			</div>
+			<div class="modal-body">
+				<div id="modules_list_container_tab_modal" style="display:none;"></div>
+				<div id="modules_list_loader"><i class="icon-refresh icon-spin"></i></div>
+			</div>
+		</div>
+	</div>
+</div>
+*}

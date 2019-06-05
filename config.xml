@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <module>
     <name>ps_mbo</name>
-    <displayName><![CDATA[MBO]]></displayName>
-    <version><![CDATA[1.1.1]]></version>
+    <displayName><![CDATA[PrestaShop Marketplace in your Back Office]]></displayName>
+    <version><![CDATA[1.2.0]]></version>
     <description><![CDATA[Discover the best PrestaShop modules to optimize your online store.]]></description>
     <author><![CDATA[PrestaShop]]></author>
-    <tab><![CDATA[administration]]></tab>
+    <tab><![CDATA[]]></tab>
     <is_configurable>0</is_configurable>
-    <need_instance>0</need_instance>
-    <limited_countries></limited_countries>
+    <need_instance>1</need_instance>
+	<limited_countries></limited_countries>
 </module>

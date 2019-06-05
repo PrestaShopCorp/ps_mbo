@@ -1,10 +1,9 @@
-<?php
-/**
+{**
  * 2007-2019 PrestaShop SA and Contributors
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
+ * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
@@ -22,13 +21,15 @@
  * @copyright 2007-2019 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+ *}
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
-
-header('Location: ../');
-exit;
+<script>
+  mbo.insertToolbarButton({
+    lang: {
+      'Recommended Modules and Services': '{l s='Recommended Modules and Services'|escape:'javascript'}',
+    },
+    controller : '{$mbo_current_controller_name|escape:'javascript'}',
+    recommendedModulesButtonUrl: '{$mbo_recommended_modules_button_url|escape:'javascript'}',
+    recommendedModulesAjaxUrl: '{$mbo_recommended_modules_ajax_url|escape:'javascript'}',
+  });
+</script>
