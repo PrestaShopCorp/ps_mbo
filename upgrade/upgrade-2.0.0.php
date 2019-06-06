@@ -37,9 +37,8 @@ function upgrade_module_2_0_0($module)
     $hookData = Db::getInstance()->executeS('
         SELECT DISTINCT(`id_hook`)
         FROM `' . _DB_PREFIX_ . 'hook_module`
-        WHERE `id_module` = ' . (int) $module->id . '
-        AND `id_hook` NOT IN (' . (int) Hook::getIdByName('displayAdminEndContent') . ')
-    ');
+        WHERE `id_module` = ' . (int) $module->id
+    );
 
     if (!empty($hookData)) {
         foreach ($hookData as $row) {

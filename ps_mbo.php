@@ -33,12 +33,13 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 }
 
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ps_mbo extends Module
 {
     /**
-     * @var array Tabs
+     * @var array $adminTabs Tabs
      */
     public $adminTabs = [
         'AdminPsMboModule' => [
@@ -65,12 +66,11 @@ class ps_mbo extends Module
     ];
 
     /**
-     * @var array Hooks used
+     * @var array $hooks Hooks used
      */
     public $hooks = [
         'actionAdminControllerSetMedia',
         'displayDashboardTop',
-        'displayAdminEndContent',
     ];
 
     /**
@@ -251,12 +251,12 @@ class ps_mbo extends Module
     {
         if ($this->shouldAttachRecommendedModulesButton()) {
             /**
-             * @var SymfonyContainer
+             * @var ContainerInterface $container
              */
             $container = SymfonyContainer::getInstance();
 
             /**
-             * @var UrlGeneratorInterface
+             * @var UrlGeneratorInterface $router
              */
             $router = $container->get('router');
 
@@ -269,47 +269,6 @@ class ps_mbo extends Module
             return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
         }
 
-        return '';
-    }
-
-    /**
-     * Hook displayAdminEndContent.
-     *
-     * @todo Refactoring in progress
-     *
-     * @return string
-     */
-    public function hookDisplayAdminEndContent()
-    {
-        // $connectWithMbo = $this->handleAddonsConnectWithMbo();
-        // if ($connectWithMbo !== false) {
-        //     return $connectWithMbo;
-        // }
-
-        // $handleTheme = $this->handleTheme();
-        // if ($handleTheme !== false) {
-        //     return $handleTheme;
-        // }
-
-        // $content = '';
-        // $content .= $this->context->smarty->fetch($this->template_dir . '/modal.tpl');
-
-        // $controller_page = (Tools::getIsset('controller')) ? Tools::getValue('controller') : '';
-        // $controllerWhiteList = array('AdminCarriers', 'AdminPayment');
-        // if (in_array($controller_page, $controllerWhiteList)) {
-        //     $this->context->smarty->assign(array(
-        //         'admin_module_ajax_url_psmbo' => $this->getControllerLink('AdminPsMboModule'),
-        //         'controller_page' => $controller_page
-        //     ));
-
-        //     if (ADMIN_LEGACY_CONTEXT === true) {
-        //         $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content-legacy.tpl');
-        //     } else {
-        //         $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
-        //     }
-        // }
-
-        // return $content;
         return '';
     }
 
