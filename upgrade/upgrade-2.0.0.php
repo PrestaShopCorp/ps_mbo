@@ -29,7 +29,7 @@
  *
  * @return bool
  */
-function upgrade_module_1_2_0($module)
+function upgrade_module_2_0_0($module)
 {
     $result = true;
 

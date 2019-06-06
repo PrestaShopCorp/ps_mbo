@@ -1,33 +1,33 @@
 {
-	"name": "prestashop/ps_mbo",
-	"description": "PrestaShop module ps_mbo",
-	"homepage": "https://github.com/PrestaShop/ps_mbo",
-	"license": "AFL-3.0",
-	"type": "prestashop-module",
-	"authors": [
-		{
-			"name": "PrestaShop SA",
-			"email": "contact@prestashop.com"
-		}
-	],
-	"config": {
-		"platform": {
-			"php": "5.6.0"
-		},
-		"preferred-install": "dist",
-		"prepend-autoloader": false
-	},
-	"require": {
-		"php": ">=5.6.0",
-		"ext-json": "*"
-	},
-	"require-dev": {
-		"prestashop/php-coding-standards": "dev-master"
-	},
-	"autoload": {
-		"psr-4": {
-			"PrestaShop\\Module\\Mbo\\Controller\\Admin\\": "src/Controller/Admin"
-		},
-		"classmap": ["ps_mbo.php"]
-	}
+  "name": "prestashop/ps_mbo",
+  "description": "PrestaShop module ps_mbo",
+  "homepage": "https://github.com/PrestaShop/ps_mbo",
+  "license": "AFL-3.0",
+  "type": "prestashop-module",
+  "authors": [
+    {
+      "name": "PrestaShop SA",
+      "email": "contact@prestashop.com"
+    }
+  ],
+  "config": {
+    "platform": {
+      "php": "5.6.0"
+    },
+    "preferred-install": "dist",
+    "prepend-autoloader": false
+  },
+  "require": {
+    "php": ">=5.6.0",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "prestashop/php-coding-standards": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "PrestaShop\\Module\\Mbo\\": "src/"
+    },
+    "classmap": ["ps_mbo.php"]
+  }
 }
