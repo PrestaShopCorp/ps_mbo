@@ -263,7 +263,6 @@ class ps_mbo extends Module
             $this->smarty->assign([
                 'mbo_recommended_modules_button_url' => $router->generate('admin_mbo_catalog_module'),
                 'mbo_recommended_modules_ajax_url' => $router->generate('admin_module_catalog_post'),
-                'mbo_current_controller_name' => Tools::getValue('controller')
             ]);
 
             return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');

@@ -183,7 +183,7 @@ var mbo = {};
    * @param {string} currentControllerName
    * @constructor
    */
-  var RecommendedModulesPopinHandler = function(pageMap, recommendedModulesAjaxUrl, currentControllerName) {
+  var RecommendedModulesPopinHandler = function(pageMap, recommendedModulesAjaxUrl, currentControllerName, recommendedModules, source) {
 
     var initPopin = function() {
       $(pageMap.fancybox).fancybox({
@@ -209,11 +209,11 @@ var mbo = {};
         url: recommendedModulesAjaxUrl,
         data: {
           ajax : "1",
-          controller : "AdminModules",
+          controller : currentControllerName,
           action : "getTabModulesList",
-          tab_modules_list : tab_modules_list,
+          tab_modules_list : recommendedModules,
           back_tab_modules_list : window.location.href,
-          admin_list_from_source : getControllerActionMap().join()
+          admin_list_from_source : source
         }
       });
 
@@ -249,6 +249,8 @@ var mbo = {};
    * @param {string} config.recommendedModulesButtonUrl - URL for button
    * @param {string} config.recommendedModulesAjaxUrl - URL for button
    * @param {string} config.controller - Current controller name
+   * @param {string} config.recommendedModules - Current controller name
+   * @param {string} config.source - Current controller name
    */
   mbo.insertToolbarButton = function(config) {
     var isNewTheme = new ThemeDetector().isNewTheme();
@@ -261,7 +263,7 @@ var mbo = {};
       .insertToolbarButton(button);
 
     if (!isNewTheme) {
-      new RecommendedModulesPopinHandler(pageMap, config.recommendedModulesAjaxUrl, config.controller)
+      new RecommendedModulesPopinHandler(pageMap, config.recommendedModulesAjaxUrl, config.controller, config.recommendedModules, config.source)
         .initialize();
     }
   };

@@ -30,6 +30,8 @@
     },
     recommendedModulesButtonUrl: '{$mbo_recommended_modules_button_url|escape:'javascript'}',
     recommendedModulesAjaxUrl: '{$mbo_recommended_modules_ajax_url|escape:'javascript'}',
-    controller: '{$mbo_current_controller_name|escape:'javascript'}'
+    controller: help_class_name,
+    recommendedModules: tab_modules_list,
+    source: getControllerActionMap().join(),
   });
 </script>
