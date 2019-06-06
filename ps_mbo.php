@@ -174,124 +174,6 @@ class ps_mbo extends Module
     }
 
     /**
-     * Hook displayAdminEndContent.
-     *
-     * @todo Refactoring in progress
-     *
-     * @return string
-     */
-    public function hookDisplayAdminEndContent()
-    {
-        // $connectWithMbo = $this->handleAddonsConnectWithMbo();
-        // if ($connectWithMbo !== false) {
-        //     return $connectWithMbo;
-        // }
-
-        // $handleTheme = $this->handleTheme();
-        // if ($handleTheme !== false) {
-        //     return $handleTheme;
-        // }
-
-        // $content = '';
-        // $content .= $this->context->smarty->fetch($this->template_dir . '/modal.tpl');
-
-        // $controller_page = (Tools::getIsset('controller')) ? Tools::getValue('controller') : '';
-        // $controllerWhiteList = array('AdminCarriers', 'AdminPayment');
-        // if (in_array($controller_page, $controllerWhiteList)) {
-        //     $this->context->smarty->assign(array(
-        //         'admin_module_ajax_url_psmbo' => $this->getControllerLink('AdminPsMboModule'),
-        //         'controller_page' => $controller_page
-        //     ));
-
-        //     if (ADMIN_LEGACY_CONTEXT === true) {
-        //         $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content-legacy.tpl');
-        //     } else {
-        //         $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
-        //     }
-        // }
-
-        // return $content;
-        return '';
-    }
-
-    /**
-     * Hook actionAdminControllerSetMedia.
-     */
-    public function hookActionAdminControllerSetMedia()
-    {
-        // has to be loaded in header to prevent flash of content
-        $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
-    }
-
-    /**
-     * Hook displayDashboardTop.
-     * Includes content just below the toolbar.
-     *
-     * @return string
-     */
-    public function hookDisplayDashboardTop()
-    {
-        if ($this->shouldAttachRecommendedModulesButton()) {
-            /**
-             * @var SymfonyContainer
-             */
-            $container = SymfonyContainer::getInstance();
-
-            /**
-             * @var UrlGeneratorInterface
-             */
-            $router = $container->get('router');
-
-            $this->smarty->assign([
-                'mbo_recommended_modules_button_url' => $router->generate('admin_mbo_catalog_module'),
-                'mbo_recommended_modules_ajax_url' => $router->generate('admin_module_catalog_post'),
-                'mbo_current_controller_name' => Tools::getValue('controller')
-            ]);
-
-            return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
-        }
-
-        return '';
-    }
-
-    /**
-     * Indicates if the recommended modules button should be attached in this page
-     *
-     * @return bool
-     */
-    private function shouldAttachRecommendedModulesButton()
-    {
-        $controllerExceptions = [
-            'AdminPsMboModule',
-            'AdminModulesManage',
-            'AdminModulesCatalog',
-            'AdminAddonsCatalog',
-            'AdminModules',
-        ];
-
-        if (in_array($this->context->controller->controller_name, $controllerExceptions)) {
-            return false;
-        }
-
-        $routeExceptions = [
-            '#/improve/international/languages/(?:new$|[\d]+/edit)#',
-            '#/configure/shop/seo-urls/(?:new|edit/[\d]+)$#',
-            '#/sell/catalog/categories/(?:new$|[\d]+/edit)#',
-            '#/sell/customers/(?:new$|[\d]+/edit)#',
-        ];
-
-        if (isset($_SERVER['PATH_INFO'])) {
-            foreach ($routeExceptions as $routePattern) {
-                if (preg_match($routePattern, $_SERVER['PATH_INFO'])) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Uninstall Module.
      *
      * @return bool
@@ -348,5 +230,123 @@ class ps_mbo extends Module
         }
 
         return $result;
+    }
+
+    /**
+     * Hook actionAdminControllerSetMedia.
+     */
+    public function hookActionAdminControllerSetMedia()
+    {
+        // has to be loaded in header to prevent flash of content
+        $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
+    }
+
+    /**
+     * Hook displayDashboardTop.
+     * Includes content just below the toolbar.
+     *
+     * @return string
+     */
+    public function hookDisplayDashboardTop()
+    {
+        if ($this->shouldAttachRecommendedModulesButton()) {
+            /**
+             * @var SymfonyContainer
+             */
+            $container = SymfonyContainer::getInstance();
+
+            /**
+             * @var UrlGeneratorInterface
+             */
+            $router = $container->get('router');
+
+            $this->smarty->assign([
+                'mbo_recommended_modules_button_url' => $router->generate('admin_mbo_catalog_module'),
+                'mbo_recommended_modules_ajax_url' => $router->generate('admin_module_catalog_post'),
+                'mbo_current_controller_name' => Tools::getValue('controller')
+            ]);
+
+            return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
+        }
+
+        return '';
+    }
+
+    /**
+     * Hook displayAdminEndContent.
+     *
+     * @todo Refactoring in progress
+     *
+     * @return string
+     */
+    public function hookDisplayAdminEndContent()
+    {
+        // $connectWithMbo = $this->handleAddonsConnectWithMbo();
+        // if ($connectWithMbo !== false) {
+        //     return $connectWithMbo;
+        // }
+
+        // $handleTheme = $this->handleTheme();
+        // if ($handleTheme !== false) {
+        //     return $handleTheme;
+        // }
+
+        // $content = '';
+        // $content .= $this->context->smarty->fetch($this->template_dir . '/modal.tpl');
+
+        // $controller_page = (Tools::getIsset('controller')) ? Tools::getValue('controller') : '';
+        // $controllerWhiteList = array('AdminCarriers', 'AdminPayment');
+        // if (in_array($controller_page, $controllerWhiteList)) {
+        //     $this->context->smarty->assign(array(
+        //         'admin_module_ajax_url_psmbo' => $this->getControllerLink('AdminPsMboModule'),
+        //         'controller_page' => $controller_page
+        //     ));
+
+        //     if (ADMIN_LEGACY_CONTEXT === true) {
+        //         $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content-legacy.tpl');
+        //     } else {
+        //         $content .= $this->context->smarty->fetch($this->template_dir . '/admin-end-content.tpl');
+        //     }
+        // }
+
+        // return $content;
+        return '';
+    }
+
+    /**
+     * Indicates if the recommended modules button should be attached in this page
+     *
+     * @return bool
+     */
+    private function shouldAttachRecommendedModulesButton()
+    {
+        $controllerExceptions = [
+            'AdminPsMboModule',
+            'AdminModulesManage',
+            'AdminModulesCatalog',
+            'AdminAddonsCatalog',
+            'AdminModules',
+        ];
+
+        if (in_array($this->context->controller->controller_name, $controllerExceptions)) {
+            return false;
+        }
+
+        $routeExceptions = [
+            '#/improve/international/languages/(?:new$|[\d]+/edit)#',
+            '#/configure/shop/seo-urls/(?:new|edit/[\d]+)$#',
+            '#/sell/catalog/categories/(?:new$|[\d]+/edit)#',
+            '#/sell/customers/(?:new$|[\d]+/edit)#',
+        ];
+
+        if (isset($_SERVER['PATH_INFO'])) {
+            foreach ($routeExceptions as $routePattern) {
+                if (preg_match($routePattern, $_SERVER['PATH_INFO'])) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
