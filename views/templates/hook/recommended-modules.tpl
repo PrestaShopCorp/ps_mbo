@@ -28,7 +28,8 @@
     lang: {
       'Recommended Modules and Services': '{l s='Recommended Modules and Services'|escape:'javascript'}',
     },
-    recommendedModulesButtonUrl: '{$mbo_recommended_modules_ajax_url|escape:'javascript'}',
+    recommendedModulesButtonUrl: '{$mbo_recommended_modules_button_url|escape:'javascript'}',
+    recommendedModulesAjaxUrl: '{$mbo_recommended_modules_ajax_url|escape:'javascript'}',
     controller: '{$mbo_current_controller_name|escape:'javascript'}'
   });
 </script>

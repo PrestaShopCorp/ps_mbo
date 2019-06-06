@@ -105,7 +105,7 @@ var mbo = {};
         // default theme
         $(pageMap.toolbarButtons).filter(
           function() {
-            var buttonIdPattern = /^page-header-desc-[a-z-]+-modules-list$/;
+            var buttonIdPattern = /^page-header-desc-[a-z-_]+-modules-list$/;
             return String($(this).attr('id'))
               .match(buttonIdPattern);
           }
@@ -203,8 +203,9 @@ var mbo = {};
     var openModulesList = function() {
       $(pageMap.modulesListModal).modal('show');
 
-      $.ajax({
+      var recommendedModulesRequest = $.ajax({
         type: 'GET',
+        dataType: 'html',
         url: recommendedModulesAjaxUrl,
         data: {
           ajax : "1",
@@ -213,11 +214,12 @@ var mbo = {};
           tab_modules_list : tab_modules_list,
           back_tab_modules_list : window.location.href,
           admin_list_from_source : getControllerActionMap().join()
-        },
-        success: function(data) {
-          $(pageMap.modulesListModalContent).html(data).slideDown();
-          $(pageMap.modulesListLoader).hide();
-        },
+        }
+      });
+
+      recommendedModulesRequest.done(function(data) {
+        $(pageMap.modulesListModalContent).html(data).slideDown();
+        $(pageMap.modulesListLoader).hide();
       });
     };
 
