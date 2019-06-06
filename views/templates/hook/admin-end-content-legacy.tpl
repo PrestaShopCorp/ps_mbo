@@ -22,7 +22,8 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
- 
+
+{**
  <div id="admin-end-content-footer">
 
  </div>
@@ -69,3 +70,4 @@
         });
     });
 </script>
+*}

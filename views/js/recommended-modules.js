@@ -179,11 +179,11 @@ var mbo = {};
   /**
    *
    * @param {object} pageMap
-   * @param {string} recommendedModulesButtonUrl
+   * @param {string} recommendedModulesAjaxUrl
    * @param {string} currentControllerName
    * @constructor
    */
-  var RecommendedModulesPopinHandler = function(pageMap, recommendedModulesButtonUrl, currentControllerName) {
+  var RecommendedModulesPopinHandler = function(pageMap, recommendedModulesAjaxUrl, currentControllerName) {
 
     var initPopin = function() {
       $(pageMap.fancybox).fancybox({
@@ -204,12 +204,15 @@ var mbo = {};
       $(pageMap.modulesListModal).modal('show');
 
       $.ajax({
-        type: 'POST',
-        url: recommendedModulesButtonUrl,
+        type: 'GET',
+        url: recommendedModulesAjaxUrl,
         data: {
-          ajax: true,
-          action: 'GetTabModulesList',
-          controllerName: currentControllerName
+          ajax : "1",
+          controller : "AdminModules",
+          action : "getTabModulesList",
+          tab_modules_list : tab_modules_list,
+          back_tab_modules_list : window.location.href,
+          admin_list_from_source : getControllerActionMap().join()
         },
         success: function(data) {
           $(pageMap.modulesListModalContent).html(data).slideDown();
@@ -242,6 +245,7 @@ var mbo = {};
    * @param {object} config
    * @param {object} config.lang - Object containing translations
    * @param {string} config.recommendedModulesButtonUrl - URL for button
+   * @param {string} config.recommendedModulesAjaxUrl - URL for button
    * @param {string} config.controller - Current controller name
    */
   mbo.insertToolbarButton = function(config) {
@@ -255,7 +259,7 @@ var mbo = {};
       .insertToolbarButton(button);
 
     if (!isNewTheme) {
-      new RecommendedModulesPopinHandler(pageMap, config.recommendedModulesButtonUrl, config.controller)
+      new RecommendedModulesPopinHandler(pageMap, config.recommendedModulesAjaxUrl, config.controller)
         .initialize();
     }
   };

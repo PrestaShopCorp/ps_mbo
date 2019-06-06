@@ -23,6 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
+{**
  <div id="admin-end-content-footer" class="container">
 
  </div>
@@ -69,3 +70,4 @@
         });
     });
 </script>
+*}
