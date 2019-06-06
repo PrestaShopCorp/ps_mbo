@@ -23,5 +23,11 @@
 	},
 	"require-dev": {
 		"prestashop/php-coding-standards": "dev-master"
+	},
+	"autoload": {
+		"psr-4": {
+			"PrestaShop\\Module\\Mbo\\Controller\\Admin\\": "src/Controller/Admin"
+		},
+		"classmap": ["ps_mbo.php"]
 	}
 }
