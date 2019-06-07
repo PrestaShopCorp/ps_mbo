@@ -37,6 +37,7 @@ var mbo = {};
     modulesListModal: '#modules_list_container',
     modulesListModalContent: '#modules_list_container_tab_modal',
     modulesListLoader: '#modules_list_loader',
+    contentContainer: '#content',
   };
 
   var pageMapNewTheme = {
@@ -45,6 +46,7 @@ var mbo = {};
     toolbarLastElement: '.toolbar-icons a:last-of-type',
     recommendedModulesButton: '#recommended-modules-button',
     oldButton: '#page-header-desc-configuration-modules-list',
+    contentContainer: '#main-div .content-div .container:last',
   };
 
   /**
@@ -135,6 +137,40 @@ var mbo = {};
 
       return this;
     };
+
+    /**
+     * Inserts the recommended modules in the DOM
+     *
+     * @param {string} recommendedModulesAjaxUrl
+     * @param {string} currentControllerName
+     * @param {string} recommendedModules
+     * @param {string} source
+     *
+     * @return this
+     */
+    this.insertRecommendedModules = function(recommendedModulesAjaxUrl, currentControllerName, recommendedModules, source) {
+      if (pageMap.contentContainer) {
+        var recommendedModulesRequest = $.ajax({
+          type: 'GET',
+          dataType: 'html',
+          url: recommendedModulesAjaxUrl,
+          data: {
+            ajax : "1",
+            controller : currentControllerName,
+            action : "getTabModulesList",
+            tab_modules_list : recommendedModules,
+            back_tab_modules_list : window.location.href,
+            admin_list_from_source : source
+          }
+        });
+
+        recommendedModulesRequest.done(function(data) {
+          $(pageMap.contentContainer).append(data);
+        });
+      }
+
+      return this;
+    };
   };
 
   /**
@@ -181,6 +217,8 @@ var mbo = {};
    * @param {object} pageMap
    * @param {string} recommendedModulesAjaxUrl
    * @param {string} currentControllerName
+   * @param {string} recommendedModules
+   * @param {string} source
    * @constructor
    */
   var RecommendedModulesPopinHandler = function(pageMap, recommendedModulesAjaxUrl, currentControllerName, recommendedModules, source) {
@@ -266,6 +304,26 @@ var mbo = {};
       new RecommendedModulesPopinHandler(pageMap, config.recommendedModulesAjaxUrl, config.controller, config.recommendedModules, config.source)
         .initialize();
     }
+  };
+
+  /**
+   * Inserts the recommended modules button in the toolbar
+   *
+   * @param {object} config
+   * @param {object} config.lang - Object containing translations
+   * @param {string} config.recommendedModulesButtonUrl - URL for button
+   * @param {string} config.recommendedModulesAjaxUrl - URL for button
+   * @param {string} config.controller - Current controller name
+   * @param {string} config.recommendedModules - Current controller name
+   * @param {string} config.source - Current controller name
+   */
+  mbo.insertRecommendedModules = function(config) {
+    var isNewTheme = new ThemeDetector().isNewTheme();
+    var pageMap = isNewTheme ? pageMapNewTheme : pageMapDefault;
+
+    new Page(pageMap)
+      .removeOldButton()
+      .insertRecommendedModules(config.recommendedModulesAjaxUrl, config.controller, config.recommendedModules, config.source);
   };
 
 })();

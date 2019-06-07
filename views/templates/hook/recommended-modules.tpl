@@ -24,7 +24,7 @@
  *}
 
 <script>
-  mbo.insertToolbarButton({
+  var mboConfiguration = {
     lang: {
       'Recommended Modules and Services': '{l s='Recommended Modules and Services'|escape:'javascript'}',
     },
@@ -33,5 +33,14 @@
     controller: help_class_name,
     recommendedModules: tab_modules_list,
     source: getControllerActionMap().join(),
-  });
+  };
+
+  switch (help_class_name) {
+    case 'AdminCarriers':
+    case 'AdminPayment':
+      mbo.insertRecommendedModules(mboConfiguration);
+      break;
+    default:
+      mbo.insertToolbarButton(mboConfiguration);
+  }
 </script>
