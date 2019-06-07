@@ -213,6 +213,56 @@ var mbo = {};
   };
 
   /**
+   * Handles markup for the Recommended modules container
+   *
+   * @param {object} trad - Translations dictionary
+   * @param {boolean} isNewTheme
+   * @param {string} content
+   * @constructor
+   */
+  var RecommendedModulesContainer = function(trad, isNewTheme, content) {
+    var containerTitle = trad['Recommended Modules and Services'];
+    var containerId = 'recommended-modules-container';
+    var $markup;
+
+    if (isNewTheme) {
+      $markup = $(
+        '<div class="row" id="' + containerId + '">\n' +
+        '  <div class="card">\n' +
+        '    <h3 class="card-header">\n' +
+        '      <i class="material-icons">extension</i>\n' +
+        '      ' + containerTitle + '\n' +
+        '    </h3>\n' +
+        '    <div class="card-block">\n' +
+        '      ' + content +'\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '</div>'
+      );
+    } else {
+      $markup = $(
+        '<div class="panel" id="' + containerId + '">\n' +
+        '  <h3>\n' +
+        '    <i class="icon-list-ul"></i>\n' +
+        '    ' + containerTitle + '\n' +
+        '  </h3>\n' +
+        '  <div class="modules_list_container_tab row">\n' +
+        '    ' + content +'\n' +
+        '  </div>\n' +
+        '</div>'
+      );
+    }
+
+    /**
+     * Returns the button's markup
+     * @return {jQuery|HTMLElement}
+     */
+    this.getMarkup = function() {
+      return $markup;
+    }
+  };
+
+  /**
    *
    * @param {object} pageMap
    * @param {string} recommendedModulesAjaxUrl
