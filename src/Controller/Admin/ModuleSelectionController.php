@@ -71,6 +71,25 @@ class ModuleSelectionController extends FrameworkBundleAdminController
     }
 
     /**
+     * @todo use RecommendedModulesRepository to return ajax response
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function recommendedModulesAction(Request $request)
+    {
+        $tab = $request->get('tab');
+
+        return $this->render(
+            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
+            [
+                'tab' => $tab,
+            ]
+        );
+    }
+
+    /**
      * @param Request $request
      *
      * @return string

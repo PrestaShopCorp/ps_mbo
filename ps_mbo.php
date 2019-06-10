@@ -261,7 +261,12 @@ class ps_mbo extends Module
             $router = $container->get('router');
 
             $this->smarty->assign([
-                'mbo_recommended_modules_button_url' => $router->generate('admin_mbo_catalog_module'),
+                'mbo_recommended_modules_button_url' => $router->generate(
+                    'admin_mbo_recommended_modules',
+                    [
+                        'tab' => Tools::getValue('controller'),
+                    ]
+                ),
                 'mbo_recommended_modules_ajax_url' => $router->generate('admin_module_catalog_post'),
             ]);
 
@@ -280,6 +285,8 @@ class ps_mbo extends Module
     {
         $controllerExceptions = [
             'AdminPsMboModule',
+            'AdminPsMboAddons',
+            'AdminPsMboTheme',
             'AdminModulesManage',
             'AdminModulesCatalog',
             'AdminAddonsCatalog',
