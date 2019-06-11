@@ -26,7 +26,9 @@
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
+use PrestaShop\Module\Mbo\Adapter\ModulesDataProvider;
 use PrestaShop\Module\Mbo\DataProvider\RecommendedModulesProvider;
+use PrestaShop\Module\Mbo\Factory\RecommendedModulesEnhancedFactory;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,8 +81,17 @@ class ModuleSelectionController extends FrameworkBundleAdminController
     {
         $recommendedModulesProvider = new RecommendedModulesProvider();
         $tabRecommendedModules = $recommendedModulesProvider->getTabRecommendedModules($request->get('tabClassName'));
+        $modulesDataProvider = new ModulesDataProvider(
+            $this->get('prestashop.core.admin.data_provider.module_interface'),
+            $this->get('prestashop.core.admin.module.repository'),
+            $this->get('prestashop.adapter.presenter.module'),
+            $this->get('prestashop.core.admin.tab.repository'),
+            $this->get('prestashop.adapter.legacy.context')
+        );
+        $recommendedModulesEnhancedFactory = new RecommendedModulesEnhancedFactory($modulesDataProvider);
+        $recommendedModulesEnhanced = $recommendedModulesEnhancedFactory->buildFromRecommendedModules($tabRecommendedModules->getRecommendedModules());
 
-        dump($tabRecommendedModules);
+        dump($recommendedModulesEnhanced);
 
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',

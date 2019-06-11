@@ -24,43 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\RecommendedModules;
+namespace PrestaShop\Module\Mbo\Factory;
 
-use ArrayAccess;
-use Countable;
-use IteratorAggregate;
+use PrestaShop\Module\Mbo\RecommendedModules\RecommendedModulesEnhancedInterface;
+use PrestaShop\Module\Mbo\RecommendedModules\RecommendedModulesInterface;
 
-interface RecommendedModulesInterface extends ArrayAccess, IteratorAggregate, Countable
+interface RecommendedModulesEnhancedFactoryInterface
 {
     /**
-     * Add a recommended module to this collection.
+     * Builds a collection of recommended modules enhanced from a collection of recommended modules.
      *
-     * @param RecommendedModuleInterface $recommendedModule
+     * @param RecommendedModulesInterface $recommendedModules
      *
-     * @return self
+     * @return RecommendedModulesEnhancedInterface
      */
-    public function addRecommendedModule(RecommendedModuleInterface $recommendedModule);
-
-    /**
-     * Get a recommended module by name
-     *
-     * @param string $moduleName
-     *
-     * @return RecommendedModuleInterface|false
-     */
-    public function getRecommendedModule($moduleName);
-
-    /**
-     * Get names of recommended modules
-     *
-     * @return string[]
-     */
-    public function getRecommendedModuleNames();
-
-    /**
-     * @param mixed $offset
-     *
-     * @return RecommendedModuleInterface
-     */
-    public function offsetGet($offset);
+    public function buildFromRecommendedModules(RecommendedModulesInterface $recommendedModules);
 }

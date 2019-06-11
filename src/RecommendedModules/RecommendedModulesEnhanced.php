@@ -26,41 +26,21 @@
 
 namespace PrestaShop\Module\Mbo\RecommendedModules;
 
-use ArrayAccess;
-use Countable;
-use IteratorAggregate;
-
-interface RecommendedModulesInterface extends ArrayAccess, IteratorAggregate, Countable
+class RecommendedModulesEnhanced extends RecommendedModules implements RecommendedModulesEnhancedInterface
 {
     /**
-     * Add a recommended module to this collection.
-     *
-     * @param RecommendedModuleInterface $recommendedModule
-     *
-     * @return self
+     * {@inheritdoc}
      */
-    public function addRecommendedModule(RecommendedModuleInterface $recommendedModule);
+    public function getInstalled()
+    {
+        return new RecommendedModulesEnhancedFilter($this->getIterator(), true);
+    }
 
     /**
-     * Get a recommended module by name
-     *
-     * @param string $moduleName
-     *
-     * @return RecommendedModuleInterface|false
+     * {@inheritdoc}
      */
-    public function getRecommendedModule($moduleName);
-
-    /**
-     * Get names of recommended modules
-     *
-     * @return string[]
-     */
-    public function getRecommendedModuleNames();
-
-    /**
-     * @param mixed $offset
-     *
-     * @return RecommendedModuleInterface
-     */
-    public function offsetGet($offset);
+    public function getUninstalled()
+    {
+        return new RecommendedModulesEnhancedFilter($this->getIterator(), false);
+    }
 }

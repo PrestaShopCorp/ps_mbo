@@ -48,6 +48,34 @@ class RecommendedModules implements RecommendedModulesInterface
     /**
      * {@inheritdoc}
      */
+    public function getRecommendedModule($moduleName)
+    {
+        foreach ($this->recommendedModules as $recommendedModule) {
+            if ($moduleName === $recommendedModule->getModuleName()) {
+                return $recommendedModule;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRecommendedModuleNames()
+    {
+        $recommendedModuleNames = [];
+
+        foreach ($this->recommendedModules as $recommendedModule) {
+            $recommendedModuleNames[] = $recommendedModule->getModuleName();
+        }
+
+        return $recommendedModuleNames;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function offsetExists($offset)
     {
         return array_key_exists($offset, $this->recommendedModules);
