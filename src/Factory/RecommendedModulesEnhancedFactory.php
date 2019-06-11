@@ -55,14 +55,14 @@ class RecommendedModulesEnhancedFactory implements RecommendedModulesEnhancedFac
         $modulesData = $this->modulesDataProvider->getData($recommendedModules->getRecommendedModuleNames());
 
         foreach ($modulesData as $moduleData) {
-            if (isset($moduleData['attributes']['name'], $modulesData['installed'])) {
+            if (isset($moduleData['attributes']['name'], $moduleData['database']['installed'])) {
                 $recommendedModule = $recommendedModules->getRecommendedModule($moduleData['attributes']['name']);
                 if ($recommendedModule) {
                     $recommendedModuleEnhanced = new RecommendedModuleEnhanced(
                         $recommendedModule->getModuleName(),
                         $recommendedModule->getPosition(),
-                        (bool) $modulesData['installed'],
-                        $modulesData
+                        (bool) $moduleData['database']['installed'],
+                        $moduleData
                     );
                     $recommendedModulesEnhanced->addRecommendedModule($recommendedModuleEnhanced);
                 }

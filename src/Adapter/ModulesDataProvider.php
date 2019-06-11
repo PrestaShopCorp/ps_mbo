@@ -123,9 +123,7 @@ class ModulesDataProvider
 
                 if ($perm) {
                     $module->fillLogo();
-                    $moduleData = $this->modulePresenter->present($module);
-                    $moduleData['installed'] = $module->database->get('installed');
-                    $data[] = $moduleData;
+                    $data[] = $this->modulePresenter->present($module);
                 }
             }
         }
