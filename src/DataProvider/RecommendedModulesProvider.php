@@ -26,137 +26,127 @@
 
 namespace PrestaShop\Module\Mbo\DataProvider;
 
-use Doctrine\Common\Cache\CacheProvider;
-use Psr\Log\LoggerInterface;
+use Doctrine\Common\Cache\FilesystemCache;
+use GuzzleHttp\Subscriber\Cache\CacheStorage;
+use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
+use PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory;
+use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
+use PrestaShop\CircuitBreaker\FactorySettings;
+use PrestaShop\CircuitBreaker\Storage\DoctrineCache;
+use PrestaShop\Module\Mbo\Adapter\RecommendedModulesXMLParser;
+use PrestaShop\Module\Mbo\Factory\TabsRecommendedModulesFactory;
+use PrestaShop\Module\Mbo\TabsRecommendedModules\TabRecommendedModulesInterface;
+use PrestaShop\Module\Mbo\TabsRecommendedModules\TabsRecommendedModulesInterface;
 
-/**
- * Class RecommendedModulesProvider is responsible for providing recommended modules.
- */
 class RecommendedModulesProvider
 {
+    const CACHE_DIRECTORY = 'mbo';
+
     const CACHE_KEY = 'recommendedModules';
 
     const CACHE_LIFETIME = 604800; // 7 days
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var CacheProvider
-     */
-    private $cacheProvider;
+    const API_URL = 'https://api.prestashop.com/xml/tab_modules_list_17.xml';
+
+    const CLOSED_ALLOWED_FAILURES = 2;
+
+    const API_TIMEOUT_SECONDS = 0.6;
+
+    const OPEN_ALLOWED_FAILURES = 1;
+
+    const OPEN_TIMEOUT_SECONDS = 1.2;
+
+    const OPEN_THRESHOLD_SECONDS = 60;
 
     /**
-     * ModuleCatalogDataProvider constructor.
-     *
-     * @param LoggerInterface $logger
-     * @param CacheProvider|null $cacheProvider
+     * @var FactoryInterface
      */
-    public function __construct(
-        LoggerInterface $logger,
-        CacheProvider $cacheProvider = null
-    ) {
-        $this->logger = $logger;
-        $this->cacheProvider = $cacheProvider;
+    private $factory;
+
+    /**
+     * @var array
+     */
+    private $apiSettings;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        //Doctrine cache used for Guzzle and CircuitBreaker storage
+        $doctrineCache = new FilesystemCache(
+            _PS_CACHE_DIR_
+            . DIRECTORY_SEPARATOR
+            . self::CACHE_DIRECTORY
+        );
+
+        //Init Guzzle cache
+        $cacheStorage = new CacheStorage(
+            $doctrineCache,
+            self::CACHE_KEY,
+            self::CACHE_LIFETIME
+        );
+
+        $cacheSubscriber = new CacheSubscriber(
+            $cacheStorage,
+            function () {
+                return true;
+            }
+        );
+
+        //Init circuit breaker factory
+        $storage = new DoctrineCache($doctrineCache);
+
+        $this->apiSettings = new FactorySettings(
+            self::CLOSED_ALLOWED_FAILURES,
+            self::API_TIMEOUT_SECONDS,
+            0
+        );
+
+        $this->apiSettings
+            ->setThreshold(self::OPEN_THRESHOLD_SECONDS)
+            ->setStrippedFailures(self::OPEN_ALLOWED_FAILURES)
+            ->setStrippedTimeout(self::OPEN_TIMEOUT_SECONDS)
+            ->setStorage($storage)
+            ->setClientOptions([
+                'subscribers' => [$cacheSubscriber],
+                'method' => 'GET',
+            ])
+        ;
+
+        $this->factory = new AdvancedCircuitBreakerFactory();
     }
 
     /**
-     * Get recommended modules.
+     * Get recommended modules by Tab class name.
      *
-     * @return array
+     * @param string $tabClassName
+     *
+     * @return TabRecommendedModulesInterface
      */
-    public function getRecommendedModules()
+    public function getTabRecommendedModules($tabClassName)
     {
-        if ($this->isCached()) {
-            return $this->cacheProvider->fetch(static::CACHE_KEY);
-        }
+        $tabsRecommendedModules = $this->getTabRecommendedModulesFromApi();
 
-        return $this->loadRecommendedModulesData();
+        return $tabsRecommendedModules->getTab($tabClassName);
     }
 
     /**
      * Retrieve recommended modules from PrestaShop
-     * @todo implement CircuitBreaker and tool to parse XML and return an array
      *
-     * @return array
+     * @return TabsRecommendedModulesInterface
      */
-    private function loadRecommendedModulesData()
+    private function getTabRecommendedModulesFromApi()
     {
-        $recommendedModules = [];
+        $circuitBreaker = $this->factory->create($this->apiSettings);
 
-        if ($recommendedModules) {
-            $isCacheSaved = $this->setCache($recommendedModules);
+        $apiResponse = $circuitBreaker->call(self::API_URL);
 
-            if (!$isCacheSaved) {
-                $this->logger->error('Unable to save recommended modules into the cache.');
-            }
-        }
+        $recommendedModulesXMLParser = new RecommendedModulesXMLParser($apiResponse);
 
-        return $recommendedModules;
-    }
+        $tabsRecommendedModulesFactory = new TabsRecommendedModulesFactory();
+        $tabsRecommendedModules = $tabsRecommendedModulesFactory->buildFromArray($recommendedModulesXMLParser->toArray());
 
-    /**
-     * If cache exists, get recommended modules from the cache.
-     *
-     * @return array Recommended modules loaded from the cache
-     */
-    private function fallbackOnCache()
-    {
-        if ($this->isCached()) {
-            return $this->cacheProvider->fetch(static::CACHE_KEY);
-        }
-
-        $this->logger->error('Unable to fallback on recommended modules cache.');
-
-        return [];
-    }
-
-    /**
-     * Check if cache exist.
-     *
-     * @return bool
-     */
-    private function isCached()
-    {
-        return $this->cacheProvider
-            && $this->cacheProvider->contains(static::CACHE_KEY);
-    }
-
-    /**
-     * Save recommended modules into the cache.
-     *
-     * @param array $recommendedModules
-     *
-     * @return bool
-     */
-    private function setCache(array $recommendedModules)
-    {
-        return $this->cacheProvider
-            && $this->cacheProvider->save(
-                static::CACHE_KEY,
-                $recommendedModules,
-                static::CACHE_LIFETIME
-            );
-    }
-
-    /**
-     * Clear cache if exist.
-     *
-     * @return bool
-     */
-    private function clearCache()
-    {
-        $isCacheCleared = true;
-
-        if ($this->cacheProvider) {
-            $isCacheCleared = $this->cacheProvider->delete(static::CACHE_KEY);
-
-            if (!$isCacheCleared) {
-                $this->logger->error('Unable to clear recommended modules cache.');
-            }
-        }
-
-        return $isCacheCleared;
+        return $tabsRecommendedModules;
     }
 }

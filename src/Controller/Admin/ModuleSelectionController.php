@@ -26,7 +26,7 @@
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use PrestaShop\PrestaShop\Adapter\Module\TabModuleListProvider;
+use PrestaShop\Module\Mbo\DataProvider\RecommendedModulesProvider;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,20 +71,21 @@ class ModuleSelectionController extends FrameworkBundleAdminController
     }
 
     /**
-     * @todo use RecommendedModulesRepository to return ajax response
-     *
      * @param Request $request
      *
      * @return Response
      */
     public function recommendedModulesAction(Request $request)
     {
-        $tab = $request->get('tab');
+        $recommendedModulesProvider = new RecommendedModulesProvider();
+        $tabRecommendedModules = $recommendedModulesProvider->getTabRecommendedModules($request->get('tabClassName'));
+
+        dump($tabRecommendedModules);
 
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
             [
-                'tab' => $tab,
+                'tab' => $tabRecommendedModules->getClassName(),
             ]
         );
     }

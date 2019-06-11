@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
@@ -32,6 +31,7 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 }
 
+use PrestaShop\Module\Mbo\DataProvider\RecommendedModulesProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -39,7 +39,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ps_mbo extends Module
 {
     /**
-     * @var array $adminTabs Tabs
+     * @var array Tabs
      */
     public $adminTabs = [
         'AdminPsMboModule' => [
@@ -66,7 +66,7 @@ class ps_mbo extends Module
     ];
 
     /**
-     * @var array $hooks Hooks used
+     * @var array Hooks used
      */
     public $hooks = [
         'actionAdminControllerSetMedia',
@@ -251,24 +251,24 @@ class ps_mbo extends Module
     {
         if ($this->shouldAttachRecommendedModulesButton()) {
             /**
-             * @var ContainerInterface $container
+             * @var ContainerInterface
              */
             $container = SymfonyContainer::getInstance();
 
             /**
-             * @var UrlGeneratorInterface $router
+             * @var UrlGeneratorInterface
              */
             $router = $container->get('router');
 
-            $this->smarty->assign([
-                'mbo_recommended_modules_button_url' => $router->generate(
+            $this->smarty->assign(
+                'mbo_recommended_modules_url',
+                $router->generate(
                     'admin_mbo_recommended_modules',
                     [
-                        'tab' => Tools::getValue('controller'),
+                        'tabClassName' => Tools::getValue('controller'),
                     ]
-                ),
-                'mbo_recommended_modules_ajax_url' => $router->generate('admin_module_catalog_post'),
-            ]);
+                )
+            );
 
             return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
         }
@@ -283,35 +283,9 @@ class ps_mbo extends Module
      */
     private function shouldAttachRecommendedModulesButton()
     {
-        $controllerExceptions = [
-            'AdminPsMboModule',
-            'AdminPsMboAddons',
-            'AdminPsMboTheme',
-            'AdminModulesManage',
-            'AdminModulesCatalog',
-            'AdminAddonsCatalog',
-            'AdminModules',
-        ];
+        $recommendedModulesProvider = new RecommendedModulesProvider();
+        $tabRecommendedModules = $recommendedModulesProvider->getTabRecommendedModules(Tools::getValue('controller'));
 
-        if (in_array($this->context->controller->controller_name, $controllerExceptions)) {
-            return false;
-        }
-
-        $routeExceptions = [
-            '#/improve/international/languages/(?:new$|[\d]+/edit)#',
-            '#/configure/shop/seo-urls/(?:new|edit/[\d]+)$#',
-            '#/sell/catalog/categories/(?:new$|[\d]+/edit)#',
-            '#/sell/customers/(?:new$|[\d]+/edit)#',
-        ];
-
-        if (isset($_SERVER['PATH_INFO'])) {
-            foreach ($routeExceptions as $routePattern) {
-                if (preg_match($routePattern, $_SERVER['PATH_INFO'])) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return $tabRecommendedModules->hasRecommendedModules();
     }
 }

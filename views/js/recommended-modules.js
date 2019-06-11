@@ -334,8 +334,7 @@ var mbo = {};
    *
    * @param {object} config
    * @param {object} config.lang - Object containing translations
-   * @param {string} config.recommendedModulesButtonUrl - URL for button
-   * @param {string} config.recommendedModulesAjaxUrl - URL for button
+   * @param {string} config.recommendedModulesUrl - URL for button
    * @param {string} config.controller - Current controller name
    * @param {string} config.recommendedModules - Current controller name
    * @param {string} config.source - Current controller name
@@ -344,14 +343,14 @@ var mbo = {};
     var isNewTheme = new ThemeDetector().isNewTheme();
     var pageMap = isNewTheme ? pageMapNewTheme : pageMapDefault;
 
-    var button = new RecommendedModulesButton(config.lang, isNewTheme, config.recommendedModulesButtonUrl);
+    var button = new RecommendedModulesButton(config.lang, isNewTheme, config.recommendedModulesUrl);
 
     new Page(pageMap)
       .removeOldButton()
       .insertToolbarButton(button);
 
     if (!isNewTheme) {
-      new RecommendedModulesPopinHandler(pageMap, config.recommendedModulesAjaxUrl, config.controller, config.recommendedModules, config.source)
+      new RecommendedModulesPopinHandler(pageMap, config.recommendedModulesUrl, config.controller, config.recommendedModules, config.source)
         .initialize();
     }
   };
@@ -361,8 +360,7 @@ var mbo = {};
    *
    * @param {object} config
    * @param {object} config.lang - Object containing translations
-   * @param {string} config.recommendedModulesButtonUrl - URL for button
-   * @param {string} config.recommendedModulesAjaxUrl - URL for button
+   * @param {string} config.recommendedModulesUrl - URL for button
    * @param {string} config.controller - Current controller name
    * @param {string} config.recommendedModules - Current controller name
    * @param {string} config.source - Current controller name
@@ -373,7 +371,7 @@ var mbo = {};
 
     new Page(pageMap)
       .removeOldButton()
-      .insertRecommendedModules(config.recommendedModulesAjaxUrl, config.controller, config.recommendedModules, config.source);
+      .insertRecommendedModules(config.recommendedModulesUrl, config.controller, config.recommendedModules, config.source);
   };
 
 })();
