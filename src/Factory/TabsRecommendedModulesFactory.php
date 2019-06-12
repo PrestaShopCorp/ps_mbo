@@ -71,7 +71,7 @@ class TabsRecommendedModulesFactory implements TabsRecommendedModulesFactoryInte
                     $recommendedModule = new RecommendedModule(
                         $moduleName,
                         $position,
-                        true,
+                        (bool) $modulesData[$moduleName]['database']['installed'],
                         $modulesData[$moduleName]
                     );
                     $recommendedModules->addRecommendedModule($recommendedModule);

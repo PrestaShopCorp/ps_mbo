@@ -17,6 +17,6 @@ services:
       - '@mbo.adapter.modules_data_provider'
 
   mbo.data_provider.recommended_modules_provider:
-    class: 'PrestaShop\Module\Mbo\Adapter\ModulesDataProvider'
+    class: 'PrestaShop\Module\Mbo\DataProvider\RecommendedModulesProvider'
     arguments:
       - '@mbo.factory.tabs_recommended_modules_factory'
