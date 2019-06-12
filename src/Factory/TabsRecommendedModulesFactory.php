@@ -51,6 +51,8 @@ class TabsRecommendedModulesFactory implements TabsRecommendedModulesFactoryInte
                 $recommendedModules->addRecommendedModule($recommendedModule);
             }
 
+            $recommendedModules->sortByPosition();
+
             $tabRecommendedModules = new TabRecommendedModules(
                 $tabClassName,
                 $tabdata['displayMode'],

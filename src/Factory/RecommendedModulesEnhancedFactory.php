@@ -69,6 +69,8 @@ class RecommendedModulesEnhancedFactory implements RecommendedModulesEnhancedFac
             }
         }
 
+        $recommendedModulesEnhanced->sortByPosition();
+
         return $recommendedModulesEnhanced;
     }
 }

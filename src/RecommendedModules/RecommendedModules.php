@@ -120,4 +120,18 @@ class RecommendedModules implements RecommendedModulesInterface
     {
         return count($this->recommendedModules);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function sortByPosition()
+    {
+        $this->getIterator()->uasort(function (RecommendedModuleInterface $recommendedModuleA, RecommendedModuleInterface $recommendedModuleB) {
+            if ($recommendedModuleA->getPosition() === $recommendedModuleB->getPosition()) {
+                return 0;
+            }
+
+            return ($recommendedModuleA->getPosition() < $recommendedModuleB->getPosition()) ? -1 : 1;
+        });
+    }
 }
