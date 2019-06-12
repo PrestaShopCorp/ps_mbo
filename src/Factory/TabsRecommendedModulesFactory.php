@@ -26,6 +26,7 @@
 
 namespace PrestaShop\Module\Mbo\Factory;
 
+use PrestaShop\Module\Mbo\Adapter\ModulesDataProvider;
 use PrestaShop\Module\Mbo\RecommendedModules\RecommendedModule;
 use PrestaShop\Module\Mbo\RecommendedModules\RecommendedModules;
 use PrestaShop\Module\Mbo\TabsRecommendedModules\TabRecommendedModules;
@@ -33,6 +34,18 @@ use PrestaShop\Module\Mbo\TabsRecommendedModules\TabsRecommendedModules;
 
 class TabsRecommendedModulesFactory implements TabsRecommendedModulesFactoryInterface
 {
+    private $modulesDataProvider;
+
+    /**
+     * Constructor.
+     *
+     * @param ModulesDataProvider $modulesDataProvider
+     */
+    public function __construct(ModulesDataProvider $modulesDataProvider)
+    {
+        $this->modulesDataProvider = $modulesDataProvider;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -40,27 +53,59 @@ class TabsRecommendedModulesFactory implements TabsRecommendedModulesFactoryInte
     {
         $tabsRecommendedModules = new TabsRecommendedModules();
 
-        foreach ($data as $tabClassName => $tabdata) {
+        if (empty($data)) {
+            return $tabsRecommendedModules;
+        }
+
+        $modulesData = $this->modulesDataProvider->getData($this->getModuleNames($data));
+
+        if (empty($modulesData)) {
+            return $tabsRecommendedModules;
+        }
+
+        foreach ($data as $tabClassName => $tabData) {
             $recommendedModules = new RecommendedModules();
 
-            foreach ($tabdata['recommendedModules'] as $position => $moduleName) {
-                $recommendedModule = new RecommendedModule(
-                    $moduleName,
-                    $position
-                );
-                $recommendedModules->addRecommendedModule($recommendedModule);
+            foreach ($tabData['recommendedModules'] as $position => $moduleName) {
+                if (isset($modulesData[$moduleName])) {
+                    $recommendedModule = new RecommendedModule(
+                        $moduleName,
+                        $position,
+                        true,
+                        $modulesData[$moduleName]
+                    );
+                    $recommendedModules->addRecommendedModule($recommendedModule);
+                }
             }
 
             $recommendedModules->sortByPosition();
 
             $tabRecommendedModules = new TabRecommendedModules(
                 $tabClassName,
-                $tabdata['displayMode'],
+                $tabData['displayMode'],
                 $recommendedModules
             );
             $tabsRecommendedModules->addTab($tabRecommendedModules);
         }
 
         return $tabsRecommendedModules;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return string[]
+     */
+    private function getModuleNames(array $data)
+    {
+        $moduleNames = [];
+
+        foreach ($data as $tabClassName => $tabData) {
+            foreach ($tabData['recommendedModules'] as $position => $moduleName) {
+                $moduleNames[] = $moduleName;
+            }
+        }
+
+        return array_unique($moduleNames);
     }
 }

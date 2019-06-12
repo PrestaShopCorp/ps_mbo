@@ -39,13 +39,29 @@ class RecommendedModule implements RecommendedModuleInterface
     private $position;
 
     /**
+     * @var bool
+     */
+    private $isInstalled;
+
+    /**
+     * @var array
+     */
+    private $moduleData;
+
+    /**
+     * Constructor.
+     *
      * @param string $moduleName
      * @param int $position
+     * @param bool $isInstalled
+     * @param array $moduleData
      */
-    public function __construct($moduleName, $position)
+    public function __construct($moduleName, $position, $isInstalled, array $moduleData)
     {
         $this->moduleName = $moduleName;
         $this->position = $position;
+        $this->isInstalled = $isInstalled;
+        $this->moduleData = $moduleData;
     }
 
     /**
@@ -62,5 +78,21 @@ class RecommendedModule implements RecommendedModuleInterface
     public function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isInstalled()
+    {
+        return $this->isInstalled;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getModuleData()
+    {
+        return $this->moduleData;
     }
 }

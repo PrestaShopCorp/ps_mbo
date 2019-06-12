@@ -26,9 +26,7 @@
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use PrestaShop\Module\Mbo\Adapter\ModulesDataProvider;
 use PrestaShop\Module\Mbo\DataProvider\RecommendedModulesProvider;
-use PrestaShop\Module\Mbo\Factory\RecommendedModulesEnhancedFactory;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,22 +77,9 @@ class ModuleSelectionController extends FrameworkBundleAdminController
      */
     public function recommendedModulesAction(Request $request)
     {
-        $recommendedModulesProvider = new RecommendedModulesProvider();
+        $recommendedModulesProvider = $this->getRecommendedModulesProvider();
         $tabRecommendedModules = $recommendedModulesProvider->getTabRecommendedModules($request->get('tabClassName'));
-        $recommendedModulesEnhanced = null;
-        if ($tabRecommendedModules->hasRecommendedModules()) {
-            $modulesDataProvider = new ModulesDataProvider(
-                $this->get('prestashop.core.admin.data_provider.module_interface'),
-                $this->get('prestashop.core.admin.module.repository'),
-                $this->get('prestashop.adapter.presenter.module'),
-                $this->get('prestashop.core.admin.tab.repository'),
-                $this->get('prestashop.adapter.legacy.context')
-            );
-            $recommendedModulesEnhancedFactory = new RecommendedModulesEnhancedFactory($modulesDataProvider);
-            $recommendedModulesEnhanced = $recommendedModulesEnhancedFactory->buildFromRecommendedModules($tabRecommendedModules->getRecommendedModules());
-        }
-        dump($recommendedModulesEnhanced);
-        dump($recommendedModulesProvider->getTabNamesHasRecommendedModules());
+        dump($tabRecommendedModules);
 
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
@@ -126,5 +111,13 @@ class ModuleSelectionController extends FrameworkBundleAdminController
             . "&activity=$activity"
             . "&parentUrl=$parent_domain"
         ;
+    }
+
+    /**
+     * @return RecommendedModulesProvider
+     */
+    private function getRecommendedModulesProvider()
+    {
+        return $this->get('mbo.data_provider.recommended_modules_provider');
     }
 }

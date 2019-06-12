@@ -26,9 +26,6 @@
 
 namespace PrestaShop\Module\Mbo\Adapter;
 
-/**
- * Class RecommendedModulesXMLParser is responsible for providing recommended modules.
- */
 class RecommendedModulesXMLParser
 {
     private $content;

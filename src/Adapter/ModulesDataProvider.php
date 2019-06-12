@@ -123,7 +123,7 @@ class ModulesDataProvider
 
                 if ($perm) {
                     $module->fillLogo();
-                    $data[] = $this->modulePresenter->present($module);
+                    $data[$module->get('name')] = $this->modulePresenter->present($module);
                 }
             }
         }

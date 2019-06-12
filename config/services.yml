@@ -1,0 +1,22 @@
+services:
+  _defaults:
+    public: true
+
+  mbo.adapter.modules_data_provider:
+    class: 'PrestaShop\Module\Mbo\Adapter\ModulesDataProvider'
+    arguments:
+      - '@prestashop.core.admin.data_provider.module_interface'
+      - '@prestashop.core.admin.module.repository'
+      - '@prestashop.adapter.presenter.module'
+      - '@prestashop.core.admin.tab.repository'
+      - '@prestashop.adapter.legacy.context'
+
+  mbo.factory.tabs_recommended_modules_factory:
+    class: 'PrestaShop\Module\Mbo\Factory\TabsRecommendedModulesFactory'
+    arguments:
+      - '@mbo.adapter.modules_data_provider'
+
+  mbo.data_provider.recommended_modules_provider:
+    class: 'PrestaShop\Module\Mbo\Adapter\ModulesDataProvider'
+    arguments:
+      - '@mbo.factory.tabs_recommended_modules_factory'

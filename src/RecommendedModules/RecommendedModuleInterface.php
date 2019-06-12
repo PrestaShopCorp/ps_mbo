@@ -41,4 +41,18 @@ interface RecommendedModuleInterface
      * @return int
      */
     public function getPosition();
+
+    /**
+     * Check if the recommended modules is installed.
+     *
+     * @return bool
+     */
+    public function isInstalled();
+
+    /**
+     * Get the recommended module data.
+     *
+     * @return array
+     */
+    public function getModuleData();
 }

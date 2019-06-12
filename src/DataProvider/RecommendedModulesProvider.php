@@ -34,7 +34,7 @@ use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
 use PrestaShop\CircuitBreaker\FactorySettings;
 use PrestaShop\CircuitBreaker\Storage\DoctrineCache;
 use PrestaShop\Module\Mbo\Adapter\RecommendedModulesXMLParser;
-use PrestaShop\Module\Mbo\Factory\TabsRecommendedModulesFactory;
+use PrestaShop\Module\Mbo\Factory\TabsRecommendedModulesFactoryInterface;
 use PrestaShop\Module\Mbo\TabsRecommendedModules\TabRecommendedModulesInterface;
 use PrestaShop\Module\Mbo\TabsRecommendedModules\TabsRecommendedModulesInterface;
 
@@ -59,6 +59,11 @@ class RecommendedModulesProvider
     const OPEN_THRESHOLD_SECONDS = 60;
 
     /**
+     * @var TabsRecommendedModulesFactoryInterface
+     */
+    private $tabsRecommendedModulesFactory;
+
+    /**
      * @var FactoryInterface
      */
     private $factory;
@@ -70,9 +75,13 @@ class RecommendedModulesProvider
 
     /**
      * Constructor.
+     *
+     * @param TabsRecommendedModulesFactoryInterface $tabsRecommendedModulesFactory
      */
-    public function __construct()
+    public function __construct(TabsRecommendedModulesFactoryInterface $tabsRecommendedModulesFactory)
     {
+        $this->tabsRecommendedModulesFactory = $tabsRecommendedModulesFactory;
+
         //Doctrine cache used for Guzzle and CircuitBreaker storage
         $doctrineCache = new FilesystemCache(
             _PS_CACHE_DIR_
@@ -132,17 +141,6 @@ class RecommendedModulesProvider
     }
 
     /**
-     * Get tabs class names has recommended modules
-     *
-     * @return string[]
-     */
-    public function getTabNamesHasRecommendedModules()
-    {
-        $tabsRecommendedModules = $this->getTabsRecommendedModulesFromApi();
-
-        return $tabsRecommendedModules->getTabsClassNames();
-    }
-    /**
      * Retrieve tabs with recommended modules from PrestaShop
      *
      * @return TabsRecommendedModulesInterface
@@ -155,8 +153,7 @@ class RecommendedModulesProvider
 
         $recommendedModulesXMLParser = new RecommendedModulesXMLParser($apiResponse);
 
-        $tabsRecommendedModulesFactory = new TabsRecommendedModulesFactory();
-        $tabsRecommendedModules = $tabsRecommendedModulesFactory->buildFromArray($recommendedModulesXMLParser->toArray());
+        $tabsRecommendedModules = $this->tabsRecommendedModulesFactory->buildFromArray($recommendedModulesXMLParser->toArray());
 
         return $tabsRecommendedModules;
     }

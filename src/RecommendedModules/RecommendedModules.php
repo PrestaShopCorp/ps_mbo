@@ -134,4 +134,20 @@ class RecommendedModules implements RecommendedModulesInterface
             return ($recommendedModuleA->getPosition() < $recommendedModuleB->getPosition()) ? -1 : 1;
         });
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getInstalled()
+    {
+        return new RecommendedModulesFilter($this->getIterator(), true);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUninstalled()
+    {
+        return new RecommendedModulesFilter($this->getIterator(), false);
+    }
 }

@@ -24,19 +24,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\Factory;
+namespace PrestaShop\Module\Mbo\RecommendedModules;
 
-use PrestaShop\Module\Mbo\RecommendedModules\RecommendedModulesEnhancedInterface;
-use PrestaShop\Module\Mbo\RecommendedModules\RecommendedModulesInterface;
+use Iterator;
+use FilterIterator;
 
-interface RecommendedModulesEnhancedFactoryInterface
+class RecommendedModulesFilter extends FilterIterator
 {
     /**
-     * Builds a collection of recommended modules enhanced from a collection of recommended modules.
-     *
-     * @param RecommendedModulesInterface $recommendedModules
-     *
-     * @return RecommendedModulesEnhancedInterface
+     * @var bool
      */
-    public function buildFromRecommendedModules(RecommendedModulesInterface $recommendedModules);
+    private $isInstalled;
+
+    /**
+     * Constructor.
+     *
+     * @param Iterator $iterator
+     * @param bool $isInstalled
+     */
+    public function __construct(Iterator $iterator, $isInstalled)
+    {
+        parent::__construct($iterator);
+        $this->isInstalled = $isInstalled;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function accept()
+    {
+        /**
+         * @var RecommendedModuleInterface
+         */
+        $recommendedModules = $this->getInnerIterator()->current();
+
+        return $this->isInstalled === $recommendedModules->isInstalled();
+    }
 }
