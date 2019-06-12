@@ -40,7 +40,7 @@ use PrestaShop\Module\Mbo\TabsRecommendedModules\TabsRecommendedModulesInterface
 
 class RecommendedModulesProvider
 {
-    const CACHE_DIRECTORY = 'mbo';
+    const CACHE_DIRECTORY = 'ps_mbo';
 
     const CACHE_KEY = 'recommendedModules';
 
@@ -126,17 +126,28 @@ class RecommendedModulesProvider
      */
     public function getTabRecommendedModules($tabClassName)
     {
-        $tabsRecommendedModules = $this->getTabRecommendedModulesFromApi();
+        $tabsRecommendedModules = $this->getTabsRecommendedModulesFromApi();
 
         return $tabsRecommendedModules->getTab($tabClassName);
     }
 
     /**
-     * Retrieve recommended modules from PrestaShop
+     * Get tabs class names has recommended modules
+     *
+     * @return string[]
+     */
+    public function getTabNamesHasRecommendedModules()
+    {
+        $tabsRecommendedModules = $this->getTabsRecommendedModulesFromApi();
+
+        return $tabsRecommendedModules->getTabsClassNames();
+    }
+    /**
+     * Retrieve tabs with recommended modules from PrestaShop
      *
      * @return TabsRecommendedModulesInterface
      */
-    private function getTabRecommendedModulesFromApi()
+    private function getTabsRecommendedModulesFromApi()
     {
         $circuitBreaker = $this->factory->create($this->apiSettings);
 

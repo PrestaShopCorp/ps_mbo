@@ -49,6 +49,11 @@ interface TabsRecommendedModulesInterface extends ArrayAccess, IteratorAggregate
     public function getTab($tabClassName);
 
     /**
+     * @return string[]
+     */
+    public function getTabsClassNames();
+
+    /**
      * @param mixed $offset
      *
      * @return TabRecommendedModulesInterface

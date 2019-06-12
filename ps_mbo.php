@@ -283,9 +283,65 @@ class ps_mbo extends Module
      */
     private function shouldAttachRecommendedModulesButton()
     {
-        $recommendedModulesProvider = new RecommendedModulesProvider();
-        $tabRecommendedModules = $recommendedModulesProvider->getTabRecommendedModules(Tools::getValue('controller'));
-
-        return $tabRecommendedModules->hasRecommendedModules();
+        return in_array(
+            Tools::getValue('controller'),
+            [
+                "AdminProducts",
+                "AdminCategories",
+                "AdminTracking",
+                "AdminAttributesGroups",
+                "AdminFeatures",
+                "AdminManufacturers",
+                "AdminSuppliers",
+                "AdminTags",
+                "AdminOrders",
+                "AdminInvoices",
+                "AdminReturn",
+                "AdminDeliverySlip",
+                "AdminSlip",
+                "AdminStatuses",
+                "AdminOrderMessage",
+                "AdminCustomers",
+                "AdminAddresses",
+                "AdminGroups",
+                "AdminCarts",
+                "AdminCustomerThreads",
+                "AdminContacts",
+                "AdminCartRules",
+                "AdminSpecificPriceRule",
+                "AdminMarketing",
+                "AdminPayment",
+                "AdminCarriers",
+                "AdminShipping",
+                "AdminLocalization",
+                "AdminZones",
+                "AdminCountries",
+                "AdminCurrencies",
+                "AdminTaxes",
+                "AdminTaxRulesGroup",
+                "AdminTranslations",
+                "AdminPreferences",
+                "AdminOrderPreferences",
+                "AdminPPreferences",
+                "AdminCustomerPreferences",
+                "AdminThemes",
+                "AdminMeta",
+                "AdminCmsContent",
+                "AdminImages",
+                "AdminSearchConf",
+                "AdminGeolocation",
+                "AdminInformation",
+                "AdminPerformance",
+                "AdminEmails",
+                "AdminImport",
+                "AdminBackup",
+                "AdminRequestSql",
+                "AdminLogs",
+                "AdminAdminPreferences",
+                "AdminStats",
+                "AdminSearchEngines",
+                "AdminReferrers",
+            ]
+        );
     }
 }

@@ -62,6 +62,20 @@ class TabsRecommendedModules implements TabsRecommendedModulesInterface
     /**
      * {@inheritdoc}
      */
+    public function getTabsClassNames()
+    {
+        $tabsNames = [];
+
+        foreach ($this->tabsRecommendedModules as $tabRecommendedModules) {
+            $tabsNames[] = $tabRecommendedModules->getClassName();
+        }
+
+        return $tabsNames;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function offsetExists($offset)
     {
         return array_key_exists($offset, $this->tabsRecommendedModules);
