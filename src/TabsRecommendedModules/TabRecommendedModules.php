@@ -54,8 +54,8 @@ class TabRecommendedModules implements TabRecommendedModulesInterface
      */
     public function __construct(
         $className,
-        $displayMode = TabRecommendedModulesInterface::DISPLAY_MODE_MODAL,
-        RecommendedModulesInterface $recommendedModules = null
+        $displayMode,
+        RecommendedModulesInterface $recommendedModules
     ) {
         $this->className = $className;
         $this->displayMode = $displayMode;
@@ -91,7 +91,6 @@ class TabRecommendedModules implements TabRecommendedModulesInterface
      */
     public function hasRecommendedModules()
     {
-        return $this->recommendedModules
-            && $this->recommendedModules->count();
+        return !$this->recommendedModules->isEmpty();
     }
 }

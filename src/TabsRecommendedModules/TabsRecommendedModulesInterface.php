@@ -44,14 +44,9 @@ interface TabsRecommendedModulesInterface extends ArrayAccess, IteratorAggregate
     /**
      * @param string $tabClassName
      *
-     * @return TabRecommendedModulesInterface
+     * @return TabRecommendedModulesInterface|false
      */
     public function getTab($tabClassName);
-
-    /**
-     * @return string[]
-     */
-    public function getTabsClassNames();
 
     /**
      * @param mixed $offset
@@ -59,4 +54,9 @@ interface TabsRecommendedModulesInterface extends ArrayAccess, IteratorAggregate
      * @return TabRecommendedModulesInterface
      */
     public function offsetGet($offset);
+
+    /**
+     * @return bool
+     */
+    public function isEmpty();
 }

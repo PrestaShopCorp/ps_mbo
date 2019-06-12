@@ -78,14 +78,16 @@ class TabsRecommendedModulesFactory implements TabsRecommendedModulesFactoryInte
                 }
             }
 
-            $recommendedModules->sortByPosition();
+            if (!$recommendedModules->isEmpty()) {
+                $recommendedModules->sortByPosition();
 
-            $tabRecommendedModules = new TabRecommendedModules(
-                $tabClassName,
-                $tabData['displayMode'],
-                $recommendedModules
-            );
-            $tabsRecommendedModules->addTab($tabRecommendedModules);
+                $tabRecommendedModules = new TabRecommendedModules(
+                    $tabClassName,
+                    $tabData['displayMode'],
+                    $recommendedModules
+                );
+                $tabsRecommendedModules->addTab($tabRecommendedModules);
+            }
         }
 
         return $tabsRecommendedModules;

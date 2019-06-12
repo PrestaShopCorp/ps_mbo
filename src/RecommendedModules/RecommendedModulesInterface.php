@@ -65,6 +65,11 @@ interface RecommendedModulesInterface extends ArrayAccess, IteratorAggregate, Co
     public function offsetGet($offset);
 
     /**
+     * @return bool
+     */
+    public function isEmpty();
+
+    /**
      * Sort recommended modules by position
      *
      * @return void
@@ -74,14 +79,14 @@ interface RecommendedModulesInterface extends ArrayAccess, IteratorAggregate, Co
     /**
      * Get recommended modules installed.
      *
-     * @return RecommendedModuleEnhancedInterface[]
+     * @return RecommendedModuleInterface[]
      */
     public function getInstalled();
 
     /**
      * Get recommended modules uninstalled.
      *
-     * @return RecommendedModuleEnhancedInterface[]
+     * @return RecommendedModuleInterface[]
      */
     public function getUninstalled();
 }

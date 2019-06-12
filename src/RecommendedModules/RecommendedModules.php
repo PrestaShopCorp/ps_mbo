@@ -124,6 +124,14 @@ class RecommendedModules implements RecommendedModulesInterface
     /**
      * {@inheritdoc}
      */
+    public function isEmpty()
+    {
+        return empty($this->recommendedModules);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function sortByPosition()
     {
         $this->getIterator()->uasort(function (RecommendedModuleInterface $recommendedModuleA, RecommendedModuleInterface $recommendedModuleB) {

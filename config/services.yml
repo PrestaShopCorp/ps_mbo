@@ -20,3 +20,4 @@ services:
     class: 'PrestaShop\Module\Mbo\DataProvider\RecommendedModulesProvider'
     arguments:
       - '@mbo.factory.tabs_recommended_modules_factory'
+      - "@doctrine.cache.provider"

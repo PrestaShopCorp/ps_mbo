@@ -26,13 +26,10 @@
 
 namespace PrestaShop\Module\Mbo\DataProvider;
 
-use Doctrine\Common\Cache\FilesystemCache;
-use GuzzleHttp\Subscriber\Cache\CacheStorage;
-use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
+use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory;
 use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
 use PrestaShop\CircuitBreaker\FactorySettings;
-use PrestaShop\CircuitBreaker\Storage\DoctrineCache;
 use PrestaShop\Module\Mbo\Adapter\RecommendedModulesXMLParser;
 use PrestaShop\Module\Mbo\Factory\TabsRecommendedModulesFactoryInterface;
 use PrestaShop\Module\Mbo\TabsRecommendedModules\TabRecommendedModulesInterface;
@@ -40,8 +37,6 @@ use PrestaShop\Module\Mbo\TabsRecommendedModules\TabsRecommendedModulesInterface
 
 class RecommendedModulesProvider
 {
-    const CACHE_DIRECTORY = 'ps_mbo';
-
     const CACHE_KEY = 'recommendedModules';
 
     const CACHE_LIFETIME = 604800; // 7 days
@@ -64,9 +59,14 @@ class RecommendedModulesProvider
     private $tabsRecommendedModulesFactory;
 
     /**
+     * @var CacheProvider|null
+     */
+    private $cacheProvider;
+
+    /**
      * @var FactoryInterface
      */
-    private $factory;
+    private $circuitBreakerFactory;
 
     /**
      * @var array
@@ -77,34 +77,14 @@ class RecommendedModulesProvider
      * Constructor.
      *
      * @param TabsRecommendedModulesFactoryInterface $tabsRecommendedModulesFactory
+     * @param CacheProvider|null $cacheProvider
      */
-    public function __construct(TabsRecommendedModulesFactoryInterface $tabsRecommendedModulesFactory)
-    {
+    public function __construct(
+        TabsRecommendedModulesFactoryInterface $tabsRecommendedModulesFactory,
+        CacheProvider $cacheProvider = null
+    ) {
         $this->tabsRecommendedModulesFactory = $tabsRecommendedModulesFactory;
-
-        //Doctrine cache used for Guzzle and CircuitBreaker storage
-        $doctrineCache = new FilesystemCache(
-            _PS_CACHE_DIR_
-            . DIRECTORY_SEPARATOR
-            . self::CACHE_DIRECTORY
-        );
-
-        //Init Guzzle cache
-        $cacheStorage = new CacheStorage(
-            $doctrineCache,
-            self::CACHE_KEY,
-            self::CACHE_LIFETIME
-        );
-
-        $cacheSubscriber = new CacheSubscriber(
-            $cacheStorage,
-            function () {
-                return true;
-            }
-        );
-
-        //Init circuit breaker factory
-        $storage = new DoctrineCache($doctrineCache);
+        $this->cacheProvider = $cacheProvider;
 
         $this->apiSettings = new FactorySettings(
             self::CLOSED_ALLOWED_FAILURES,
@@ -116,14 +96,12 @@ class RecommendedModulesProvider
             ->setThreshold(self::OPEN_THRESHOLD_SECONDS)
             ->setStrippedFailures(self::OPEN_ALLOWED_FAILURES)
             ->setStrippedTimeout(self::OPEN_TIMEOUT_SECONDS)
-            ->setStorage($storage)
             ->setClientOptions([
-                'subscribers' => [$cacheSubscriber],
                 'method' => 'GET',
             ])
         ;
 
-        $this->factory = new AdvancedCircuitBreakerFactory();
+        $this->circuitBreakerFactory = new AdvancedCircuitBreakerFactory();
     }
 
     /**
@@ -135,9 +113,35 @@ class RecommendedModulesProvider
      */
     public function getTabRecommendedModules($tabClassName)
     {
-        $tabsRecommendedModules = $this->getTabsRecommendedModulesFromApi();
+        $tabsRecommendedModules = $this->getTabsRecommendedModules();
 
         return $tabsRecommendedModules->getTab($tabClassName);
+    }
+
+    /**
+     * @return TabsRecommendedModulesInterface
+     */
+    public function getTabsRecommendedModules()
+    {
+        if ($this->cacheProvider
+            && $this->cacheProvider->contains(static::CACHE_KEY)
+        ) {
+            return $this->cacheProvider->fetch(static::CACHE_KEY);
+        }
+
+        $tabsRecommendedModules = $this->getTabsRecommendedModulesFromApi();
+
+        if ($this->cacheProvider
+            && !$tabsRecommendedModules->isEmpty()
+        ) {
+            $this->cacheProvider->save(
+                static::CACHE_KEY,
+                $tabsRecommendedModules,
+                static::CACHE_LIFETIME
+            );
+        }
+
+        return $tabsRecommendedModules;
     }
 
     /**
@@ -147,7 +151,7 @@ class RecommendedModulesProvider
      */
     private function getTabsRecommendedModulesFromApi()
     {
-        $circuitBreaker = $this->factory->create($this->apiSettings);
+        $circuitBreaker = $this->circuitBreakerFactory->create($this->apiSettings);
 
         $apiResponse = $circuitBreaker->call(self::API_URL);
 

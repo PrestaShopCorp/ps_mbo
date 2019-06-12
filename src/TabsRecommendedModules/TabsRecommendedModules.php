@@ -56,21 +56,7 @@ class TabsRecommendedModules implements TabsRecommendedModulesInterface
             }
         }
 
-        return new TabRecommendedModules($tabClassName);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTabsClassNames()
-    {
-        $tabsNames = [];
-
-        foreach ($this->tabsRecommendedModules as $tabRecommendedModules) {
-            $tabsNames[] = $tabRecommendedModules->getClassName();
-        }
-
-        return $tabsNames;
+        return false;
     }
 
     /**
@@ -119,5 +105,13 @@ class TabsRecommendedModules implements TabsRecommendedModulesInterface
     public function count()
     {
         return count($this->tabsRecommendedModules);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isEmpty()
+    {
+        return empty($this->tabsRecommendedModules);
     }
 }
