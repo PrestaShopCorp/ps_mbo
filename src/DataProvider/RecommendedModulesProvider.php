@@ -105,11 +105,11 @@ class RecommendedModulesProvider
     }
 
     /**
-     * Get recommended modules by Tab class name.
+     * Get tab with recommended modules by class name.
      *
      * @param string $tabClassName
      *
-     * @return TabRecommendedModulesInterface
+     * @return TabRecommendedModulesInterface|false
      */
     public function getTabRecommendedModules($tabClassName)
     {
@@ -119,13 +119,13 @@ class RecommendedModulesProvider
     }
 
     /**
+     * Get tabs with recommended modules
+     *
      * @return TabsRecommendedModulesInterface
      */
     public function getTabsRecommendedModules()
     {
-        if ($this->cacheProvider
-            && $this->cacheProvider->contains(static::CACHE_KEY)
-        ) {
+        if ($this->isCached()) {
             return $this->cacheProvider->fetch(static::CACHE_KEY);
         }
 
@@ -142,6 +142,17 @@ class RecommendedModulesProvider
         }
 
         return $tabsRecommendedModules;
+    }
+
+    /**
+     * Check if recommended modules cache is set
+     *
+     * @return bool
+     */
+    public function isCached()
+    {
+        return $this->cacheProvider
+            && $this->cacheProvider->contains(static::CACHE_KEY);
     }
 
     /**

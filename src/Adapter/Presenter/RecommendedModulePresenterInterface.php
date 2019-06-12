@@ -24,40 +24,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\RecommendedModules;
+namespace PrestaShop\Module\Mbo\Adapter\Presenter;
 
-use Iterator;
-use FilterIterator;
+use PrestaShop\Module\Mbo\RecommendedModules\RecommendedModuleInterface;
+use PrestaShop\Module\Mbo\RecommendedModules\RecommendedModulesInterface;
 
-class RecommendedModulesFilter extends FilterIterator
+interface RecommendedModulePresenterInterface
 {
     /**
-     * @var bool
-     */
-    private $isInstalled;
-
-    /**
-     * Constructor.
+     * Transform a RecommendedModuleInterface as a simple array of data.
      *
-     * @param Iterator $iterator
-     * @param bool $isInstalled
+     * @param RecommendedModuleInterface $recommendedModule
+     *
+     * @return array
      */
-    public function __construct(Iterator $iterator, $isInstalled)
-    {
-        parent::__construct($iterator);
-        $this->isInstalled = $isInstalled;
-    }
+    public function present(RecommendedModuleInterface $recommendedModule);
 
     /**
-     * {@inheritdoc}
+     * Transform a collection of RecommendedModulesInterface as a simple array of data.
+     *
+     * @param RecommendedModulesInterface $recommendedModules
+     *
+     * @return array
      */
-    public function accept()
-    {
-        /**
-         * @var RecommendedModuleInterface
-         */
-        $recommendedModules = $this->getInnerIterator()->current();
-
-        return $this->isInstalled === $recommendedModules->isInstalled();
-    }
+    public function presentCollection(RecommendedModulesInterface $recommendedModules);
 }

@@ -91,6 +91,31 @@ class TabRecommendedModules implements TabRecommendedModulesInterface
      */
     public function hasRecommendedModules()
     {
-        return !$this->recommendedModules->isEmpty();
+        return $this->recommendedModules
+            && !$this->recommendedModules->isEmpty();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRecommendedModulesInstalled()
+    {
+        if ($this->hasRecommendedModules()) {
+            return $this->getRecommendedModules()->getInstalled();
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRecommendedModulesNotInstalled()
+    {
+        if ($this->hasRecommendedModules()) {
+            return $this->getRecommendedModules()->getNotInstalled();
+        }
+
+        return false;
     }
 }

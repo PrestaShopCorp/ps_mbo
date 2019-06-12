@@ -32,6 +32,7 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 }
 
 use PrestaShop\Module\Mbo\DataProvider\RecommendedModulesProvider;
+use PrestaShop\Module\Mbo\TabsRecommendedModules\TabRecommendedModulesInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -249,31 +250,49 @@ class ps_mbo extends Module
      */
     public function hookDisplayDashboardTop()
     {
-        if ($this->shouldAttachRecommendedModulesButton()) {
-            /**
-             * @var ContainerInterface
-             */
-            $container = SymfonyContainer::getInstance();
+        $this->smarty->assign([
+            'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModulesAfterContent(),
+            'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModulesButton(),
+            'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
+            'recommendedModulesTitle' => $this->l('Recommended Modules and Services'),
+            'recommendedModulesUrl' => $this->getRouter()->generate(
+                'admin_mbo_recommended_modules',
+                [
+                    'tabClassName' => Tools::getValue('controller'),
+                ]
+            ),
+        ]);
 
-            /**
-             * @var UrlGeneratorInterface
-             */
-            $router = $container->get('router');
+        return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
+    }
 
-            $this->smarty->assign(
-                'mbo_recommended_modules_url',
-                $router->generate(
-                    'admin_mbo_recommended_modules',
-                    [
-                        'tabClassName' => Tools::getValue('controller'),
-                    ]
-                )
-            );
+    /**
+     * Indicates if the recommended modules should be attached after content in this page
+     *
+     * @return bool
+     */
+    private function shouldAttachRecommendedModulesAfterContent()
+    {
+        $recommendedModulesProvider = $this->getRecommendedModulesProvider();
+        if ($recommendedModulesProvider->isCached()) {
+            $tabRecommendedModules = $recommendedModulesProvider->getTabRecommendedModules(Tools::getValue('controller'));
 
-            return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
+            return $tabRecommendedModules
+                && $tabRecommendedModules->hasRecommendedModules()
+                && (
+                    TabRecommendedModulesInterface::DISPLAY_MODE_AFTER_CONTENT === $tabRecommendedModules->getDisplayMode()
+                    || 'AdminCarriers' === Tools::getValue('controller')
+                );
         }
 
-        return '';
+        return in_array(
+            Tools::getValue('controller'),
+            [
+                'AdminMarketing',
+                'AdminPayment',
+                'AdminCarriers',
+            ]
+        );
     }
 
     /**
@@ -283,65 +302,98 @@ class ps_mbo extends Module
      */
     private function shouldAttachRecommendedModulesButton()
     {
+        $recommendedModulesProvider = $this->getRecommendedModulesProvider();
+        if ($recommendedModulesProvider->isCached()) {
+            $tabRecommendedModules = $recommendedModulesProvider->getTabRecommendedModules(Tools::getValue('controller'));
+
+            return $tabRecommendedModules
+                && $tabRecommendedModules->hasRecommendedModules()
+                && (
+                    TabRecommendedModulesInterface::DISPLAY_MODE_MODAL === $tabRecommendedModules->getDisplayMode()
+                    && 'AdminCarriers' !== Tools::getValue('controller')
+                );
+        }
+
         return in_array(
             Tools::getValue('controller'),
             [
-                "AdminProducts",
-                "AdminCategories",
-                "AdminTracking",
-                "AdminAttributesGroups",
-                "AdminFeatures",
-                "AdminManufacturers",
-                "AdminSuppliers",
-                "AdminTags",
-                "AdminOrders",
-                "AdminInvoices",
-                "AdminReturn",
-                "AdminDeliverySlip",
-                "AdminSlip",
-                "AdminStatuses",
-                "AdminOrderMessage",
-                "AdminCustomers",
-                "AdminAddresses",
-                "AdminGroups",
-                "AdminCarts",
-                "AdminCustomerThreads",
-                "AdminContacts",
-                "AdminCartRules",
-                "AdminSpecificPriceRule",
-                "AdminMarketing",
-                "AdminPayment",
-                "AdminCarriers",
-                "AdminShipping",
-                "AdminLocalization",
-                "AdminZones",
-                "AdminCountries",
-                "AdminCurrencies",
-                "AdminTaxes",
-                "AdminTaxRulesGroup",
-                "AdminTranslations",
-                "AdminPreferences",
-                "AdminOrderPreferences",
-                "AdminPPreferences",
-                "AdminCustomerPreferences",
-                "AdminThemes",
-                "AdminMeta",
-                "AdminCmsContent",
-                "AdminImages",
-                "AdminSearchConf",
-                "AdminGeolocation",
-                "AdminInformation",
-                "AdminPerformance",
-                "AdminEmails",
-                "AdminImport",
-                "AdminBackup",
-                "AdminRequestSql",
-                "AdminLogs",
-                "AdminAdminPreferences",
-                "AdminStats",
-                "AdminSearchEngines",
-                "AdminReferrers",
+                'AdminProducts',
+                'AdminCategories',
+                'AdminTracking',
+                'AdminAttributesGroups',
+                'AdminFeatures',
+                'AdminManufacturers',
+                'AdminSuppliers',
+                'AdminTags',
+                'AdminOrders',
+                'AdminInvoices',
+                'AdminReturn',
+                'AdminDeliverySlip',
+                'AdminSlip',
+                'AdminStatuses',
+                'AdminOrderMessage',
+                'AdminCustomers',
+                'AdminAddresses',
+                'AdminGroups',
+                'AdminCarts',
+                'AdminCustomerThreads',
+                'AdminContacts',
+                'AdminCartRules',
+                'AdminSpecificPriceRule',
+                'AdminShipping',
+                'AdminLocalization',
+                'AdminZones',
+                'AdminCountries',
+                'AdminCurrencies',
+                'AdminTaxes',
+                'AdminTaxRulesGroup',
+                'AdminTranslations',
+                'AdminPreferences',
+                'AdminOrderPreferences',
+                'AdminPPreferences',
+                'AdminCustomerPreferences',
+                'AdminThemes',
+                'AdminMeta',
+                'AdminCmsContent',
+                'AdminImages',
+                'AdminSearchConf',
+                'AdminGeolocation',
+                'AdminInformation',
+                'AdminPerformance',
+                'AdminEmails',
+                'AdminImport',
+                'AdminBackup',
+                'AdminRequestSql',
+                'AdminLogs',
+                'AdminAdminPreferences',
+                'AdminStats',
+                'AdminSearchEngines',
+                'AdminReferrers',
             ]
         );
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    private function getSymfonyContainer()
+    {
+        return SymfonyContainer::getInstance();
+    }
+
+    /**
+     * @return UrlGeneratorInterface
+     */
+    private function getRouter()
+    {
+        return $this->getSymfonyContainer()->get('router');
+    }
+
+    /**
+     * @return RecommendedModulesProvider
+     */
+    private function getRecommendedModulesProvider()
+    {
+        return $this->getSymfonyContainer()->get('mbo.data_provider.recommended_modules_provider');
     }
 }

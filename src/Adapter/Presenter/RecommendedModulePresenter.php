@@ -24,55 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\TabsRecommendedModules;
+namespace PrestaShop\Module\Mbo\Adapter\Presenter;
 
+use PrestaShop\Module\Mbo\RecommendedModules\RecommendedModuleInterface;
 use PrestaShop\Module\Mbo\RecommendedModules\RecommendedModulesInterface;
 
-interface TabRecommendedModulesInterface
+class RecommendedModulePresenter implements RecommendedModulePresenterInterface
 {
-    const DISPLAY_MODE_MODAL = 'slider_list';
-
-    const DISPLAY_MODE_AFTER_CONTENT = 'default_list';
+    /**
+     * {@inheritdoc}
+     */
+    public function present(RecommendedModuleInterface $recommendedModule)
+    {
+        return $recommendedModule->getModuleData();
+    }
 
     /**
-     * Get the class name of the tab.
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getClassName();
+    public function presentCollection(RecommendedModulesInterface $recommendedModules)
+    {
+        $recommendedModulesPresented = [];
 
-    /**
-     * Get the display mode of the tab.
-     *
-     * @return string
-     */
-    public function getDisplayMode();
+        foreach ($recommendedModules as $recommendedModule) {
+            $recommendedModulesPresented[] = $this->present($recommendedModule);
+        }
 
-    /**
-     * Get the recommended modules of the tab.
-     *
-     * @return RecommendedModulesInterface|false
-     */
-    public function getRecommendedModules();
-
-    /**
-     * Check if the tab has recommended modules.
-     *
-     * @return bool
-     */
-    public function hasRecommendedModules();
-
-    /**
-     * Get the installed recommended modules of the tab.
-     *
-     * @return RecommendedModulesInterface|false
-     */
-    public function getRecommendedModulesInstalled();
-
-    /**
-     * Get the not installed recommended modules of the tab.
-     *
-     * @return RecommendedModulesInterface|false
-     */
-    public function getRecommendedModulesNotInstalled();
+        return $recommendedModulesPresented;
+    }
 }

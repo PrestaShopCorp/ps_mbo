@@ -134,7 +134,7 @@ class RecommendedModules implements RecommendedModulesInterface
      */
     public function sortByPosition()
     {
-        $this->getIterator()->uasort(function (RecommendedModuleInterface $recommendedModuleA, RecommendedModuleInterface $recommendedModuleB) {
+        uasort($this->recommendedModules, function (RecommendedModuleInterface $recommendedModuleA, RecommendedModuleInterface $recommendedModuleB) {
             if ($recommendedModuleA->getPosition() === $recommendedModuleB->getPosition()) {
                 return 0;
             }
@@ -148,14 +148,26 @@ class RecommendedModules implements RecommendedModulesInterface
      */
     public function getInstalled()
     {
-        return new RecommendedModulesFilter($this->getIterator(), true);
+        $recommendedModulesInstalled = new static();
+        $recommendedModulesInstalled->recommendedModules = array_filter($this->recommendedModules, function (RecommendedModuleInterface $recommendedModule) {
+            return $recommendedModule->isInstalled();
+        });
+        $recommendedModulesInstalled->sortByPosition();
+
+        return $recommendedModulesInstalled;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getUninstalled()
+    public function getNotInstalled()
     {
-        return new RecommendedModulesFilter($this->getIterator(), false);
+        $recommendedModulesNotInstalled = new static();
+        $recommendedModulesNotInstalled->recommendedModules = array_filter($this->recommendedModules, function (RecommendedModuleInterface $recommendedModule) {
+            return !$recommendedModule->isInstalled();
+        });
+        $recommendedModulesNotInstalled->sortByPosition();
+
+        return $recommendedModulesNotInstalled;
     }
 }

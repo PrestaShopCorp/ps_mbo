@@ -25,21 +25,14 @@
 
 <script>
   var mboConfiguration = {
-    lang: {
-      'Recommended Modules and Services': '{l s='Recommended Modules and Services'|escape:'javascript' mod='ps_mbo'}',
+    translations: {
+      'Recommended Modules and Services': '{$recommendedModulesTitle|escape:'javascript'}',
     },
-    recommendedModulesUrl: '{$mbo_recommended_modules_url|escape:'javascript'}',
-    controller: help_class_name,
-    recommendedModules: tab_modules_list,
-    source: getControllerActionMap().join(),
+    recommendedModulesUrl: '{$recommendedModulesUrl|escape:'javascript'}',
+    shouldAttachRecommendedModulesAfterContent: {$shouldAttachRecommendedModulesAfterContent|intval},
+    shouldAttachRecommendedModulesButton: {$shouldAttachRecommendedModulesButton|intval},
+    shouldUseLegacyTheme: {$shouldUseLegacyTheme|intval},
   };
 
-  switch (help_class_name) {
-    case 'AdminCarriers':
-    case 'AdminPayment':
-      mbo.insertRecommendedModules(mboConfiguration);
-      break;
-    default:
-      mbo.insertToolbarButton(mboConfiguration);
-  }
+  mbo.initialize(mboConfiguration);
 </script>

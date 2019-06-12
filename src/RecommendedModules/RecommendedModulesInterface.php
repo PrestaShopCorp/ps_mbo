@@ -71,8 +71,6 @@ interface RecommendedModulesInterface extends ArrayAccess, IteratorAggregate, Co
 
     /**
      * Sort recommended modules by position
-     *
-     * @return void
      */
     public function sortByPosition();
 
@@ -84,9 +82,9 @@ interface RecommendedModulesInterface extends ArrayAccess, IteratorAggregate, Co
     public function getInstalled();
 
     /**
-     * Get recommended modules uninstalled.
+     * Get recommended modules not installed.
      *
      * @return RecommendedModuleInterface[]
      */
-    public function getUninstalled();
+    public function getNotInstalled();
 }

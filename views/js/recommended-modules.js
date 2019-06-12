@@ -47,23 +47,10 @@ var mbo = {};
     recommendedModulesButton: '#recommended-modules-button',
     oldButton: '#page-header-desc-configuration-modules-list',
     contentContainer: '#main-div .content-div .container:last',
-  };
-
-  /**
-   * Detects which theme we are currently on
-   * @constructor
-   */
-  var ThemeDetector = function() {
-    var isNewTheme = $('link').filter(function() {
-      return $(this).attr('href').match(RegExp('/themes/new-theme/'));
-    }).length > 0;
-
-    /**
-     * @return {boolean}
-     */
-    this.isNewTheme = function() {
-      return isNewTheme;
-    }
+    modulesListModal: '#modules_list_container',
+    modulesListModalContainer: '#main-div .content-div',
+    modulesListModalContent: '#modules_list_container .modal-body',
+    modulesListLoader: '#modules_list_loader',
   };
 
   /**
@@ -141,31 +128,31 @@ var mbo = {};
     /**
      * Inserts the recommended modules in the DOM
      *
-     * @param {string} recommendedModulesAjaxUrl
-     * @param {string} currentControllerName
-     * @param {string} recommendedModules
-     * @param {string} source
+     * @param {object} config
+     * @param {object} config.translations - Object containing translations
+     * @param {string} config.recommendedModulesUrl
+     * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
+     * @param {boolean} config.shouldAttachRecommendedModulesButton
+     * @param {boolean} config.shouldUseLegacyTheme
      *
      * @return this
      */
-    this.insertRecommendedModules = function(recommendedModulesAjaxUrl, currentControllerName, recommendedModules, source) {
+    this.insertRecommendedModules = function(config) {
       if (pageMap.contentContainer) {
         var recommendedModulesRequest = $.ajax({
           type: 'GET',
-          dataType: 'html',
-          url: recommendedModulesAjaxUrl,
+          dataType: 'json',
+          url: config.recommendedModulesUrl,
           data: {
-            ajax : "1",
-            controller : currentControllerName,
-            action : "getTabModulesList",
-            tab_modules_list : recommendedModules,
-            back_tab_modules_list : window.location.href,
-            admin_list_from_source : source
+            ajax : true,
+            shouldUseLegacyTheme: config.shouldUseLegacyTheme,
           }
         });
 
         recommendedModulesRequest.done(function(data) {
-          $(pageMap.contentContainer).append(data);
+          var recommendedModulesContainer = new RecommendedModulesContainer(config, data.content);
+
+          $(pageMap.contentContainer).append(recommendedModulesContainer.getMarkup());
         });
       }
 
@@ -176,30 +163,33 @@ var mbo = {};
   /**
    * Handles markup for the Recommended modules button
    *
-   * @param {object} trad - Translations dictionary
-   * @param {boolean} isNewTheme
-   * @param {string} href
+   * @param {object} config
+   * @param {object} config.translations - Object containing translations
+   * @param {string} config.recommendedModulesUrl
+   * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
+   * @param {boolean} config.shouldAttachRecommendedModulesButton
+   * @param {boolean} config.shouldUseLegacyTheme
    * @constructor
    */
-  var RecommendedModulesButton = function(trad, isNewTheme, href) {
-    var label = trad['Recommended Modules and Services'];
+  var RecommendedModulesButton = function(config) {
+    var label = config.translations['Recommended Modules and Services'];
     var buttonId = 'recommended-modules-button';
     var $markup;
 
-    if (isNewTheme) {
-      $markup = $(
-        '<a class="btn btn-outline-secondary" id="' + buttonId + '" href="' + href + '" title="' + label + '">\n' +
-        label +
-        '</a>'
-      );
-    } else {
+    if (config.shouldUseLegacyTheme) {
       $markup = $(
         '<li id="recommended-modules-button-container">\n' +
-        '  <a id="' + buttonId + '" class="toolbar_btn pointer" href="' + href + '" title="' + label + '">\n' +
+        '  <a id="' + buttonId + '" class="toolbar_btn pointer" href="' + config.recommendedModulesUrl + '" title="' + label + '">\n' +
         '    <i class="process-icon-modules-list"></i>\n' +
         '    <div>' + label + '</div>\n' +
         '  </a>\n' +
         '</li>'
+      );
+    } else {
+      $markup = $(
+        '<a class="btn btn-outline-secondary" id="' + buttonId + '" href="' + config.recommendedModulesUrl + '" title="' + label + '">\n' +
+        label +
+        '</a>'
       );
     }
 
@@ -215,31 +205,21 @@ var mbo = {};
   /**
    * Handles markup for the Recommended modules container
    *
-   * @param {object} trad - Translations dictionary
-   * @param {boolean} isNewTheme
+   * @param {object} config
+   * @param {object} config.translations - Object containing translations
+   * @param {string} config.recommendedModulesUrl
+   * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
+   * @param {boolean} config.shouldAttachRecommendedModulesButton
+   * @param {boolean} config.shouldUseLegacyTheme
    * @param {string} content
    * @constructor
    */
-  var RecommendedModulesContainer = function(trad, isNewTheme, content) {
-    var containerTitle = trad['Recommended Modules and Services'];
+  var RecommendedModulesContainer = function(config, content) {
+    var containerTitle = config.translations['Recommended Modules and Services'];
     var containerId = 'recommended-modules-container';
     var $markup;
 
-    if (isNewTheme) {
-      $markup = $(
-        '<div class="row" id="' + containerId + '">\n' +
-        '  <div class="card">\n' +
-        '    <h3 class="card-header">\n' +
-        '      <i class="material-icons">extension</i>\n' +
-        '      ' + containerTitle + '\n' +
-        '    </h3>\n' +
-        '    <div class="card-block">\n' +
-        '      ' + content +'\n' +
-        '    </div>\n' +
-        '  </div>\n' +
-        '</div>'
-      );
-    } else {
+    if (config.shouldUseLegacyTheme) {
       $markup = $(
         '<div class="panel" id="' + containerId + '">\n' +
         '  <h3>\n' +
@@ -248,6 +228,22 @@ var mbo = {};
         '  </h3>\n' +
         '  <div class="modules_list_container_tab row">\n' +
         '    ' + content +'\n' +
+        '  </div>\n' +
+        '</div>'
+      );
+    } else {
+      $markup = $(
+        '<div class="row" id="' + containerId + '">\n' +
+        '  <div class="col">\n' +
+        '    <div class="card">\n' +
+        '      <h3 class="card-header">\n' +
+        '        <i class="material-icons">extension</i>\n' +
+        '        ' + containerTitle + '\n' +
+        '      </h3>\n' +
+        '      <div class="card-block">\n' +
+        '        ' + content +'\n' +
+        '      </div>\n' +
+        '    </div>\n' +
         '  </div>\n' +
         '</div>'
       );
@@ -263,51 +259,102 @@ var mbo = {};
   };
 
   /**
+   * Handles markup for the Recommended modules container
    *
    * @param {object} pageMap
-   * @param {string} recommendedModulesAjaxUrl
-   * @param {string} currentControllerName
-   * @param {string} recommendedModules
-   * @param {string} source
+   * @param {object} config
+   * @param {object} config.translations - Object containing translations
+   * @param {string} config.recommendedModulesUrl
+   * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
+   * @param {boolean} config.shouldAttachRecommendedModulesButton
+   * @param {boolean} config.shouldUseLegacyTheme
    * @constructor
    */
-  var RecommendedModulesPopinHandler = function(pageMap, recommendedModulesAjaxUrl, currentControllerName, recommendedModules, source) {
+  var RecommendedModulesModal = function(pageMap, config) {
+    var containerTitle = config.translations['Recommended Modules and Services'];
+    var $markup;
+
+    if (!config.shouldUseLegacyTheme) {
+      $markup = $(
+        '<div id="modules_list_container" class="modal modal-vcenter fade" role="dialog">\n' +
+        '  <div class="modal-dialog">\n' +
+        '    <div class="modal-content">\n' +
+        '      <div class="modal-header">\n' +
+        '        <h4 class="modal-title module-modal-title">\n' +
+        '          ' + containerTitle + '\n' +
+        '        </h4>\n' +
+        '        <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
+        '          <span aria-hidden="true">&times;</span>\n' +
+        '        </button>\n' +
+        '      </div>\n' +
+        '      <div class="modal-body row">\n' +
+        '      </div>\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '</div>'
+      );
+    }
+
+    /**
+     * Returns the button's markup
+     * @return {jQuery|HTMLElement}
+     */
+    this.getMarkup = function() {
+      return $markup;
+    }
+  };
+
+  /**
+   * @param {object} pageMap
+   * @param {object} config
+   * @param {object} config.translations - Object containing translations
+   * @param {string} config.recommendedModulesUrl
+   * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
+   * @param {boolean} config.shouldAttachRecommendedModulesButton
+   * @param {boolean} config.shouldUseLegacyTheme
+   * @constructor
+   */
+  var RecommendedModulesPopinHandler = function(pageMap, config) {
 
     var initPopin = function() {
-      $(pageMap.fancybox).fancybox({
-        type: 'ajax',
-        autoDimensions: false,
-        autoSize: false,
-        width: 600,
-        height: 'auto',
-        helpers: {
-          overlay: {
-            locked: false
+      if (config.shouldUseLegacyTheme) {
+        $(pageMap.fancybox).fancybox({
+          type: 'ajax',
+          autoDimensions: false,
+          autoSize: false,
+          width: 600,
+          height: 'auto',
+          helpers: {
+            overlay: {
+              locked: false
+            }
           }
-        }
-      });
+        });
+      } else {
+        var modal = new RecommendedModulesModal(pageMap, config);
+        $(pageMap.modulesListModalContainer).append(modal.getMarkup());
+      }
     };
 
     var openModulesList = function() {
-      $(pageMap.modulesListModal).modal('show');
-
       var recommendedModulesRequest = $.ajax({
         type: 'GET',
-        dataType: 'html',
-        url: recommendedModulesAjaxUrl,
+        dataType: 'json',
+        url: config.recommendedModulesUrl,
         data: {
-          ajax : "1",
-          controller : currentControllerName,
-          action : "getTabModulesList",
-          tab_modules_list : recommendedModules,
-          back_tab_modules_list : window.location.href,
-          admin_list_from_source : source
+          ajax: true,
+          shouldUseLegacyTheme: config.shouldUseLegacyTheme,
         }
       });
 
-      recommendedModulesRequest.done(function(data) {
-        $(pageMap.modulesListModalContent).html(data).slideDown();
-        $(pageMap.modulesListLoader).hide();
+      recommendedModulesRequest.done(function (data) {
+        if (config.shouldUseLegacyTheme) {
+          $(pageMap.modulesListModalContent).html(data.content).slideDown();
+          $(pageMap.modulesListLoader).hide();
+        } else {
+          $(pageMap.modulesListModalContent).html(data.content);
+          $(pageMap.modulesListModal).modal('show');
+        }
       });
     };
 
@@ -333,45 +380,28 @@ var mbo = {};
    * Inserts the recommended modules button in the toolbar
    *
    * @param {object} config
-   * @param {object} config.lang - Object containing translations
-   * @param {string} config.recommendedModulesUrl - URL for button
-   * @param {string} config.controller - Current controller name
-   * @param {string} config.recommendedModules - Current controller name
-   * @param {string} config.source - Current controller name
+   * @param {object} config.translations - Object containing translations
+   * @param {string} config.recommendedModulesUrl
+   * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
+   * @param {boolean} config.shouldAttachRecommendedModulesButton
+   * @param {boolean} config.shouldUseLegacyTheme
    */
-  mbo.insertToolbarButton = function(config) {
-    var isNewTheme = new ThemeDetector().isNewTheme();
-    var pageMap = isNewTheme ? pageMapNewTheme : pageMapDefault;
+  mbo.initialize = function(config) {
+    var pageMap = config.shouldUseLegacyTheme ? pageMapDefault : pageMapNewTheme;
+    var page = new Page(pageMap);
 
-    var button = new RecommendedModulesButton(config.lang, isNewTheme, config.recommendedModulesUrl);
+    page.removeOldButton();
 
-    new Page(pageMap)
-      .removeOldButton()
-      .insertToolbarButton(button);
-
-    if (!isNewTheme) {
-      new RecommendedModulesPopinHandler(pageMap, config.recommendedModulesUrl, config.controller, config.recommendedModules, config.source)
-        .initialize();
+    if (config.shouldAttachRecommendedModulesButton) {
+      var button = new RecommendedModulesButton(config);
+      var recommendedModulesPopinHandler = new RecommendedModulesPopinHandler(pageMap, config);
+      page.insertToolbarButton(button);
+      recommendedModulesPopinHandler.initialize();
     }
-  };
 
-  /**
-   * Inserts the recommended modules button in the toolbar
-   *
-   * @param {object} config
-   * @param {object} config.lang - Object containing translations
-   * @param {string} config.recommendedModulesUrl - URL for button
-   * @param {string} config.controller - Current controller name
-   * @param {string} config.recommendedModules - Current controller name
-   * @param {string} config.source - Current controller name
-   */
-  mbo.insertRecommendedModules = function(config) {
-    var isNewTheme = new ThemeDetector().isNewTheme();
-    var pageMap = isNewTheme ? pageMapNewTheme : pageMapDefault;
-
-    new Page(pageMap)
-      .removeOldButton()
-      .insertRecommendedModules(config.recommendedModulesUrl, config.controller, config.recommendedModules, config.source);
+    if (config.shouldAttachRecommendedModulesAfterContent) {
+      page.insertRecommendedModules(config);
+    }
   };
 
 })();

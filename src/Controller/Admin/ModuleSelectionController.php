@@ -26,9 +26,12 @@
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
+use PrestaShop\Module\Mbo\Adapter\Presenter\RecommendedModulePresenter;
 use PrestaShop\Module\Mbo\DataProvider\RecommendedModulesProvider;
+use PrestaShop\Module\Mbo\TabsRecommendedModules\TabRecommendedModulesInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -73,20 +76,17 @@ class ModuleSelectionController extends FrameworkBundleAdminController
     /**
      * @param Request $request
      *
-     * @return Response
+     * @return JsonResponse
      */
     public function recommendedModulesAction(Request $request)
     {
         $recommendedModulesProvider = $this->getRecommendedModulesProvider();
         $tabRecommendedModules = $recommendedModulesProvider->getTabRecommendedModules($request->get('tabClassName'));
-        dump($tabRecommendedModules);
 
-        return $this->render(
-            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
-            [
-                'tab' => $tabRecommendedModules->getClassName(),
-            ]
-        );
+        return new JsonResponse([
+            'content' => $this->buildJsonRecommendedModulesBodyResponse($tabRecommendedModules),
+            'status' => true,
+        ]);
     }
 
     /**
@@ -119,5 +119,25 @@ class ModuleSelectionController extends FrameworkBundleAdminController
     private function getRecommendedModulesProvider()
     {
         return $this->get('mbo.data_provider.recommended_modules_provider');
+    }
+
+    /**
+     * @param TabRecommendedModulesInterface|false $tabRecommendedModules
+     *
+     * @return string
+     */
+    private function buildJsonRecommendedModulesBodyResponse($tabRecommendedModules)
+    {
+        $recommendedModulePresenter = new RecommendedModulePresenter();
+        $recommendedModulesInstalled = $tabRecommendedModules->getRecommendedModulesInstalled();
+        $recommendedModulesNotInstalled = $tabRecommendedModules->getRecommendedModulesNotInstalled();
+
+        return $this->render(
+            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
+            [
+                'recommendedModulesInstalled' => $recommendedModulePresenter->presentCollection($recommendedModulesInstalled),
+                'recommendedModulesNotInstalled' => $recommendedModulePresenter->presentCollection($recommendedModulesNotInstalled),
+            ]
+        )->getContent();
     }
 }
