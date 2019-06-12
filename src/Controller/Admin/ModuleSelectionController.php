@@ -128,15 +128,22 @@ class ModuleSelectionController extends FrameworkBundleAdminController
      */
     private function buildJsonRecommendedModulesBodyResponse($tabRecommendedModules)
     {
-        $recommendedModulePresenter = new RecommendedModulePresenter();
-        $recommendedModulesInstalled = $tabRecommendedModules->getRecommendedModulesInstalled();
-        $recommendedModulesNotInstalled = $tabRecommendedModules->getRecommendedModulesNotInstalled();
+        $recommendedModulesInstalledPresented = null;
+        $recommendedModulesNotInstalledPresented = null;
+
+        if ($tabRecommendedModules) {
+            $recommendedModulePresenter = new RecommendedModulePresenter();
+            $recommendedModulesInstalled = $tabRecommendedModules->getRecommendedModulesInstalled();
+            $recommendedModulesInstalledPresented = $recommendedModulePresenter->presentCollection($recommendedModulesInstalled);
+            $recommendedModulesNotInstalled = $tabRecommendedModules->getRecommendedModulesNotInstalled();
+            $recommendedModulesNotInstalledPresented = $recommendedModulePresenter->presentCollection($recommendedModulesNotInstalled);
+        }
 
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
             [
-                'recommendedModulesInstalled' => $recommendedModulePresenter->presentCollection($recommendedModulesInstalled),
-                'recommendedModulesNotInstalled' => $recommendedModulePresenter->presentCollection($recommendedModulesNotInstalled),
+                'recommendedModulesInstalled' => $recommendedModulesInstalledPresented,
+                'recommendedModulesNotInstalled' => $recommendedModulesNotInstalledPresented,
             ]
         )->getContent();
     }
