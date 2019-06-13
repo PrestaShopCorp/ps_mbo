@@ -163,10 +163,7 @@ class ps_mbo extends Module
         $result &= $tab->add();
 
         if (Validate::isLoadedObject($tab)) {
-            /*
-             * Force update for position
-             * @todo Check if it's really needed
-             */
+            // Updating the id_parent will override the position, that's why we save 2 times
             $tab->position = (int) $position;
             $result &= $tab->save();
         }
