@@ -254,7 +254,8 @@ class ps_mbo extends Module
             'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModulesAfterContent(),
             'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModulesButton(),
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
-            'recommendedModulesTitle' => $this->l('Recommended Modules and Services'),
+            'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services'), // Retrieved from messages.xlf
+            'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
             'recommendedModulesUrl' => $this->getRouter()->generate(
                 'admin_mbo_recommended_modules',
                 [
@@ -274,7 +275,7 @@ class ps_mbo extends Module
     private function shouldAttachRecommendedModulesAfterContent()
     {
         $recommendedModulesProvider = $this->getRecommendedModulesProvider();
-        if ($recommendedModulesProvider->isCached()) {
+        if ($recommendedModulesProvider && $recommendedModulesProvider->isCached()) {
             $tabRecommendedModules = $recommendedModulesProvider->getTabRecommendedModules(Tools::getValue('controller'));
 
             return $tabRecommendedModules
@@ -303,7 +304,7 @@ class ps_mbo extends Module
     private function shouldAttachRecommendedModulesButton()
     {
         $recommendedModulesProvider = $this->getRecommendedModulesProvider();
-        if ($recommendedModulesProvider->isCached()) {
+        if ($recommendedModulesProvider && $recommendedModulesProvider->isCached()) {
             $tabRecommendedModules = $recommendedModulesProvider->getTabRecommendedModules(Tools::getValue('controller'));
 
             return $tabRecommendedModules
@@ -390,10 +391,15 @@ class ps_mbo extends Module
     }
 
     /**
-     * @return RecommendedModulesProvider
+     * @return RecommendedModulesProvider|null
      */
     private function getRecommendedModulesProvider()
     {
+        if (!Validate::isLoadedObject($this->context->employee)) {
+            // AdminLogin should not call RecommendedModulesProvider
+            return null;
+        }
+
         return $this->getSymfonyContainer()->get('mbo.data_provider.recommended_modules_provider');
     }
 }

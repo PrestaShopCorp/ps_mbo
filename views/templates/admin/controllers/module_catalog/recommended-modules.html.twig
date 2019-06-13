@@ -23,6 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
+{% if recommendedModulesNotInstalled is not empty or recommendedModulesInstalled is not empty %}
 <div class="row row-margin-bottom">
   <div class="col-lg-12">
     <ul class="nav nav-pills">
@@ -64,6 +65,7 @@
     </div>
   {% endif %}
 </div>
+{% endif %}
 
 <div class="alert alert-addons row-margin-top" role="alert">
   <p class="alert-text">

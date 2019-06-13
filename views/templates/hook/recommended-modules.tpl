@@ -26,7 +26,8 @@
 <script>
   var mboConfiguration = {
     translations: {
-      'Recommended Modules and Services': '{$recommendedModulesTitle|escape:'javascript'}',
+      'Recommended Modules and Services': '{$recommendedModulesTitleTranslated|escape:'javascript'}',
+      'Close': '{$recommendedModulesCloseTranslated|escape:'javascript'}',
     },
     recommendedModulesUrl: '{$recommendedModulesUrl|escape:'javascript'}',
     shouldAttachRecommendedModulesAfterContent: {$shouldAttachRecommendedModulesAfterContent|intval},
