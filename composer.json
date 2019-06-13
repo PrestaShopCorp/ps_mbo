@@ -20,19 +20,11 @@
   "require": {
     "php": ">=5.6.0",
     "ext-simplexml": "*",
-    "prestashop/circuit-breaker": "dev-improve-symfony-circuit-breaker",
-    "doctrine/cache": "^1.6",
-    "guzzlehttp/cache-subscriber": "dev-master"
+    "prestashop/circuit-breaker": "^3.0.0"
   },
   "require-dev": {
     "prestashop/php-coding-standards": "dev-master"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:jolelievre/circuit-breaker.git"
-    }
-  ],
   "autoload": {
     "psr-4": {
       "PrestaShop\\Module\\Mbo\\": "src/"
