@@ -34,10 +34,10 @@ var mbo = {};
     toolbarLastElement: '#toolbar-nav li:last-of-type',
     recommendedModulesButton: '#recommended-modules-button',
     fancybox: '.fancybox-quick-view',
+    contentContainer: '#content',
     modulesListModal: '#modules_list_container',
     modulesListModalContent: '#modules_list_container_tab_modal',
     modulesListLoader: '#modules_list_loader',
-    contentContainer: '#content',
   };
 
   var pageMapNewTheme = {
@@ -49,7 +49,7 @@ var mbo = {};
     contentContainer: '#main-div .content-div .container:last',
     modulesListModal: '#modules_list_container',
     modulesListModalContainer: '#main-div .content-div',
-    modulesListModalContent: '#modules_list_container .modal-body',
+    modulesListModalContent: '#modules_list_container_tab_modal',
     modulesListLoader: '#modules_list_loader',
   };
 
@@ -271,7 +271,6 @@ var mbo = {};
    * @constructor
    */
   var RecommendedModulesModal = function(pageMap, config) {
-    var containerTitle = config.translations['Recommended Modules and Services'];
     var $markup;
 
     if (!config.shouldUseLegacyTheme) {
@@ -281,13 +280,17 @@ var mbo = {};
         '    <div class="modal-content">\n' +
         '      <div class="modal-header">\n' +
         '        <h4 class="modal-title module-modal-title">\n' +
-        '          ' + containerTitle + '\n' +
+        '          ' + config.translations['Recommended Modules and Services'] + '\n' +
         '        </h4>\n' +
-        '        <button type="button" class="close" data-dismiss="modal" aria-label="Close">\n' +
+        '        <button type="button" class="close" data-dismiss="modal" aria-label="' + config.translations['Close'] + '">\n' +
         '          <span aria-hidden="true">&times;</span>\n' +
         '        </button>\n' +
         '      </div>\n' +
         '      <div class="modal-body row">\n' +
+        '        <div id="modules_list_container_tab_modal" style="display:none;"></div>\n' +
+        '        <div id="modules_list_loader">\n' +
+        '          <i class="material-icons">query_builder</i>\n' +
+        '        </div>\n' +
         '      </div>\n' +
         '    </div>\n' +
         '  </div>\n' +
@@ -331,8 +334,10 @@ var mbo = {};
           }
         });
       } else {
-        var modal = new RecommendedModulesModal(pageMap, config);
-        $(pageMap.modulesListModalContainer).append(modal.getMarkup());
+        if (!$(pageMap.modulesListModal).length) {
+          var modal = new RecommendedModulesModal(pageMap, config);
+          $(pageMap.modulesListModalContainer).append(modal.getMarkup());
+        }
       }
     };
 
@@ -347,14 +352,11 @@ var mbo = {};
         }
       });
 
+      $(pageMap.modulesListModal).modal('show');
+
       recommendedModulesRequest.done(function (data) {
-        if (config.shouldUseLegacyTheme) {
-          $(pageMap.modulesListModalContent).html(data.content).slideDown();
-          $(pageMap.modulesListLoader).hide();
-        } else {
-          $(pageMap.modulesListModalContent).html(data.content);
-          $(pageMap.modulesListModal).modal('show');
-        }
+        $(pageMap.modulesListModalContent).html(data.content).slideDown();
+        $(pageMap.modulesListLoader).hide();
       });
     };
 
