@@ -20,7 +20,9 @@
   "require": {
     "php": ">=5.6.0",
     "ext-simplexml": "*",
-    "prestashop/circuit-breaker": "^3.0.0"
+    "prestashop/circuit-breaker": "dev-improve-symfony-circuit-breaker",
+    "doctrine/cache": "^1.6",
+    "guzzlehttp/cache-subscriber": "dev-master"
   },
   "require-dev": {
     "prestashop/php-coding-standards": "dev-master"
