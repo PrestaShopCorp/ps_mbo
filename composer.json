@@ -25,12 +25,6 @@
   "require-dev": {
     "prestashop/php-coding-standards": "dev-master"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:jolelievre/circuit-breaker.git"
-    }
-  ],
   "autoload": {
     "psr-4": {
       "PrestaShop\\Module\\Mbo\\": "src/"
