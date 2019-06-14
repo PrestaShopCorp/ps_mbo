@@ -143,4 +143,22 @@ class Tab implements TabInterface
 
         return $recommendedModulesNotInstalled;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function shouldDisplayButton()
+    {
+        return $this->hasRecommendedModules()
+            && TabInterface::DISPLAY_MODE_MODAL === $this->getDisplayMode();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function shouldDisplayAfterContent()
+    {
+        return $this->hasRecommendedModules()
+            && TabInterface::DISPLAY_MODE_AFTER_CONTENT === $this->getDisplayMode();
+    }
 }

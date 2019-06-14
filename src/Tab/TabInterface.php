@@ -96,4 +96,14 @@ interface TabInterface
      * @return RecommendedModuleCollectionInterface
      */
     public function getRecommendedModulesNotInstalled();
+
+    /**
+     * @return bool
+     */
+    public function shouldDisplayButton();
+
+    /**
+     * @return bool
+     */
+    public function shouldDisplayAfterContent();
 }

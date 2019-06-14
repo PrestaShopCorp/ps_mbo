@@ -156,11 +156,10 @@ var mbo = {};
         });
 
         recommendedModulesRequest.fail(function(jqXHR, textStatus, errorThrown) {
-          var alertType = (500 >= jqXHR.status) ? 'danger' : 'warning';
-          var recommendedModulesAlertMessage = new RecommendedModulesAlertMessage(config, alertType, errorThrown);
+          var recommendedModulesAlertMessage = new RecommendedModulesAlertMessage(config, 'danger', errorThrown);
           var recommendedModulesContainer = new RecommendedModulesContainer(config, recommendedModulesAlertMessage.getMarkup().get(0).outerHTML);
 
-          $(pageMap.contentContainer).append(recommendedModulesContainer.getMarkup());
+          $(pageMap.contentContainer).append(recommendedModulesContainer.getMarkup().get(0).outerHTML);
         });
       }
 
@@ -375,7 +374,7 @@ var mbo = {};
       } else {
         if (!$(pageMap.modulesListModal).length) {
           var modal = new RecommendedModulesModal(pageMap, config);
-          $(pageMap.modulesListModalContainer).append(modal.getMarkup());
+          $(pageMap.modulesListModalContainer).append(modal.getMarkup().get(0).outerHTML);
         }
       }
     };
@@ -399,8 +398,7 @@ var mbo = {};
       });
 
       recommendedModulesRequest.fail(function(jqXHR, textStatus, errorThrown) {
-        var alertType = (500 >= jqXHR.status) ? 'danger' : 'warning';
-        var recommendedModulesAlertMessage = new RecommendedModulesAlertMessage(config, alertType, errorThrown);
+        var recommendedModulesAlertMessage = new RecommendedModulesAlertMessage(config, 'danger', errorThrown);
 
         $(pageMap.modulesListModalContent).html(recommendedModulesAlertMessage.getMarkup()).slideDown();
         $(pageMap.modulesListLoader).hide();

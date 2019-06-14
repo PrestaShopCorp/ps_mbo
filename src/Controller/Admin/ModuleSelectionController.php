@@ -122,29 +122,23 @@ class ModuleSelectionController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param TabInterface|false $tabRecommendedModules
+     * @param TabInterface $tabRecommendedModules
      *
      * @return string
      */
     private function buildJsonRecommendedModulesBodyResponse($tabRecommendedModules)
     {
-        $recommendedModulesInstalledPresented = null;
-        $recommendedModulesNotInstalledPresented = null;
-
-        if ($tabRecommendedModules) {
-            $recommendedModulePresenter = new RecommendedModulePresenter();
-            $recommendedModulesInstalled = $tabRecommendedModules->getRecommendedModulesInstalled();
-            $recommendedModulesInstalledPresented = $recommendedModulePresenter->presentCollection($recommendedModulesInstalled);
-            $recommendedModulesNotInstalled = $tabRecommendedModules->getRecommendedModulesNotInstalled();
-            $recommendedModulesNotInstalledPresented = $recommendedModulePresenter->presentCollection($recommendedModulesNotInstalled);
-        }
-
-        return $this->render(
+        $recommendedModulePresenter = new RecommendedModulePresenter();
+        $recommendedModulesInstalled = $tabRecommendedModules->getRecommendedModulesInstalled();
+        $recommendedModulesNotInstalled = $tabRecommendedModules->getRecommendedModulesNotInstalled();
+        $recommendedModuleRendered = $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
             [
-                'recommendedModulesInstalled' => $recommendedModulesInstalledPresented,
-                'recommendedModulesNotInstalled' => $recommendedModulesNotInstalledPresented,
+                'recommendedModulesInstalled' => $recommendedModulePresenter->presentCollection($recommendedModulesInstalled),
+                'recommendedModulesNotInstalled' => $recommendedModulePresenter->presentCollection($recommendedModulesNotInstalled),
             ]
-        )->getContent();
+        );
+
+        return $recommendedModuleRendered->getContent();
     }
 }

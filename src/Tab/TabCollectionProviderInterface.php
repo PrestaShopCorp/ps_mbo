@@ -33,7 +33,7 @@ interface TabCollectionProviderInterface
      *
      * @param string $tabClassName
      *
-     * @return TabInterface|false
+     * @return TabInterface
      */
     public function getTab($tabClassName);
 

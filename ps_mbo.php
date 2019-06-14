@@ -32,7 +32,6 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
 }
 
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
-use PrestaShop\Module\Mbo\Tab\TabInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -275,12 +274,8 @@ class ps_mbo extends Module
         if ($tabCollectionProvider && $tabCollectionProvider->isTabCollectionCached()) {
             $tab = $tabCollectionProvider->getTab(Tools::getValue('controller'));
 
-            return $tab
-                && $tab->hasRecommendedModules()
-                && (
-                    TabInterface::DISPLAY_MODE_AFTER_CONTENT === $tab->getDisplayMode()
-                    || 'AdminCarriers' === Tools::getValue('controller')
-                );
+            return $tab->shouldDisplayAfterContent()
+                || 'AdminCarriers' === Tools::getValue('controller');
         }
 
         return in_array(
@@ -304,12 +299,8 @@ class ps_mbo extends Module
         if ($tabCollectionProvider && $tabCollectionProvider->isTabCollectionCached()) {
             $tab = $tabCollectionProvider->getTab(Tools::getValue('controller'));
 
-            return $tab
-                && $tab->hasRecommendedModules()
-                && (
-                    TabInterface::DISPLAY_MODE_MODAL === $tab->getDisplayMode()
-                    && 'AdminCarriers' !== Tools::getValue('controller')
-                );
+            return $tab->shouldDisplayButton()
+                && 'AdminCarriers' !== Tools::getValue('controller');
         }
 
         return in_array(
