@@ -26,9 +26,9 @@
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use PrestaShop\Module\Mbo\Adapter\Presenter\RecommendedModulePresenter;
-use PrestaShop\Module\Mbo\DataProvider\RecommendedModulesProvider;
-use PrestaShop\Module\Mbo\TabsRecommendedModules\TabRecommendedModulesInterface;
+use PrestaShop\Module\Mbo\Adapter\RecommendedModulePresenter;
+use PrestaShop\Module\Mbo\RecommendedModule\TabCollectionProvider;
+use PrestaShop\Module\Mbo\RecommendedModule\TabInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -80,11 +80,11 @@ class ModuleSelectionController extends FrameworkBundleAdminController
      */
     public function recommendedModulesAction(Request $request)
     {
-        $recommendedModulesProvider = $this->getRecommendedModulesProvider();
-        $tabRecommendedModules = $recommendedModulesProvider->getTabRecommendedModules($request->get('tabClassName'));
+        $tabCollectionProvider = $this->getTabCollectionProvider();
+        $tab = $tabCollectionProvider->getTab($request->get('tabClassName'));
 
         return new JsonResponse([
-            'content' => $this->buildJsonRecommendedModulesBodyResponse($tabRecommendedModules),
+            'content' => $this->buildJsonRecommendedModulesBodyResponse($tab),
             'status' => true,
         ]);
     }
@@ -114,15 +114,15 @@ class ModuleSelectionController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return RecommendedModulesProvider
+     * @return TabCollectionProvider
      */
-    private function getRecommendedModulesProvider()
+    private function getTabCollectionProvider()
     {
-        return $this->get('mbo.data_provider.recommended_modules_provider');
+        return $this->get('mbo.tab.collection_provider');
     }
 
     /**
-     * @param TabRecommendedModulesInterface|false $tabRecommendedModules
+     * @param TabInterface|false $tabRecommendedModules
      *
      * @return string
      */

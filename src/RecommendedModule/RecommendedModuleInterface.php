@@ -24,55 +24,63 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\TabsRecommendedModules;
+namespace PrestaShop\Module\Mbo\RecommendedModule;
 
-use PrestaShop\Module\Mbo\RecommendedModules\RecommendedModulesInterface;
-
-interface TabRecommendedModulesInterface
+interface RecommendedModuleInterface
 {
-    const DISPLAY_MODE_MODAL = 'slider_list';
-
-    const DISPLAY_MODE_AFTER_CONTENT = 'default_list';
-
     /**
-     * Get the class name of the tab.
+     * Get the technical name of the recommended module.
      *
      * @return string
      */
-    public function getClassName();
+    public function getModuleName();
 
     /**
-     * Get the display mode of the tab.
+     * @param string $moduleName
      *
-     * @return string
+     * @return RecommendedModuleInterface
      */
-    public function getDisplayMode();
+    public function setModuleName($moduleName);
 
     /**
-     * Get the recommended modules of the tab.
+     * Get the position of the recommended module.
      *
-     * @return RecommendedModulesInterface|false
+     * @return int
      */
-    public function getRecommendedModules();
+    public function getPosition();
 
     /**
-     * Check if the tab has recommended modules.
+     * @param int $position
+     *
+     * @return RecommendedModuleInterface
+     */
+    public function setPosition($position);
+
+    /**
+     * Check if the recommended modules is installed.
      *
      * @return bool
      */
-    public function hasRecommendedModules();
+    public function isInstalled();
 
     /**
-     * Get the installed recommended modules of the tab.
+     * @param bool $isInstalled
      *
-     * @return RecommendedModulesInterface|false
+     * @return RecommendedModuleInterface
      */
-    public function getRecommendedModulesInstalled();
+    public function setInstalled($isInstalled);
 
     /**
-     * Get the not installed recommended modules of the tab.
+     * Get the recommended module data.
      *
-     * @return RecommendedModulesInterface|false
+     * @return array
      */
-    public function getRecommendedModulesNotInstalled();
+    public function getModuleData();
+
+    /**
+     * @param array $moduleData
+     *
+     * @return RecommendedModuleInterface
+     */
+    public function setModuleData($moduleData);
 }

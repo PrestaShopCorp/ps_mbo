@@ -24,35 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\RecommendedModules;
+namespace PrestaShop\Module\Mbo\Tab;
 
-interface RecommendedModuleInterface
+interface TabCollectionFactoryInterface
 {
     /**
-     * Get the technical name of the recommended module.
+     * Builds a tabs recommended modules collection from an array.
      *
-     * @return string
-     */
-    public function getModuleName();
-
-    /**
-     * Get the position of the recommended module.
+     * @param array $data
      *
-     * @return int
+     * @return TabCollectionInterface
      */
-    public function getPosition();
-
-    /**
-     * Check if the recommended modules is installed.
-     *
-     * @return bool
-     */
-    public function isInstalled();
-
-    /**
-     * Get the recommended module data.
-     *
-     * @return array
-     */
-    public function getModuleData();
+    public function buildFromArray(array $data);
 }

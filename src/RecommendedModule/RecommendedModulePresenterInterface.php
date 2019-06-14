@@ -24,32 +24,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\Adapter\Presenter;
+namespace PrestaShop\Module\Mbo\RecommendedModule;
 
-use PrestaShop\Module\Mbo\RecommendedModules\RecommendedModuleInterface;
-use PrestaShop\Module\Mbo\RecommendedModules\RecommendedModulesInterface;
-
-class RecommendedModulePresenter implements RecommendedModulePresenterInterface
+interface RecommendedModulePresenterInterface
 {
     /**
-     * {@inheritdoc}
+     * Transform a RecommendedModuleInterface as a simple array of data.
+     *
+     * @param RecommendedModuleInterface $recommendedModule
+     *
+     * @return array
      */
-    public function present(RecommendedModuleInterface $recommendedModule)
-    {
-        return $recommendedModule->getModuleData();
-    }
+    public function present(RecommendedModuleInterface $recommendedModule);
 
     /**
-     * {@inheritdoc}
+     * Transform a collection of RecommendedModulesInterface as a simple array of data.
+     *
+     * @param RecommendedModuleCollectionInterface $recommendedModules
+     *
+     * @return array
      */
-    public function presentCollection(RecommendedModulesInterface $recommendedModules)
-    {
-        $recommendedModulesPresented = [];
-
-        foreach ($recommendedModules as $recommendedModule) {
-            $recommendedModulesPresented[] = $this->present($recommendedModule);
-        }
-
-        return $recommendedModulesPresented;
-    }
+    public function presentCollection(RecommendedModuleCollectionInterface $recommendedModules);
 }

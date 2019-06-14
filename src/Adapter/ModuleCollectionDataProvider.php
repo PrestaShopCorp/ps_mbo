@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Profile;
 
-class ModulesDataProvider
+class ModuleCollectionDataProvider
 {
     /**
      * @var AdminModuleDataProvider

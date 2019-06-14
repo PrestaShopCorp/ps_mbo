@@ -26,7 +26,7 @@
 
 namespace PrestaShop\Module\Mbo\Adapter;
 
-class RecommendedModulesXMLParser
+class TabCollectionDecoderXml
 {
     private $content;
 

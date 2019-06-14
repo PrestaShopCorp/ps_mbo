@@ -24,13 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\RecommendedModules;
+namespace PrestaShop\Module\Mbo\RecommendedModule;
 
 use ArrayAccess;
 use Countable;
 use IteratorAggregate;
 
-interface RecommendedModulesInterface extends ArrayAccess, IteratorAggregate, Countable
+interface RecommendedModuleCollectionInterface extends ArrayAccess, IteratorAggregate, Countable
 {
     /**
      * Add a recommended module to this collection.

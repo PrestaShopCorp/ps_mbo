@@ -24,16 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\TabsRecommendedModules;
+namespace PrestaShop\Module\Mbo\Tab;
 
-use PrestaShop\Module\Mbo\RecommendedModules\RecommendedModulesInterface;
+use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModuleCollection;
+use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModuleCollectionInterface;
 
-class TabRecommendedModules implements TabRecommendedModulesInterface
+class Tab implements TabInterface
 {
     /**
      * @var string class name of the tab
      */
-    private $className;
+    private $legacyClassName;
 
     /**
      * @var string class name of the tab
@@ -41,33 +42,34 @@ class TabRecommendedModules implements TabRecommendedModulesInterface
     private $displayMode;
 
     /**
-     * @var RecommendedModulesInterface recommended modules of the tab
+     * @var RecommendedModuleCollectionInterface recommended modules of the tab
      */
     private $recommendedModules;
 
     /**
      * Tab constructor.
-     *
-     * @param string $className
-     * @param string $displayMode
-     * @param RecommendedModulesInterface $recommendedModules
      */
-    public function __construct(
-        $className,
-        $displayMode,
-        RecommendedModulesInterface $recommendedModules
-    ) {
-        $this->className = $className;
-        $this->displayMode = $displayMode;
-        $this->recommendedModules = $recommendedModules;
+    public function __construct()
+    {
+        $this->recommendedModules = new RecommendedModuleCollection();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getClassName()
+    public function getLegacyClassName()
     {
-        return $this->className;
+        return $this->legacyClassName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLegacyClassName($legacyClassName)
+    {
+        $this->legacyClassName = $legacyClassName;
+
+        return $this;
     }
 
     /**
@@ -81,6 +83,16 @@ class TabRecommendedModules implements TabRecommendedModulesInterface
     /**
      * {@inheritdoc}
      */
+    public function setDisplayMode($displayMode)
+    {
+        $this->displayMode = $displayMode;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getRecommendedModules()
     {
         return $this->recommendedModules;
@@ -89,10 +101,19 @@ class TabRecommendedModules implements TabRecommendedModulesInterface
     /**
      * {@inheritdoc}
      */
+    public function setRecommendedModules(RecommendedModuleCollectionInterface $recommendedModules)
+    {
+        $this->recommendedModules = $recommendedModules;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function hasRecommendedModules()
     {
-        return $this->recommendedModules
-            && !$this->recommendedModules->isEmpty();
+        return !$this->recommendedModules->isEmpty();
     }
 
     /**
@@ -100,11 +121,13 @@ class TabRecommendedModules implements TabRecommendedModulesInterface
      */
     public function getRecommendedModulesInstalled()
     {
+        $recommendedModulesInstalled = $this->getRecommendedModules();
+
         if ($this->hasRecommendedModules()) {
-            return $this->getRecommendedModules()->getInstalled();
+            return $recommendedModulesInstalled->getInstalled();
         }
 
-        return false;
+        return $recommendedModulesInstalled;
     }
 
     /**
@@ -112,10 +135,12 @@ class TabRecommendedModules implements TabRecommendedModulesInterface
      */
     public function getRecommendedModulesNotInstalled()
     {
+        $recommendedModulesNotInstalled = $this->getRecommendedModules();
+
         if ($this->hasRecommendedModules()) {
-            return $this->getRecommendedModules()->getNotInstalled();
+            return $recommendedModulesNotInstalled->getNotInstalled();
         }
 
-        return false;
+        return $recommendedModulesNotInstalled;
     }
 }

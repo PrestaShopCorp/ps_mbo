@@ -2,8 +2,8 @@ services:
   _defaults:
     public: true
 
-  mbo.adapter.modules_data_provider:
-    class: 'PrestaShop\Module\Mbo\Adapter\ModulesDataProvider'
+  mbo.adapter.module_collection_data_provider:
+    class: 'PrestaShop\Module\Mbo\Adapter\ModuleCollectionDataProvider'
     arguments:
       - '@prestashop.core.admin.data_provider.module_interface'
       - '@prestashop.core.admin.module.repository'
@@ -11,13 +11,14 @@ services:
       - '@prestashop.core.admin.tab.repository'
       - '@prestashop.adapter.legacy.context'
 
-  mbo.factory.tabs_recommended_modules_factory:
-    class: 'PrestaShop\Module\Mbo\Factory\TabsRecommendedModulesFactory'
+  mbo.tab.collection_factory:
+    class: 'PrestaShop\Module\Mbo\Adapter\TabCollectionFactory'
     arguments:
-      - '@mbo.adapter.modules_data_provider'
+      - '@mbo.adapter.module_collection_data_provider'
 
-  mbo.data_provider.recommended_modules_provider:
-    class: 'PrestaShop\Module\Mbo\DataProvider\RecommendedModulesProvider'
+  mbo.tab.collection_provider:
+    class: 'PrestaShop\Module\Mbo\Tab\TabCollectionProvider'
     arguments:
-      - '@mbo.factory.tabs_recommended_modules_factory'
+      - '@mbo.tab.collection_factory'
+      - "@logger"
       - "@doctrine.cache.provider"

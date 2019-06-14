@@ -24,75 +24,94 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\RecommendedModules;
+namespace PrestaShop\Module\Mbo\Tab;
 
-class RecommendedModule implements RecommendedModuleInterface
+use ArrayIterator;
+
+class TabCollection implements TabCollectionInterface
 {
     /**
-     * @var string technical name of the recommended module
+     * @var TabInterface[]
      */
-    private $moduleName;
+    private $tabs = [];
 
     /**
-     * @var int position of the recommended module
+     * {@inheritdoc}
      */
-    private $position;
-
-    /**
-     * @var bool
-     */
-    private $isInstalled;
-
-    /**
-     * @var array
-     */
-    private $moduleData;
-
-    /**
-     * Constructor.
-     *
-     * @param string $moduleName
-     * @param int $position
-     * @param bool $isInstalled
-     * @param array $moduleData
-     */
-    public function __construct($moduleName, $position, $isInstalled, array $moduleData)
+    public function addTab(TabInterface $tab)
     {
-        $this->moduleName = $moduleName;
-        $this->position = $position;
-        $this->isInstalled = $isInstalled;
-        $this->moduleData = $moduleData;
+        $this->tabs[] = $tab;
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getModuleName()
+    public function getTab($tabClassName)
     {
-        return $this->moduleName;
+        foreach ($this->tabs as $tab) {
+            if ($tabClassName === $tab->getLegacyClassName()) {
+                return $tab;
+            }
+        }
+
+        return new Tab();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPosition()
+    public function offsetExists($offset)
     {
-        return $this->position;
+        return array_key_exists($offset, $this->tabs);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isInstalled()
+    public function offsetSet($offset, $value)
     {
-        return $this->isInstalled;
+        $this->tabs[$offset] = $value;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getModuleData()
+    public function offsetGet($offset)
     {
-        return $this->moduleData;
+        return $this->tabs[$offset];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function offsetUnset($offset)
+    {
+        unset($this->tabs[$offset]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator($this->tabs);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count()
+    {
+        return count($this->tabs);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isEmpty()
+    {
+        return empty($this->tabs);
     }
 }

@@ -23,12 +23,33 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+namespace PrestaShop\Module\Mbo\Tab;
 
-header('Location: ../');
-exit;
+use Symfony\Component\Serializer\SerializerInterface;
+
+interface TabCollectionSerializerInterface extends SerializerInterface
+{
+    /**
+     * Serializes data in the appropriate format.
+     *
+     * @param mixed $data Any data
+     * @param string $format Format name
+     * @param array $context Options normalizers/encoders have access to
+     *
+     * @return string
+     */
+    public function serialize($data, $format, array $context = []);
+
+    /**
+     * Deserializes data into the given type.
+     *
+     * @param mixed $data
+     * @param string $type
+     * @param string $format
+     * @param array $context
+     *
+     * @return TabCollectionInterface
+     */
+    public function deserialize($data, $type, $format, array $context = []);
+}

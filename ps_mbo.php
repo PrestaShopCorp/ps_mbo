@@ -31,8 +31,8 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 }
 
-use PrestaShop\Module\Mbo\DataProvider\RecommendedModulesProvider;
-use PrestaShop\Module\Mbo\TabsRecommendedModules\TabRecommendedModulesInterface;
+use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
+use PrestaShop\Module\Mbo\Tab\TabInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -163,10 +163,7 @@ class ps_mbo extends Module
         $result &= $tab->add();
 
         if (Validate::isLoadedObject($tab)) {
-            /*
-             * Force update for position
-             * @todo Check if it's really needed
-             */
+            // Updating the id_parent will override the position, that's why we save 2 times
             $tab->position = (int) $position;
             $result &= $tab->save();
         }
@@ -274,14 +271,14 @@ class ps_mbo extends Module
      */
     private function shouldAttachRecommendedModulesAfterContent()
     {
-        $recommendedModulesProvider = $this->getRecommendedModulesProvider();
-        if ($recommendedModulesProvider && $recommendedModulesProvider->isCached()) {
-            $tabRecommendedModules = $recommendedModulesProvider->getTabRecommendedModules(Tools::getValue('controller'));
+        $tabCollectionProvider = $this->getTabCollectionProvider();
+        if ($tabCollectionProvider && $tabCollectionProvider->isTabCollectionCached()) {
+            $tab = $tabCollectionProvider->getTab(Tools::getValue('controller'));
 
-            return $tabRecommendedModules
-                && $tabRecommendedModules->hasRecommendedModules()
+            return $tab
+                && $tab->hasRecommendedModules()
                 && (
-                    TabRecommendedModulesInterface::DISPLAY_MODE_AFTER_CONTENT === $tabRecommendedModules->getDisplayMode()
+                    TabInterface::DISPLAY_MODE_AFTER_CONTENT === $tab->getDisplayMode()
                     || 'AdminCarriers' === Tools::getValue('controller')
                 );
         }
@@ -303,14 +300,14 @@ class ps_mbo extends Module
      */
     private function shouldAttachRecommendedModulesButton()
     {
-        $recommendedModulesProvider = $this->getRecommendedModulesProvider();
-        if ($recommendedModulesProvider && $recommendedModulesProvider->isCached()) {
-            $tabRecommendedModules = $recommendedModulesProvider->getTabRecommendedModules(Tools::getValue('controller'));
+        $tabCollectionProvider = $this->getTabCollectionProvider();
+        if ($tabCollectionProvider && $tabCollectionProvider->isTabCollectionCached()) {
+            $tab = $tabCollectionProvider->getTab(Tools::getValue('controller'));
 
-            return $tabRecommendedModules
-                && $tabRecommendedModules->hasRecommendedModules()
+            return $tab
+                && $tab->hasRecommendedModules()
                 && (
-                    TabRecommendedModulesInterface::DISPLAY_MODE_MODAL === $tabRecommendedModules->getDisplayMode()
+                    TabInterface::DISPLAY_MODE_MODAL === $tab->getDisplayMode()
                     && 'AdminCarriers' !== Tools::getValue('controller')
                 );
         }
@@ -391,15 +388,15 @@ class ps_mbo extends Module
     }
 
     /**
-     * @return RecommendedModulesProvider|null
+     * @return TabCollectionProvider|null
      */
-    private function getRecommendedModulesProvider()
+    private function getTabCollectionProvider()
     {
         if (!Validate::isLoadedObject($this->context->employee)) {
-            // AdminLogin should not call RecommendedModulesProvider
+            // AdminLogin should not call TabCollectionProvider
             return null;
         }
 
-        return $this->getSymfonyContainer()->get('mbo.data_provider.recommended_modules_provider');
+        return $this->getSymfonyContainer()->get('mbo.tab.collection_provider');
     }
 }

@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\RecommendedModules;
+namespace PrestaShop\Module\Mbo\RecommendedModule;
 
 use ArrayIterator;
 
-class RecommendedModules implements RecommendedModulesInterface
+class RecommendedModuleCollection implements RecommendedModuleCollectionInterface
 {
     /**
      * @var RecommendedModuleInterface[]

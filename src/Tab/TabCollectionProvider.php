@@ -24,22 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\DataProvider;
+namespace PrestaShop\Module\Mbo\Tab;
 
 use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory;
 use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
 use PrestaShop\CircuitBreaker\FactorySettings;
-use PrestaShop\Module\Mbo\Adapter\RecommendedModulesXMLParser;
-use PrestaShop\Module\Mbo\Factory\TabsRecommendedModulesFactoryInterface;
-use PrestaShop\Module\Mbo\TabsRecommendedModules\TabRecommendedModulesInterface;
-use PrestaShop\Module\Mbo\TabsRecommendedModules\TabsRecommendedModulesInterface;
+use PrestaShop\Module\Mbo\Adapter\TabCollectionDecoderXml;
+use Psr\Log\LoggerInterface;
 
-class RecommendedModulesProvider
+class TabCollectionProvider implements TabCollectionProviderInterface
 {
     const CACHE_KEY = 'recommendedModules';
 
-    const CACHE_LIFETIME = 604800; // 7 days
+    const CACHE_LIFETIME = 604800; // 7 days same as defined in Core
 
     const API_URL = 'https://api.prestashop.com/xml/tab_modules_list_17.xml';
 
@@ -54,9 +52,14 @@ class RecommendedModulesProvider
     const OPEN_THRESHOLD_SECONDS = 60;
 
     /**
-     * @var TabsRecommendedModulesFactoryInterface
+     * @var TabCollectionFactoryInterface
      */
-    private $tabsRecommendedModulesFactory;
+    private $tabCollectionFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @var CacheProvider|null
@@ -76,14 +79,17 @@ class RecommendedModulesProvider
     /**
      * Constructor.
      *
-     * @param TabsRecommendedModulesFactoryInterface $tabsRecommendedModulesFactory
+     * @param TabCollectionFactoryInterface $tabCollectionFactory
+     * @param LoggerInterface $logger
      * @param CacheProvider|null $cacheProvider
      */
     public function __construct(
-        TabsRecommendedModulesFactoryInterface $tabsRecommendedModulesFactory,
+        TabCollectionFactoryInterface $tabCollectionFactory,
+        LoggerInterface $logger,
         CacheProvider $cacheProvider = null
     ) {
-        $this->tabsRecommendedModulesFactory = $tabsRecommendedModulesFactory;
+        $this->tabCollectionFactory = $tabCollectionFactory;
+        $this->logger = $logger;
         $this->cacheProvider = $cacheProvider;
 
         $this->apiSettings = new FactorySettings(
@@ -105,43 +111,37 @@ class RecommendedModulesProvider
     }
 
     /**
-     * Get tab with recommended modules by class name.
-     *
-     * @param string $tabClassName
-     *
-     * @return TabRecommendedModulesInterface|false
+     * {@inheritdoc}
      */
-    public function getTabRecommendedModules($tabClassName)
+    public function getTab($tabClassName)
     {
-        $tabsRecommendedModules = $this->getTabsRecommendedModules();
+        $tabCollection = $this->getTabCollection();
 
-        return $tabsRecommendedModules->getTab($tabClassName);
+        return $tabCollection->getTab($tabClassName);
     }
 
     /**
-     * Get tabs with recommended modules
-     *
-     * @return TabsRecommendedModulesInterface
+     * {@inheritdoc}
      */
-    public function getTabsRecommendedModules()
+    public function getTabCollection()
     {
-        if ($this->isCached()) {
+        if ($this->isTabCollectionCached()) {
             return $this->cacheProvider->fetch(static::CACHE_KEY);
         }
 
-        $tabsRecommendedModules = $this->getTabsRecommendedModulesFromApi();
+        $tabCollection = $this->getTabCollectionFromApi();
 
         if ($this->cacheProvider
-            && !$tabsRecommendedModules->isEmpty()
+            && !$tabCollection->isEmpty()
         ) {
             $this->cacheProvider->save(
                 static::CACHE_KEY,
-                $tabsRecommendedModules,
+                $tabCollection,
                 static::CACHE_LIFETIME
             );
         }
 
-        return $tabsRecommendedModules;
+        return $tabCollection;
     }
 
     /**
@@ -149,7 +149,7 @@ class RecommendedModulesProvider
      *
      * @return bool
      */
-    public function isCached()
+    public function isTabCollectionCached()
     {
         return $this->cacheProvider
             && $this->cacheProvider->contains(static::CACHE_KEY);
@@ -158,18 +158,34 @@ class RecommendedModulesProvider
     /**
      * Retrieve tabs with recommended modules from PrestaShop
      *
-     * @return TabsRecommendedModulesInterface
+     * @return TabCollectionInterface
      */
-    private function getTabsRecommendedModulesFromApi()
+    private function getTabCollectionFromApi()
     {
         $circuitBreaker = $this->circuitBreakerFactory->create($this->apiSettings);
 
-        $apiResponse = $circuitBreaker->call(self::API_URL);
+        $apiResponse = $circuitBreaker->call(
+            self::API_URL,
+            [],
+            $this->circuitBreakerFallback()
+        );
 
-        $recommendedModulesXMLParser = new RecommendedModulesXMLParser($apiResponse);
+        $tabCollectionDecoderXml = new TabCollectionDecoderXml($apiResponse);
 
-        $tabsRecommendedModules = $this->tabsRecommendedModulesFactory->buildFromArray($recommendedModulesXMLParser->toArray());
+        $tabCollection = $this->tabCollectionFactory->buildFromArray($tabCollectionDecoderXml->toArray());
 
-        return $tabsRecommendedModules;
+        return $tabCollection;
+    }
+
+    /**
+     * Called by CircuitBreaker if the service is unavailable
+     *
+     * @return string|null
+     */
+    public function circuitBreakerFallback()
+    {
+        $this->logger->error('Unable to retrieve tab_modules_list_17.xml from PrestaShop');
+
+        return null;
     }
 }

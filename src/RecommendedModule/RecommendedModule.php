@@ -24,23 +24,44 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\TabsRecommendedModules;
+namespace PrestaShop\Module\Mbo\RecommendedModule;
 
-use ArrayIterator;
-
-class TabsRecommendedModules implements TabsRecommendedModulesInterface
+class RecommendedModule implements RecommendedModuleInterface
 {
     /**
-     * @var TabRecommendedModulesInterface[]
+     * @var string technical name of the recommended module
      */
-    private $tabsRecommendedModules = [];
+    private $moduleName;
+
+    /**
+     * @var int position of the recommended module
+     */
+    private $position;
+
+    /**
+     * @var bool
+     */
+    private $isInstalled;
+
+    /**
+     * @var array
+     */
+    private $moduleData;
 
     /**
      * {@inheritdoc}
      */
-    public function addTab(TabRecommendedModulesInterface $tab)
+    public function getModuleName()
     {
-        $this->tabsRecommendedModules[] = $tab;
+        return $this->moduleName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setModuleName($moduleName)
+    {
+        $this->moduleName = $moduleName;
 
         return $this;
     }
@@ -48,70 +69,54 @@ class TabsRecommendedModules implements TabsRecommendedModulesInterface
     /**
      * {@inheritdoc}
      */
-    public function getTab($tabClassName)
+    public function getPosition()
     {
-        foreach ($this->tabsRecommendedModules as $tabRecommendedModules) {
-            if ($tabClassName === $tabRecommendedModules->getClassName()) {
-                return $tabRecommendedModules;
-            }
-        }
-
-        return false;
+        return $this->position;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function setPosition($position)
     {
-        return array_key_exists($offset, $this->tabsRecommendedModules);
+        $this->position = $position;
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function offsetSet($offset, $value)
+    public function isInstalled()
     {
-        $this->tabsRecommendedModules[$offset] = $value;
+        return $this->isInstalled;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function offsetGet($offset)
+    public function setInstalled($isInstalled)
     {
-        return $this->tabsRecommendedModules[$offset];
+        $this->isInstalled = $isInstalled;
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function offsetUnset($offset)
+    public function getModuleData()
     {
-        unset($this->tabsRecommendedModules[$offset]);
+        return $this->moduleData;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getIterator()
+    public function setModuleData($moduleData)
     {
-        return new ArrayIterator($this->tabsRecommendedModules);
-    }
+        $this->moduleData = $moduleData;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function count()
-    {
-        return count($this->tabsRecommendedModules);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isEmpty()
-    {
-        return empty($this->tabsRecommendedModules);
+        return $this;
     }
 }
