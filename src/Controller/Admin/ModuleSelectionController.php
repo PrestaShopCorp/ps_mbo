@@ -27,8 +27,8 @@
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use PrestaShop\Module\Mbo\Adapter\RecommendedModulePresenter;
-use PrestaShop\Module\Mbo\RecommendedModule\TabCollectionProvider;
-use PrestaShop\Module\Mbo\RecommendedModule\TabInterface;
+use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
+use PrestaShop\Module\Mbo\Tab\TabInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;

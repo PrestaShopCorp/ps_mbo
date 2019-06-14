@@ -154,6 +154,14 @@ var mbo = {};
 
           $(pageMap.contentContainer).append(recommendedModulesContainer.getMarkup());
         });
+
+        recommendedModulesRequest.fail(function(jqXHR, textStatus, errorThrown) {
+          var alertType = (500 >= jqXHR.status) ? 'danger' : 'warning';
+          var recommendedModulesAlertMessage = new RecommendedModulesAlertMessage(config, alertType, errorThrown);
+          var recommendedModulesContainer = new RecommendedModulesContainer(config, recommendedModulesAlertMessage.getMarkup().get(0).outerHTML);
+
+          $(pageMap.contentContainer).append(recommendedModulesContainer.getMarkup());
+        });
       }
 
       return this;
@@ -211,7 +219,7 @@ var mbo = {};
    * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
    * @param {boolean} config.shouldAttachRecommendedModulesButton
    * @param {boolean} config.shouldUseLegacyTheme
-   * @param {string} content
+   * @param {jQuery|HTMLElement} content
    * @constructor
    */
   var RecommendedModulesContainer = function(config, content) {
@@ -261,6 +269,37 @@ var mbo = {};
   /**
    * Handles markup for the Recommended modules container
    *
+   * @param {object} config
+   * @param {object} config.translations - Object containing translations
+   * @param {string} config.recommendedModulesUrl
+   * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
+   * @param {boolean} config.shouldAttachRecommendedModulesButton
+   * @param {boolean} config.shouldUseLegacyTheme
+   * @param {string} type
+   * @param {string} text
+   * @constructor
+   */
+  var RecommendedModulesAlertMessage = function(config, type, text) {
+    var $markup = $(
+      '<div class="alert alert-' + type + '" role="alert">\n' +
+      '  <p class="alert-text">\n' +
+      '    ' + text + '\n' +
+      '  </p>\n' +
+      '</div>'
+    );
+
+    /**
+     * Returns the button's markup
+     * @return {jQuery|HTMLElement}
+     */
+    this.getMarkup = function() {
+      return $markup;
+    }
+  };
+
+  /**
+   * Handles markup for the Recommended modules container
+   *
    * @param {object} pageMap
    * @param {object} config
    * @param {object} config.translations - Object containing translations
@@ -287,8 +326,8 @@ var mbo = {};
         '        </button>\n' +
         '      </div>\n' +
         '      <div class="modal-body row">\n' +
-        '        <div id="modules_list_container_tab_modal" style="display:none;"></div>\n' +
-        '        <div id="modules_list_loader">\n' +
+        '        <div id="modules_list_container_tab_modal" class="col-md-12" style="display:none;"></div>\n' +
+        '        <div id="modules_list_loader" class="col-md-12">\n' +
         '          <i class="material-icons">query_builder</i>\n' +
         '        </div>\n' +
         '      </div>\n' +
@@ -356,6 +395,14 @@ var mbo = {};
 
       recommendedModulesRequest.done(function (data) {
         $(pageMap.modulesListModalContent).html(data.content).slideDown();
+        $(pageMap.modulesListLoader).hide();
+      });
+
+      recommendedModulesRequest.fail(function(jqXHR, textStatus, errorThrown) {
+        var alertType = (500 >= jqXHR.status) ? 'danger' : 'warning';
+        var recommendedModulesAlertMessage = new RecommendedModulesAlertMessage(config, alertType, errorThrown);
+
+        $(pageMap.modulesListModalContent).html(recommendedModulesAlertMessage.getMarkup()).slideDown();
         $(pageMap.modulesListLoader).hide();
       });
     };

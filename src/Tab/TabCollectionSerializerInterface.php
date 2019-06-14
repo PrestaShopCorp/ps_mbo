@@ -31,17 +31,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 interface TabCollectionSerializerInterface extends SerializerInterface
 {
     /**
-     * Serializes data in the appropriate format.
-     *
-     * @param mixed $data Any data
-     * @param string $format Format name
-     * @param array $context Options normalizers/encoders have access to
-     *
-     * @return string
-     */
-    public function serialize($data, $format, array $context = []);
-
-    /**
      * Deserializes data into the given type.
      *
      * @param mixed $data
