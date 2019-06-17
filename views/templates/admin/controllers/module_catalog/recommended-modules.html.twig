@@ -27,30 +27,25 @@
 
 {% block content %}
   {% if recommendedModulesNotInstalled is not empty or recommendedModulesInstalled is not empty %}
-  <div class="row row-margin-bottom">
-    <div class="col-lg-12">
-      <ul class="nav nav-pills">
-        {% if recommendedModulesNotInstalled is not empty %}
-          <li class="active">
-            <a href="#tab_modules_list_not_installed" data-toggle="tab">
-              {{ 'Not Installed'|trans({}) }}
-            </a>
-          </li>
-        {% endif %}
-
-        {% if recommendedModulesInstalled is not empty %}
-          <li {% if recommendedModulesNotInstalled is empty %}class="active"{% endif %}>
-            <a href="#tab_modules_list_installed" data-toggle="tab">
-              {{ 'Installed'|trans({}) }}
-            </a>
-          </li>
-        {% endif %}
-      </ul>
-    </div>
-  </div>
+  <ul class="nav nav-tabs" role="tablist">
+    {% if recommendedModulesNotInstalled is not empty %}
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#tab_modules_list_not_installed" role="tab">
+          {{ 'Not Installed'|trans({}) }}
+        </a>
+      </li>
+    {% endif %}
+    {% if recommendedModulesInstalled is not empty %}
+      <li class="nav-item">
+        <a class="nav-link{% if recommendedModulesNotInstalled is empty %} active{% endif %}" data-toggle="tab" href="#tab_modules_list_installed" role="tab">
+          {{ 'Installed'|trans({}) }}
+        </a>
+      </li>
+    {% endif %}
+  </ul>
   <div id="modules_list_container_content" class="tab-content modal-content-overflow">
     {% if recommendedModulesNotInstalled is not empty %}
-      <div class="tab-pane active" id="tab_modules_list_not_installed">
+      <div class="tab-pane active" id="tab_modules_list_not_installed" role="tabpanel">
         <table id="tab_modules_list_not_installed" class="table">
           {% for recommendedModuleNotInstalled in recommendedModulesNotInstalled %}
             {{ include('@PrestaShop/Admin/Module/Includes/tab-module-line.html.twig',{'module': recommendedModuleNotInstalled}) }}
@@ -59,7 +54,7 @@
       </div>
     {% endif %}
     {% if recommendedModulesInstalled is not empty %}
-      <div class="tab-pane {% if recommendedModulesNotInstalled is empty %}active{% endif %}" id="tab_modules_list_installed">
+      <div class="tab-pane {% if recommendedModulesNotInstalled is empty %}active{% endif %}" id="tab_modules_list_installed" role="tabpanel">
         <table id="tab_modules_list_installed" class="table">
           {% for recommendedModuleInstalled in recommendedModulesInstalled %}
             {{ include('@PrestaShop/Admin/Module/Includes/tab-module-line.html.twig',{'module': recommendedModuleInstalled}) }}

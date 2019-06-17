@@ -330,6 +330,9 @@ var mbo = {};
         '          <i class="material-icons">query_builder</i>\n' +
         '        </div>\n' +
         '      </div>\n' +
+        '      <div class="modal-footer">\n' +
+        '        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">' + config.translations['Close'] + '</button>\n' +
+        '      </div>\n' +
         '    </div>\n' +
         '  </div>\n' +
         '</div>'

@@ -1,0 +1,13 @@
+.alert-addons {
+  border-color: #25b9d7;
+}
+
+.alert-addons:before {
+  color: #25b9d7;
+  background-color: #dff5f9;
+  content: "\E88F";
+}
+
+#modules_list_container_content .img-thumbnail {
+  max-width: 56px;
+}
