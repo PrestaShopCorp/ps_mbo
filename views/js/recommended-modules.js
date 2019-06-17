@@ -326,8 +326,8 @@ var mbo = {};
         '      </div>\n' +
         '      <div class="modal-body row">\n' +
         '        <div id="modules_list_container_tab_modal" class="col-md-12" style="display:none;"></div>\n' +
-        '        <div id="modules_list_loader" class="col-md-12">\n' +
-        '          <i class="material-icons">query_builder</i>\n' +
+        '        <div id="modules_list_loader" class="col-md-12 text-center">\n' +
+        '          <button class="btn-primary-reverse onclick unbind spinner"></button>\n' +
         '        </div>\n' +
         '      </div>\n' +
         '      <div class="modal-footer">\n' +
