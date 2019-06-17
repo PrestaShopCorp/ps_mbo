@@ -32,6 +32,7 @@ use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
 use PrestaShop\CircuitBreaker\FactorySettings;
 use PrestaShop\Module\Mbo\Adapter\TabCollectionDecoderXml;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class TabCollectionProvider implements TabCollectionProviderInterface
 {
@@ -57,6 +58,11 @@ class TabCollectionProvider implements TabCollectionProviderInterface
     private $tabCollectionFactory;
 
     /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -80,15 +86,18 @@ class TabCollectionProvider implements TabCollectionProviderInterface
      * Constructor.
      *
      * @param TabCollectionFactoryInterface $tabCollectionFactory
+     * @param SerializerInterface $serializer
      * @param LoggerInterface $logger
      * @param CacheProvider|null $cacheProvider
      */
     public function __construct(
         TabCollectionFactoryInterface $tabCollectionFactory,
+        SerializerInterface $serializer,
         LoggerInterface $logger,
         CacheProvider $cacheProvider = null
     ) {
         $this->tabCollectionFactory = $tabCollectionFactory;
+        $this->serializer = $serializer;
         $this->logger = $logger;
         $this->cacheProvider = $cacheProvider;
 
@@ -169,6 +178,14 @@ class TabCollectionProvider implements TabCollectionProviderInterface
             [],
             $this->circuitBreakerFallback()
         );
+
+//        $tabCollection = $this->serializer->deserialize(
+//            $apiResponse,
+//            TabCollection::class,
+//            'xml'
+//        );
+//
+//        dump($tabCollection);
 
         $tabCollectionDecoderXml = new TabCollectionDecoderXml($apiResponse);
 
