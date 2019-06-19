@@ -101,7 +101,7 @@ class TabCollectionFactory implements TabCollectionFactoryInterface
     {
         $moduleNames = [];
 
-        foreach ($data as $tabClassName => $tabData) {
+        foreach ($data as $tabData) {
             foreach ($tabData['recommendedModules'] as $moduleName) {
                 $moduleNames[] = $moduleName;
             }

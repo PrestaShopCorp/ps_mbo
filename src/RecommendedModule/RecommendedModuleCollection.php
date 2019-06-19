@@ -27,6 +27,7 @@
 namespace PrestaShop\Module\Mbo\RecommendedModule;
 
 use ArrayIterator;
+use Closure;
 
 class RecommendedModuleCollection implements RecommendedModuleCollectionInterface
 {
@@ -134,7 +135,10 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
      */
     public function sortByPosition()
     {
-        uasort($this->recommendedModules, function (RecommendedModuleInterface $recommendedModuleA, RecommendedModuleInterface $recommendedModuleB) {
+        $this->sort(function (
+            RecommendedModuleInterface $recommendedModuleA,
+            RecommendedModuleInterface $recommendedModuleB
+        ) {
             if ($recommendedModuleA->getPosition() === $recommendedModuleB->getPosition()) {
                 return 0;
             }
@@ -148,13 +152,9 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
      */
     public function getInstalled()
     {
-        $recommendedModulesInstalled = new static();
-        $recommendedModulesInstalled->recommendedModules = array_filter($this->recommendedModules, function (RecommendedModuleInterface $recommendedModule) {
+        return $this->filter(function (RecommendedModuleInterface $recommendedModule) {
             return $recommendedModule->isInstalled();
         });
-        $recommendedModulesInstalled->sortByPosition();
-
-        return $recommendedModulesInstalled;
     }
 
     /**
@@ -162,12 +162,37 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
      */
     public function getNotInstalled()
     {
-        $recommendedModulesNotInstalled = new static();
-        $recommendedModulesNotInstalled->recommendedModules = array_filter($this->recommendedModules, function (RecommendedModuleInterface $recommendedModule) {
+        return $this->filter(function (RecommendedModuleInterface $recommendedModule) {
             return !$recommendedModule->isInstalled();
         });
-        $recommendedModulesNotInstalled->sortByPosition();
+    }
 
-        return $recommendedModulesNotInstalled;
+    /**
+     * @param Closure $closure
+     *
+     * @return RecommendedModuleCollection
+     */
+    private function filter(Closure $closure)
+    {
+        $recommendedModules = new static();
+        $recommendedModules->recommendedModules = array_filter(
+            $this->recommendedModules,
+            $closure,
+            ARRAY_FILTER_USE_BOTH
+        );
+        $recommendedModules->sortByPosition();
+
+        return $recommendedModules;
+    }
+
+    /**
+     * @param Closure $closure
+     */
+    private function sort(Closure $closure)
+    {
+        uasort(
+            $this->recommendedModules,
+            $closure
+        );
     }
 }

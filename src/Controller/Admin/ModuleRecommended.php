@@ -40,6 +40,7 @@ class ModuleRecommended extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
+
     /**
      * @param Request $request
      *

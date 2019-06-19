@@ -20,6 +20,5 @@ services:
     class: 'PrestaShop\Module\Mbo\Tab\TabCollectionProvider'
     arguments:
       - '@mbo.tab.collection_factory'
-      - '@serializer'
       - '@logger'
       - '@doctrine.cache.provider'
