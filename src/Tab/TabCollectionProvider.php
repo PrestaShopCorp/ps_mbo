@@ -27,9 +27,9 @@
 namespace PrestaShop\Module\Mbo\Tab;
 
 use Doctrine\Common\Cache\CacheProvider;
-use PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory;
 use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
 use PrestaShop\CircuitBreaker\FactorySettings;
+use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
 use PrestaShop\Module\Mbo\Adapter\TabCollectionDecoderXml;
 use Psr\Log\LoggerInterface;
 
@@ -37,19 +37,15 @@ class TabCollectionProvider implements TabCollectionProviderInterface
 {
     const CACHE_KEY = 'recommendedModules';
 
-    const CACHE_LIFETIME = 604800; // 7 days same as defined in Core
+    const CACHE_LIFETIME_SECONDS = 604800; // 7 days same as defined in Core
 
     const API_URL = 'https://api.prestashop.com/xml/tab_modules_list_17.xml';
 
-    const CLOSED_ALLOWED_FAILURES = 2;
+    const API_ALLOWED_FAILURES = 2;
 
     const API_TIMEOUT_SECONDS = 0.6;
 
-    const OPEN_ALLOWED_FAILURES = 1;
-
-    const OPEN_TIMEOUT_SECONDS = 1.2;
-
-    const OPEN_THRESHOLD_SECONDS = 60;
+    const API_THRESHOLD_SECONDS = 3600; // Retry in 1 hour
 
     /**
      * @var TabCollectionFactoryInterface
@@ -93,21 +89,18 @@ class TabCollectionProvider implements TabCollectionProviderInterface
         $this->cacheProvider = $cacheProvider;
 
         $this->apiSettings = new FactorySettings(
-            self::CLOSED_ALLOWED_FAILURES,
+            self::API_ALLOWED_FAILURES,
             self::API_TIMEOUT_SECONDS,
-            0
+            self::API_THRESHOLD_SECONDS
         );
 
         $this->apiSettings
-            ->setThreshold(self::OPEN_THRESHOLD_SECONDS)
-            ->setStrippedFailures(self::OPEN_ALLOWED_FAILURES)
-            ->setStrippedTimeout(self::OPEN_TIMEOUT_SECONDS)
             ->setClientOptions([
                 'method' => 'GET',
             ])
         ;
 
-        $this->circuitBreakerFactory = new AdvancedCircuitBreakerFactory();
+        $this->circuitBreakerFactory = new SimpleCircuitBreakerFactory();
     }
 
     /**
@@ -137,7 +130,7 @@ class TabCollectionProvider implements TabCollectionProviderInterface
             $this->cacheProvider->save(
                 static::CACHE_KEY,
                 $tabCollection,
-                static::CACHE_LIFETIME
+                static::CACHE_LIFETIME_SECONDS
             );
         }
 
