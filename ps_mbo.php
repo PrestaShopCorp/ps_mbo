@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class Ps_Mbo extends Module
+class ps_mbo extends Module
 {
     /**
      * @var array Tabs
