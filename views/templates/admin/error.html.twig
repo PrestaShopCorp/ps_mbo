@@ -23,27 +23,22 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% extends app.request.isxmlhttprequest ? '@Modules/ps_mbo/views/templates/admin/layout-ajax.html.twig' : '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-    <div class="container">
-        <div class="row mt-5">
-            <div class="col">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <img class="img-responsive"
-                             src="{{ asset('../modules/ps_mbo/views/img/error.svg') }}"
-                             alt="{{ 'It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.'|trans({}, 'Admin.Notifications.Error') }}"
-                        >
-
-                        <div class="mt-3">
-                            <p class="error-header">
-                                {{ 'It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.'|trans({}, 'Admin.Notifications.Error') }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body text-center">
+          <img class="img-responsive"
+               src="{{ asset('../modules/ps_mbo/views/img/error.svg') }}"
+               alt="{{ 'It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.'|trans({}, 'Admin.Notifications.Error') }}"
+          >
+          <p class="mt-3 error-header">
+            {{ 'It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.'|trans({}, 'Admin.Notifications.Error') }}
+          </p>
         </div>
+      </div>
     </div>
+  </div>
 {% endblock %}

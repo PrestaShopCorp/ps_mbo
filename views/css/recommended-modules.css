@@ -1,13 +1,35 @@
-.alert-addons {
+#main-div #modules_list_container_tab_modal .alert-addons {
   border-color: #25b9d7;
 }
 
-.alert-addons:before {
+#main-div #modules_list_container_tab_modal .alert-addons:before {
   color: #25b9d7;
   background-color: #dff5f9;
   content: "\E88F";
 }
 
-#modules_list_container_content .img-thumbnail {
+#main-div #modules_list_container_tab_modal .img-thumbnail {
   max-width: 56px;
+}
+
+#content.bootstrap .card {
+  position: relative;
+  display: block;
+  background-color: #fff;
+  border: 1px solid #dbe6e9;
+  border-radius: 5px;
+  box-shadow: 0 0 4px 0 rgba(0,0,0,.06);
+}
+
+#content.bootstrap .card-body {
+  padding: 20px;
+}
+
+#content.bootstrap .card-body .img-responsive {
+  display: inline;
+  max-width: 100%;
+}
+
+#content.bootstrap .mt-3 {
+  margin-top: 15px;
 }

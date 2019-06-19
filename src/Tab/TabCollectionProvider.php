@@ -32,6 +32,7 @@ use PrestaShop\CircuitBreaker\FactorySettings;
 use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
 use PrestaShop\Module\Mbo\Adapter\TabCollectionDecoderXml;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class TabCollectionProvider implements TabCollectionProviderInterface
 {
@@ -173,12 +174,11 @@ class TabCollectionProvider implements TabCollectionProviderInterface
     /**
      * Called by CircuitBreaker if the service is unavailable
      *
-     * @return string|null
+     * @throws ServiceUnavailableHttpException
      */
     public function circuitBreakerFallback()
     {
-        $this->logger->error('Unable to retrieve tab_modules_list_17.xml from PrestaShop');
-
         return null;
+        // throw new ServiceUnavailableHttpException(self::API_THRESHOLD_SECONDS);
     }
 }

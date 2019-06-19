@@ -32,6 +32,8 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Symfony\Component\Templating\EngineInterface;
 
 class ModuleRecommendedController extends FrameworkBundleAdminController
 {
@@ -42,24 +44,41 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $tabCollectionProvider = $this->getTabCollectionProvider();
-        $tab = $tabCollectionProvider->getTab($request->get('tabClassName'));
-        $recommendedModulePresenter = new RecommendedModulePresenter();
-        $recommendedModulesInstalled = $tab->getRecommendedModulesInstalled();
-        $recommendedModulesNotInstalled = $tab->getRecommendedModulesNotInstalled();
-        $response = $this->render(
-            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
-            [
-                'recommendedModulesInstalled' => $recommendedModulePresenter->presentCollection($recommendedModulesInstalled),
-                'recommendedModulesNotInstalled' => $recommendedModulePresenter->presentCollection($recommendedModulesNotInstalled),
-            ]
-        );
+        $response = $request->isXmlHttpRequest()
+            ? new JsonResponse()
+            : new Response();
 
-        if ($request->isXmlHttpRequest()) {
-            return new JsonResponse([
-                'content' => $response->getContent(),
-                'status' => true,
-            ]);
+        try {
+            $tabCollectionProvider = $this->getTabCollectionProvider();
+            $tab = $tabCollectionProvider->getTab($request->get('tabClassName'));
+            $recommendedModulePresenter = new RecommendedModulePresenter();
+            $recommendedModulesInstalled = $tab->getRecommendedModulesInstalled();
+            $recommendedModulesNotInstalled = $tab->getRecommendedModulesNotInstalled();
+            $content = $this->getTemplateEngine()->render(
+                '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
+                [
+                    'recommendedModulesInstalled' => $recommendedModulePresenter->presentCollection($recommendedModulesInstalled),
+                    'recommendedModulesNotInstalled' => $recommendedModulePresenter->presentCollection($recommendedModulesNotInstalled),
+                ]
+            );
+            if ($request->isXmlHttpRequest()) {
+                $response->setData([
+                    'content' => $content,
+                ]);
+            } else {
+                $response->setContent($content);
+            }
+        } catch (ServiceUnavailableHttpException $exception) {
+            $content = $this->getTemplateEngine()->render('@Modules/ps_mbo/views/templates/admin/error.html.twig');
+            if ($request->isXmlHttpRequest()) {
+                $response->setData([
+                    'content' => $content,
+                ]);
+            } else {
+                $response->setContent($content);
+            }
+            $response->setStatusCode($exception->getStatusCode());
+            $response->headers->add($exception->getHeaders());
         }
 
         return $response;
@@ -71,5 +90,13 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
     private function getTabCollectionProvider()
     {
         return $this->get('mbo.tab.collection_provider');
+    }
+
+    /**
+     * @return EngineInterface
+     */
+    private function getTemplateEngine()
+    {
+        return $this->get('templating');
     }
 }
