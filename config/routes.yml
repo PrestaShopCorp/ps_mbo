@@ -18,7 +18,7 @@ admin_mbo_recommended_modules:
   path: /addons/modules/recommended
   methods: [GET]
   defaults:
-    _controller: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleRecommended::indexAction'
+    _controller: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleRecommendedController::indexAction'
     _legacy_controller: AdminPsMboAddons
     _legacy_link: AdminPsMboAddons:recommendedModules
 

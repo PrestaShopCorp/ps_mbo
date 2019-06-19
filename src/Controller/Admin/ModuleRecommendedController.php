@@ -33,14 +33,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class ModuleRecommended extends FrameworkBundleAdminController
+class ModuleRecommendedController extends FrameworkBundleAdminController
 {
-    /**
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-
     /**
      * @param Request $request
      *
