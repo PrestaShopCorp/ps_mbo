@@ -26,6 +26,7 @@
 
 namespace PrestaShop\Module\Mbo\Tab;
 
+use Closure;
 use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
 use PrestaShop\CircuitBreaker\FactorySettings;
@@ -40,7 +41,7 @@ class TabCollectionProvider implements TabCollectionProviderInterface
 
     const CACHE_LIFETIME_SECONDS = 604800; // 7 days same as defined in Core
 
-    const API_URL = 'https://api.prestashop.com/xml/tab_modules_list_17.xml';
+    const API_URL = 'https://api.prestashop.com/xml/tab_modules_list_17.xmllllll';
 
     const API_ALLOWED_FAILURES = 2;
 
@@ -153,6 +154,8 @@ class TabCollectionProvider implements TabCollectionProviderInterface
      * Retrieve tabs with recommended modules from PrestaShop
      *
      * @return TabCollectionInterface
+     *
+     * @throws ServiceUnavailableHttpException
      */
     private function getTabCollectionFromApi()
     {
@@ -174,11 +177,12 @@ class TabCollectionProvider implements TabCollectionProviderInterface
     /**
      * Called by CircuitBreaker if the service is unavailable
      *
-     * @throws ServiceUnavailableHttpException
+     * @return Closure
      */
-    public function circuitBreakerFallback()
+    private function circuitBreakerFallback()
     {
-        return null;
-        // throw new ServiceUnavailableHttpException(self::API_THRESHOLD_SECONDS);
+        return function() {
+            throw new ServiceUnavailableHttpException(self::API_THRESHOLD_SECONDS);
+        };
     }
 }

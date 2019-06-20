@@ -31,7 +31,6 @@ use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -40,13 +39,11 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
     /**
      * @param Request $request
      *
-     * @return JsonResponse|Response
+     * @return JsonResponse
      */
     public function indexAction(Request $request)
     {
-        $response = $request->isXmlHttpRequest()
-            ? new JsonResponse()
-            : new Response();
+        $response = new JsonResponse();
 
         try {
             $tabCollectionProvider = $this->getTabCollectionProvider();
@@ -54,29 +51,19 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
             $recommendedModulePresenter = new RecommendedModulePresenter();
             $recommendedModulesInstalled = $tab->getRecommendedModulesInstalled();
             $recommendedModulesNotInstalled = $tab->getRecommendedModulesNotInstalled();
-            $content = $this->getTemplateEngine()->render(
-                '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
-                [
-                    'recommendedModulesInstalled' => $recommendedModulePresenter->presentCollection($recommendedModulesInstalled),
-                    'recommendedModulesNotInstalled' => $recommendedModulePresenter->presentCollection($recommendedModulesNotInstalled),
-                ]
-            );
-            if ($request->isXmlHttpRequest()) {
-                $response->setData([
-                    'content' => $content,
-                ]);
-            } else {
-                $response->setContent($content);
-            }
+            $response->setData([
+                'content' => $this->getTemplateEngine()->render(
+                    '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
+                    [
+                        'recommendedModulesInstalled' => $recommendedModulePresenter->presentCollection($recommendedModulesInstalled),
+                        'recommendedModulesNotInstalled' => $recommendedModulePresenter->presentCollection($recommendedModulesNotInstalled),
+                    ]
+                ),
+            ]);
         } catch (ServiceUnavailableHttpException $exception) {
-            $content = $this->getTemplateEngine()->render('@Modules/ps_mbo/views/templates/admin/error.html.twig');
-            if ($request->isXmlHttpRequest()) {
-                $response->setData([
-                    'content' => $content,
-                ]);
-            } else {
-                $response->setContent($content);
-            }
+            $response->setData([
+                'content' => $this->getTemplateEngine()->render('@Modules/ps_mbo/views/templates/admin/error.html.twig'),
+            ]);
             $response->setStatusCode($exception->getStatusCode());
             $response->headers->add($exception->getHeaders());
         }
