@@ -331,9 +331,6 @@ var mbo = {};
         '          <button class="btn-primary-reverse onclick unbind spinner"></button>\n' +
         '        </div>\n' +
         '      </div>\n' +
-        '      <div class="modal-footer">\n' +
-        '        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">' + config.translations['Close'] + '</button>\n' +
-        '      </div>\n' +
         '    </div>\n' +
         '  </div>\n' +
         '</div>'

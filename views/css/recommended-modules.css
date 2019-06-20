@@ -1,15 +1,80 @@
+#main-div #recommended-modules-container .alert-addons,
 #main-div #modules_list_container_tab_modal .alert-addons {
   border-color: #25b9d7;
 }
 
+#main-div #recommended-modules-container .alert-addons:before,
 #main-div #modules_list_container_tab_modal .alert-addons:before {
   color: #25b9d7;
   background-color: #dff5f9;
   content: "\E88F";
 }
 
-#main-div #modules_list_container_tab_modal .img-thumbnail {
+#main-div #modules_list_container_content .img-thumbnail {
   max-width: 56px;
+}
+
+#content.bootstrap .nav-tabs .nav-item.show .nav-link,
+#content.bootstrap .nav-tabs .nav-item.active .nav-link {
+  border-top: 3px solid #25b9d7;
+}
+
+#content.bootstrap .nav-tabs .nav-item.show .nav-link,
+#content.bootstrap .nav-tabs .nav-link.active {
+  color: #363a41;
+  background-color: #fff;
+  border-color: #25b9d7;
+}
+
+#content.bootstrap .nav-tabs,
+#content.bootstrap .nav-tabs .nav-link {
+  border: none;
+}
+
+#content.bootstrap #modules_list_container_content .btn {
+  border-radius: 0;
+}
+
+#content.bootstrap #modules_list_container_content .btn .caret {
+  border-top-color: #25b9d7!important;
+}
+
+#content.bootstrap #modules_list_container_content .btn-outline-primary {
+  color: #25b9d7;
+  background-color: transparent;
+  background-image: none;
+  border-color: #25b9d7;
+}
+
+#content.bootstrap #modules_list_container_content .btn-outline-primary:hover {
+  color: #fff;
+  background-color: #3ed2f0;
+  border-color: #3ed2f0;
+}
+
+#content.bootstrap #modules_list_container_content .btn-block {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+#content.bootstrap #modules_list_container_content .dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 5px;
+  clear: both;
+  font-weight: 400;
+  color: #6c868e;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+}
+
+#content.bootstrap #modules_list_container_content .dropdown-item:focus,
+#content.bootstrap #modules_list_container_content .dropdown-item:hover {
+  color: #25b9d7;
+  text-decoration: none;
+  background-color: #fff;
 }
 
 #content.bootstrap .card {
