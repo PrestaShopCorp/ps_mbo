@@ -32,7 +32,6 @@ use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
 use PrestaShop\CircuitBreaker\FactorySettings;
 use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
 use PrestaShop\Module\Mbo\Adapter\TabCollectionDecoderXml;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 class TabCollectionProvider implements TabCollectionProviderInterface
@@ -55,11 +54,6 @@ class TabCollectionProvider implements TabCollectionProviderInterface
     private $tabCollectionFactory;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @var CacheProvider|null
      */
     private $cacheProvider;
@@ -78,16 +72,13 @@ class TabCollectionProvider implements TabCollectionProviderInterface
      * Constructor.
      *
      * @param TabCollectionFactoryInterface $tabCollectionFactory
-     * @param LoggerInterface $logger
      * @param CacheProvider|null $cacheProvider
      */
     public function __construct(
         TabCollectionFactoryInterface $tabCollectionFactory,
-        LoggerInterface $logger,
         CacheProvider $cacheProvider = null
     ) {
         $this->tabCollectionFactory = $tabCollectionFactory;
-        $this->logger = $logger;
         $this->cacheProvider = $cacheProvider;
 
         $this->apiSettings = new FactorySettings(
