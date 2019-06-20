@@ -41,7 +41,7 @@ class TabCollectionProvider implements TabCollectionProviderInterface
 
     const CACHE_LIFETIME_SECONDS = 604800; // 7 days same as defined in Core
 
-    const API_URL = 'https://api.prestashop.com/xml/tab_modules_list_17.xmllllll';
+    const API_URL = 'https://api.prestashop.com/xml/tab_modules_list_17.xml';
 
     const API_ALLOWED_FAILURES = 2;
 
