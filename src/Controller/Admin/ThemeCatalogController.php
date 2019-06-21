@@ -52,14 +52,11 @@ class ThemeCatalogController extends FrameworkBundleAdminController
 
         try {
             $externalContentProvider = new ExternalContentProvider();
-            $pageContent = $externalContentProvider->call([
-                'url' => $this->getAddonsUrl($request),
-            ]);
 
             $content = $this->getTemplateEngine()->render(
                 '@Modules/ps_mbo/views/templates/admin/controllers/theme_catalog/addons_store.html.twig',
                 [
-                    'pageContent' => $pageContent,
+                    'pageContent' => $externalContentProvider->getContent($this->getAddonsUrl($request)),
                     'layoutHeaderToolbarBtn' => [],
                     'layoutTitle' => $this->trans('Themes Catalog', 'Admin.Navigation.Menu'),
                     'requireAddonsSearch' => true,

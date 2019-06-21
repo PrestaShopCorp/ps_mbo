@@ -68,7 +68,7 @@ class ExternalContentProvider implements ExternalContentProviderInterface
      * @throws MissingOptionsException
      * @throws ServiceUnavailableHttpException
      */
-    public function call(array $options)
+    public function getContent($url, array $options = [])
     {
         $settings = $this->optionsResolver->resolve($options);
 
@@ -81,7 +81,7 @@ class ExternalContentProvider implements ExternalContentProviderInterface
         $circuitBreaker = $this->circuitBreakerFactory->create($apiSettings);
 
         return $circuitBreaker->call(
-            $settings['url'],
+            $url,
             $settings['client_options'],
             $this->circuitBreakerFallback()
         );
@@ -93,11 +93,8 @@ class ExternalContentProvider implements ExternalContentProviderInterface
             'failures' => self::ALLOWED_FAILURES,
             'timeout' => self::TIMEOUT_SECONDS,
             'threshold' => self::THRESHOLD_SECONDS,
-            'url' => '',
             'client_options' => [],
         ]);
-        $this->optionsResolver->setRequired('url');
-        $this->optionsResolver->setAllowedTypes('url', 'string');
         $this->optionsResolver->setAllowedTypes('failures', 'numeric');
         $this->optionsResolver->setAllowedTypes('timeout', 'numeric');
         $this->optionsResolver->setAllowedTypes('threshold', 'numeric');

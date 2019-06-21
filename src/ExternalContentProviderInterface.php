@@ -29,9 +29,10 @@ namespace PrestaShop\Module\Mbo;
 interface ExternalContentProviderInterface
 {
     /**
+     * @param string $url
      * @param array $options
      *
      * @return string
      */
-    public function call(array $options);
+    public function getContent($url, array $options = []);
 }

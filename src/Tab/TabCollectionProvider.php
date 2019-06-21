@@ -118,9 +118,7 @@ class TabCollectionProvider implements TabCollectionProviderInterface
     private function getTabCollectionFromApi()
     {
         $externalContentProvider = new ExternalContentProvider();
-        $apiResponse = $externalContentProvider->call([
-            'url' => self::API_URL,
-        ]);
+        $apiResponse = $externalContentProvider->getContent(self::API_URL);
 
         $tabCollectionDecoderXml = new TabCollectionDecoderXml($apiResponse);
 
