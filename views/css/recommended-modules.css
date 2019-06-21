@@ -12,6 +12,7 @@
 
 #main-div #modules_list_container_content .img-thumbnail {
   max-width: 56px;
+  width: 56px;
 }
 
 #content.bootstrap .nav-tabs .nav-item.show .nav-link,
@@ -29,6 +30,11 @@
 #content.bootstrap .nav-tabs,
 #content.bootstrap .nav-tabs .nav-link {
   border: none;
+}
+
+#content.bootstrap #modules_list_container_content .img-thumbnail {
+  max-width: 56px;
+  width: 56px;
 }
 
 #content.bootstrap #modules_list_container_content .btn {
@@ -57,6 +63,10 @@
   padding-right: 8px;
 }
 
+#content.bootstrap #modules_list_container_content .btn-group {
+  display: inline-flex;
+}
+
 #content.bootstrap #modules_list_container_content .dropdown-item {
   display: block;
   width: 100%;
@@ -75,6 +85,11 @@
   color: #25b9d7;
   text-decoration: none;
   background-color: #fff;
+}
+
+#content.bootstrap #tab_modules_list_installed > tbody > tr > td:nth-child(2),
+#content.bootstrap #tab_modules_list_not_installed > tbody > tr > td:nth-child(2) {
+  width: 90%;
 }
 
 #content.bootstrap .card {
@@ -97,4 +112,10 @@
 
 #content.bootstrap .mt-3 {
   margin-top: 15px;
+}
+
+@media (min-width: 768px) {
+  #content.bootstrap #modules_list_container .modal-dialog {
+    width: 680px;
+  }
 }
