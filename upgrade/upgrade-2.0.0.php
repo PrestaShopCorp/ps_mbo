@@ -59,5 +59,10 @@ function upgrade_module_2_0_0($module)
         $result &= $module->installTab($module->adminTabs['AdminPsMboAddons']);
     }
 
+    // We create Module Recommended Tabs to MBO
+    if (isset($module->adminTabs['AdminPsMboRecommended'])) {
+        $result &= $module->installTab($module->adminTabs['AdminPsMboRecommended']);
+    }
+
     return $result;
 }

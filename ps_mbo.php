@@ -50,11 +50,16 @@ class ps_mbo extends Module
             'core_reference' => 'AdminModulesCatalog',
         ],
         'AdminPsMboAddons' => [
-            'name' => 'Module Selections',
+            'name' => 'Module selection',
             'visible' => true,
             'class_name' => 'AdminPsMboAddons',
             'parent_class_name' => 'AdminParentModulesCatalog',
             'core_reference' => 'AdminAddonsCatalog',
+        ],
+        'AdminPsMboRecommended' => [
+            'name' => 'Module recommended',
+            'visible' => true,
+            'class_name' => 'AdminPsMboRecommended',
         ],
         'AdminPsMboTheme' => [
             'name' => 'Theme catalog',
@@ -157,7 +162,7 @@ class ps_mbo extends Module
         $tab->module = $this->name;
         $tab->class_name = $tabData['class_name'];
         $tab->position = (int) $position;
-        $tab->id_parent = Tab::getIdFromClassName($tabData['parent_class_name']);
+        $tab->id_parent = empty($tabData['parent_class_name']) ? -1 : Tab::getIdFromClassName($tabData['parent_class_name']);
         $tab->name = $tabNameByLangId;
         $result &= $tab->add();
 
