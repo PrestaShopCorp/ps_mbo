@@ -26,10 +26,13 @@
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
+use PrestaShop\Module\Mbo\Adapter\ExternalContentProvider;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * Responsible of "Improve > Design > Themes Catalog" page display.
@@ -45,28 +48,37 @@ class ThemeCatalogController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $pageContent = @file_get_contents($this->getAddonsUrl($request));
+        $response = new Response();
 
-        $template = !$pageContent
-            ? '@Modules/ps_mbo/views/templates/admin/error.html.twig'
-            : '@Modules/ps_mbo/views/templates/admin/controllers/theme_catalog/addons_store.html.twig'
-        ;
+        try {
+            $externalContentProvider = new ExternalContentProvider();
+            $pageContent = $externalContentProvider->call([
+                'url' => $this->getAddonsUrl($request),
+            ]);
 
-        return $this->render(
-            $template,
-            [
-                'pageContent' => $pageContent,
-                'layoutHeaderToolbarBtn' => [],
-                'layoutTitle' => $this->trans('Themes Catalog', 'Admin.Navigation.Menu'),
-                'requireAddonsSearch' => true,
-                'requireBulkActions' => false,
-                'showContentHeader' => true,
-                'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-                'requireFilterStatus' => false,
-                'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
-            ]
-        );
+            $content = $this->getTemplateEngine()->render(
+                '@Modules/ps_mbo/views/templates/admin/controllers/theme_catalog/addons_store.html.twig',
+                [
+                    'pageContent' => $pageContent,
+                    'layoutHeaderToolbarBtn' => [],
+                    'layoutTitle' => $this->trans('Themes Catalog', 'Admin.Navigation.Menu'),
+                    'requireAddonsSearch' => true,
+                    'requireBulkActions' => false,
+                    'showContentHeader' => true,
+                    'enableSidebar' => true,
+                    'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                    'requireFilterStatus' => false,
+                    'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
+                ]
+            );
+            $response->setContent($content);
+        } catch (ServiceUnavailableHttpException $exception) {
+            $response->setContent($this->getTemplateEngine()->render('@Modules/ps_mbo/views/templates/admin/error.html.twig'));
+            $response->setStatusCode($exception->getStatusCode());
+            $response->headers->add($exception->getHeaders());
+        }
+
+        return $response;
     }
 
     /**
@@ -92,5 +104,13 @@ class ThemeCatalogController extends FrameworkBundleAdminController
             . "&parentUrl=$parent_domain"
             . '&onlyThemes=1'
         ;
+    }
+
+    /**
+     * @return EngineInterface
+     */
+    private function getTemplateEngine()
+    {
+        return $this->get('templating');
     }
 }

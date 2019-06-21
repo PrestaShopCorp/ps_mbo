@@ -26,11 +26,8 @@
 
 namespace PrestaShop\Module\Mbo\Tab;
 
-use Closure;
 use Doctrine\Common\Cache\CacheProvider;
-use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
-use PrestaShop\CircuitBreaker\FactorySettings;
-use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
+use PrestaShop\Module\Mbo\Adapter\ExternalContentProvider;
 use PrestaShop\Module\Mbo\Adapter\TabCollectionDecoderXml;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
@@ -42,12 +39,6 @@ class TabCollectionProvider implements TabCollectionProviderInterface
 
     const API_URL = 'https://api.prestashop.com/xml/tab_modules_list_17.xml';
 
-    const API_ALLOWED_FAILURES = 2;
-
-    const API_TIMEOUT_SECONDS = 0.6;
-
-    const API_THRESHOLD_SECONDS = 3600; // Retry in 1 hour
-
     /**
      * @var TabCollectionFactoryInterface
      */
@@ -57,16 +48,6 @@ class TabCollectionProvider implements TabCollectionProviderInterface
      * @var CacheProvider|null
      */
     private $cacheProvider;
-
-    /**
-     * @var FactoryInterface
-     */
-    private $circuitBreakerFactory;
-
-    /**
-     * @var array
-     */
-    private $apiSettings;
 
     /**
      * Constructor.
@@ -80,20 +61,6 @@ class TabCollectionProvider implements TabCollectionProviderInterface
     ) {
         $this->tabCollectionFactory = $tabCollectionFactory;
         $this->cacheProvider = $cacheProvider;
-
-        $this->apiSettings = new FactorySettings(
-            self::API_ALLOWED_FAILURES,
-            self::API_TIMEOUT_SECONDS,
-            self::API_THRESHOLD_SECONDS
-        );
-
-        $this->apiSettings
-            ->setClientOptions([
-                'method' => 'GET',
-            ])
-        ;
-
-        $this->circuitBreakerFactory = new SimpleCircuitBreakerFactory();
     }
 
     /**
@@ -150,30 +117,15 @@ class TabCollectionProvider implements TabCollectionProviderInterface
      */
     private function getTabCollectionFromApi()
     {
-        $circuitBreaker = $this->circuitBreakerFactory->create($this->apiSettings);
-
-        $apiResponse = $circuitBreaker->call(
-            self::API_URL,
-            [],
-            $this->circuitBreakerFallback()
-        );
+        $externalContentProvider = new ExternalContentProvider();
+        $apiResponse = $externalContentProvider->call([
+            'url' => self::API_URL,
+        ]);
 
         $tabCollectionDecoderXml = new TabCollectionDecoderXml($apiResponse);
 
         $tabCollection = $this->tabCollectionFactory->buildFromArray($tabCollectionDecoderXml->toArray());
 
         return $tabCollection;
-    }
-
-    /**
-     * Called by CircuitBreaker if the service is unavailable
-     *
-     * @return Closure
-     */
-    private function circuitBreakerFallback()
-    {
-        return function() {
-            throw new ServiceUnavailableHttpException(self::API_THRESHOLD_SECONDS);
-        };
     }
 }
