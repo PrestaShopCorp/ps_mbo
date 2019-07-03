@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\Controller\Admin;
+namespace PrestaShop\Module\Mbo\Bundle\Controller\Admin;
 
 use PrestaShop\Module\Mbo\Adapter\RecommendedModulePresenter;
-use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
+use PrestaShop\Module\Mbo\Core\Tab\TabCollectionProvider;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

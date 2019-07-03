@@ -24,23 +24,44 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\Tab;
+namespace PrestaShop\Module\Mbo\Core\RecommendedModule;
 
-use ArrayIterator;
-
-class TabCollection implements TabCollectionInterface
+class RecommendedModule implements RecommendedModuleInterface
 {
     /**
-     * @var TabInterface[]
+     * @var string technical name of the recommended module
      */
-    private $tabs = [];
+    private $moduleName;
+
+    /**
+     * @var int position of the recommended module
+     */
+    private $position;
+
+    /**
+     * @var bool
+     */
+    private $isInstalled;
+
+    /**
+     * @var array
+     */
+    private $moduleData;
 
     /**
      * {@inheritdoc}
      */
-    public function addTab(TabInterface $tab)
+    public function getModuleName()
     {
-        $this->tabs[] = $tab;
+        return $this->moduleName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setModuleName($moduleName)
+    {
+        $this->moduleName = $moduleName;
 
         return $this;
     }
@@ -48,70 +69,54 @@ class TabCollection implements TabCollectionInterface
     /**
      * {@inheritdoc}
      */
-    public function getTab($tabClassName)
+    public function getPosition()
     {
-        foreach ($this->tabs as $tab) {
-            if ($tabClassName === $tab->getLegacyClassName()) {
-                return $tab;
-            }
-        }
-
-        return new Tab();
+        return $this->position;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function setPosition($position)
     {
-        return array_key_exists($offset, $this->tabs);
+        $this->position = $position;
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function offsetSet($offset, $value)
+    public function isInstalled()
     {
-        $this->tabs[$offset] = $value;
+        return $this->isInstalled;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function offsetGet($offset)
+    public function setInstalled($isInstalled)
     {
-        return $this->tabs[$offset];
+        $this->isInstalled = $isInstalled;
+
+        return $this;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function offsetUnset($offset)
+    public function getModuleData()
     {
-        unset($this->tabs[$offset]);
+        return $this->moduleData;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getIterator()
+    public function setModuleData($moduleData)
     {
-        return new ArrayIterator($this->tabs);
-    }
+        $this->moduleData = $moduleData;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function count()
-    {
-        return count($this->tabs);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isEmpty()
-    {
-        return empty($this->tabs);
+        return $this;
     }
 }

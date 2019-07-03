@@ -2,7 +2,7 @@ admin_mbo_catalog_module:
   path: /addons/modules/catalog
   methods: [GET]
   defaults:
-    _controller: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController::indexAction'
+    _controller: 'PrestaShop\Module\Mbo\Bundle\Controller\Admin\ModuleCatalogController::indexAction'
     _legacy_controller: AdminPsMboModule
     _legacy_link: AdminPsMboModule
 
@@ -10,7 +10,7 @@ admin_mbo_catalog_module_selection:
   path: /addons/modules/catalog/selection
   methods: [GET]
   defaults:
-    _controller: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleSelectionController::indexAction'
+    _controller: 'PrestaShop\Module\Mbo\Bundle\Controller\Admin\ModuleSelectionController::indexAction'
     _legacy_controller: AdminPsMboAddons
     _legacy_link: AdminPsMboAddons
 
@@ -18,14 +18,22 @@ admin_mbo_recommended_modules:
   path: /addons/modules/recommended
   methods: [GET]
   defaults:
-    _controller: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleRecommendedController::indexAction'
+    _controller: 'PrestaShop\Module\Mbo\Bundle\Controller\Admin\ModuleRecommendedController::indexAction'
     _legacy_controller: AdminPsMboRecommended
     _legacy_link: AdminPsMboRecommended
+
+admin_mbo_week_advice:
+  path: /addons/week-advice
+  methods: [GET]
+  defaults:
+    _controller: 'PrestaShop\Module\Mbo\Bundle\Controller\Admin\WeekAdviceController::indexAction'
+    _legacy_controller: AdminPsMboWeekAdvice
+    _legacy_link: AdminPsMboWeekAdvice
 
 admin_mbo_catalog_theme:
   path: /addons/themes/catalog
   methods: [GET]
   defaults:
-    _controller: 'PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController::indexAction'
+    _controller: 'PrestaShop\Module\Mbo\Bundle\Controller\Admin\ThemeCatalogController::indexAction'
     _legacy_controller: AdminPsMboTheme
     _legacy_link: AdminPsMboTheme

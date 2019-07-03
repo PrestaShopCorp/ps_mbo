@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\Controller\Admin;
+namespace PrestaShop\Module\Mbo\Bundle\Controller\Admin;
 
 use PrestaShop\Module\Mbo\Adapter\ExternalContentProvider;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -35,9 +35,9 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
- * Responsible of "Improve > Modules > Modules Catalog" page display.
+ * Responsible of "Improve > Design > Themes Catalog" page display.
  */
-class ModuleSelectionController extends FrameworkBundleAdminController
+class ThemeCatalogController extends FrameworkBundleAdminController
 {
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
@@ -54,11 +54,11 @@ class ModuleSelectionController extends FrameworkBundleAdminController
             $externalContentProvider = new ExternalContentProvider();
 
             $content = $this->getTemplateEngine()->render(
-                '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/addons_store.html.twig',
+                '@Modules/ps_mbo/views/templates/admin/controllers/theme_catalog/addons_store.html.twig',
                 [
                     'pageContent' => $externalContentProvider->getContent($this->getAddonsUrl($request)),
                     'layoutHeaderToolbarBtn' => [],
-                    'layoutTitle' => $this->trans('Module selection', 'Admin.Navigation.Menu'),
+                    'layoutTitle' => $this->trans('Themes Catalog', 'Admin.Navigation.Menu'),
                     'requireAddonsSearch' => true,
                     'requireBulkActions' => false,
                     'showContentHeader' => true,
@@ -99,6 +99,7 @@ class ModuleSelectionController extends FrameworkBundleAdminController
             . "&isoCountry=$countryCode"
             . "&activity=$activity"
             . "&parentUrl=$parent_domain"
+            . '&onlyThemes=1'
         ;
     }
 

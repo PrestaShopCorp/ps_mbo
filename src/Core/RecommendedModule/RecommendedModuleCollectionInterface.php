@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\RecommendedModule;
+namespace PrestaShop\Module\Mbo\Core\RecommendedModule;
 
 use ArrayAccess;
 use Countable;

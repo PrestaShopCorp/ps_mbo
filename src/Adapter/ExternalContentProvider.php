@@ -29,9 +29,8 @@ namespace PrestaShop\Module\Mbo\Adapter;
 use Closure;
 use PrestaShop\CircuitBreaker\FactorySettings;
 use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
-use PrestaShop\Module\Mbo\ExternalContentProviderInterface;
+use PrestaShop\Module\Mbo\Core\ExternalContentProvider\ExternalContentProviderInterface;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
-use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ExternalContentProvider implements ExternalContentProviderInterface
@@ -65,7 +64,6 @@ class ExternalContentProvider implements ExternalContentProviderInterface
     /**
      * {@inheritdoc}
      *
-     * @throws MissingOptionsException
      * @throws ServiceUnavailableHttpException
      */
     public function getContent($url, array $options = [])

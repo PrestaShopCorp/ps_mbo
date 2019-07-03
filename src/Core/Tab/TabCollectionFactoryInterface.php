@@ -24,15 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo;
+namespace PrestaShop\Module\Mbo\Core\Tab;
 
-interface ExternalContentProviderInterface
+interface TabCollectionFactoryInterface
 {
     /**
-     * @param string $url
-     * @param array $options
+     * Builds a tabs recommended modules collection from an array.
      *
-     * @return string
+     * @param array $data
+     *
+     * @return TabCollectionInterface
      */
-    public function getContent($url, array $options = []);
+    public function buildFromArray(array $data);
 }

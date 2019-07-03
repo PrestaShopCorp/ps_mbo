@@ -23,34 +23,12 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 
-namespace PrestaShop\Module\Mbo\Adapter;
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
 
-use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModuleInterface;
-use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModuleCollectionInterface;
-use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModulePresenterInterface;
-
-class RecommendedModulePresenter implements RecommendedModulePresenterInterface
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function present(RecommendedModuleInterface $recommendedModule)
-    {
-        return $recommendedModule->getModuleData();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function presentCollection(RecommendedModuleCollectionInterface $recommendedModules)
-    {
-        $recommendedModulesPresented = [];
-
-        foreach ($recommendedModules as $recommendedModule) {
-            $recommendedModulesPresented[] = $this->present($recommendedModule);
-        }
-
-        return $recommendedModulesPresented;
-    }
-}
+header('Location: ../');
+exit;

@@ -24,33 +24,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\Adapter;
+namespace PrestaShop\Module\Mbo\Core\WeekAdvice;
 
-use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModuleInterface;
-use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModuleCollectionInterface;
-use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModulePresenterInterface;
-
-class RecommendedModulePresenter implements RecommendedModulePresenterInterface
+class WeekAdvice
 {
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    public function present(RecommendedModuleInterface $recommendedModule)
-    {
-        return $recommendedModule->getModuleData();
-    }
+    public $advice;
 
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    public function presentCollection(RecommendedModuleCollectionInterface $recommendedModules)
-    {
-        $recommendedModulesPresented = [];
-
-        foreach ($recommendedModules as $recommendedModule) {
-            $recommendedModulesPresented[] = $this->present($recommendedModule);
-        }
-
-        return $recommendedModulesPresented;
-    }
+    public $link;
 }

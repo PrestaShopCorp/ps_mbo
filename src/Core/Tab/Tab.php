@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\Tab;
+namespace PrestaShop\Module\Mbo\Core\Tab;
 
-use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModuleCollection;
-use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModuleCollectionInterface;
+use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModuleCollection;
+use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModuleCollectionInterface;
 
 class Tab implements TabInterface
 {

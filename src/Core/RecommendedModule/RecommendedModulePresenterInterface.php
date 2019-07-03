@@ -24,39 +24,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\Tab;
+namespace PrestaShop\Module\Mbo\Core\RecommendedModule;
 
-use ArrayAccess;
-use Countable;
-use IteratorAggregate;
-
-interface TabCollectionInterface extends ArrayAccess, IteratorAggregate, Countable
+interface RecommendedModulePresenterInterface
 {
     /**
-     * Add a tab to this collection.
+     * Transform a RecommendedModuleInterface as a simple array of data.
      *
-     * @param TabInterface $tab
+     * @param RecommendedModuleInterface $recommendedModule
      *
-     * @return self
+     * @return array
      */
-    public function addTab(TabInterface $tab);
+    public function present(RecommendedModuleInterface $recommendedModule);
 
     /**
-     * @param string $tabClassName
+     * Transform a collection of RecommendedModulesInterface as a simple array of data.
      *
-     * @return TabInterface
-     */
-    public function getTab($tabClassName);
-
-    /**
-     * @param mixed $offset
+     * @param RecommendedModuleCollectionInterface $recommendedModules
      *
-     * @return TabInterface
+     * @return array
      */
-    public function offsetGet($offset);
-
-    /**
-     * @return bool
-     */
-    public function isEmpty();
+    public function presentCollection(RecommendedModuleCollectionInterface $recommendedModules);
 }

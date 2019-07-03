@@ -17,7 +17,14 @@ services:
       - '@mbo.adapter.module_collection_data_provider'
 
   mbo.tab.collection_provider:
-    class: 'PrestaShop\Module\Mbo\Tab\TabCollectionProvider'
+    class: 'PrestaShop\Module\Mbo\Core\Tab\TabCollectionProvider'
     arguments:
       - '@mbo.tab.collection_factory'
       - '@doctrine.cache.provider'
+
+  mbo.week_advice.provider:
+    class: 'PrestaShop\Module\Mbo\Core\WeekAdvice\WeekAdviceProvider'
+    arguments:
+      - '@serializer'
+      - '@doctrine.cache.provider'
+      - '@prestashop.adapter.legacy.context'

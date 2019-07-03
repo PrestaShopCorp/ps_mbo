@@ -24,33 +24,39 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\Adapter;
+namespace PrestaShop\Module\Mbo\Core\Tab;
 
-use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModuleInterface;
-use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModuleCollectionInterface;
-use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModulePresenterInterface;
+use ArrayAccess;
+use Countable;
+use IteratorAggregate;
 
-class RecommendedModulePresenter implements RecommendedModulePresenterInterface
+interface TabCollectionInterface extends ArrayAccess, IteratorAggregate, Countable
 {
     /**
-     * {@inheritdoc}
+     * Add a tab to this collection.
+     *
+     * @param TabInterface $tab
+     *
+     * @return self
      */
-    public function present(RecommendedModuleInterface $recommendedModule)
-    {
-        return $recommendedModule->getModuleData();
-    }
+    public function addTab(TabInterface $tab);
 
     /**
-     * {@inheritdoc}
+     * @param string $tabClassName
+     *
+     * @return TabInterface
      */
-    public function presentCollection(RecommendedModuleCollectionInterface $recommendedModules)
-    {
-        $recommendedModulesPresented = [];
+    public function getTab($tabClassName);
 
-        foreach ($recommendedModules as $recommendedModule) {
-            $recommendedModulesPresented[] = $this->present($recommendedModule);
-        }
+    /**
+     * @param mixed $offset
+     *
+     * @return TabInterface
+     */
+    public function offsetGet($offset);
 
-        return $recommendedModulesPresented;
-    }
+    /**
+     * @return bool
+     */
+    public function isEmpty();
 }

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\Tab;
+namespace PrestaShop\Module\Mbo\Core\Tab;
 
 use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\Module\Mbo\Adapter\ExternalContentProvider;

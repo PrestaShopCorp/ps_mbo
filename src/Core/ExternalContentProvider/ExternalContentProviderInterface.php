@@ -24,25 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\RecommendedModule;
+namespace PrestaShop\Module\Mbo\Core\ExternalContentProvider;
 
-interface RecommendedModulePresenterInterface
+interface ExternalContentProviderInterface
 {
     /**
-     * Transform a RecommendedModuleInterface as a simple array of data.
+     * @param string $url
+     * @param array $options
      *
-     * @param RecommendedModuleInterface $recommendedModule
-     *
-     * @return array
+     * @return string
      */
-    public function present(RecommendedModuleInterface $recommendedModule);
-
-    /**
-     * Transform a collection of RecommendedModulesInterface as a simple array of data.
-     *
-     * @param RecommendedModuleCollectionInterface $recommendedModules
-     *
-     * @return array
-     */
-    public function presentCollection(RecommendedModuleCollectionInterface $recommendedModules);
+    public function getContent($url, array $options = []);
 }

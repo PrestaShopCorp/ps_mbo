@@ -143,10 +143,6 @@ var mbo = {};
           type: 'GET',
           dataType: 'json',
           url: config.recommendedModulesUrl,
-          data: {
-            ajax : true,
-            shouldUseLegacyTheme: config.shouldUseLegacyTheme,
-          }
         });
 
         recommendedModulesRequest.done(function(data) {
@@ -231,7 +227,7 @@ var mbo = {};
       $markup = $(
         '<div class="panel" id="' + containerId + '">\n' +
         '  <h3>\n' +
-        '    <i class="icon-list-ul"></i>\n' +
+        '    <i class="icon-puzzle-piece"></i>\n' +
         '    ' + containerTitle + '\n' +
         '  </h3>\n' +
         '  <div class="modules_list_container_tab row">\n' +
@@ -385,10 +381,6 @@ var mbo = {};
         type: 'GET',
         dataType: 'json',
         url: config.recommendedModulesUrl,
-        data: {
-          ajax: true,
-          shouldUseLegacyTheme: config.shouldUseLegacyTheme,
-        }
       });
 
       $(pageMap.modulesListModal).modal('show');

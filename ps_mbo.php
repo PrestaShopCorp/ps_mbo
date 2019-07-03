@@ -31,7 +31,9 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 }
 
-use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
+use PrestaShop\Module\Mbo\Core\Tab\TabCollectionProvider;
+use PrestaShop\Module\Mbo\Core\WeekAdvice\WeekAdviceProvider;
+use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -61,6 +63,11 @@ class ps_mbo extends Module
             'visible' => true,
             'class_name' => 'AdminPsMboRecommended',
         ],
+        'AdminPsMboWeekAdvice' => [
+            'name' => 'Week Advice',
+            'visible' => true,
+            'class_name' => 'AdminPsMboWeekAdvice',
+        ],
         'AdminPsMboTheme' => [
             'name' => 'Theme catalog',
             'visible' => true,
@@ -76,6 +83,7 @@ class ps_mbo extends Module
     public $hooks = [
         'actionAdminControllerSetMedia',
         'displayDashboardTop',
+        'dashboardZoneOne',
     ];
 
     /**
@@ -110,7 +118,9 @@ class ps_mbo extends Module
     {
         return parent::install()
             && $this->registerHook($this->hooks)
-            && $this->installTabs();
+            && $this->installTabs()
+            && $this->uninstallPsAddonsConnect()
+            && $this->setDashboardWidgetPosition();
     }
 
     /**
@@ -235,6 +245,41 @@ class ps_mbo extends Module
     }
 
     /**
+     * Uninstall psaddonsconnect module since it was now part of MBO
+     * Used in upgrade script too
+     *
+     * @return bool
+     */
+    public function uninstallPsAddonsConnect()
+    {
+        if (Module::isInstalled('psaddonsconnect')) {
+            $psaddonsconnect = Module::getInstanceByName('psaddonsconnect');
+            return $psaddonsconnect->uninstall();
+        }
+
+        return true;
+    }
+
+    /**
+     * Mbo dashboard widget should be at first position, same as psaddonsconnect
+     * Used in upgrade script too
+     *
+     * @return bool
+     */
+    public function setDashboardWidgetPosition()
+    {
+        if ($this->isRegisteredInHook('dashboardZoneOne')) {
+            return $this->updatePosition(
+                Hook::getIdByName('dashboardZoneOne'),
+                0,
+                0
+            );
+        }
+
+        return true;
+    }
+
+    /**
      * Hook actionAdminControllerSetMedia.
      */
     public function hookActionAdminControllerSetMedia()
@@ -272,6 +317,27 @@ class ps_mbo extends Module
         ]);
 
         return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
+    }
+
+    public function hookDashboardZoneOne()
+    {
+        $weekAdvice = null;
+        $this->context->controller->addJs($this->getPathUri() . 'views/js/dashboard-widget.js?v=' . $this->version);
+        $this->context->controller->addCSS($this->getPathUri() . 'views/css/dashboard-widget.css');
+
+        if ($this->getWeekAdviceProvider()->isCached()) {
+            $weekAdvice = $this->getWeekAdviceProvider()->getWeekAdvice();
+        }
+
+        $this->smarty->assign([
+            'shouldDisplayAddonsLogin' => !$this->getAddonsProvider()->isAddonsAuthenticated(),
+            'weekAdvice' => $weekAdvice,
+            'weekAdviceUrl' => $this->getRouter()->generate('admin_mbo_week_advice'),
+            'adviceLinkTranslated' => $this->l('See the entire selection'),
+            'adviceUnavailableTranslated' => $this->l('No tip available today.'),
+        ]);
+
+        return $this->fetch('module:ps_mbo/views/templates/hook/dashboard-zone-one.tpl');
     }
 
     /**
@@ -400,5 +466,21 @@ class ps_mbo extends Module
         }
 
         return $this->getSymfonyContainer()->get('mbo.tab.collection_provider');
+    }
+
+    /**
+     * @return AddonsDataProvider
+     */
+    private function getAddonsProvider()
+    {
+        return $this->getSymfonyContainer()->get('prestashop.core.admin.data_provider.addons_interface');
+    }
+
+    /**
+     * @return WeekAdviceProvider
+     */
+    private function getWeekAdviceProvider()
+    {
+        return $this->getSymfonyContainer()->get('mbo.week_advice.provider');
     }
 }
