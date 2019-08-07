@@ -23,7 +23,7 @@
   * International Registered Trademark & Property of PrestaShop SA
   *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% extends app.request.isxmlhttprequest ? '@Modules/ps_mbo/views/templates/admin/layout-ajax.html.twig' : '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
   {{ pageContent|raw }}

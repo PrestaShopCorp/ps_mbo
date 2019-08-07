@@ -31,8 +31,9 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 }
 
+use PrestaShop\Module\Mbo\Adapter\RecommendedLinkProvider;
+use PrestaShop\Module\Mbo\Adapter\WeekAdviceProvider;
 use PrestaShop\Module\Mbo\Core\Tab\TabCollectionProvider;
-use PrestaShop\Module\Mbo\Core\WeekAdvice\WeekAdviceProvider;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -291,6 +292,15 @@ class ps_mbo extends Module
             || $this->shouldAttachRecommendedModulesAfterContent()
         ) {
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css');
+//            $this->context->controller->addJs(
+//                str_ireplace(
+//                    _PS_CORE_DIR_,
+//                    '',
+//                    _PS_BO_ALL_THEMES_DIR_
+//                )
+//                . 'new-theme/public/module_card.bundle.js?v='
+//                . _PS_VERSION_
+//            );
         }
     }
 
@@ -319,23 +329,34 @@ class ps_mbo extends Module
         return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
     }
 
+    /**
+     * Hook dashboardZoneOne
+     * Adds TIPS & UPDATES on Dashboard
+     *
+     * @return string
+     */
     public function hookDashboardZoneOne()
     {
-        $weekAdvice = null;
         $this->context->controller->addJs($this->getPathUri() . 'views/js/dashboard-widget.js?v=' . $this->version);
         $this->context->controller->addCSS($this->getPathUri() . 'views/css/dashboard-widget.css');
 
-        if ($this->getWeekAdviceProvider()->isCached()) {
-            $weekAdvice = $this->getWeekAdviceProvider()->getWeekAdvice();
-        }
+        if ($this->getAddonsProvider()->isAddonsAuthenticated()) {
+            $weekAdvice = null;
+            if ($this->getWeekAdviceProvider()->isCached()) {
+                $weekAdvice = $this->getWeekAdviceProvider()->getWeekAdvice();
+            }
 
-        $this->smarty->assign([
-            'shouldDisplayAddonsLogin' => !$this->getAddonsProvider()->isAddonsAuthenticated(),
-            'weekAdvice' => $weekAdvice,
-            'weekAdviceUrl' => $this->getRouter()->generate('admin_mbo_week_advice'),
-            'adviceLinkTranslated' => $this->l('See the entire selection'),
-            'adviceUnavailableTranslated' => $this->l('No tip available today.'),
-        ]);
+            $this->smarty->assign([
+                'isAddonsAuthenticated' => true,
+                'weekAdvice' => $weekAdvice,
+                'weekAdviceUrl' => $this->getRouter()->generate('admin_mbo_week_advice'),
+                'adviceLinkTranslated' => $this->l('See the entire selection'),
+                'adviceUnavailableTranslated' => $this->l('No tip available today.'),
+                'recommendedLinks' => $this->getRecommendedLinkProvider()->getRecommendedLinks()
+            ]);
+        } else {
+            $this->smarty->assign('isAddonsAuthenticated', false);
+        }
 
         return $this->fetch('module:ps_mbo/views/templates/hook/dashboard-zone-one.tpl');
     }
@@ -482,5 +503,13 @@ class ps_mbo extends Module
     private function getWeekAdviceProvider()
     {
         return $this->getSymfonyContainer()->get('mbo.week_advice.provider');
+    }
+
+    /**
+     * @return RecommendedLinkProvider
+     */
+    private function getRecommendedLinkProvider()
+    {
+        return $this->getSymfonyContainer()->get('mbo.recommendedlinks.provider');
     }
 }

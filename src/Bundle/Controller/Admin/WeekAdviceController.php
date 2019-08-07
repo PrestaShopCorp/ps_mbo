@@ -26,7 +26,7 @@
 
 namespace PrestaShop\Module\Mbo\Bundle\Controller\Admin;
 
-use PrestaShop\Module\Mbo\Core\WeekAdvice\WeekAdviceProvider;
+use PrestaShop\Module\Mbo\Adapter\WeekAdviceProvider;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
@@ -41,8 +41,12 @@ class WeekAdviceController extends FrameworkBundleAdminController
         $response = new JsonResponse();
 
         try {
+            $weekAdvice = $this->getWeekAdviceProvider()->getWeekAdvice();
             $response->setData([
-                'content' => $this->getWeekAdviceProvider()->getWeekAdvice(),
+                'content' => [
+                    'advice' => $weekAdvice->getAdvice(),
+                    'link' => $weekAdvice->getLink(),
+                ],
                 'success' => true,
             ]);
         } catch (ServiceUnavailableHttpException $exception) {

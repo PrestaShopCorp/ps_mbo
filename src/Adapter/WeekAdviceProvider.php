@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\Core\WeekAdvice;
+namespace PrestaShop\Module\Mbo\Adapter;
 
 use Doctrine\Common\Cache\CacheProvider;
-use PrestaShop\Module\Mbo\Adapter\ExternalContentProvider;
 use PrestaShop\Module\Mbo\Core\ExternalContentProvider\ExternalContentProviderInterface;
+use PrestaShop\Module\Mbo\Core\WeekAdvice\WeekAdvice;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\Serializer\SerializerInterface;

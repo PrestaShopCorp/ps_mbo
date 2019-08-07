@@ -23,46 +23,12 @@
  * @license   https://opensource.org/licenses/AFL-3.0  Academic Free License (AFL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 
-namespace PrestaShop\Module\Mbo\Core\WeekAdvice;
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
 
-class WeekAdvice implements WeekAdviceInterface
-{
-    /**
-     * @var string
-     */
-    private $advice;
-
-    /**
-     * @var string
-     */
-    private $link;
-
-    /**
-     * WeekAdvice constructor.
-     *
-     * @param string $advice
-     * @param string $link
-     */
-    public function __construct($advice, $link)
-    {
-        $this->advice = $advice;
-        $this->link = $link;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getAdvice()
-    {
-        return $this->advice;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLink()
-    {
-        return $this->link;
-    }
-}
+header('Location: ../');
+exit;

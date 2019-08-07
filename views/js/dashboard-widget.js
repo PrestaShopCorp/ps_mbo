@@ -29,7 +29,6 @@ var mboDashboardWidget = {};
 (function() {
   var pageMapDefault = {
     widgetContainer: '#psaddonsconnect-widget-container',
-    widgetButtonClose: '#psaddonsconnect-widget-close',
     adviceContentContainer: '#psaddonsconnect-tips-content-container',
     adviceLoaderContainer: '#psaddonsconnect-tips-loader-container',
   };
@@ -151,11 +150,6 @@ var mboDashboardWidget = {};
    * @param {string} config.weekAdviceUrl
    */
   mboDashboardWidget.initialize = function(config) {
-    $(document).on('click', pageMapDefault.widgetButtonClose, function(event) {
-      event.preventDefault();
-      $(pageMapDefault.widgetContainer).hide();
-    });
-
     if (0 === $(pageMapDefault.adviceContentContainer).children().length) {
       var page = new Page(pageMapDefault);
       page.displayAdvice(config);

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "traffic",
+    "url": "https://addons.prestashop.com/de/2-modules-prestashop?m=1&benefits=6&utm_source=back-office&utm_medium=AddonsConnect&utm_campaign=back-office-DE&utm_content=traffic",
+    "name": "Module für mehr Traffic"
+  },
+  {
+    "id": "conversion",
+    "url": "https://addons.prestashop.com/de/2-modules-prestashop?m=1&benefits=1&utm_source=back-office&utm_medium=AddonsConnect&utm_campaign=back-office-DE&utm_content=conversions",
+    "name": "Module für eine bessere Konversionsrate"
+  },
+  {
+    "id": "averageCart",
+    "url": "https://addons.prestashop.com/de/2-modules-prestashop?m=1&benefits=3&utm_source=back-office&utm_medium=AddonsConnect&utm_campaign=back-office-DE&utm_content=cart",
+    "name": "Module für eine Erhöhung des durchschnittlichen Warenkorbwerts"
+  },
+  {
+    "id": "businessSector",
+    "url": "https://addons.prestashop.com/de/content/44-die-ressourcen-von-prestashop-die-tools-zu-ihrem-erfolg?utm_source=back-office&utm_medium=AddonsConnect&utm_campaign=back-office-DE&utm_content=sector#modulebusinesssector",
+    "name": "Eine Auswahl an empfohlenen Modulen für meinen Geschäftsbereich"
+  }
+]

@@ -28,15 +28,36 @@
     <div class="panel-heading">
         <i class="icon-puzzle-piece"></i>
         {l s='TIPS & UPDATES' mod='psaddonsconnect'}
-        <div class="panel-heading-action">
-          <a href="#" class="list-toolbar-btn" id="psaddonsconnect-widget-close">
-            <i class="process-icon-cancel"></i>
-          </a>
-        </div>
     </div>
-    {if $shouldDisplayAddonsLogin}
+    {if $isAddonsAuthenticated}
+      <div class="clearfix">
+        <h4>{l s='Tip of the moment' mod='psaddonsconnect'}</h4>
+        <div id="psaddonsconnect-tips-loader-container"{if $weekAdvice} style="display: none;"{/if}>
+          <i class="icon-refresh icon-spin"></i>
+        </div>
+        <div id="psaddonsconnect-tips-content-container">
+          {if $weekAdvice}
+            <p><i class="icon-lightbulb"></i> {$weekAdvice->getAdvice() }</p>
+            <a href="{$weekAdvice->getLink()}" target="_blank" class="btn btn-default btn-sm pull-right">
+              {$adviceLinkTranslated}
+            </a>
+          {/if}
+        </div>
+      </div>
+      {if $recommendedLinks}
+        <h4>{l s='Practical links' mod='psaddonsconnect'}</h4>
+        <div class="list-group">
+          {foreach from=$recommendedLinks item="recommendedLink"}
+            <a class="list-group-item" href="{$recommendedLink->getUrl()}" id="psaddons-{$recommendedLink->getId()}">
+              {$recommendedLink->getName()}
+            </a>
+          {/foreach}
+        </div>
+      {/if}
+    {else}
     <div id="psaddonsconnect-addons-login-container">
       <p>{l s='Connect to your account right now to enjoy updates (security and features) on all of your modules.' mod='psaddonsconnect'}</p>
+      <p>{l s='Once you are connected, you will also enjoy weekly tips directly from your back office.' mod='psaddonsconnect'}</p>
       <div class="text-center">
         <button type="button" id="psaddonsconnect-addons-login-button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal_addons_connect">
           {l s='CONNECT TO PRESTASHOP MARKETPLACE' mod='psaddonsconnect'}
@@ -44,38 +65,10 @@
       </div>
     </div>
     {/if}
-    <div class="clearfix">
-      <h4>{l s='Tip of the moment' mod='psaddonsconnect'}</h4>
-      <div id="psaddonsconnect-tips-loader-container"{if $weekAdvice} style="display: none;"{/if}>
-        <i class="icon-refresh icon-spin"></i>
-      </div>
-      <div id="psaddonsconnect-tips-content-container">
-        {if $weekAdvice}
-          <p><i class="icon-lightbulb"></i> {$weekAdvice->advice}</p>
-          <a href="{$weekAdvice->link}" target="_blank" class="btn btn-default btn-sm pull-right">
-            {$adviceLinkTranslated}
-          </a>
-        {/if}
-      </div>
-    </div>
-    <h4>{l s='Practical links' mod='psaddonsconnect'}</h4>
-    <div class="list-group">
-      <a class="list-group-item" href="#">
-        {l s='Modules to' mod='psaddonsconnect'} {l s='increase your traffic' mod='psaddonsconnect'}
-      </a>
-      <a class="list-group-item" href="#">
-        {l s='Modules to' mod='psaddonsconnect'} {l s='boost your conversions' mod='psaddonsconnect'}
-      </a>
-      <a class="list-group-item" href="#">
-        {l s='Modules to' mod='psaddonsconnect'} {l s='increase your clients\' average cart' mod='psaddonsconnect'}
-      </a>
-      <a class="list-group-item" href="#">
-        {l s='Selection of modules recommended for' mod='psaddonsconnect'} {l s='your business sector' mod='psaddonsconnect'}
-      </a>
-    </div>
   </div>
 </section>
 
+{if $isAddonsAuthenticated}
 <script>
   var mboDashboardWidgetConfiguration = {
     translations: {
@@ -87,3 +80,4 @@
 
   mboDashboardWidget.initialize(mboDashboardWidgetConfiguration);
 </script>
+{/if}

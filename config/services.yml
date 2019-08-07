@@ -23,8 +23,14 @@ services:
       - '@doctrine.cache.provider'
 
   mbo.week_advice.provider:
-    class: 'PrestaShop\Module\Mbo\Core\WeekAdvice\WeekAdviceProvider'
+    class: 'PrestaShop\Module\Mbo\Adapter\WeekAdviceProvider'
     arguments:
       - '@serializer'
       - '@doctrine.cache.provider'
       - '@prestashop.adapter.legacy.context'
+
+  mbo.recommendedlinks.provider:
+    class: 'PrestaShop\Module\Mbo\Adapter\RecommendedLinkProvider'
+    arguments:
+      - '@prestashop.adapter.legacy.context'
+      - '@serializer'
