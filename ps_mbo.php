@@ -68,8 +68,8 @@ class ps_mbo extends Module
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
         $this->bootstrap = true;
         parent::__construct();
-        $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
-        $this->description = $this->l('Discover the best PrestaShop modules to optimize your online store.');
+        $this->displayName = $this->trans('PrestaShop Marketplace in your Back Office', [], 'Modules.Mbo.Admin');
+        $this->description = $this->trans('Browse the Addons marketplace from your back office directly and handle all your modules in one place to better meet all your needs.', [], 'Modules.Mbo.Admin');
 
         $this->controller_name = array('AdminPsMboModule', 'AdminPsMboTheme');
 
@@ -97,7 +97,7 @@ class ps_mbo extends Module
             || !$this->registerHook('displayAdminEndContent')
             || !$this->installTabs()
         ) {
-            $this->_errors[] = $this->l('There was an error during the installation.');
+            $this->_errors[] = $this->trans('There was an error during the installation.', [], 'Admin.Modules.Notification');
             return false;
         }
 
@@ -456,7 +456,7 @@ class ps_mbo extends Module
     {
         // unregister hook
         if (!parent::uninstall()) {
-            $this->_errors[] = $this->l('There was an error during the desinstallation.');
+            $this->_errors[] = $this->trans('There was an error during the uninstallation.', [], 'Admin.Modules.Notification');
             return false;
         }
 
@@ -623,7 +623,7 @@ class ps_mbo extends Module
         }
 
         $module->options['uninstall_onclick'] = ((!$module->onclick_option) ?
-                                                 ((empty($module->confirmUninstall)) ? 'return confirm(\''.$this->l('Do you really want to uninstall this module?').'\');' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') :
+                                                 ((empty($module->confirmUninstall)) ? 'return confirm(\''.$this->trans('Are you sure you want to uninstall this module?', [], 'Admin.Modules.Notification').'\');' : 'return confirm(\''.addslashes($module->confirmUninstall).'\');') :
                                                  $obj->onclickOption('uninstall', $module->options['uninstall_url']));
 
         if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')))) && (int)Tools::getValue('conf') > 0) {
@@ -650,27 +650,27 @@ class ps_mbo extends Module
             $module->enable_device = Context::DEVICE_COMPUTER | Context::DEVICE_TABLET | Context::DEVICE_MOBILE;
         }
 
-        $this->translationsTab['confirm_uninstall_popup'] = (isset($module->confirmUninstall) ? $module->confirmUninstall : $this->l('Do you really want to uninstall this module?'));
+        $this->translationsTab['confirm_uninstall_popup'] = (isset($module->confirmUninstall) ? $module->confirmUninstall : $this->trans('Are you sure you want to uninstall this module?', [], 'Admin.Modules.Notification'));
         if (!isset($this->translationsTab['Disable this module'])) {
-            $this->translationsTab['Disable this module'] = $this->l('Disable this module');
-            $this->translationsTab['Enable this module for all shops'] = $this->l('Enable this module for all shops');
-            $this->translationsTab['Disable'] = $this->l('Disable');
-            $this->translationsTab['Enable'] = $this->l('Enable');
-            $this->translationsTab['Disable on mobiles'] = $this->l('Disable on mobiles');
-            $this->translationsTab['Disable on tablets'] = $this->l('Disable on tablets');
-            $this->translationsTab['Disable on computers'] = $this->l('Disable on computers');
-            $this->translationsTab['Display on mobiles'] = $this->l('Display on mobiles');
-            $this->translationsTab['Display on tablets'] = $this->l('Display on tablets');
-            $this->translationsTab['Display on computers'] = $this->l('Display on computers');
-            $this->translationsTab['Reset'] = $this->l('Reset');
-            $this->translationsTab['Configure'] = $this->l('Configure');
-            $this->translationsTab['Delete'] = $this->l('Delete');
-            $this->translationsTab['Install'] = $this->l('Install');
-            $this->translationsTab['Uninstall'] = $this->l('Uninstall');
-            $this->translationsTab['Would you like to delete the content related to this module ?'] = $this->l('Would you like to delete the content related to this module ?');
-            $this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->l('This action will permanently remove the module from the server. Are you sure you want to do this?');
-            $this->translationsTab['Remove from Favorites'] = $this->l('Remove from Favorites');
-            $this->translationsTab['Mark as Favorite'] = $this->l('Mark as Favorite');
+            $this->translationsTab['Disable this module'] = $this->trans('Disable this module', [], 'Admin.Modules.Notification');
+            $this->translationsTab['Enable this module for all shops'] = $this->trans('Enable this module for all shops', [], 'Admin.Modules.Notification');
+            $this->translationsTab['Disable'] = $this->trans('Disable', [], 'Admin.Actions');
+            $this->translationsTab['Enable'] = $this->trans('Enable', [], 'Admin.Actions');
+            $this->translationsTab['Disable on mobiles'] = $this->trans('Disable on mobiles', [], 'Admin.Actions');
+            $this->translationsTab['Disable on tablets'] = $this->trans('Disable on tablets', [], 'Admin.Actions');
+            $this->translationsTab['Disable on computers'] = $this->trans('Disable on computers', [], 'Admin.Actions');
+            $this->translationsTab['Display on mobiles'] = $this->trans('Display on mobiles', [], 'Admin.Actions');
+            $this->translationsTab['Display on tablets'] = $this->trans('Display on tablets', [], 'Admin.Actions');
+            $this->translationsTab['Display on computers'] = $this->trans('Display on computers', [], 'Admin.Actions');
+            $this->translationsTab['Reset'] = $this->trans('Reset', [], 'Admin.Actions');
+            $this->translationsTab['Configure'] = $this->trans('Configure', [], 'Admin.Actions');
+            $this->translationsTab['Delete'] = $this->trans('Delete', [], 'Admin.Actions');
+            $this->translationsTab['Install'] = $this->trans('Install', [], 'Admin.Actions');
+            $this->translationsTab['Uninstall'] = $this->trans('Uninstall', [], 'Admin.Actions');
+            $this->translationsTab['Would you like to delete the content related to this module ?'] = $this->trans('Are you sure you want to delete the content related to this module?', [], 'Admin.Modules.Notification');
+            $this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->trans('This action will permanently remove the module from the server. Are you sure you want to do this?', [], 'Admin.Modules.Notification');
+            $this->translationsTab['Remove from Favorites'] = $this->trans('Remove from Favorites', [], 'Admin.Actions');
+            $this->translationsTab['Mark as Favorite'] = $this->trans('Mark as Favorite', [], 'Admin.Actions');
         }
 
         $link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
