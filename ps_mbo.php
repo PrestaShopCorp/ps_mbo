@@ -669,8 +669,6 @@ class ps_mbo extends Module
             $this->translationsTab['Uninstall'] = $this->trans('Uninstall', [], 'Admin.Actions');
             $this->translationsTab['Would you like to delete the content related to this module ?'] = $this->trans('Are you sure you want to delete the content related to this module?', [], 'Admin.Modules.Notification');
             $this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->trans('This action will permanently remove the module from the server. Are you sure you want to do this?', [], 'Admin.Modules.Notification');
-            $this->translationsTab['Remove from Favorites'] = $this->trans('Remove from Favorites', [], 'Admin.Actions');
-            $this->translationsTab['Mark as Favorite'] = $this->trans('Mark as Favorite', [], 'Admin.Actions');
         }
 
         $link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
