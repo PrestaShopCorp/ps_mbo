@@ -23,7 +23,7 @@
     "prestashop/circuit-breaker": "^3.0.0"
   },
   "require-dev": {
-    "prestashop/php-coding-standards": "dev-master"
+    "prestashop/php-dev-tools": "^2.2"
   },
   "autoload": {
     "psr-4": {
