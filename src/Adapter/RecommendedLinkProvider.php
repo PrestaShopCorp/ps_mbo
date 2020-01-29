@@ -84,7 +84,7 @@ class RecommendedLinkProvider
     {
         $cacheFile = _PS_MODULE_DIR_
             . 'ps_mbo/cache/recommended-links-'
-            . strtolower($this->context->getLanguage()->getIsoCode())
+            . strtolower($this->context->getContext()->language->iso_code)
             . '.json'
         ;
 
