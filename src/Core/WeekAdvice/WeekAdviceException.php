@@ -24,33 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo\Adapter;
+namespace PrestaShop\Module\Mbo\Core\WeekAdvice;
 
-use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModuleCollectionInterface;
-use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModuleInterface;
-use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModulePresenterInterface;
+use Exception;
 
-class RecommendedModulePresenter implements RecommendedModulePresenterInterface
+class WeekAdviceException extends Exception
 {
     /**
-     * {@inheritdoc}
+     * When no content is available to create WeekAdvice
      */
-    public function present(RecommendedModuleInterface $recommendedModule)
-    {
-        return $recommendedModule->getModuleData();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function presentCollection(RecommendedModuleCollectionInterface $recommendedModules)
-    {
-        $recommendedModulesPresented = [];
-
-        foreach ($recommendedModules as $recommendedModule) {
-            $recommendedModulesPresented[] = $this->present($recommendedModule);
-        }
-
-        return $recommendedModulesPresented;
-    }
+    const NO_CONTENT = 1;
 }

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\Module\Mbo\Bundle\Controller\Admin;
 
+use Exception;
 use PrestaShop\Module\Mbo\Adapter\WeekAdviceProvider;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -56,6 +57,12 @@ class WeekAdviceController extends FrameworkBundleAdminController
             ]);
             $response->setStatusCode($exception->getStatusCode());
             $response->headers->add($exception->getHeaders());
+        } catch (Exception $exception) {
+            $response->setData([
+                'content' => $exception->getMessage(),
+                'success' => false,
+            ]);
+            $response->setStatusCode(503);
         }
 
         return $response;

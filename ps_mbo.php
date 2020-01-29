@@ -255,6 +255,7 @@ class ps_mbo extends Module
     {
         if (Module::isInstalled('psaddonsconnect')) {
             $psaddonsconnect = Module::getInstanceByName('psaddonsconnect');
+
             return $psaddonsconnect->uninstall();
         }
 
@@ -352,7 +353,7 @@ class ps_mbo extends Module
                 'weekAdviceUrl' => $this->getRouter()->generate('admin_mbo_week_advice'),
                 'adviceLinkTranslated' => $this->l('See the entire selection'),
                 'adviceUnavailableTranslated' => $this->l('No tip available today.'),
-                'recommendedLinks' => $this->getRecommendedLinkProvider()->getRecommendedLinks()
+                'recommendedLinks' => $this->getRecommendedLinkProvider()->getRecommendedLinks(),
             ]);
         } else {
             $this->smarty->assign('isAddonsAuthenticated', false);

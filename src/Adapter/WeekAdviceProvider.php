@@ -29,6 +29,7 @@ namespace PrestaShop\Module\Mbo\Adapter;
 use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\Module\Mbo\Core\ExternalContentProvider\ExternalContentProviderInterface;
 use PrestaShop\Module\Mbo\Core\WeekAdvice\WeekAdvice;
+use PrestaShop\Module\Mbo\Core\WeekAdvice\WeekAdviceException;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -71,6 +72,7 @@ class WeekAdviceProvider
      *
      * @param SerializerInterface $serializer
      * @param CacheProvider $cacheProvider
+     * @param LegacyContext $context
      */
     public function __construct(
         SerializerInterface $serializer,
@@ -103,6 +105,10 @@ class WeekAdviceProvider
                 'iso_lang' => $this->context->getContext()->language->iso_code,
             ])
         );
+
+        if (empty($apiResponse)) {
+            throw new WeekAdviceException('No content available', WeekAdviceException::NO_CONTENT);
+        }
 
         $weekAdvice = $this->serializer->deserialize(
             $apiResponse,

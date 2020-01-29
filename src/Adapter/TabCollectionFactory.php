@@ -28,9 +28,9 @@ namespace PrestaShop\Module\Mbo\Adapter;
 
 use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModule;
 use PrestaShop\Module\Mbo\Core\RecommendedModule\RecommendedModuleCollection;
-use PrestaShop\Module\Mbo\Core\Tab\TabCollectionFactoryInterface;
 use PrestaShop\Module\Mbo\Core\Tab\Tab;
 use PrestaShop\Module\Mbo\Core\Tab\TabCollection;
+use PrestaShop\Module\Mbo\Core\Tab\TabCollectionFactoryInterface;
 
 class TabCollectionFactory implements TabCollectionFactoryInterface
 {
