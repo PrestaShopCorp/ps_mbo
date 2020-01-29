@@ -61,7 +61,7 @@ class TabCollectionDecoderXml
 
         foreach ($simpleXMLElement->tab as $tab) {
             $tabClassName = null;
-            $tabDisplayMode = null;
+            $tabDisplayMode = 'slider_list';
             $tabRecommendedModules = [];
             foreach ($tab->attributes() as $key => $value) {
                 if ('class_name' === $key) {
