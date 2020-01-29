@@ -76,5 +76,5 @@ function upgrade_module_2_0_0($module)
     // Mbo dashboard widget should be at first position
     $result &= $module->setDashboardWidgetPosition();
 
-    return $result;
+    return (bool) $result;
 }
