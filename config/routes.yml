@@ -22,14 +22,6 @@ admin_mbo_recommended_modules:
     _legacy_controller: AdminPsMboRecommended
     _legacy_link: AdminPsMboRecommended
 
-admin_mbo_week_advice:
-  path: /addons/week-advice
-  methods: [GET]
-  defaults:
-    _controller: 'PrestaShop\Module\Mbo\Bundle\Controller\Admin\WeekAdviceController::indexAction'
-    _legacy_controller: AdminPsMboWeekAdvice
-    _legacy_link: AdminPsMboWeekAdvice
-
 admin_mbo_catalog_theme:
   path: /addons/themes/catalog
   methods: [GET]

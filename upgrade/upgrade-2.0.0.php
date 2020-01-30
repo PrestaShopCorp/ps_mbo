@@ -65,16 +65,5 @@ function upgrade_module_2_0_0($module)
         $result &= $module->installTab($module->adminTabs['AdminPsMboRecommended']);
     }
 
-    // We create Week Advice Tab to MBO
-    if (isset($module->adminTabs['AdminPsMboWeekAdvice'])) {
-        $result &= $module->installTab($module->adminTabs['AdminPsMboWeekAdvice']);
-    }
-
-    // Uninstall psaddonsconnect since it was now part of MBO
-    $result &= $module->uninstallPsAddonsConnect();
-
-    // Mbo dashboard widget should be at first position
-    $result &= $module->setDashboardWidgetPosition();
-
     return (bool) $result;
 }
