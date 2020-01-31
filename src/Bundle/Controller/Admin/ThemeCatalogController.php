@@ -108,6 +108,6 @@ class ThemeCatalogController extends FrameworkBundleAdminController
      */
     private function getTemplateEngine()
     {
-        return $this->get('templating');
+        return $this->get('twig');
     }
 }
