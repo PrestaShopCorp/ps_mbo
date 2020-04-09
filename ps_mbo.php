@@ -31,8 +31,8 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 }
 
-use PrestaShop\Module\Mbo\Adapter\RecommendedLinkProvider;
-use PrestaShop\Module\Mbo\Core\Tab\TabCollectionProvider;
+use PrestaShop\Module\Mbo\RecommendedLink\RecommendedLinkProvider;
+use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;

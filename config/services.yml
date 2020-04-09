@@ -3,7 +3,7 @@ services:
     public: true
 
   mbo.adapter.module_collection_data_provider:
-    class: 'PrestaShop\Module\Mbo\Adapter\ModuleCollectionDataProvider'
+    class: 'PrestaShop\Module\Mbo\ModuleCollectionDataProvider'
     arguments:
       - '@prestashop.core.admin.data_provider.module_interface'
       - '@prestashop.core.admin.module.repository'
@@ -12,18 +12,18 @@ services:
       - '@prestashop.adapter.legacy.context'
 
   mbo.tab.collection_factory:
-    class: 'PrestaShop\Module\Mbo\Adapter\TabCollectionFactory'
+    class: 'PrestaShop\Module\Mbo\Tab\TabCollectionFactory'
     arguments:
       - '@mbo.adapter.module_collection_data_provider'
 
   mbo.tab.collection_provider:
-    class: 'PrestaShop\Module\Mbo\Core\Tab\TabCollectionProvider'
+    class: 'PrestaShop\Module\Mbo\Tab\TabCollectionProvider'
     arguments:
       - '@mbo.tab.collection_factory'
       - '@doctrine.cache.provider'
 
   mbo.recommendedlinks.provider:
-    class: 'PrestaShop\Module\Mbo\Adapter\RecommendedLinkProvider'
+    class: 'PrestaShop\Module\Mbo\RecommendedLink\RecommendedLinkProvider'
     arguments:
       - '@prestashop.adapter.legacy.context'
       - '@serializer'
