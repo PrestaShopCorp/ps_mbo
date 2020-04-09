@@ -31,11 +31,8 @@ if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     require_once __DIR__ . '/vendor/autoload.php';
 }
 
-use PrestaShop\Module\Mbo\RecommendedLink\RecommendedLinkProvider;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
-use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ps_mbo extends Module
@@ -79,6 +76,11 @@ class ps_mbo extends Module
         'actionAdminControllerSetMedia',
         'displayDashboardTop',
     ];
+
+    /**
+     * @var bool
+     */
+    public $bootstrap;
 
     /**
      * Constructor.
@@ -125,7 +127,7 @@ class ps_mbo extends Module
         $result = true;
 
         foreach ($this->adminTabs as $adminTab) {
-            $result &= $this->installTab($adminTab);
+            $result = $result && $this->installTab($adminTab);
         }
 
         return $result;
@@ -141,7 +143,6 @@ class ps_mbo extends Module
      */
     public function installTab(array $tabData)
     {
-        $result = true;
         $position = 0;
         $tabNameByLangId = array_fill_keys(
             Language::getIDs(false),
@@ -166,12 +167,12 @@ class ps_mbo extends Module
         $tab->position = (int) $position;
         $tab->id_parent = empty($tabData['parent_class_name']) ? -1 : Tab::getIdFromClassName($tabData['parent_class_name']);
         $tab->name = $tabNameByLangId;
-        $result &= $tab->add();
+        $result = (bool) $tab->add();
 
         if (Validate::isLoadedObject($tab)) {
             // Updating the id_parent will override the position, that's why we save 2 times
             $tab->position = (int) $position;
-            $result &= $tab->save();
+            $result = $result && (bool) $tab->save();
         }
 
         return $result;
@@ -229,7 +230,7 @@ class ps_mbo extends Module
 
             if (Validate::isLoadedObject($tabCore)) {
                 $tabCore->active = true;
-                $result &= $tabCore->save();
+                $result = $result && (bool) $tabCore->save();
             }
         }
 
@@ -268,13 +269,15 @@ class ps_mbo extends Module
      */
     public function hookDisplayDashboardTop()
     {
+        /** @var UrlGeneratorInterface $router */
+        $router = SymfonyContainer::getInstance()->get('router');
         $this->smarty->assign([
             'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModulesAfterContent(),
             'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModulesButton(),
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
             'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services'), // Retrieved from messages.xlf
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
-            'recommendedModulesUrl' => $this->getRouter()->generate(
+            'recommendedModulesUrl' => $router->generate(
                 'admin_mbo_recommended_modules',
                 [
                     'tabClassName' => Tools::getValue('controller'),
@@ -292,12 +295,16 @@ class ps_mbo extends Module
      */
     private function shouldAttachRecommendedModulesAfterContent()
     {
-        $tabCollectionProvider = $this->getTabCollectionProvider();
-        if ($tabCollectionProvider && $tabCollectionProvider->isTabCollectionCached()) {
-            $tab = $tabCollectionProvider->getTab(Tools::getValue('controller'));
+        // AdminLogin should not call TabCollectionProvider
+        if (Validate::isLoadedObject($this->context->employee)) {
+            /** @var TabCollectionProvider $tabCollectionProvider */
+            $tabCollectionProvider = SymfonyContainer::getInstance()->get('mbo.tab.collection_provider');
+            if ($tabCollectionProvider->isTabCollectionCached()) {
+                $tab = $tabCollectionProvider->getTab(Tools::getValue('controller'));
 
-            return $tab->shouldDisplayAfterContent()
-                || 'AdminCarriers' === Tools::getValue('controller');
+                return $tab->shouldDisplayAfterContent()
+                    || 'AdminCarriers' === Tools::getValue('controller');
+            }
         }
 
         return in_array(
@@ -317,12 +324,16 @@ class ps_mbo extends Module
      */
     private function shouldAttachRecommendedModulesButton()
     {
-        $tabCollectionProvider = $this->getTabCollectionProvider();
-        if ($tabCollectionProvider && $tabCollectionProvider->isTabCollectionCached()) {
-            $tab = $tabCollectionProvider->getTab(Tools::getValue('controller'));
+        // AdminLogin should not call TabCollectionProvider
+        if (Validate::isLoadedObject($this->context->employee)) {
+            /** @var TabCollectionProvider $tabCollectionProvider */
+            $tabCollectionProvider = SymfonyContainer::getInstance()->get('mbo.tab.collection_provider');
+            if ($tabCollectionProvider->isTabCollectionCached()) {
+                $tab = $tabCollectionProvider->getTab(Tools::getValue('controller'));
 
-            return $tab->shouldDisplayButton()
-                && 'AdminCarriers' !== Tools::getValue('controller');
+                return $tab->shouldDisplayButton()
+                    && 'AdminCarriers' !== Tools::getValue('controller');
+            }
         }
 
         return in_array(
@@ -382,50 +393,5 @@ class ps_mbo extends Module
                 'AdminReferrers',
             ]
         );
-    }
-
-    /**
-     * @return ContainerInterface
-     */
-    private function getSymfonyContainer()
-    {
-        return SymfonyContainer::getInstance();
-    }
-
-    /**
-     * @return UrlGeneratorInterface
-     */
-    private function getRouter()
-    {
-        return $this->getSymfonyContainer()->get('router');
-    }
-
-    /**
-     * @return TabCollectionProvider|null
-     */
-    private function getTabCollectionProvider()
-    {
-        if (!Validate::isLoadedObject($this->context->employee)) {
-            // AdminLogin should not call TabCollectionProvider
-            return null;
-        }
-
-        return $this->getSymfonyContainer()->get('mbo.tab.collection_provider');
-    }
-
-    /**
-     * @return AddonsDataProvider
-     */
-    private function getAddonsProvider()
-    {
-        return $this->getSymfonyContainer()->get('prestashop.core.admin.data_provider.addons_interface');
-    }
-
-    /**
-     * @return RecommendedLinkProvider
-     */
-    private function getRecommendedLinkProvider()
-    {
-        return $this->getSymfonyContainer()->get('mbo.recommendedlinks.provider');
     }
 }
