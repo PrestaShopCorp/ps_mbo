@@ -87,6 +87,27 @@
   background-color: #fff;
 }
 
+#content.bootstrap #modules_list_container_content button.spinner {
+  color:#fff;
+  background-color:#fff;
+  width:40px;
+  width:2.5rem;
+  height:40px;
+  height:2.5rem;
+  border-radius:2.5rem;
+  border-right-color:#25b9d7;
+  border-bottom-color:#25b9d7;
+  border-width:3px;
+  border-width:.1875rem;
+  border-style:solid;
+  font-size:0;
+  outline:none;
+  display:inline-block;
+  border-left-color:#bbcdd2;
+  border-top-color:#bbcdd2;
+  animation:rotating 2s linear infinite;
+}
+
 #content.bootstrap #tab_modules_list_installed > tbody > tr > td:nth-child(2),
 #content.bootstrap #tab_modules_list_not_installed > tbody > tr > td:nth-child(2) {
   width: 90%;
