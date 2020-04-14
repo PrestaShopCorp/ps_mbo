@@ -27,3 +27,11 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.context'
       - '@serializer'
+
+  mbo.addons_selection_link_provider:
+    class: 'PrestaShop\Module\Mbo\AddonsSelectionLinkProvider'
+    arguments:
+      - '@prestashop.core.foundation.version'
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.adapter.legacy.configuration'
+      - '@request_stack'

@@ -1,6 +1,8 @@
 parameters:
 	bootstrap: tests/phpstan/bootstrap.php
 	paths:
+		- src
+		- upgrade
 		- ps_mbo.php
 	dynamicConstantNames:
 		- _PS_VERSION_
