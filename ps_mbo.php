@@ -164,10 +164,10 @@ class ps_mbo extends Module
         $tab->name = $tabNameByLangId;
         $result = (bool) $tab->add();
 
-        if (Validate::isLoadedObject($tab)) {
+        if ($result && Validate::isLoadedObject($tab)) {
             // Updating the id_parent will override the position, that's why we save 2 times
             $tab->position = (int) $position;
-            $result = $result && (bool) $tab->save();
+            $result = $tab->save();
         }
 
         return $result;
@@ -219,7 +219,7 @@ class ps_mbo extends Module
             $result &= $tab->delete();
         }
 
-        if (isset($tabData['core_reference'])) {
+        if ($result && isset($tabData['core_reference'])) {
             $tabCoreId = Tab::getIdFromClassName($tabData['core_reference']);
             $tabCore = new Tab($tabCoreId);
 
@@ -270,7 +270,7 @@ class ps_mbo extends Module
             'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModulesAfterContent(),
             'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModulesButton(),
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
-            'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services'), // Retrieved from messages.xlf
+            'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services'),
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
             'recommendedModulesUrl' => $router->generate(
                 'admin_mbo_recommended_modules',

@@ -94,32 +94,34 @@ class ModuleCollectionDataProvider
 
         foreach ($modulesOnDisk as $module) {
             /** @var \PrestaShop\PrestaShop\Adapter\Module\Module $module */
-            if (in_array($module->get('name'), $moduleNames)) {
-                if ($module->get('id')) {
-                    $perm = (bool) Module::getPermissionStatic(
-                        $module->get('id'),
-                        'configure',
-                        $this->context->getContext()->employee
-                    );
-                } else {
-                    $id_admin_module = $this->tabRepository->findOneIdByClassName('AdminModules');
-                    /** @var array $access */
-                    $access = Profile::getProfileAccess(
-                        $this->context->getContext()->employee->id_profile,
-                        $id_admin_module
-                    );
+            if (!in_array($module->get('name'), $moduleNames)) {
+                continue;
+            }
 
-                    $perm = !$access['edit'];
-                }
+            if ($module->get('id')) {
+                $perm = (bool) Module::getPermissionStatic(
+                    $module->get('id'),
+                    'configure',
+                    $this->context->getContext()->employee
+                );
+            } else {
+                $id_admin_module = $this->tabRepository->findOneIdByClassName('AdminModules');
+                /** @var array $access */
+                $access = Profile::getProfileAccess(
+                    $this->context->getContext()->employee->id_profile,
+                    $id_admin_module
+                );
 
-                if ($module->get('author') === ModuleRepository::PARTNER_AUTHOR) {
-                    $module->set('type', 'addonsPartner');
-                }
+                $perm = !$access['edit'];
+            }
 
-                if ($perm) {
-                    $module->fillLogo();
-                    $data[$module->get('name')] = $this->modulePresenter->present($module);
-                }
+            if ($module->get('author') === ModuleRepository::PARTNER_AUTHOR) {
+                $module->set('type', 'addonsPartner');
+            }
+
+            if ($perm) {
+                $module->fillLogo();
+                $data[$module->get('name')] = $this->modulePresenter->present($module);
             }
         }
 
