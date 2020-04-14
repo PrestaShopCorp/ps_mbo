@@ -76,37 +76,4 @@ class ThemeCatalogController extends FrameworkBundleAdminController
 
         return $response;
     }
-
-    /**
-     * @param Request $request
-     *
-     * @return string
-     */
-    private function getAddonsUrl(Request $request)
-    {
-        $psVersion = $this->get('prestashop.core.foundation.version')->getVersion();
-        $parent_domain = $request->getSchemeAndHttpHost();
-        $context = $this->getContext();
-        $currencyCode = $context->currency->iso_code;
-        $languageCode = $context->language->iso_code;
-        $countryCode = $context->country->iso_code;
-        $activity = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_SHOP_ACTIVITY');
-
-        return "https://addons.prestashop.com/iframe/search-1.7.php?psVersion=$psVersion"
-            . "&isoLang=$languageCode"
-            . "&isoCurrency=$currencyCode"
-            . "&isoCountry=$countryCode"
-            . "&activity=$activity"
-            . "&parentUrl=$parent_domain"
-            . '&onlyThemes=1'
-        ;
-    }
-
-    /**
-     * @return EngineInterface
-     */
-    private function getTemplateEngine()
-    {
-        return $this->get('twig');
-    }
 }

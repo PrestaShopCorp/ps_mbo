@@ -2,13 +2,13 @@ parameters:
 	bootstrap: tests/phpstan/bootstrap.php
 	paths:
 		- src
-		- upgrade
 		- ps_mbo.php
 	dynamicConstantNames:
 		- _PS_VERSION_
 	ignoreErrors:
 		- '#Property ModuleCore::\$version \(float\) does not accept string.#'
-		- '#Property TabCore::\$name \(string\) does not accept array<string>.#'
-		- '#Parameter \#1 \$hook_name of method ModuleCore::registerHook\(\) expects string, array given.#'
+		- '#Parameter \#1 \$hook_name of method ModuleCore::registerHook\(\) expects string, array<string> given.#'
+		- '#Parameter \#2 \$variable of static method ModuleCore::getPermissionStatic\(\) expects array, string given.#'
+		- '#Parameter \#1 \$idProfile of static method ProfileCore::getProfileAccess\(\) expects int, string given.#'
 
 	level: 5

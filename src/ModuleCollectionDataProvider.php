@@ -93,22 +93,23 @@ class ModuleCollectionDataProvider
         $modulesOnDisk = $this->addonsProvider->generateAddonsUrls($modulesOnDisk);
 
         foreach ($modulesOnDisk as $module) {
+            /** @var \PrestaShop\PrestaShop\Adapter\Module\Module $module */
             if (in_array($module->get('name'), $moduleNames)) {
-                $perm = true;
                 if ($module->get('id')) {
-                    $perm &= Module::getPermissionStatic(
+                    $perm = (bool) Module::getPermissionStatic(
                         $module->get('id'),
                         'configure',
                         $this->context->getContext()->employee
                     );
                 } else {
                     $id_admin_module = $this->tabRepository->findOneIdByClassName('AdminModules');
+                    /** @var array $access */
                     $access = Profile::getProfileAccess(
                         $this->context->getContext()->employee->id_profile,
                         $id_admin_module
                     );
 
-                    $perm &= !$access['edit'];
+                    $perm = !$access['edit'];
                 }
 
                 if ($module->get('author') === ModuleRepository::PARTNER_AUTHOR) {

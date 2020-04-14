@@ -71,14 +71,14 @@ interface RecommendedModuleCollectionInterface extends ArrayAccess, IteratorAggr
     /**
      * Get recommended modules installed.
      *
-     * @return RecommendedModuleInterface[]
+     * @return RecommendedModuleCollectionInterface
      */
     public function getInstalled();
 
     /**
      * Get recommended modules not installed.
      *
-     * @return RecommendedModuleInterface[]
+     * @return RecommendedModuleCollectionInterface
      */
     public function getNotInstalled();
 }
