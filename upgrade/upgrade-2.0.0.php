@@ -44,7 +44,7 @@ function upgrade_module_2_0_0($module)
 
     // Some hooks are added, we register them.
     foreach ($module->hooks as $hook) {
-        if (!$module->isRegisteredInHook($hook)) {
+        if ($result && !$module->isRegisteredInHook($hook)) {
             $result = $result && $module->registerHook($hook);
         }
     }
