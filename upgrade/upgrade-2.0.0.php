@@ -37,26 +37,28 @@ function upgrade_module_2_0_0($module)
     // Some hooks are no longer used, we unregister them.
     if (!empty($hookData)) {
         foreach ($hookData as $row) {
-            $result = $result && $module->unregisterHook((int) $row['id_hook']);
-            $result = $result && $module->unregisterExceptions((int) $row['id_hook']);
+            $result = $result
+                && $module->unregisterHook((int) $row['id_hook'])
+                && $module->unregisterExceptions((int) $row['id_hook'])
+            ;
         }
     }
 
     // Some hooks are added, we register them.
     foreach ($module->hooks as $hook) {
         if ($result && !$module->isRegisteredInHook($hook)) {
-            $result = $result && $module->registerHook($hook);
+            $result = $module->registerHook($hook);
         }
     }
 
     // We migrate Module Selections Tab to MBO
     if ($result && isset($module->adminTabs['AdminPsMboAddons'])) {
-        $result = $result && $module->installTab($module->adminTabs['AdminPsMboAddons']);
+        $result = $module->installTab($module->adminTabs['AdminPsMboAddons']);
     }
 
     // We create Module Recommended Tab to MBO
     if ($result && isset($module->adminTabs['AdminPsMboRecommended'])) {
-        $result = $result && $module->installTab($module->adminTabs['AdminPsMboRecommended']);
+        $result = $module->installTab($module->adminTabs['AdminPsMboRecommended']);
     }
 
     return $result;

@@ -123,7 +123,7 @@ var mbo = {};
      * Inserts the recommended modules in the DOM
      *
      * @param {object} config
-     * @param {object} config.translations - Object containing translations
+     * @param {array} config.translations
      * @param {string} config.recommendedModulesUrl
      * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
      * @param {boolean} config.shouldAttachRecommendedModulesButton
@@ -162,7 +162,7 @@ var mbo = {};
    * Handles markup for the Recommended modules button
    *
    * @param {object} config
-   * @param {array} config.translations - Object containing translations
+   * @param {array} config.translations
    * @param {string} config.recommendedModulesUrl
    * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
    * @param {boolean} config.shouldAttachRecommendedModulesButton
@@ -204,7 +204,7 @@ var mbo = {};
    * Handles markup for the Recommended modules container
    *
    * @param {object} config
-   * @param {array} config.translations - Object containing translations
+   * @param {array} config.translations
    * @param {string} config.recommendedModulesUrl
    * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
    * @param {boolean} config.shouldAttachRecommendedModulesButton
@@ -260,7 +260,7 @@ var mbo = {};
    * Handles markup for the Recommended modules container
    *
    * @param {object} config
-   * @param {object} config.translations - Object containing translations
+   * @param {array} config.translations
    * @param {string} config.recommendedModulesUrl
    * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
    * @param {boolean} config.shouldAttachRecommendedModulesButton
@@ -292,7 +292,7 @@ var mbo = {};
    *
    * @param {object} pageMap
    * @param {object} config
-   * @param {object} config.translations - Object containing translations
+   * @param {array} config.translations
    * @param {string} config.recommendedModulesUrl
    * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
    * @param {boolean} config.shouldAttachRecommendedModulesButton
@@ -339,7 +339,7 @@ var mbo = {};
   /**
    * @param {object} pageMap
    * @param {object} config
-   * @param {object} config.translations - Object containing translations
+   * @param {array} config.translations
    * @param {string} config.recommendedModulesUrl
    * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
    * @param {boolean} config.shouldAttachRecommendedModulesButton
@@ -415,7 +415,7 @@ var mbo = {};
    * Inserts the recommended modules button in the toolbar
    *
    * @param {object} config
-   * @param {array} config.translations - Object containing translations
+   * @param {array} config.translations
    * @param {string} config.recommendedModulesUrl
    * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
    * @param {boolean} config.shouldAttachRecommendedModulesButton

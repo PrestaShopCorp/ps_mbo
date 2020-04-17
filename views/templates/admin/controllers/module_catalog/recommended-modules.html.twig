@@ -40,7 +40,7 @@
   <div id="modules_list_container_content" class="tab-content">
     {% if recommendedModulesNotInstalled is not empty %}
       <div class="tab-pane active" id="tab_modules_list_not_installed" role="tabpanel">
-        <table id="tab_modules_list_not_installed" class="table">
+        <table class="table">
           {% for recommendedModuleNotInstalled in recommendedModulesNotInstalled %}
             {{ include('@PrestaShop/Admin/Module/Includes/tab-module-line.html.twig',{'module': recommendedModuleNotInstalled}) }}
           {% endfor %}
@@ -49,7 +49,7 @@
     {% endif %}
     {% if recommendedModulesInstalled is not empty %}
       <div class="tab-pane {% if recommendedModulesNotInstalled is empty %}active{% endif %}" id="tab_modules_list_installed" role="tabpanel">
-        <table id="tab_modules_list_installed" class="table">
+        <table class="table">
           {% for recommendedModuleInstalled in recommendedModulesInstalled %}
             {{ include('@PrestaShop/Admin/Module/Includes/tab-module-line.html.twig',{'module': recommendedModuleInstalled}) }}
           {% endfor %}

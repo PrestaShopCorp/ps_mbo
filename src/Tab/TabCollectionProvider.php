@@ -113,8 +113,7 @@ class TabCollectionProvider implements TabCollectionProviderInterface
         $externalContentProvider = new ExternalContentProvider();
         $apiResponse = $externalContentProvider->getContent(self::API_URL);
         $tabCollectionDecoderXml = new TabCollectionDecoderXml($apiResponse);
-        $tabCollection = $this->tabCollectionFactory->buildFromArray($tabCollectionDecoderXml->toArray());
 
-        return $tabCollection;
+        return $this->tabCollectionFactory->buildFromArray($tabCollectionDecoderXml->toArray());
     }
 }

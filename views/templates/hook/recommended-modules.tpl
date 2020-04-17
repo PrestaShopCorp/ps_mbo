@@ -18,16 +18,16 @@
  *}
 
 <script>
-  var mboConfiguration = {
-    translations: {
-      'Recommended Modules and Services': '{$recommendedModulesTitleTranslated|escape:'javascript'}',
-      'Close': '{$recommendedModulesCloseTranslated|escape:'javascript'}',
-    },
-    recommendedModulesUrl: '{$recommendedModulesUrl|escape:'javascript'}',
-    shouldAttachRecommendedModulesAfterContent: {$shouldAttachRecommendedModulesAfterContent|intval},
-    shouldAttachRecommendedModulesButton: {$shouldAttachRecommendedModulesButton|intval},
-    shouldUseLegacyTheme: {$shouldUseLegacyTheme|intval},
-  };
-
-  mbo.initialize(mboConfiguration);
+  if (undefined !== mbo) {
+    mbo.initialize({
+      translations: {
+        'Recommended Modules and Services': '{$recommendedModulesTitleTranslated|escape:'javascript'}',
+        'Close': '{$recommendedModulesCloseTranslated|escape:'javascript'}',
+      },
+      recommendedModulesUrl: '{$recommendedModulesUrl|escape:'javascript'}',
+      shouldAttachRecommendedModulesAfterContent: {$shouldAttachRecommendedModulesAfterContent|intval},
+      shouldAttachRecommendedModulesButton: {$shouldAttachRecommendedModulesButton|intval},
+      shouldUseLegacyTheme: {$shouldUseLegacyTheme|intval},
+    });
+  }
 </script>

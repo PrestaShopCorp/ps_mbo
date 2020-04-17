@@ -115,14 +115,16 @@ class ModuleCollectionDataProvider
                 $perm = !$access['edit'];
             }
 
+            if (false === $perm) {
+                continue;
+            }
+
             if ($module->get('author') === ModuleRepository::PARTNER_AUTHOR) {
                 $module->set('type', 'addonsPartner');
             }
 
-            if ($perm) {
-                $module->fillLogo();
-                $data[$module->get('name')] = $this->modulePresenter->present($module);
-            }
+            $module->fillLogo();
+            $data[$module->get('name')] = $this->modulePresenter->present($module);
         }
 
         return $data;
