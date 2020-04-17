@@ -50,12 +50,12 @@ function upgrade_module_2_0_0($module)
     }
 
     // We migrate Module Selections Tab to MBO
-    if (isset($module->adminTabs['AdminPsMboAddons'])) {
+    if ($result && isset($module->adminTabs['AdminPsMboAddons'])) {
         $result = $result && $module->installTab($module->adminTabs['AdminPsMboAddons']);
     }
 
     // We create Module Recommended Tab to MBO
-    if (isset($module->adminTabs['AdminPsMboRecommended'])) {
+    if ($result && isset($module->adminTabs['AdminPsMboRecommended'])) {
         $result = $result && $module->installTab($module->adminTabs['AdminPsMboRecommended']);
     }
 
