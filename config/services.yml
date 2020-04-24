@@ -2,6 +2,9 @@ services:
   _defaults:
     public: true
 
+  mbo.externalcontent.provider:
+    class: 'PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProvider'
+
   mbo.adapter.module_collection_data_provider:
     class: 'PrestaShop\Module\Mbo\ModuleCollectionDataProvider'
     arguments:
@@ -11,15 +14,17 @@ services:
       - '@prestashop.core.admin.tab.repository'
       - '@prestashop.adapter.legacy.context'
 
-  mbo.tab.collection_factory:
+  mbo.tab.collection.factory:
     class: 'PrestaShop\Module\Mbo\Tab\TabCollectionFactory'
     arguments:
       - '@mbo.adapter.module_collection_data_provider'
 
-  mbo.tab.collection_provider:
+  mbo.tab.collection.provider:
     class: 'PrestaShop\Module\Mbo\Tab\TabCollectionProvider'
     arguments:
-      - '@mbo.tab.collection_factory'
+      - '@prestashop.adapter.legacy.context'
+      - '@mbo.externalcontent.provider'
+      - '@mbo.tab.collection.factory'
       - '@doctrine.cache.provider'
 
   mbo.recommendedlinks.provider:
@@ -28,6 +33,9 @@ services:
       - '@prestashop.adapter.legacy.context'
       - '@serializer'
 
+  mbo.recommendedmodules.presenter:
+    class: 'PrestaShop\Module\Mbo\RecommendedModule\RecommendedModulePresenter'
+
   mbo.addons_selection_link_provider:
     class: 'PrestaShop\Module\Mbo\AddonsSelectionLinkProvider'
     arguments:
@@ -35,3 +43,27 @@ services:
       - '@prestashop.adapter.legacy.context'
       - '@prestashop.adapter.legacy.configuration'
       - '@request_stack'
+
+  mbo.controller.modules.catalog:
+    class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController'
+
+  mbo.controller.modules.selection:
+    class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleSelectionController'
+    arguments:
+      - '@request_stack'
+      - '@mbo.externalcontent.provider'
+      - '@mbo.addons_selection_link_provider'
+
+  mbo.controller.modules.recommended:
+    class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleRecommendedController'
+    arguments:
+      - '@request_stack'
+      - '@mbo.tab.collection.provider'
+      - '@mbo.recommendedmodules.presenter'
+
+  mbo.controller.themes.catalog:
+    class: 'PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController'
+    arguments:
+      - '@request_stack'
+      - '@mbo.externalcontent.provider'
+      - '@mbo.addons_selection_link_provider'

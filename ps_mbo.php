@@ -293,11 +293,9 @@ class ps_mbo extends Module
         // AdminLogin should not call TabCollectionProvider
         if (Validate::isLoadedObject($this->context->employee)) {
             /** @var TabCollectionProvider $tabCollectionProvider */
-            $tabCollectionProvider = SymfonyContainer::getInstance()->get('mbo.tab.collection_provider');
+            $tabCollectionProvider = SymfonyContainer::getInstance()->get('mbo.tab.collection.provider');
             if ($tabCollectionProvider->isTabCollectionCached()) {
-                $tab = $tabCollectionProvider->getTab(Tools::getValue('controller'));
-
-                return $tab->shouldDisplayAfterContent()
+                return $tabCollectionProvider->getTabCollection()->getTab(Tools::getValue('controller'))->shouldDisplayAfterContent()
                     || 'AdminCarriers' === Tools::getValue('controller');
             }
         }
@@ -322,11 +320,9 @@ class ps_mbo extends Module
         // AdminLogin should not call TabCollectionProvider
         if (Validate::isLoadedObject($this->context->employee)) {
             /** @var TabCollectionProvider $tabCollectionProvider */
-            $tabCollectionProvider = SymfonyContainer::getInstance()->get('mbo.tab.collection_provider');
+            $tabCollectionProvider = SymfonyContainer::getInstance()->get('mbo.tab.collection.provider');
             if ($tabCollectionProvider->isTabCollectionCached()) {
-                $tab = $tabCollectionProvider->getTab(Tools::getValue('controller'));
-
-                return $tab->shouldDisplayButton()
+                return $tabCollectionProvider->getTabCollection()->getTab(Tools::getValue('controller'))->shouldDisplayButton()
                     && 'AdminCarriers' !== Tools::getValue('controller');
             }
         }

@@ -53,8 +53,12 @@ class AddonsSelectionLinkProvider
      * @param Configuration $configuration
      * @param RequestStack $requestStack
      */
-    public function __construct(Version $version, LegacyContext $context, Configuration $configuration, RequestStack $requestStack)
-    {
+    public function __construct(
+        Version $version,
+        LegacyContext $context,
+        Configuration $configuration,
+        RequestStack $requestStack
+    ) {
         $this->version = $version;
         $this->context = $context;
         $this->configuration = $configuration;

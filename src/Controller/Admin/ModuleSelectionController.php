@@ -21,13 +21,12 @@
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use PrestaShop\Module\Mbo\AddonsSelectionLinkProvider;
-use PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProvider;
+use PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProviderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
-use Symfony\Component\Templating\EngineInterface;
 
 /**
  * Responsible of "Improve > Modules > Modules Catalog" page display.
@@ -35,41 +34,63 @@ use Symfony\Component\Templating\EngineInterface;
 class ModuleSelectionController extends FrameworkBundleAdminController
 {
     /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
+    /**
+     * @var ExternalContentProviderInterface
+     */
+    private $externalContentProvider;
+
+    /**
+     * @var AddonsSelectionLinkProvider
+     */
+    private $addonsSelectionLinkProvider;
+
+    /**
+     * @param RequestStack $requestStack
+     * @param ExternalContentProviderInterface $externalContentCollectionProvider
+     * @param AddonsSelectionLinkProvider $addonsSelectionLinkProvider
+     */
+    public function __construct(
+        RequestStack $requestStack,
+        ExternalContentProviderInterface $externalContentCollectionProvider,
+        AddonsSelectionLinkProvider $addonsSelectionLinkProvider
+    ) {
+        parent::__construct();
+        $this->requestStack = $requestStack;
+        $this->externalContentProvider = $externalContentCollectionProvider;
+        $this->addonsSelectionLinkProvider = $addonsSelectionLinkProvider;
+    }
+
+    /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $response = new Response();
-        /** @var EngineInterface $templateEngine */
-        $templateEngine = $this->get('twig');
 
         try {
-            $externalContentProvider = new ExternalContentProvider();
-            /** @var AddonsSelectionLinkProvider $addonsSelectionLinkProvider */
-            $addonsSelectionLinkProvider = $this->get('mbo.addons_selection_link_provider');
-
-            $content = $templateEngine->render(
+            $response->setContent($this->renderView(
                 '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/addons_store.html.twig',
                 [
-                    'pageContent' => $externalContentProvider->getContent($addonsSelectionLinkProvider->getLinkUrl()),
+                    'pageContent' => $this->externalContentProvider->getContent($this->addonsSelectionLinkProvider->getLinkUrl()),
                     'layoutHeaderToolbarBtn' => [],
                     'layoutTitle' => $this->trans('Module selection', 'Admin.Navigation.Menu'),
                     'requireAddonsSearch' => true,
                     'requireBulkActions' => false,
                     'showContentHeader' => true,
                     'enableSidebar' => true,
-                    'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+                    'help_link' => $this->generateSidebarLink($this->requestStack->getCurrentRequest()->get('_legacy_controller')),
                     'requireFilterStatus' => false,
-                    'level' => $this->authorizationLevel($request->attributes->get('_legacy_controller')),
+                    'level' => $this->authorizationLevel($this->requestStack->getCurrentRequest()->get('_legacy_controller')),
                 ]
-            );
-            $response->setContent($content);
+            ));
         } catch (ServiceUnavailableHttpException $exception) {
-            $response->setContent($templateEngine->render('@Modules/ps_mbo/views/templates/admin/error.html.twig'));
+            $response->setContent($this->renderView('@Modules/ps_mbo/views/templates/admin/error.html.twig'));
             $response->setStatusCode($exception->getStatusCode());
             $response->headers->add($exception->getHeaders());
         }

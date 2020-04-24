@@ -147,7 +147,10 @@ var mbo = {};
 
         recommendedModulesRequest.fail(function(jqXHR, textStatus, errorThrown) {
           var recommendedModulesAlertMessage = new RecommendedModulesAlertMessage(config, 'danger', errorThrown);
-          var content = recommendedModulesAlertMessage.getMarkup().get(0).outerHTML + jqXHR.responseJSON.content;
+          var content = recommendedModulesAlertMessage.getMarkup().get(0).outerHTML;
+          if (undefined !== jqXHR.responseJSON && undefined !== jqXHR.responseJSON.content) {
+            content += jqXHR.responseJSON.content;
+          }
           var recommendedModulesContainer = new RecommendedModulesContainer(config, content);
 
           $(pageMap.contentContainer).append(recommendedModulesContainer.getMarkup().get(0).outerHTML);
@@ -386,7 +389,10 @@ var mbo = {};
 
       recommendedModulesRequest.fail(function(jqXHR, textStatus, errorThrown) {
         var recommendedModulesAlertMessage = new RecommendedModulesAlertMessage(config, 'danger', errorThrown);
-        var content = recommendedModulesAlertMessage.getMarkup().get(0).outerHTML + jqXHR.responseJSON.content;
+        var content = recommendedModulesAlertMessage.getMarkup().get(0).outerHTML;
+        if (undefined !== jqXHR.responseJSON && undefined !== jqXHR.responseJSON.content) {
+          content += jqXHR.responseJSON.content;
+        }
 
         $(pageMap.modulesListModalContent).html(content).slideDown();
         $(pageMap.modulesListLoader).hide();

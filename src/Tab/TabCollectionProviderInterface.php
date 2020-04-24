@@ -23,17 +23,6 @@ namespace PrestaShop\Module\Mbo\Tab;
 interface TabCollectionProviderInterface
 {
     /**
-     * Get tab with recommended modules by class name.
-     *
-     * @param string $tabClassName
-     *
-     * @return TabInterface
-     */
-    public function getTab($tabClassName);
-
-    /**
-     * Get tab collection with recommended modules
-     *
      * @return TabCollectionInterface
      */
     public function getTabCollection();
