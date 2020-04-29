@@ -25,8 +25,6 @@
  */
 function upgrade_module_2_0_0($module)
 {
-    $result = true;
-
     // Retrieve all hooks registered with MBO
     $hookData = Db::getInstance()->executeS('
         SELECT DISTINCT(`id_hook`)
@@ -37,29 +35,30 @@ function upgrade_module_2_0_0($module)
     // Some hooks are no longer used, we unregister them.
     if (!empty($hookData)) {
         foreach ($hookData as $row) {
-            $result = $result
-                && $module->unregisterHook((int) $row['id_hook'])
-                && $module->unregisterExceptions((int) $row['id_hook'])
-            ;
+            if (false === $module->unregisterHook((int) $row['id_hook'])) {
+                return false;
+            }
+
+            if (false === $module->unregisterExceptions((int) $row['id_hook'])) {
+                return false;
+            }
         }
     }
 
     // Some hooks are added, we register them.
-    foreach ($module->hooks as $hook) {
-        if ($result && !$module->isRegisteredInHook($hook)) {
-            $result = $module->registerHook($hook);
-        }
+    if (false === $module->registerHook(ps_mbo::HOOKS)) {
+        return false;
     }
 
     // We migrate Module Selections Tab to MBO
-    if ($result && isset($module->adminTabs['AdminPsMboAddons'])) {
-        $result = $module->installTab($module->adminTabs['AdminPsMboAddons']);
+    if (false === $module->installTab(ps_mbo::ADMIN_CONTROLLERS['AdminPsMboAddons'])) {
+        return false;
     }
 
     // We create Module Recommended Tab to MBO
-    if ($result && isset($module->adminTabs['AdminPsMboRecommended'])) {
-        $result = $module->installTab($module->adminTabs['AdminPsMboRecommended']);
+    if (false === $module->installTab(ps_mbo::ADMIN_CONTROLLERS['AdminPsMboRecommended'])) {
+        return false;
     }
 
-    return $result;
+    return true;
 }

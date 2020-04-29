@@ -24,6 +24,9 @@ use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Responsible of "Improve > Modules > Modules Catalog" page display.
+ */
 class ModuleCatalogController extends ModuleAbstractController
 {
     /**

@@ -25,6 +25,9 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Foundation\Version;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * Responsible of provide Addons url with Context params for Module Selection and Theme Catalog pages
+ */
 class AddonsSelectionLinkProvider
 {
     /**
@@ -66,6 +69,10 @@ class AddonsSelectionLinkProvider
     }
 
     /**
+     * We cannot use http_build_query() here due to a bug on Addons
+     *
+     * @see https://github.com/PrestaShop/PrestaShop/pull/9255/files#r200498010
+     *
      * @return string
      */
     public function getLinkUrl()

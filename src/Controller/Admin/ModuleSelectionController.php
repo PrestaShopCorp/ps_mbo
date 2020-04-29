@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 /**
- * Responsible of "Improve > Modules > Modules Catalog" page display.
+ * Responsible of "Improve > Modules > Modules Catalog > Modules Selection" page display.
  */
 class ModuleSelectionController extends FrameworkBundleAdminController
 {

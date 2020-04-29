@@ -99,23 +99,23 @@ class ModuleCollectionDataProvider
             }
 
             if ($module->get('id')) {
-                $perm = (bool) Module::getPermissionStatic(
+                $isEmployeeAllowed = (bool) Module::getPermissionStatic(
                     $module->get('id'),
                     'configure',
                     $this->context->getContext()->employee
                 );
             } else {
-                $id_admin_module = $this->tabRepository->findOneIdByClassName('AdminModules');
+                $ModuleTabId = $this->tabRepository->findOneIdByClassName('AdminModules');
                 /** @var array $access */
                 $access = Profile::getProfileAccess(
                     $this->context->getContext()->employee->id_profile,
-                    $id_admin_module
+                    $ModuleTabId
                 );
 
-                $perm = !$access['edit'];
+                $isEmployeeAllowed = !$access['edit'];
             }
 
-            if (false === $perm) {
+            if (false === $isEmployeeAllowed) {
                 continue;
             }
 

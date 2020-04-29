@@ -27,6 +27,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
+/**
+ * Responsible of render json data for ajax display of Recommended Modules.
+ */
 class ModuleRecommendedController extends FrameworkBundleAdminController
 {
     /**

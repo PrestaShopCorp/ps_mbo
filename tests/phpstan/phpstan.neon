@@ -7,7 +7,6 @@ parameters:
 		- _PS_VERSION_
 	ignoreErrors:
 		- '#Property ModuleCore::\$version \(float\) does not accept string.#'
-		- '#Parameter \#1 \$hook_name of method ModuleCore::registerHook\(\) expects string, array<string> given.#'
 		- '#Parameter \#2 \$variable of static method ModuleCore::getPermissionStatic\(\) expects array, string given.#'
 		- '#Parameter \#1 \$idProfile of static method ProfileCore::getProfileAccess\(\) expects int, string given.#'
 

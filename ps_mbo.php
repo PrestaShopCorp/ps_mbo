@@ -28,14 +28,73 @@ if (file_exists($autoloadPath)) {
 
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ps_mbo extends Module
 {
-    /**
-     * @var array Tabs
-     */
-    public $adminTabs = [
+    const TABS_WITH_RECOMMENDED_MODULES_BUTTON = [
+        'AdminProducts',
+        'AdminCategories',
+        'AdminTracking',
+        'AdminAttributesGroups',
+        'AdminFeatures',
+        'AdminManufacturers',
+        'AdminSuppliers',
+        'AdminTags',
+        'AdminOrders',
+        'AdminInvoices',
+        'AdminReturn',
+        'AdminDeliverySlip',
+        'AdminSlip',
+        'AdminStatuses',
+        'AdminOrderMessage',
+        'AdminCustomers',
+        'AdminAddresses',
+        'AdminGroups',
+        'AdminCarts',
+        'AdminCustomerThreads',
+        'AdminContacts',
+        'AdminCartRules',
+        'AdminSpecificPriceRule',
+        'AdminShipping',
+        'AdminLocalization',
+        'AdminZones',
+        'AdminCountries',
+        'AdminCurrencies',
+        'AdminTaxes',
+        'AdminTaxRulesGroup',
+        'AdminTranslations',
+        'AdminPreferences',
+        'AdminOrderPreferences',
+        'AdminPPreferences',
+        'AdminCustomerPreferences',
+        'AdminThemes',
+        'AdminMeta',
+        'AdminCmsContent',
+        'AdminImages',
+        'AdminSearchConf',
+        'AdminGeolocation',
+        'AdminInformation',
+        'AdminPerformance',
+        'AdminEmails',
+        'AdminImport',
+        'AdminBackup',
+        'AdminRequestSql',
+        'AdminLogs',
+        'AdminAdminPreferences',
+        'AdminStats',
+        'AdminSearchEngines',
+        'AdminReferrers',
+    ];
+
+    const TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT = [
+        'AdminMarketing',
+        'AdminPayment',
+        'AdminCarriers',
+    ];
+
+    const ADMIN_CONTROLLERS = [
         'AdminPsMboModule' => [
             'name' => 'Module catalog',
             'visible' => true,
@@ -64,18 +123,15 @@ class ps_mbo extends Module
         ],
     ];
 
-    /**
-     * @var string[] Hooks used
-     */
-    public $hooks = [
+    const HOOKS = [
         'actionAdminControllerSetMedia',
         'displayDashboardTop',
     ];
 
     /**
-     * @var bool
+     * @var ContainerInterface
      */
-    public $bootstrap;
+    protected $container;
 
     /**
      * Constructor.
@@ -87,7 +143,6 @@ class ps_mbo extends Module
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
-        $this->bootstrap = true;
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
             'min' => '1.7.5.0',
@@ -108,7 +163,7 @@ class ps_mbo extends Module
     public function install()
     {
         return parent::install()
-            && $this->registerHook($this->hooks)
+            && $this->registerHook(static::HOOKS)
             && $this->installTabs();
     }
 
@@ -119,13 +174,13 @@ class ps_mbo extends Module
      */
     public function installTabs()
     {
-        $result = true;
-
-        foreach ($this->adminTabs as $adminTab) {
-            $result = $result && $this->installTab($adminTab);
+        foreach (static::ADMIN_CONTROLLERS as $adminTab) {
+            if (false === $this->installTab($adminTab)) {
+                return false;
+            }
         }
 
-        return $result;
+        return true;
     }
 
     /**
@@ -162,15 +217,18 @@ class ps_mbo extends Module
         $tab->position = (int) $position;
         $tab->id_parent = empty($tabData['parent_class_name']) ? -1 : Tab::getIdFromClassName($tabData['parent_class_name']);
         $tab->name = $tabNameByLangId;
-        $result = (bool) $tab->add();
 
-        if ($result && Validate::isLoadedObject($tab)) {
-            // Updating the id_parent will override the position, that's why we save 2 times
-            $tab->position = (int) $position;
-            $result = $tab->save();
+        if (false === (bool) $tab->add()) {
+            return false;
         }
 
-        return $result;
+        if (Validate::isLoadedObject($tab)) {
+            // Updating the id_parent will override the position, that's why we save 2 times
+            $tab->position = (int) $position;
+            $tab->save();
+        }
+
+        return true;
     }
 
     /**
@@ -191,13 +249,13 @@ class ps_mbo extends Module
      */
     public function uninstallTabs()
     {
-        $result = true;
-
-        foreach ($this->adminTabs as $adminTab) {
-            $result &= $this->uninstallTab($adminTab);
+        foreach (static::ADMIN_CONTROLLERS as $adminTab) {
+            if (false === $this->uninstallTab($adminTab)) {
+                return false;
+            }
         }
 
-        return $result;
+        return true;
     }
 
     /**
@@ -210,26 +268,31 @@ class ps_mbo extends Module
      */
     public function uninstallTab(array $tabData)
     {
-        $result = true;
-
         $tabId = Tab::getIdFromClassName($tabData['class_name']);
         $tab = new Tab($tabId);
 
-        if (Validate::isLoadedObject($tab)) {
-            $result &= $tab->delete();
+        if (false === Validate::isLoadedObject($tab)) {
+            return false;
         }
 
-        if ($result && isset($tabData['core_reference'])) {
+        if (false === (bool) $tab->delete()) {
+            return false;
+        }
+
+        if (isset($tabData['core_reference'])) {
             $tabCoreId = Tab::getIdFromClassName($tabData['core_reference']);
             $tabCore = new Tab($tabCoreId);
 
             if (Validate::isLoadedObject($tabCore)) {
                 $tabCore->active = true;
-                $result = $result && (bool) $tabCore->save();
+            }
+
+            if (false === (bool) $tabCore->save()) {
+                return false;
             }
         }
 
-        return $result;
+        return true;
     }
 
     /**
@@ -265,7 +328,7 @@ class ps_mbo extends Module
     public function hookDisplayDashboardTop()
     {
         /** @var UrlGeneratorInterface $router */
-        $router = SymfonyContainer::getInstance()->get('router');
+        $router = $this->get('router');
         $this->smarty->assign([
             'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModulesAfterContent(),
             'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModulesButton(),
@@ -293,21 +356,14 @@ class ps_mbo extends Module
         // AdminLogin should not call TabCollectionProvider
         if (Validate::isLoadedObject($this->context->employee)) {
             /** @var TabCollectionProvider $tabCollectionProvider */
-            $tabCollectionProvider = SymfonyContainer::getInstance()->get('mbo.tab.collection.provider');
+            $tabCollectionProvider = $this->get('mbo.tab.collection.provider');
             if ($tabCollectionProvider->isTabCollectionCached()) {
                 return $tabCollectionProvider->getTabCollection()->getTab(Tools::getValue('controller'))->shouldDisplayAfterContent()
                     || 'AdminCarriers' === Tools::getValue('controller');
             }
         }
 
-        return in_array(
-            Tools::getValue('controller'),
-            [
-                'AdminMarketing',
-                'AdminPayment',
-                'AdminCarriers',
-            ]
-        );
+        return in_array(Tools::getValue('controller'), static::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT, true);
     }
 
     /**
@@ -320,69 +376,27 @@ class ps_mbo extends Module
         // AdminLogin should not call TabCollectionProvider
         if (Validate::isLoadedObject($this->context->employee)) {
             /** @var TabCollectionProvider $tabCollectionProvider */
-            $tabCollectionProvider = SymfonyContainer::getInstance()->get('mbo.tab.collection.provider');
+            $tabCollectionProvider = $this->get('mbo.tab.collection.provider');
             if ($tabCollectionProvider->isTabCollectionCached()) {
                 return $tabCollectionProvider->getTabCollection()->getTab(Tools::getValue('controller'))->shouldDisplayButton()
                     && 'AdminCarriers' !== Tools::getValue('controller');
             }
         }
 
-        return in_array(
-            Tools::getValue('controller'),
-            [
-                'AdminProducts',
-                'AdminCategories',
-                'AdminTracking',
-                'AdminAttributesGroups',
-                'AdminFeatures',
-                'AdminManufacturers',
-                'AdminSuppliers',
-                'AdminTags',
-                'AdminOrders',
-                'AdminInvoices',
-                'AdminReturn',
-                'AdminDeliverySlip',
-                'AdminSlip',
-                'AdminStatuses',
-                'AdminOrderMessage',
-                'AdminCustomers',
-                'AdminAddresses',
-                'AdminGroups',
-                'AdminCarts',
-                'AdminCustomerThreads',
-                'AdminContacts',
-                'AdminCartRules',
-                'AdminSpecificPriceRule',
-                'AdminShipping',
-                'AdminLocalization',
-                'AdminZones',
-                'AdminCountries',
-                'AdminCurrencies',
-                'AdminTaxes',
-                'AdminTaxRulesGroup',
-                'AdminTranslations',
-                'AdminPreferences',
-                'AdminOrderPreferences',
-                'AdminPPreferences',
-                'AdminCustomerPreferences',
-                'AdminThemes',
-                'AdminMeta',
-                'AdminCmsContent',
-                'AdminImages',
-                'AdminSearchConf',
-                'AdminGeolocation',
-                'AdminInformation',
-                'AdminPerformance',
-                'AdminEmails',
-                'AdminImport',
-                'AdminBackup',
-                'AdminRequestSql',
-                'AdminLogs',
-                'AdminAdminPreferences',
-                'AdminStats',
-                'AdminSearchEngines',
-                'AdminReferrers',
-            ]
-        );
+        return in_array(Tools::getValue('controller'), static::TABS_WITH_RECOMMENDED_MODULES_BUTTON, true);
+    }
+
+    /**
+     * Override of native function to always retrieve Symfony container instead of legacy admin container on legacy context.
+     *
+     * {@inheritdoc}
+     */
+    public function get($serviceName)
+    {
+        if (null === $this->container) {
+            $this->container = SymfonyContainer::getInstance();
+        }
+
+        return $this->container->get($serviceName);
     }
 }
