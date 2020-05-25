@@ -1,19 +1,35 @@
 {
-	"name": "prestashop/ps_mbo",
-	"description": "PrestaShop module ps_mbo",
-	"homepage": "https://github.com/PrestaShop/ps_mbo",
-	"license": "AFL-3.0",
-	"authors": [
-		{
-			"name": "PrestaShop SA",
-			"email": "contact@prestashop.com"
-		}
-	],
-	"require": {
-		"php": ">=5.6.0"
-	},
-	"config": {
-		"preferred-install": "dist"
-	},
-	"type": "prestashop-module"
-} 
+  "name": "prestashop/ps_mbo",
+  "description": "PrestaShop module ps_mbo",
+  "homepage": "https://github.com/PrestaShop/ps_mbo",
+  "license": "AFL-3.0",
+  "type": "prestashop-module",
+  "authors": [
+    {
+      "name": "PrestaShop SA",
+      "email": "contact@prestashop.com"
+    }
+  ],
+  "config": {
+    "platform": {
+      "php": "5.6.0"
+    },
+    "preferred-install": "dist",
+    "optimize-autoloader": true,
+    "prepend-autoloader": false
+  },
+  "require": {
+    "php": ">=5.6.0",
+    "ext-simplexml": "*",
+    "prestashop/circuit-breaker": "^3.0.0"
+  },
+  "require-dev": {
+    "prestashop/php-dev-tools": "^2.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "PrestaShop\\Module\\Mbo\\": "src/"
+    },
+    "classmap": ["ps_mbo.php"]
+  }
+}
