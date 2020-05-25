@@ -1,10 +1,10 @@
 'use strict';
-/*
- * 2007-2019 PrestaShop and Contributors
+/**
+ * 2007-2020 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License (AFL 3.0)
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
@@ -12,17 +12,10 @@
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2019 PrestaShop SA
- * @license   https://opensource.org/licenses/afl-3.0 Academic Free License (AFL 3.0)
+ * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *
  */
 
 var mbo = {};
@@ -35,6 +28,7 @@ var mbo = {};
     toolbarLastElement: '#toolbar-nav li:last-of-type',
     recommendedModulesButton: '#recommended-modules-button',
     fancybox: '.fancybox-quick-view',
+    contentContainer: '#content',
     modulesListModal: '#modules_list_container',
     modulesListModalContent: '#modules_list_container_tab_modal',
     modulesListLoader: '#modules_list_loader',
@@ -46,23 +40,11 @@ var mbo = {};
     toolbarLastElement: '.toolbar-icons a:last-of-type',
     recommendedModulesButton: '#recommended-modules-button',
     oldButton: '#page-header-desc-configuration-modules-list',
-  };
-
-  /**
-   * Detects which theme we are currently on
-   * @constructor
-   */
-  var ThemeDetector = function() {
-    var isNewTheme = $('link').filter(function() {
-      return $(this).attr('href').match(RegExp('/themes/new-theme/'));
-    }).length > 0;
-
-    /**
-     * @return {boolean}
-     */
-    this.isNewTheme = function() {
-      return isNewTheme;
-    }
+    contentContainer: '#main-div .content-div .container:last',
+    modulesListModal: '#modules_list_container',
+    modulesListModalContainer: '#main-div .content-div',
+    modulesListModalContent: '#modules_list_container_tab_modal',
+    modulesListLoader: '#modules_list_loader',
   };
 
   /**
@@ -106,7 +88,7 @@ var mbo = {};
         // default theme
         $(pageMap.toolbarButtons).filter(
           function() {
-            var buttonIdPattern = /^page-header-desc-[a-z-]+-modules-list$/;
+            var buttonIdPattern = /^page-header-desc-[a-z-_]+-modules-list$/;
             return String($(this).attr('id'))
               .match(buttonIdPattern);
           }
@@ -136,35 +118,79 @@ var mbo = {};
 
       return this;
     };
+
+    /**
+     * Inserts the recommended modules in the DOM
+     *
+     * @param {object} config
+     * @param {array} config.translations
+     * @param {string} config.recommendedModulesUrl
+     * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
+     * @param {boolean} config.shouldAttachRecommendedModulesButton
+     * @param {boolean} config.shouldUseLegacyTheme
+     *
+     * @return this
+     */
+    this.insertRecommendedModules = function(config) {
+      if (pageMap.contentContainer) {
+        var recommendedModulesRequest = $.ajax({
+          type: 'GET',
+          dataType: 'json',
+          url: config.recommendedModulesUrl,
+        });
+
+        recommendedModulesRequest.done(function(data) {
+          var recommendedModulesContainer = new RecommendedModulesContainer(config, data.content);
+
+          $(pageMap.contentContainer).append(recommendedModulesContainer.getMarkup());
+        });
+
+        recommendedModulesRequest.fail(function(jqXHR, textStatus, errorThrown) {
+          var recommendedModulesAlertMessage = new RecommendedModulesAlertMessage(config, 'danger', errorThrown);
+          var content = recommendedModulesAlertMessage.getMarkup().get(0).outerHTML;
+          if (undefined !== jqXHR.responseJSON && undefined !== jqXHR.responseJSON.content) {
+            content += jqXHR.responseJSON.content;
+          }
+          var recommendedModulesContainer = new RecommendedModulesContainer(config, content);
+
+          $(pageMap.contentContainer).append(recommendedModulesContainer.getMarkup().get(0).outerHTML);
+        });
+      }
+
+      return this;
+    };
   };
 
   /**
    * Handles markup for the Recommended modules button
    *
-   * @param {object} trad - Translations dictionary
-   * @param {boolean} isNewTheme
-   * @param {string} href
+   * @param {object} config
+   * @param {array} config.translations
+   * @param {string} config.recommendedModulesUrl
+   * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
+   * @param {boolean} config.shouldAttachRecommendedModulesButton
+   * @param {boolean} config.shouldUseLegacyTheme
    * @constructor
    */
-  var RecommendedModulesButton = function(trad, isNewTheme, href) {
-    var label = trad['Recommended Modules and Services'];
+  var RecommendedModulesButton = function(config) {
+    var label = config.translations['Recommended Modules and Services'];
     var buttonId = 'recommended-modules-button';
     var $markup;
 
-    if (isNewTheme) {
-      $markup = $(
-        '<a class="btn btn-outline-secondary" id="' + buttonId + '" href="' + href + '" title="' + label + '">\n' +
-        label +
-        '</a>'
-      );
-    } else {
+    if (config.shouldUseLegacyTheme) {
       $markup = $(
         '<li id="recommended-modules-button-container">\n' +
-        '  <a id="' + buttonId + '" class="toolbar_btn pointer" href="' + href + '" title="' + label + '">\n' +
+        '  <a id="' + buttonId + '" class="toolbar_btn pointer" href="' + config.recommendedModulesUrl + '" title="' + label + '">\n' +
         '    <i class="process-icon-modules-list"></i>\n' +
         '    <div>' + label + '</div>\n' +
         '  </a>\n' +
         '</li>'
+      );
+    } else {
+      $markup = $(
+        '<a class="btn btn-outline-secondary" id="' + buttonId + '" href="' + config.recommendedModulesUrl + '" title="' + label + '">\n' +
+        label +
+        '</a>'
       );
     }
 
@@ -178,44 +204,198 @@ var mbo = {};
   };
 
   /**
+   * Handles markup for the Recommended modules container
    *
-   * @param {object} pageMap
-   * @param {string} recommendedModulesButtonUrl
-   * @param {string} currentControllerName
+   * @param {object} config
+   * @param {array} config.translations
+   * @param {string} config.recommendedModulesUrl
+   * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
+   * @param {boolean} config.shouldAttachRecommendedModulesButton
+   * @param {boolean} config.shouldUseLegacyTheme
+   * @param {jQuery|HTMLElement} content
    * @constructor
    */
-  var RecommendedModulesPopinHandler = function(pageMap, recommendedModulesButtonUrl, currentControllerName) {
+  var RecommendedModulesContainer = function(config, content) {
+    var containerTitle = config.translations['Recommended Modules and Services'];
+    var containerId = 'recommended-modules-container';
+    var $markup;
+
+    if (config.shouldUseLegacyTheme) {
+      $markup = $(
+        '<div class="panel" id="' + containerId + '">\n' +
+        '  <h3>\n' +
+        '    <i class="icon-puzzle-piece"></i>\n' +
+        '    ' + containerTitle + '\n' +
+        '  </h3>\n' +
+        '  <div class="modules_list_container_tab row">\n' +
+        '    ' + content +'\n' +
+        '  </div>\n' +
+        '</div>'
+      );
+    } else {
+      $markup = $(
+        '<div class="row" id="' + containerId + '">\n' +
+        '  <div class="col">\n' +
+        '    <div class="card">\n' +
+        '      <h3 class="card-header">\n' +
+        '        <i class="material-icons">extension</i>\n' +
+        '        ' + containerTitle + '\n' +
+        '      </h3>\n' +
+        '      <div class="card-block">\n' +
+        '        ' + content +'\n' +
+        '      </div>\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '</div>'
+      );
+    }
+
+    /**
+     * Returns the button's markup
+     * @return {jQuery|HTMLElement}
+     */
+    this.getMarkup = function() {
+      return $markup;
+    }
+  };
+
+  /**
+   * Handles markup for the Recommended modules container
+   *
+   * @param {object} config
+   * @param {array} config.translations
+   * @param {string} config.recommendedModulesUrl
+   * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
+   * @param {boolean} config.shouldAttachRecommendedModulesButton
+   * @param {boolean} config.shouldUseLegacyTheme
+   * @param {string} type
+   * @param {string} text
+   * @constructor
+   */
+  var RecommendedModulesAlertMessage = function(config, type, text) {
+    var $markup = $(
+      '<div class="alert alert-' + type + '" role="alert">\n' +
+      '  <p class="alert-text">\n' +
+      '    ' + text + '\n' +
+      '  </p>\n' +
+      '</div>'
+    );
+
+    /**
+     * Returns the button's markup
+     * @return {jQuery|HTMLElement}
+     */
+    this.getMarkup = function() {
+      return $markup;
+    }
+  };
+
+  /**
+   * Handles markup for the Recommended modules container
+   *
+   * @param {object} pageMap
+   * @param {object} config
+   * @param {array} config.translations
+   * @param {string} config.recommendedModulesUrl
+   * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
+   * @param {boolean} config.shouldAttachRecommendedModulesButton
+   * @param {boolean} config.shouldUseLegacyTheme
+   * @constructor
+   */
+  var RecommendedModulesModal = function(pageMap, config) {
+    var $markup;
+
+    if (!config.shouldUseLegacyTheme) {
+      $markup = $(
+        '<div id="modules_list_container" class="modal modal-vcenter fade" role="dialog">\n' +
+        '  <div class="modal-dialog">\n' +
+        '    <div class="modal-content">\n' +
+        '      <div class="modal-header">\n' +
+        '        <h4 class="modal-title module-modal-title">\n' +
+        '          ' + config.translations['Recommended Modules and Services'] + '\n' +
+        '        </h4>\n' +
+        '        <button type="button" class="close" data-dismiss="modal" aria-label="' + config.translations['Close'] + '">\n' +
+        '          <span aria-hidden="true">&times;</span>\n' +
+        '        </button>\n' +
+        '      </div>\n' +
+        '      <div class="modal-body row">\n' +
+        '        <div id="modules_list_container_tab_modal" class="col-md-12" style="display:none;"></div>\n' +
+        '        <div id="modules_list_loader" class="col-md-12 text-center">\n' +
+        '          <button class="btn-primary-reverse onclick unbind spinner"></button>\n' +
+        '        </div>\n' +
+        '      </div>\n' +
+        '    </div>\n' +
+        '  </div>\n' +
+        '</div>'
+      );
+    }
+
+    /**
+     * Returns the button's markup
+     * @return {jQuery|HTMLElement}
+     */
+    this.getMarkup = function() {
+      return $markup;
+    }
+  };
+
+  /**
+   * @param {object} pageMap
+   * @param {object} config
+   * @param {array} config.translations
+   * @param {string} config.recommendedModulesUrl
+   * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
+   * @param {boolean} config.shouldAttachRecommendedModulesButton
+   * @param {boolean} config.shouldUseLegacyTheme
+   * @constructor
+   */
+  var RecommendedModulesPopinHandler = function(pageMap, config) {
 
     var initPopin = function() {
-      $(pageMap.fancybox).fancybox({
-        type: 'ajax',
-        autoDimensions: false,
-        autoSize: false,
-        width: 600,
-        height: 'auto',
-        helpers: {
-          overlay: {
-            locked: false
+      if (config.shouldUseLegacyTheme) {
+        $(pageMap.fancybox).fancybox({
+          type: 'ajax',
+          autoDimensions: false,
+          autoSize: false,
+          width: 600,
+          height: 'auto',
+          helpers: {
+            overlay: {
+              locked: false
+            }
           }
+        });
+      } else {
+        if (!$(pageMap.modulesListModal).length) {
+          var modal = new RecommendedModulesModal(pageMap, config);
+          $(pageMap.modulesListModalContainer).append(modal.getMarkup().get(0).outerHTML);
         }
-      });
+      }
     };
 
     var openModulesList = function() {
+      var recommendedModulesRequest = $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        url: config.recommendedModulesUrl,
+      });
+
       $(pageMap.modulesListModal).modal('show');
 
-      $.ajax({
-        type: 'POST',
-        url: recommendedModulesButtonUrl,
-        data: {
-          ajax: true,
-          action: 'GetTabModulesList',
-          controllerName: currentControllerName
-        },
-        success: function(data) {
-          $(pageMap.modulesListModalContent).html(data).slideDown();
-          $(pageMap.modulesListLoader).hide();
-        },
+      recommendedModulesRequest.done(function (data) {
+        $(pageMap.modulesListModalContent).html(data.content).slideDown();
+        $(pageMap.modulesListLoader).hide();
+      });
+
+      recommendedModulesRequest.fail(function(jqXHR, textStatus, errorThrown) {
+        var recommendedModulesAlertMessage = new RecommendedModulesAlertMessage(config, 'danger', errorThrown);
+        var content = recommendedModulesAlertMessage.getMarkup().get(0).outerHTML;
+        if (undefined !== jqXHR.responseJSON && undefined !== jqXHR.responseJSON.content) {
+          content += jqXHR.responseJSON.content;
+        }
+
+        $(pageMap.modulesListModalContent).html(content).slideDown();
+        $(pageMap.modulesListLoader).hide();
       });
     };
 
@@ -241,23 +421,27 @@ var mbo = {};
    * Inserts the recommended modules button in the toolbar
    *
    * @param {object} config
-   * @param {object} config.lang - Object containing translations
-   * @param {string} config.recommendedModulesButtonUrl - URL for button
-   * @param {string} config.controller - Current controller name
+   * @param {array} config.translations
+   * @param {string} config.recommendedModulesUrl
+   * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
+   * @param {boolean} config.shouldAttachRecommendedModulesButton
+   * @param {boolean} config.shouldUseLegacyTheme
    */
-  mbo.insertToolbarButton = function(config) {
-    var isNewTheme = new ThemeDetector().isNewTheme();
-    var pageMap = isNewTheme ? pageMapNewTheme : pageMapDefault;
+  mbo.initialize = function(config) {
+    var pageMap = config.shouldUseLegacyTheme ? pageMapDefault : pageMapNewTheme;
+    var page = new Page(pageMap);
 
-    var button = new RecommendedModulesButton(config.lang, isNewTheme, config.recommendedModulesButtonUrl);
+    page.removeOldButton();
 
-    new Page(pageMap)
-      .removeOldButton()
-      .insertToolbarButton(button);
+    if (config.shouldAttachRecommendedModulesButton) {
+      var button = new RecommendedModulesButton(config);
+      var recommendedModulesPopinHandler = new RecommendedModulesPopinHandler(pageMap, config);
+      page.insertToolbarButton(button);
+      recommendedModulesPopinHandler.initialize();
+    }
 
-    if (!isNewTheme) {
-      new RecommendedModulesPopinHandler(pageMap, config.recommendedModulesButtonUrl, config.controller)
-        .initialize();
+    if (config.shouldAttachRecommendedModulesAfterContent) {
+      page.insertRecommendedModules(config);
     }
   };
 
