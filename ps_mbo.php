@@ -330,18 +330,26 @@ class ps_mbo extends Module
     {
         /** @var UrlGeneratorInterface $router */
         $router = $this->get('router');
+
+        try {
+            $recommendedModulesUrl = $router->generate(
+                'admin_mbo_recommended_modules',
+                [
+                    'tabClassName' => Tools::getValue('controller'),
+                ]
+            );
+        } catch (Exception $exception) {
+            // Avoid fatal errors on ServiceNotFoundException
+            return '';
+        }
+
         $this->smarty->assign([
             'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModulesAfterContent(),
             'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModulesButton(),
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
             'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services'),
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
-            'recommendedModulesUrl' => $router->generate(
-                'admin_mbo_recommended_modules',
-                [
-                    'tabClassName' => Tools::getValue('controller'),
-                ]
-            ),
+            'recommendedModulesUrl' => $recommendedModulesUrl,
         ]);
 
         return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
