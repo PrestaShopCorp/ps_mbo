@@ -139,7 +139,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '2.0.0';
+        $this->version = '2.0.1';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -330,18 +330,26 @@ class ps_mbo extends Module
     {
         /** @var UrlGeneratorInterface $router */
         $router = $this->get('router');
+
+        try {
+            $recommendedModulesUrl = $router->generate(
+                'admin_mbo_recommended_modules',
+                [
+                    'tabClassName' => Tools::getValue('controller'),
+                ]
+            );
+        } catch (Exception $exception) {
+            // Avoid fatal errors on ServiceNotFoundException
+            return '';
+        }
+
         $this->smarty->assign([
             'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModulesAfterContent(),
             'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModulesButton(),
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
             'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services'),
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
-            'recommendedModulesUrl' => $router->generate(
-                'admin_mbo_recommended_modules',
-                [
-                    'tabClassName' => Tools::getValue('controller'),
-                ]
-            ),
+            'recommendedModulesUrl' => $recommendedModulesUrl,
         ]);
 
         return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
