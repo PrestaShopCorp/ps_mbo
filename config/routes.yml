@@ -1,0 +1,31 @@
+admin_mbo_catalog_module:
+  path: /addons/modules/catalog
+  methods: [GET]
+  defaults:
+    _controller: mbo.controller.modules.catalog:indexAction
+    _legacy_controller: AdminPsMboModule
+    _legacy_link: AdminPsMboModule
+
+admin_mbo_catalog_module_selection:
+  path: /addons/modules/catalog/selection
+  methods: [GET]
+  defaults:
+    _controller: mbo.controller.modules.selection:indexAction
+    _legacy_controller: AdminPsMboAddons
+    _legacy_link: AdminPsMboAddons
+
+admin_mbo_recommended_modules:
+  path: /addons/modules/recommended
+  methods: [GET]
+  defaults:
+    _controller: mbo.controller.modules.recommended:indexAction
+    _legacy_controller: AdminPsMboRecommended
+    _legacy_link: AdminPsMboRecommended
+
+admin_mbo_catalog_theme:
+  path: /addons/themes/catalog
+  methods: [GET]
+  defaults:
+    _controller: mbo.controller.themes.catalog:indexAction
+    _legacy_controller: AdminPsMboTheme
+    _legacy_link: AdminPsMboTheme
