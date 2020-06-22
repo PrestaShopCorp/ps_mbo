@@ -1,5 +1,9 @@
 # MBO
 
+![PHP tests](https://github.com/PrestaShopCorp/ps_mbo/workflows/PHP%20tests/badge.svg)
+![Build & Release draft](https://github.com/PrestaShopCorp/ps_mbo/workflows/Build%20&%20Release%20draft/badge.svg)
+[![GitHub license](https://img.shields.io/github/license/PrestaShopCorp/ps_mbo)](https://github.com/PrestaShopCorp/ps_mbo/LICENSE.md)
+
 PrestaShop Marketplace in your Back Office
 
 ## About
