@@ -168,7 +168,7 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
      */
     private function filter(Closure $closure)
     {
-        $recommendedModules = new static();
+        $recommendedModules = new RecommendedModuleCollection();
         $recommendedModules->recommendedModules = array_filter(
             $this->recommendedModules,
             $closure,

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2020 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -13,45 +14,38 @@
  * to license@prestashop.com so we can send you a copy immediately.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\Module\Mbo\ExternalContentProvider;
 
 use Closure;
-use PrestaShop\CircuitBreaker\FactorySettings;
-use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
+use PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ExternalContentProvider implements ExternalContentProviderInterface
 {
-    const ALLOWED_FAILURES = 2;
+    const CLOSED_ALLOWED_FAILURES = 3;
+    const CLOSED_TIMEOUT_SECONDS = 5;
 
-    const TIMEOUT_SECONDS = 0.6;
+    const OPEN_ALLOWED_FAILURES = 3;
+    const OPEN_TIMEOUT_SECONDS = 10;
+    const OPEN_THRESHOLD_SECONDS = 3600; // 1 hour
 
-    const THRESHOLD_SECONDS = 3600; // Retry in 1 hour
-
-    /**
-     * @var SimpleCircuitBreakerFactory
-     */
-    private $circuitBreakerFactory;
+    const CACHE_DURATION = 86400; // 24 hours
 
     /**
-     * @var OptionsResolver
+     * @var CircuitBreakerInterface
      */
-    private $optionsResolver;
+    private $circuitBreaker;
 
     /**
-     * Constructor.
+     * @param CircuitBreakerInterface $circuitBreaker
      */
-    public function __construct()
+    public function __construct(CircuitBreakerInterface $circuitBreaker)
     {
-        $this->circuitBreakerFactory = new SimpleCircuitBreakerFactory();
-        $this->optionsResolver = new OptionsResolver();
-        $this->configureOptions();
+        $this->circuitBreaker = $circuitBreaker;
     }
 
     /**
@@ -61,35 +55,11 @@ class ExternalContentProvider implements ExternalContentProviderInterface
      */
     public function getContent($url, array $options = [])
     {
-        $settings = $this->optionsResolver->resolve($options);
-
-        $apiSettings = new FactorySettings(
-            $settings['failures'],
-            $settings['timeout'],
-            $settings['threshold']
-        );
-
-        $circuitBreaker = $this->circuitBreakerFactory->create($apiSettings);
-
-        return $circuitBreaker->call(
+        return $this->circuitBreaker->call(
             $url,
-            $settings['client_options'],
+            $options,
             $this->circuitBreakerFallback()
         );
-    }
-
-    private function configureOptions()
-    {
-        $this->optionsResolver->setDefaults([
-            'failures' => self::ALLOWED_FAILURES,
-            'timeout' => self::TIMEOUT_SECONDS,
-            'threshold' => self::THRESHOLD_SECONDS,
-            'client_options' => [],
-        ]);
-        $this->optionsResolver->setAllowedTypes('failures', 'numeric');
-        $this->optionsResolver->setAllowedTypes('timeout', 'numeric');
-        $this->optionsResolver->setAllowedTypes('threshold', 'numeric');
-        $this->optionsResolver->setAllowedTypes('client_options', 'array');
     }
 
     /**
@@ -100,7 +70,7 @@ class ExternalContentProvider implements ExternalContentProviderInterface
     private function circuitBreakerFallback()
     {
         return function () {
-            throw new ServiceUnavailableHttpException(self::THRESHOLD_SECONDS);
+            throw new ServiceUnavailableHttpException(static::OPEN_THRESHOLD_SECONDS);
         };
     }
 }

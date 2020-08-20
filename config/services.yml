@@ -2,8 +2,64 @@ services:
   _defaults:
     public: true
 
+  mbo.cache.directory_provider:
+    class: 'PrestaShop\Module\Mbo\Cache\CacheDirectoryProvider'
+    arguments:
+      - !php/const _PS_VERSION_
+      - !php/const _PS_ROOT_DIR_
+      - !php/const _PS_MODE_DEV_
+
+  mbo.external_content.circuit_breaker.doctrine_cache:
+    class: Doctrine\Common\Cache\FilesystemCache
+    arguments:
+      - '@=service("mbo.cache.directory_provider").getPath() ~ "/mbo_circuit_breaker"'
+
+  mbo.external_content.circuit_breaker.guzzle.cache_storage:
+    class: GuzzleHttp\Subscriber\Cache\CacheStorage
+    arguments:
+      - '@mbo.external_content.circuit_breaker.doctrine_cache'
+      - "mbo_circuit_breaker_"
+      - !php/const \PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProvider::CACHE_DURATION
+
+  mbo.external_content.circuit_breaker.guzzle.cache_subscriber_factory:
+    class: PrestaShop\Module\Mbo\Cache\CacheSubscriberFactory
+
+  mbo.external_content.circuit_breaker.guzzle.cache_subscriber:
+    class: GuzzleHttp\Subscriber\Cache\CacheSubscriber
+    factory: ['@mbo.external_content.circuit_breaker.guzzle.cache_subscriber_factory', 'create']
+    arguments:
+      - "@mbo.external_content.circuit_breaker.guzzle.cache_storage"
+
+  mbo.external_content.circuit_breaker.storage:
+    class: PrestaShop\CircuitBreaker\Storage\DoctrineCache
+    arguments:
+      - '@mbo.external_content.circuit_breaker.doctrine_cache'
+
+  mbo.external_content.circuit_breaker.advanced_factory:
+    class: PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory
+
+  mbo.external_content.circuit_breaker.settings:
+    class: PrestaShop\CircuitBreaker\FactorySettings
+    arguments:
+      - !php/const \PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProvider::CLOSED_ALLOWED_FAILURES
+      - !php/const \PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProvider::CLOSED_TIMEOUT_SECONDS
+      - !php/const \PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProvider::OPEN_THRESHOLD_SECONDS
+    calls:
+      - ['setStrippedFailures', [!php/const \PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProvider::OPEN_ALLOWED_FAILURES]]
+      - ['setStrippedTimeout', [!php/const \PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProvider::OPEN_TIMEOUT_SECONDS]]
+      - ['setStorage', ['@mbo.external_content.circuit_breaker.storage']]
+      - ['setClientOptions', [{'method': 'GET', 'subscribers': ['@mbo.external_content.circuit_breaker.guzzle.cache_subscriber']}]]
+
+  mbo.external_content.circuit_breaker:
+    class: 'PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface'
+    factory: ["@mbo.external_content.circuit_breaker.advanced_factory", create]
+    arguments:
+      - "@mbo.external_content.circuit_breaker.settings"
+
   mbo.externalcontent.provider:
     class: 'PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProvider'
+    arguments:
+      - '@mbo.external_content.circuit_breaker'
 
   mbo.adapter.module_collection_data_provider:
     class: 'PrestaShop\Module\Mbo\ModuleCollectionDataProvider'

@@ -1,10 +1,12 @@
+includes:
+	- %currentWorkingDirectory%/vendor/prestashop/php-dev-tools/phpstan/ps-module-extension.neon
+
 parameters:
-	bootstrap: tests/phpstan/bootstrap.php
 	paths:
-		- src
-		- ps_mbo.php
-	dynamicConstantNames:
-		- _PS_VERSION_
+		# From PHPStan 0.12, paths to check are relative to the neon file
+		- ../../src
+		- ../../ps_mbo.php
+	reportUnmatchedIgnoredErrors: false
 	ignoreErrors:
 		- '#Property ModuleCore::\$version \(float\) does not accept string.#'
 		- '#Parameter \#2 \$variable of static method ModuleCore::getPermissionStatic\(\) expects array, string given.#'
