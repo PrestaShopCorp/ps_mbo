@@ -36,6 +36,12 @@ class CacheSubscriberFactory
      */
     public function create(CacheStorageInterface $storage)
     {
-        return new CacheSubscriber($storage, function (Request $request) { return true; });
+        return new CacheSubscriber(
+            $storage,
+            function (Request $request) {
+                // Cache all requests
+                return true;
+            }
+        );
     }
 }

@@ -26,11 +26,6 @@ namespace PrestaShop\Module\Mbo\Cache;
 class CacheDirectoryProvider
 {
     /**
-     * @var string PrestaShop version
-     */
-    private $psVersion;
-
-    /**
      * @var string PrestaShop path
      */
     private $psPath;
@@ -41,13 +36,11 @@ class CacheDirectoryProvider
     private $psIsDebugMode;
 
     /**
-     * @param string $psVersion
      * @param string $psPath
      * @param bool $psIsDebugMode
      */
-    public function __construct($psVersion, $psPath, $psIsDebugMode)
+    public function __construct($psPath, $psIsDebugMode)
     {
-        $this->psVersion = $psVersion;
         $this->psPath = $psPath;
         $this->psIsDebugMode = $psIsDebugMode;
     }
@@ -61,15 +54,7 @@ class CacheDirectoryProvider
             return constant('_PS_CACHE_DIR_');
         }
 
-        $path = '/var/cache/' . $this->getEnvName();
-
-        if (version_compare($this->psVersion, '1.7.0.0', '<')) {
-            $path = '/cache';
-        } elseif (version_compare($this->psVersion, '1.7.4.0', '<')) {
-            $path = '/app/cache/' . $this->getEnvName();
-        }
-
-        return $this->psPath . $path;
+        return $this->psPath . '/var/cache/' . $this->getEnvName();
     }
 
     /**
@@ -93,6 +78,10 @@ class CacheDirectoryProvider
      */
     private function getEnvName()
     {
+        if (defined('_PS_IN_TEST_')) {
+            return 'test';
+        }
+
         return $this->psIsDebugMode ? 'dev' : 'prod';
     }
 }

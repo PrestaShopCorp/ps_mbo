@@ -5,7 +5,6 @@ services:
   mbo.cache.directory_provider:
     class: 'PrestaShop\Module\Mbo\Cache\CacheDirectoryProvider'
     arguments:
-      - !php/const _PS_VERSION_
       - !php/const _PS_ROOT_DIR_
       - !php/const _PS_MODE_DEV_
 
