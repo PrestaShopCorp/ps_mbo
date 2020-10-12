@@ -123,6 +123,10 @@ class ModuleCollectionDataProvider
                 $module->set('type', 'addonsPartner');
             }
 
+            if (!empty($module->get('description'))) {
+                $module->set('description', html_entity_decode($module->get('description'), ENT_QUOTES));
+            }
+
             $module->fillLogo();
             $data[$module->get('name')] = $this->modulePresenter->present($module);
         }
