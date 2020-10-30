@@ -8,7 +8,7 @@ PrestaShop Marketplace in your Back Office
 
 ## About
 
-Discover the best PrestaShop modules to optimize your online store.
+Browse the Addons marketplace directly from your back office to better meet your needs.
 
 ## Reporting issues
 
