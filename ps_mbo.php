@@ -152,7 +152,7 @@ class ps_mbo extends Module
         parent::__construct();
 
         $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
-        $this->description = $this->l('Discover the best PrestaShop modules to optimize your online store.');
+        $this->description = $this->l('Browse the Addons marketplace directly from your back office to better meet your needs.');
     }
 
     /**
