@@ -163,7 +163,17 @@ class ps_mbo extends Module
     public function install()
     {
         return parent::install()
-            && $this->registerHook(static::HOOKS)
+            && $this->registerHook(static::HOOKS);
+    }
+
+    /**
+     * Enable Module.
+     *
+     * @return bool
+     */
+    public function enable($force_all = false)
+    {
+        return parent::enable($force_all)
             && $this->installTabs();
     }
 
@@ -232,13 +242,13 @@ class ps_mbo extends Module
     }
 
     /**
-     * Uninstall Module.
+     * Disable Module.
      *
      * @return bool
      */
-    public function uninstall()
+    public function disable($force_all = false)
     {
-        return parent::uninstall()
+        return parent::disable($force_all)
             && $this->uninstallTabs();
     }
 
