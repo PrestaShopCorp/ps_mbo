@@ -26,7 +26,6 @@ var mbo = {};
     toolbarButtons: '#toolbar-nav > li > a.toolbar_btn',
     toolbarHelpButton: '#toolbar-nav li:last-of-type > a.btn-help',
     toolbarLastElement: '#toolbar-nav li:last-of-type',
-    floatingLastElement: '.btn-floating-menu a:last-of-type',
     recommendedModulesButton: '#recommended-modules-button',
     fancybox: '.fancybox-quick-view',
     contentContainer: '#content',
