@@ -26,6 +26,7 @@ var mbo = {};
     toolbarButtons: '#toolbar-nav > li > a.toolbar_btn',
     toolbarHelpButton: '#toolbar-nav li:last-of-type > a.btn-help',
     toolbarLastElement: '#toolbar-nav li:last-of-type',
+    floatingLastElement: '.btn-floating-menu a:last-of-type',
     recommendedModulesButton: '#recommended-modules-button',
     fancybox: '.fancybox-quick-view',
     contentContainer: '#content',
@@ -38,6 +39,7 @@ var mbo = {};
     toolbarButtonsContainer: '.toolbar-icons .wrapper',
     toolbarHelpButton: '.toolbar-icons a.btn-help',
     toolbarLastElement: '.toolbar-icons a:last-of-type',
+    floatingLastElement: '.btn-floating-menu a:last-of-type',
     recommendedModulesButton: '#recommended-modules-button',
     oldButton: '#page-header-desc-configuration-modules-list',
     contentContainer: '#main-div .content-div .container:last',
@@ -67,15 +69,16 @@ var mbo = {};
      * Inserts the button before the help one
      * @param {RecommendedModulesButton} button
      */
-    var insertItBeforeHelpButton = function(button) {
+    var insertItBeforeHelpButton = function(button, floatingButton) {
       $(pageMap.toolbarLastElement).before(button.getMarkup());
+      $(pageMap.floatingLastElement).before(floatingButton.getMarkup());
     };
 
     /**
      * Inserts the button as the last item in the toolbar
      * @param {RecommendedModulesButton} button
      */
-    var insertItLastInToolbar = function(button) {
+    var insertItLastInToolbar = function(button, floatingButton) {
       $(pageMap.toolbarButtonsContainer).append(button.getMarkup());
     };
 
@@ -109,11 +112,11 @@ var mbo = {};
      * @param {RecommendedModulesButton} button
      * @return this
      */
-    this.insertToolbarButton = function(button) {
+    this.insertToolbarButton = function(button, floatingButton) {
       if (lastElementIsHelpButton()) {
-        insertItBeforeHelpButton(button);
+        insertItBeforeHelpButton(button, floatingButton);
       } else {
-        insertItLastInToolbar(button);
+        insertItLastInToolbar(button, floatingButton);
       }
 
       return this;
@@ -188,7 +191,7 @@ var mbo = {};
       );
     } else {
       $markup = $(
-        '<a class="btn btn-outline-secondary" id="' + buttonId + '" href="' + config.recommendedModulesUrl + '" title="' + label + '">\n' +
+        '<a class="btn ' + (!config.isFloating ? 'btn-outline-secondary' : 'btn-floating-item') + '" id="' + buttonId + '" href="' + config.recommendedModulesUrl + '" title="' + label + '">\n' +
         label +
         '</a>'
       );
@@ -435,8 +438,13 @@ var mbo = {};
 
     if (config.shouldAttachRecommendedModulesButton) {
       var button = new RecommendedModulesButton(config);
+
+      var floatingConfig = config;
+      floatingConfig.isFloating = true;
+
+      var floatingButton = new RecommendedModulesButton(floatingConfig);
       var recommendedModulesPopinHandler = new RecommendedModulesPopinHandler(pageMap, config);
-      page.insertToolbarButton(button);
+      page.insertToolbarButton(button, floatingButton);
       recommendedModulesPopinHandler.initialize();
     }
 
