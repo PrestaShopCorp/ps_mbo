@@ -37,6 +37,7 @@ var mbo = {};
 
   var pageMapNewTheme = {
     toolbarButtonsContainer: '.toolbar-icons .wrapper',
+    floatingButtonsContainer: '.btn-floatin-menu',
     toolbarHelpButton: '.toolbar-icons a.btn-help',
     toolbarLastElement: '.toolbar-icons a:last-of-type',
     floatingLastElement: '.btn-floating-menu a:last-of-type',
@@ -71,7 +72,10 @@ var mbo = {};
      */
     var insertItBeforeHelpButton = function(button, floatingButton) {
       $(pageMap.toolbarLastElement).before(button.getMarkup());
-      $(pageMap.floatingLastElement).before(floatingButton.getMarkup());
+
+      if($(pageMap.floatingLastElement)) {
+        $(pageMap.floatingLastElement).before(floatingButton.getMarkup());
+      }
     };
 
     /**
@@ -80,6 +84,10 @@ var mbo = {};
      */
     var insertItLastInToolbar = function(button, floatingButton) {
       $(pageMap.toolbarButtonsContainer).append(button.getMarkup());
+
+      if($(pageMap.floatingButtonsContainer)) {
+        $(pageMap.floatingButtonsContainer).append(floatingButton.getMarkup());
+      }
     };
 
     /**
