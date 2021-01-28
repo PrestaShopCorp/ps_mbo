@@ -40,7 +40,7 @@ var mbo = {};
     toolbarHelpButton: '.toolbar-icons a.btn-help',
     toolbarLastElement: '.toolbar-icons a:last-of-type',
     floatingLastElement: '.btn-floating-menu a:last-of-type',
-    recommendedModulesButton: '#recommended-modules-button',
+    recommendedModulesButton: '#recommended-modules-button, #recommended-modules-button-floating',
     oldButton: '#page-header-desc-configuration-modules-list',
     contentContainer: '#main-div .content-div .container:last',
     modulesListModal: '#modules_list_container',
@@ -198,7 +198,7 @@ var mbo = {};
       );
     } else {
       $markup = $(
-        '<a class="btn ' + (!config.isFloating ? 'btn-outline-secondary' : 'btn-floating-item') + '" id="' + buttonId + '" href="' + config.recommendedModulesUrl + '" title="' + label + '">\n' +
+        '<a class="btn ' + (!config.isFloating ? 'btn-outline-secondary' : 'btn-floating-item') + '" id="' + (!config.isFloating ? `${buttonId}` : `${buttonId}-floating`) + '" href="' + config.recommendedModulesUrl + '" title="' + label + '">\n' +
         label +
         '</a>'
       );
