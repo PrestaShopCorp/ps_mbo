@@ -40,7 +40,10 @@ var mbo = {};
     toolbarLastElement: '.toolbar-icons a:last-of-type',
     recommendedModulesButton: '#recommended-modules-button',
     oldButton: '#page-header-desc-configuration-modules-list',
-    contentContainer: '#main-div .content-div .row:last .col',
+    contentContainer: [
+      '#main-div .content-div .container:last',
+      '#main-div .content-div .col:last',
+    ],
     modulesListModal: '#modules_list_container',
     modulesListModalContainer: '#main-div .content-div',
     modulesListModalContent: '#modules_list_container_tab_modal',
@@ -142,7 +145,14 @@ var mbo = {};
         recommendedModulesRequest.done(function(data) {
           var recommendedModulesContainer = new RecommendedModulesContainer(config, data.content);
 
-          $(pageMap.contentContainer).append(recommendedModulesContainer.getMarkup());
+          let contentContainer;
+          if (pageMap.contentContainer instanceof Array) {
+            contentContainer = pageMap.contentContainer.find(element => $(element).length);
+          } else {
+            contentContainer = pageMap.contentContainer;
+          }
+
+          $(contentContainer).append(recommendedModulesContainer.getMarkup());
         });
 
         recommendedModulesRequest.fail(function(jqXHR, textStatus, errorThrown) {
@@ -153,7 +163,14 @@ var mbo = {};
           }
           var recommendedModulesContainer = new RecommendedModulesContainer(config, content);
 
-          $(pageMap.contentContainer).append(recommendedModulesContainer.getMarkup().get(0).outerHTML);
+          let contentContainer;
+          if (pageMap.contentContainer instanceof Array) {
+            contentContainer = pageMap.contentContainer.find(element => $(element).length);
+          } else {
+            contentContainer = pageMap.contentContainer;
+          }
+
+          $(contentContainer).append(recommendedModulesContainer.getMarkup().get(0).outerHTML);
         });
       }
 
