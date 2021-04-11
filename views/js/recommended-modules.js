@@ -142,14 +142,7 @@ var mbo = {};
         recommendedModulesRequest.done(function(data) {
           var recommendedModulesContainer = new RecommendedModulesContainer(config, data.content);
 
-          let contentContainer;
-          if (pageMap.contentContainer instanceof Array) {
-            contentContainer = pageMap.contentContainer.find(element => $(element).length);
-          } else {
-            contentContainer = pageMap.contentContainer;
-          }
-
-          $(contentContainer).append(recommendedModulesContainer.getMarkup());
+          $(pageMap.contentContainer).first().append(recommendedModulesContainer.getMarkup());
         });
 
         recommendedModulesRequest.fail(function(jqXHR, textStatus, errorThrown) {
@@ -160,14 +153,7 @@ var mbo = {};
           }
           var recommendedModulesContainer = new RecommendedModulesContainer(config, content);
 
-          let contentContainer;
-          if (pageMap.contentContainer instanceof Array) {
-            contentContainer = pageMap.contentContainer.find(element => $(element).length);
-          } else {
-            contentContainer = pageMap.contentContainer;
-          }
-
-          $(contentContainer).append(recommendedModulesContainer.getMarkup().get(0).outerHTML);
+          $(pageMap.contentContainer).first().append(recommendedModulesContainer.getMarkup().get(0).outerHTML);
         });
       }
 
