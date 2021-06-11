@@ -139,7 +139,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '2.0.1';
+        $this->version = '2.0.2';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -152,7 +152,7 @@ class ps_mbo extends Module
         parent::__construct();
 
         $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
-        $this->description = $this->l('Discover the best PrestaShop modules to optimize your online store.');
+        $this->description = $this->l('Browse the Addons marketplace directly from your back office to better meet your needs.');
     }
 
     /**
@@ -163,7 +163,17 @@ class ps_mbo extends Module
     public function install()
     {
         return parent::install()
-            && $this->registerHook(static::HOOKS)
+            && $this->registerHook(static::HOOKS);
+    }
+
+    /**
+     * Enable Module.
+     *
+     * @return bool
+     */
+    public function enable($force_all = false)
+    {
+        return parent::enable($force_all)
             && $this->installTabs();
     }
 
@@ -232,13 +242,13 @@ class ps_mbo extends Module
     }
 
     /**
-     * Uninstall Module.
+     * Disable Module.
      *
      * @return bool
      */
-    public function uninstall()
+    public function disable($force_all = false)
     {
-        return parent::uninstall()
+        return parent::disable($force_all)
             && $this->uninstallTabs();
     }
 
