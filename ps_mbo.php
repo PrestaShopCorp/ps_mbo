@@ -25,7 +25,6 @@ $autoloadPath = __DIR__ . '/vendor/autoload.php';
 if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
-
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -126,6 +125,7 @@ class ps_mbo extends Module
     const HOOKS = [
         'actionAdminControllerSetMedia',
         'displayDashboardTop',
+        'displayBackOfficeEmployeeMenu',
     ];
 
     /**
@@ -363,6 +363,113 @@ class ps_mbo extends Module
         ]);
 
         return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
+    }
+
+    /**
+     * Hook displayBackOfficeMenu.
+     * Returns menu in BackOffice
+     *
+     * @param array $params
+     *
+     * @return void
+     */
+    public function hookDisplayBackOfficeEmployeeMenu(array $params)
+    {
+        if (!class_exists(\PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection::class)
+            && !class_exists(\PrestaShopBundle\Component\ActionBar\ActionsBarButton::class)
+            && !($params['links'] instanceof \PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection)) {
+            return;
+        }
+        $params['links']->add(
+            new \PrestaShopBundle\Component\ActionBar\ActionsBarButton(
+                __CLASS__,
+                [
+                    'link' => $this->trans(
+                        'https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17',
+                        [],
+                        'Admin.Navigation.Header'
+                    ),
+                    'icon' => 'book',
+                ],
+                $this->trans(
+                    'Resources',
+                    [],
+                    'Admin.Navigation.Header'
+                )
+            )
+        );
+        $params['links']->add(
+            new \PrestaShopBundle\Component\ActionBar\ActionsBarButton(
+                __CLASS__,
+                [
+                    'link' => $this->trans(
+                        'https://www.prestashop.com/en/training?utm_source=back-office&utm_medium=profile&utm_campaign=training-en&utm_content=download17',
+                        [],
+                        'Admin.Navigation.Header'
+                    ),
+                    'icon' => 'school',
+                ],
+                $this->trans(
+                    'Training',
+                    [],
+                    'Admin.Navigation.Header'
+                )
+            )
+        );
+        $params['links']->add(
+            new \PrestaShopBundle\Component\ActionBar\ActionsBarButton(
+                __CLASS__,
+                [
+                    'link' => $this->trans(
+                        'https://www.prestashop.com/en/experts?utm_source=back-office&utm_medium=profile&utm_campaign=expert-en&utm_content=download17',
+                        [],
+                        'Admin.Navigation.Header'
+                    ),
+                    'icon' => 'person_pin_circle',
+                ],
+                $this->trans(
+                    'Find an Expert',
+                    [],
+                    'Admin.Navigation.Header'
+                )
+            )
+        );
+        $params['links']->add(
+            new \PrestaShopBundle\Component\ActionBar\ActionsBarButton(
+                __CLASS__,
+                [
+                    'link' => $this->trans(
+                        'https://addons.prestashop.com?utm_source=back-office&utm_medium=profile&utm_campaign=addons-en&utm_content=download17',
+                        [],
+                        'Admin.Navigation.Header'
+                    ),
+                    'icon' => 'extension',
+                ],
+                $this->trans(
+                    'PrestaShop Marketplace',
+                    [],
+                    'Admin.Navigation.Header'
+                )
+            )
+        );
+        $params['links']->add(
+            new \PrestaShopBundle\Component\ActionBar\ActionsBarButton(
+                __CLASS__,
+                [
+                    'link' => $this->trans(
+                        'https://www.prestashop.com/en/contact?utm_source=back-office&utm_medium=profile&utm_campaign=help-center-en&utm_content=download17',
+                        [],
+                        'Admin.Navigation.Header'
+                    ),
+                    'icon' => 'help',
+                ],
+                $this->trans(
+                    'Help Center',
+                    [],
+                    'Admin.Navigation.Header'
+                )
+            )
+        );
     }
 
     /**
