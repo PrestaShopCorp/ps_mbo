@@ -25,6 +25,7 @@ $autoloadPath = __DIR__ . '/vendor/autoload.php';
 if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
+
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
@@ -167,6 +168,11 @@ class ps_mbo extends Module
     {
         return parent::install()
             && $this->registerHook(static::HOOKS);
+    }
+
+    public function postInstall()
+    {
+
     }
 
     /**
@@ -584,5 +590,24 @@ class ps_mbo extends Module
         }
 
         return $this->container->get($serviceName);
+    }
+
+    protected function getAddonsModules()
+    {
+
+        $addons_modules = [];
+        $content = Tools::addonsRequest('install-modules', []);
+        $xml = @simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOCDATA);
+
+        if ($xml !== false && isset($xml->module)) {
+            foreach ($xml->module as $modaddons) {
+                if (in_array($modaddons->name, $blacklist)) {
+                    continue;
+                }
+                $addons_modules[] = ['id_module' => $modaddons->id, 'name' => $modaddons->name];
+            }
+        }
+
+        return $addons_modules;
     }
 }

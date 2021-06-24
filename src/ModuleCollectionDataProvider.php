@@ -24,9 +24,9 @@ use Module;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepositoryInterface;
+use PrestaShop\Module\Mbo\Addon\AddonsCollection;
+use PrestaShop\Module\Mbo\Addon\Module\ModuleRepository;
+use PrestaShop\Module\Mbo\Addon\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Profile;
 
