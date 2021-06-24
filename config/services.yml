@@ -1,3 +1,6 @@
+imports:
+    - { resource: services/*.yml }
+
 services:
   _defaults:
     public: true
@@ -9,7 +12,7 @@ services:
     class: 'PrestaShop\Module\Mbo\ModuleCollectionDataProvider'
     arguments:
       - '@prestashop.core.admin.data_provider.module_interface'
-      - '@prestashop.core.admin.module.repository'
+      - '@mbo.addon.module.repository'
       - '@prestashop.adapter.presenter.module'
       - '@prestashop.core.admin.tab.repository'
       - '@prestashop.adapter.legacy.context'
