@@ -1,14 +1,11 @@
 parameters:
-	bootstrap: tests/phpstan/bootstrap.php
-	paths:
-		- src
-		- ps_mbo.php
-	dynamicConstantNames:
-		- _PS_VERSION_
-	ignoreErrors:
-		- '#Call to method add\(\) on an unknown class PrestaShopBundle\\Component\\ActionBar\\ActionsBarButtonsCollection.#'
-		- '#Class PrestaShopBundle\\Component\\ActionBar\\ActionsBarButton not found.#'
-		- '#Class PrestaShopBundle\\Component\\ActionBar\\ActionsBarButtonsCollection not found.#'
-		- '#Instantiated class PrestaShopBundle\\Component\\ActionBar\\ActionsBarButton not found.#'
+  bootstrap: tests/phpstan/bootstrap.php
+  paths:
+    - src
+    - ps_mbo.php
+  dynamicConstantNames:
+    - _PS_VERSION_
+  ignoreErrors:
+    - '#Parameter \#1 \$idProfile of static method ProfileCore::getProfileAccess\(\) expects int, string given.#'
 
-	level: 5
+  level: 5
