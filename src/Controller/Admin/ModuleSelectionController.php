@@ -20,7 +20,7 @@
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use PrestaShop\Module\Mbo\AddonsSelectionLinkProvider;
+use PrestaShop\Module\Mbo\Addons\SelectionLinkProvider;
 use PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProviderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -44,24 +44,24 @@ class ModuleSelectionController extends FrameworkBundleAdminController
     private $externalContentProvider;
 
     /**
-     * @var AddonsSelectionLinkProvider
+     * @var SelectionLinkProvider
      */
-    private $addonsSelectionLinkProvider;
+    private $selectionLinkProvider;
 
     /**
      * @param RequestStack $requestStack
      * @param ExternalContentProviderInterface $externalContentCollectionProvider
-     * @param AddonsSelectionLinkProvider $addonsSelectionLinkProvider
+     * @param SelectionLinkProvider $selectionLinkProvider
      */
     public function __construct(
         RequestStack $requestStack,
         ExternalContentProviderInterface $externalContentCollectionProvider,
-        AddonsSelectionLinkProvider $addonsSelectionLinkProvider
+        SelectionLinkProvider $selectionLinkProvider
     ) {
         parent::__construct();
         $this->requestStack = $requestStack;
         $this->externalContentProvider = $externalContentCollectionProvider;
-        $this->addonsSelectionLinkProvider = $addonsSelectionLinkProvider;
+        $this->selectionLinkProvider = $selectionLinkProvider;
     }
 
     /**
@@ -77,7 +77,7 @@ class ModuleSelectionController extends FrameworkBundleAdminController
             $response->setContent($this->renderView(
                 '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/addons_store.html.twig',
                 [
-                    'pageContent' => $this->externalContentProvider->getContent($this->addonsSelectionLinkProvider->getLinkUrl()),
+                    'pageContent' => $this->externalContentProvider->getContent($this->selectionLinkProvider->getLinkUrl()),
                     'layoutHeaderToolbarBtn' => [],
                     'layoutTitle' => $this->trans('Module selection', 'Admin.Navigation.Menu'),
                     'requireAddonsSearch' => true,

@@ -3,7 +3,7 @@ services:
     public: true
 
   mbo.addon.module.repository:
-    class: PrestaShop\Module\Mbo\Addon\Module\ModuleRepository
+    class: PrestaShop\Module\Mbo\Addons\Module\ModuleRepository
     arguments:
       - "@prestashop.adapter.admin.data_provider.module"
       - "@prestashop.adapter.data_provider.module"
@@ -12,55 +12,26 @@ services:
       - "@translator"
       - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
       - "@doctrine.cache.provider"
+
+  mbo.addon.module.data_provider.module:
+    class: PrestaShop\Module\Mbo\Addons\Module\ModuleDataProvider
+    arguments:
+      - "@translator"
+      - "@logger"
+      - "@mbo.addon.module.data_provider.addons"
+      - "@prestashop.categories_provider"
+      - "@prestashop.adapter.data_provider.module"
+      - "@doctrine.cache.provider"
+      - "@=service('prestashop.adapter.legacy.context').getContext().employee"
     calls:
-      - [setPrestaTrustChecker, ['@prestashop.adapter.module.prestatrust.checker']]
+      - [ setRouter, ['@router']]
 
-  mbo.addon.theme.repository:
-    class: PrestaShop\Module\Mbo\Addon\Theme\ThemeRepository
+  mbo.addon.module.data_provider.addons:
+    class: PrestaShop\Module\Mbo\Addons\DataProvider
+    decorates: prestashop.core.admin.data_provider.addons_interface
     arguments:
-      - "@prestashop.adapter.legacy.configuration"
-      - "@filesystem"
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop"
-
-  mbo.addon.theme.exporter:
-    class: PrestaShop\Module\Mbo\Addon\Theme\ThemeExporter
-    arguments:
-      - "@prestashop.adapter.legacy.configuration"
-      - "@filesystem"
-      - "@prestashop.core.admin.lang.repository"
-      - "@prestashop.translation.theme.exporter"
-
-  mbo.addon.theme.theme_validator:
-    class: PrestaShop\Module\Mbo\Addon\Theme\ThemeValidator
-    arguments:
-      - '@translator'
-      - '@prestashop.adapter.legacy.configuration'
-
-  mbo.addon.theme.theme_manager_builder:
-    class: PrestaShop\Module\Mbo\Addon\Theme\ThemeManagerBuilder
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext()'
-      - '@prestashop.adapter.legacy_db'
-      - '@mbo.addon.theme.theme_validator'
-
-  mbo.addon.theme.theme_manager:
-    class: PrestaShop\Module\Mbo\Addon\Theme\ThemeManager
-    factory: 'mbo.addon.theme.theme_manager_builder:build'
-
-  mbo.addon.theme.theme.page_layouts_customizer:
-    class: PrestaShop\Module\Mbo\Addon\Theme\ThemePageLayoutsCustomizer
-    arguments:
-      - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme'
-      - '@mbo.addon.theme.theme_manager'
-      - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
-
-  mbo.addon.theme.theme_zip_uploader:
-    class: PrestaShop\Module\Mbo\Addon\Theme\ThemeZipUploader
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
-
-  mbo.addon.theme.theme_provider:
-    class: PrestaShop\Module\Mbo\Addon\Theme\ThemeProvider
-    arguments:
-      - '@mbo.addon.theme.repository'
-      - '@=service("prestashop.adapter.legacy.context").getContext().shop.theme'
+      - '@prestashop.addons.client_api'
+      - '@prestashop.module.zip.manager'
+      - '@=service("prestashop.adapter.legacy.configuration").get("ADDONS_API_MODULE_CHANNEL", "stable")'
+    properties:
+      cacheDir: "%kernel.cache_dir%"

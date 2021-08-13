@@ -100,15 +100,13 @@ class ps_mbo extends Module
             'name' => 'Module catalog',
             'visible' => true,
             'class_name' => 'AdminPsMboModule',
-            'parent_class_name' => 'AdminParentModulesCatalog',
-            'core_reference' => 'AdminModulesCatalog',
+            'parent_class_name' => 'AdminParentModulesSf',
         ],
         'AdminPsMboAddons' => [
             'name' => 'Module selection',
             'visible' => true,
             'class_name' => 'AdminPsMboAddons',
-            'parent_class_name' => 'AdminParentModulesCatalog',
-            'core_reference' => 'AdminAddonsCatalog',
+            'parent_class_name' => 'AdminPsMboModule',
         ],
         'AdminPsMboRecommended' => [
             'name' => 'Module recommended',
@@ -120,7 +118,6 @@ class ps_mbo extends Module
             'visible' => true,
             'class_name' => 'AdminPsMboTheme',
             'parent_class_name' => 'AdminParentThemes',
-            'core_reference' => 'AdminThemesCatalog',
         ],
     ];
 
@@ -172,7 +169,7 @@ class ps_mbo extends Module
 
     public function postInstall()
     {
-
+        return true;
     }
 
     /**
@@ -218,24 +215,13 @@ class ps_mbo extends Module
             $tabData['name']
         );
 
-        if (isset($tabData['core_reference'])) {
-            $tabCoreId = Tab::getIdFromClassName($tabData['core_reference']);
-
-            if ($tabCoreId !== false) {
-                $tabCore = new Tab($tabCoreId);
-                $tabNameByLangId = $tabCore->name;
-                $position = $tabCore->position;
-                $tabCore->active = false;
-                $tabCore->save();
-            }
-        }
-
         $tab = new Tab();
         $tab->module = $this->name;
         $tab->class_name = $tabData['class_name'];
         $tab->position = (int) $position;
         $tab->id_parent = empty($tabData['parent_class_name']) ? -1 : Tab::getIdFromClassName($tabData['parent_class_name']);
         $tab->name = $tabNameByLangId;
+        $tab->active = true;
 
         if (false === (bool) $tab->add()) {
             return false;
@@ -601,9 +587,6 @@ class ps_mbo extends Module
 
         if ($xml !== false && isset($xml->module)) {
             foreach ($xml->module as $modaddons) {
-                if (in_array($modaddons->name, $blacklist)) {
-                    continue;
-                }
                 $addons_modules[] = ['id_module' => $modaddons->id, 'name' => $modaddons->name];
             }
         }

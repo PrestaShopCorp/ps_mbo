@@ -22,18 +22,18 @@ namespace PrestaShop\Module\Mbo;
 
 use Module;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider as ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
-use PrestaShop\Module\Mbo\Addon\AddonsCollection;
-use PrestaShop\Module\Mbo\Addon\Module\ModuleRepository;
-use PrestaShop\Module\Mbo\Addon\Module\ModuleRepositoryInterface;
+use PrestaShop\Module\Mbo\Addons\AddonsCollection;
+use PrestaShop\Module\Mbo\Addons\Module\ModuleRepository;
+use PrestaShop\Module\Mbo\Addons\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Profile;
 
 class ModuleCollectionDataProvider
 {
     /**
-     * @var AdminModuleDataProvider
+     * @var ModuleDataProvider
      */
     private $addonsProvider;
 
@@ -60,14 +60,14 @@ class ModuleCollectionDataProvider
     /**
      * Constructor.
      *
-     * @param AdminModuleDataProvider $addonsProvider
+     * @param ModuleDataProvider $addonsProvider
      * @param ModuleRepositoryInterface $moduleRepository
      * @param PresenterInterface $modulePresenter
      * @param TabRepository $tabRepository
      * @param LegacyContext $context
      */
     public function __construct(
-        AdminModuleDataProvider $addonsProvider,
+        ModuleDataProvider $addonsProvider,
         ModuleRepositoryInterface $moduleRepository,
         PresenterInterface $modulePresenter,
         TabRepository $tabRepository,

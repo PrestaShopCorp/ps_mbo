@@ -40,7 +40,7 @@ services:
     class: 'PrestaShop\Module\Mbo\RecommendedModule\RecommendedModulePresenter'
 
   mbo.addons_selection_link_provider:
-    class: 'PrestaShop\Module\Mbo\AddonsSelectionLinkProvider'
+    class: 'PrestaShop\Module\Mbo\Addons\SelectionLinkProvider'
     arguments:
       - '@prestashop.core.foundation.version'
       - '@prestashop.adapter.legacy.context'
