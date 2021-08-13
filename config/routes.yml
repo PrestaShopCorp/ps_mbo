@@ -11,8 +11,8 @@ admin_mbo_catalog_module_selection:
   methods: [GET]
   defaults:
     _controller: mbo.controller.modules.selection:indexAction
-    _legacy_controller: AdminPsMboAddons
-    _legacy_link: AdminPsMboAddons
+    _legacy_controller: AdminPsMboSelection
+    _legacy_link: AdminPsMboSelection
 
 admin_mbo_catalog_module_refresh:
     path:     /catalog/refresh/{category}/{keyword}

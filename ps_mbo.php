@@ -96,17 +96,23 @@ class ps_mbo extends Module
     ];
 
     const ADMIN_CONTROLLERS = [
+        'AdminPsMboModuleParent' => [
+            'name' => 'Module catalog',
+            'visible' => true,
+            'class_name' => 'AdminPsMboModuleParent',
+            'parent_class_name' => 'AdminParentModulesSf',
+        ],
         'AdminPsMboModule' => [
             'name' => 'Module catalog',
             'visible' => true,
             'class_name' => 'AdminPsMboModule',
-            'parent_class_name' => 'AdminParentModulesSf',
+            'parent_class_name' => 'AdminPsMboModuleParent',
         ],
-        'AdminPsMboAddons' => [
+        'AdminPsMboSelection' => [
             'name' => 'Module selection',
             'visible' => true,
-            'class_name' => 'AdminPsMboAddons',
-            'parent_class_name' => 'AdminPsMboModule',
+            'class_name' => 'AdminPsMboSelection',
+            'parent_class_name' => 'AdminPsMboModuleParent',
         ],
         'AdminPsMboRecommended' => [
             'name' => 'Module recommended',
