@@ -376,8 +376,8 @@ class ps_mbo extends Module
     public function hookDisplayBackOfficeEmployeeMenu(array $params)
     {
         if (!class_exists(\PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection::class)
-            && !class_exists(\PrestaShopBundle\Component\ActionBar\ActionsBarButton::class)
-            && !($params['links'] instanceof \PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection)) {
+            || !class_exists(\PrestaShopBundle\Component\ActionBar\ActionsBarButton::class)
+            || !($params['links'] instanceof \PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection)) {
             return;
         }
         $params['links']->add(
