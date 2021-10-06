@@ -24,7 +24,7 @@ use PrestaShop\Module\Mbo\Addons\AddonsCollection;
 use PrestaShop\Module\Mbo\Addons\ListFilter;
 use PrestaShop\Module\Mbo\Addons\ListFilterStatus;
 use PrestaShop\Module\Mbo\Addons\ListFilterType;
-use PrestaShop\Module\Mbo\Addons\Module\ModuleDataProvider;
+use PrestaShop\Module\Mbo\Addons\Module\AdminModuleDataProvider;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -76,7 +76,7 @@ class ModuleCatalogController extends ModuleAbstractController
      */
     public function refreshAction(Request $request)
     {
-        $modulesProvider = $this->get('mbo.addon.module.data_provider.module');
+        $modulesProvider = $this->get('mbo.addon.module.data_provider.admin_module');
         $moduleRepository = $this->get('mbo.addon.module.repository');
         $responseArray = [];
 
@@ -113,12 +113,12 @@ class ModuleCatalogController extends ModuleAbstractController
     /**
      * Get categories and its modules.
      *
-     * @param ModuleDataProvider $modulesProvider
+     * @param AdminModuleDataProvider $modulesProvider
      * @param array $modules List of installed modules
      *
      * @return array
      */
-    private function getCategories(ModuleDataProvider $modulesProvider, array $modules)
+    private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules)
     {
         /** @var CategoriesProvider $categoriesProvider */
         $categoriesProvider = $this->get('prestashop.categories_provider');

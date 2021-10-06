@@ -26,482 +26,287 @@
 
 namespace PrestaShop\Module\Mbo\Addons\Module;
 
-use Context;
-use Doctrine\Common\Cache\CacheProvider;
-use Employee;
+use Db;
+use Doctrine\ORM\EntityManager;
 use Module as LegacyModule;
-use PrestaShop\Module\Mbo\Addons\AddonsCollection;
-use PrestaShop\Module\Mbo\Addons\ListFilterOrigin;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider as CoreModuleDataProviderAdapter;
-use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
-use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
+use PhpParser;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
+use Validate;
 
 /**
- * Data provider for new Architecture, about Module object model.
- *
- * This class will provide data from DB / ORM about Modules for the Admin interface.
- * This is an Adapter that works with the Legacy code and persistence behaviors.
+ * This class will provide data from DB / ORM about Module.
  */
 class ModuleDataProvider
 {
-    public const _CACHEKEY_MODULES_ = '_addons_modules';
-
-    public const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
-
     /**
-     * @const array giving a translation domain key for each module action
-     */
-    public const _ACTIONS_TRANSLATION_DOMAINS_ = [
-        'install' => 'Admin.Actions',
-        'uninstall' => 'Admin.Actions',
-        'enable' => 'Admin.Actions',
-        'disable' => 'Admin.Actions',
-        'enable_mobile' => 'Admin.Modules.Feature',
-        'disable_mobile' => 'Admin.Modules.Feature',
-        'reset' => 'Admin.Actions',
-        'upgrade' => 'Admin.Actions',
-        'configure' => 'Admin.Actions',
-    ];
-
-    /**
-     * @var array of defined and callable module actions
-     */
-    protected $moduleActions = ['install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade'];
-
-    /**
-     * @var int
-     */
-    private $languageISO;
-
-    /**
+     * Logger.
+     *
      * @var LoggerInterface
      */
     private $logger;
 
     /**
-     * @var Router|null
+     * Translator.
+     *
+     * @var \Symfony\Component\Translation\TranslatorInterface
      */
-    private $router = null;
+    private $translator;
 
     /**
-     * @var AddonsInterface
+     * EntityManager for module history.
+     *
+     * @var EntityManager
      */
-    private $addonsDataProvider;
+    private $entityManager;
 
     /**
-     * @var CategoriesProvider
+     * @var int
      */
-    private $categoriesProvider;
+    private $employeeID;
 
-    /**
-     * @var ModuleDataProvider
-     */
-    private $moduleProvider;
-
-    /**
-     * @var CacheProvider|null
-     */
-    private $cacheProvider;
-
-    /**
-     * @var Employee|null
-     */
-    private $employee;
-
-    /**
-     * @var array
-     */
-    protected $catalog_modules = [];
-
-    /**
-     * @var array
-     */
-    protected $catalog_modules_names;
-
-    /**
-     * @var bool
-     */
-    public $failed = false;
-
-    public function __construct(
-        TranslatorInterface $translator,
-        LoggerInterface $logger,
-        AddonsInterface $addonsDataProvider,
-        CategoriesProvider $categoriesProvider,
-        CoreModuleDataProviderAdapter $modulesProvider,
-        CacheProvider $cacheProvider = null,
-        Employee $employee = null
-    ) {
-        list($this->languageISO) = explode('-', $translator->getLocale());
-
+    public function __construct(LoggerInterface $logger, TranslatorInterface $translator, EntityManager $entityManager = null)
+    {
         $this->logger = $logger;
-        $this->addonsDataProvider = $addonsDataProvider;
-        $this->categoriesProvider = $categoriesProvider;
-        $this->moduleProvider = $modulesProvider;
-        $this->cacheProvider = $cacheProvider;
-        $this->employee = $employee;
+        $this->translator = $translator;
+        $this->entityManager = $entityManager;
+        $this->employeeID = 0;
     }
 
     /**
-     * @param Router $router
+     * @param int $employeeID
      */
-    public function setRouter(Router $router)
+    public function setEmployeeId($employeeID)
     {
-        $this->router = $router;
+        $this->employeeID = (int) $employeeID;
     }
 
     /**
-     * Clear the modules information from Addons cache.
-     */
-    public function clearCatalogCache()
-    {
-        if ($this->cacheProvider) {
-            $this->cacheProvider->delete($this->languageISO . self::_CACHEKEY_MODULES_);
-        }
-        $this->catalog_modules = [];
-    }
-
-    /**
-     * Clears module list cache.
-     */
-    public function clearModuleListCache()
-    {
-        if (file_exists(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST)) {
-            @unlink(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-        }
-    }
-
-    /**
-     * @param array $filters
+     * Return all module information from database.
+     *
+     * @param string $name The technical module name to search
      *
      * @return array
      */
-    public function getCatalogModules(array $filters = [])
+    public function findByName($name)
     {
-        if (count($this->catalog_modules) === 0 && !$this->failed) {
-            $this->loadCatalogData();
+        $result = Db::getInstance()->getRow('SELECT `id_module` as `id`, `active`, `version` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"');
+        if ($result) {
+            $result['installed'] = 1;
+            $result['active'] = $this->isEnabled($name);
+            $result['active_on_mobile'] = (bool) ($this->getDeviceStatus($name) & AddonListFilterDeviceStatus::DEVICE_MOBILE);
+            $lastAccessDate = '0000-00-00 00:00:00';
+
+            if (!Tools::isPHPCLI() && null !== $this->entityManager && $this->employeeID) {
+                $moduleID = isset($result['id']) ? (int) $result['id'] : 0;
+
+                $qb = $this->entityManager->createQueryBuilder();
+                $qb->select('mh')
+                    ->from('PrestaShopBundle:ModuleHistory', 'mh', 'mh.idModule')
+                    ->where('mh.idEmployee = ?1')
+                    ->setParameter(1, $this->employeeID);
+                $query = $qb->getQuery();
+                $query->useResultCache(true);
+                $modulesHistory = $query->getResult();
+
+                if (array_key_exists($moduleID, $modulesHistory)) {
+                    $lastAccessDate = $modulesHistory[$moduleID]->getDateUpd()->format('Y-m-d H:i:s');
+                }
+            }
+            $result['last_access_date'] = $lastAccessDate;
+
+            return $result;
         }
 
-        return $this->applyModuleFilters(
-                $this->catalog_modules,
-            $filters
+        return ['installed' => 0];
+    }
+
+    /**
+     * Return translated module *Display Name*.
+     *
+     * @param string $module The technical module name
+     *
+     * @return string The translated Module displayName
+     */
+    public function getModuleName($module)
+    {
+        return LegacyModule::getModuleName($module);
+    }
+
+    /**
+     * Check current employee permission on a given module.
+     *
+     * @param string $action
+     * @param string $name
+     *
+     * @return bool True if allowed
+     */
+    public function can($action, $name)
+    {
+        $module_id = LegacyModule::getModuleIdByName($name);
+
+        if (empty($module_id)) {
+            return false;
+        }
+
+        return LegacyModule::getPermissionStatic($module_id, $action);
+    }
+
+    /**
+     * Check if a module is enabled in the current shop context.
+     *
+     * @param string $name The technical module name
+     *
+     * @return bool True if enable
+     */
+    public function isEnabled($name)
+    {
+        $id_shops = (new Context())->getContextListShopID();
+        // ToDo: Load list of all installed modules ?
+
+        $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`
+        FROM `' . _DB_PREFIX_ . 'module` m
+        LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
+        WHERE `name` = "' . pSQL($name) . '"
+        AND ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')');
+        if ($result) {
+            return (bool) ($result['active'] && $result['shop_active']);
+        } else {
+            return false;
+        }
+    }
+
+    public function isInstalled($name)
+    {
+        // ToDo: Load list of all installed modules ?
+        return (bool) $this->getModuleIdByName($name);
+    }
+
+    /**
+     * Returns the Module Id
+     *
+     * @param string $name The technical module name
+     *
+     * @return int the Module Id, or 0 if not found
+     */
+    public function getModuleIdByName($name)
+    {
+        return (int) Db::getInstance()->getValue(
+            'SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"'
         );
     }
 
     /**
-     * @param array $filter
+     * We won't load an invalid class. This function will check any potential parse error.
      *
-     * @return array
+     * @param string $name The technical module name to check
+     *
+     * @return bool true if valid
      */
-    public function getCatalogModulesNames(array $filter = [])
+    public function isModuleMainClassValid($name)
     {
-        return array_keys($this->getCatalogModules($filter));
-    }
-
-    /**
-     * Check the permissions of the current context (CLI or employee) for a module.
-     *
-     * @param array $actions Actions to check
-     * @param string $name The module name
-     *
-     * @return array of allowed actions
-     */
-    protected function filterAllowedActions(array $actions, $name = '')
-    {
-        $allowedActions = [];
-        foreach (array_keys($actions) as $actionName) {
-            if ($this->isAllowedAccess($actionName, $name)) {
-                $allowedActions[$actionName] = $actions[$actionName];
-            }
+        if (!Validate::isModuleName($name)) {
+            return false;
         }
 
-        return $allowedActions;
-    }
-
-    /**
-     * Check the permissions of the current context (CLI or employee) for a specified action.
-     *
-     * @param string $action The action called in the module
-     * @param string $name (Optionnal for 'install') The module name to check
-     *
-     * @return bool
-     */
-    public function isAllowedAccess($action, $name = '')
-    {
-        if (Tools::isPHPCLI()) {
-            return true;
+        $file_path = _PS_MODULE_DIR_ . $name . '/' . $name . '.php';
+        // Check if file exists (slightly faster than file_exists)
+        if (!(int) @filemtime($file_path)) {
+            return false;
         }
 
-        if (in_array($action, ['install', 'upgrade'])) {
-            return $this->employee->can('add', 'AdminModulessf');
+        $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::ONLY_PHP7);
+        $log_context_data = [
+            'object_type' => 'Module',
+            'object_id' => LegacyModule::getModuleIdByName($name),
+        ];
+
+        try {
+            $parser->parse(file_get_contents($file_path));
+        } catch (PhpParser\Error $exception) {
+            $this->logger->critical(
+                $this->translator->trans(
+                    'Parse error detected in main class of module %module%: %parse_error%',
+                    [
+                        '%module%' => $name,
+                        '%parse_error%' => $exception->getMessage(),
+                    ],
+                    'Admin.Modules.Notification'
+                ),
+                $log_context_data
+            );
+
+            return false;
         }
 
-        if ('uninstall' === $action) {
-            return $this->employee->can('delete', 'AdminModulessf') && $this->moduleProvider->can('uninstall', $name);
-        }
-
-        return $this->employee->can('edit', 'AdminModulessf') && $this->moduleProvider->can('configure', $name);
-    }
-
-    /**
-     * @param AddonsCollection $addons
-     * @param string|null $specific_action
-     *
-     * @return AddonsCollection
-     */
-    public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
-    {
-        foreach ($addons as $addon) {
-            $urls = [];
-            foreach ($this->moduleActions as $action) {
-                $urls[$action] = $this->router->generate('admin_module_manage_action', [
-                    'action' => $action,
-                    'module_name' => $addon->attributes->get('name'),
-                ]);
-            }
-            $urls['configure'] = $this->router->generate('admin_module_configure_action', [
-                'module_name' => $addon->attributes->get('name'),
-            ]);
-
-            if ($addon->database->has('installed') && $addon->database->getBoolean('installed')) {
-                if (!$addon->database->getBoolean('active')) {
-                    $url_active = 'enable';
-                    unset(
-                        $urls['install'],
-                        $urls['disable']
-                    );
-                } elseif ($addon->attributes->getBoolean('is_configurable')) {
-                    $url_active = 'configure';
-                    unset(
-                        $urls['enable'],
-                        $urls['install']
-                    );
-                } else {
-                    $url_active = 'disable';
-                    unset(
-                        $urls['install'],
-                        $urls['enable'],
-                        $urls['configure']
-                    );
-                }
-
-                if (!$addon->attributes->getBoolean('is_configurable')) {
-                    unset($urls['configure']);
-                }
-
-                if ($addon->canBeUpgraded()) {
-                    $url_active = 'upgrade';
-                } else {
-                    unset(
-                        $urls['upgrade']
-                    );
-                }
-                if (!$addon->database->getBoolean('active_on_mobile')) {
-                    unset($urls['disable_mobile']);
-                } else {
-                    unset($urls['enable_mobile']);
-                }
-                if (!$addon->canBeUpgraded()) {
-                    unset(
-                        $urls['upgrade']
-                    );
-                }
-            } elseif (
-                !$addon->attributes->has('origin') ||
-                $addon->disk->getBoolean('is_present') ||
-                in_array($addon->attributes->get('origin'), ['native', 'native_all', 'partner', 'customer'], true)
-            ) {
-                $url_active = 'install';
-                unset(
-                    $urls['uninstall'],
-                    $urls['enable'],
-                    $urls['disable'],
-                    $urls['enable_mobile'],
-                    $urls['disable_mobile'],
-                    $urls['reset'],
-                    $urls['upgrade'],
-                    $urls['configure']
-                );
-            } else {
-                $url_active = 'buy';
-            }
-
-            $urls = $this->filterAllowedActions($urls, $addon->attributes->get('name'));
-            $addon->attributes->set('urls', $urls);
-            $addon->attributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
-            if ($specific_action && array_key_exists($specific_action, $urls)) {
-                $addon->attributes->set('url_active', $specific_action);
-            } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {
-                $addon->attributes->set('url_active', $url_active);
-            } else {
-                $addon->attributes->set('url_active', key($urls));
-            }
-
-            $categoryParent = $this->categoriesProvider->getParentCategory($addon->attributes->get('categoryName'));
-            $addon->attributes->set('categoryParent', $categoryParent);
-        }
-
-        return $addons;
-    }
-
-    /**
-     * @param int $moduleId
-     *
-     * @return array
-     */
-    public function getModuleAttributesById($moduleId)
-    {
-        return (array) $this->addonsDataProvider->request('module', ['id_module' => $moduleId]);
-    }
-
-    /**
-     * @param array $modules
-     * @param array $filters
-     *
-     * @return array
-     */
-    protected function applyModuleFilters(array $modules, array $filters)
-    {
-        if (!count($filters)) {
-            return $modules;
-        }
-
-        // We get our module IDs to keep
-        foreach ($filters as $filter_name => $value) {
-            $search_result = [];
-
-            switch ($filter_name) {
-                case 'search':
-                    // We build our results array.
-                    // We could remove directly the non-matching modules, but we will give that for the final loop of this function
-
-                    foreach (explode(' ', $value) as $keyword) {
-                        if (empty($keyword)) {
-                            continue;
-                        }
-
-                        // Instead of looping on the whole module list, we use $module_ids which can already be reduced
-                        // thanks to the previous array_intersect(...)
-                        foreach ($modules as $key => $module) {
-                            if (strpos($module->displayName, $keyword) !== false
-                                || strpos($module->name, $keyword) !== false
-                                || strpos($module->description, $keyword) !== false) {
-                                $search_result[] = $key;
-                            }
-                        }
-                    }
-
-                    break;
-                case 'name':
-                    // exact given name (should return 0 or 1 result)
-                    $search_result[] = $value;
-
-                    break;
-                default:
-                    // "the switch statement is considered a looping structure for the purposes of continue."
-                    continue 2;
-            }
-
-            $modules = array_intersect_key($modules, array_flip($search_result));
-        }
-
-        return $modules;
-    }
-
-    /**
-     * Load module catalogue. If not in cache, query Addons API.
-     */
-    protected function loadCatalogData()
-    {
-        if ($this->cacheProvider && $this->cacheProvider->contains($this->languageISO . self::_CACHEKEY_MODULES_)) {
-            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
-        }
-
-        if (!$this->catalog_modules) {
-            $params = ['format' => 'json'];
-            $requests = [
-                ListFilterOrigin::ADDONS_MUST_HAVE => 'must-have',
-                ListFilterOrigin::ADDONS_SERVICE => 'service',
-                ListFilterOrigin::ADDONS_NATIVE => 'native',
-                ListFilterOrigin::ADDONS_NATIVE_ALL => 'native_all',
-            ];
-            if ($this->addonsDataProvider->isAddonsAuthenticated()) {
-                $requests[ListFilterOrigin::ADDONS_CUSTOMER] = 'customer';
-            }
-
+        $logger = $this->logger;
+        // -> Even if we do not detect any parse error in the file, we may have issues
+        // when trying to load the file. (i.e with additional require_once).
+        // -> We use an anonymous function here because if a test is made twice
+        // on the same module, the test on require_once would immediately return true
+        // (as the file would have already been evaluated).
+        $require_correct = function ($name) use ($file_path, $logger, $log_context_data) {
             try {
-                $listAddons = [];
-                // We execute each addons request
-                foreach ($requests as $action_filter_value => $action) {
-                    if (!$this->addonsDataProvider->isAddonsUp()) {
-                        continue;
-                    }
-                    // We add the request name in each product returned by Addons,
-                    // so we know whether is bought
-
-                    $addons = $this->addonsDataProvider->request($action, $params);
-                    /** @var \stdClass $addon */
-                    foreach ($addons as $addonsType => $addon) {
-                        if (empty($addon->name)) {
-                            $this->logger->error(sprintf('The addon with id %s does not have name.', $addon->id));
-
-                            continue;
-                        }
-
-                        $addon->origin = $action;
-                        $addon->origin_filter_value = $action_filter_value;
-                        $addon->categoryParent = $this->categoriesProvider
-                            ->getParentCategory($addon->categoryName);
-                        if (isset($addon->version)) {
-                            $addon->version_available = $addon->version;
-                        }
-                        if (!isset($addon->product_type)) {
-                            $addon->productType = isset($addonsType) ? rtrim($addonsType, 's') : 'module';
-                        } else {
-                            $addon->productType = $addon->product_type;
-                        }
-                        $listAddons[$addon->name] = $addon;
-                    }
-                }
-
-                if (!empty($listAddons)) {
-                    $this->catalog_modules = $listAddons;
-                    if ($this->cacheProvider) {
-                        $this->cacheProvider->save($this->languageISO . self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
-                    }
-                } else {
-                    $this->fallbackOnCatalogCache();
-                }
+                require_once $file_path;
             } catch (\Exception $e) {
-                if (!$this->fallbackOnCatalogCache()) {
-                    $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache.');
-                }
+                $logger->error(
+                    $this->translator->trans(
+                        'Error while loading file of module %module%. %error_message%',
+                        [
+                            '%module%' => $name,
+                            '%error_message%' => $e->getMessage(), ],
+                        'Admin.Modules.Notification'
+                    ),
+                    $log_context_data
+                );
+
+                return false;
             }
-        }
+
+            return true;
+        };
+
+        return $require_correct($name);
     }
 
     /**
-     * If cache exists, get the Catalogue from the cache.
+     * Check if the module is in the modules folder, with a valid class.
      *
-     * @return array Module loaded from the cache
+     * @param string $name The technical module name to find
+     *
+     * @return bool True if found
      */
-    protected function fallbackOnCatalogCache()
+    public function isOnDisk($name)
     {
-        // Fallback on data from cache if exists
-        if ($this->cacheProvider) {
-            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
+        $path = _PS_MODULE_DIR_ . $name . '/' . $name . '.php';
+
+        return file_exists($path);
+    }
+
+    /**
+     * Check if the module has been enabled on mobile.
+     *
+     * @param string $name The technical module name to check
+     *
+     * @return int|false The devices enabled for this module
+     */
+    private function getDeviceStatus($name)
+    {
+        $id_shops = (new Context())->getContextListShopID();
+        // ToDo: Load list of all installed modules ?
+
+        $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`, ms.`enable_device` as `enable_device`
+            FROM `' . _DB_PREFIX_ . 'module` m
+            LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
+            WHERE `name` = "' . pSQL($name) . '"
+            AND ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')');
+        if ($result) {
+            return (int) $result['enable_device'];
         }
 
-        if (!$this->catalog_modules) {
-            $this->catalog_modules = [];
-        }
-
-        $this->failed = true;
-
-        return $this->catalog_modules;
+        return false;
     }
 }

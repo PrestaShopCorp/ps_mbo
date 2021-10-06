@@ -25,7 +25,7 @@ use PrestaShop\Module\Mbo\Addons\AddonsCollection;
 use PrestaShop\Module\Mbo\Addons\Module\ModuleRepository;
 use PrestaShop\Module\Mbo\Addons\Module\ModuleRepositoryInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider as ModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Profile;
@@ -33,7 +33,7 @@ use Profile;
 class ModuleCollectionDataProvider
 {
     /**
-     * @var ModuleDataProvider
+     * @var AdminModuleDataProvider
      */
     private $addonsProvider;
 
@@ -60,14 +60,14 @@ class ModuleCollectionDataProvider
     /**
      * Constructor.
      *
-     * @param ModuleDataProvider $addonsProvider
+     * @param AdminModuleDataProvider $addonsProvider
      * @param ModuleRepositoryInterface $moduleRepository
      * @param PresenterInterface $modulePresenter
      * @param TabRepository $tabRepository
      * @param LegacyContext $context
      */
     public function __construct(
-        ModuleDataProvider $addonsProvider,
+        AdminModuleDataProvider $addonsProvider,
         ModuleRepositoryInterface $moduleRepository,
         PresenterInterface $modulePresenter,
         TabRepository $tabRepository,
