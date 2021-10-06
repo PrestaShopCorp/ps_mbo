@@ -20,16 +20,16 @@
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShop\Module\Mbo\Addons\AddonsCollection;
 use PrestaShop\Module\Mbo\Addons\ListFilter;
 use PrestaShop\Module\Mbo\Addons\ListFilterStatus;
 use PrestaShop\Module\Mbo\Addons\ListFilterType;
-use PrestaShop\Module\Mbo\Addons\AddonsCollection;
+use PrestaShop\Module\Mbo\Addons\Module\ModuleDataProvider;
+use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use PrestaShop\Module\Mbo\Addons\Module\ModuleDataProvider;
 
 /**
  * Responsible of "Improve > Modules > Modules Catalog" page display.

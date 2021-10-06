@@ -27,13 +27,12 @@
 namespace PrestaShop\Module\Mbo\Addons\Module;
 
 use Exception;
+use PrestaShop\Module\Mbo\Addons\AddonsCollection;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
-use PrestaShop\Module\Mbo\Addons\ManagerInterface;
-use PrestaShop\Module\Mbo\Addons\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\FailedToEnableThemeModuleException;
 use PrestaShopBundle\Event\ModuleManagementEvent;
@@ -173,23 +172,6 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * Returns the total of module notifications
-     * Not used anymore, but kept for backward compatibility.
-     *
-     * @return int
-     *
-     * @deprecated since 1.7.5.0
-     */
-    public function countModulesWithNotifications()
-    {
-        $modules = (array) $this->groupModulesByInstallationProgress();
-
-        return array_reduce($modules, function ($carry, $item) {
-            return $carry + count($item);
-        }, 0);
-    }
-
-    /**
      * Detailed array of number of modules per notification type.
      *
      * @return array
@@ -295,14 +277,7 @@ class ModuleManager implements AddonManagerInterface
             $this->moduleZipManager->storeInModulesFolder($source);
         } elseif (!$this->moduleProvider->isOnDisk($name)) {
             if (!$this->moduleUpdater->setModuleOnDiskFromAddons($name)) {
-                throw new FailedToEnableThemeModuleException(
-                    $name,
-                    $this->translator->trans(
-                        'The module %name% could not be found on Addons.',
-                        ['%name%' => $name],
-                        'Admin.Modules.Notification'
-                    )
-                );
+                throw new FailedToEnableThemeModuleException($name, $this->translator->trans('The module %name% could not be found on Addons.', ['%name%' => $name], 'Admin.Modules.Notification'));
             }
         }
 
@@ -475,22 +450,6 @@ class ModuleManager implements AddonManagerInterface
 
     /**
      * Disable a module specifically on mobile.
-     * Not written in camel case because the route and the displayed action in the template
-     * are related to this function name.
-     *
-     * @deprecated use disableMobile()
-     *
-     * @param string $name The module name to disable
-     *
-     * @return bool True for success
-     */
-    public function disable_mobile($name)
-    {
-        return $this->disableMobile($name);
-    }
-
-    /**
-     * Disable a module specifically on mobile.
      *
      * @param string $name The module name to disable
      *
@@ -515,22 +474,6 @@ class ModuleManager implements AddonManagerInterface
         $this->checkAndClearCache($result);
 
         return $result;
-    }
-
-    /**
-     * Enable a module previously disabled on mobile
-     * Not written in camel case because the route and the displayed action in the template
-     * are related to this function name.
-     *
-     * @deprecated use enableMobile
-     *
-     * @param string $name The module name to enable
-     *
-     * @return bool True for success
-     */
-    public function enable_mobile($name)
-    {
-        return $this->enableMobile($name);
     }
 
     /**

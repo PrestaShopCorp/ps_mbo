@@ -30,12 +30,11 @@ use Context;
 use Doctrine\Common\Cache\CacheProvider;
 use Employee;
 use Module as LegacyModule;
-use PrestaShop\Module\Mbo\Addons\ListFilterOrigin;
 use PrestaShop\Module\Mbo\Addons\AddonsCollection;
+use PrestaShop\Module\Mbo\Addons\ListFilterOrigin;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider as CoreModuleDataProviderAdapter;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
-use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -47,7 +46,7 @@ use Tools;
  * This class will provide data from DB / ORM about Modules for the Admin interface.
  * This is an Adapter that works with the Legacy code and persistence behaviors.
  */
-class ModuleDataProvider implements ModuleInterface
+class ModuleDataProvider
 {
     public const _CACHEKEY_MODULES_ = '_addons_modules';
 
@@ -174,20 +173,6 @@ class ModuleDataProvider implements ModuleInterface
         if (file_exists(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST)) {
             @unlink(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
         }
-    }
-
-    /**
-     * @deprecated since version 1.7.3.0
-     *
-     * @return array
-     */
-    public function getAllModules()
-    {
-        return LegacyModule::getModulesOnDisk(
-            true,
-            $this->addonsDataProvider->isAddonsAuthenticated(),
-            (int) Context::getContext()->employee->id
-        );
     }
 
     /**

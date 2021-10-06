@@ -26,10 +26,10 @@
 
 namespace PrestaShop\Module\Mbo\Addons\Module;
 
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\Module\Mbo\Addons\AddonInterface;
 use PrestaShop\Module\Mbo\Addons\ListFilter;
 use PrestaShop\Module\Mbo\Addons\RepositoryInterface;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 
 interface ModuleRepositoryInterface extends RepositoryInterface
 {

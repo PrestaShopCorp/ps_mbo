@@ -26,8 +26,6 @@
 
 namespace PrestaShop\Module\Mbo\Addons;
 
-use PrestaShop\Module\Mbo\Addons\ListFilter;
-
 class ListFilter
 {
     /**

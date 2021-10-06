@@ -31,6 +31,7 @@ use Context;
 use Db;
 use Doctrine\Common\Cache\FilesystemCache;
 use GuzzleHttp\Client;
+use PrestaShop\Module\Mbo\Addons\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -42,7 +43,6 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
-use PrestaShop\Module\Mbo\Addons\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
@@ -105,7 +105,7 @@ class ModuleManagerBuilder
         if (null === self::$moduleManager) {
             $sfContainer = SymfonyContainer::getInstance();
             if (null !== $sfContainer) {
-                /** @var ModuleManagerBuilder */
+                /* @var ModuleManagerBuilder */
                 self::$moduleManager = $sfContainer->get('prestashop.module.manager');
             } else {
                 self::$moduleManager = new ModuleManager(

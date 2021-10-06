@@ -586,7 +586,6 @@ class ps_mbo extends Module
 
     protected function getAddonsModules()
     {
-
         $addons_modules = [];
         $content = Tools::addonsRequest('install-modules', []);
         $xml = @simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOCDATA);

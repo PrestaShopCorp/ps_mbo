@@ -29,16 +29,15 @@ namespace PrestaShop\Module\Mbo\Addons\Module;
 use Doctrine\Common\Cache\CacheProvider;
 use Exception;
 use Module as LegacyModule;
-use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
-use PrestaShop\Module\Mbo\Addons\AddonInterface;
+use PrestaShop\Module\Mbo\Addons\AddonsCollection;
 use PrestaShop\Module\Mbo\Addons\ListFilter;
 use PrestaShop\Module\Mbo\Addons\ListFilterOrigin;
 use PrestaShop\Module\Mbo\Addons\ListFilterStatus;
 use PrestaShop\Module\Mbo\Addons\ListFilterType;
-use PrestaShop\Module\Mbo\Addons\AddonsCollection;
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\DoctrineProvider;
@@ -181,14 +180,8 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getFilteredList(ListFilter $filter, $skip_main_class_attributes = false)
     {
-        if ($filter->status >= ListFilterStatus::ON_DISK
-            && $filter->status != ListFilterStatus::ALL) {
-            /** @var Module[] $modules */
-            $modules = $this->getModulesOnDisk($skip_main_class_attributes);
-        } else {
-            /** @var Module[] $modules */
-            $modules = $this->getList();
-        }
+        /** @var Module[] $modules */
+        $modules = $this->getList();
 
         foreach ($modules as $key => &$module) {
             // Part One : Removing addons not related to the selected product type
@@ -270,10 +263,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getList()
     {
-        return array_merge(
-            $this->getAddonsCatalogModules(),
-            $this->getModulesOnDisk()
-        );
+        return $this->getAddonsCatalogModules();
     }
 
     /**
@@ -517,59 +507,6 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
 
         return $module;
-    }
-
-    /**
-     * Instanciate every module present in the modules folder.
-     *
-     * @param bool $skip_main_class_attributes
-     *
-     * @return \PrestaShop\PrestaShop\Adapter\Module\Module[]
-     */
-    private function getModulesOnDisk($skip_main_class_attributes = false)
-    {
-        $modules = [];
-        $modulesDirsList = $this->finder->directories()
-            ->in($this->modulePath)
-            ->depth('== 0')
-            ->exclude(['__MACOSX'])
-            ->ignoreVCS(true);
-
-        foreach ($modulesDirsList as $moduleDir) {
-            $moduleName = $moduleDir->getFilename();
-            if (!file_exists($this->modulePath . $moduleName . '/' . $moduleName . '.php')) {
-                continue;
-            }
-
-            try {
-                $module = $this->getModule($moduleName, $skip_main_class_attributes);
-                if ($module instanceof Module) {
-                    $modules[$moduleName] = $module;
-                }
-            } catch (\ParseError $e) {
-                $this->logger->critical(
-                    $this->translator->trans(
-                        'Parse error detected in module %module%. %error_details%.',
-                        [
-                            '%module%' => $moduleName,
-                            '%error_details%' => $e->getMessage(), ],
-                        'Admin.Modules.Notification'
-                    )
-                );
-            } catch (Exception $e) {
-                $this->logger->critical(
-                    $this->translator->trans(
-                        'Exception detected while loading module %module%. %error_details%.',
-                        [
-                            '%module%' => $moduleName,
-                            '%error_details%' => $e->getMessage(), ],
-                        'Admin.Modules.Notification'
-                    )
-                );
-            }
-        }
-
-        return $modules;
     }
 
     /**

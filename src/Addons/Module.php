@@ -27,8 +27,7 @@
 namespace PrestaShop\Module\Mbo\Addons;
 
 use Module as LegacyModule;
-use PrestaShop\Module\Mbo\Addons\ListFilterOrigin;
-use PrestaShop\Module\Mbo\Addons\Module\AddonListFilterDeviceStatus;
+use PrestaShop\Module\Mbo\Addons\Module\ListFilterDeviceStatus;
 use PrestaShop\Module\Mbo\Addons\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -333,7 +332,7 @@ class Module implements ModuleInterface
             return false;
         }
 
-        $result = $this->instance->enableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
+        $result = $this->instance->enableDevice(ListFilterDeviceStatus::DEVICE_MOBILE);
         $this->database->set('active_on_mobile', $result);
 
         return $result;
@@ -348,7 +347,7 @@ class Module implements ModuleInterface
             return false;
         }
 
-        $result = $this->instance->disableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
+        $result = $this->instance->disableDevice(ListFilterDeviceStatus::DEVICE_MOBILE);
         $this->database->set('active_on_mobile', !$result);
 
         return $result;
