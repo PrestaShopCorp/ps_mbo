@@ -11,7 +11,7 @@ services:
   mbo.adapter.module_collection_data_provider:
     class: 'PrestaShop\Module\Mbo\ModuleCollectionDataProvider'
     arguments:
-      - '@prestashop.core.admin.data_provider.module_interface'
+      - '@mbo.addon.module.data_provider.admin_module'
       - '@mbo.addon.module.repository'
       - '@prestashop.adapter.presenter.module'
       - '@prestashop.core.admin.tab.repository'
