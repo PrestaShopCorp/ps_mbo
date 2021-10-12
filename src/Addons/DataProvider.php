@@ -28,9 +28,9 @@ namespace PrestaShop\Module\Mbo\Addons;
 
 use Exception;
 use PhpEncryption;
+use PrestaShop\Module\Mbo\Addons\Service\ApiClient;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
-use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

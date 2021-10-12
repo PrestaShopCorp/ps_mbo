@@ -20,6 +20,7 @@
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
+use Exception;
 use PrestaShop\Module\Mbo\Addons\AddonsCollection;
 use PrestaShop\Module\Mbo\Addons\ListFilter;
 use PrestaShop\Module\Mbo\Addons\ListFilterStatus;
@@ -27,6 +28,7 @@ use PrestaShop\Module\Mbo\Addons\ListFilterType;
 use PrestaShop\Module\Mbo\Addons\Module\AdminModuleDataProvider;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -76,6 +78,7 @@ class ModuleCatalogController extends ModuleAbstractController
      */
     public function refreshAction(Request $request)
     {
+        /** @var AdminModuleDataProvider */
         $modulesProvider = $this->get('mbo.addon.module.data_provider.admin_module');
         $moduleRepository = $this->get('mbo.addon.module.repository');
         $responseArray = [];

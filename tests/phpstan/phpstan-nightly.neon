@@ -1,15 +1,4 @@
 parameters:
-<<<<<<< HEAD
-	bootstrap: tests/phpstan/bootstrap.php
-	paths:
-		- src
-		- ps_mbo.php
-	dynamicConstantNames:
-		- _PS_VERSION_
-	ignoreErrors:
-
-	level: 5
-=======
   bootstrap: tests/phpstan/bootstrap.php
   paths:
     - src
@@ -17,9 +6,6 @@ parameters:
   dynamicConstantNames:
     - _PS_VERSION_
   ignoreErrors:
-    - '#Property ModuleCore::\$version \(float\) does not accept string.#'
-    - '#Parameter \#2 \$variable of static method ModuleCore::getPermissionStatic\(\) expects array, string given.#'
-    - '#Parameter \#1 \$idProfile of static method ProfileCore::getProfileAccess\(\) expects int, string given.#'
+    - '#^Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.$#'
 
   level: 5
->>>>>>> b017288 (Add nightlyu for phpstan)

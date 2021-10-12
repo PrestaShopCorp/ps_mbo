@@ -37,10 +37,37 @@ services:
 
   mbo.addon.module.data_provider.addons:
     class: PrestaShop\Module\Mbo\Addons\DataProvider
-    decorates: prestashop.core.admin.data_provider.addons_interface
     arguments:
-      - '@prestashop.addons.client_api'
+      - '@mbo.addon.client.api'
       - '@prestashop.module.zip.manager'
       - '@=service("prestashop.adapter.legacy.configuration").get("ADDONS_API_MODULE_CHANNEL", "stable")'
     properties:
       cacheDir: "%kernel.cache_dir%"
+
+  mbo.addon.module.updater:
+    class: PrestaShop\Module\Mbo\Addons\DataUpdater
+    arguments:
+      - "@mbo.addon.module.data_provider.addons"
+      - "@mbo.addon.module.data_prodiver.module"
+
+  mbo.addon.module.manager:
+    class: PrestaShop\Module\Mbo\Addons\Module\ModuleManager
+    arguments:
+      - "@mbo.addon.module.data_provider.admin_module"
+      - "@mbo.addon.module.data_prodiver.module"
+      - "@mbo.addon.module.updater"
+      - "@mbo.addon.module.repository"
+      - "@prestashop.module.zip.manager"
+      - "@translator"
+      - "@event_dispatcher"
+      - "@prestashop.adapter.cache.clearer.symfony_cache_clearer"
+
+  # Addons API Client
+  mbo.addon.client.api:
+    class: PrestaShop\Module\Mbo\Addons\Service\ApiClient
+    arguments:
+      - "@eight_points_guzzle.client.addons_api"
+      - "@=service('translator').getLocale()"
+      - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
+      - "@=service('prestashop.adapter.legacy.configuration').get('_PS_BASE_URL_')"
+      - "@=service('prestashop.core.foundation.version').getVersion()"
