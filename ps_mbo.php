@@ -478,7 +478,7 @@ class ps_mbo extends Module
     /**
      * Display addons link on the middle column of the dashboard
      *
-     * @param  array  $params
+     * @param array $params
      *
      * @return false|string
      */
@@ -490,7 +490,7 @@ class ps_mbo extends Module
     /**
      * Display addons data & links in the third column of the dashboard
      *
-     * @param  array  $params
+     * @param array $params
      *
      * @return false|string
      */
@@ -500,10 +500,10 @@ class ps_mbo extends Module
         $moduleManager = $moduleManagerBuilder->build();
 
         $this->context->smarty->assign(
-            array(
+            [
                 'new_version_url' => Tools::getCurrentUrlProtocolPrefix() . _PS_API_DOMAIN_ . '/version/check_version.php?v=' . _PS_VERSION_ . '&lang=' . $this->context->language->iso_code . '&autoupgrade=' . (int) ($moduleManager->isInstalled('autoupgrade') && $moduleManager->isEnabled('autoupgrade')) . '&hosted_mode=' . (int) defined('_PS_HOST_MODE_'),
                 'help_center_link' => $this->getHelpCenterLink($this->context->language->iso_code),
-            )
+            ]
         );
 
         return $this->display(__FILE__, 'dashboard-zone-three.tpl');
