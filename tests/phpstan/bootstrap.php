@@ -84,6 +84,7 @@ $constantsToDefine = [
     '_PS_OS_PAYPAL_',
     '_PS_OS_WS_PAYMENT_',
     '_PS_OS_COD_VALIDATION_',
+    '_PS_API_DOMAIN_',
 ];
 
 foreach ($constantsToDefine as $constant) {
