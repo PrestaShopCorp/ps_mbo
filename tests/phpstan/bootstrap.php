@@ -67,6 +67,7 @@ $constantsToDefine = [
     '_PARENT_THEME_NAME_',
     '__PS_BASE_URI__',
     '_MODULE_DIR_',
+    '_PS_MODULES_DIR_',
     '_PS_PRICE_DISPLAY_PRECISION_',
     '_PS_PRICE_COMPUTE_PRECISION_',
     '_PS_OS_CHEQUE_',
@@ -85,6 +86,7 @@ $constantsToDefine = [
     '_PS_OS_WS_PAYMENT_',
     '_PS_OS_COD_VALIDATION_',
     '_PS_API_DOMAIN_',
+    '_NEW_COOKIE_KEY_',
 ];
 
 foreach ($constantsToDefine as $constant) {

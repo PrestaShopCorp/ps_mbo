@@ -18,7 +18,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\Module\Mbo;
+namespace PrestaShop\Module\Mbo\Addons;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Responsible of provide Addons url with Context params for Module Selection and Theme Catalog pages
  */
-class AddonsSelectionLinkProvider
+class SelectionLinkProvider
 {
     /**
      * @var Version

@@ -25,6 +25,7 @@ $autoloadPath = __DIR__ . '/vendor/autoload.php';
 if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
+
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
@@ -95,19 +96,23 @@ class ps_mbo extends Module
     ];
 
     const ADMIN_CONTROLLERS = [
+        'AdminPsMboModuleParent' => [
+            'name' => 'Module catalog',
+            'visible' => true,
+            'class_name' => 'AdminPsMboModuleParent',
+            'parent_class_name' => 'AdminParentModulesSf',
+        ],
         'AdminPsMboModule' => [
             'name' => 'Module catalog',
             'visible' => true,
             'class_name' => 'AdminPsMboModule',
-            'parent_class_name' => 'AdminParentModulesCatalog',
-            'core_reference' => 'AdminModulesCatalog',
+            'parent_class_name' => 'AdminPsMboModuleParent',
         ],
-        'AdminPsMboAddons' => [
+        'AdminPsMboSelection' => [
             'name' => 'Module selection',
             'visible' => true,
-            'class_name' => 'AdminPsMboAddons',
-            'parent_class_name' => 'AdminParentModulesCatalog',
-            'core_reference' => 'AdminAddonsCatalog',
+            'class_name' => 'AdminPsMboSelection',
+            'parent_class_name' => 'AdminPsMboModuleParent',
         ],
         'AdminPsMboRecommended' => [
             'name' => 'Module recommended',
@@ -119,7 +124,6 @@ class ps_mbo extends Module
             'visible' => true,
             'class_name' => 'AdminPsMboTheme',
             'parent_class_name' => 'AdminParentThemes',
-            'core_reference' => 'AdminThemesCatalog',
         ],
     ];
 
@@ -169,6 +173,11 @@ class ps_mbo extends Module
             && $this->registerHook(static::HOOKS);
     }
 
+    public function postInstall()
+    {
+        return true;
+    }
+
     /**
      * Enable Module.
      *
@@ -212,24 +221,13 @@ class ps_mbo extends Module
             $tabData['name']
         );
 
-        if (isset($tabData['core_reference'])) {
-            $tabCoreId = Tab::getIdFromClassName($tabData['core_reference']);
-
-            if ($tabCoreId !== false) {
-                $tabCore = new Tab($tabCoreId);
-                $tabNameByLangId = $tabCore->name;
-                $position = $tabCore->position;
-                $tabCore->active = false;
-                $tabCore->save();
-            }
-        }
-
         $tab = new Tab();
         $tab->module = $this->name;
         $tab->class_name = $tabData['class_name'];
         $tab->position = (int) $position;
         $tab->id_parent = empty($tabData['parent_class_name']) ? -1 : Tab::getIdFromClassName($tabData['parent_class_name']);
         $tab->name = $tabNameByLangId;
+        $tab->active = true;
 
         if (false === (bool) $tab->add()) {
             return false;
@@ -584,5 +582,20 @@ class ps_mbo extends Module
         }
 
         return $this->container->get($serviceName);
+    }
+
+    protected function getAddonsModules()
+    {
+        $addons_modules = [];
+        $content = Tools::addonsRequest('install-modules', []);
+        $xml = @simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOCDATA);
+
+        if ($xml !== false && isset($xml->module)) {
+            foreach ($xml->module as $modaddons) {
+                $addons_modules[] = ['id_module' => $modaddons->id, 'name' => $modaddons->name];
+            }
+        }
+
+        return $addons_modules;
     }
 }

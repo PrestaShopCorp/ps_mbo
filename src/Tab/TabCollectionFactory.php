@@ -44,7 +44,6 @@ class TabCollectionFactory implements TabCollectionFactoryInterface
     public function buildFromArray(array $data)
     {
         $tabCollection = new TabCollection();
-
         if (empty($data)) {
             return $tabCollection;
         }

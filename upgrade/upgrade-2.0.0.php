@@ -51,7 +51,7 @@ function upgrade_module_2_0_0($module)
     }
 
     // We migrate Module Selections Tab to MBO
-    if (false === $module->installTab(ps_mbo::ADMIN_CONTROLLERS['AdminPsMboAddons'])) {
+    if (false === $module->installTab(ps_mbo::ADMIN_CONTROLLERS['AdminPsMboSelection'])) {
         return false;
     }
 
