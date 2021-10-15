@@ -22,12 +22,80 @@ namespace PrestaShop\Module\Mbo\Traits;
 
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShopBundle\Component\ActionBar\ActionsBarButton;
+use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use ToolsCore as Tools;
 use ValidateCore as Validate;
 
 trait UseHooks
 {
+    /**
+     * @var string[]
+     */
+    private static $TABS_WITH_RECOMMENDED_MODULES_BUTTON = [
+        'AdminProducts',
+        'AdminCategories',
+        'AdminTracking',
+        'AdminAttributesGroups',
+        'AdminFeatures',
+        'AdminManufacturers',
+        'AdminSuppliers',
+        'AdminTags',
+        'AdminOrders',
+        'AdminInvoices',
+        'AdminReturn',
+        'AdminDeliverySlip',
+        'AdminSlip',
+        'AdminStatuses',
+        'AdminOrderMessage',
+        'AdminCustomers',
+        'AdminAddresses',
+        'AdminGroups',
+        'AdminCarts',
+        'AdminCustomerThreads',
+        'AdminContacts',
+        'AdminCartRules',
+        'AdminSpecificPriceRule',
+        'AdminShipping',
+        'AdminLocalization',
+        'AdminZones',
+        'AdminCountries',
+        'AdminCurrencies',
+        'AdminTaxes',
+        'AdminTaxRulesGroup',
+        'AdminTranslations',
+        'AdminPreferences',
+        'AdminOrderPreferences',
+        'AdminPPreferences',
+        'AdminCustomerPreferences',
+        'AdminThemes',
+        'AdminMeta',
+        'AdminCmsContent',
+        'AdminImages',
+        'AdminSearchConf',
+        'AdminGeolocation',
+        'AdminInformation',
+        'AdminPerformance',
+        'AdminEmails',
+        'AdminImport',
+        'AdminBackup',
+        'AdminRequestSql',
+        'AdminLogs',
+        'AdminAdminPreferences',
+        'AdminStats',
+        'AdminSearchEngines',
+        'AdminReferrers',
+    ];
+    /**
+     * @var string[]
+     */
+    private static $TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT = [
+        'AdminMarketing',
+        'AdminPayment',
+        'AdminCarriers',
+    ];
+
     /**
      * Hook displayDashboardTop.
      * Includes content just below the toolbar.
@@ -52,8 +120,8 @@ trait UseHooks
         }
 
         $this->smarty->assign([
-            'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModules(static::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT),
-            'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModules(static::TABS_WITH_RECOMMENDED_MODULES_BUTTON),
+            'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModules(static::$TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT),
+            'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModules(static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON),
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
             'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services'),
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
@@ -107,9 +175,9 @@ trait UseHooks
      */
     public function hookDisplayBackOfficeEmployeeMenu(array $params): void
     {
-        if (!class_exists(\PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection::class)
-            || !class_exists(\PrestaShopBundle\Component\ActionBar\ActionsBarButton::class)
-            || !($params['links'] instanceof \PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection)) {
+        if (!class_exists(ActionsBarButtonsCollection::class)
+            || !class_exists(ActionsBarButton::class)
+            || !($params['links'] instanceof ActionsBarButtonsCollection)) {
             return;
         }
 
@@ -143,7 +211,7 @@ trait UseHooks
 
         foreach ($links as $link) {
             $params['links']->add(
-                new \PrestaShopBundle\Component\ActionBar\ActionsBarButton(
+                new ActionsBarButton(
                     __CLASS__,
                     [
                         'link' => $this->trans($link['url'], [], 'Admin.Navigation.Header'),
@@ -163,8 +231,8 @@ trait UseHooks
         // has to be loaded in header to prevent flash of content
         $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
 
-        if ($this->shouldAttachRecommendedModules(static::TABS_WITH_RECOMMENDED_MODULES_BUTTON)
-            || $this->shouldAttachRecommendedModules(static::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT)
+        if ($this->shouldAttachRecommendedModules(static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON)
+            || $this->shouldAttachRecommendedModules(static::$TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT)
         ) {
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css');
             $this->context->controller->addJs(
