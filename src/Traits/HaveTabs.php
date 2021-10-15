@@ -63,7 +63,7 @@ trait HaveTabs
         ],
     ];
     /**
-     * @var TabRepository
+     * @var TabRepository|object|false
      */
     protected $tabRepository;
 
@@ -74,6 +74,8 @@ trait HaveTabs
      * @param string $action
      *
      * @return bool
+     *
+     * @throws \Exception
      */
     public function handleTabActions(string $action): bool
     {
@@ -135,6 +137,8 @@ trait HaveTabs
      * @param array $tabData
      *
      * @return bool
+     *
+     * @throws \PrestaShopException
      */
     public function uninstallTab(array $tabData): bool
     {
