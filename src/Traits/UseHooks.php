@@ -17,13 +17,14 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShop\Module\Mbo\Traits;
 
+use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use ToolsCore as Tools;
 use ValidateCore as Validate;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 
 trait UseHooks
 {
@@ -65,7 +66,7 @@ trait UseHooks
     /**
      * Display addons link on the middle column of the dashboard
      *
-     * @param  array  $params
+     * @param array $params
      *
      * @return false|string
      */
@@ -77,7 +78,7 @@ trait UseHooks
     /**
      * Display addons data & links in the third column of the dashboard
      *
-     * @param  array  $params
+     * @param array $params
      *
      * @return false|string
      */
@@ -88,7 +89,7 @@ trait UseHooks
 
         $this->context->smarty->assign(
             [
-                'new_version_url' => Tools::getCurrentUrlProtocolPrefix()._PS_API_DOMAIN_.'/version/check_version.php?v='._PS_VERSION_.'&lang='.$this->context->language->iso_code.'&autoupgrade='.(int)($moduleManager->isInstalled('autoupgrade') && $moduleManager->isEnabled('autoupgrade')).'&hosted_mode='.(int)defined('_PS_HOST_MODE_'),
+                'new_version_url' => Tools::getCurrentUrlProtocolPrefix() . _PS_API_DOMAIN_ . '/version/check_version.php?v=' . _PS_VERSION_ . '&lang=' . $this->context->language->iso_code . '&autoupgrade=' . (int) ($moduleManager->isInstalled('autoupgrade') && $moduleManager->isEnabled('autoupgrade')) . '&hosted_mode=' . (int) defined('_PS_HOST_MODE_'),
                 'help_center_link' => $this->getHelpCenterLink($this->context->language->iso_code),
             ]
         );
@@ -100,7 +101,7 @@ trait UseHooks
      * Hook displayBackOfficeMenu.
      * Returns menu in BackOffice
      *
-     * @param  array  $params
+     * @param array $params
      *
      * @return void
      */
@@ -183,6 +184,7 @@ trait UseHooks
      * Indicates if the recommended modules should be attached
      *
      * @param array $modules
+     *
      * @return bool
      */
     private function shouldAttachRecommendedModules(array $modules): bool
@@ -203,7 +205,7 @@ trait UseHooks
     /**
      * Returns the Help center link for the provided locale
      *
-     * @param  string  $languageCode  2-letter locale code
+     * @param string $languageCode 2-letter locale code
      *
      * @return string
      */

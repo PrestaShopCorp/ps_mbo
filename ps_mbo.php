@@ -176,6 +176,7 @@ class ps_mbo extends Module
      * Enable Module.
      *
      * @param bool $force_all
+     *
      * @return bool
      */
     public function enable($force_all = false): bool
@@ -187,7 +188,8 @@ class ps_mbo extends Module
     /**
      * Disable Module.
      *
-     * @param  bool  $force_all
+     * @param bool $force_all
+     *
      * @return bool
      */
     public function disable($force_all = false): bool
@@ -269,7 +271,7 @@ class ps_mbo extends Module
      * Uninstall Tab.
      * Can be used in upgrade script.
      *
-     * @param  array  $tabData
+     * @param array $tabData
      *
      * @return bool
      */
