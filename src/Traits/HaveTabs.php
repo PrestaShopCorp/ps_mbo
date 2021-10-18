@@ -84,6 +84,7 @@ trait HaveTabs
         if (!method_exists($this, $methodName)) {
             return false;
         }
+        /** @var TabRepository $tabRepository */
         $tabRepository = $this->get('prestashop.core.admin.tab.repository');
         $this->tabRepository = $tabRepository;
         foreach (static::$ADMIN_CONTROLLERS as $tabData) {
