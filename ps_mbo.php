@@ -89,7 +89,7 @@ class ps_mbo extends Module
     public function enable($force_all = false): bool
     {
         return parent::enable($force_all)
-            && $this->handleTabActions('install');
+            && $this->handleTabAction('install');
     }
 
     /**
@@ -102,7 +102,7 @@ class ps_mbo extends Module
     public function disable($force_all = false): bool
     {
         return parent::disable($force_all)
-            && $this->handleTabActions('uninstall');
+            && $this->handleTabAction('uninstall');
     }
 
     /**

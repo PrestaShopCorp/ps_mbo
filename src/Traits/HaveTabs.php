@@ -77,7 +77,7 @@ trait HaveTabs
      *
      * @throws \Exception
      */
-    public function handleTabActions(string $action): bool
+    public function handleTabAction(string $action): bool
     {
         $methodName = (new UnicodeString($action))->camel() . 'Tab';
         if (!method_exists($this, $methodName)) {
