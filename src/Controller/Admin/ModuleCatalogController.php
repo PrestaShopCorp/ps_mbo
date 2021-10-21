@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2020 PrestaShop and Contributors
+ * 2007-2021 PrestaShop and Contributors
  *
  * NOTICE OF LICENSE
  *
@@ -13,10 +13,11 @@
  * to license@prestashop.com so we can send you a copy immediately.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @copyright 2007-2021 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
@@ -26,6 +27,7 @@ use PrestaShop\Module\Mbo\Addons\ListFilter;
 use PrestaShop\Module\Mbo\Addons\ListFilterStatus;
 use PrestaShop\Module\Mbo\Addons\ListFilterType;
 use PrestaShop\Module\Mbo\Addons\Module\AdminModuleDataProvider;
+use PrestaShop\Module\Mbo\Addons\Module\ModuleRepository;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
@@ -45,7 +47,7 @@ class ModuleCatalogController extends ModuleAbstractController
      *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(): Response
     {
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog.html.twig',
@@ -76,10 +78,11 @@ class ModuleCatalogController extends ModuleAbstractController
      *
      * @return JsonResponse
      */
-    public function refreshAction(Request $request)
+    public function refreshAction(Request $request): JsonResponse
     {
-        /** @var AdminModuleDataProvider */
+        /** @var $modulesProvider AdminModuleDataProvider */
         $modulesProvider = $this->get('mbo.addon.module.data_provider.admin_module');
+        /** @var $moduleRepository ModuleRepository */
         $moduleRepository = $this->get('mbo.addon.module.repository');
         $responseArray = [];
 
@@ -121,7 +124,7 @@ class ModuleCatalogController extends ModuleAbstractController
      *
      * @return array
      */
-    private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules)
+    private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules): array
     {
         /** @var CategoriesProvider $categoriesProvider */
         $categoriesProvider = $this->get('prestashop.categories_provider');
@@ -137,72 +140,55 @@ class ModuleCatalogController extends ModuleAbstractController
         return $categories;
     }
 
-    private function getTopMenuData(array $topMenuData, $activeMenu = null)
-    {
-        if (isset($activeMenu)) {
-            if (!isset($topMenuData[$activeMenu])) {
-                throw new Exception(sprintf('Menu \'%s\' not found in Top Menu data', $activeMenu), 1);
-            }
-
-            $topMenuData[$activeMenu]->class = 'active';
-        }
-
-        return $topMenuData;
-    }
-
     /**
-     * Construct json struct from top menu.
+     * Build template for the categories dropdown on the header of page.
      *
      * @param array $categories
      *
      * @return array
      */
-    private function constructJsonCatalogCategoriesMenuResponse(array $categories)
+    private function constructJsonCatalogCategoriesMenuResponse(array $categories): array
     {
-        $formattedContent = [];
-        $formattedContent['selector'] = '.module-menu-item';
-        $formattedContent['content'] = $this->render(
-            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/dropdown_categories_catalog.html.twig',
-            [
-                'topMenuData' => $this->getTopMenuData($categories),
-            ]
-        )->getContent();
-
-        return $formattedContent;
+        return [
+            'selector' => '.module-menu-item',
+            'content' => $this->render(
+                '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/dropdown_categories_catalog.html.twig',
+                [
+                    'topMenuData' => $categories,
+                ]
+            )->getContent(),
+        ];
     }
 
     /**
-     * Construct Json struct for catalog body response.
+     * Build templade for the grid view and the info header with count of modules & sort dropdown.
      *
      * @param array $categories
      * @param array $modules
      *
      * @return array
      */
-    private function constructJsonCatalogBodyResponse(
-        array $categories,
-        array $modules
-    ) {
-        $formattedContent = [];
-        $formattedContent['selector'] = '.module-catalog-page';
-        $formattedContent['content'] = $this->render(
+    private function constructJsonCatalogBodyResponse(array $categories, array $modules): array
+    {
+        $sortingHeaderContent = $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/sorting.html.twig',
             [
                 'totalModules' => count($modules),
             ]
         )->getContent();
 
-        $errorMessage = $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
-
-        $formattedContent['content'] .= $this->render(
+        $gridContent = $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog-refresh.html.twig',
             [
                 'categories' => $categories['categories'],
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
-                'errorMessage' => $errorMessage,
+                'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
             ]
         )->getContent();
 
-        return $formattedContent;
+        return [
+            'selector' => '.module-catalog-page',
+            'content' => $sortingHeaderContent . $gridContent,
+        ];
     }
 }
