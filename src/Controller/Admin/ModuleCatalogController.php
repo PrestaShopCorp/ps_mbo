@@ -80,9 +80,9 @@ class ModuleCatalogController extends ModuleAbstractController
      */
     public function refreshAction(Request $request): JsonResponse
     {
-        /** @var $modulesProvider AdminModuleDataProvider */
+        /** @var AdminModuleDataProvider $modulesProvider */
         $modulesProvider = $this->get('mbo.addon.module.data_provider.admin_module');
-        /** @var $moduleRepository ModuleRepository */
+        /** @var ModuleRepository $moduleRepository */
         $moduleRepository = $this->get('mbo.addon.module.repository');
         $responseArray = [];
 
