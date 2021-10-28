@@ -22,7 +22,7 @@ namespace PrestaShop\Module\Mbo\Addons;
 
 use Exception;
 use PhpEncryption;
-use PrestaShop\Module\Mbo\Addons\Service\ApiClient;
+use PrestaShop\Module\Mbo\Service\Addons\ApiClient;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -165,40 +165,32 @@ class DataProvider implements AddonsInterface
                 case 'service':
                     return $this->marketplaceClient->getServices();
                 case 'native_all':
-                    return $this->marketplaceClient->setIsoCode('all')
+                    return $this->marketplaceClient
+                        ->setQueryParams(['iso_code' => 'all'])
                         ->getNativesModules();
                 case 'must-have':
                     return $this->marketplaceClient->getMustHaveModules();
                 case 'customer':
                     return $this->marketplaceClient->getCustomerModules($params['username_addons'], $params['password_addons']);
                 case 'customer_themes':
-                    return $this->marketplaceClient
-                        ->setUserMail($params['username_addons'])
-                        ->setPassword($params['password_addons'])
-                        ->getCustomerThemes();
+                    return $this->marketplaceClient->getCustomerThemes($params['username_addons'], $params['password_addons']);
                 case 'check_customer':
-                    return $this->marketplaceClient
-                        ->setUserMail($params['username_addons'])
-                        ->setPassword($params['password_addons'])
-                        ->getCheckCustomer();
+                    return $this->marketplaceClient->getCheckCustomer($params['username_addons'], $params['password_addons']);
                 case 'check_module':
                     return $this->marketplaceClient
-                        ->setUserMail($params['username_addons'])
-                        ->setPassword($params['password_addons'])
-                        ->setModuleName($params['module_name'])
-                        ->setModuleKey($params['module_key'])
-                        ->getCheckModule();
+                        ->getCheckModule($params['username_addons'], $params['password_addons'], $params['module_name'], $params['module_key']);
                 case 'module_download':
                     if ($this->isAddonsAuthenticated()) {
-                        return $this->marketplaceClient
-                            ->setUserMail($params['username_addons'])
-                            ->setPassword($params['password_addons'])
-                            ->getModuleZip($params['id_module'], $this->moduleChannel);
+                        $this->marketplaceClient
+                            ->setQueryParams([
+                                'username' => $params['username_addons'],
+                                'password' => $params['password_addons'],
+                            ]);
                     }
 
-                    return $this->marketplaceClient->getModuleZip($params['id_module'], $this->moduleChannel);
+                    return $this->marketplaceClient->getModuleZip((int) $params['id_module'], $this->moduleChannel);
                 case 'module':
-                    return $this->marketplaceClient->getModule($params['id_module']);
+                    return $this->marketplaceClient->getModule((int) $params['id_module']);
                 case 'install-modules':
                     return $this->marketplaceClient->getPreInstalledModules();
                 case 'categories':

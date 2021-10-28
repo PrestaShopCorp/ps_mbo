@@ -64,10 +64,13 @@ services:
 
   # Addons API Client
   mbo.addon.client.api:
-    class: PrestaShop\Module\Mbo\Addons\Service\ApiClient
+    class: PrestaShop\Module\Mbo\Service\Addons\ApiClient
     arguments:
       - "@eight_points_guzzle.client.addons_api"
-      - "@=service('translator').getLocale()"
-      - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
-      - "@=service('prestashop.adapter.legacy.configuration').get('_PS_BASE_URL_')"
-      - "@=service('prestashop.core.foundation.version').getVersion()"
+    calls:
+      - method: setDefaultParams
+        arguments:
+          - "@=service('translator').getLocale()"
+          - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
+          - "@=service('prestashop.adapter.legacy.configuration').get('_PS_BASE_URL_')"
+          - "@=service('prestashop.core.foundation.version').getVersion()"
