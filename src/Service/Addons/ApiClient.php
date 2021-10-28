@@ -27,6 +27,9 @@ use stdClass;
 
 class ApiClient
 {
+    const HTTP_METHOD_GET = 'GET';
+    const HTTP_METHOD_POST = 'POST';
+
     /**
      * @var Client
      */
@@ -69,7 +72,7 @@ class ApiClient
         $this->addonsApiClient = $addonsApiClient;
     }
 
-    public function setDefaultParams(string $locale, $isoCode, string $domain, string $shopVersion)
+    public function setDefaultParams(string $locale, $isoCode, string $domain, string $shopVersion): void
     {
         list($isoLang) = explode('-', $locale);
         $this->setQueryParams([
@@ -84,7 +87,7 @@ class ApiClient
     /**
      * In case you reuse the Client, you may want to clean the previous parameters.
      */
-    public function reset()
+    public function reset(): void
     {
         $this->queryParameters = $this->defaultQueryParameters;
     }
@@ -103,15 +106,15 @@ class ApiClient
      * @param string $username
      * @param string $password
      *
-     * @return object
+     * @return stdClass
      */
-    public function getCheckCustomer(string $username, string $password): object
+    public function getCheckCustomer(string $username, string $password): stdClass
     {
         return $this->setQueryParams([
             'method' => 'check_customer',
             'username' => $username,
             'password' => $password,
-        ])->getResponse('get');
+        ])->requestAndReturn();
     }
 
     /**
@@ -122,9 +125,9 @@ class ApiClient
      * @param string $moduleName
      * @param string $moduleKey
      *
-     * @return object
+     * @return stdClass
      */
-    public function getCheckModule(string $username, string $password, string $moduleName, string $moduleKey): object
+    public function getCheckModule(string $username, string $password, string $moduleName, string $moduleKey): stdClass
     {
         return $this->setQueryParams([
             'method' => 'check',
@@ -132,7 +135,7 @@ class ApiClient
             'password' => $password,
             'module_name' => $moduleName,
             'module_key' => $moduleKey,
-        ])->getResponse('get');
+        ])->requestAndReturn();
     }
 
     /**
@@ -143,7 +146,7 @@ class ApiClient
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'native',
-        ])->getResponseAttribute('get', 'modules');
+        ])->requestAndReturn('modules');
     }
 
     /**
@@ -154,7 +157,7 @@ class ApiClient
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'install-modules',
-        ])->getResponseAttribute('get', 'modules');
+        ])->requestAndReturn('modules');
     }
 
     /**
@@ -165,7 +168,7 @@ class ApiClient
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'must-have',
-        ])->getResponseAttribute('get', 'modules');
+        ])->requestAndReturn('modules');
     }
 
     /**
@@ -176,7 +179,7 @@ class ApiClient
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'service',
-        ])->getResponseAttribute('get', 'services');
+        ])->requestAndReturn('services');
     }
 
     /**
@@ -187,7 +190,7 @@ class ApiClient
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'categories',
-        ])->getResponseAttribute('get', 'module');
+        ])->requestAndReturn('module');
     }
 
     /**
@@ -201,7 +204,7 @@ class ApiClient
             'method' => 'listing',
             'action' => 'module',
             'id_module' => $moduleId,
-        ])->getResponseAttribute('get', 'modules');
+        ])->requestAndReturn('modules');
 
         return $modules[0] ?? null;
     }
@@ -220,7 +223,7 @@ class ApiClient
             'method' => 'listing',
             'channel' => $moduleChannel,
             'id_module' => $moduleId,
-        ])->getResponse('post');
+        ])->processRequest(self::HTTP_METHOD_POST);
     }
 
     /**
@@ -236,7 +239,7 @@ class ApiClient
             'action' => 'customer',
             'username' => $username,
             'password' => $password,
-        ])->getResponseAttribute('post', 'modules');
+        ])->requestAndReturn('modules', self::HTTP_METHOD_POST);
     }
 
     /**
@@ -254,38 +257,44 @@ class ApiClient
             'action' => 'customer-themes',
             'username' => $username,
             'password' => $password,
-        ])->getResponseAttribute('post', 'themes', new stdClass());
-    }
-
-    /**
-     * Process the request with the current parameters, given the $method, return the body
-     *
-     * @return mixed
-     */
-    public function getResponse(string $method)
-    {
-        return json_decode(
-            (string) $this->addonsApiClient
-                ->{$method}('', ['query' => $this->queryParameters])
-                ->getBody()
-        );
+        ])->requestAndReturn('themes', self::HTTP_METHOD_POST, new stdClass());
     }
 
     /**
      * Process the request with the current parameters, given the $method, and return the $attribute from
      * the response body, or the default fallback value $default.
      *
+     * @param string|null $attributeToReturn
      * @param string $method
-     * @param string $attribute
      * @param mixed $default
      *
      * @return mixed
      */
-    public function getResponseAttribute(string $method, string $attribute, $default = [])
+    public function requestAndReturn(?string $attributeToReturn = null, string $method = self::HTTP_METHOD_GET, $default = [])
     {
-        $response = $this->getResponse($method);
+        $response = json_decode($this->processRequest($method));
 
-        return $response->{$attribute} ?? $default;
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            return $default;
+        }
+
+        if ($attributeToReturn) {
+            return $response->{$attributeToReturn} ?? $default;
+        }
+
+        return $response;
+    }
+
+    /**
+     * Process the request with the current parameters, given the $method, return the body as string
+     *
+     * @return string
+     */
+    public function processRequest(string $method = self::HTTP_METHOD_GET): string
+    {
+        return (string) $this->addonsApiClient
+            ->request($method, '', ['query' => $this->queryParameters])
+            ->getBody();
     }
 
     /**
