@@ -18,13 +18,11 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
 
-namespace PrestaShop\Module\Mbo\Module;
+namespace PrestaShop\Module\Mbo\Modules;
 
-use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use PrestaShop\Module\Mbo\Module\Filter;
 
-class FilterTest extends MockeryTestCase
+class FiltersTest extends MockeryTestCase
 {
     /**
      * @var Filter
@@ -33,7 +31,7 @@ class FilterTest extends MockeryTestCase
 
     protected function setUp(): void
     {
-        $this->filter = new Filter();
+        $this->filter = new Filters();
     }
 
     /**
@@ -54,12 +52,11 @@ class FilterTest extends MockeryTestCase
     public function getOrigins()
     {
         return [
-            [Filter\Origin::ALL & Filter\Origin::ADDONS_NATIVE, [Filter\Origin::ADDONS_NATIVE]],
-            [Filter\Origin::ALL & Filter\Origin::DISK | Filter\Origin::ADDONS_NATIVE, [Filter\Origin::DISK, Filter\Origin::ADDONS_NATIVE]],
-            [Filter\Origin::ADDONS_SERVICE ^ Filter\Origin::DISK, [Filter\Origin::DISK, Filter\Origin::ADDONS_SERVICE]],
+            [Filters\Origin::ALL & Filters\Origin::ADDONS_NATIVE, [Filters\Origin::ADDONS_NATIVE]],
+            [Filters\Origin::ALL & Filters\Origin::DISK | Filters\Origin::ADDONS_NATIVE, [Filters\Origin::DISK, Filters\Origin::ADDONS_NATIVE]],
+            [Filters\Origin::ADDONS_SERVICE ^ Filters\Origin::DISK, [Filters\Origin::DISK, Filters\Origin::ADDONS_SERVICE]],
         ];
     }
-
 
     /**
      * @dataProvider getStatuses
@@ -80,15 +77,14 @@ class FilterTest extends MockeryTestCase
     public function getStatuses()
     {
         return [
-            [Filter\Status::ALL, [Filter\Status::ON_DISK, Filter\Status::INSTALLED, Filter\Status::ENABLED], true],
-            [Filter\Status::ALL, [~Filter\Status::ON_DISK, ~Filter\Status::INSTALLED, ~Filter\Status::ENABLED], true],
-            [Filter\Status::ALL & ~Filter\Status::ON_DISK, [~Filter\Status::ON_DISK], true],
-            [Filter\Status::ALL & ~Filter\Status::ON_DISK, [Filter\Status::ON_DISK], false],
-            [Filter\Status::ALL & ~Filter\Status::ON_DISK, [~Filter\Status::INSTALLED], false],
-            [Filter\Status::ALL & ~Filter\Status::ON_DISK, [Filter\Status::INSTALLED], true],
+            [Filters\Status::ALL, [Filters\Status::ON_DISK, Filters\Status::INSTALLED, Filters\Status::ENABLED], true],
+            [Filters\Status::ALL, [~Filters\Status::ON_DISK, ~Filters\Status::INSTALLED, ~Filters\Status::ENABLED], true],
+            [Filters\Status::ALL & ~Filters\Status::ON_DISK, [~Filters\Status::ON_DISK], true],
+            [Filters\Status::ALL & ~Filters\Status::ON_DISK, [Filters\Status::ON_DISK], false],
+            [Filters\Status::ALL & ~Filters\Status::ON_DISK, [~Filters\Status::INSTALLED], false],
+            [Filters\Status::ALL & ~Filters\Status::ON_DISK, [Filters\Status::INSTALLED], true],
         ];
     }
-
 
     /**
      * @dataProvider getTypes
@@ -108,8 +104,8 @@ class FilterTest extends MockeryTestCase
     public function getTypes()
     {
         return [
-            [Filter\Type::ALL, [Filter\Type::THEME, Filter\Type::MODULE]],
-            [Filter\Type::ALL & ~Filter\Type::MODULE, [Filter\Type::THEME, ~Filter\Type::MODULE]],
+            [Filters\Type::ALL, [Filters\Type::THEME, Filters\Type::MODULE]],
+            [Filters\Type::ALL & ~Filters\Type::MODULE, [Filters\Type::THEME, ~Filters\Type::MODULE]],
         ];
     }
 }

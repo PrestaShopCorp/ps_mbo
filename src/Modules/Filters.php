@@ -18,20 +18,17 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\Module;
+namespace PrestaShop\Module\Mbo\Modules;
 
-use PrestaShop\Module\Mbo\Module\Filter;
-
-
-class Filter
+class Filters implements FiltersInterface
 {
     /**
      * @var array<string, int>
      */
     protected $flags = [
-        Filter\Origin::FLAG => Filter\Origin::ALL,
-        Filter\Status::FLAG => Filter\Status::ALL,
-        Filter\Type::FLAG => Filter\Type::ALL,
+        Filters\Origin::FLAG => Filters\Origin::ALL,
+        Filters\Status::FLAG => Filters\Status::ALL,
+        Filters\Type::FLAG => Filters\Type::ALL,
     ];
 
     /*
@@ -41,7 +38,7 @@ class Filter
      */
     protected function isFlagSet(string $type, int $flag): bool
     {
-        return (($this->flags[$type] & $flag) === $flag);
+        return ($this->flags[$type] & $flag) === $flag;
     }
 
     /**
@@ -51,7 +48,7 @@ class Filter
      */
     public function setOrigin(int $origin): self
     {
-        $this->flags[Filter\Origin::FLAG] = $origin;
+        $this->flags[Filters\Origin::FLAG] = $origin;
 
         return $this;
     }
@@ -63,7 +60,7 @@ class Filter
      */
     public function setStatus(int $status): self
     {
-        $this->flags[Filter\Status::FLAG] = $status;
+        $this->flags[Filters\Status::FLAG] = $status;
 
         return $this;
     }
@@ -75,7 +72,7 @@ class Filter
      */
     public function setType(int $type): self
     {
-        $this->flags[Filter\Type::FLAG] = $type;
+        $this->flags[Filters\Type::FLAG] = $type;
 
         return $this;
     }
@@ -87,7 +84,7 @@ class Filter
      */
     public function hasOrigin(int $origin): bool
     {
-        return $this->isFlagSet(Filter\Origin::FLAG, $origin);
+        return $this->isFlagSet(Filters\Origin::FLAG, $origin);
     }
 
     /**
@@ -97,7 +94,7 @@ class Filter
      */
     public function hasStatus(int $status): bool
     {
-        return $this->isFlagSet(Filter\Status::FLAG, $status);
+        return $this->isFlagSet(Filters\Status::FLAG, $status);
     }
 
     /**
@@ -107,6 +104,6 @@ class Filter
      */
     public function hasType(int $type): bool
     {
-        return $this->isFlagSet(Filter\Type::FLAG, $type);
+        return $this->isFlagSet(Filters\Type::FLAG, $type);
     }
 }

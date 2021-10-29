@@ -23,15 +23,13 @@ namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use Exception;
 use PrestaShop\Module\Mbo\Addons\AddonsCollection;
-use PrestaShop\Module\Mbo\Module\Filter;
-use PrestaShop\Module\Mbo\Addons\ListFilterStatus;
-use PrestaShop\Module\Mbo\Addons\Filter\Type;
 use PrestaShop\Module\Mbo\Addons\Module\AdminModuleDataProvider;
 use PrestaShop\Module\Mbo\Addons\Module\ModuleRepository;
+use PrestaShop\Module\Mbo\Modules\Filters;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -92,19 +90,18 @@ class ModuleCatalogController extends ModuleAbstractController
     public function refreshAction(Request $request): JsonResponse
     {
         /** @var ModuleRepository $moduleRepository */
-        $moduleRepository = $this->get('mbo.module.repository');
+        $moduleRepository = $this->get('mbo.modules.repository');
 
-        $filters = $this->get('mbo.module.filter');
+        $filters = $this->get('mbo.modules.filters');
         $filters
-            ->setType(Filter\Type::MODULE | Filter\Type::SERVICE)
-            ->setStatus(Filter\Status::ALL & ~Filter\Status::INSTALLED);
+            ->setType(Filters\Type::MODULE | Filters\Type::SERVICE)
+            ->setStatus(Filters\Status::ALL & ~Filters\Status::INSTALLED);
 
         // try {
-            $modules = $this->get('mbo.module.collection.factory')->build(
+        $modules = $this->get('mbo.modules.collection.factory')->build(
                 $moduleRepository->fetchAll(),
                 $filters
             );
-            $categories = $this->get('mbo.category.repository');
         // } catch (Exception $e) {
         //     $modules = [];
         //     $categories = [];
@@ -113,7 +110,7 @@ class ModuleCatalogController extends ModuleAbstractController
         return new JsonResponse(
             [
                 'modules' => $modules,
-                'categories' => $categories,
+                // 'categories' => $categories,
             ]
         );
     }

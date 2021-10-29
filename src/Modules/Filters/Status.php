@@ -18,27 +18,16 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\Module;
+namespace PrestaShop\Module\Mbo\Modules\Filters;
 
-use Module as LegacyModule;
-use PrestaShop\Module\Mbo\Addons\AddonInterface;
-use PrestaShop\Module\Mbo\Module\Filter;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
-
-interface RepositoryInterface
+class Status
 {
-    /**
-     * @return AddonInterface[] retrieve a list of addons, regardless any $filter
-     */
-    public function fetchAll(): array;
+    public const FLAG = 'status';
 
-    /**
-     * Get the new module presenter class of the specified name provided.
-     * It contains data from its instance, the disk, the database and from the marketplace if exists.
-     *
-     * @param string $name The technical name of the module
-     *
-     * @return Module
-     */
-    public function getModule(string $name): Module;
+    /* Bitwise operator */
+    public const ON_DISK = 1;
+    public const INSTALLED = 2;
+    public const ENABLED = 4;
+
+    public const ALL = -1;
 }

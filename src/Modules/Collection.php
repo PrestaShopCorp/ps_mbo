@@ -18,18 +18,17 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\Module;
+namespace PrestaShop\Module\Mbo\Modules;
 
 use ArrayAccess;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
-use PrestaShop\Module\Mbo\Addons\Module as AddonModule;
 
 /**
  * An ArrayCollection is a Collection implementation that wraps a regular PHP array.
  */
-class Collection implements ArrayAccess, Countable, Iterator
+class Collection implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
      * An array containing the addons of this collection.
@@ -49,7 +48,7 @@ class Collection implements ArrayAccess, Countable, Iterator
     }
 
     /**
-     * @return ArrayIterator|\Traversable
+     * @return ArrayIterator
      */
     public function getIterator()
     {

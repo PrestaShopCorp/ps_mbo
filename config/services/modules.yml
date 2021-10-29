@@ -1,0 +1,19 @@
+---
+services:
+  _defaults:
+    public: true
+
+  mbo.modules.repository:
+    class: PrestaShop\Module\Mbo\Modules\Repository
+    arguments:
+      - "@mbo.addon.module.data_provider.addons"
+      - "@logger"
+      - "@=service('translator').getLocale()"
+      - "@doctrine.cache.provider"
+      - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
+
+  mbo.modules.filters:
+    class: PrestaShop\Module\Mbo\Modules\Filters
+
+  mbo.modules.collection.factory:
+    class: PrestaShop\Module\Mbo\Modules\CollectionFactory
