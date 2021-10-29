@@ -30,8 +30,6 @@ class CollectionFactory
         $collection = new Collection(
             $this->filter($modules, $filters)
         );
-        var_dump($modules, $this->filter($modules, $filters));
-        exit();
 
         return $collection;
     }

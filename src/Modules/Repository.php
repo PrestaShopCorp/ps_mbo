@@ -133,7 +133,6 @@ class Repository implements RepositoryInterface
         $listAddonsModules = [];
 
         foreach ($requests as $actionFilterValue => $action) {
-            var_dump($action);
             try {
                 $addons = $this->dataProvider->request($action, $params);
                 /** @var stdClass $addon */
@@ -191,7 +190,6 @@ class Repository implements RepositoryInterface
         $path = $this->moduleDirectory . $module->name;
         $phpFilePath = $path . '/' . $module->name . '.php';
 
-        var_dump('here');
         /* Data which design the module class */
         $attributes = ['name' => $name];
 
