@@ -23,9 +23,9 @@ namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use Exception;
 use PrestaShop\Module\Mbo\Addons\AddonsCollection;
-use PrestaShop\Module\Mbo\Addons\ListFilter;
+use PrestaShop\Module\Mbo\Module\Filter;
 use PrestaShop\Module\Mbo\Addons\ListFilterStatus;
-use PrestaShop\Module\Mbo\Addons\ListFilterType;
+use PrestaShop\Module\Mbo\Addons\Filter\Type;
 use PrestaShop\Module\Mbo\Addons\Module\AdminModuleDataProvider;
 use PrestaShop\Module\Mbo\Addons\Module\ModuleRepository;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
@@ -40,10 +40,16 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ModuleCatalogController extends ModuleAbstractController
 {
+    public const CONTROLLER_NAME = 'ADMINMODULESSF';
+
     /**
      * Module Catalog page
      *
-     * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this.",
+     *     redirectRoute="admin_administration"
+     * )
      *
      * @return Response
      */
@@ -60,7 +66,7 @@ class ModuleCatalogController extends ModuleAbstractController
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminModules'),
                 'requireFilterStatus' => false,
-                'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
+                'level' => $this->authorizationLevel(static::CONTROLLER_NAME),
                 'errorMessage' => $this->trans(
                     'You do not have permission to add this.',
                     'Admin.Notifications.Error'
@@ -72,7 +78,11 @@ class ModuleCatalogController extends ModuleAbstractController
     /**
      * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
      *
-     * @AdminSecurity("is_granted(['read', 'create', 'update', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this.",
+     *     redirectRoute="admin_administration"
+     * )
      *
      * @param Request $request
      *
@@ -80,40 +90,31 @@ class ModuleCatalogController extends ModuleAbstractController
      */
     public function refreshAction(Request $request): JsonResponse
     {
-        /** @var AdminModuleDataProvider $modulesProvider */
-        $modulesProvider = $this->get('mbo.addon.module.data_provider.admin_module');
         /** @var ModuleRepository $moduleRepository */
-        $moduleRepository = $this->get('mbo.addon.module.repository');
-        $responseArray = [];
+        $moduleRepository = $this->get('mbo.modules.repository');
 
-        $filters = new ListFilter();
-        $filters->setType(ListFilterType::MODULE | ListFilterType::SERVICE)
-            ->setStatus(~ListFilterStatus::INSTALLED);
+        $filters = new $this->get('mbo.modules.filters');
+        $filters
+            ->setType(Filter\Type::MODULE | Filter\Type::SERVICE)
+            ->setStatus(Filter\Status::ALL & ~Filter\Status::INSTALLED);
 
         try {
-            $modulesFromRepository = AddonsCollection::createFrom($moduleRepository->getFilteredList($filters));
-            $modulesProvider->generateAddonsUrls($modulesFromRepository);
-
-            $modules = $modulesFromRepository->toArray();
-            shuffle($modules);
-            $categories = $this->getCategories($modulesProvider, $modules);
-
-            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categories);
-            $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse(
-                $categories,
-                $modules
+            $categories = $this->get('mbo.categories.repository');
+            $modules = $this->get('mbo.modules.collection.factory')->build(
+                $moduleRepository->fetchAll(),
+                $filters
             );
-            $responseArray['status'] = true;
         } catch (Exception $e) {
-            $responseArray['msg'] = $this->trans(
-                'Cannot get catalog data, please try again later. Reason: %error_details%',
-                'Admin.Modules.Notification',
-                ['%error_details%' => print_r($e->getMessage(), true)]
-            );
-            $responseArray['status'] = false;
+            $modules = [];
+            $categories = [];
         }
 
-        return new JsonResponse($responseArray);
+        return new JsonResponse(
+            [
+                'modules' => $modules,
+                'categories' => $categories,
+            ]
+        );
     }
 
     /**
@@ -181,7 +182,7 @@ class ModuleCatalogController extends ModuleAbstractController
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog-refresh.html.twig',
             [
                 'categories' => $categories['categories'],
-                'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
+                'level' => $this->authorizationLevel(static::CONTROLLER_NAME),
                 'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
             ]
         )->getContent();
@@ -190,5 +191,33 @@ class ModuleCatalogController extends ModuleAbstractController
             'selector' => '.module-catalog-page',
             'content' => $sortingHeaderContent . $gridContent,
         ];
+    }
+
+    /**
+     * Common method for all module related controller for getting the header buttons.
+     *
+     * @return array
+     */
+    protected function getToolbarButtons()
+    {
+        // toolbarButtons
+        $toolbarButtons = [];
+
+        if (!in_array(
+            $this->authorizationLevel(static::CONTROLLER_NAME),
+            [
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+            ]
+        )) {
+            $toolbarButtons['add_module'] = [
+                'href' => '#',
+                'desc' => $this->trans('Upload a module', 'Admin.Modules.Feature'),
+                'icon' => 'cloud_upload',
+                'help' => $this->trans('Upload a module', 'Admin.Modules.Feature'),
+            ];
+        }
+
+        return $toolbarButtons;
     }
 }

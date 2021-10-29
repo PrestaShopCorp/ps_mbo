@@ -1,0 +1,22 @@
+---
+services:
+  _defaults:
+    public: true
+
+  mbo.module.repository:
+    class: PrestaShop\Module\Mbo\Module\Repository
+    arguments:
+      - "@mbo.addon.api"
+      - "@translator"
+      - "@logger"
+      - "@mbo.addon.module.data_provider.addons"
+      - "@prestashop.categories_provider"
+      - "@mbo.addon.module.data_prodiver.module"
+      - "@doctrine.cache.provider"
+
+  mbo.module.filter:
+    class: PrestaShop\Module\Mbo\Module\Filter
+
+
+  mbo.modules.collection.factory:
+    class: PrestaShop\Module\Mbo\Module\CollectionFactory

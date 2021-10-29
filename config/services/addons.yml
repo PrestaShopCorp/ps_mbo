@@ -24,7 +24,7 @@ services:
       - "@doctrine.cache.provider"
       - "@=service('prestashop.adapter.legacy.context').getContext().employee"
     calls:
-      - [ setRouter, ['@router']]
+      - [ setRouter, ['@router'] ]
 
   mbo.addon.module.data_prodiver.module:
     class: PrestaShop\Module\Mbo\Addons\Module\ModuleDataProvider
