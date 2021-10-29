@@ -24,7 +24,6 @@ use Doctrine\Common\Cache\CacheProvider;
 use Exception;
 use ParseError;
 use Module as LegacyModule;
-use PrestaShop\Module\Mbo\Addons\AddonsCollection;
 use PrestaShop\Module\Mbo\Addons\ListFilter;
 use PrestaShop\Module\Mbo\Addons\ListFilterOrigin;
 use PrestaShop\Module\Mbo\Addons\ListFilterStatus;
@@ -40,6 +39,91 @@ class CollectionFactory
 {
     public function build(array $modules, FilterInterface $filters, CategoryRepositoryInterface $categories)
     {
+        $collection = new Collection();
+    }
 
+    /**
+     * @param Filter $filter
+     *
+     * @return array<Module> retrieve a list of addons, regarding the $filter used
+     */
+    public function filter(array $modules, Filter $filter)
+    {
+        /** @var Module[] $modules */
+        $modules = $this->getList();
+
+        foreach ($modules as $key => &$module) {
+            // Part One : Removing addons not related to the selected product type
+            if ($filter->type != ListFilterType::ALL) {
+                if ($module->attributes->get('productType') == 'module') {
+                    $productType = ListFilterType::MODULE;
+                }
+                if ($module->attributes->get('productType') == 'service') {
+                    $productType = ListFilterType::SERVICE;
+                }
+                if (!isset($productType) || $productType & ~$filter->type) {
+                    unset($modules[$key]);
+
+                    continue;
+                }
+            }
+
+            // Part Two : Remove module not installed if specified
+            if ($filter->status != ListFilterStatus::ALL) {
+                if ($module->database->get('installed') == 1
+                    && ($filter->hasStatus(ListFilterStatus::UNINSTALLED)
+                        || !$filter->hasStatus(ListFilterStatus::INSTALLED))) {
+                    unset($modules[$key]);
+
+                    continue;
+                }
+
+                if ($module->database->get('installed') == 0
+                    && (!$filter->hasStatus(ListFilterStatus::UNINSTALLED)
+                        || $filter->hasStatus(ListFilterStatus::INSTALLED))) {
+                    unset($modules[$key]);
+
+                    continue;
+                }
+
+                if ($module->database->get('installed') == 1
+                    && $module->database->get('active') == 1
+                    && !$filter->hasStatus(ListFilterStatus::DISABLED)
+                    && $filter->hasStatus(ListFilterStatus::ENABLED)) {
+                    unset($modules[$key]);
+
+                    continue;
+                }
+
+                if ($module->database->get('installed') == 1
+                    && $module->database->get('active') == 0
+                    && !$filter->hasStatus(ListFilterStatus::ENABLED)
+                    && $filter->hasStatus(ListFilterStatus::DISABLED)) {
+                    unset($modules[$key]);
+
+                    continue;
+                }
+            }
+
+            // Part Three : Remove addons not related to the proper source (ex Addons)
+            if ($filter->origin != ListFilterOrigin::ALL) {
+                if (!$module->attributes->has('origin_filter_value') &&
+                    !$filter->hasOrigin(ListFilterOrigin::DISK)
+                ) {
+                    unset($modules[$key]);
+
+                    continue;
+                }
+                if ($module->attributes->has('origin_filter_value') &&
+                    !$filter->hasOrigin($module->attributes->get('origin_filter_value'))
+                ) {
+                    unset($modules[$key]);
+
+                    continue;
+                }
+            }
+        }
+
+        return $modules;
     }
 }

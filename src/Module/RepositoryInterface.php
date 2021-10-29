@@ -28,13 +28,6 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 interface RepositoryInterface
 {
     /**
-     * @param Filter $filter
-     *
-     * @return AddonInterface[] retrieve a list of addons, regarding the $filter used
-     */
-    public function getFilteredList(Filter $filter): array;
-
-    /**
      * @return AddonInterface[] retrieve a list of addons, regardless any $filter
      */
     public function fetchAll(): array;

@@ -25,23 +25,21 @@ use Exception;
 use ParseError;
 use Module as LegacyModule;
 use PrestaShop\Module\Mbo\Addons\AddonsCollection;
-use PrestaShop\Module\Mbo\Addons\ListFilter;
-use PrestaShop\Module\Mbo\Addons\ListFilterOrigin;
-use PrestaShop\Module\Mbo\Addons\ListFilterStatus;
-use PrestaShop\Module\Mbo\Addons\ListFilterType;
+use PrestaShop\Module\Mbo\Module\Filter;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShop\Module\Mbo\Addons\Service\ApiClient;
 
 class Repository implements RepositoryInterface
 {
     /**
      * @var AdminModuleDataProvider
      */
-    private $adminModuleProvider;
+    private $apiClient;
 
     /**
      * @var LoggerInterface
@@ -94,18 +92,14 @@ class Repository implements RepositoryInterface
     private $loadedModules;
 
     public function __construct(
-        AdminModuleDataProvider $adminModulesProvider,
-        ModuleDataProvider $modulesProvider,
-        LoggerInterface $logger,
+        ApiClient $apiClient,
         TranslatorInterface $translator,
-        $modulePath,
+        LoggerInterface $logger,
         CacheProvider $cacheProvider = null
     ) {
-        $this->adminModuleProvider = $adminModulesProvider;
+        $this->apiClient = $apiClient;
         $this->logger = $logger;
-        $this->moduleProvider = $modulesProvider;
         $this->translator = $translator;
-        $this->modulePath = $modulePath;
 
         list($isoLang) = explode('-', $translator->getLocale());
 
@@ -135,123 +129,72 @@ class Repository implements RepositoryInterface
         $this->cache = [];
     }
 
-    /**
-     * @param ListFilter $filter
-     * @param bool $skip_main_class_attributes
-     *
-     * @return array<Module> retrieve a list of addons, regarding the $filter used
-     */
-    public function getFilteredList(ListFilter $filter, $skip_main_class_attributes = false)
-    {
-        /** @var Module[] $modules */
-        $modules = $this->getList();
-
-        foreach ($modules as $key => &$module) {
-            // Part One : Removing addons not related to the selected product type
-            if ($filter->type != ListFilterType::ALL) {
-                if ($module->attributes->get('productType') == 'module') {
-                    $productType = ListFilterType::MODULE;
-                }
-                if ($module->attributes->get('productType') == 'service') {
-                    $productType = ListFilterType::SERVICE;
-                }
-                if (!isset($productType) || $productType & ~$filter->type) {
-                    unset($modules[$key]);
-
-                    continue;
-                }
-            }
-
-            // Part Two : Remove module not installed if specified
-            if ($filter->status != ListFilterStatus::ALL) {
-                if ($module->database->get('installed') == 1
-                    && ($filter->hasStatus(ListFilterStatus::UNINSTALLED)
-                        || !$filter->hasStatus(ListFilterStatus::INSTALLED))) {
-                    unset($modules[$key]);
-
-                    continue;
-                }
-
-                if ($module->database->get('installed') == 0
-                    && (!$filter->hasStatus(ListFilterStatus::UNINSTALLED)
-                        || $filter->hasStatus(ListFilterStatus::INSTALLED))) {
-                    unset($modules[$key]);
-
-                    continue;
-                }
-
-                if ($module->database->get('installed') == 1
-                    && $module->database->get('active') == 1
-                    && !$filter->hasStatus(ListFilterStatus::DISABLED)
-                    && $filter->hasStatus(ListFilterStatus::ENABLED)) {
-                    unset($modules[$key]);
-
-                    continue;
-                }
-
-                if ($module->database->get('installed') == 1
-                    && $module->database->get('active') == 0
-                    && !$filter->hasStatus(ListFilterStatus::ENABLED)
-                    && $filter->hasStatus(ListFilterStatus::DISABLED)) {
-                    unset($modules[$key]);
-
-                    continue;
-                }
-            }
-
-            // Part Three : Remove addons not related to the proper source (ex Addons)
-            if ($filter->origin != ListFilterOrigin::ALL) {
-                if (!$module->attributes->has('origin_filter_value') &&
-                    !$filter->hasOrigin(ListFilterOrigin::DISK)
-                ) {
-                    unset($modules[$key]);
-
-                    continue;
-                }
-                if ($module->attributes->has('origin_filter_value') &&
-                    !$filter->hasOrigin($module->attributes->get('origin_filter_value'))
-                ) {
-                    unset($modules[$key]);
-
-                    continue;
-                }
-            }
-        }
-
-        return $modules;
-    }
 
     public function fetchAll(): array
     {
-        $modules = [];
-        foreach ($this->adminModuleProvider->getCatalogModulesNames() as $name) {
+        if ($this->cacheProvider && $this->cacheProvider->contains($this->languageISO . self::_CACHEKEY_MODULES_)) {
+            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
+        }
+
+        if (!$this->catalog_modules) {
+            $params = ['format' => 'json'];
+            $requests = [
+                ListFilterOrigin::ADDONS_MUST_HAVE => 'must-have',
+                ListFilterOrigin::ADDONS_SERVICE => 'service',
+                ListFilterOrigin::ADDONS_NATIVE => 'native',
+                ListFilterOrigin::ADDONS_NATIVE_ALL => 'native_all',
+            ];
+            if ($this->addonsDataProvider->isAddonsAuthenticated()) {
+                $requests[ListFilterOrigin::ADDONS_CUSTOMER] = 'customer';
+            }
+
             try {
-                $module = $this->getModule($name);
-                if ($module instanceof Module) {
-                    $modules[$name] = $module;
+                $listAddons = [];
+                // We execute each addons request
+                foreach ($requests as $action_filter_value => $action) {
+                    if (!$this->addonsDataProvider->isAddonsUp()) {
+                        continue;
+                    }
+                    // We add the request name in each product returned by Addons,
+                    // so we know whether is bought
+
+                    $addons = $this->addonsDataProvider->request($action, $params);
+                    /** @var \stdClass $addon */
+                    foreach ($addons as $addonsType => $addon) {
+                        if (empty($addon->name)) {
+                            $this->logger->error(sprintf('The addon with id %s does not have name.', $addon->id));
+
+                            continue;
+                        }
+
+                        $addon->origin = $action;
+                        $addon->origin_filter_value = $action_filter_value;
+                        $addon->categoryParent = $this->categoriesProvider
+                            ->getParentCategory($addon->categoryName);
+                        if (isset($addon->version)) {
+                            $addon->version_available = $addon->version;
+                        }
+                        if (!isset($addon->product_type)) {
+                            $addon->productType = isset($addonsType) ? rtrim($addonsType, 's') : 'module';
+                        } else {
+                            $addon->productType = $addon->product_type;
+                        }
+                        $listAddons[$addon->name] = $addon;
+                    }
                 }
-            } catch (ParseError $e) {
-                $this->logger->critical(
-                    $this->translator->trans(
-                        'Parse error on module %module%. %error_details%',
-                        [
-                            '%module%' => $name,
-                            '%error_details%' => $e->getMessage(),
-                        ],
-                        'Admin.Modules.Notification'
-                    )
-                );
-            } catch (Exception $e) {
-                $this->logger->critical(
-                    $this->translator->trans(
-                        'Unexpected exception on module %module%. %error_details%',
-                        [
-                            '%module%' => $name,
-                            '%error_details%' => $e->getMessage(),
-                        ],
-                        'Admin.Modules.Notification'
-                    )
-                );
+
+                if (!empty($listAddons)) {
+                    $this->catalog_modules = $listAddons;
+                    if ($this->cacheProvider) {
+                        $this->cacheProvider->save($this->languageISO . self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
+                    }
+                } else {
+                    $this->fallbackOnCatalogCache();
+                }
+            } catch (\Exception $e) {
+                if (!$this->fallbackOnCatalogCache()) {
+                    $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache.');
+                }
             }
         }
 
@@ -284,7 +227,7 @@ class Repository implements RepositoryInterface
 
         // We check that we have data from the marketplace
         try {
-            $module_catalog_data = $this->adminModuleProvider->getCatalogModules(['name' => $name]);
+            $module_catalog_data = $this->apiClient->getCatalogModules(['name' => $name]);
             $attributes = array_merge(
                 $attributes,
                 (array) array_shift($module_catalog_data)

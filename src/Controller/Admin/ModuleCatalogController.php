@@ -31,6 +31,7 @@ use PrestaShop\Module\Mbo\Addons\Module\ModuleRepository;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -91,23 +92,23 @@ class ModuleCatalogController extends ModuleAbstractController
     public function refreshAction(Request $request): JsonResponse
     {
         /** @var ModuleRepository $moduleRepository */
-        $moduleRepository = $this->get('mbo.modules.repository');
+        $moduleRepository = $this->get('mbo.module.repository');
 
-        $filters = new $this->get('mbo.modules.filters');
+        $filters = $this->get('mbo.module.filter');
         $filters
             ->setType(Filter\Type::MODULE | Filter\Type::SERVICE)
             ->setStatus(Filter\Status::ALL & ~Filter\Status::INSTALLED);
 
-        try {
-            $categories = $this->get('mbo.categories.repository');
-            $modules = $this->get('mbo.modules.collection.factory')->build(
+        // try {
+            $modules = $this->get('mbo.module.collection.factory')->build(
                 $moduleRepository->fetchAll(),
                 $filters
             );
-        } catch (Exception $e) {
-            $modules = [];
-            $categories = [];
-        }
+            $categories = $this->get('mbo.category.repository');
+        // } catch (Exception $e) {
+        //     $modules = [];
+        //     $categories = [];
+        // }
 
         return new JsonResponse(
             [

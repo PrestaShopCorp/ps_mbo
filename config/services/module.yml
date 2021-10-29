@@ -6,17 +6,13 @@ services:
   mbo.module.repository:
     class: PrestaShop\Module\Mbo\Module\Repository
     arguments:
-      - "@mbo.addon.api"
+      - "@mbo.addon.client.api"
       - "@translator"
       - "@logger"
-      - "@mbo.addon.module.data_provider.addons"
-      - "@prestashop.categories_provider"
-      - "@mbo.addon.module.data_prodiver.module"
       - "@doctrine.cache.provider"
 
   mbo.module.filter:
     class: PrestaShop\Module\Mbo\Module\Filter
 
-
-  mbo.modules.collection.factory:
+  mbo.module.collection.factory:
     class: PrestaShop\Module\Mbo\Module\CollectionFactory
