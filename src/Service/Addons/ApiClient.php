@@ -114,7 +114,7 @@ class ApiClient
             'method' => 'check_customer',
             'username' => $username,
             'password' => $password,
-        ])->requestAndReturn();
+        ])->processRequestAndReturn();
     }
 
     /**
@@ -135,7 +135,7 @@ class ApiClient
             'password' => $password,
             'module_name' => $moduleName,
             'module_key' => $moduleKey,
-        ])->requestAndReturn();
+        ])->processRequestAndReturn();
     }
 
     /**
@@ -146,7 +146,7 @@ class ApiClient
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'native',
-        ])->requestAndReturn('modules');
+        ])->processRequestAndReturn('modules');
     }
 
     /**
@@ -157,7 +157,7 @@ class ApiClient
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'install-modules',
-        ])->requestAndReturn('modules');
+        ])->processRequestAndReturn('modules');
     }
 
     /**
@@ -168,7 +168,7 @@ class ApiClient
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'must-have',
-        ])->requestAndReturn('modules');
+        ])->processRequestAndReturn('modules');
     }
 
     /**
@@ -179,7 +179,7 @@ class ApiClient
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'service',
-        ])->requestAndReturn('services');
+        ])->processRequestAndReturn('services');
     }
 
     /**
@@ -190,7 +190,7 @@ class ApiClient
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'categories',
-        ])->requestAndReturn('module');
+        ])->processRequestAndReturn('module');
     }
 
     /**
@@ -204,7 +204,7 @@ class ApiClient
             'method' => 'listing',
             'action' => 'module',
             'id_module' => $moduleId,
-        ])->requestAndReturn('modules');
+        ])->processRequestAndReturn('modules');
 
         return $modules[0] ?? null;
     }
@@ -239,7 +239,7 @@ class ApiClient
             'action' => 'customer',
             'username' => $username,
             'password' => $password,
-        ])->requestAndReturn('modules', self::HTTP_METHOD_POST);
+        ])->processRequestAndReturn('modules', self::HTTP_METHOD_POST);
     }
 
     /**
@@ -257,7 +257,7 @@ class ApiClient
             'action' => 'customer-themes',
             'username' => $username,
             'password' => $password,
-        ])->requestAndReturn('themes', self::HTTP_METHOD_POST, new stdClass());
+        ])->processRequestAndReturn('themes', self::HTTP_METHOD_POST, new stdClass());
     }
 
     /**
@@ -270,7 +270,7 @@ class ApiClient
      *
      * @return mixed
      */
-    public function requestAndReturn(?string $attributeToReturn = null, string $method = self::HTTP_METHOD_GET, $default = [])
+    public function processRequestAndReturn(?string $attributeToReturn = null, string $method = self::HTTP_METHOD_GET, $default = [])
     {
         $response = json_decode($this->processRequest($method));
 
