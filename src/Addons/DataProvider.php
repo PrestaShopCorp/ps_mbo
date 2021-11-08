@@ -79,6 +79,11 @@ class DataProvider implements AddonsInterface
     private $moduleChannel;
 
     /**
+     * @var \PrestaShop\Module\Mbo\Addons\User
+     */
+    private $user;
+
+    /**
      * @param ApiClient $apiClient
      * @param ModuleZipManager $zipManager
      * @param string|null $moduleChannel
@@ -92,6 +97,7 @@ class DataProvider implements AddonsInterface
         $this->zipManager = $zipManager;
         $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
         $this->moduleChannel = $moduleChannel ?? self::ADDONS_API_MODULE_CHANNEL_STABLE;
+        $this->user = new User();
     }
 
     /**
@@ -130,16 +136,11 @@ class DataProvider implements AddonsInterface
     }
 
     /**
-     * @return bool
-     *
-     * @todo Does this function should be in a User related class ?
+     * {@inheritdoc}
      */
     public function isAddonsAuthenticated(): bool
     {
-        $request = Request::createFromGlobals();
-
-        return $request->cookies->get('username_addons', false)
-            && $request->cookies->get('password_addons', false);
+        return $this->user->isAddonsAuthenticated();
     }
 
     /**
@@ -153,7 +154,7 @@ class DataProvider implements AddonsInterface
 
         // We merge the addons credentials
         if ($this->isAddonsAuthenticated()) {
-            $params = array_merge($this->getAddonsCredentials(), $params);
+            $params = array_merge($this->user->getAddonsCredentials(), $params);
         }
 
         $this->marketplaceClient->reset();
@@ -209,34 +210,6 @@ class DataProvider implements AddonsInterface
 
             throw $e;
         }
-    }
-
-    /**
-     * @return array
-     *
-     * @throws Exception
-     */
-    protected function getAddonsCredentials()
-    {
-        $request = Request::createFromGlobals();
-        $username = $this->encryption->decrypt($request->cookies->get('username_addons'));
-        $password = $this->encryption->decrypt($request->cookies->get('password_addons'));
-
-        return [
-            'username_addons' => $username,
-            'password_addons' => $password,
-        ];
-    }
-
-    /** Does this function should be in a User related class ? **/
-    public function getAddonsEmail()
-    {
-        $request = Request::createFromGlobals();
-        $username = $this->encryption->decrypt($request->cookies->get('username_addons'));
-
-        return [
-            'username_addons' => $username,
-        ];
     }
 
     /**
