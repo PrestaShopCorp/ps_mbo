@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Service\Addons;
 
 use GuzzleHttp\Client;
-use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use stdClass;
 
 class ApiClient
@@ -133,7 +132,7 @@ class ApiClient
      *
      * @return array
      */
-    public function getNativesModules(array $params = []): array
+    public function getNativesModules(array $params): array
     {
         return $this->setQueryParams([
             'method' => 'listing',
@@ -142,47 +141,55 @@ class ApiClient
     }
 
     /**
+     * @param array $params
+     *
      * @return array
      */
-    public function getPreInstalledModules(): array
+    public function getPreInstalledModules(array $params = []): array
     {
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'install-modules',
-        ])->processRequestAndReturn('modules');
+        ] + $params)->processRequestAndReturn('modules');
     }
 
     /**
+     * @param array $params
+     *
      * @return array
      */
-    public function getMustHaveModules(): array
+    public function getMustHaveModules(array $params = []): array
     {
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'must-have',
-        ])->processRequestAndReturn('modules');
+        ] + $params)->processRequestAndReturn('modules');
     }
 
     /**
+     * @param array $params
+     *
      * @return array
      */
-    public function getServices(): array
+    public function getServices(array $params = []): array
     {
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'service',
-        ])->processRequestAndReturn('services');
+        ] + $params)->processRequestAndReturn('services');
     }
 
     /**
+     * @param array $params
+     *
      * @return array
      */
-    public function getCategories(): array
+    public function getCategories(array $params = []): array
     {
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'categories',
-        ])->processRequestAndReturn('module');
+        ] + $params)->processRequestAndReturn('module');
     }
 
     /**
