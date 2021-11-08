@@ -165,32 +165,22 @@ class DataProvider implements AddonsInterface
                 case 'service':
                     return $this->marketplaceClient->getServices();
                 case 'native_all':
-                    return $this->marketplaceClient
-                        ->setQueryParams(['iso_code' => 'all'])
-                        ->getNativesModules();
+                    return $this->marketplaceClient->getNativesModules(['iso_code' => 'all']);
                 case 'must-have':
                     return $this->marketplaceClient->getMustHaveModules();
                 case 'customer':
-                    return $this->marketplaceClient->getCustomerModules($params['username_addons'], $params['password_addons']);
+                    return $this->marketplaceClient->getCustomerModules($params);
                 case 'customer_themes':
-                    return $this->marketplaceClient->getCustomerThemes($params['username_addons'], $params['password_addons']);
+                    return $this->marketplaceClient->getCustomerThemes($params);
                 case 'check_customer':
-                    return $this->marketplaceClient->getCheckCustomer($params['username_addons'], $params['password_addons']);
+                    return $this->marketplaceClient->getCheckCustomer($params);
                 case 'check_module':
-                    return $this->marketplaceClient
-                        ->getCheckModule($params['username_addons'], $params['password_addons'], $params['module_name'], $params['module_key']);
+                    return $this->marketplaceClient->getCheckModule($params);
                 case 'module_download':
-                    if ($this->isAddonsAuthenticated()) {
-                        $this->marketplaceClient
-                            ->setQueryParams([
-                                'username' => $params['username_addons'],
-                                'password' => $params['password_addons'],
-                            ]);
-                    }
-
-                    return $this->marketplaceClient->getModuleZip((int) $params['id_module'], $this->moduleChannel);
+                    $params['channel'] = $this->moduleChannel;
+                    return $this->marketplaceClient->getModuleZip($params);
                 case 'module':
-                    return $this->marketplaceClient->getModule((int) $params['id_module']);
+                    return $this->marketplaceClient->getModule($params);
                 case 'install-modules':
                     return $this->marketplaceClient->getPreInstalledModules();
                 case 'categories':

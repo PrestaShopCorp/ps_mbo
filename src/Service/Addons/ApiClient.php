@@ -60,8 +60,8 @@ class ApiClient
         'module_key',
         'module_name',
         'shop_url',
-        'username',
-        'password',
+        'username_addons',
+        'password_addons',
     ];
 
     /**
@@ -103,50 +103,42 @@ class ApiClient
     /**
      * Check Addons client account credentials.
      *
-     * @param string $username
-     * @param string $password
+     * @param array{username_addons: string, password_addons: string} $params
      *
      * @return stdClass
      */
-    public function getCheckCustomer(string $username, string $password): stdClass
+    public function getCheckCustomer(array $params): stdClass
     {
         return $this->setQueryParams([
             'method' => 'check_customer',
-            'username' => $username,
-            'password' => $password,
-        ])->processRequestAndReturn();
+        ] + $params)->processRequestAndReturn();
     }
 
     /**
      * Check Addons client account credentials.
      *
-     * @param string $username
-     * @param string $password
-     * @param string $moduleName
-     * @param string $moduleKey
+     * @param array{username_addons: string, password_addons: string, module_name: string, module_key: string} $params
      *
      * @return stdClass
      */
-    public function getCheckModule(string $username, string $password, string $moduleName, string $moduleKey): stdClass
+    public function getCheckModule(array $params): stdClass
     {
         return $this->setQueryParams([
             'method' => 'check',
-            'username' => $username,
-            'password' => $password,
-            'module_name' => $moduleName,
-            'module_key' => $moduleKey,
-        ])->processRequestAndReturn();
+        ] + $params)->processRequestAndReturn();
     }
 
     /**
+     * @param array{iso_code: string} $params
+     *
      * @return array
      */
-    public function getNativesModules(): array
+    public function getNativesModules(array $params = []): array
     {
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'native',
-        ])->processRequestAndReturn('modules');
+        ] + $params)->processRequestAndReturn('modules');
     }
 
     /**
@@ -194,17 +186,16 @@ class ApiClient
     }
 
     /**
-     * @param int $moduleId
+     * @param array{id_module: int} $params
      *
      * @return object|null
      */
-    public function getModule(int $moduleId): ?object
+    public function getModule(array $params): ?object
     {
         $modules = $this->setQueryParams([
             'method' => 'listing',
             'action' => 'module',
-            'id_module' => $moduleId,
-        ])->processRequestAndReturn('modules');
+        ] + $params)->processRequestAndReturn('modules');
 
         return $modules[0] ?? null;
     }
@@ -212,52 +203,43 @@ class ApiClient
     /**
      * Call API for module ZIP content (= download).
      *
-     * @param int $moduleId
-     * @param string $moduleChannel
+     * @param array{username_addons: string, password_addons: string, channel: string, id_module: int} $params
      *
      * @return string binary content (zip format)
      */
-    public function getModuleZip(int $moduleId, string $moduleChannel = AddonsDataProvider::ADDONS_API_MODULE_CHANNEL_STABLE): string
+    public function getModuleZip(array $params): string
     {
         return $this->setQueryParams([
             'method' => 'listing',
-            'channel' => $moduleChannel,
-            'id_module' => $moduleId,
-        ])->processRequest(self::HTTP_METHOD_POST);
+        ] + $params)->processRequest(self::HTTP_METHOD_POST);
     }
 
     /**
-     * @param string $username
-     * @param string $password
+     * @param array{username_addons: string, password_addons: string} $params
      *
      * @return array
      */
-    public function getCustomerModules(string $username, string $password): array
+    public function getCustomerModules(array $params): array
     {
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'customer',
-            'username' => $username,
-            'password' => $password,
-        ])->processRequestAndReturn('modules', self::HTTP_METHOD_POST);
+        ] + $params)->processRequestAndReturn('modules', self::HTTP_METHOD_POST);
     }
 
     /**
      * Get list of themes bought by customer.
      *
-     * @param string $username
-     * @param string $password
+     * @param array{username_addons: string, password_addons: string} $params
      *
      * @return array
      */
-    public function getCustomerThemes(string $username, string $password): array
+    public function getCustomerThemes(array $params): array
     {
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'customer-themes',
-            'username' => $username,
-            'password' => $password,
-        ])->processRequestAndReturn('themes', self::HTTP_METHOD_POST, new stdClass());
+        ] + $params)->processRequestAndReturn('themes', self::HTTP_METHOD_POST, new stdClass());
     }
 
     /**
