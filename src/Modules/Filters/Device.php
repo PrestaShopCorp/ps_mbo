@@ -18,24 +18,13 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\Modules;
+namespace PrestaShop\Module\Mbo\Modules\Filters;
 
-use PrestaShop\Module\Mbo\Addons\AddonInterface;
-
-interface RepositoryInterface
+class Device
 {
-    /**
-     * @return AddonInterface[] retrieve a list of addons, regardless any $filter
-     */
-    public function fetchAll(): array;
+    public const COMPUTER = 1;
+    public const TABLET = 2;
+    public const MOBILE = 4;
 
-    /**
-     * Get the new module presenter class of the specified name provided.
-     * It contains data from its instance, the disk, the database and from the marketplace if exists.
-     *
-     * @param string $name The technical name of the module
-     *
-     * @return Module|null
-     */
-    public function getModule(string $name): ?Module;
+    public const ALL = 7;
 }

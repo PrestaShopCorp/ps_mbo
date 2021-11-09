@@ -45,9 +45,9 @@ class CollectionFactory
         $result = [];
         foreach ($modules as $key => $module) {
             // Part One : Removing addons not related to the selected product type
-            if ($module->product_type == 'module') {
+            if ($module->get('product_type') == 'module') {
                 $productType = Filters\Type::MODULE;
-            } elseif ($module->product_type == 'service') {
+            } elseif ($module->get('product_type') == 'service') {
                 $productType = Filters\Type::SERVICE;
             }
 
@@ -56,18 +56,20 @@ class CollectionFactory
             }
 
             // Part Two : Remove module not installed if specified
-            if ($filters->status != Filters\Status::ALL) {
+            if (!$filters->hasStatus(Filters\Status::ALL)) {
                 if ($module->database->get('installed') == 1
-                    && ($filters->hasStatus(Filters\Status::UNINSTALLED)
-                        || !$filters->hasStatus(Filters\Status::INSTALLED))) {
+                    && ($filters->hasStatus(~Filters\Status::INSTALLED)
+                        || !$filters->hasStatus(Filters\Status::INSTALLED))
+                ) {
                     unset($modules[$key]);
 
                     continue;
                 }
 
                 if ($module->database->get('installed') == 0
-                    && (!$filters->hasStatus(Filters\Status::UNINSTALLED)
-                        || $filters->hasStatus(Filters\Status::INSTALLED))) {
+                    && (!$filters->hasStatus(~Filters\Status::INSTALLED)
+                        || $filters->hasStatus(Filters\Status::INSTALLED))
+                ) {
                     unset($modules[$key]);
 
                     continue;
@@ -75,8 +77,9 @@ class CollectionFactory
 
                 if ($module->database->get('installed') == 1
                     && $module->database->get('active') == 1
-                    && !$filters->hasStatus(Filters\Status::DISABLED)
-                    && $filters->hasStatus(Filters\Status::ENABLED)) {
+                    && !$filters->hasStatus(~Filters\Status::ENABLED)
+                    && $filters->hasStatus(Filters\Status::ENABLED)
+                ) {
                     unset($modules[$key]);
 
                     continue;
@@ -85,7 +88,8 @@ class CollectionFactory
                 if ($module->database->get('installed') == 1
                     && $module->database->get('active') == 0
                     && !$filters->hasStatus(Filters\Status::ENABLED)
-                    && $filters->hasStatus(Filters\Status::DISABLED)) {
+                    && $filters->hasStatus(~Filters\Status::ENABLED)
+                ) {
                     unset($modules[$key]);
 
                     continue;
@@ -93,7 +97,7 @@ class CollectionFactory
             }
 
             // Part Three : Remove addons not related to the proper source (ex Addons)
-            if (!$filters->hasOrigin($module->origin_filter_value)) {
+            if (!$filters->hasOrigin($module->get('origin_filter_value'))) {
                 continue;
             }
 

@@ -109,7 +109,7 @@ class ModuleCatalogController extends ModuleAbstractController
 
         return new JsonResponse(
             [
-                'modules' => $modules,
+                'modules' => (array) $modules,
                 // 'categories' => $categories,
             ]
         );

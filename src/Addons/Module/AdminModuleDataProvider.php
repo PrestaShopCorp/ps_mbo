@@ -453,10 +453,11 @@ class AdminModuleDataProvider
                             $addon->version_available = $addon->version;
                         }
                         if (!isset($addon->product_type)) {
-                            $addon->productType = isset($addonsType) ? rtrim($addonsType, 's') : 'module';
+                            $addon->product_type = isset($addonsType) ? rtrim($addonsType, 's') : 'module';
                         } else {
-                            $addon->productType = $addon->product_type;
+                            $addon->product_type = $addon->product_type;
                         }
+
                         $listAddons[$addon->name] = $addon;
                     }
                 }
