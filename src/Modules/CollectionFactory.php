@@ -58,8 +58,10 @@ class CollectionFactory
             // Part Two : Remove module not installed if specified
             if (!$filters->hasStatus(Filters\Status::ALL)) {
                 if ($module->database->get('installed') == 1
-                    && ($filters->hasStatus(~Filters\Status::INSTALLED)
-                        || !$filters->hasStatus(Filters\Status::INSTALLED))
+                    && (
+                        $filters->hasStatus(~Filters\Status::INSTALLED)
+                        || !$filters->hasStatus(Filters\Status::INSTALLED)
+                    )
                 ) {
                     unset($modules[$key]);
 
@@ -67,8 +69,10 @@ class CollectionFactory
                 }
 
                 if ($module->database->get('installed') == 0
-                    && (!$filters->hasStatus(~Filters\Status::INSTALLED)
-                        || $filters->hasStatus(Filters\Status::INSTALLED))
+                    && (
+                        !$filters->hasStatus(~Filters\Status::INSTALLED)
+                        || $filters->hasStatus(Filters\Status::INSTALLED)
+                    )
                 ) {
                     unset($modules[$key]);
 
