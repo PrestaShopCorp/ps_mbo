@@ -22,5 +22,6 @@ services:
   mbo.modules.builder:
     class: PrestaShop\Module\Mbo\Modules\ModuleBuilder
     arguments:
+      - '@router'
       - "@logger"
       - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"

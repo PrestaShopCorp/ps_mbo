@@ -24,12 +24,28 @@ use Exception;
 use Module as LegacyModule;
 use PaymentModule;
 use PhpParser;
+use PrestaShopBundle\Service\Routing\Router;
 use Psr\Log\LoggerInterface;
 use stdClass;
 use Validate;
 
 class ModuleBuilder implements ModuleBuilderInterface
 {
+    /**
+     * @const array giving a translation domain key for each module action
+     */
+    public const ACTIONS_TRANSLATION_DOMAINS = [
+        'install' => 'Admin.Actions',
+        'uninstall' => 'Admin.Actions',
+        'enable' => 'Admin.Actions',
+        'disable' => 'Admin.Actions',
+        'enable_mobile' => 'Admin.Modules.Feature',
+        'disable_mobile' => 'Admin.Modules.Feature',
+        'reset' => 'Admin.Actions',
+        'upgrade' => 'Admin.Actions',
+        'configure' => 'Admin.Actions',
+    ];
+
     /**
      * @var array
      */
@@ -46,10 +62,26 @@ class ModuleBuilder implements ModuleBuilderInterface
         'confirmUninstall',
     ];
 
+    public const AVAILABLE_ACTIONS = [
+        'install',
+        'uninstall',
+        'enable',
+        'disable',
+        'enable_mobile',
+        'disable_mobile',
+        'reset',
+        'upgrade',
+    ];
+
     /**
      * @var LoggerInterface
      */
     private $logger;
+
+    /**
+     * @var Router
+     */
+    private $router;
 
     /**
      * Path to the module directory, coming from Confiuration class.
@@ -59,9 +91,11 @@ class ModuleBuilder implements ModuleBuilderInterface
     private $moduleDirectory;
 
     public function __construct(
+        Router $router,
         LoggerInterface $logger,
         string $moduleDirectory
     ) {
+        $this->router = $router;
         $this->logger = $logger;
         $this->moduleDirectory = $moduleDirectory;
     }
@@ -103,7 +137,101 @@ class ModuleBuilder implements ModuleBuilderInterface
             $attributes = array_merge($attributes, $mainClassAttributes);
         }
 
-        return new Module($attributes, $disk, $database);
+        $module = new Module($attributes, $disk, $database);
+        $this->generateAddonsUrls($module);
+
+        return $module;
+    }
+
+    /**
+     * @param Module $module
+     *
+     * @return void
+     */
+    public function generateAddonsUrls(Module $module): void
+    {
+        foreach (static::AVAILABLE_ACTIONS as $action) {
+            $urls[$action] = $this->router->generate('admin_module_manage_action', [
+                'action' => $action,
+                'module_name' => $module->attributes->get('name'),
+            ]);
+        }
+        $urls['configure'] = $this->router->generate('admin_module_configure_action', [
+            'module_name' => $module->attributes->get('name'),
+        ]);
+
+        if ($module->database->has('installed')
+            && $module->database->getBoolean('installed')
+        ) {
+            if (!$module->database->getBoolean('active')) {
+                $urlActive = 'enable';
+                unset(
+                    $urls['install'],
+                    $urls['disable']
+                );
+            } elseif ($module->attributes->getBoolean('is_configurable')) {
+                $urlActive = 'configure';
+                unset(
+                    $urls['enable'],
+                    $urls['install']
+                );
+            } else {
+                $urlActive = 'disable';
+                unset(
+                    $urls['install'],
+                    $urls['enable'],
+                    $urls['configure']
+                );
+            }
+
+            if (!$module->attributes->getBoolean('is_configurable')) {
+                unset($urls['configure']);
+            }
+
+            if ($module->canBeUpgraded()) {
+                $urlActive = 'upgrade';
+            } else {
+                unset(
+                    $urls['upgrade']
+                );
+            }
+            if (!$module->database->getBoolean('active_on_mobile')) {
+                unset($urls['disable_mobile']);
+            } else {
+                unset($urls['enable_mobile']);
+            }
+            if (!$module->canBeUpgraded()) {
+                unset(
+                    $urls['upgrade']
+                );
+            }
+        } elseif (
+            !$module->attributes->has('origin')
+            || $module->disk->getBoolean('is_present')
+            || in_array($module->attributes->get('origin'), ['native', 'native_all', 'partner', 'customer'], true)
+        ) {
+            $urlActive = 'install';
+            unset(
+                $urls['uninstall'],
+                $urls['enable'],
+                $urls['disable'],
+                $urls['enable_mobile'],
+                $urls['disable_mobile'],
+                $urls['reset'],
+                $urls['upgrade'],
+                $urls['configure']
+            );
+        } else {
+            $urlActive = 'buy';
+        }
+
+        $module->attributes->set('urls', $urls);
+
+        if ($urlActive === 'buy' || array_key_exists($urlActive, $urls)) {
+            $module->attributes->set('url_active', $urlActive);
+        } else {
+            $module->attributes->set('url_active', key($urls));
+        }
     }
 
     /**

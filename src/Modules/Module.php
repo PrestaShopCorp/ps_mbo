@@ -101,7 +101,6 @@ class Module implements ModuleInterface
         // Generate addons urls
         'url_active' => null,
         'urls' => [],
-        'actionTranslationDomains' => '',
     ];
 
     /**
