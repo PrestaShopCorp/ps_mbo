@@ -22,9 +22,8 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use Exception;
-use PrestaShop\Module\Mbo\Addons\AddonsCollection;
-use PrestaShop\Module\Mbo\Addons\Module\AdminModuleDataProvider;
 use PrestaShop\Module\Mbo\Addons\Module\ModuleRepository;
+use PrestaShop\Module\Mbo\Modules\Collection;
 use PrestaShop\Module\Mbo\Modules\Filters;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -92,46 +91,51 @@ class ModuleCatalogController extends ModuleAbstractController
         /** @var ModuleRepository $moduleRepository */
         $moduleRepository = $this->get('mbo.modules.repository');
 
-        $filters = $this->get('mbo.modules.filters');
+        $filters = $this->get('mbo.modules.filters.factory')->create();
         $filters
             ->setType(Filters\Type::MODULE | Filters\Type::SERVICE)
             ->setStatus(Filters\Status::ALL & ~Filters\Status::INSTALLED);
 
-        // try {
-        $modules = $this->get('mbo.modules.collection.factory')->build(
+        $responseArray = [];
+        try {
+            $modules = $this->get('mbo.modules.collection.factory')->build(
                 $moduleRepository->fetchAll(),
                 $filters
             );
-        // } catch (Exception $e) {
-        //     $modules = [];
-        //     $categories = [];
-        // }
+            $categories = $this->getCategories($modules);
 
-        return new JsonResponse(
-            [
-                'modules' => (array) $modules,
-                // 'categories' => $categories,
-            ]
-        );
+            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categories);
+            $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse(
+                $categories,
+                $modules
+            );
+            $responseArray['status'] = true;
+        } catch (Exception $e) {
+            $responseArray['msg'] = $this->trans(
+                'Cannot get catalog data, please try again later. Reason: %error_details%',
+                'Admin.Modules.Notification',
+                ['%error_details%' => print_r($e->getMessage(), true)]
+            );
+            $responseArray['status'] = false;
+        }
+
+        return new JsonResponse($responseArray);
     }
 
     /**
      * Get categories and its modules.
      *
-     * @param AdminModuleDataProvider $modulesProvider
      * @param array $modules List of installed modules
      *
      * @return array
      */
-    private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules): array
+    private function getCategories(Collection $modules): array
     {
         /** @var CategoriesProvider $categoriesProvider */
         $categoriesProvider = $this->get('prestashop.categories_provider');
         $categories = $categoriesProvider->getCategoriesMenu($modules);
 
         foreach ($categories['categories']->subMenu as $category) {
-            $collection = AddonsCollection::createFrom($category->modules);
-            $modulesProvider->generateAddonsUrls($collection);
             $category->modules = $this->get('prestashop.adapter.presenter.module')
                 ->presentCollection($category->modules);
         }
@@ -167,7 +171,7 @@ class ModuleCatalogController extends ModuleAbstractController
      *
      * @return array
      */
-    private function constructJsonCatalogBodyResponse(array $categories, array $modules): array
+    private function constructJsonCatalogBodyResponse(array $categories, Collection $modules): array
     {
         $sortingHeaderContent = $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/sorting.html.twig',

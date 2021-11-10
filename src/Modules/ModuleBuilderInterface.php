@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -15,12 +16,13 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
- *#}
-<div id="modules-categories-grid">
-  <div class="row">
-    {% for category in categories.subMenu|arrayCast %}
-      {# Module Card #}
-      {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/categories_card.html.twig' with { 'category': category } %}
-    {% endfor %}
-  </div>
-</div>
+ */
+
+namespace PrestaShop\Module\Mbo\Modules;
+
+use stdClass;
+
+interface ModuleBuilderInterface
+{
+    public function build(stdClass $module): Module;
+}

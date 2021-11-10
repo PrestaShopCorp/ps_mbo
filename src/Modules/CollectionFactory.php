@@ -27,11 +27,9 @@ class CollectionFactory
 {
     public function build(array $modules, FiltersInterface $filters)
     {
-        $collection = new Collection(
+        return new Collection(
             $this->filter($modules, $filters)
         );
-
-        return $collection;
     }
 
     /**
@@ -40,7 +38,7 @@ class CollectionFactory
      *
      * @return array<Module> retrieve a list of addons, regarding the $filters used
      */
-    protected function filter(array $modules, Filters $filters): array
+    protected function filter(array $modules, Filters $filters = null): array
     {
         $result = [];
         foreach ($modules as $key => $module) {

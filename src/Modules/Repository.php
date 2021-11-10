@@ -23,13 +23,10 @@ namespace PrestaShop\Module\Mbo\Modules;
 use Db;
 use Doctrine\Common\Cache\CacheProvider;
 use Exception;
-use Module as LegacyModule;
-use PhpParser;
 use PrestaShop\Module\Mbo\Addons\DataProvider;
 use Psr\Log\LoggerInterface;
 use Shop;
 use stdClass;
-use Validate;
 
 class Repository implements RepositoryInterface
 {
@@ -49,11 +46,9 @@ class Repository implements RepositoryInterface
     private $moduleProvider;
 
     /**
-     * Path to the module directory, coming from Confiuration class.
-     *
-     * @var string
+     * @var ModuleBuilder
      */
-    private $moduleDirectory;
+    private $moduleBuilder;
 
     /**
      * Key of the cache content.
@@ -78,10 +73,10 @@ class Repository implements RepositoryInterface
 
     public function __construct(
         DataProvider $dataProvider,
+        ModuleBuilder $moduleBuilder,
         LoggerInterface $logger,
         string $localeCode,
         CacheProvider $cacheProvider,
-        string $moduleDirectory,
         string $dbPrefix
     ) {
         $this->dataProvider = $dataProvider;
@@ -92,12 +87,11 @@ class Repository implements RepositoryInterface
             $localeCode
         );
 
-        $this->moduleDirectory = $moduleDirectory;
+        $this->moduleBuilder = $moduleBuilder;
 
         // Cache related variables
         $this->cacheProvider = $cacheProvider;
 
-        $this->clearCache();
         if ($this->cacheProvider->contains($this->cacheName)) {
             $this->cache = $this->cacheProvider->fetch($this->cacheName);
         }
@@ -113,15 +107,14 @@ class Repository implements RepositoryInterface
     public function clearCache(): void
     {
         $this->cacheProvider->delete($this->cacheName);
-
         $this->cache = null;
     }
 
     public function fetchAll(): array
     {
-        // if ($this->cache !== null) {
-        //     return $this->cache;
-        // }
+        if ($this->cache !== null) {
+            return $this->cache;
+        }
 
         $params = ['format' => 'json'];
         $requests = [
@@ -163,7 +156,10 @@ class Repository implements RepositoryInterface
                         $addon->product_type = $addon->product_type;
                     }
 
-                    $listAddonsModules[$addon->name] = $this->buildModule($addon);
+                    $listAddonsModules[$addon->name] = $this->moduleBuilder->build(
+                        $addon,
+                        $this->findInDatabaseByName($addon->name)
+                    );
                 }
             } catch (Exception $e) {
                 $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache.');
@@ -182,189 +178,27 @@ class Repository implements RepositoryInterface
         return $this->cache[$name] ?? null;
     }
 
-    /**
-     * Get the new module presenter class of the specified name provided.
-     * It contains data from its instance, the disk, the database and from the marketplace if exists.
-     *
-     * @param string $name The technical name of the module
-     *
-     * @return Module
-     */
-    protected function buildModule(stdClass $module): Module
-    {
-        $filePath = $this->getModulePath($module->name);
-        $moduleIsPresentOnDisk = file_exists($filePath);
-
-        /* Convert module to array */
-        $attributes = json_decode(json_encode($module), true);
-
-        // Get filemtime of module main class (We do this directly with an error suppressor to go faster)
-        $currentFilemtime = $moduleIsPresentOnDisk ? (int) filemtime($filePath) : 0;
-
-        // Now, we check that cache is up to date
-        if ($currentFilemtime !== 0
-            && isset($this->cache[$module->name]['disk']['filemtime'])
-            && $this->cache[$module->name]['disk']['filemtime'] === $currentFilemtime
-        ) {
-            // OK, cache can be loaded and used directly
-            $attributes = array_merge($attributes, $this->cache[$module->name]['attributes']);
-            $disk = $this->cache[$module->name]['disk'];
-        } else {
-            // NOPE, we have to fulfil the cache with the module data
-
-            $disk = [
-                'filemtime' => $currentFilemtime,
-                'is_present' => $moduleIsPresentOnDisk,
-                'is_valid' => 0,
-                'version' => null,
-                'path' => $this->moduleDirectory . $module->name,
-            ];
-            $main_class_attributes = [];
-
-            if ($this->isModuleMainClassValid($module->name)) {
-                // We load the main class of the module, and get its properties
-                $tmp_module = LegacyModule::getInstanceByName($module->name);
-                foreach (['warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_address',
-                    'limited_countries', 'need_instance', 'confirmUninstall', ] as $data_to_get) {
-                    if (isset($tmp_module->{$data_to_get})) {
-                        $main_class_attributes[$data_to_get] = $tmp_module->{$data_to_get};
-                    }
-                }
-
-                $main_class_attributes['parent_class'] = get_parent_class($module->name);
-                $main_class_attributes['is_paymentModule'] = is_subclass_of($module->name, 'PaymentModule');
-                $main_class_attributes['is_configurable'] = (int) method_exists($tmp_module, 'getContent');
-
-                $disk['is_valid'] = 1;
-                $disk['version'] = $tmp_module->version;
-
-                $attributes = array_merge($attributes, $main_class_attributes);
-            } else {
-                $disk['is_valid'] = 1;
-            }
-
-            $this->cache[$module->name]['attributes'] = $main_class_attributes;
-            $this->cache[$module->name]['disk'] = $disk;
-        }
-
-        // Get data from database
-        $database = $this->findInDatabaseByName($module->name) ?? [];
-
-        return new Module($attributes, $disk, $database);
-    }
-
-    /**
-     * We won't load an invalid class. This function will check any potential parse error.
-     *
-     * @param string $name The technical module name to check
-     *
-     * @return bool true if valid
-     */
-    protected function isModuleMainClassValid(string $name): bool
-    {
-        if (!Validate::isModuleName($name)) {
-            return false;
-        }
-
-        $filePath = $this->getModulePath($name);
-        // Check if file exists (slightly faster than file_exists)
-        if (!file_exists($filePath)) {
-            return false;
-        }
-
-        $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::ONLY_PHP7);
-        $log_context_data = [
-            'object_type' => 'Module',
-            'object_id' => LegacyModule::getModuleIdByName($name),
-        ];
-
-        try {
-            $parser->parse(file_get_contents($filePath));
-        } catch (PhpParser\Error $exception) {
-            $this->logger->critical(
-                $this->translator->trans(
-                    'Parse error detected in main class of module %module%: %parse_error%',
-                    [
-                        '%module%' => $name,
-                        '%parse_error%' => $exception->getMessage(),
-                    ],
-                    'Admin.Modules.Notification'
-                ),
-                $log_context_data
-            );
-
-            return false;
-        }
-
-        $logger = $this->logger;
-        // -> Even if we do not detect any parse error in the file, we may have issues
-        // when trying to load the file. (i.e with additional require_once).
-        // -> We use an anonymous function here because if a test is made twice
-        // on the same module, the test on require_once would immediately return true
-        // (as the file would have already been evaluated).
-        $requireCorrect = function ($name) use ($filePath, $logger, $log_context_data) {
-            try {
-                require_once $filePath;
-            } catch (Exception $e) {
-                $logger->error(
-                    $this->translator->trans(
-                        'Error while loading file of module %module%. %error_message%',
-                        [
-                            '%module%' => $name,
-                            '%error_message%' => $e->getMessage(), ],
-                        'Admin.Modules.Notification'
-                    ),
-                    $log_context_data
-                );
-
-                return false;
-            }
-
-            return true;
-        };
-
-        return $requireCorrect($name);
-    }
-
     protected function findInDatabaseByName(string $name): ?array
     {
         $result = Db::getInstance()->getRow(
-            'SELECT `id_module` as `id`, `active`, `version` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"'
+            'SELECT `id_module` as `id`, `active`, `version` FROM `' . $this->dbPrefix . 'module` WHERE `name` = "' . pSQL($name) . '"'
         );
 
         if (!is_array($result)) {
             return null;
         }
 
-        $enableStatuses = $this->getEnableStatuses($name);
+        $enableStatuses = Db::getInstance()->getRow(
+            'SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`, ms.`enable_device` as `enable_device`' .
+            'FROM `' . $this->dbPrefix . 'module` m ' .
+            'LEFT JOIN `' . $this->dbPrefix . 'module_shop` ms ON m.`id_module` = ms.`id_module` ' .
+            'WHERE `name` = "' . pSQL($name) . '" ' .
+            'AND ms.`id_shop` IN (' . implode(',', array_map('intval', Shop::getContextListShopID())) . ')');
+
         $result['installed'] = true;
         $result['active'] = (bool) (($result['active'] ?? false) && ($result['shop_active'] ?? false));
         $result['active_on_mobile'] = (bool) ((int) ($enableStatuses['enable_device'] ?? 0) & Filters\Device::MOBILE);
 
         return $result;
-    }
-
-    /**
-     * Check if a module is enabled in the current shop context.
-     *
-     * @param string $name The technical module name
-     *
-     * @return bool
-     */
-    protected function getEnableStatuses(string $name)
-    {
-        $id_shops = Shop::getContextListShopID();
-
-        return Db::getInstance()->getRow(
-            'SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`, ms.`enable_device` as `enable_device`' .
-            'FROM `' . _DB_PREFIX_ . 'module` m ' .
-            'LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module` ' .
-            'WHERE `name` = "' . pSQL($name) . '" ' .
-            'AND ms.`id_shop` IN (' . implode(',', array_map('intval', $id_shops)) . ')');
-    }
-
-    protected function getModulePath(string $name): string
-    {
-        return $this->moduleDirectory . $name . '/' . $name . '.php';
     }
 }

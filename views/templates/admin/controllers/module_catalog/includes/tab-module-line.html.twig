@@ -1,25 +1,25 @@
 {#**
- * Copyright since 2007 PrestaShop SA and Contributors
- * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Academic Free License version 3.0
- * that is bundled with this package in the file LICENSE.md.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/AFL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * @author    PrestaShop SA and Contributors <contact@prestashop.com>
- * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
- *#}
+  * Copyright since 2007 PrestaShop SA and Contributors
+  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the Academic Free License version 3.0
+  * that is bundled with this package in the file LICENSE.md.
+  * It is also available through the world-wide-web at this URL:
+  * https://opensource.org/licenses/AFL-3.0
+  * If you did not receive a copy of the license and are unable to
+  * obtain it through the world-wide-web, please send an email
+  * to license@prestashop.com so we can send you a copy immediately.
+  *
+  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+  * @copyright Since 2007 PrestaShop SA and Contributors
+  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
+  *#}
 {%
   set moduleImage = module.attributes.img is null ?
-    constant('_MODULE_DIR_') ~ module.attributes.name ~ '/' ~ module.attributes.logo :
-    module.attributes.img
+  constant('_MODULE_DIR_') ~ module.attributes.name ~ '/' ~ module.attributes.logo :
+  module.attributes.img
 %}
 <tr>
   <td class="fixed-with-sm center">
@@ -36,11 +36,11 @@
         {{ module.attributes.displayName }}
         <small class="text-muted">v{{ module.attributes.version }} - by {{ module.attributes.author }}</small>
         {% if module.attributes.type is not empty and module.attributes.type == 'addonsBought' %}
-        - <span class="module-badge-bought help-tooltip text-warning" data-title="{{ 'You bought this module on PrestaShop Addons. Thank You.'|trans({}, 'Admin.Modules.Help') }}"><i class="icon-pushpin"></i> <small>{{ 'Bought'|trans({}, 'Admin.Modules.Help') }}</small></span>
+          - <span class="module-badge-bought help-tooltip text-warning" data-title="{{ 'You bought this module on PrestaShop Addons. Thank You.'|trans({}, 'Admin.Modules.Help') }}"><i class="icon-pushpin"></i> <small>{{ 'Bought'|trans({}, 'Admin.Modules.Help') }}</small></span>
         {% elseif module.attributes.type is not empty and module.attributes.type == 'addonsMustHave' %}
-        - <span class="module-badge-popular help-tooltip text-primary" data-title="{{ 'This module is available on PrestaShop Addons.'|trans({}, 'Admin.Modules.Help') }}"><i class="icon-group"></i> <small>{{ 'Popular'|trans({}, 'Admin.Modules.Help') }}</small></span>
+          - <span class="module-badge-popular help-tooltip text-primary" data-title="{{ 'This module is available on PrestaShop Addons.'|trans({}, 'Admin.Modules.Help') }}"><i class="icon-group"></i> <small>{{ 'Popular'|trans({}, 'Admin.Modules.Help') }}</small></span>
         {% elseif module.attributes.type is not empty and module.attributes.type == 'addonsPartner' %}
-        - <span class="module-badge-partner help-tooltip text-warning" data-title="{{ 'This module is available for free thanks to our partner.'|trans({}, 'Admin.Modules.Help') }}"><i class="icon-pushpin"></i> <small>{{ 'Official'|trans({}, 'Admin.Modules.Help') }}</small></span>
+          - <span class="module-badge-partner help-tooltip text-warning" data-title="{{ 'This module is available for free thanks to our partner.'|trans({}, 'Admin.Modules.Help') }}"><i class="icon-pushpin"></i> <small>{{ 'Official'|trans({}, 'Admin.Modules.Help') }}</small></span>
         {% elseif module.attributes.id is defined and module.attributes.id >= 0 %}
           {% if module.attributes.version_addons is defined and module.attributes.version_addons %}
             <span class="label label-warning">{{ 'Need update'|trans({}, 'Admin.Modules.Help') }}</span>
@@ -63,6 +63,6 @@
     </div>
   </td>
   <td class="module-container module-quick-action-list clearfix">
-    {{ include('@PrestaShop/Admin/Module/Includes/action_menu.html.twig', {'module': module}) }}
+    {{ include('@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/action_menu.html.twig', {'module': module}) }}
   </td>
 </tr>
