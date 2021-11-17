@@ -86,18 +86,20 @@ class DataProvider implements AddonsInterface
     /**
      * @param ApiClient $apiClient
      * @param ModuleZipManager $zipManager
+     * @param \PrestaShop\Module\Mbo\Addons\User $user
      * @param string|null $moduleChannel
      */
     public function __construct(
         ApiClient $apiClient,
         ModuleZipManager $zipManager,
+        User $user,
         ?string $moduleChannel = null
     ) {
         $this->marketplaceClient = $apiClient;
         $this->zipManager = $zipManager;
         $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
         $this->moduleChannel = $moduleChannel ?? self::ADDONS_API_MODULE_CHANNEL_STABLE;
-        $this->user = new User();
+        $this->user = $user;
     }
 
     /**
