@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Addons;
 use Exception;
 use PhpEncryption;
 use PrestaShop\Module\Mbo\Addons\Service\ApiClient;
+use PrestaShop\Module\Mbo\Addons\User\AddonsUserInterface;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,20 +80,20 @@ class DataProvider implements AddonsInterface
     private $moduleChannel;
 
     /**
-     * @var \PrestaShop\Module\Mbo\Addons\User
+     * @var \PrestaShop\Module\Mbo\Addons\User\AddonsUserInterface
      */
     private $user;
 
     /**
      * @param ApiClient $apiClient
      * @param ModuleZipManager $zipManager
-     * @param \PrestaShop\Module\Mbo\Addons\User $user
+     * @param \PrestaShop\Module\Mbo\Addons\User\AddonsUserInterface $user
      * @param string|null $moduleChannel
      */
     public function __construct(
         ApiClient $apiClient,
         ModuleZipManager $zipManager,
-        User $user,
+        AddonsUserInterface $user,
         ?string $moduleChannel = null
     ) {
         $this->marketplaceClient = $apiClient;

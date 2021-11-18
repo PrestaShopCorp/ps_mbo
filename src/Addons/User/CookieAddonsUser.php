@@ -17,8 +17,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Addons;
+namespace PrestaShop\Module\Mbo\Addons\User;
 
 use PhpEncryptionCore as PhpEncryption;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * This class will provide data from Addons API
  */
-class User implements UserInterface
+class CookieAddonsUser implements AddonsUserInterface
 {
     /**
      * @var PhpEncryption
@@ -42,6 +43,28 @@ class User implements UserInterface
     {
         $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
         $this->request = Request::createFromGlobals();
+    }
+
+    /**
+     * @return static
+     */
+    public static function buildAddonsUser(): self
+    {
+        $user = new self();
+
+        return $user->setRequest(Request::createFromGlobals());
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return static
+     */
+    public function setRequest(Request $request): self
+    {
+        $this->request = $request;
+
+        return $this;
     }
 
     /**

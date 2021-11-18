@@ -35,15 +35,15 @@ services:
     calls:
       - [ "setEmployeeId", ["@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.adapter.legacy.context').getContext().employee.id:0"]]
 
-  mbo.addon.module.user.addons:
-    class: PrestaShop\Module\Mbo\Addons\User
+  mbo.addon.module.data_provider.user:
+    class: PrestaShop\Module\Mbo\Addons\User\CookieAddonsUserProvider
 
   mbo.addon.module.data_provider.addons:
     class: PrestaShop\Module\Mbo\Addons\DataProvider
     arguments:
       - '@mbo.addon.client.api'
       - '@prestashop.module.zip.manager'
-      - '@mbo.addon.module.user.addons'
+      - '@=service("mbo.addon.module.data_provider.user").getAddonsUser()'
       - '@=service("prestashop.adapter.legacy.configuration").get("ADDONS_API_MODULE_CHANNEL", "stable")'
     properties:
       cacheDir: "%kernel.cache_dir%"
