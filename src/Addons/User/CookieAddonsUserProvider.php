@@ -24,10 +24,20 @@ namespace PrestaShop\Module\Mbo\Addons\User;
 class CookieAddonsUserProvider implements AddonsUserProviderInterface
 {
     /**
+     * @var \PrestaShop\Module\Mbo\Addons\User\CookieAddonsUser
+     */
+    protected $user;
+
+    public function __construct(CookieAddonsUser $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getAddonsUser(): AddonsUserInterface
     {
-        return CookieAddonsUser::buildAddonsUser();
+        return $this->user;
     }
 }
