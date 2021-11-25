@@ -17,13 +17,14 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons;
 
 use Exception;
 use PhpEncryption;
-use PrestaShop\Module\Mbo\Addons\Service\ApiClient;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUserInterface;
+use PrestaShop\Module\Mbo\Service\Addons\ApiClient;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,6 +48,22 @@ class DataProvider implements AddonsInterface
         self::ADDONS_API_MODULE_CHANNEL_STABLE,
         self::ADDONS_API_MODULE_CHANNEL_BETA,
         self::ADDONS_API_MODULE_CHANNEL_ALPHA,
+    ];
+
+    /** @var array<string, string> */
+    public const ADDONS_API_MODULE_ACTIONS = [
+        'native' => 'getNativesModules',
+        'service' => 'getServices',
+        'native_all' => 'getNativesModules',
+        'must-have' => 'getMustHaveModules',
+        'customer' => 'getCustomerModules',
+        'customer_themes' => 'getCustomerThemes',
+        'check_customer' => 'getCheckCustomer',
+        'check_module' => 'getCheckModule',
+        'module_download' => 'getModuleZip',
+        'module' => 'getModule',
+        'install-modules' => 'getPreInstalledModules',
+        'categories' => 'getCategories',
     ];
 
     /**
@@ -104,11 +121,7 @@ class DataProvider implements AddonsInterface
     }
 
     /**
-     * @param int $module_id
-     *
-     * @return bool
-     *
-     * @throws Exception
+     * {@inheritdoc}
      */
     public function downloadModule(int $module_id): bool
     {
@@ -121,11 +134,11 @@ class DataProvider implements AddonsInterface
         try {
             $module_data = $this->request('module_download', $params);
         } catch (Exception $e) {
-            if (!$this->isAddonsAuthenticated()) {
-                throw new Exception('Error sent by Addons. You may need to be logged.', 0, $e);
-            } else {
-                throw new Exception('Error sent by Addons. You may be not allowed to download this module.', 0, $e);
-            }
+            $message = $this->isAddonsAuthenticated() ?
+                'Error sent by Addons. You may be not allowed to download this module.'
+                : 'Error sent by Addons. You may need to be logged.';
+
+            throw new Exception($message, 0, $e);
         }
 
         $temp_filename = tempnam($this->cacheDir, 'mod');
@@ -155,59 +168,26 @@ class DataProvider implements AddonsInterface
             throw new Exception('Previous call failed and disabled client.');
         }
 
+        if (!array_key_exists($action, self::ADDONS_API_MODULE_ACTIONS) ||
+            !method_exists($this->marketplaceClient, self::ADDONS_API_MODULE_ACTIONS[$action])) {
+            throw new Exception("Action '{$action}' not found in actions list.");
+        }
+
         // We merge the addons credentials
         if ($this->isAddonsAuthenticated()) {
             $params = array_merge($this->user->getAddonsCredentials(), $params);
         }
 
+        if ($action === 'module_download') {
+            $params['channel'] = $this->moduleChannel;
+        } elseif ($action === 'native_all') {
+            $params['iso_code'] = 'all';
+        }
+
         $this->marketplaceClient->reset();
 
         try {
-            switch ($action) {
-                case 'native':
-                    return $this->marketplaceClient->getNativesModules();
-                case 'service':
-                    return $this->marketplaceClient->getServices();
-                case 'native_all':
-                    return $this->marketplaceClient->setIsoCode('all')
-                        ->getNativesModules();
-                case 'must-have':
-                    return $this->marketplaceClient->getMustHaveModules();
-                case 'customer':
-                    return $this->marketplaceClient->getCustomerModules($params['username_addons'], $params['password_addons']);
-                case 'customer_themes':
-                    return $this->marketplaceClient
-                        ->setUserMail($params['username_addons'])
-                        ->setPassword($params['password_addons'])
-                        ->getCustomerThemes();
-                case 'check_customer':
-                    return $this->marketplaceClient
-                        ->setUserMail($params['username_addons'])
-                        ->setPassword($params['password_addons'])
-                        ->getCheckCustomer();
-                case 'check_module':
-                    return $this->marketplaceClient
-                        ->setUserMail($params['username_addons'])
-                        ->setPassword($params['password_addons'])
-                        ->setModuleName($params['module_name'])
-                        ->setModuleKey($params['module_key'])
-                        ->getCheckModule();
-                case 'module_download':
-                    if ($this->isAddonsAuthenticated()) {
-                        return $this->marketplaceClient
-                            ->setUserMail($params['username_addons'])
-                            ->setPassword($params['password_addons'])
-                            ->getModuleZip($params['id_module'], $this->moduleChannel);
-                    }
-
-                    return $this->marketplaceClient->getModuleZip($params['id_module'], $this->moduleChannel);
-                case 'module':
-                    return $this->marketplaceClient->getModule($params['id_module']);
-                case 'install-modules':
-                    return $this->marketplaceClient->getPreInstalledModules();
-                case 'categories':
-                    return $this->marketplaceClient->getCategories();
-            }
+            return $this->marketplaceClient->{self::ADDONS_API_MODULE_ACTIONS[$action]}($params);
         } catch (Exception $e) {
             self::$is_addons_up = false;
 
