@@ -266,7 +266,7 @@ class ModuleBuilder implements ModuleBuilderInterface
                 sprintf(
                     'Parse error detected in main class of module %s: %s',
                     $name,
-                    $exception->getMessage(),
+                    $exception->getMessage()
                 ),
                 $logContextData
             );
@@ -289,7 +289,7 @@ class ModuleBuilder implements ModuleBuilderInterface
                     sprintf(
                         'Error while loading file of module %module%. %error_message%',
                         $name,
-                        $e->getMessage(),
+                        $e->getMessage()
                     ),
                     $logContextData
                 );
