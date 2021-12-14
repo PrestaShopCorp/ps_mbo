@@ -60,7 +60,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
      */
     public function offsetExists($offset)
     {
-        return isset($this->data[$key]) || array_key_exists($key, $this->data);
+        return isset($this->data[$offset]) || array_key_exists($offset, $this->data);
     }
 
     /**

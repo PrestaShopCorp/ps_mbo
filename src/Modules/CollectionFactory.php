@@ -25,7 +25,7 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 
 class CollectionFactory
 {
-    public function build(array $modules, FiltersInterface $filters)
+    public function build(array $modules, ?FiltersInterface $filters)
     {
         return new Collection(
             $this->filter($modules, $filters)
@@ -33,12 +33,9 @@ class CollectionFactory
     }
 
     /**
-     * @param array $modules
-     * @param Filters $filters
-     *
      * @return array<Module> retrieve a list of addons, regarding the $filters used
      */
-    protected function filter(array $modules, Filters $filters = null): array
+    protected function filter(array $modules, ?FiltersInterface $filters = null): array
     {
         $result = [];
         foreach ($modules as $key => $module) {

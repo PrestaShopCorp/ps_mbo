@@ -329,7 +329,7 @@ class Module implements ModuleInterface
             return false;
         }
 
-        $result = $this->instance->enableDevice(Filters\Device::DEVICE_MOBILE);
+        $result = $this->instance->enableDevice(Filters\Device::MOBILE);
         $this->database->set('active_on_mobile', $result);
 
         return $result;
@@ -344,7 +344,7 @@ class Module implements ModuleInterface
             return false;
         }
 
-        $result = $this->instance->disableDevice(Filters\Device::DEVICE_MOBILE);
+        $result = $this->instance->disableDevice(Filters\Device::MOBILE);
         $this->database->set('active_on_mobile', !$result);
 
         return $result;
@@ -402,7 +402,7 @@ class Module implements ModuleInterface
     /**
      * @param string $value
      *
-     * @return mixed|string
+     * @return string
      */
     private function convertType(string $value): string
     {

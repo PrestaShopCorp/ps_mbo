@@ -20,22 +20,18 @@
 
 namespace PrestaShop\Module\Mbo\Tab;
 
-use PrestaShop\Module\Mbo\ModuleCollectionDataProvider;
+use PrestaShop\Module\Mbo\Modules\Module;
+use PrestaShop\Module\Mbo\Modules\Repository;
 use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModule;
 use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModuleCollection;
 
 class TabCollectionFactory implements TabCollectionFactoryInterface
 {
-    private $moduleCollectionDataProvider;
+    protected $moduleRepository;
 
-    /**
-     * Constructor.
-     *
-     * @param ModuleCollectionDataProvider $moduleCollectionDataProvider
-     */
-    public function __construct(ModuleCollectionDataProvider $moduleCollectionDataProvider)
+    public function __construct(Repository $moduleRepository)
     {
-        $this->moduleCollectionDataProvider = $moduleCollectionDataProvider;
+        $this->moduleRepository = $moduleRepository;
     }
 
     /**
@@ -48,7 +44,7 @@ class TabCollectionFactory implements TabCollectionFactoryInterface
             return $tabCollection;
         }
 
-        $modulesData = $this->moduleCollectionDataProvider->getData($this->getModuleNames($data));
+        $modulesData = $this->getModules($data);
 
         if (empty($modulesData)) {
             return $tabCollection;
@@ -60,10 +56,10 @@ class TabCollectionFactory implements TabCollectionFactoryInterface
             foreach ($tabData['recommendedModules'] as $position => $moduleName) {
                 if (isset($modulesData[$moduleName])) {
                     $recommendedModule = new RecommendedModule();
-                    $recommendedModule->setModuleName($moduleName);
+                    $recommendedModule->setName($moduleName);
                     $recommendedModule->setPosition((int) $position);
-                    $recommendedModule->setInstalled((bool) $modulesData[$moduleName]['database']['installed']);
-                    $recommendedModule->setModuleData($modulesData[$moduleName]);
+                    $recommendedModule->setInstalled((bool) $modulesData[$moduleName]->database->get('installed'));
+                    $recommendedModule->setModule($modulesData[$moduleName]);
                     $recommendedModuleCollection->addRecommendedModule($recommendedModule);
                 }
             }
@@ -86,18 +82,18 @@ class TabCollectionFactory implements TabCollectionFactoryInterface
     /**
      * @param array $data
      *
-     * @return string[]
+     * @return array<string, Module>
      */
-    private function getModuleNames(array $data)
+    private function getModules(array $data)
     {
         $moduleNames = [];
 
         foreach ($data as $tabData) {
             foreach ($tabData['recommendedModules'] as $moduleName) {
-                $moduleNames[] = $moduleName;
+                $moduleNames[$moduleName] = $this->moduleRepository->getModule($moduleName);
             }
         }
 
-        return array_unique($moduleNames);
+        return $moduleNames;
     }
 }

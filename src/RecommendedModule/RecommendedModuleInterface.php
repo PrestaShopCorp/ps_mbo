@@ -20,6 +20,8 @@
 
 namespace PrestaShop\Module\Mbo\RecommendedModule;
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
+
 interface RecommendedModuleInterface
 {
     /**
@@ -27,54 +29,54 @@ interface RecommendedModuleInterface
      *
      * @return string
      */
-    public function getModuleName();
+    public function getName(): string;
 
     /**
-     * @param string $moduleName
+     * @param string $name
      *
      * @return RecommendedModuleInterface
      */
-    public function setModuleName($moduleName);
+    public function setName(string $name): self;
 
     /**
      * Get the position of the recommended module.
      *
      * @return int
      */
-    public function getPosition();
+    public function getPosition(): int;
 
     /**
      * @param int $position
      *
      * @return RecommendedModuleInterface
      */
-    public function setPosition($position);
+    public function setPosition(int $position): self;
 
     /**
      * Check if the recommended modules is installed.
      *
      * @return bool
      */
-    public function isInstalled();
+    public function isInstalled(): bool;
 
     /**
      * @param bool $isInstalled
      *
      * @return RecommendedModuleInterface
      */
-    public function setInstalled($isInstalled);
+    public function setInstalled(bool $isInstalled): self;
 
     /**
      * Get the recommended module data.
      *
-     * @return array
+     * @return ModuleInterface
      */
-    public function getModuleData();
+    public function getModule(): ModuleInterface;
 
     /**
-     * @param array $moduleData
+     * @param ModuleInterface $module
      *
      * @return RecommendedModuleInterface
      */
-    public function setModuleData($moduleData);
+    public function setModule(ModuleInterface $module): self;
 }

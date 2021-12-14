@@ -22,9 +22,9 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use Exception;
-use PrestaShop\Module\Mbo\Addons\Module\ModuleRepository;
 use PrestaShop\Module\Mbo\Modules\Collection;
 use PrestaShop\Module\Mbo\Modules\Filters;
+use PrestaShop\Module\Mbo\Modules\Repository;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -88,7 +88,7 @@ class ModuleCatalogController extends ModuleAbstractController
      */
     public function refreshAction(Request $request): JsonResponse
     {
-        /** @var ModuleRepository $moduleRepository */
+        /** @var Repository $moduleRepository */
         $moduleRepository = $this->get('mbo.modules.repository');
 
         $filters = $this->get('mbo.modules.filters.factory')->create();
@@ -125,7 +125,7 @@ class ModuleCatalogController extends ModuleAbstractController
     /**
      * Get categories and its modules.
      *
-     * @param array $modules List of installed modules
+     * @param Collection $modules List of installed modules
      *
      * @return array
      */
@@ -167,7 +167,7 @@ class ModuleCatalogController extends ModuleAbstractController
      * Build templade for the grid view and the info header with count of modules & sort dropdown.
      *
      * @param array $categories
-     * @param array $modules
+     * @param Collection $modules
      *
      * @return array
      */

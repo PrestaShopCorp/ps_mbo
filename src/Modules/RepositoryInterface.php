@@ -20,12 +20,10 @@
 
 namespace PrestaShop\Module\Mbo\Modules;
 
-use PrestaShop\Module\Mbo\Addons\AddonInterface;
-
 interface RepositoryInterface
 {
     /**
-     * @return AddonInterface[] retrieve a list of addons, regardless any $filter
+     * @return array<int, Module> retrieve a list of addons modules, regardless any $filter
      */
     public function fetchAll(): array;
 

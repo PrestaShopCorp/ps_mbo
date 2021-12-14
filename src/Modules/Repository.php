@@ -33,43 +33,48 @@ class Repository implements RepositoryInterface
     /**
      * @var DataProvider
      */
-    private $dataProvider;
+    protected $dataProvider;
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
-
-    /**
-     * @var ModuleDataProvider
-     */
-    private $moduleProvider;
+    protected $logger;
 
     /**
      * @var ModuleBuilder
      */
-    private $moduleBuilder;
+    protected $moduleBuilder;
 
     /**
      * Key of the cache content.
      *
      * @var string
      */
-    private $cacheFilePath;
+    protected $cacheFilePath;
 
     /**
      * Contains data from cache file about modules on disk.
      *
-     * @var ?array
+     * @var ?array<int, Module>
      */
-    private $cache;
+    protected $cache;
 
     /**
      * Optionnal Doctrine cache provider.
      *
      * @var CacheProvider|null
      */
-    private $cacheProvider;
+    protected $cacheProvider;
+
+    /**
+     * @var string
+     */
+    protected $cacheName;
+
+    /**
+     * @var string
+     */
+    protected $dbPrefix;
 
     public function __construct(
         DataProvider $dataProvider,
@@ -82,8 +87,9 @@ class Repository implements RepositoryInterface
         $this->dataProvider = $dataProvider;
         $this->dbPrefix = $dbPrefix;
         $this->logger = $logger;
+
         $this->cacheName = sprintf(
-            '%_addons_modules',
+            '%s_addons_modules',
             $localeCode
         );
 
@@ -125,7 +131,7 @@ class Repository implements RepositoryInterface
         ];
 
         if ($this->dataProvider->isAddonsAuthenticated()) {
-            $requests[ListFilterOrigin::ADDONS_CUSTOMER] = 'customer';
+            $requests[Filters\Origin::ADDONS_CUSTOMER] = 'customer';
         }
 
         $listAddonsModules = [];

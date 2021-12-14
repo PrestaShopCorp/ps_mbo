@@ -287,7 +287,7 @@ class ModuleBuilder implements ModuleBuilderInterface
             } catch (Exception $e) {
                 $logger->error(
                     sprintf(
-                        'Error while loading file of module %module%. %error_message%',
+                        'Error while loading file of module %s. %s',
                         $name,
                         $e->getMessage()
                     ),

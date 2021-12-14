@@ -20,12 +20,14 @@
 
 namespace PrestaShop\Module\Mbo\RecommendedModule;
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
+
 class RecommendedModule implements RecommendedModuleInterface
 {
     /**
      * @var string technical name of the recommended module
      */
-    private $moduleName;
+    private $name;
 
     /**
      * @var int position of the recommended module
@@ -38,24 +40,24 @@ class RecommendedModule implements RecommendedModuleInterface
     private $isInstalled;
 
     /**
-     * @var array
+     * @var ModuleInterface
      */
-    private $moduleData;
+    private $module;
 
     /**
      * {@inheritdoc}
      */
-    public function getModuleName()
+    public function getName(): string
     {
-        return $this->moduleName;
+        return $this->name;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setModuleName($moduleName)
+    public function setName(string $name): RecommendedModuleInterface
     {
-        $this->moduleName = $moduleName;
+        $this->name = $name;
 
         return $this;
     }
@@ -63,7 +65,7 @@ class RecommendedModule implements RecommendedModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->position;
     }
@@ -71,7 +73,7 @@ class RecommendedModule implements RecommendedModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function setPosition($position)
+    public function setPosition(int $position): RecommendedModuleInterface
     {
         $this->position = $position;
 
@@ -81,7 +83,7 @@ class RecommendedModule implements RecommendedModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function isInstalled()
+    public function isInstalled(): bool
     {
         return $this->isInstalled;
     }
@@ -89,7 +91,7 @@ class RecommendedModule implements RecommendedModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function setInstalled($isInstalled)
+    public function setInstalled(bool $isInstalled): RecommendedModuleInterface
     {
         $this->isInstalled = $isInstalled;
 
@@ -99,17 +101,17 @@ class RecommendedModule implements RecommendedModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getModuleData()
+    public function getModule(): ModuleInterface
     {
-        return $this->moduleData;
+        return $this->module;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setModuleData($moduleData)
+    public function setModule(ModuleInterface $module): RecommendedModuleInterface
     {
-        $this->moduleData = $moduleData;
+        $this->module = $module;
 
         return $this;
     }
