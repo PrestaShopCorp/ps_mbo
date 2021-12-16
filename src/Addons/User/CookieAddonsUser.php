@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Addons\User;
 
 use PhpEncryptionCore as PhpEncryption;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This class will provide data from Addons API
@@ -31,33 +32,41 @@ class CookieAddonsUser implements AddonsUserInterface
     /**
      * @var PhpEncryption
      */
-    protected $encryption;
-    /**
-     * @var mixed
-     */
-    protected $username;
-    /**
-     * @var mixed
-     */
-    protected $password;
+    private $encryption;
 
-    public function __construct(?string $username, ?string $password)
+    /**
+     * @var Request
+     */
+    private $request;
+
+    public function __construct()
     {
         $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
-        $this->username = $username;
-        $this->password = $password;
+        $this->request = Request::createFromGlobals();
     }
 
     /**
      * @param string $key
+     * @param mixed $default
+     *
+     * @return mixed
+     */
+    private function getFromCookie(string $key, $default = null)
+    {
+        return $this->request->cookies->get($key, $default);
+    }
+
+    /**
+     * @param string $key
+     * @param null $default
      *
      * @return bool|string
      *
      * @throws \Exception
      */
-    protected function decrypt(string $key)
+    private function getAndDecrypt(string $key, $default = null)
     {
-        return $this->encryption->decrypt($this->{$key});
+        return $this->encryption->decrypt($this->getFromCookie($key, $default));
     }
 
     /**
@@ -65,7 +74,8 @@ class CookieAddonsUser implements AddonsUserInterface
      */
     public function isAddonsAuthenticated(): bool
     {
-        return $this->username && $this->password;
+        return $this->getFromCookie('username_addons', false)
+            && $this->getFromCookie('password_addons', false);
     }
 
     /**
@@ -74,8 +84,8 @@ class CookieAddonsUser implements AddonsUserInterface
     public function getAddonsCredentials(): array
     {
         return [
-            'username_addons' => $this->decrypt('username'),
-            'password_addons' => $this->decrypt('password'),
+            'username_addons' => $this->getAndDecrypt('username_addons'),
+            'password_addons' => $this->getAndDecrypt('password_addons'),
         ];
     }
 
@@ -85,7 +95,7 @@ class CookieAddonsUser implements AddonsUserInterface
     public function getAddonsEmail(): array
     {
         return [
-            'username_addons' => $this->decrypt('username'),
+            'username_addons' => $this->getAndDecrypt('username_addons'),
         ];
     }
 }

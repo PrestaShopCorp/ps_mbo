@@ -13,9 +13,6 @@ services:
 
   mbo.addon.module.addons.cookie_user:
     class: PrestaShop\Module\Mbo\Addons\User\CookieAddonsUser
-    arguments:
-      - "@=service('request_stack').getCurrentRequest().cookies.get('username_addons')"
-      - "@=service('request_stack').getCurrentRequest().cookies.get('password_addons')"
 
   mbo.addon.module.data_provider.cookie_user:
     class: PrestaShop\Module\Mbo\Addons\User\CookieAddonsUserProvider
