@@ -62,7 +62,7 @@ class Module implements ModuleInterface
      *
      * @var array
      */
-    private $attributes_default = [
+    protected $attributes_default = [
         'id' => 0,
         'name' => '',
         'picos' => [],
@@ -108,7 +108,7 @@ class Module implements ModuleInterface
      *
      * @var array
      */
-    private $disk_default = [
+    protected $disk_default = [
         'filemtype' => 0,
         'is_present' => 0,
         'is_valid' => 0,
@@ -121,7 +121,7 @@ class Module implements ModuleInterface
      *
      * @var array
      */
-    private $database_default = [
+    protected $database_default = [
         'installed' => 0,
         'active' => 0,
         'active_on_mobile' => true,
@@ -404,7 +404,7 @@ class Module implements ModuleInterface
      *
      * @return string
      */
-    private function convertType(string $value): string
+    protected function convertType(string $value): string
     {
         $conversionTable = [
             Filters\Origin::ADDONS_CUSTOMER => 'addonsBought',

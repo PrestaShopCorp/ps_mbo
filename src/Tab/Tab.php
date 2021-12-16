@@ -28,17 +28,17 @@ class Tab implements TabInterface
     /**
      * @var string class name of the tab
      */
-    private $legacyClassName;
+    protected $legacyClassName;
 
     /**
      * @var string class name of the tab
      */
-    private $displayMode;
+    protected $displayMode;
 
     /**
      * @var RecommendedModuleCollectionInterface recommended modules of the tab
      */
-    private $recommendedModules;
+    protected $recommendedModules;
 
     /**
      * Tab constructor.

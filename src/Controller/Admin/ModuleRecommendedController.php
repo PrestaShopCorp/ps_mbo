@@ -36,17 +36,17 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
     /**
      * @var RequestStack
      */
-    private $requestStack;
+    protected $requestStack;
 
     /**
      * @var TabCollectionProviderInterface
      */
-    private $tabCollectionProvider;
+    protected $tabCollectionProvider;
 
     /**
      * @var RecommendedModulePresenterInterface
      */
-    private $recommendedModulePresenter;
+    protected $recommendedModulePresenter;
 
     /**
      * @param RequestStack $requestStack

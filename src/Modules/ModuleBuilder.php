@@ -76,19 +76,19 @@ class ModuleBuilder implements ModuleBuilderInterface
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    protected $logger;
 
     /**
      * @var Router
      */
-    private $router;
+    protected $router;
 
     /**
      * Path to the module directory, coming from Confiuration class.
      *
      * @var string
      */
-    private $moduleDirectory;
+    protected $moduleDirectory;
 
     public function __construct(
         Router $router,

@@ -27,22 +27,22 @@ class RecommendedModule implements RecommendedModuleInterface
     /**
      * @var string technical name of the recommended module
      */
-    private $name;
+    protected $name;
 
     /**
      * @var int position of the recommended module
      */
-    private $position;
+    protected $position;
 
     /**
      * @var bool
      */
-    private $isInstalled;
+    protected $isInstalled;
 
     /**
      * @var ModuleInterface
      */
-    private $module;
+    protected $module;
 
     /**
      * {@inheritdoc}

@@ -84,7 +84,7 @@ class TabCollectionFactory implements TabCollectionFactoryInterface
      *
      * @return array<string, Module>
      */
-    private function getModules(array $data)
+    protected function getModules(array $data)
     {
         $moduleNames = [];
 

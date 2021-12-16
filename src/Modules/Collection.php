@@ -35,7 +35,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @var array
      */
-    private $data;
+    protected $data;
 
     /**
      * Initializes a new AddonsCollection.

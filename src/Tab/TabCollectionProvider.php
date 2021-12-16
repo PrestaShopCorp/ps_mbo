@@ -36,22 +36,22 @@ class TabCollectionProvider implements TabCollectionProviderInterface
     /**
      * @var LegacyContext
      */
-    private $context;
+    protected $context;
 
     /**
      * @var ExternalContentProviderInterface
      */
-    private $externalContentProvider;
+    protected $externalContentProvider;
 
     /**
      * @var TabCollectionFactoryInterface
      */
-    private $tabCollectionFactory;
+    protected $tabCollectionFactory;
 
     /**
      * @var CacheProvider|null
      */
-    private $cacheProvider;
+    protected $cacheProvider;
 
     /**
      * @param LegacyContext $context
@@ -95,7 +95,7 @@ class TabCollectionProvider implements TabCollectionProviderInterface
         return $tabCollection;
     }
 
-    private function getCacheKey()
+    protected function getCacheKey()
     {
         return static::CACHE_KEY . '-' . $this->context->getEmployeeLanguageIso();
     }
@@ -118,7 +118,7 @@ class TabCollectionProvider implements TabCollectionProviderInterface
      *
      * @throws ServiceUnavailableHttpException
      */
-    private function getTabCollectionFromApi()
+    protected function getTabCollectionFromApi()
     {
         $apiResponse = $this->externalContentProvider->getContent(self::API_URL);
         $tabCollectionDecoderXml = new TabCollectionDecoderXml($apiResponse);

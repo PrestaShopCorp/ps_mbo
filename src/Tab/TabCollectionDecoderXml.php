@@ -22,7 +22,7 @@ namespace PrestaShop\Module\Mbo\Tab;
 
 class TabCollectionDecoderXml
 {
-    private $content;
+    protected $content;
 
     /**
      * Constructor.

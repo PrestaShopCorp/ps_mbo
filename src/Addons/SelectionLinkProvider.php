@@ -33,22 +33,22 @@ class SelectionLinkProvider
     /**
      * @var Version
      */
-    private $version;
+    protected $version;
 
     /**
      * @var LegacyContext
      */
-    private $context;
+    protected $context;
 
     /**
      * @var Configuration
      */
-    private $configuration;
+    protected $configuration;
 
     /**
      * @var RequestStack
      */
-    private $requestStack;
+    protected $requestStack;
 
     /**
      * @param Version $version

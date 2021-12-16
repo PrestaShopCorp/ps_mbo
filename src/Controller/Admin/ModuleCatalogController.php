@@ -129,7 +129,7 @@ class ModuleCatalogController extends ModuleAbstractController
      *
      * @return array
      */
-    private function getCategories(Collection $modules): array
+    protected function getCategories(Collection $modules): array
     {
         /** @var CategoriesProvider $categoriesProvider */
         $categoriesProvider = $this->get('prestashop.categories_provider');
@@ -150,7 +150,7 @@ class ModuleCatalogController extends ModuleAbstractController
      *
      * @return array
      */
-    private function constructJsonCatalogCategoriesMenuResponse(array $categories): array
+    protected function constructJsonCatalogCategoriesMenuResponse(array $categories): array
     {
         return [
             'selector' => '.module-menu-item',
@@ -171,7 +171,7 @@ class ModuleCatalogController extends ModuleAbstractController
      *
      * @return array
      */
-    private function constructJsonCatalogBodyResponse(array $categories, Collection $modules): array
+    protected function constructJsonCatalogBodyResponse(array $categories, Collection $modules): array
     {
         $sortingHeaderContent = $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/sorting.html.twig',

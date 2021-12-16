@@ -27,7 +27,7 @@ class FiltersTest extends MockeryTestCase
     /**
      * @var Filter
      */
-    private $filter;
+    protected $filter;
 
     protected function setUp(): void
     {
