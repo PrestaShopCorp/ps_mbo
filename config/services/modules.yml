@@ -1,0 +1,27 @@
+---
+services:
+  _defaults:
+    public: true
+
+  mbo.modules.repository:
+    class: PrestaShop\Module\Mbo\Modules\Repository
+    arguments:
+      - "@mbo.addon.module.data_provider.addons"
+      - "@mbo.modules.builder"
+      - "@logger"
+      - "@=service('translator').getLocale()"
+      - "@doctrine.cache.provider"
+      - "@=service('prestashop.adapter.legacy.configuration').get('_DB_PREFIX_')"
+
+  mbo.modules.filters.factory:
+    class: PrestaShop\Module\Mbo\Modules\FiltersFactory
+
+  mbo.modules.collection.factory:
+    class: PrestaShop\Module\Mbo\Modules\CollectionFactory
+
+  mbo.modules.builder:
+    class: PrestaShop\Module\Mbo\Modules\ModuleBuilder
+    arguments:
+      - '@router'
+      - "@logger"
+      - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"

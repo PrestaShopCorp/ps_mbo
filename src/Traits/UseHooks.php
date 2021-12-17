@@ -34,7 +34,7 @@ trait UseHooks
     /**
      * @var string[]
      */
-    private static $TABS_WITH_RECOMMENDED_MODULES_BUTTON = [
+    protected static $TABS_WITH_RECOMMENDED_MODULES_BUTTON = [
         'AdminProducts',
         'AdminCategories',
         'AdminTracking',
@@ -91,7 +91,7 @@ trait UseHooks
     /**
      * @var string[]
      */
-    private static $TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT = [
+    protected static $TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT = [
         'AdminMarketing',
         'AdminPayment',
         'AdminCarriers',
@@ -256,7 +256,7 @@ trait UseHooks
      *
      * @return bool
      */
-    private function shouldAttachRecommendedModules(array $modules): bool
+    protected function shouldAttachRecommendedModules(array $modules): bool
     {
         // AdminLogin should not call TabCollectionProvider
         if (Validate::isLoadedObject($this->context->employee)) {
@@ -278,7 +278,7 @@ trait UseHooks
      *
      * @return string
      */
-    private function getHelpCenterLink(string $languageCode): string
+    protected function getHelpCenterLink(string $languageCode): string
     {
         $links = [
             'fr' => 'https://www.prestashop.com/fr/contact?utm_source=back-office&utm_medium=links&utm_campaign=help-center-fr&utm_content=download17',

@@ -18,19 +18,16 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\Addons;
+namespace PrestaShop\Module\Mbo\Modules\Filters;
 
-interface AddonInterface
+class Type
 {
-    public function onInstall();
+    public const FLAG = 'type';
 
-    public function onUninstall();
+    /* Bitwise operator */
+    public const THEME = 1;
+    public const MODULE = 2;
+    public const SERVICE = 4;
 
-    public function onEnable();
-
-    public function onDisable();
-
-    public function onReset();
-
-    public function onUpgrade($version);
+    public const ALL = -1;
 }

@@ -36,22 +36,6 @@ interface RecommendedModuleCollectionInterface extends ArrayAccess, IteratorAggr
     public function addRecommendedModule(RecommendedModuleInterface $recommendedModule);
 
     /**
-     * Get a recommended module by name
-     *
-     * @param string $moduleName
-     *
-     * @return RecommendedModuleInterface|false
-     */
-    public function getRecommendedModule($moduleName);
-
-    /**
-     * Get names of recommended modules
-     *
-     * @return string[]
-     */
-    public function getRecommendedModuleNames();
-
-    /**
      * @param mixed $offset
      *
      * @return RecommendedModuleInterface

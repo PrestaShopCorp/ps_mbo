@@ -27,7 +27,7 @@ class TabCollection implements TabCollectionInterface
     /**
      * @var TabInterface[]
      */
-    private $tabs = [];
+    protected $tabs = [];
 
     /**
      * {@inheritdoc}

@@ -2,30 +2,6 @@ services:
   _defaults:
     public: true
 
-  mbo.addon.module.repository:
-    class: PrestaShop\Module\Mbo\Addons\Module\ModuleRepository
-    arguments:
-      - "@mbo.addon.module.data_provider.admin_module"
-      - "@mbo.addon.module.data_prodiver.module"
-      - "@prestashop.core.module.updater"
-      - "@prestashop.adapter.legacy.logger"
-      - "@translator"
-      - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
-      - "@doctrine.cache.provider"
-
-  mbo.addon.module.data_provider.admin_module:
-    class: PrestaShop\Module\Mbo\Addons\Module\AdminModuleDataProvider
-    arguments:
-      - "@translator"
-      - "@logger"
-      - "@mbo.addon.module.data_provider.addons"
-      - "@prestashop.categories_provider"
-      - "@mbo.addon.module.data_prodiver.module"
-      - "@doctrine.cache.provider"
-      - "@=service('prestashop.adapter.legacy.context').getContext().employee"
-    calls:
-      - [ setRouter, ['@router']]
-
   mbo.addon.module.data_prodiver.module:
     class: PrestaShop\Module\Mbo\Addons\Module\ModuleDataProvider
     arguments:
@@ -37,9 +13,6 @@ services:
 
   mbo.addon.module.addons.cookie_user:
     class: PrestaShop\Module\Mbo\Addons\User\CookieAddonsUser
-    arguments:
-      - "@=service('request_stack').getCurrentRequest().cookies.get('username_addons')"
-      - "@=service('request_stack').getCurrentRequest().cookies.get('password_addons')"
 
   mbo.addon.module.data_provider.cookie_user:
     class: PrestaShop\Module\Mbo\Addons\User\CookieAddonsUserProvider
@@ -55,23 +28,6 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").get("ADDONS_API_MODULE_CHANNEL", "stable")'
     properties:
       cacheDir: "%kernel.cache_dir%"
-  mbo.addon.module.updater:
-    class: PrestaShop\Module\Mbo\Addons\DataUpdater
-    arguments:
-      - "@mbo.addon.module.data_provider.addons"
-      - "@mbo.addon.module.data_prodiver.module"
-
-  mbo.addon.module.manager:
-    class: PrestaShop\Module\Mbo\Addons\Module\ModuleManager
-    arguments:
-      - "@mbo.addon.module.data_provider.admin_module"
-      - "@mbo.addon.module.data_prodiver.module"
-      - "@mbo.addon.module.updater"
-      - "@mbo.addon.module.repository"
-      - "@prestashop.module.zip.manager"
-      - "@translator"
-      - "@event_dispatcher"
-      - "@prestashop.adapter.cache.clearer.symfony_cache_clearer"
 
   # Addons API Client
   mbo.addon.client.api:

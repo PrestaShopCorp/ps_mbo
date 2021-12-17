@@ -18,26 +18,19 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\Addons;
+namespace PrestaShop\Module\Mbo\Modules;
 
-interface RepositoryInterface
+interface FiltersInterface
 {
-    /**
-     * @param string $name theme name
-     *
-     * @return AddonInterface the theme or module
-     */
-    public function getInstanceByName($name);
+    public function setOrigin(int $origin);
 
-    /**
-     * @param ListFilter $filter
-     *
-     * @return AddonInterface[] retrieve a list of addons, regarding the $filter used
-     */
-    public function getFilteredList(ListFilter $filter);
+    public function hasOrigin(int $origin): bool;
 
-    /**
-     * @return AddonInterface[] retrieve a list of addons, regardless any $filter
-     */
-    public function getList();
+    public function setStatus(int $status);
+
+    public function hasStatus(int $status): bool;
+
+    public function setType(int $type);
+
+    public function hasType(int $type): bool;
 }

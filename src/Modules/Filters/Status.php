@@ -18,14 +18,16 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\Addons;
+namespace PrestaShop\Module\Mbo\Modules\Filters;
 
-class ListItem
+class Status
 {
-    public $name;
-    public $displayName;
-    public $type;
-    public $author;
-    public $version;
-    public $isEnabled;
+    public const FLAG = 'status';
+
+    /* Bitwise operator */
+    public const ON_DISK = 1;
+    public const INSTALLED = 2;
+    public const ENABLED = 4;
+
+    public const ALL = -1;
 }

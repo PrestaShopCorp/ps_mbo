@@ -74,17 +74,17 @@ class DataProvider implements AddonsInterface
     /**
      * @var ApiClient
      */
-    private $marketplaceClient;
+    protected $marketplaceClient;
 
     /**
      * @var ModuleZipManager
      */
-    private $zipManager;
+    protected $zipManager;
 
     /**
      * @var PhpEncryption
      */
-    private $encryption;
+    protected $encryption;
 
     /**
      * @var string the cache directory location
@@ -94,12 +94,12 @@ class DataProvider implements AddonsInterface
     /**
      * @var string
      */
-    private $moduleChannel;
+    protected $moduleChannel;
 
     /**
      * @var \PrestaShop\Module\Mbo\Addons\User\AddonsUserInterface
      */
-    private $user;
+    protected $user;
 
     /**
      * @param ApiClient $apiClient

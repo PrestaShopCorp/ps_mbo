@@ -32,22 +32,22 @@ class ApiClient
     /**
      * @var Client
      */
-    private $addonsApiClient;
+    protected $addonsApiClient;
 
     /**
      * @var array<string, string>
      */
-    private $queryParameters = ['format' => 'json'];
+    protected $queryParameters = ['format' => 'json'];
 
     /**
      * @var array<string, string>
      */
-    private $defaultQueryParameters;
+    protected $defaultQueryParameters;
 
     /**
      * @var array<int, string>
      */
-    private $possibleQueryParameters = [
+    protected $possibleQueryParameters = [
         'format',
         'method',
         'action',

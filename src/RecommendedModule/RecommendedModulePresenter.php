@@ -20,14 +20,23 @@
 
 namespace PrestaShop\Module\Mbo\RecommendedModule;
 
+use PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter;
+
 class RecommendedModulePresenter implements RecommendedModulePresenterInterface
 {
+    protected $modulePresenter;
+
+    public function __construct(ModulePresenter $modulePresenter)
+    {
+        $this->modulePresenter = $modulePresenter;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function present(RecommendedModuleInterface $recommendedModule)
     {
-        return $recommendedModule->getModuleData();
+        return $this->modulePresenter->present($recommendedModule->getModule());
     }
 
     /**

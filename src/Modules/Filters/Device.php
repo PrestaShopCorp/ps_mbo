@@ -18,28 +18,13 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\RecommendedLink;
+namespace PrestaShop\Module\Mbo\Modules\Filters;
 
-interface RecommendedLinkInterface
+class Device
 {
-    /**
-     * Get the identifier of the recommended link.
-     *
-     * @return string
-     */
-    public function getId();
+    public const COMPUTER = 1;
+    public const TABLET = 2;
+    public const MOBILE = 4;
 
-    /**
-     * Get the url of the recommended module.
-     *
-     * @return string
-     */
-    public function getUrl();
-
-    /**
-     * Get the display name of the recommended module.
-     *
-     * @return string
-     */
-    public function getName();
+    public const ALL = 7;
 }

@@ -2,3 +2,4 @@
 config_*.xml
 /vendor/
 !/vendor/index.php
+tests/.phpunit.result.cache

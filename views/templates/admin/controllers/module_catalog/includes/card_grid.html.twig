@@ -30,7 +30,7 @@
   data-tech-name="{{ module.attributes.name }}"
   data-child-categories="{{ module.attributes.categoryName }}"
   data-categories="{{ category }}"
-  data-type="{{ module.attributes.productType }}"
+  data-type="{{ module.attributes.product_type }}"
   data-price="{{ module.attributes.price.raw }}"
   data-active="{{ isModuleActive }}"
 >
@@ -56,7 +56,7 @@
       </h3>
       <div class="text-ellipsis small-text module-version-author-grid">
         {% block addon_version %}
-          {% if module.attributes.productType == "service" %}
+          {% if module.attributes.product_type == "service" %}
             {{ 'Service by %author%'|trans({'%author%' : '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
           {% else %}
             {{ 'v%version% - by %author%'|trans({ '%version%' : module.attributes.version, '%author%' : '<b>' ~ module.attributes.author ~ '</b>' }, 'Admin.Modules.Feature')|raw }}
@@ -107,9 +107,9 @@
           <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" />
         </div>
       {% endif %}
-      {% include '@PrestaShop/Admin/Module/Includes/action_menu.html.twig' with { 'module': module, 'level' : level } %}
+      {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/action_menu.html.twig' with { 'module': module, 'level' : level } %}
     </div>
-    {% include '@PrestaShop/Admin/Module/Includes/modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default(''), 'level' : level } %}
-    {% include '@PrestaShop/Admin/Module/Includes/modal_confirm.html.twig' with { 'module': module } %}
+    {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default(''), 'level' : level } %}
+    {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_confirm.html.twig' with { 'module': module } %}
   </div>
 </div>

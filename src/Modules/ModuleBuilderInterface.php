@@ -18,14 +18,11 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\Addons;
+namespace PrestaShop\Module\Mbo\Modules;
 
-class ListFilterType
+use stdClass;
+
+interface ModuleBuilderInterface
 {
-    /* Bitwise operator */
-    public const THEME = 1;
-    public const MODULE = 2;
-    public const SERVICE = 4;
-
-    public const ALL = 7; /* = 1 | 2 | 4 */
+    public function build(stdClass $module): Module;
 }

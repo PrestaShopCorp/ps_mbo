@@ -18,16 +18,12 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\Addons;
+namespace PrestaShop\Module\Mbo\Modules;
 
-class ListFilterStatus
+class FiltersFactory
 {
-    public const NOT_ON_DISK = 1;
-    public const ON_DISK = 2; // = Present on disk but not installed
-    public const UNINSTALLED = 4;
-    public const INSTALLED = 8; // = Installed
-    public const DISABLED = 16;
-    public const ENABLED = 32;
-
-    public const ALL = 63;
+    public static function create(): Filters
+    {
+        return new Filters();
+    }
 }

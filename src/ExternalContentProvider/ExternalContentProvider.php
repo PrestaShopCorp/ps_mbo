@@ -37,12 +37,12 @@ class ExternalContentProvider implements ExternalContentProviderInterface
     /**
      * @var SimpleCircuitBreakerFactory
      */
-    private $circuitBreakerFactory;
+    protected $circuitBreakerFactory;
 
     /**
      * @var OptionsResolver
      */
-    private $optionsResolver;
+    protected $optionsResolver;
 
     /**
      * Constructor.
@@ -78,7 +78,7 @@ class ExternalContentProvider implements ExternalContentProviderInterface
         );
     }
 
-    private function configureOptions()
+    protected function configureOptions()
     {
         $this->optionsResolver->setDefaults([
             'failures' => self::ALLOWED_FAILURES,
@@ -97,7 +97,7 @@ class ExternalContentProvider implements ExternalContentProviderInterface
      *
      * @return Closure
      */
-    private function circuitBreakerFallback()
+    protected function circuitBreakerFallback()
     {
         return function () {
             throw new ServiceUnavailableHttpException(self::THRESHOLD_SECONDS);

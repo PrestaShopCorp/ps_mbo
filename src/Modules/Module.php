@@ -18,11 +18,10 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\Addons;
+namespace PrestaShop\Module\Mbo\Modules;
 
 use Module as LegacyModule;
-use PrestaShop\Module\Mbo\Addons\Module\ListFilterDeviceStatus;
-use PrestaShop\Module\Mbo\Addons\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -32,15 +31,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Module implements ModuleInterface
 {
-    public const ACTION_INSTALL = 'install';
-    public const ACTION_UNINSTALL = 'uninstall';
-    public const ACTION_ENABLE = 'enable';
-    public const ACTION_DISABLE = 'disable';
-    public const ACTION_ENABLE_MOBILE = 'enable_mobile';
-    public const ACTION_DISABLE_MOBILE = 'disable_mobile';
-    public const ACTION_RESET = 'reset';
-    public const ACTION_UPGRADE = 'upgrade';
-
     /**
      * @var LegacyModule Module The instance of the legacy module
      */
@@ -72,9 +62,10 @@ class Module implements ModuleInterface
      *
      * @var array
      */
-    private $attributes_default = [
+    protected $attributes_default = [
         'id' => 0,
         'name' => '',
+        'picos' => [],
         'categoryName' => '',
         'displayName' => '',
         'version' => null,
@@ -87,7 +78,7 @@ class Module implements ModuleInterface
         'limited_countries' => [],
         'parent_class' => 'Module',
         'is_paymentModule' => false,
-        'productType' => 'module',
+        'product_type' => 'module',
         'warning' => '',
         'img' => '',
         'badges' => [],
@@ -107,6 +98,9 @@ class Module implements ModuleInterface
         'nbRates' => 0,
         'fullDescription' => '',
         'confirmUninstall' => '',
+        // Generate addons urls
+        'url_active' => null,
+        'urls' => [],
     ];
 
     /**
@@ -114,7 +108,7 @@ class Module implements ModuleInterface
      *
      * @var array
      */
-    private $disk_default = [
+    protected $disk_default = [
         'filemtype' => 0,
         'is_present' => 0,
         'is_valid' => 0,
@@ -127,7 +121,7 @@ class Module implements ModuleInterface
      *
      * @var array
      */
-    private $database_default = [
+    protected $database_default = [
         'installed' => 0,
         'active' => 0,
         'active_on_mobile' => true,
@@ -142,15 +136,24 @@ class Module implements ModuleInterface
      * @param array $disk
      * @param array $database
      */
-    public function __construct(array $attributes = [], array $disk = [], array $database = [])
+    public function __construct(?array $attributes = null, ?array $disk = null, ?array $database = null)
     {
         $this->attributes = new ParameterBag($this->attributes_default);
         $this->disk = new ParameterBag($this->disk_default);
         $this->database = new ParameterBag($this->database_default);
+
         // Set all attributes
-        $this->attributes->add($attributes);
-        $this->disk->add($disk);
-        $this->database->add($database);
+        if ($attributes !== null) {
+            $this->attributes->add($attributes);
+        }
+
+        if ($disk !== null) {
+            $this->disk->add($disk);
+        }
+
+        if ($database !== null) {
+            $this->database->add($database);
+        }
 
         if ($this->database->get('installed')) {
             $version = $this->database->get('version');
@@ -326,7 +329,7 @@ class Module implements ModuleInterface
             return false;
         }
 
-        $result = $this->instance->enableDevice(ListFilterDeviceStatus::DEVICE_MOBILE);
+        $result = $this->instance->enableDevice(Filters\Device::MOBILE);
         $this->database->set('active_on_mobile', $result);
 
         return $result;
@@ -341,7 +344,7 @@ class Module implements ModuleInterface
             return false;
         }
 
-        $result = $this->instance->disableDevice(ListFilterDeviceStatus::DEVICE_MOBILE);
+        $result = $this->instance->disableDevice(Filters\Device::MOBILE);
         $this->database->set('active_on_mobile', !$result);
 
         return $result;
@@ -382,7 +385,7 @@ class Module implements ModuleInterface
      *
      * @return mixed
      */
-    public function get($attribute)
+    public function get(string $attribute)
     {
         return $this->attributes->get($attribute, null);
     }
@@ -391,7 +394,7 @@ class Module implements ModuleInterface
      * @param string $attribute
      * @param mixed $value
      */
-    public function set($attribute, $value)
+    public function set(string $attribute, $value): void
     {
         $this->attributes->set($attribute, $value);
     }
@@ -399,13 +402,13 @@ class Module implements ModuleInterface
     /**
      * @param string $value
      *
-     * @return mixed|string
+     * @return string
      */
-    private function convertType($value)
+    protected function convertType(string $value): string
     {
         $conversionTable = [
-            ListFilterOrigin::ADDONS_CUSTOMER => 'addonsBought',
-            ListFilterOrigin::ADDONS_MUST_HAVE => 'addonsMustHave',
+            Filters\Origin::ADDONS_CUSTOMER => 'addonsBought',
+            Filters\Origin::ADDONS_MUST_HAVE => 'addonsMustHave',
         ];
 
         return isset($conversionTable[$value]) ? $conversionTable[$value] : '';
@@ -414,7 +417,7 @@ class Module implements ModuleInterface
     /**
      * Set the module logo.
      */
-    public function fillLogo()
+    public function fillLogo(): void
     {
         $img = $this->attributes->get('img');
         if (empty($img)) {
@@ -458,7 +461,7 @@ class Module implements ModuleInterface
      *
      * @return bool
      */
-    public function canBeUpgradedFromAddons()
+    public function canBeUpgradedFromAddons(): bool
     {
         return $this->attributes->get('version_available') !== 0
             && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<');
@@ -471,7 +474,7 @@ class Module implements ModuleInterface
      *
      * @return array Modules
      */
-    public function getModulesInstalled($position = 0)
+    public function getModulesInstalled($position = 0): array
     {
         return LegacyModule::getModulesInstalled((int) $position);
     }

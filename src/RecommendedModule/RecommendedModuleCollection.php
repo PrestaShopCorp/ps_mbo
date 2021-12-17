@@ -28,7 +28,7 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
     /**
      * @var RecommendedModuleInterface[]
      */
-    private $recommendedModules = [];
+    protected $recommendedModules = [];
 
     /**
      * {@inheritdoc}
@@ -38,34 +38,6 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
         $this->recommendedModules[] = $recommendedModule;
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRecommendedModule($moduleName)
-    {
-        foreach ($this->recommendedModules as $recommendedModule) {
-            if ($moduleName === $recommendedModule->getModuleName()) {
-                return $recommendedModule;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRecommendedModuleNames()
-    {
-        $recommendedModuleNames = [];
-
-        foreach ($this->recommendedModules as $recommendedModule) {
-            $recommendedModuleNames[] = $recommendedModule->getModuleName();
-        }
-
-        return $recommendedModuleNames;
     }
 
     /**
@@ -166,7 +138,7 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
      *
      * @return RecommendedModuleCollection
      */
-    private function filter(Closure $closure)
+    protected function filter(Closure $closure)
     {
         $recommendedModules = new static();
         $recommendedModules->recommendedModules = array_filter(
@@ -182,7 +154,7 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
     /**
      * @param Closure $closure
      */
-    private function sort(Closure $closure)
+    protected function sort(Closure $closure)
     {
         uasort(
             $this->recommendedModules,

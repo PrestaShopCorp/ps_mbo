@@ -18,36 +18,14 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\Addons\Module;
+namespace PrestaShop\Module\Mbo\Modules;
 
-use PrestaShop\Module\Mbo\Addons\AddonInterface;
-use PrestaShop\Module\Mbo\Addons\ListFilter;
-use PrestaShop\Module\Mbo\Addons\RepositoryInterface;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
-
-interface ModuleRepositoryInterface extends RepositoryInterface
+interface RepositoryInterface
 {
     /**
-     * Get the **Legacy** Module object from its name
-     * Used for retrocompatibility.
-     *
-     * @param string $name The technical module name to instanciate
-     *
-     * @return \Module|null Instance of legacy Module, if valid
+     * @return array<int, Module> retrieve a list of addons modules, regardless any $filter
      */
-    public function getInstanceByName($name);
-
-    /**
-     * @param ListFilter $filter
-     *
-     * @return AddonInterface[] retrieve a list of addons, regarding the $filter used
-     */
-    public function getFilteredList(ListFilter $filter);
-
-    /**
-     * @return AddonInterface[] retrieve a list of addons, regardless any $filter
-     */
-    public function getList();
+    public function fetchAll(): array;
 
     /**
      * Get the new module presenter class of the specified name provided.
@@ -55,7 +33,7 @@ interface ModuleRepositoryInterface extends RepositoryInterface
      *
      * @param string $name The technical name of the module
      *
-     * @return Module
+     * @return Module|null
      */
-    public function getModule($name);
+    public function getModule(string $name): ?Module;
 }

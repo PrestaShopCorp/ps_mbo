@@ -37,17 +37,17 @@ class ThemeCatalogController extends FrameworkBundleAdminController
     /**
      * @var RequestStack
      */
-    private $requestStack;
+    protected $requestStack;
 
     /**
      * @var ExternalContentProviderInterface
      */
-    private $externalContentProvider;
+    protected $externalContentProvider;
 
     /**
      * @var SelectionLinkProvider
      */
-    private $selectionLinkProvider;
+    protected $selectionLinkProvider;
 
     /**
      * @param RequestStack $requestStack
