@@ -65,6 +65,7 @@ class ps_mbo extends Module
         'actionAdminModuleExtraToolbarButton',
         'actionAdminModuleInstallRetrieveSource',
         'actionAdminModuleUpgradeRetrieveSource',
+        'displayAdminThemesListAfter',
         'displayDashboardTop',
         'displayBackOfficeFooter',
         'displayBackOfficeEmployeeMenu',

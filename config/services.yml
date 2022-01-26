@@ -30,6 +30,12 @@ services:
       - '@mbo.security.permission_checker'
       - '@prestashop.categories_provider'
 
+  mbo.addons_themes_link_provider:
+    class: 'PrestaShop\Module\Mbo\AddonsThemesLinkProvider'
+    arguments:
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.adapter.hosting_information'
+
   mbo.controller.modules.catalog:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController'
     arguments:
