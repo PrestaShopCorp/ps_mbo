@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use Exception;
+use PrestaShop\Module\Mbo\Addons\DataProvider;
 use PrestaShop\Module\Mbo\Modules\Collection;
 use PrestaShop\Module\Mbo\Modules\Filters;
 use PrestaShop\Module\Mbo\Modules\Repository;
@@ -218,6 +219,25 @@ class ModuleCatalogController extends ModuleAbstractController
                 'icon' => 'cloud_upload',
                 'help' => $this->trans('Upload a module', 'Admin.Modules.Feature'),
             ];
+
+            /** @var DataProvider $addonsProvider */
+            $addonsProvider = $this->get('mbo.addon.module.data_provider.addons');
+
+            if ($addonsProvider->isAddonsAuthenticated()) {
+                $toolbarButtons['addons_logout'] = [
+                    'href' => '#',
+                    'desc' => $addonsProvider->getAddonsEmail(),
+                    'icon' => 'exit_to_app',
+                    'help' => $this->trans('Synchronized with Addons marketplace!', 'Admin.Modules.Notification'),
+                ];
+            } else {
+                $toolbarButtons['addons_connect'] = [
+                    'href' => '#',
+                    'desc' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
+                    'icon' => 'vpn_key',
+                    'help' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
+                ];
+            }
         }
 
         return $toolbarButtons;

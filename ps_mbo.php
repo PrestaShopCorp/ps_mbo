@@ -51,6 +51,7 @@ class ps_mbo extends Module
      */
     public const HOOKS = [
         'actionAdminControllerSetMedia',
+        'actionAdminModuleExtraToolbarButton',
         'displayDashboardTop',
         'displayBackOfficeEmployeeMenu',
         'dashboardZoneTwo',
