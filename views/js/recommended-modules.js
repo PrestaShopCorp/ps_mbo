@@ -40,7 +40,7 @@ var mbo = {};
     toolbarLastElement: '.toolbar-icons a:last-of-type',
     recommendedModulesButton: '#recommended-modules-button',
     oldButton: '#page-header-desc-configuration-modules-list',
-    contentContainer: '#main-div .content-div .container:last',
+    contentContainer: '#main-div .content-div > .row:last > .col-sm-12',
     modulesListModal: '#modules_list_container',
     modulesListModalContainer: '#main-div .content-div',
     modulesListModalContent: '#modules_list_container_tab_modal',
