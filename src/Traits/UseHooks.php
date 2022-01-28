@@ -26,11 +26,20 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShopBundle\Component\ActionBar\ActionsBarButton;
 use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\String\UnicodeString;
 use ToolsCore as Tools;
 use ValidateCore as Validate;
 
 trait UseHooks
 {
+    /**
+     * @var string
+     */
+    protected static $RECOMMENDED_BUTTON_TYPE = 'button';
+    /**
+     * @var string
+     */
+    protected static $RECOMMENDED_AFTER_CONTENT_TYPE = 'after_content';
     /**
      * @var string[]
      */
@@ -121,8 +130,8 @@ trait UseHooks
         }
 
         $this->smarty->assign([
-            'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModules(static::$TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT),
-            'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModules(static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON),
+            'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModules(static::$RECOMMENDED_AFTER_CONTENT_TYPE),
+            'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModules(static::$RECOMMENDED_BUTTON_TYPE),
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
             'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services'),
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
@@ -232,8 +241,8 @@ trait UseHooks
         // has to be loaded in header to prevent flash of content
         $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
 
-        if ($this->shouldAttachRecommendedModules(static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON)
-            || $this->shouldAttachRecommendedModules(static::$TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT)
+        if ($this->shouldAttachRecommendedModules(static::$RECOMMENDED_BUTTON_TYPE)
+            || $this->shouldAttachRecommendedModules(static::$RECOMMENDED_AFTER_CONTENT_TYPE)
         ) {
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css');
             $this->context->controller->addJs(
@@ -252,18 +261,26 @@ trait UseHooks
     /**
      * Indicates if the recommended modules should be attached
      *
-     * @param array $modules
+     * @param string $type If we want `afterContent` or `button` related modules
      *
      * @return bool
      */
-    protected function shouldAttachRecommendedModules(array $modules): bool
+    protected function shouldAttachRecommendedModules(string $type): bool
     {
+        $method = 'shouldDisplay' . (new UnicodeString($type))->camel();
+        if ($type === static::$RECOMMENDED_BUTTON_TYPE) {
+            $modules = static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON;
+        } elseif ($type === static::$RECOMMENDED_AFTER_CONTENT_TYPE) {
+            $modules = static::$TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT;
+        } else {
+            return false;
+        }
         // AdminLogin should not call TabCollectionProvider
         if (Validate::isLoadedObject($this->context->employee)) {
             /** @var TabCollectionProvider $tabCollectionProvider */
             $tabCollectionProvider = $this->get('mbo.tab.collection.provider');
             if ($tabCollectionProvider->isTabCollectionCached()) {
-                return $tabCollectionProvider->getTabCollection()->getTab(Tools::getValue('controller'))->shouldDisplayAfterContent()
+                return $tabCollectionProvider->getTabCollection()->getTab(Tools::getValue('controller'))->{$method}()
                     || 'AdminCarriers' === Tools::getValue('controller');
             }
         }
