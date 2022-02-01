@@ -53,6 +53,7 @@ class ps_mbo extends Module
         'actionAdminControllerSetMedia',
         'actionAdminModuleExtraToolbarButton',
         'displayDashboardTop',
+        'displayBackOfficeFooter',
         'displayBackOfficeEmployeeMenu',
         'dashboardZoneTwo',
         'dashboardZoneThree',

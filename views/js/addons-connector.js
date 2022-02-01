@@ -36,15 +36,8 @@ var mbo = {};
     var AddonsConnector = function(pageMap) {
         this.initConnect = function() {
             // Make addons connect modal ready to be clicked
-            if ($(pageMap.addonsConnectModalBtnSelector).attr('href') === '#') {
-                $(pageMap.addonsConnectModalBtnSelector).attr('data-toggle', 'modal');
-                $(pageMap.addonsConnectModalBtnSelector).attr('data-target', pageMap.addonsConnectModalSelector);
-            }
-
-            if ($(pageMap.addonsLogoutModalBtnSelector).attr('href') === '#') {
-                $(pageMap.addonsLogoutModalBtnSelector).attr('data-toggle', 'modal');
-                $(pageMap.addonsLogoutModalBtnSelector).attr('data-target', pageMap.addonsLogoutModalSelector);
-            }
+            this.switchToModal(pageMap.addonsConnectModalBtnSelector, pageMap.addonsConnectModalSelector);
+            this.switchToModal(pageMap.addonsLogoutModalBtnSelector, pageMap.addonsLogoutModalSelector);
 
             $('body').on('submit', pageMap.addonsConnectForm, function initializeBodySubmit(event) {
                 event.preventDefault();
@@ -69,6 +62,16 @@ var mbo = {};
                     }
                 });
             });
+        }
+
+        /**
+         * @private
+         */
+        this.switchToModal = function(element, target) {
+            if ($(element).attr('href') === '#') {
+                $(element).data('toggle', 'modal');
+                $(element).data('target', target);
+            }
         }
     }
 
