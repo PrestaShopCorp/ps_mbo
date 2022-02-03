@@ -34,6 +34,7 @@ use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDisplayBackOfficeEmployeeMenu;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\String\UnicodeString;
 
 class ps_mbo extends Module
 {
@@ -45,6 +46,9 @@ class ps_mbo extends Module
     use UseDisplayDashboardTop;
     use UseAdminControllerSetMedia;
 
+    /**
+     * @var array Hooks registered by the module
+     */
     public const HOOKS = [
         'actionAdminControllerSetMedia',
         'displayDashboardTop',
@@ -52,6 +56,13 @@ class ps_mbo extends Module
         'dashboardZoneTwo',
         'dashboardZoneThree',
     ];
+    /**
+     * @var array An array of method that can be called to register media in the actionAdminControllerSetMedia hook
+     *
+     * @see UseAdminControllerSetMedia
+     */
+    protected $adminControllerMediaMethods = [];
+
     /**
      * @var ContainerInterface
      */
@@ -77,6 +88,14 @@ class ps_mbo extends Module
 
         $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
         $this->description = $this->l('Browse the Addons marketplace directly from your back office to better meet your needs.');
+
+        // Parse all traits to call boot method
+        foreach (class_uses($this) as $trait) {
+            $traitName = (new UnicodeString($trait))->afterLast('\\')->toString();
+            if (method_exists($this, "boot{$traitName}")) {
+                $this->{"boot{$traitName}"}();
+            }
+        }
     }
 
     /**

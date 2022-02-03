@@ -105,6 +105,18 @@ trait UseDisplayDashboardTop
     ];
 
     /**
+     * @return void
+     *
+     * @throws \Exception
+     */
+    public function bootUseDisplayDashboardTop(): void
+    {
+        if (method_exists($this, 'addAdminControllerMedia')) {
+            $this->addAdminControllerMedia('loadMediaForDashboardTop');
+        }
+    }
+
+    /**
      * Hook displayDashboardTop.
      * Includes content just below the toolbar.
      *
