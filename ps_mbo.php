@@ -27,13 +27,23 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
+use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDisplayBackOfficeEmployeeMenu;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ps_mbo extends Module
 {
-    use PrestaShop\Module\Mbo\Traits\UseHooks;
     use PrestaShop\Module\Mbo\Traits\HaveTabs;
+    // Hooks
+    use UseDisplayDisplayBackOfficeEmployeeMenu;
+    use UseDashboardZoneTwo;
+    use UseDashboardZoneThree;
+    use UseDisplayDashboardTop;
+    use UseAdminControllerSetMedia;
 
     public const HOOKS = [
         'actionAdminControllerSetMedia',
