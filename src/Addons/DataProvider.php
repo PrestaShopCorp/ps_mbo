@@ -26,7 +26,6 @@ use PhpEncryption;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUserInterface;
 use PrestaShop\Module\Mbo\Service\Addons\ApiClient;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
-use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
