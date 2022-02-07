@@ -24,7 +24,7 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 use PrestaShopBundle\Component\ActionBar\ActionsBarButton;
 use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 
-trait UseDisplayDisplayBackOfficeEmployeeMenu
+trait UseDisplayBackOfficeEmployeeMenu
 {
     /**
      * Hook displayBackOfficeMenu.

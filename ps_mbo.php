@@ -27,11 +27,14 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
+use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleExtraToolbarButton;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeEmployeeMenu;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDisplayBackOfficeEmployeeMenu;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\String\UnicodeString;
@@ -40,11 +43,13 @@ class ps_mbo extends Module
 {
     use PrestaShop\Module\Mbo\Traits\HaveTabs;
     // Hooks
-    use UseDisplayDisplayBackOfficeEmployeeMenu;
+    use UseDisplayBackOfficeEmployeeMenu;
     use UseDashboardZoneTwo;
     use UseDashboardZoneThree;
     use UseDisplayDashboardTop;
     use UseAdminControllerSetMedia;
+    use UseAdminModuleExtraToolbarButton;
+    use UseDisplayBackOfficeFooter;
 
     /**
      * @var array Hooks registered by the module
@@ -71,6 +76,11 @@ class ps_mbo extends Module
     protected $container;
 
     /**
+     * @var PermissionCheckerInterface
+     */
+    protected $permissionChecker;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -90,6 +100,8 @@ class ps_mbo extends Module
 
         $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
         $this->description = $this->l('Browse the Addons marketplace directly from your back office to better meet your needs.');
+
+        $this->permissionChecker = $this->get('mbo.security.permission_checker');
 
         // Parse all traits to call boot method
         foreach (class_uses($this) as $trait) {
