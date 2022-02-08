@@ -103,7 +103,7 @@ class AddonsController extends FrameworkBundleAdminController
             );
 
             $response->setData(['success' => 1, 'message' => '']);
-            $this->modulesDataProvider->clearCatalogCache();
+//            $this->modulesDataProvider->clearCatalogCache();
         } catch (Exception $e) {
             $response->setData([
                 'success' => 0,
@@ -124,7 +124,7 @@ class AddonsController extends FrameworkBundleAdminController
      */
     public function logoutAction()
     {
-        $this->modulesDataProvider->clearCatalogCache();
+//        $this->modulesDataProvider->clearCatalogCache();
         $request = $this->requestStack->getCurrentRequest();
 
         if ($request->isXmlHttpRequest()) {

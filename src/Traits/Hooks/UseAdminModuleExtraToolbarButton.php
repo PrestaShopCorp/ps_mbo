@@ -36,26 +36,7 @@ trait UseAdminModuleExtraToolbarButton
      */
     public function hookActionAdminModuleExtraToolbarButton(array $params): array
     {
-        /** @var DataProvider $addonsProvider */
-        $addonsProvider = $this->get('mbo.addon.module.data_provider.addons');
-
-        if ($addonsProvider->isAddonsAuthenticated()) {
-            $toolbarButtons['addons_logout'] = [
-                'href' => '#',
-                'desc' => $addonsProvider->getAddonsEmail(),
-                'icon' => 'exit_to_app',
-                'help' => $this->trans('Synchronized with Addons marketplace!', [], 'Admin.Modules.Notification'),
-            ];
-        } else {
-            $toolbarButtons['addons_connect'] = [
-                'href' => '#',
-                'desc' => $this->trans('Connect to Addons marketplace', [], 'Admin.Modules.Feature'),
-                'icon' => 'vpn_key',
-                'help' => $this->trans('Connect to Addons marketplace', [], 'Admin.Modules.Feature'),
-            ];
-        }
-
-        return $toolbarButtons;
+        return $this->get('mbo.addon.toolbar')->getConnectionToolbar();
     }
 
     /**

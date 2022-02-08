@@ -20,8 +20,6 @@
 
 const {$} = window;
 
-var mbo = {};
-
 (function() {
     var pageMap = {
         addonsLoginButtonSelector: '#addons_login_btn',
@@ -69,8 +67,12 @@ var mbo = {};
          */
         this.switchToModal = function(element, target) {
             if ($(element).attr('href') === '#') {
+                // modify jQuery cache
                 $(element).data('toggle', 'modal');
                 $(element).data('target', target);
+                // modify the DOM
+                $(element).attr('data-toggle', 'modal');
+                $(element).attr('data-target', target);
             }
         }
     }

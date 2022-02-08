@@ -3,8 +3,8 @@ services:
     class: GuzzleHttp\Client
     arguments:
       $config:
-        base_url: "https://api-addons.prestashop.com"
-        timeout: "5.0"
+        base_uri: "https://api-addons.prestashop.com"
+        timeout: "7200"
         headers:
             Accept: "application/json"
         CURLOPT_FORBID_REUSE: true

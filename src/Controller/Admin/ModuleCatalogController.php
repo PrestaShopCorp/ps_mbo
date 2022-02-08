@@ -22,13 +22,11 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use Exception;
-use PrestaShop\Module\Mbo\Addons\DataProvider;
 use PrestaShop\Module\Mbo\Modules\Collection;
 use PrestaShop\Module\Mbo\Modules\Filters;
 use PrestaShop\Module\Mbo\Modules\Repository;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,7 +55,7 @@ class ModuleCatalogController extends ModuleAbstractController
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog.html.twig',
             [
-                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
+                'layoutHeaderToolbarBtn' => $this->get('mbo.addon.toolbar')->getToolbarButtons(),
                 'layoutTitle' => $this->trans('Modules catalog', 'Admin.Navigation.Menu'),
                 'requireAddonsSearch' => true,
                 'requireBulkActions' => false,
@@ -194,52 +192,5 @@ class ModuleCatalogController extends ModuleAbstractController
             'selector' => '.module-catalog-page',
             'content' => $sortingHeaderContent . $gridContent,
         ];
-    }
-
-    /**
-     * Common method for all module related controller for getting the header buttons.
-     *
-     * @return array
-     */
-    protected function getToolbarButtons()
-    {
-        // toolbarButtons
-        $toolbarButtons = [];
-
-        if (!in_array(
-            $this->authorizationLevel(static::CONTROLLER_NAME),
-            [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-            ]
-        )) {
-            $toolbarButtons['add_module'] = [
-                'href' => '#',
-                'desc' => $this->trans('Upload a module', 'Admin.Modules.Feature'),
-                'icon' => 'cloud_upload',
-                'help' => $this->trans('Upload a module', 'Admin.Modules.Feature'),
-            ];
-
-            /** @var DataProvider $addonsProvider */
-            $addonsProvider = $this->get('mbo.addon.module.data_provider.addons');
-
-            if ($addonsProvider->isAddonsAuthenticated()) {
-                $toolbarButtons['addons_logout'] = [
-                    'href' => '#',
-                    'desc' => $addonsProvider->getAddonsEmail(),
-                    'icon' => 'exit_to_app',
-                    'help' => $this->trans('Synchronized with Addons marketplace!', 'Admin.Modules.Notification'),
-                ];
-            } else {
-                $toolbarButtons['addons_connect'] = [
-                    'href' => '#',
-                    'desc' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
-                    'icon' => 'vpn_key',
-                    'help' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
-                ];
-            }
-        }
-
-        return $toolbarButtons;
     }
 }
