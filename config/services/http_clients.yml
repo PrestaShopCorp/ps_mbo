@@ -1,0 +1,11 @@
+services:
+  mbo.addon.client.http:
+    class: GuzzleHttp\Client
+    arguments:
+      $config:
+        base_url: "https://api-addons.prestashop.com"
+        timeout: "5.0"
+        headers:
+            Accept: "application/json"
+        CURLOPT_FORBID_REUSE: true
+        CURLOPT_FRESH_CONNECT: true

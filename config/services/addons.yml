@@ -33,7 +33,7 @@ services:
   mbo.addon.client.api:
     class: PrestaShop\Module\Mbo\Service\Addons\ApiClient
     arguments:
-      - "@eight_points_guzzle.client.addons_api"
+      - "@mbo.addon.client.http"
     calls:
       - method: setDefaultParams
         arguments:
