@@ -17,6 +17,10 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *}
 
+<script>
+  var mbo_dashboard_news_ajax_url = '{$link->getAdminLink('DashboardNews')}';
+  var mbo_dasboard_news_read_more = '{l s='Read more' js=1}';
+</script>
 <section class="dash_news panel">
   <h3><i class="icon-rss"></i> {l s='PrestaShop News' d='Modules.Mbo.Dashboardzonethree'}</h3>
   <div class="dash_news_content"></div>

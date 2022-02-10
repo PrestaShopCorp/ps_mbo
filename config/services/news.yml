@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    public: true
+
+  mbo.service.news.provider:
+    class: PrestaShop\Module\Mbo\Service\News\NewsDataProvider
+    arguments:
+      - "@mbo.news.circuit_breaker"
+      - "@prestashop.adapter.data_provider.country"
+      - "@prestashop.adapter.tools"
+      - "@prestashop.adapter.legacy.configuration"
+      - "@prestashop.adapter.validate"
+      - "@=service('prestashop.adapter.legacy.context').getContext().mode"
