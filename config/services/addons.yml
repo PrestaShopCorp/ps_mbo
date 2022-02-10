@@ -41,3 +41,10 @@ services:
           - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
           - "@=service('prestashop.adapter.legacy.configuration').get('_PS_BASE_URL_')"
           - "@=service('prestashop.core.foundation.version').getVersion()"
+
+  mbo.addon.toolbar:
+    class: PrestaShop\Module\Mbo\Addons\Toolbar
+    arguments:
+      - '@mbo.security.permission_checker'
+      - '@mbo.addon.module.data_provider.addons'
+      - '@translator'

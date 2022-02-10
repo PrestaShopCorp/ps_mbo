@@ -59,8 +59,8 @@ class ApiClient
         'module_key',
         'module_name',
         'shop_url',
-        'username_addons',
-        'password_addons',
+        'username',
+        'password',
     ];
 
     /**
@@ -110,7 +110,7 @@ class ApiClient
     {
         return $this->setQueryParams([
             'method' => 'check_customer',
-        ] + $params)->processRequestAndReturn();
+        ] + $params)->processRequestAndReturn(null, self::HTTP_METHOD_POST);
     }
 
     /**

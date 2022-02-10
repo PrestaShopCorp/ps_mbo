@@ -158,6 +158,11 @@ class DataProvider implements AddonsInterface
         return $this->user->isAddonsAuthenticated();
     }
 
+    public function getAddonsEmail(): ?string
+    {
+        return $this->isAddonsAuthenticated() ? (string) $this->user->getAddonsEmail()['username_addons'] : null;
+    }
+
     /**
      * {@inheritdoc}
      */

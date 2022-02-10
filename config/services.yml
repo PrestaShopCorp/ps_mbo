@@ -44,3 +44,10 @@ services:
       - '@request_stack'
       - '@mbo.externalcontent.provider'
       - '@mbo.addons_selection_link_provider'
+
+  mbo.controller.addons:
+    class: 'PrestaShop\Module\Mbo\Controller\Admin\AddonsController'
+    arguments:
+      - '@request_stack'
+      - '@mbo.addon.module.data_provider.addons'
+      - '@prestashop.core.admin.data_provider.module_interface'
