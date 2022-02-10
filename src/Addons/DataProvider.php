@@ -122,16 +122,16 @@ class DataProvider implements AddonsInterface
     /**
      * {@inheritdoc}
      */
-    public function downloadModule(int $module_id): bool
+    public function downloadModule(int $moduleId): bool
     {
         $params = [
-            'id_module' => $module_id,
+            'id_module' => $moduleId,
             'format' => 'json',
         ];
 
         // Module downloading
         try {
-            $module_data = $this->request('module_download', $params);
+            $moduleData = $this->request('module_download', $params);
         } catch (Exception $e) {
             $message = $this->isAddonsAuthenticated() ?
                 'Error sent by Addons. You may be not allowed to download this module.'
@@ -140,9 +140,10 @@ class DataProvider implements AddonsInterface
             throw new Exception($message, 0, $e);
         }
 
-        $temp_filename = tempnam($this->cacheDir, 'mod');
-        if (file_put_contents($temp_filename, $module_data) !== false) {
-            $this->zipManager->storeInModulesFolder($temp_filename);
+        $temporaryZipFilename = tempnam($this->cacheDir, 'mod');
+        if (file_put_contents($temporaryZipFilename, $moduleData) !== false) {
+            // Here we unzip the module in PS folder. Do we have to do it or is it PS purpose ?
+            $this->zipManager->storeInModulesFolder($temporaryZipFilename);
 
             return true;
         } else {

@@ -21,29 +21,20 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController;
+use Exception;
 
-trait UseDisplayBackOfficeFooter
+trait UseAdminModuleUpgradeRetrieveSource
 {
     /**
-     * Hook displayBackOfficeFooter.
-     * Adds content in BackOffice footer section
-     *
-     * @param array $params
-     *
-     * @return string
+     * Hook actionAdminModuleUpgradeRetrieveSource.
      */
-    public function hookDisplayBackOfficeFooter(array $params): string
+    public function hookActionAdminModuleUpgradeRetrieveSource(array $params): ?string
     {
-        return $this->get('twig')->render(
-            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig', [
-                'level' => $this->get('mbo.security.permission_checker')->getAuthorizationLevel(ModuleCatalogController::CONTROLLER_NAME),
-                'errorMessage' => $this->trans(
-                    'You do not have permission to add this.',
-                    [],
-                    'Admin.Notifications.Error'
-                ),
-            ]
-        );
+        if (empty($params['name'])) {
+            return null;
+        }
+
+        // Download from addons
+        return '/home/isow/workspace/prestashopexamplemodule.zip';
     }
 }
