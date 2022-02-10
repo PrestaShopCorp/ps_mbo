@@ -19,7 +19,7 @@
  */
 
 
-function getBlogRss() {
+function getDashboardMBONewsBlogRss() {
   $.ajax({
     url : mbo_dashboard_news_ajax_url,
     data : {
@@ -41,5 +41,3 @@ function getBlogRss() {
   });
 }
 
-
-getBlogRss();

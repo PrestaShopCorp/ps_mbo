@@ -27,6 +27,18 @@ use ToolsCore as Tools;
 trait UseDashboardZoneThree
 {
     /**
+     * @return void
+     *
+     * @throws \Exception
+     */
+    public function bootUseDashboardZoneThree(): void
+    {
+        if (method_exists($this, 'addAdminControllerMedia')) {
+            $this->addAdminControllerMedia('loadMediaForDashboardColumnThree');
+        }
+    }
+
+    /**
      * Display addons data & links in the third column of the dashboard
      *
      * @param array $params
@@ -69,5 +81,20 @@ trait UseDashboardZoneThree
         ];
 
         return $links[$languageCode] ?? $links['en'];
+    }
+
+    /**
+     * Add JS and CSS file
+     *
+     * @return void
+     *
+     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia
+     */
+    protected function loadMediaForDashboardColumnThree(): void
+    {
+        if (Tools::getValue('controller') === 'AdminDashboard') {
+            $this->context->controller->addJs($this->getPathUri() . 'views/js/dashboard-news.js?v=' . $this->version);
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/dashboard-news.css?v=' . $this->version);
+        }
     }
 }

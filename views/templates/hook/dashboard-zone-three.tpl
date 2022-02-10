@@ -20,6 +20,8 @@
 <script>
   var mbo_dashboard_news_ajax_url = '{$link->getAdminLink('DashboardNews')}';
   var mbo_dasboard_news_read_more = '{l s='Read more' js=1}';
+
+  getDashboardMBONewsBlogRss();
 </script>
 <section class="dash_news panel">
   <h3><i class="icon-rss"></i> {l s='PrestaShop News' d='Modules.Mbo.Dashboardzonethree'}</h3>
