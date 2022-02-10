@@ -48,3 +48,11 @@ services:
       - '@mbo.security.permission_checker'
       - '@mbo.addon.module.data_provider.addons'
       - '@translator'
+
+  # Event subscribers
+  mbo.addon.event_subscriber:
+    class: PrestaShop\Module\Mbo\Addons\Subscriber\EventSubscriber
+    arguments:
+      - '@logger'
+    tags:
+      - { name: 'kernel.event_subscriber', event: 'module.install' }
