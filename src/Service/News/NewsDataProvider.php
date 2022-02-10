@@ -148,7 +148,7 @@ class NewsDataProvider
                 $analytics_params['utm_content'] = 'cloud';
             }
 
-            $url_query = parse_url((string) $item->link, PHP_URL_QUERY);
+            $url_query = parse_url((string) $item->link, PHP_URL_QUERY) ?? '';
             parse_str($url_query, $link_query_params);
             $full_url_params = array_merge($link_query_params, $analytics_params);
             $base_url = explode('?', (string) $item->link);

@@ -18,7 +18,7 @@
  *}
 
 <script>
-  var mbo_dashboard_news_ajax_url = '{$link->getAdminLink('DashboardNews')}';
+  var mbo_dashboard_news_ajax_url = '{$link->getAdminLink('DashboardNews', true, ["route" => "admin_mbo_dashboard_blog_rss"])}';
   var mbo_dasboard_news_read_more = '{l s='Read more' js=1}';
 
   getDashboardMBONewsBlogRss();

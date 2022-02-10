@@ -21,25 +21,20 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use AdminController;
-use PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProviderInterface;
 use PrestaShop\Module\Mbo\Service\News\NewsDataProvider;
-use Symfony\Component\HttpFoundation\RequestStack;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Responsible of "Improve > Design > Themes Catalog" page display.
+ * Responsible of loading the news in the dashboard widget.
  */
-class DashboardNewsController extends AdminController
+class DashboardNewsController extends FrameworkBundleAdminController
 {
     /**
-     * @var RequestStack
+     * @var \PrestaShop\PrestaShop\Adapter\LegacyContext
      */
-    protected $requestStack;
-
-    /**
-     * @var ExternalContentProviderInterface
-     */
-    protected $externalContentProvider;
+    protected $context;
 
     /**
      * @var NewsDataProvider
@@ -47,24 +42,22 @@ class DashboardNewsController extends AdminController
     protected $newsDataProvider;
 
     /**
-     * @param \PrestaShop\Module\Mbo\Service\News\NewsDataProvider $newsDataProvider
+     * @param LegacyContext $context
      */
     public function __construct(
+        LegacyContext $context,
         NewsDataProvider $newsDataProvider
     ) {
         parent::__construct();
+        $this->context = $context;
         $this->newsDataProvider = $newsDataProvider;
     }
 
     /**
      * Returns last news from the blog
      */
-    public function displayAjaxGetBlogRss()
+    public function getBlogRssAction()
     {
-        $return = $this->newsDataProvider->getData($this->context->language->iso_code);
-
-        // Response
-        header('Content-Type: application/json');
-        $this->ajaxRender(json_encode($return));
+        return new JsonResponse($this->newsDataProvider->getData($this->context->getLanguage()->iso_code));
     }
 }

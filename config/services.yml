@@ -56,4 +56,5 @@ services:
   mbo.controller.dashboard.news:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\DashboardNewsController'
     arguments:
+      - '@prestashop.adapter.legacy.context'
       - '@mbo.service.news.provider'
