@@ -142,12 +142,9 @@ class DataProvider implements AddonsInterface
 
         $temporaryZipFilename = tempnam($this->cacheDir, 'mod');
         if (file_put_contents($temporaryZipFilename, $moduleData) !== false) {
-            // Here we unzip the module in PS folder. Do we have to do it or is it PS purpose ?
-            $this->zipManager->storeInModulesFolder($temporaryZipFilename);
-
-            return true;
+            return $temporaryZipFilename;
         } else {
-            throw new Exception('Cannot store module content in temporary folder !');
+            throw new Exception('Cannot store module content in temporary file !');
         }
     }
 

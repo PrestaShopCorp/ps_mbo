@@ -46,19 +46,8 @@ trait UseAdminModuleInstallRetrieveSource
             return null;
         }
 
-        if (
-            // download the module from addons and unzip the sources to the PS modules folder
-            $this->get('mbo.addon.module.data_provider.addons')->downloadModule(
-                (int) $module->get('id')
-            )
-        ) {
-            // ??
-            $modulePath = _PS_MODULE_DIR_ . $moduleName;
-            if (is_dir($modulePath)) {
-                return $modulePath;
-            }
-        }
-
-        throw new Exception('Unable to download module');
+        return $this->get('mbo.addon.module.data_provider.addons')->downloadModule(
+            (int) $module->get('id')
+        );
     }
 }
