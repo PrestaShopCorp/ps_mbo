@@ -25,6 +25,7 @@ use Exception;
 use PrestaShop\Module\Mbo\Modules\Collection;
 use PrestaShop\Module\Mbo\Modules\Filters;
 use PrestaShop\Module\Mbo\Modules\Repository;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
@@ -119,6 +120,35 @@ class ModuleCatalogController extends ModuleAbstractController
         }
 
         return new JsonResponse($responseArray);
+    }
+
+    /**
+     * Responsible of displaying the data inside the modal when user clicks on "See more" on module card
+     *
+     * @param int $moduleId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function seeMoreAction(int $moduleId): Response
+    {
+        $moduleRepository = $this->get('mbo.modules.repository');
+        $module = $moduleRepository->getModuleById($moduleId);
+
+        $addOnsAdminDataProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
+        $addOnsAdminDataProvider->generateAddonsUrls(
+            AddonsCollection::createFrom([$module])
+        );
+
+        $modulePresenter = $this->get('prestashop.adapter.presenter.module');
+        $moduleToPresent = $modulePresenter->present($module);
+
+        return $this->render(
+            '@PrestaShop/Admin/Module/Includes/modal_read_more_content.html.twig',
+            [
+                'module' => $moduleToPresent,
+                'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
+            ]
+        );
     }
 
     /**

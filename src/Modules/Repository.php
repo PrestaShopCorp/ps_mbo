@@ -55,7 +55,7 @@ class Repository implements RepositoryInterface
     /**
      * Contains data from cache file about modules on disk.
      *
-     * @var ?array<int, Module>
+     * @var ?array<int|string, Module>
      */
     protected $cache;
 
@@ -182,6 +182,38 @@ class Repository implements RepositoryInterface
         $this->fetchAll();
 
         return $this->cache[$name] ?? null;
+    }
+
+    /**
+     * @param int $moduleId
+     *
+     * @return array
+     */
+    public function getModuleAttributesById(int $moduleId): array
+    {
+        return (array) $this->dataProvider->request('module', ['id_module' => $moduleId]);
+    }
+
+    /**
+     * Send request to get module details on the marketplace, then merge the data received in Module instance.
+     *
+     * @param int $moduleId
+     *
+     * @return Module
+     */
+    public function getModuleById(int $moduleId): ?Module
+    {
+        $moduleAttributes = $this->getModuleAttributesById($moduleId);
+
+        $module = $this->getModule($moduleAttributes['name']);
+
+        foreach ($moduleAttributes as $name => $value) {
+            if (!$module->attributes->has($name)) {
+                $module->attributes->set($name, $value);
+            }
+        }
+
+        return $module;
     }
 
     protected function findInDatabaseByName(string $name): ?array
