@@ -180,7 +180,7 @@ class AddonsController extends FrameworkBundleAdminController
                     'Admin.Modules.Notification',
                     ['%module%' => $moduleName]
                 );
-                $upgradeResponse['is_configurable'] = (bool)$this->get('prestashop.core.admin.module.repository')
+                $upgradeResponse['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
                     ->getModule($moduleName)
                     ->attributes
                     ->get('is_configurable');

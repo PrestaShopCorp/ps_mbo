@@ -29,9 +29,9 @@ if (file_exists($autoloadPath)) {
 
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleExtraToolbarButton;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleInstallRetrieveSource;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleUpgradeRetrieveSource;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleExtraToolbarButton;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeEmployeeMenu;

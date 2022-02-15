@@ -71,6 +71,8 @@ trait UseDisplayModuleConfigureExtraButtons
      */
     protected function loadMediaForModuleConfigureExtraButtons(): void
     {
-        $this->context->controller->addJs($this->getPathUri() . 'views/js/module-configure-extra-buttons.js?v=' . $this->version);
+        if (\Tools::getValue('controller') === 'AdminModule') {
+            $this->context->controller->addJs($this->getPathUri() . 'views/js/module-configure-extra-buttons.js?v=' . $this->version);
+        }
     }
 }

@@ -33,8 +33,6 @@
                     this.checkForUpdates(upgradeUrl, moduleName);
                 }
             });
-
-            console.log('Events initialized for ModuleConfigureExtraButtons');
         }
 
         this.checkForUpdates = (upgradeUrl, moduleName) => {
@@ -53,12 +51,9 @@
                     size: 'large',
                     message: data.msg,
                 });
-                console.log(`Module ${moduleName} successfully upgraded`);
-                console.log(data);
             });
 
             upgradeModuleRequest.fail(function(jqXHR, textStatus, errorThrown) {
-                console.error(`Module ${moduleName} upgrade failed`)
                 if (undefined !== jqXHR.responseText) {
                     $.growl.error({message: jqXHR.responseText});
                 }
