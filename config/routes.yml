@@ -1,55 +1,16 @@
-admin_mbo_catalog_module:
-  path: /addons/modules/catalog
-  methods: [GET]
-  defaults:
-    _controller: mbo.controller.modules.catalog:indexAction
-    _legacy_controller: AdminPsMboModule
-    _legacy_link: AdminPsMboModule
 
-admin_mbo_catalog_module_selection:
-  path: /addons/modules/catalog/selection
-  methods: [GET]
-  defaults:
-    _controller: mbo.controller.modules.selection:indexAction
-    _legacy_controller: AdminPsMboSelection
-    _legacy_link: AdminPsMboSelection
+modules_catalog:
+  resource: './routes/modules_catalog.yml'
+  prefix: /mbo/modules/catalog
 
-admin_mbo_catalog_module_refresh:
-    path:     /catalog/refresh/{category}/{keyword}
-    methods:  [GET]
-    defaults:
-        category:
-        keyword:
-        _controller: mbo.controller.modules.catalog::refreshAction
-        _legacy_controller: AdminPsMboModule
-        _legacy_link: AdminPsMboModule:refresh
+recommended_modules:
+  resource: './routes/recommended_modules.yml'
+  prefix: /mbo/modules/recommended
 
-admin_mbo_recommended_modules:
-  path: /addons/modules/recommended
-  methods: [GET]
-  defaults:
-    _controller: mbo.controller.modules.recommended:indexAction
-    _legacy_controller: AdminPsMboRecommended
-    _legacy_link: AdminPsMboRecommended
+themes_catalog:
+  resource: './routes/theme_catalog.yml'
+  prefix: /mbo/themes/catalog
 
-admin_mbo_catalog_theme:
-  path: /addons/themes/catalog
-  methods: [GET]
-  defaults:
-    _controller: mbo.controller.themes.catalog:indexAction
-    _legacy_controller: AdminPsMboTheme
-    _legacy_link: AdminPsMboTheme
-
-
-# Login and logout to Addons
-admin_mbo_addons_login:
-  path: /login
-  methods: [ POST ]
-  defaults:
-    _controller: mbo.controller.addons:loginAction
-
-admin_mbo_addons_logout:
-  path: /logout
-  methods: [ GET ]
-  defaults:
-    _controller: mbo.controller.addons:logoutAction
+addons:
+  resource: './routes/addons.yml'
+  prefix: /mbo/addons

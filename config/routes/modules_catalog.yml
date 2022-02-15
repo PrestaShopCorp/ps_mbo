@@ -1,0 +1,26 @@
+
+admin_mbo_catalog_module:
+  path: /
+  methods: [GET]
+  defaults:
+    _controller: mbo.controller.modules.catalog:indexAction
+    _legacy_controller: AdminPsMboModule
+    _legacy_link: AdminPsMboModule
+
+admin_mbo_catalog_module_selection:
+  path: /selection
+  methods: [GET]
+  defaults:
+    _controller: mbo.controller.modules.selection:indexAction
+    _legacy_controller: AdminPsMboSelection
+    _legacy_link: AdminPsMboSelection
+
+admin_mbo_catalog_module_refresh:
+  path: /refresh/{category}/{keyword}
+  methods:  [GET]
+  defaults:
+    category:
+    keyword:
+    _controller: mbo.controller.modules.catalog::refreshAction
+    _legacy_controller: AdminPsMboModule
+    _legacy_link: AdminPsMboModule:refresh
