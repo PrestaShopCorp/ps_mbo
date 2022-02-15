@@ -52,3 +52,9 @@ services:
       - '@mbo.addon.module.data_provider.addons'
       - '@prestashop.core.admin.data_provider.module_interface'
       - '@prestashop.module.manager'
+
+  mbo.controller.dashboard.news:
+    class: 'PrestaShop\Module\Mbo\Controller\Admin\DashboardNewsController'
+    arguments:
+      - '@prestashop.adapter.legacy.context'
+      - '@mbo.service.news.provider'

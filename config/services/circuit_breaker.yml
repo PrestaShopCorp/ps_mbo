@@ -1,0 +1,20 @@
+services:
+  mbo.circuit_breaker.advanced_factory:
+    class: PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory
+
+  mbo.news.circuit_breaker.settings:
+    class: PrestaShop\CircuitBreaker\FactorySettings
+    arguments:
+      - !php/const \PrestaShop\Module\Mbo\Service\News\NewsDataProvider::CLOSED_ALLOWED_FAILURES
+      - !php/const \PrestaShop\Module\Mbo\Service\News\NewsDataProvider::CLOSED_TIMEOUT_SECONDS
+      - !php/const \PrestaShop\Module\Mbo\Service\News\NewsDataProvider::OPEN_THRESHOLD_SECONDS
+    calls:
+      - [ 'setStrippedFailures', [ !php/const \PrestaShop\Module\Mbo\Service\News\NewsDataProvider::OPEN_ALLOWED_FAILURES ] ]
+      - [ 'setStrippedTimeout', [ !php/const \PrestaShop\Module\Mbo\Service\News\NewsDataProvider::OPEN_TIMEOUT_SECONDS ] ]
+      - [ 'setStorage', [ '@prestashop.core.circuit_breaker.storage' ] ]
+
+  mbo.news.circuit_breaker:
+    class: 'PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface'
+    factory: [ "@mbo.circuit_breaker.advanced_factory", create ]
+    arguments:
+      - "@mbo.news.circuit_breaker.settings"

@@ -13,3 +13,7 @@ themes_catalog:
 addons:
   resource: './routes/addons.yml'
   prefix: /mbo/addons
+
+dashboard:
+  resource: './routes/dashboard.yml'
+  prefix: /mbo/dashboard

@@ -17,10 +17,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
+use Composer\Autoload\ClassLoader;
+
 $rootDir = getenv('_PS_ROOT_DIR_');
 if (!$rootDir) {
-    echo '[ERROR] Define _PS_ROOT_DIR_ with the path to PrestaShop folder' . PHP_EOL;
-    exit(1);
+    $rootDir = __DIR__ . '/../../../../';
 }
 
 $pathToModuleRoot = __DIR__ . '/../../';
@@ -39,11 +41,11 @@ require_once $rootDir . '/config/bootstrap.php';
 // Make sure loader php-parser is coming from php stan composer
 
 // 1- Use with Docker container
-$loader = new \Composer\Autoload\ClassLoader();
+$loader = new ClassLoader();
 $loader->setPsr4('PhpParser\\', ['/composer/vendor/nikic/php-parser/lib/PhpParser']);
 $loader->register(true);
 // 2- Use with PHPStan phar
-$loader = new \Composer\Autoload\ClassLoader();
+$loader = new ClassLoader();
 // Contains the vendor in phar, like "phar://phpstan.phar/vendor"
 $loader->setPsr4('PhpParser\\', ['phar://' . dirname($_SERVER['PATH_TRANSLATED']) . '/../phpstan/phpstan-shim/phpstan.phar/vendor/nikic/php-parser/lib/PhpParser/']);
 $loader->register(true);

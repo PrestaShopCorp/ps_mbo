@@ -17,6 +17,16 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *}
 
+<script>
+  var dashboardNewsAjaxUrl = '{$link->getAdminLink('DashboardNews', true, ["route" => "admin_mbo_dashboard_blog_rss"])}';
+  var translationsDashboardMbo = {
+    new_read_more: '{l s='Read more' js=1}',
+  }
+
+  if('function' === typeof getDashboardMBONewsBlogRss) {
+    getDashboardMBONewsBlogRss(dashboardNewsAjaxUrl, translationsDashboardMbo);
+  }
+</script>
 <section class="dash_news panel">
   <h3><i class="icon-rss"></i> {l s='PrestaShop News' d='Modules.Mbo.Dashboardzonethree'}</h3>
   <div class="dash_news_content"></div>
