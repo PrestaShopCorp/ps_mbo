@@ -21,10 +21,10 @@
 
 function getDashboardMBONewsBlogRss() {
   $.ajax({
-    url : mbo_dashboard_news_ajax_url,
-    data : {
-      ajax:true,
-      action:'getBlogRss'
+    url: mbo_dashboard_news_ajax_url,
+    data: {
+      ajax: true,
+      action: 'getBlogRss'
     },
     dataType: 'json',
     success : function(jsonData) {
