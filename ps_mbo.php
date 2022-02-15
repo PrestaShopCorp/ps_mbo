@@ -37,6 +37,7 @@ use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeEmployeeMenu;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayModuleConfigureExtraButtons;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\String\UnicodeString;
@@ -54,6 +55,7 @@ class ps_mbo extends Module
     use UseAdminModuleUpgradeRetrieveSource;
     use UseAdminModuleExtraToolbarButton;
     use UseDisplayBackOfficeFooter;
+    use UseDisplayModuleConfigureExtraButtons;
 
     /**
      * @var array Hooks registered by the module
@@ -66,6 +68,7 @@ class ps_mbo extends Module
         'displayDashboardTop',
         'displayBackOfficeFooter',
         'displayBackOfficeEmployeeMenu',
+        'displayModuleConfigureExtraButtons',
         'dashboardZoneTwo',
         'dashboardZoneThree',
     ];

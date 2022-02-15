@@ -51,3 +51,4 @@ services:
       - '@request_stack'
       - '@mbo.addon.module.data_provider.addons'
       - '@prestashop.core.admin.data_provider.module_interface'
+      - '@prestashop.module.manager'

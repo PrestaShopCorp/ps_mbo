@@ -26,7 +26,6 @@ use PhpEncryption;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUserInterface;
 use PrestaShop\Module\Mbo\Service\Addons\ApiClient;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This class will provide data from Addons API
@@ -122,7 +121,7 @@ class DataProvider implements AddonsInterface
     /**
      * {@inheritdoc}
      */
-    public function downloadModule(int $moduleId): bool
+    public function downloadModule(int $moduleId): string
     {
         $params = [
             'id_module' => $moduleId,

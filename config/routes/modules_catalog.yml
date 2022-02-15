@@ -1,4 +1,3 @@
-
 admin_mbo_catalog_module:
   path: /
   methods: [GET]

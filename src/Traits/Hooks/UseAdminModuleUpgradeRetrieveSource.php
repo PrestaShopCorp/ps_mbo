@@ -21,7 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use Exception;
+use PrestaShop\Module\Mbo\Exception\ModuleUpgradeNotNeededException;
+use PrestaShop\Module\Mbo\Modules\Module;
 
 trait UseAdminModuleUpgradeRetrieveSource
 {
@@ -30,11 +31,30 @@ trait UseAdminModuleUpgradeRetrieveSource
      */
     public function hookActionAdminModuleUpgradeRetrieveSource(array $params): ?string
     {
-        if (empty($params['name'])) {
+        if (empty($params['name']) || empty($params['current_version'])) {
             return null;
         }
 
-        // Download from addons
-        return '/home/isow/workspace/prestashopexamplemodule.zip';
+        $moduleName = (string) $params['name'];
+        $moduleVersion = (string) $params['current_version'];
+
+        $moduleRepository = $this->get('mbo.modules.repository');
+        // We need to clear cache to get fresh data from addons
+        $moduleRepository->clearCache();
+        /** @var Module $module */
+        $module = $moduleRepository->getModule($moduleName);
+
+        if (null === $module) {
+            return null;
+        }
+
+        // If the current installed version is greater or equal than the one returned by Addons, do nothing
+        if (version_compare($moduleVersion, (string) $module->get('version_available'), 'ge')) {
+            throw new ModuleUpgradeNotNeededException();
+        }
+
+        return $this->get('mbo.addon.module.data_provider.addons')->downloadModule(
+            (int) $module->get('id')
+        );
     }
 }
