@@ -26,7 +26,6 @@ use PhpEncryption;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUserInterface;
 use PrestaShop\Module\Mbo\Service\Addons\ApiClient;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This class will provide data from Addons API
@@ -122,16 +121,16 @@ class DataProvider implements AddonsInterface
     /**
      * {@inheritdoc}
      */
-    public function downloadModule(int $module_id): bool
+    public function downloadModule(int $moduleId): string
     {
         $params = [
-            'id_module' => $module_id,
+            'id_module' => $moduleId,
             'format' => 'json',
         ];
 
         // Module downloading
         try {
-            $module_data = $this->request('module_download', $params);
+            $moduleData = $this->request('module_download', $params);
         } catch (Exception $e) {
             $message = $this->isAddonsAuthenticated() ?
                 'Error sent by Addons. You may be not allowed to download this module.'
@@ -140,13 +139,11 @@ class DataProvider implements AddonsInterface
             throw new Exception($message, 0, $e);
         }
 
-        $temp_filename = tempnam($this->cacheDir, 'mod');
-        if (file_put_contents($temp_filename, $module_data) !== false) {
-            $this->zipManager->storeInModulesFolder($temp_filename);
-
-            return true;
+        $temporaryZipFilename = tempnam($this->cacheDir, 'mod');
+        if (file_put_contents($temporaryZipFilename, $moduleData) !== false) {
+            return $temporaryZipFilename;
         } else {
-            throw new Exception('Cannot store module content in temporary folder !');
+            throw new Exception('Cannot store module content in temporary file !');
         }
     }
 

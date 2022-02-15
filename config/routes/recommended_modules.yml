@@ -1,4 +1,3 @@
-
 admin_mbo_recommended_modules:
   path: /
   methods: [GET]

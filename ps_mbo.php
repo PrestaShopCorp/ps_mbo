@@ -30,11 +30,14 @@ if (file_exists($autoloadPath)) {
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleExtraToolbarButton;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleInstallRetrieveSource;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleUpgradeRetrieveSource;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeEmployeeMenu;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayModuleConfigureExtraButtons;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\String\UnicodeString;
@@ -48,8 +51,11 @@ class ps_mbo extends Module
     use UseDashboardZoneThree;
     use UseDisplayDashboardTop;
     use UseAdminControllerSetMedia;
+    use UseAdminModuleInstallRetrieveSource;
+    use UseAdminModuleUpgradeRetrieveSource;
     use UseAdminModuleExtraToolbarButton;
     use UseDisplayBackOfficeFooter;
+    use UseDisplayModuleConfigureExtraButtons;
 
     /**
      * @var array Hooks registered by the module
@@ -57,9 +63,12 @@ class ps_mbo extends Module
     public const HOOKS = [
         'actionAdminControllerSetMedia',
         'actionAdminModuleExtraToolbarButton',
+        'actionAdminModuleInstallRetrieveSource',
+        'actionAdminModuleUpgradeRetrieveSource',
         'displayDashboardTop',
         'displayBackOfficeFooter',
         'displayBackOfficeEmployeeMenu',
+        'displayModuleConfigureExtraButtons',
         'dashboardZoneTwo',
         'dashboardZoneThree',
     ];
@@ -100,8 +109,6 @@ class ps_mbo extends Module
 
         $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
         $this->description = $this->l('Browse the Addons marketplace directly from your back office to better meet your needs.');
-
-        $this->permissionChecker = $this->get('mbo.security.permission_checker');
 
         // Parse all traits to call boot method
         foreach (class_uses($this) as $trait) {

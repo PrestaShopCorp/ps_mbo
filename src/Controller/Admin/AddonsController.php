@@ -25,13 +25,16 @@ use Configuration;
 use Exception;
 use PhpEncryption;
 use PrestaShop\Module\Mbo\Addons\DataProvider;
+use PrestaShop\Module\Mbo\Exception\ModuleUpgradeNotNeededException;
 use PrestaShop\PrestaShop\Core\Addon\Login\Exception\LoginErrorException;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 
 class AddonsController extends FrameworkBundleAdminController
 {
@@ -50,15 +53,22 @@ class AddonsController extends FrameworkBundleAdminController
      */
     private $modulesDataProvider;
 
+    /**
+     * @var ModuleManager
+     */
+    private $moduleManager;
+
     public function __construct(
         RequestStack $requestStack,
         DataProvider $addonsDataProvider,
-        ModuleInterface $modulesDataProvider
+        ModuleInterface $modulesDataProvider,
+        ModuleManager $moduleManager
     ) {
         parent::__construct();
         $this->requestStack = $requestStack;
         $this->addonsDataProvider = $addonsDataProvider;
         $this->modulesDataProvider = $modulesDataProvider;
+        $this->moduleManager = $moduleManager;
     }
 
     /**
@@ -146,5 +156,72 @@ class AddonsController extends FrameworkBundleAdminController
         $response->headers->clearCookie('is_contributor');
 
         return $response;
+    }
+
+    public function upgradeModuleAction(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $moduleName = $request->request->get('moduleName');
+
+        if (null === $moduleName) {
+            return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            $upgradeResponse = [
+                'status' => $this->moduleManager->upgrade($moduleName),
+                'msg' => '',
+                'module_name' => $moduleName,
+            ];
+
+            if ($upgradeResponse['status'] === true) {
+                $upgradeResponse['msg'] = $this->trans(
+                    'Module %module% successfully upgraded.',
+                    'Admin.Modules.Notification',
+                    ['%module%' => $moduleName]
+                );
+                $upgradeResponse['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
+                    ->getModule($moduleName)
+                    ->attributes
+                    ->get('is_configurable');
+            } else {
+                $error = $this->moduleManager->getError($moduleName);
+                $upgradeResponse['msg'] = $this->trans(
+                    'Upgrade of module %module% failed. %error%',
+                    'Admin.Modules.Notification',
+                    [
+                        '%module%' => $moduleName,
+                        '%error%' => $error,
+                    ]
+                );
+            }
+        } catch (Exception $e) {
+            if ($e->getPrevious() instanceof ModuleUpgradeNotNeededException) {
+                $upgradeResponse['status'] = true;
+                $upgradeResponse['msg'] = $this->trans(
+                    'Module %module% is already up to date',
+                    'Admin.Modules.Notification',
+                    [
+                        '%module%' => $moduleName,
+                    ]
+                );
+            } else {
+                try {
+                    $this->moduleManager->disable($moduleName);
+                } catch (Exception $subE) {
+                }
+
+                $upgradeResponse['msg'] = $this->trans(
+                    'Upgrade of module %module% failed. %error%',
+                    'Admin.Modules.Notification',
+                    [
+                        '%module%' => $moduleName,
+                        '%error%' => $e->getMessage(),
+                    ]
+                );
+            }
+        }
+
+        return new JsonResponse($upgradeResponse);
     }
 }

@@ -114,7 +114,7 @@ class ApiClient
     }
 
     /**
-     * Check Addons client account credentials.
+     * Check if a module is distributed by Addons.
      *
      * @param array{username_addons: string, password_addons: string, module_name: string, module_key: string} $params
      *
@@ -217,7 +217,7 @@ class ApiClient
     public function getModuleZip(array $params): string
     {
         return $this->setQueryParams([
-            'method' => 'listing',
+            'method' => 'module',
         ] + $params)->processRequest(self::HTTP_METHOD_POST);
     }
 
