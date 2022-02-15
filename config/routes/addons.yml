@@ -1,4 +1,4 @@
-
+# Login and logout to Addons
 admin_mbo_addons_login:
   path: /login
   methods: [ POST ]
