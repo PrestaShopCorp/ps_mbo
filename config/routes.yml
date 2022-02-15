@@ -14,8 +14,6 @@ addons:
   resource: './routes/addons.yml'
   prefix: /mbo/addons
 
-admin_mbo_dashboard_blog_rss:
-  path: /mbo/dashboard/news/rss
-  methods: [GET]
-  defaults:
-    _controller: mbo.controller.dashboard.news:getBlogRssAction
+dashboard:
+  resource: './routes/dashboard.yml'
+  prefix: /mbo/dashboard
