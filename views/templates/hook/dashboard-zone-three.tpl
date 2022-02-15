@@ -18,10 +18,14 @@
  *}
 
 <script>
-  var mbo_dashboard_news_ajax_url = '{$link->getAdminLink('DashboardNews', true, ["route" => "admin_mbo_dashboard_blog_rss"])}';
-  var mbo_dasboard_news_read_more = '{l s='Read more' js=1}';
+  var dashboardNewsAjaxUrl = '{$link->getAdminLink('DashboardNews', true, ["route" => "admin_mbo_dashboard_blog_rss"])}';
+  var translationsDashboardMbo = {
+    new_read_more: '{l s='Read more' js=1}',
+  }
 
-  getDashboardMBONewsBlogRss();
+  if('function' === typeof getDashboardMBONewsBlogRss) {
+    getDashboardMBONewsBlogRss(dashboardNewsAjaxUrl, translationsDashboardMbo);
+  }
 </script>
 <section class="dash_news panel">
   <h3><i class="icon-rss"></i> {l s='PrestaShop News' d='Modules.Mbo.Dashboardzonethree'}</h3>

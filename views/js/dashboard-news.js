@@ -19,9 +19,12 @@
  */
 
 
-function getDashboardMBONewsBlogRss() {
+function getDashboardMBONewsBlogRss(dashboardNewsAjaxUrl, translationsDashboardMbo) {
+  if(!dashboardNewsAjaxUrl || ! translationsDashboardMbo || !translationsDashboardMbo.new_read_more) {
+    return;
+  }
   $.ajax({
-    url: mbo_dashboard_news_ajax_url,
+    url: dashboardNewsAjaxUrl,
     data: {
       ajax: true,
       action: 'getBlogRss'
@@ -30,7 +33,7 @@ function getDashboardMBONewsBlogRss() {
     success: function(jsonData) {
       if (typeof jsonData !== 'undefined' && jsonData !== null && !jsonData.has_errors) {
         for (var article in jsonData.rss) {
-          var article_html = '<article><h4><a href="'+jsonData.rss[article].link+'" target="_blank" rel="noopener noreferrer nofollow" onclick="return !window.open(this.href);">'+jsonData.rss[article].title+'</a></h4><span class="dash-news-date text-muted">'+jsonData.rss[article].date+'</span><p>'+jsonData.rss[article].short_desc+' <a href="'+jsonData.rss[article].link+'">'+mbo_dasboard_news_read_more+'</a><p></article><hr/>';
+          var article_html = '<article><h4><a href="'+jsonData.rss[article].link+'" target="_blank" rel="noopener noreferrer nofollow" onclick="return !window.open(this.href);">'+jsonData.rss[article].title+'</a></h4><span class="dash-news-date text-muted">'+jsonData.rss[article].date+'</span><p>'+jsonData.rss[article].short_desc+' <a href="'+jsonData.rss[article].link+'">'+translationsDashboardMbo.new_read_more+'</a><p></article><hr/>';
           $('.dash_news .dash_news_content').append(article_html);
         }
       }
