@@ -23,7 +23,7 @@
   function registerMboSeeMoreBtnEventHandler() {
     $('body').on(
       'click',
-      'a.module-read-more-grid-btn',
+      'a.module-read-more-grid-btn, a.module-read-more-list-btn',
       (event) => {
         event.preventDefault();
         const modulePoppin = $(event.target).data('target');
