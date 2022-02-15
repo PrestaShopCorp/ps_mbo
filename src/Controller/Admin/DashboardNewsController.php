@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class DashboardNewsController extends FrameworkBundleAdminController
 {
     /**
-     * @var \PrestaShop\PrestaShop\Adapter\LegacyContext
+     * @var LegacyContext
      */
     protected $context;
 
