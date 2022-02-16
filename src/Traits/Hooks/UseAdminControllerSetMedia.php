@@ -22,9 +22,23 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
+use Tools;
 
 trait UseAdminControllerSetMedia
 {
+    /**
+     * @return void
+     *
+     * @throws \Exception
+     */
+    public function bootUseAdminControllerSetMedia(): void
+    {
+        if (Tools::getValue('controller') === 'AdminPsMboModule') {
+            $this->context->controller->addJs($this->getPathUri() . 'views/js/catalog-see-more.js?v=' . $this->version);
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css?v=' . $this->version);
+        }
+    }
+
     /**
      * Hook actionAdminControllerSetMedia.
      */

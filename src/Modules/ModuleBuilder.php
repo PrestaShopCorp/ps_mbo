@@ -226,6 +226,7 @@ class ModuleBuilder implements ModuleBuilderInterface
         }
 
         $module->attributes->set('urls', $urls);
+        $module->attributes->set('actionTranslationDomains', self::ACTIONS_TRANSLATION_DOMAINS);
 
         if ($urlActive === 'buy' || array_key_exists($urlActive, $urls)) {
             $module->attributes->set('url_active', $urlActive);

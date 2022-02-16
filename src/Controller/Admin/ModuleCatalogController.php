@@ -122,6 +122,33 @@ class ModuleCatalogController extends ModuleAbstractController
     }
 
     /**
+     * Responsible of displaying the data inside the modal when user clicks on "See more" on module card
+     *
+     * @param int $moduleId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function seeMoreAction(int $moduleId): Response
+    {
+        $moduleRepository = $this->get('mbo.modules.repository');
+        $module = $moduleRepository->getModuleById($moduleId);
+
+        $moduleBuilder = $this->get('mbo.modules.builder');
+        $moduleBuilder->generateAddonsUrls($module);
+
+        $modulePresenter = $this->get('prestashop.adapter.presenter.module');
+        $moduleToPresent = $modulePresenter->present($module);
+
+        return $this->render(
+            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/modal-read-more-content.html.twig',
+            [
+                'module' => $moduleToPresent,
+                'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
+            ]
+        );
+    }
+
+    /**
      * Get categories and its modules.
      *
      * @param Collection $modules List of installed modules
