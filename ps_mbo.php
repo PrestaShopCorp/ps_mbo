@@ -34,6 +34,7 @@ use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleInstallRetrieveSource;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleUpgradeRetrieveSource;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayAdminThemesListAfter;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeEmployeeMenu;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
@@ -47,6 +48,7 @@ class ps_mbo extends Module
     use PrestaShop\Module\Mbo\Traits\HaveTabs;
     // Hooks
     use UseDisplayBackOfficeEmployeeMenu;
+    use UseDisplayAdminThemesListAfter;
     use UseDashboardZoneTwo;
     use UseDashboardZoneThree;
     use UseDisplayDashboardTop;
