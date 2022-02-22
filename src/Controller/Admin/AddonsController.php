@@ -26,8 +26,10 @@ use Exception;
 use PhpEncryption;
 use PrestaShop\Module\Mbo\Addons\DataProvider;
 use PrestaShop\Module\Mbo\Exception\ModuleUpgradeNotNeededException;
+use PrestaShop\Module\Mbo\Modules\Repository;
 use PrestaShop\PrestaShop\Core\Addon\Login\Exception\LoginErrorException;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -58,17 +60,31 @@ class AddonsController extends FrameworkBundleAdminController
      */
     private $moduleManager;
 
+    /**
+     * @var Repository
+     */
+    private $moduleRepository;
+
+    /**
+     * @var ModuleRepository
+     */
+    private $coreModuleRepository;
+
     public function __construct(
         RequestStack $requestStack,
         DataProvider $addonsDataProvider,
         ModuleInterface $modulesDataProvider,
-        ModuleManager $moduleManager
+        ModuleManager $moduleManager,
+        Repository $moduleRepository,
+        ModuleRepository $coreModuleRepository
     ) {
         parent::__construct();
         $this->requestStack = $requestStack;
         $this->addonsDataProvider = $addonsDataProvider;
         $this->modulesDataProvider = $modulesDataProvider;
         $this->moduleManager = $moduleManager;
+        $this->moduleRepository = $moduleRepository;
+        $this->coreModuleRepository = $coreModuleRepository;
     }
 
     /**
@@ -113,7 +129,9 @@ class AddonsController extends FrameworkBundleAdminController
             );
 
             $response->setData(['success' => 1, 'message' => '']);
-//            $this->modulesDataProvider->clearCatalogCache();
+
+            // Clear previously filtered modules search
+            $this->moduleRepository->clearCache();
         } catch (Exception $e) {
             $response->setData([
                 'success' => 0,
@@ -134,7 +152,9 @@ class AddonsController extends FrameworkBundleAdminController
      */
     public function logoutAction()
     {
-//        $this->modulesDataProvider->clearCatalogCache();
+        // Clear previously filtered modules search
+        $this->moduleRepository->clearCache();
+
         $request = $this->requestStack->getCurrentRequest();
 
         if ($request->isXmlHttpRequest()) {
@@ -180,7 +200,7 @@ class AddonsController extends FrameworkBundleAdminController
                     'Admin.Modules.Notification',
                     ['%module%' => $moduleName]
                 );
-                $upgradeResponse['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')
+                $upgradeResponse['is_configurable'] = (bool) $this->coreModuleRepository
                     ->getModule($moduleName)
                     ->attributes
                     ->get('is_configurable');
