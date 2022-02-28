@@ -30,6 +30,8 @@ use PrestaShop\Module\Mbo\Modules\FiltersFactory;
 use PrestaShop\Module\Mbo\Modules\ModuleBuilderInterface;
 use PrestaShop\Module\Mbo\Modules\RepositoryInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter;
+use PrestaShop\Module\Mbo\Modules\Query\GetModulesForListing;
+use PrestaShop\Module\Mbo\Modules\Repository;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
@@ -146,18 +148,11 @@ class ModuleCatalogController extends ModuleAbstractController
      */
     public function refreshAction(Request $request): JsonResponse
     {
-        $filters = $this->moduleFiltersFactory->create();
-        $filters
-            ->setType(Filters\Type::MODULE | Filters\Type::SERVICE)
-            ->setStatus(Filters\Status::ALL & ~Filters\Status::INSTALLED);
-
         $responseArray = [];
         try {
-            $modules = $this->moduleCollectionFactory->build(
-                $this->moduleRepository->fetchAll(),
-                $filters
-            );
-            $categories = $this->getCategories($modules);
+            $modulesData = $this->getQueryBus()->handle(new GetModulesForListing());
+            $modules = $modulesData['modules'];
+            $categories = $this->presentCategories($modulesData['categories']);
 
             $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categories);
             $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse(
@@ -202,17 +197,12 @@ class ModuleCatalogController extends ModuleAbstractController
     /**
      * Get categories and its modules.
      *
-     * @param Collection $modules List of installed modules
+     * @param array $categories
      *
      * @return array
      */
-    protected function getCategories(Collection $modules): array
+    protected function presentCategories(array $categories): array
     {
-        // moduleCategoriesProvider::getCategoriesMenu expects an array. it maybe should require an iterator
-        $modulesArray = $modules->getIterator()->getArrayCopy();
-
-        $categories = $this->moduleCategoriesProvider->getCategoriesMenu($modulesArray);
-
         foreach ($categories['categories']->subMenu as $category) {
             $category->modules = $this->modulePresenter
                 ->presentCollection($category->modules);

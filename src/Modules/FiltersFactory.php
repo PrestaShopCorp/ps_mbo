@@ -20,6 +20,9 @@
 
 namespace PrestaShop\Module\Mbo\Modules;
 
+/**
+ * Creates class to filter modules list
+ */
 class FiltersFactory
 {
     public static function create(): Filters

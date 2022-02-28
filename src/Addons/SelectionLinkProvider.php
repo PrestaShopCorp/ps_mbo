@@ -17,6 +17,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons;
 
@@ -26,7 +27,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Version;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Responsible of provide Addons url with Context params for Module Selection and Theme Catalog pages
+ * Responsible for provide Addons url with Context params for Module Selection and Theme Catalog pages
  */
 class SelectionLinkProvider
 {
@@ -75,7 +76,7 @@ class SelectionLinkProvider
      *
      * @return string
      */
-    public function getLinkUrl()
+    public function getLinkUrl(): string
     {
         $link = 'https://addons.prestashop.com/iframe/search-1.7.php?psVersion=' . $this->version->getVersion()
             . '&isoLang=' . $this->context->getContext()->language->iso_code

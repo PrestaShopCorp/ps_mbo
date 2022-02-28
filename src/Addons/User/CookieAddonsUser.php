@@ -25,7 +25,7 @@ use PhpEncryptionCore as PhpEncryption;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * This class will provide data from Addons API
+ * This class will read user information stored in cookies
  */
 class CookieAddonsUser implements AddonsUserInterface
 {

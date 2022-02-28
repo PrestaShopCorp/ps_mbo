@@ -17,15 +17,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Modules;
 
-use PrestaShop\Module\Mbo\Modules\Filters\Type;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 
+/**
+ * Builds a modules' collection formatted and filtered
+ */
 class CollectionFactory
 {
-    public function build(array $modules, ?FiltersInterface $filters)
+    public function build(array $modules, ?FiltersInterface $filters): Collection
     {
         return new Collection(
             $this->filter($modules, $filters)

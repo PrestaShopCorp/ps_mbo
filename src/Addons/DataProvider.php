@@ -95,14 +95,14 @@ class DataProvider implements AddonsInterface
     protected $moduleChannel;
 
     /**
-     * @var \PrestaShop\Module\Mbo\Addons\User\AddonsUserInterface
+     * @var AddonsUserInterface
      */
     protected $user;
 
     /**
      * @param ApiClient $apiClient
      * @param ModuleZipManager $zipManager
-     * @param \PrestaShop\Module\Mbo\Addons\User\AddonsUserInterface $user
+     * @param AddonsUserInterface $user
      * @param string|null $moduleChannel
      */
     public function __construct(
@@ -119,7 +119,7 @@ class DataProvider implements AddonsInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Downloads a module source from addons, store it and returns the file name
      */
     public function downloadModule(int $moduleId): string
     {
@@ -148,13 +148,16 @@ class DataProvider implements AddonsInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Tells if the user is authenticated to Addons
      */
     public function isAddonsAuthenticated(): bool
     {
         return $this->user->isAddonsAuthenticated();
     }
 
+    /**
+     * Returns the user's login if he is authenticated to Addons
+     */
     public function getAddonsEmail(): ?string
     {
         return $this->isAddonsAuthenticated() ? (string) $this->user->getAddonsEmail()['username_addons'] : null;
@@ -162,8 +165,10 @@ class DataProvider implements AddonsInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws Exception
      */
-    public function request($action, $params = [])
+    public function request(string $action, array $params = [])
     {
         if (!$this->isAddonsUp()) {
             throw new Exception('Previous call failed and disabled client.');
@@ -197,7 +202,7 @@ class DataProvider implements AddonsInterface
     }
 
     /**
-     * Check if a request has already failed.
+     * Check if the previous request to Addons has failed.
      *
      * @return bool
      */

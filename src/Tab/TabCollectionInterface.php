@@ -33,24 +33,24 @@ interface TabCollectionInterface extends ArrayAccess, IteratorAggregate, Countab
      *
      * @return self
      */
-    public function addTab(TabInterface $tab);
+    public function addTab(TabInterface $tab): TabCollectionInterface;
 
     /**
      * @param string $tabClassName
      *
      * @return TabInterface
      */
-    public function getTab($tabClassName);
+    public function getTab($tabClassName): TabInterface;
 
     /**
      * @param mixed $offset
      *
      * @return TabInterface
      */
-    public function offsetGet($offset);
+    public function offsetGet($offset): TabInterface;
 
     /**
      * @return bool
      */
-    public function isEmpty();
+    public function isEmpty(): bool;
 }

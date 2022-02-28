@@ -17,16 +17,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\ExternalContentProvider;
+namespace PrestaShop\Module\Mbo\Modules\Query;
 
-interface ExternalContentProviderInterface
+class GetModulesForListing
 {
-    /**
-     * @param string $url
-     * @param array $options
-     *
-     * @return string
-     */
-    public function getContent(string $url, array $options = []): string;
+
 }

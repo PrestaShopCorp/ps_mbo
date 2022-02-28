@@ -17,6 +17,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Modules;
 
@@ -28,6 +29,9 @@ use Psr\Log\LoggerInterface;
 use Shop;
 use stdClass;
 
+/**
+ * Retrieves modules' raw information from Addons and database
+ */
 class Repository implements RepositoryInterface
 {
     /**
@@ -44,13 +48,6 @@ class Repository implements RepositoryInterface
      * @var ModuleBuilder
      */
     protected $moduleBuilder;
-
-    /**
-     * Key of the cache content.
-     *
-     * @var string
-     */
-    protected $cacheFilePath;
 
     /**
      * Contains data from cache file about modules on disk.

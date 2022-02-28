@@ -17,9 +17,13 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Modules;
 
+/**
+ * Helper class to define filters for modules list.
+ */
 class Filters implements FiltersInterface
 {
     /**
@@ -44,9 +48,9 @@ class Filters implements FiltersInterface
     /**
      * @param int $origin
      *
-     * @return self
+     * @return FiltersInterface
      */
-    public function setOrigin(int $origin): self
+    public function setOrigin(int $origin): FiltersInterface
     {
         $this->flags[Filters\Origin::FLAG] = $origin;
 
@@ -56,9 +60,9 @@ class Filters implements FiltersInterface
     /**
      * @param int $status
      *
-     * @return self
+     * @return FiltersInterface
      */
-    public function setStatus(int $status): self
+    public function setStatus(int $status): FiltersInterface
     {
         $this->flags[Filters\Status::FLAG] = $status;
 
@@ -68,9 +72,9 @@ class Filters implements FiltersInterface
     /**
      * @param int $type
      *
-     * @return self
+     * @return FiltersInterface
      */
-    public function setType(int $type): self
+    public function setType(int $type): FiltersInterface
     {
         $this->flags[Filters\Type::FLAG] = $type;
 
