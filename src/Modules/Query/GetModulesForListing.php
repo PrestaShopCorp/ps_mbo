@@ -23,5 +23,4 @@ namespace PrestaShop\Module\Mbo\Modules\Query;
 
 class GetModulesForListing
 {
-
 }

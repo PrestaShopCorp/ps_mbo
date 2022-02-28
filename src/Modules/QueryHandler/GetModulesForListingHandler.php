@@ -27,13 +27,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Modules\QueryHandler;
 
-use PrestaShop\Module\Mbo\Modules\Collection;
 use PrestaShop\Module\Mbo\Modules\CollectionFactory;
 use PrestaShop\Module\Mbo\Modules\Filters;
 use PrestaShop\Module\Mbo\Modules\FiltersFactory;
 use PrestaShop\Module\Mbo\Modules\Query\GetModulesForListing;
 use PrestaShop\Module\Mbo\Modules\RepositoryInterface;
-use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 
 /**
  * @internal
@@ -55,22 +53,14 @@ final class GetModulesForListingHandler
      */
     private $moduleRepository;
 
-    /**
-     * @var CategoriesProvider
-     */
-    private $moduleCategoriesProvider;
-
     public function __construct(
         FiltersFactory $moduleFiltersFactory,
         CollectionFactory $moduleCollectionFactory,
-        RepositoryInterface $moduleRepository,
-        CategoriesProvider $moduleCategoriesProvider
-    )
-    {
+        RepositoryInterface $moduleRepository
+    ) {
         $this->moduleFiltersFactory = $moduleFiltersFactory;
         $this->moduleCollectionFactory = $moduleCollectionFactory;
         $this->moduleRepository = $moduleRepository;
-        $this->moduleCategoriesProvider = $moduleCategoriesProvider;
     }
 
     public function handle(GetModulesForListing $query)
@@ -80,27 +70,9 @@ final class GetModulesForListingHandler
             ->setType(Filters\Type::MODULE | Filters\Type::SERVICE)
             ->setStatus(Filters\Status::ALL & ~Filters\Status::INSTALLED);
 
-        $modules = $this->moduleCollectionFactory->build(
+        return $this->moduleCollectionFactory->build(
             $this->moduleRepository->fetchAll(),
             $filters
         );
-        $categories = $this->getCategories($modules);
-
-        return [
-            'modules' => $modules,
-            'categories' => $categories,
-        ];
-    }
-
-    /**
-     * Get categories and its modules.
-     *
-     * @param Collection $modules List of installed modules
-     *
-     * @return array
-     */
-    private function getCategories(Collection $modules): array
-    {
-        return $this->moduleCategoriesProvider->getCategoriesMenu($modules->getIterator()->getArrayCopy());
     }
 }

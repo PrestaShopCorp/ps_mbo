@@ -21,6 +21,15 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@request_stack'
 
+  mbo.modules_listing.presenter:
+    class: 'PrestaShop\Module\Mbo\Modules\Presenter\ModulesForListingPresenter'
+    arguments:
+      - '@prestashop.adapter.presenter.module'
+      - '@twig'
+      - '@translator'
+      - '@mbo.security.permission_checker'
+      - '@prestashop.categories_provider'
+
   mbo.controller.modules.catalog:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController'
     arguments:

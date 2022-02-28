@@ -31,10 +31,8 @@ use PrestaShop\Module\Mbo\Modules\ModuleBuilderInterface;
 use PrestaShop\Module\Mbo\Modules\RepositoryInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter;
 use PrestaShop\Module\Mbo\Modules\Query\GetModulesForListing;
-use PrestaShop\Module\Mbo\Modules\Repository;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -150,15 +148,9 @@ class ModuleCatalogController extends ModuleAbstractController
     {
         $responseArray = [];
         try {
-            $modulesData = $this->getQueryBus()->handle(new GetModulesForListing());
-            $modules = $modulesData['modules'];
-            $categories = $this->presentCategories($modulesData['categories']);
-
-            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categories);
-            $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse(
-                $categories,
-                $modules
-            );
+            /** @var Collection $modules */
+            $modules = $this->getQueryBus()->handle(new GetModulesForListing());
+            $responseArray['domElements'] = $this->get('mbo.modules_listing.presenter')->present($modules);
             $responseArray['status'] = true;
         } catch (Exception $e) {
             $responseArray['msg'] = $this->trans(
@@ -192,74 +184,5 @@ class ModuleCatalogController extends ModuleAbstractController
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
             ]
         );
-    }
-
-    /**
-     * Get categories and its modules.
-     *
-     * @param array $categories
-     *
-     * @return array
-     */
-    protected function presentCategories(array $categories): array
-    {
-        foreach ($categories['categories']->subMenu as $category) {
-            $category->modules = $this->modulePresenter
-                ->presentCollection($category->modules);
-        }
-
-        return $categories;
-    }
-
-    /**
-     * Build template for the categories dropdown on the header of page.
-     *
-     * @param array $categories
-     *
-     * @return array
-     */
-    protected function constructJsonCatalogCategoriesMenuResponse(array $categories): array
-    {
-        return [
-            'selector' => '.module-menu-item',
-            'content' => $this->render(
-                '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/dropdown_categories_catalog.html.twig',
-                [
-                    'topMenuData' => $categories,
-                ]
-            )->getContent(),
-        ];
-    }
-
-    /**
-     * Build templade for the grid view and the info header with count of modules & sort dropdown.
-     *
-     * @param array $categories
-     * @param Collection $modules
-     *
-     * @return array
-     */
-    protected function constructJsonCatalogBodyResponse(array $categories, Collection $modules): array
-    {
-        $sortingHeaderContent = $this->render(
-            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/sorting.html.twig',
-            [
-                'totalModules' => count($modules),
-            ]
-        )->getContent();
-
-        $gridContent = $this->render(
-            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog-refresh.html.twig',
-            [
-                'categories' => $categories['categories'],
-                'level' => $this->authorizationLevel(static::CONTROLLER_NAME),
-                'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
-            ]
-        )->getContent();
-
-        return [
-            'selector' => '.module-catalog-page',
-            'content' => $sortingHeaderContent . $gridContent,
-        ];
     }
 }
