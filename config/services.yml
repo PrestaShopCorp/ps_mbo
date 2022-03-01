@@ -23,6 +23,14 @@ services:
 
   mbo.controller.modules.catalog:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController'
+    arguments:
+      - '@mbo.addon.toolbar'
+      - '@mbo.modules.filters.factory'
+      - '@mbo.modules.collection.factory'
+      - '@mbo.modules.builder'
+      - '@mbo.modules.repository'
+      - '@prestashop.categories_provider'
+      - '@prestashop.adapter.presenter.module'
 
   mbo.controller.modules.selection:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleSelectionController'
@@ -52,6 +60,8 @@ services:
       - '@mbo.addon.module.data_provider.addons'
       - '@prestashop.core.admin.data_provider.module_interface'
       - '@prestashop.module.manager'
+      - '@mbo.modules.repository'
+      - '@prestashop.core.admin.module.repository'
 
   mbo.controller.dashboard.news:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\DashboardNewsController'

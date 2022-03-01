@@ -84,8 +84,8 @@ class CookieAddonsUser implements AddonsUserInterface
     public function getAddonsCredentials(): array
     {
         return [
-            'username_addons' => $this->getAndDecrypt('username_addons'),
-            'password_addons' => $this->getAndDecrypt('password_addons'),
+            'username' => $this->getAndDecrypt('username_addons'),
+            'password' => $this->getAndDecrypt('password_addons'),
         ];
     }
 

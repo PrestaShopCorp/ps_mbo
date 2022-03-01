@@ -22,9 +22,14 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use Exception;
+use PrestaShop\Module\Mbo\Addons\Toolbar;
 use PrestaShop\Module\Mbo\Modules\Collection;
+use PrestaShop\Module\Mbo\Modules\CollectionFactory;
 use PrestaShop\Module\Mbo\Modules\Filters;
-use PrestaShop\Module\Mbo\Modules\Repository;
+use PrestaShop\Module\Mbo\Modules\FiltersFactory;
+use PrestaShop\Module\Mbo\Modules\ModuleBuilderInterface;
+use PrestaShop\Module\Mbo\Modules\RepositoryInterface;
+use PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
@@ -38,6 +43,60 @@ use Symfony\Component\HttpFoundation\Response;
 class ModuleCatalogController extends ModuleAbstractController
 {
     public const CONTROLLER_NAME = 'ADMINMODULESSF';
+
+    /**
+     * @var Toolbar
+     */
+    private $toolbar;
+
+    /**
+     * @var RepositoryInterface
+     */
+    private $moduleRepository;
+
+    /**
+     * @var FiltersFactory
+     */
+    private $moduleFiltersFactory;
+
+    /**
+     * @var CollectionFactory
+     */
+    private $moduleCollectionFactory;
+
+    /**
+     * @var ModuleBuilderInterface
+     */
+    private $moduleBuilder;
+
+    /**
+     * @var ModulePresenter
+     */
+    private $modulePresenter;
+
+    /**
+     * @var CategoriesProvider
+     */
+    private $moduleCategoriesProvider;
+
+    public function __construct(
+        Toolbar $toolbar,
+        FiltersFactory $moduleFiltersFactory,
+        CollectionFactory $moduleCollectionFactory,
+        ModuleBuilderInterface $moduleBuilder,
+        RepositoryInterface $moduleRepository,
+        CategoriesProvider $moduleCategoriesProvider,
+        ModulePresenter $modulePresenter
+    ) {
+        parent::__construct();
+        $this->toolbar = $toolbar;
+        $this->moduleRepository = $moduleRepository;
+        $this->moduleFiltersFactory = $moduleFiltersFactory;
+        $this->moduleCollectionFactory = $moduleCollectionFactory;
+        $this->moduleBuilder = $moduleBuilder;
+        $this->modulePresenter = $modulePresenter;
+        $this->moduleCategoriesProvider = $moduleCategoriesProvider;
+    }
 
     /**
      * Module Catalog page
@@ -55,7 +114,7 @@ class ModuleCatalogController extends ModuleAbstractController
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog.html.twig',
             [
-                'layoutHeaderToolbarBtn' => $this->get('mbo.addon.toolbar')->getToolbarButtons(),
+                'layoutHeaderToolbarBtn' => $this->toolbar->getToolbarButtons(),
                 'layoutTitle' => $this->trans('Modules catalog', 'Admin.Navigation.Menu'),
                 'requireAddonsSearch' => true,
                 'requireBulkActions' => false,
@@ -87,18 +146,15 @@ class ModuleCatalogController extends ModuleAbstractController
      */
     public function refreshAction(Request $request): JsonResponse
     {
-        /** @var Repository $moduleRepository */
-        $moduleRepository = $this->get('mbo.modules.repository');
-
-        $filters = $this->get('mbo.modules.filters.factory')->create();
+        $filters = $this->moduleFiltersFactory->create();
         $filters
             ->setType(Filters\Type::MODULE | Filters\Type::SERVICE)
             ->setStatus(Filters\Status::ALL & ~Filters\Status::INSTALLED);
 
         $responseArray = [];
         try {
-            $modules = $this->get('mbo.modules.collection.factory')->build(
-                $moduleRepository->fetchAll(),
+            $modules = $this->moduleCollectionFactory->build(
+                $this->moduleRepository->fetchAll(),
                 $filters
             );
             $categories = $this->getCategories($modules);
@@ -130,19 +186,14 @@ class ModuleCatalogController extends ModuleAbstractController
      */
     public function seeMoreAction(int $moduleId): Response
     {
-        $moduleRepository = $this->get('mbo.modules.repository');
-        $module = $moduleRepository->getModuleById($moduleId);
+        $module = $this->moduleRepository->getModuleById($moduleId);
 
-        $moduleBuilder = $this->get('mbo.modules.builder');
-        $moduleBuilder->generateAddonsUrls($module);
-
-        $modulePresenter = $this->get('prestashop.adapter.presenter.module');
-        $moduleToPresent = $modulePresenter->present($module);
+        $this->moduleBuilder->generateAddonsUrls($module);
 
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/modal-read-more-content.html.twig',
             [
-                'module' => $moduleToPresent,
+                'module' => $this->modulePresenter->present($module),
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
             ]
         );
@@ -157,12 +208,13 @@ class ModuleCatalogController extends ModuleAbstractController
      */
     protected function getCategories(Collection $modules): array
     {
-        /** @var CategoriesProvider $categoriesProvider */
-        $categoriesProvider = $this->get('prestashop.categories_provider');
-        $categories = $categoriesProvider->getCategoriesMenu($modules);
+        // moduleCategoriesProvider::getCategoriesMenu expects an array. it maybe should require an iterator
+        $modulesArray = $modules->getIterator()->getArrayCopy();
+
+        $categories = $this->moduleCategoriesProvider->getCategoriesMenu($modulesArray);
 
         foreach ($categories['categories']->subMenu as $category) {
-            $category->modules = $this->get('prestashop.adapter.presenter.module')
+            $category->modules = $this->modulePresenter
                 ->presentCollection($category->modules);
         }
 
