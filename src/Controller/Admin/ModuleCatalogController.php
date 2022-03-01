@@ -24,13 +24,11 @@ namespace PrestaShop\Module\Mbo\Controller\Admin;
 use Exception;
 use PrestaShop\Module\Mbo\Addons\Toolbar;
 use PrestaShop\Module\Mbo\Modules\Collection;
-use PrestaShop\Module\Mbo\Modules\CollectionFactory;
-use PrestaShop\Module\Mbo\Modules\Filters;
-use PrestaShop\Module\Mbo\Modules\FiltersFactory;
 use PrestaShop\Module\Mbo\Modules\ModuleBuilderInterface;
+use PrestaShop\Module\Mbo\Modules\Presenter\ModulesForListingPresenter;
+use PrestaShop\Module\Mbo\Modules\Query\GetModulesForListing;
 use PrestaShop\Module\Mbo\Modules\RepositoryInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter;
-use PrestaShop\Module\Mbo\Modules\Query\GetModulesForListing;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -55,16 +53,6 @@ class ModuleCatalogController extends ModuleAbstractController
     private $moduleRepository;
 
     /**
-     * @var FiltersFactory
-     */
-    private $moduleFiltersFactory;
-
-    /**
-     * @var CollectionFactory
-     */
-    private $moduleCollectionFactory;
-
-    /**
      * @var ModuleBuilderInterface
      */
     private $moduleBuilder;
@@ -73,29 +61,24 @@ class ModuleCatalogController extends ModuleAbstractController
      * @var ModulePresenter
      */
     private $modulePresenter;
-
     /**
-     * @var CategoriesProvider
+     * @var ModulesForListingPresenter
      */
-    private $moduleCategoriesProvider;
+    private $modulesForListingPresenter;
 
     public function __construct(
         Toolbar $toolbar,
-        FiltersFactory $moduleFiltersFactory,
-        CollectionFactory $moduleCollectionFactory,
         ModuleBuilderInterface $moduleBuilder,
         RepositoryInterface $moduleRepository,
-        CategoriesProvider $moduleCategoriesProvider,
-        ModulePresenter $modulePresenter
+        ModulePresenter $modulePresenter,
+        ModulesForListingPresenter $modulesForListingPresenter
     ) {
         parent::__construct();
         $this->toolbar = $toolbar;
-        $this->moduleRepository = $moduleRepository;
-        $this->moduleFiltersFactory = $moduleFiltersFactory;
-        $this->moduleCollectionFactory = $moduleCollectionFactory;
         $this->moduleBuilder = $moduleBuilder;
+        $this->moduleRepository = $moduleRepository;
         $this->modulePresenter = $modulePresenter;
-        $this->moduleCategoriesProvider = $moduleCategoriesProvider;
+        $this->modulesForListingPresenter = $modulesForListingPresenter;
     }
 
     /**
@@ -150,7 +133,7 @@ class ModuleCatalogController extends ModuleAbstractController
         try {
             /** @var Collection $modules */
             $modules = $this->getQueryBus()->handle(new GetModulesForListing());
-            $responseArray['domElements'] = $this->get('mbo.modules_listing.presenter')->present($modules);
+            $responseArray['domElements'] = $this->modulesForListingPresenter->present($modules);
             $responseArray['status'] = true;
         } catch (Exception $e) {
             $responseArray['msg'] = $this->trans(

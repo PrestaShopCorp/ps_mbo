@@ -21,7 +21,7 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@request_stack'
 
-  mbo.modules_listing.presenter:
+  mbo.modules.presenter.listing:
     class: 'PrestaShop\Module\Mbo\Modules\Presenter\ModulesForListingPresenter'
     arguments:
       - '@prestashop.adapter.presenter.module'
@@ -34,12 +34,10 @@ services:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController'
     arguments:
       - '@mbo.addon.toolbar'
-      - '@mbo.modules.filters.factory'
-      - '@mbo.modules.collection.factory'
       - '@mbo.modules.builder'
       - '@mbo.modules.repository'
-      - '@prestashop.categories_provider'
       - '@prestashop.adapter.presenter.module'
+      - '@mbo.modules.presenter.listing'
 
   mbo.controller.modules.selection:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleSelectionController'
