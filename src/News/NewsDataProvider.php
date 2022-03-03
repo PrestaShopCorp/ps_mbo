@@ -67,6 +67,11 @@ class NewsDataProvider
     private $validate;
 
     /**
+     * @var NewsBuilder
+     */
+    private $newsBuilder;
+
+    /**
      * NewsDataProvider constructor.
      *
      * @param CircuitBreakerInterface $circuitBreaker
@@ -77,12 +82,14 @@ class NewsDataProvider
      */
     public function __construct(
         CircuitBreakerInterface $circuitBreaker,
+        NewsBuilder $newsBuilder,
         CountryDataProvider $countryDataProvider,
         Configuration $configuration,
         Validate $validate,
         int $contextMode
     ) {
         $this->circuitBreaker = $circuitBreaker;
+        $this->newsBuilder = $newsBuilder;
         $this->configuration = $configuration;
         $this->contextMode = $contextMode;
         $this->countryDataProvider = $countryDataProvider;
@@ -132,7 +139,7 @@ class NewsDataProvider
             }
 
             $newsCollection->addNews(
-                NewsBuilder::build(
+                $this->newsBuilder->build(
                     (string) $item->pubDate,
                     (string) $item->title,
                     (string) $item->description,

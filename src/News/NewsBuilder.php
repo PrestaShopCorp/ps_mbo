@@ -22,16 +22,25 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\News;
 
 use Context;
-use Tools;
+use PrestaShop\PrestaShop\Adapter\Tools;
 
 class NewsBuilder
 {
     /**
      * @var string[]
      */
-    private static $analyticsParams;
+    private $analyticParams;
+    /**
+     * @var Tools
+     */
+    private $tools;
 
-    public static function build(
+    public function __construct(Tools $tools)
+    {
+        $this->tools = $tools;
+    }
+
+    public function build(
         string $date,
         string $title,
         string $description,
@@ -39,34 +48,34 @@ class NewsBuilder
         string $countryIsoCode,
         int $contextMode
     ): News {
-        $analyticParams = self::getAnalyticsParams($countryIsoCode, $contextMode);
+        $analyticParams = $this->getAnalyticsParams($countryIsoCode, $contextMode);
 
         return new News(
-            self::formatDate($date),
-            self::formatTitle($title),
-            self::formatDescription($description),
-            self::buildLink($link, $analyticParams)
+            $this->formatDate($date),
+            $this->formatTitle($title),
+            $this->formatDescription($description),
+            $this->buildLink($link, $analyticParams)
         );
     }
 
-    private static function formatDate(string $date): string
+    private function formatDate(string $date): string
     {
         $date = strtotime($date);
 
-        return Tools::displayDate(date('Y-m-d H:i:s', $date), null, false);
+        return $this->tools->displayDate(date('Y-m-d H:i:s', $date), null, false);
     }
 
-    private static function formatTitle(string $title): string
+    private function formatTitle(string $title): string
     {
         return htmlentities($title, ENT_QUOTES, 'utf-8');
     }
 
-    private static function formatDescription(string $description)
+    private function formatDescription(string $description)
     {
-        return Tools::truncateString(strip_tags($description), 150);
+        return $this->tools->truncateString(strip_tags($description), 150);
     }
 
-    private static function buildLink(string $link, array $analyticParams): string
+    private function buildLink(string $link, array $analyticParams): string
     {
         $url_query = parse_url($link, PHP_URL_QUERY) ?? '';
         parse_str($url_query, $link_query_params);
@@ -77,23 +86,24 @@ class NewsBuilder
         return $base_url . '?' . http_build_query($full_url_params);
     }
 
-    private static function getAnalyticsParams(string $countryIsoCode, int $contextMode): array
+    protected function getAnalyticsParams(string $countryIsoCode, int $contextMode): array
     {
-        if (null !== self::$analyticsParams) {
-            return self::$analyticsParams;
+        if (null !== $this->analyticParams) {
+            return $this->analyticParams;
         }
 
-        self::$analyticsParams = [
+        $this->analyticParams = [
             'utm_source' => 'back-office',
             'utm_medium' => 'rss',
             'utm_campaign' => 'back-office-' . $countryIsoCode,
+            'utm_content' => $this->isHostContext($contextMode) ? 'cloud' : 'download',
         ];
 
-        self::$analyticsParams['utm_content'] = 'download';
-        if (in_array($contextMode, [Context::MODE_HOST, Context::MODE_HOST_CONTRIB])) {
-            self::$analyticsParams['utm_content'] = 'cloud';
-        }
+        return $this->analyticParams;
+    }
 
-        return self::$analyticsParams;
+    protected function isHostContext(int $contextMode): bool
+    {
+        return in_array($contextMode, [Context::MODE_HOST, Context::MODE_HOST_CONTRIB]);
     }
 }

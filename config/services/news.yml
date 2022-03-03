@@ -2,10 +2,16 @@ services:
   _defaults:
     public: true
 
-  mbo.service.news.provider:
+  mbo.news.builder:
+    class: PrestaShop\Module\Mbo\News\NewsBuilder
+    arguments:
+      - "@prestashop.adapter.tools"
+
+  mbo.news.data_provider:
     class: PrestaShop\Module\Mbo\News\NewsDataProvider
     arguments:
       - "@mbo.news.circuit_breaker"
+      - "@mbo.news.builder"
       - "@prestashop.adapter.data_provider.country"
       - "@prestashop.adapter.legacy.configuration"
       - "@prestashop.adapter.validate"

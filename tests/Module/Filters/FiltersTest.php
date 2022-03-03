@@ -18,20 +18,21 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
 
-namespace PrestaShop\Module\Mbo\Module;
+namespace PrestaShop\Module\Mbo\Tests\Module\Filters;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use PrestaShop\Module\Mbo\Module\Filters;
 
 class FiltersTest extends MockeryTestCase
 {
     /**
-     * @var Filter
+     * @var Filters
      */
-    protected $filter;
+    protected $filters;
 
     protected function setUp(): void
     {
-        $this->filter = new Filters();
+        $this->filters = new Filters();
     }
 
     /**
@@ -39,12 +40,12 @@ class FiltersTest extends MockeryTestCase
      */
     public function testSetOrigin(int $origin, array $expectedValues)
     {
-        $this->filter->setOrigin($origin);
+        $this->filters->setOrigin($origin);
 
-        // Check after everything have been compute
+        // Check after everything have been computed
         foreach ($expectedValues as $expected) {
             $this->assertTrue(
-                $this->filter->hasOrigin($expected)
+                $this->filters->hasOrigin($expected)
             );
         }
     }
@@ -63,13 +64,13 @@ class FiltersTest extends MockeryTestCase
      */
     public function testSetStatus(int $status, array $expectedValues, bool $bool)
     {
-        $this->filter->setStatus($status);
+        $this->filters->setStatus($status);
 
-        // Check after everything have been compute
+        // Check after everything have been computed
         foreach ($expectedValues as $expected) {
             $this->assertEquals(
                 $bool,
-                $this->filter->hasStatus($expected)
+                $this->filters->hasStatus($expected)
             );
         }
     }
@@ -91,12 +92,12 @@ class FiltersTest extends MockeryTestCase
      */
     public function testSetTypes(int $type, array $expectedValues)
     {
-        $this->filter->setType($type);
+        $this->filters->setType($type);
 
-        // Check after everything have been compute
+        // Check after everything have been computed
         foreach ($expectedValues as $expected) {
             $this->assertTrue(
-                $this->filter->hasType($expected)
+                $this->filters->hasType($expected)
             );
         }
     }
