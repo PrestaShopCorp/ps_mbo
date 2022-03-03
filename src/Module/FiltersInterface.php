@@ -17,34 +17,20 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Traits\Hooks;
+namespace PrestaShop\Module\Mbo\Module;
 
-use PrestaShop\Module\Mbo\Module\Module;
-
-trait UseAdminModuleInstallRetrieveSource
+interface FiltersInterface
 {
-    /**
-     * Hook actionAdminModuleInstallRetrieveSource.
-     */
-    public function hookActionAdminModuleInstallRetrieveSource(array $params): ?string
-    {
-        if (empty($params['name'])) {
-            return null;
-        }
+    public function setOrigin(int $origin): FiltersInterface;
 
-        $moduleName = (string) $params['name'];
+    public function hasOrigin(int $origin): bool;
 
-        /** @var Module $module */
-        $module = $this->get('mbo.modules.repository')->getModule($moduleName);
+    public function setStatus(int $status): FiltersInterface;
 
-        if (null === $module) {
-            return null;
-        }
+    public function hasStatus(int $status): bool;
 
-        return $this->get('mbo.addons.data_provider')->downloadModule(
-            (int) $module->get('id')
-        );
-    }
+    public function setType(int $type): FiltersInterface;
+
+    public function hasType(int $type): bool;
 }

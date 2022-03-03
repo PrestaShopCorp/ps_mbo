@@ -2,8 +2,8 @@ services:
   _defaults:
     public: true
 
-  mbo.addon.module.data_prodiver.module:
-    class: PrestaShop\Module\Mbo\Addons\Module\ModuleDataProvider
+  mbo.addons.data_prodiver:
+    class: PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider
     arguments:
       - "@prestashop.adapter.legacy.logger"
       - "@translator"
@@ -11,29 +11,29 @@ services:
     calls:
       - [ "setEmployeeId", ["@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.adapter.legacy.context').getContext().employee.id:0"]]
 
-  mbo.addon.module.addons.cookie_user:
-    class: PrestaShop\Module\Mbo\Addons\User\CookieAddonsUser
+  mbo.addons.cookie_user:
+    class: PrestaShop\Module\Mbo\Addons\User\CookieUser
 
-  mbo.addon.module.data_provider.cookie_user:
-    class: PrestaShop\Module\Mbo\Addons\User\CookieAddonsUserProvider
+  mbo.addons.cookie_user.provider:
+    class: PrestaShop\Module\Mbo\Addons\User\CookieUserProvider
     arguments:
-      - "@mbo.addon.module.addons.cookie_user"
+      - "@mbo.addons.cookie_user"
 
-  mbo.addon.module.data_provider.addons:
-    class: PrestaShop\Module\Mbo\Addons\DataProvider
+  mbo.addons.data_provider:
+    class: PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider
     arguments:
-      - '@mbo.addon.client.api'
+      - '@mbo.addons.client.api'
       - '@prestashop.module.zip.manager'
-      - '@=service("mbo.addon.module.data_provider.cookie_user").getAddonsUser()'
+      - '@=service("mbo.addons.cookie_user.provider").getUser()'
       - '@=service("prestashop.adapter.legacy.configuration").get("ADDONS_API_MODULE_CHANNEL", "stable")'
     properties:
       cacheDir: "%kernel.cache_dir%"
 
   # Addons API Client
-  mbo.addon.client.api:
-    class: PrestaShop\Module\Mbo\Service\Addons\ApiClient
+  mbo.addons.client.api:
+    class: PrestaShop\Module\Mbo\Addons\ApiClient
     arguments:
-      - "@mbo.addon.client.http"
+      - "@mbo.addons.client.http"
     calls:
       - method: setDefaultParams
         arguments:
@@ -42,16 +42,16 @@ services:
           - "@=service('prestashop.adapter.legacy.configuration').get('_PS_BASE_URL_')"
           - "@=service('prestashop.core.foundation.version').getVersion()"
 
-  mbo.addon.toolbar:
+  mbo.addons.toolbar:
     class: PrestaShop\Module\Mbo\Addons\Toolbar
     arguments:
       - '@mbo.security.permission_checker'
-      - '@mbo.addon.module.data_provider.addons'
+      - '@mbo.addons.data_provider'
       - '@translator'
 
   # Event subscribers
-  mbo.addon.event_subscriber:
-    class: PrestaShop\Module\Mbo\Addons\Subscriber\EventSubscriber
+  mbo.addons.event_subscriber:
+    class: PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber
     arguments:
       - '@logger'
     tags:

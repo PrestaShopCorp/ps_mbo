@@ -4,9 +4,9 @@ services:
     public: true
 
   mbo.modules.repository:
-    class: PrestaShop\Module\Mbo\Modules\Repository
+    class: PrestaShop\Module\Mbo\Module\Repository
     arguments:
-      - "@mbo.addon.module.data_provider.addons"
+      - "@mbo.addons.data_provider"
       - "@mbo.modules.builder"
       - "@logger"
       - "@=service('translator').getLocale()"
@@ -14,13 +14,13 @@ services:
       - "@=service('prestashop.adapter.legacy.configuration').get('_DB_PREFIX_')"
 
   mbo.modules.filters.factory:
-    class: PrestaShop\Module\Mbo\Modules\FiltersFactory
+    class: PrestaShop\Module\Mbo\Module\FiltersFactory
 
   mbo.modules.collection.factory:
-    class: PrestaShop\Module\Mbo\Modules\CollectionFactory
+    class: PrestaShop\Module\Mbo\Module\CollectionFactory
 
   mbo.modules.builder:
-    class: PrestaShop\Module\Mbo\Modules\ModuleBuilder
+    class: PrestaShop\Module\Mbo\Module\ModuleBuilder
     arguments:
       - '@router'
       - "@logger"

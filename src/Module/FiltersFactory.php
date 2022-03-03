@@ -17,34 +17,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Traits\Hooks;
+namespace PrestaShop\Module\Mbo\Module;
 
-use PrestaShop\Module\Mbo\Module\Module;
-
-trait UseAdminModuleInstallRetrieveSource
+/**
+ * Creates class to filter modules list
+ */
+class FiltersFactory
 {
-    /**
-     * Hook actionAdminModuleInstallRetrieveSource.
-     */
-    public function hookActionAdminModuleInstallRetrieveSource(array $params): ?string
+    public static function create(): Filters
     {
-        if (empty($params['name'])) {
-            return null;
-        }
-
-        $moduleName = (string) $params['name'];
-
-        /** @var Module $module */
-        $module = $this->get('mbo.modules.repository')->getModule($moduleName);
-
-        if (null === $module) {
-            return null;
-        }
-
-        return $this->get('mbo.addons.data_provider')->downloadModule(
-            (int) $module->get('id')
-        );
+        return new Filters();
     }
 }

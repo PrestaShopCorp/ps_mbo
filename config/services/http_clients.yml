@@ -1,5 +1,5 @@
 services:
-  mbo.addon.client.http:
+  mbo.addons.client.http:
     class: GuzzleHttp\Client
     arguments:
       $config:

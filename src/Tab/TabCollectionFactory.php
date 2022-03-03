@@ -21,8 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Tab;
 
-use PrestaShop\Module\Mbo\Modules\Module;
-use PrestaShop\Module\Mbo\Modules\Repository;
+use PrestaShop\Module\Mbo\Module\Module;
+use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModule;
 use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModuleCollection;
 

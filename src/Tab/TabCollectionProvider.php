@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Tab;
 
 use Doctrine\Common\Cache\CacheProvider;
-use PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProviderInterface;
+use PrestaShop\Module\Mbo\Service\ExternalContentProvider\ExternalContentProviderInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 

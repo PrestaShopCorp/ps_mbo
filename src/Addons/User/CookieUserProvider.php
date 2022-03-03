@@ -19,32 +19,25 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Traits\Hooks;
+namespace PrestaShop\Module\Mbo\Addons\User;
 
-use PrestaShop\Module\Mbo\Module\Module;
-
-trait UseAdminModuleInstallRetrieveSource
+class CookieUserProvider implements UserProviderInterface
 {
     /**
-     * Hook actionAdminModuleInstallRetrieveSource.
+     * @var CookieUser
      */
-    public function hookActionAdminModuleInstallRetrieveSource(array $params): ?string
+    protected $user;
+
+    public function __construct(CookieUser $user)
     {
-        if (empty($params['name'])) {
-            return null;
-        }
+        $this->user = $user;
+    }
 
-        $moduleName = (string) $params['name'];
-
-        /** @var Module $module */
-        $module = $this->get('mbo.modules.repository')->getModule($moduleName);
-
-        if (null === $module) {
-            return null;
-        }
-
-        return $this->get('mbo.addons.data_provider')->downloadModule(
-            (int) $module->get('id')
-        );
+    /**
+     * {@inheritdoc}
+     */
+    public function getUser(): UserInterface
+    {
+        return $this->user;
     }
 }

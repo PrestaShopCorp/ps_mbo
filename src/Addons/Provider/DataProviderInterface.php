@@ -19,32 +19,22 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Traits\Hooks;
+namespace PrestaShop\Module\Mbo\Addons\Provider;
 
-use PrestaShop\Module\Mbo\Module\Module;
-
-trait UseAdminModuleInstallRetrieveSource
+interface DataProviderInterface
 {
     /**
-     * Hook actionAdminModuleInstallRetrieveSource.
+     * Check if a request has already failed.
+     *
+     * @return bool
      */
-    public function hookActionAdminModuleInstallRetrieveSource(array $params): ?string
-    {
-        if (empty($params['name'])) {
-            return null;
-        }
+    public function isServiceUp(): bool;
 
-        $moduleName = (string) $params['name'];
-
-        /** @var Module $module */
-        $module = $this->get('mbo.modules.repository')->getModule($moduleName);
-
-        if (null === $module) {
-            return null;
-        }
-
-        return $this->get('mbo.addons.data_provider')->downloadModule(
-            (int) $module->get('id')
-        );
-    }
+    /**
+     * Send a request to addons.prestashop.com to retrieve Modules/Addons data.
+     *
+     * @param string $action the query type
+     * @param array $params the request parameters
+     */
+    public function request(string $action, array $params);
 }

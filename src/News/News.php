@@ -19,45 +19,49 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Controller\Admin;
+namespace PrestaShop\Module\Mbo\News;
 
-use PrestaShop\Module\Mbo\News\NewsDataProvider;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-
-/**
- * Responsible of loading the news in the dashboard widget.
- */
-class DashboardNewsController extends FrameworkBundleAdminController
+class News
 {
     /**
-     * @var LegacyContext
+     * @var string
      */
-    protected $context;
+    private $date;
 
     /**
-     * @var NewsDataProvider
+     * @var string
      */
-    protected $newsDataProvider;
+    private $title;
 
     /**
-     * @param LegacyContext $context
+     * @var string
      */
+    private $shortDescription;
+
+    /**
+     * @var string
+     */
+    private $link;
+
     public function __construct(
-        LegacyContext $context,
-        NewsDataProvider $newsDataProvider
+        string $date,
+        string $title,
+        string $shortDescription,
+        string $link
     ) {
-        parent::__construct();
-        $this->context = $context;
-        $this->newsDataProvider = $newsDataProvider;
+        $this->date = $date;
+        $this->title = $title;
+        $this->shortDescription = $shortDescription;
+        $this->link = $link;
     }
 
-    /**
-     * Returns last news from the blog
-     */
-    public function getBlogRssAction()
+    public function toArray(): array
     {
-        return new JsonResponse($this->newsDataProvider->getData($this->context->getLanguage()->iso_code));
+        return [
+            'date' => $this->date,
+            'title' => $this->title,
+            'short_desc' => $this->shortDescription,
+            'link' => $this->link,
+        ];
     }
 }
