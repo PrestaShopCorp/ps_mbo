@@ -17,6 +17,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Tab;
 
@@ -51,7 +52,7 @@ class Tab implements TabInterface
     /**
      * {@inheritdoc}
      */
-    public function getLegacyClassName()
+    public function getLegacyClassName(): string
     {
         return $this->legacyClassName;
     }
@@ -59,7 +60,7 @@ class Tab implements TabInterface
     /**
      * {@inheritdoc}
      */
-    public function setLegacyClassName($legacyClassName)
+    public function setLegacyClassName(string $legacyClassName): TabInterface
     {
         $this->legacyClassName = $legacyClassName;
 
@@ -69,7 +70,7 @@ class Tab implements TabInterface
     /**
      * {@inheritdoc}
      */
-    public function getDisplayMode()
+    public function getDisplayMode(): string
     {
         return $this->displayMode;
     }
@@ -77,7 +78,7 @@ class Tab implements TabInterface
     /**
      * {@inheritdoc}
      */
-    public function setDisplayMode($displayMode)
+    public function setDisplayMode(string $displayMode): TabInterface
     {
         $this->displayMode = $displayMode;
 
@@ -87,7 +88,7 @@ class Tab implements TabInterface
     /**
      * {@inheritdoc}
      */
-    public function getRecommendedModules()
+    public function getRecommendedModules(): RecommendedModuleCollectionInterface
     {
         return $this->recommendedModules;
     }
@@ -95,7 +96,7 @@ class Tab implements TabInterface
     /**
      * {@inheritdoc}
      */
-    public function setRecommendedModules(RecommendedModuleCollectionInterface $recommendedModules)
+    public function setRecommendedModules(RecommendedModuleCollectionInterface $recommendedModules): TabInterface
     {
         $this->recommendedModules = $recommendedModules;
 
@@ -105,7 +106,7 @@ class Tab implements TabInterface
     /**
      * {@inheritdoc}
      */
-    public function hasRecommendedModules()
+    public function hasRecommendedModules(): bool
     {
         return !$this->recommendedModules->isEmpty();
     }
@@ -113,7 +114,7 @@ class Tab implements TabInterface
     /**
      * {@inheritdoc}
      */
-    public function getRecommendedModulesInstalled()
+    public function getRecommendedModulesInstalled(): RecommendedModuleCollectionInterface
     {
         $recommendedModulesInstalled = $this->getRecommendedModules();
 
@@ -127,7 +128,7 @@ class Tab implements TabInterface
     /**
      * {@inheritdoc}
      */
-    public function getRecommendedModulesNotInstalled()
+    public function getRecommendedModulesNotInstalled(): RecommendedModuleCollectionInterface
     {
         $recommendedModulesNotInstalled = $this->getRecommendedModules();
 
@@ -141,7 +142,7 @@ class Tab implements TabInterface
     /**
      * {@inheritdoc}
      */
-    public function shouldDisplayButton()
+    public function shouldDisplayButton(): bool
     {
         return $this->hasRecommendedModules()
             && TabInterface::DISPLAY_MODE_MODAL === $this->getDisplayMode();
@@ -150,7 +151,7 @@ class Tab implements TabInterface
     /**
      * {@inheritdoc}
      */
-    public function shouldDisplayAfterContent()
+    public function shouldDisplayAfterContent(): bool
     {
         return $this->hasRecommendedModules()
             && TabInterface::DISPLAY_MODE_AFTER_CONTENT === $this->getDisplayMode();

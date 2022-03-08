@@ -33,71 +33,71 @@ interface TabInterface
      *
      * @return string
      */
-    public function getLegacyClassName();
+    public function getLegacyClassName(): string;
 
     /**
      * @param string $legacyClassName
      *
      * @return TabInterface
      */
-    public function setLegacyClassName($legacyClassName);
+    public function setLegacyClassName(string $legacyClassName): TabInterface;
 
     /**
      * Get the display mode of the tab.
      *
      * @return string
      */
-    public function getDisplayMode();
+    public function getDisplayMode(): string;
 
     /**
      * @param string $displayMode
      *
      * @return TabInterface
      */
-    public function setDisplayMode($displayMode);
+    public function setDisplayMode(string $displayMode): TabInterface;
 
     /**
      * Get the recommended modules of the tab.
      *
      * @return RecommendedModuleCollectionInterface
      */
-    public function getRecommendedModules();
+    public function getRecommendedModules(): RecommendedModuleCollectionInterface;
 
     /**
      * @param RecommendedModuleCollectionInterface $recommendedModules
      *
      * @return TabInterface
      */
-    public function setRecommendedModules(RecommendedModuleCollectionInterface $recommendedModules);
+    public function setRecommendedModules(RecommendedModuleCollectionInterface $recommendedModules): TabInterface;
 
     /**
      * Check if the tab has recommended modules.
      *
      * @return bool
      */
-    public function hasRecommendedModules();
+    public function hasRecommendedModules(): bool;
 
     /**
      * Get the installed recommended modules of the tab.
      *
      * @return RecommendedModuleCollectionInterface
      */
-    public function getRecommendedModulesInstalled();
+    public function getRecommendedModulesInstalled(): RecommendedModuleCollectionInterface;
 
     /**
      * Get the not installed recommended modules of the tab.
      *
      * @return RecommendedModuleCollectionInterface
      */
-    public function getRecommendedModulesNotInstalled();
+    public function getRecommendedModulesNotInstalled(): RecommendedModuleCollectionInterface;
 
     /**
      * @return bool
      */
-    public function shouldDisplayButton();
+    public function shouldDisplayButton(): bool;
 
     /**
      * @return bool
      */
-    public function shouldDisplayAfterContent();
+    public function shouldDisplayAfterContent(): bool;
 }

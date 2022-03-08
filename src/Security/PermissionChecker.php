@@ -26,6 +26,9 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShopBundle\Security\Voter\PageVoter;
 
+/**
+ * Checks user access levels and permissions
+ */
 class PermissionChecker implements PermissionCheckerInterface
 {
     /**

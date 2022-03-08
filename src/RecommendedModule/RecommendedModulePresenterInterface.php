@@ -29,7 +29,7 @@ interface RecommendedModulePresenterInterface
      *
      * @return array
      */
-    public function present(RecommendedModuleInterface $recommendedModule);
+    public function present(RecommendedModuleInterface $recommendedModule): array;
 
     /**
      * Transform a collection of RecommendedModulesInterface as a simple array of data.
@@ -38,5 +38,5 @@ interface RecommendedModulePresenterInterface
      *
      * @return array
      */
-    public function presentCollection(RecommendedModuleCollectionInterface $recommendedModules);
+    public function presentCollection(RecommendedModuleCollectionInterface $recommendedModules): array;
 }

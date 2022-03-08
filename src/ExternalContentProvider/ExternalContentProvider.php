@@ -17,6 +17,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\ExternalContentProvider;
 
@@ -26,6 +27,9 @@ use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Gateway to retrieve content from external source.
+ */
 class ExternalContentProvider implements ExternalContentProviderInterface
 {
     const ALLOWED_FAILURES = 2;
@@ -59,7 +63,7 @@ class ExternalContentProvider implements ExternalContentProviderInterface
      *
      * @throws ServiceUnavailableHttpException
      */
-    public function getContent($url, array $options = [])
+    public function getContent(string $url, array $options = []): string
     {
         $settings = $this->optionsResolver->resolve($options);
 
@@ -78,7 +82,7 @@ class ExternalContentProvider implements ExternalContentProviderInterface
         );
     }
 
-    protected function configureOptions()
+    protected function configureOptions(): void
     {
         $this->optionsResolver->setDefaults([
             'failures' => self::ALLOWED_FAILURES,
@@ -97,7 +101,7 @@ class ExternalContentProvider implements ExternalContentProviderInterface
      *
      * @return Closure
      */
-    protected function circuitBreakerFallback()
+    protected function circuitBreakerFallback(): Closure
     {
         return function () {
             throw new ServiceUnavailableHttpException(self::THRESHOLD_SECONDS);

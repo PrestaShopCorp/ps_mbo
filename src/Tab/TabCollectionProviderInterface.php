@@ -25,5 +25,5 @@ interface TabCollectionProviderInterface
     /**
      * @return TabCollectionInterface
      */
-    public function getTabCollection();
+    public function getTabCollection(): TabCollectionInterface;
 }

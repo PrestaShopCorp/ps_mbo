@@ -24,15 +24,13 @@ namespace PrestaShop\Module\Mbo\Controller\Admin;
 use Exception;
 use PrestaShop\Module\Mbo\Addons\Toolbar;
 use PrestaShop\Module\Mbo\Modules\Collection;
-use PrestaShop\Module\Mbo\Modules\CollectionFactory;
-use PrestaShop\Module\Mbo\Modules\Filters;
-use PrestaShop\Module\Mbo\Modules\FiltersFactory;
 use PrestaShop\Module\Mbo\Modules\ModuleBuilderInterface;
+use PrestaShop\Module\Mbo\Modules\Presenter\ModulesForListingPresenter;
+use PrestaShop\Module\Mbo\Modules\Query\GetModulesForListing;
 use PrestaShop\Module\Mbo\Modules\RepositoryInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,16 +53,6 @@ class ModuleCatalogController extends ModuleAbstractController
     private $moduleRepository;
 
     /**
-     * @var FiltersFactory
-     */
-    private $moduleFiltersFactory;
-
-    /**
-     * @var CollectionFactory
-     */
-    private $moduleCollectionFactory;
-
-    /**
      * @var ModuleBuilderInterface
      */
     private $moduleBuilder;
@@ -73,29 +61,24 @@ class ModuleCatalogController extends ModuleAbstractController
      * @var ModulePresenter
      */
     private $modulePresenter;
-
     /**
-     * @var CategoriesProvider
+     * @var ModulesForListingPresenter
      */
-    private $moduleCategoriesProvider;
+    private $modulesForListingPresenter;
 
     public function __construct(
         Toolbar $toolbar,
-        FiltersFactory $moduleFiltersFactory,
-        CollectionFactory $moduleCollectionFactory,
         ModuleBuilderInterface $moduleBuilder,
         RepositoryInterface $moduleRepository,
-        CategoriesProvider $moduleCategoriesProvider,
-        ModulePresenter $modulePresenter
+        ModulePresenter $modulePresenter,
+        ModulesForListingPresenter $modulesForListingPresenter
     ) {
         parent::__construct();
         $this->toolbar = $toolbar;
-        $this->moduleRepository = $moduleRepository;
-        $this->moduleFiltersFactory = $moduleFiltersFactory;
-        $this->moduleCollectionFactory = $moduleCollectionFactory;
         $this->moduleBuilder = $moduleBuilder;
+        $this->moduleRepository = $moduleRepository;
         $this->modulePresenter = $modulePresenter;
-        $this->moduleCategoriesProvider = $moduleCategoriesProvider;
+        $this->modulesForListingPresenter = $modulesForListingPresenter;
     }
 
     /**
@@ -146,24 +129,11 @@ class ModuleCatalogController extends ModuleAbstractController
      */
     public function refreshAction(Request $request): JsonResponse
     {
-        $filters = $this->moduleFiltersFactory->create();
-        $filters
-            ->setType(Filters\Type::MODULE | Filters\Type::SERVICE)
-            ->setStatus(Filters\Status::ALL & ~Filters\Status::INSTALLED);
-
         $responseArray = [];
         try {
-            $modules = $this->moduleCollectionFactory->build(
-                $this->moduleRepository->fetchAll(),
-                $filters
-            );
-            $categories = $this->getCategories($modules);
-
-            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categories);
-            $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse(
-                $categories,
-                $modules
-            );
+            /** @var Collection $modules */
+            $modules = $this->getQueryBus()->handle(new GetModulesForListing());
+            $responseArray['domElements'] = $this->modulesForListingPresenter->present($modules);
             $responseArray['status'] = true;
         } catch (Exception $e) {
             $responseArray['msg'] = $this->trans(
@@ -197,79 +167,5 @@ class ModuleCatalogController extends ModuleAbstractController
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
             ]
         );
-    }
-
-    /**
-     * Get categories and its modules.
-     *
-     * @param Collection $modules List of installed modules
-     *
-     * @return array
-     */
-    protected function getCategories(Collection $modules): array
-    {
-        // moduleCategoriesProvider::getCategoriesMenu expects an array. it maybe should require an iterator
-        $modulesArray = $modules->getIterator()->getArrayCopy();
-
-        $categories = $this->moduleCategoriesProvider->getCategoriesMenu($modulesArray);
-
-        foreach ($categories['categories']->subMenu as $category) {
-            $category->modules = $this->modulePresenter
-                ->presentCollection($category->modules);
-        }
-
-        return $categories;
-    }
-
-    /**
-     * Build template for the categories dropdown on the header of page.
-     *
-     * @param array $categories
-     *
-     * @return array
-     */
-    protected function constructJsonCatalogCategoriesMenuResponse(array $categories): array
-    {
-        return [
-            'selector' => '.module-menu-item',
-            'content' => $this->render(
-                '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/dropdown_categories_catalog.html.twig',
-                [
-                    'topMenuData' => $categories,
-                ]
-            )->getContent(),
-        ];
-    }
-
-    /**
-     * Build templade for the grid view and the info header with count of modules & sort dropdown.
-     *
-     * @param array $categories
-     * @param Collection $modules
-     *
-     * @return array
-     */
-    protected function constructJsonCatalogBodyResponse(array $categories, Collection $modules): array
-    {
-        $sortingHeaderContent = $this->render(
-            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/sorting.html.twig',
-            [
-                'totalModules' => count($modules),
-            ]
-        )->getContent();
-
-        $gridContent = $this->render(
-            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog-refresh.html.twig',
-            [
-                'categories' => $categories['categories'],
-                'level' => $this->authorizationLevel(static::CONTROLLER_NAME),
-                'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
-            ]
-        )->getContent();
-
-        return [
-            'selector' => '.module-catalog-page',
-            'content' => $sortingHeaderContent . $gridContent,
-        ];
     }
 }

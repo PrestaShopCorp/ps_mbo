@@ -20,6 +20,7 @@
 
 namespace PrestaShop\Module\Mbo\Modules;
 
+use Exception;
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -132,9 +133,9 @@ class Module implements ModuleInterface
     ];
 
     /**
-     * @param array $attributes
-     * @param array $disk
-     * @param array $database
+     * @param array|null $attributes
+     * @param array|null $disk
+     * @param array|null $database
      */
     public function __construct(?array $attributes = null, ?array $disk = null, ?array $database = null)
     {
@@ -180,7 +181,7 @@ class Module implements ModuleInterface
     /**
      * @return LegacyModule|void
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getInstance()
     {
@@ -194,7 +195,7 @@ class Module implements ModuleInterface
     /**
      * @return bool True if valid Module instance
      */
-    public function hasValidInstance()
+    public function hasValidInstance(): bool
     {
         if (($this->disk->has('is_present') && $this->disk->getBoolean('is_present') === false)
             || ($this->disk->has('is_valid') && $this->disk->getBoolean('is_valid') === false)
@@ -205,8 +206,8 @@ class Module implements ModuleInterface
         if ($this->instance === null) {
             // We try to instantiate the legacy class if not done yet
             try {
-                $this->instanciateLegacyModule();
-            } catch (\Exception $e) {
+                $this->instantiateLegacyModule();
+            } catch (Exception $e) {
                 $this->disk->set('is_valid', false);
 
                 return false;
@@ -221,7 +222,7 @@ class Module implements ModuleInterface
     /**
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return (bool) $this->database->get('active');
     }
@@ -365,7 +366,7 @@ class Module implements ModuleInterface
     /**
      * Retrieve an instance of Legacy Module Object model from data.
      */
-    protected function instanciateLegacyModule()
+    protected function instantiateLegacyModule(): void
     {
         /**
          * @TODO Temporary: This test prevents an error when switching branches with the cache.
@@ -411,7 +412,7 @@ class Module implements ModuleInterface
             Filters\Origin::ADDONS_MUST_HAVE => 'addonsMustHave',
         ];
 
-        return isset($conversionTable[$value]) ? $conversionTable[$value] : '';
+        return $conversionTable[$value] ?? '';
     }
 
     /**
@@ -437,11 +438,11 @@ class Module implements ModuleInterface
     }
 
     /**
-     * Inform the merchant an upgrade is wating to be applied from the disk or the marketplace.
+     * Inform the merchant an upgrade is waiting to be applied from the disk or the marketplace.
      *
      * @return bool
      */
-    public function canBeUpgraded()
+    public function canBeUpgraded(): bool
     {
         if ($this->database->get('installed') == 0) {
             return false;
@@ -470,13 +471,13 @@ class Module implements ModuleInterface
     /**
      * Return installed modules.
      *
-     * @param int $position Take only positionnables modules
+     * @param int $position Take only positionable modules
      *
      * @return array Modules
      */
-    public function getModulesInstalled($position = 0): array
+    public function getModulesInstalled(int $position = 0): array
     {
-        return LegacyModule::getModulesInstalled((int) $position);
+        return LegacyModule::getModulesInstalled($position);
     }
 
     /**
@@ -486,8 +487,8 @@ class Module implements ModuleInterface
      *
      * @return Module|false
      */
-    public function getInstanceById($moduleId)
+    public function getInstanceById(int $moduleId)
     {
-        return LegacyModule::getInstanceById((int) $moduleId);
+        return LegacyModule::getInstanceById($moduleId);
     }
 }

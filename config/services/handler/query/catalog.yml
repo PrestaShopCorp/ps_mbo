@@ -1,0 +1,10 @@
+services:
+  mbo.handlers.query.get_modules_for_listing_handler:
+    class: 'PrestaShop\Module\Mbo\Modules\QueryHandler\GetModulesForListingHandler'
+    arguments:
+      - '@mbo.modules.filters.factory'
+      - '@mbo.modules.collection.factory'
+      - '@mbo.modules.repository'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\Module\Mbo\Modules\Query\GetModulesForListing'

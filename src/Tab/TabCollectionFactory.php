@@ -17,6 +17,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Tab;
 
@@ -27,6 +28,9 @@ use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModuleCollection;
 
 class TabCollectionFactory implements TabCollectionFactoryInterface
 {
+    /**
+     * @var Repository
+     */
     protected $moduleRepository;
 
     public function __construct(Repository $moduleRepository)
@@ -37,7 +41,7 @@ class TabCollectionFactory implements TabCollectionFactoryInterface
     /**
      * {@inheritdoc}
      */
-    public function buildFromArray(array $data)
+    public function buildFromArray(array $data): TabCollectionInterface
     {
         $tabCollection = new TabCollection();
         if (empty($data)) {
@@ -84,7 +88,7 @@ class TabCollectionFactory implements TabCollectionFactoryInterface
      *
      * @return array<string, Module>
      */
-    protected function getModules(array $data)
+    protected function getModules(array $data): array
     {
         $moduleNames = [];
 

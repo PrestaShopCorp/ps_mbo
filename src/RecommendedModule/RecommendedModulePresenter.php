@@ -17,6 +17,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\RecommendedModule;
 
@@ -34,7 +35,7 @@ class RecommendedModulePresenter implements RecommendedModulePresenterInterface
     /**
      * {@inheritdoc}
      */
-    public function present(RecommendedModuleInterface $recommendedModule)
+    public function present(RecommendedModuleInterface $recommendedModule): array
     {
         return $this->modulePresenter->present($recommendedModule->getModule());
     }
@@ -42,7 +43,7 @@ class RecommendedModulePresenter implements RecommendedModulePresenterInterface
     /**
      * {@inheritdoc}
      */
-    public function presentCollection(RecommendedModuleCollectionInterface $recommendedModules)
+    public function presentCollection(RecommendedModuleCollectionInterface $recommendedModules): array
     {
         $recommendedModulesPresented = [];
 

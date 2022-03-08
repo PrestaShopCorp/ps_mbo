@@ -17,6 +17,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Tab;
 
@@ -25,6 +26,9 @@ use PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProviderInterfa
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
+/**
+ * Get tabs used to group modules from Addons
+ */
 class TabCollectionProvider implements TabCollectionProviderInterface
 {
     const CACHE_KEY = 'recommendedModules';
@@ -74,7 +78,7 @@ class TabCollectionProvider implements TabCollectionProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getTabCollection()
+    public function getTabCollection(): TabCollectionInterface
     {
         if ($this->isTabCollectionCached()) {
             return $this->cacheProvider->fetch($this->getCacheKey());
@@ -95,7 +99,7 @@ class TabCollectionProvider implements TabCollectionProviderInterface
         return $tabCollection;
     }
 
-    protected function getCacheKey()
+    protected function getCacheKey(): string
     {
         return static::CACHE_KEY . '-' . $this->context->getEmployeeLanguageIso();
     }
@@ -105,7 +109,7 @@ class TabCollectionProvider implements TabCollectionProviderInterface
      *
      * @return bool
      */
-    public function isTabCollectionCached()
+    public function isTabCollectionCached(): bool
     {
         return $this->cacheProvider
             && $this->cacheProvider->contains($this->getCacheKey());
@@ -118,7 +122,7 @@ class TabCollectionProvider implements TabCollectionProviderInterface
      *
      * @throws ServiceUnavailableHttpException
      */
-    protected function getTabCollectionFromApi()
+    protected function getTabCollectionFromApi(): TabCollectionInterface
     {
         $apiResponse = $this->externalContentProvider->getContent(self::API_URL);
         $tabCollectionDecoderXml = new TabCollectionDecoderXml($apiResponse);

@@ -17,6 +17,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Modules;
 
@@ -50,7 +51,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->data);
     }
@@ -58,7 +59,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->data);
     }
@@ -76,7 +77,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
      *
      * {@inheritdoc}
      */
-    public function offsetSet($key, $module)
+    public function offsetSet($key, $module): void
     {
         $this->data[$key] = $module;
     }
@@ -86,7 +87,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
      *
      * {@inheritdoc}
      */
-    public function offsetUnset($module)
+    public function offsetUnset($module): bool
     {
         $key = array_search($module, $this->data, true);
 
@@ -104,7 +105,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->data);
     }
