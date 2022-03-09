@@ -49,6 +49,9 @@ services:
       - '@mbo.addons.data_provider'
       - '@translator'
 
+  mbo.addons.week_advice_provider:
+    class: PrestaShop\Module\Mbo\Addons\Provider\WeekAdviceProvider
+
   # Event subscribers
   mbo.addons.event_subscriber:
     class: PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber

@@ -13,8 +13,8 @@ services:
     arguments:
       - '@prestashop.adapter.presenter.module'
 
-  mbo.addons_selection_link_provider:
-    class: 'PrestaShop\Module\Mbo\Addons\SelectionLinkProvider'
+  mbo.addons.static_link_provider:
+    class: 'PrestaShop\Module\Mbo\Addons\Provider\StaticLinksProvider'
     arguments:
       - '@prestashop.core.foundation.version'
       - '@prestashop.adapter.legacy.context'
@@ -50,7 +50,7 @@ services:
     arguments:
       - '@request_stack'
       - '@mbo.externalcontent.provider'
-      - '@mbo.addons_selection_link_provider'
+      - '@mbo.addons.static_link_provider'
 
   mbo.controller.modules.recommended:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleRecommendedController'
@@ -64,7 +64,7 @@ services:
     arguments:
       - '@request_stack'
       - '@mbo.externalcontent.provider'
-      - '@mbo.addons_selection_link_provider'
+      - '@mbo.addons.static_link_provider'
 
   mbo.controller.addons:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\AddonsController'

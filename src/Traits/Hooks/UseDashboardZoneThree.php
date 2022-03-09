@@ -50,7 +50,7 @@ trait UseDashboardZoneThree
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
-        $this->context->smarty->assign(
+        $this->smarty->assign(
             [
                 'new_version_url' => Tools::getCurrentUrlProtocolPrefix() . _PS_API_DOMAIN_ . '/version/check_version.php?v=' . _PS_VERSION_ . '&lang=' . $this->context->language->iso_code . '&autoupgrade=' . (int) ($moduleManager->isInstalled('autoupgrade') && $moduleManager->isEnabled('autoupgrade')) . '&hosted_mode=' . (int) defined('_PS_HOST_MODE_'),
                 'help_center_link' => $this->getHelpCenterLink($this->context->language->iso_code),
@@ -94,7 +94,7 @@ trait UseDashboardZoneThree
     {
         if (Tools::getValue('controller') === 'AdminDashboard') {
             $this->context->controller->addJs($this->getPathUri() . 'views/js/dashboard-news.js?v=' . $this->version);
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/dashboard-news.css?v=' . $this->version);
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/dashboard.css?v=' . $this->version);
         }
     }
 }

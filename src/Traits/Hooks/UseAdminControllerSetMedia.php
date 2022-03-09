@@ -29,7 +29,7 @@ trait UseAdminControllerSetMedia
     /**
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function bootUseAdminControllerSetMedia(): void
     {
