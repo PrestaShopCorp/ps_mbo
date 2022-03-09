@@ -28,7 +28,7 @@ class NewsBuilderTest extends MockeryTestCase
 {
     public function testBuildWillReturnAValidNewsInstance()
     {
-        $date = 'Mon, 28 Feb 2022 11:24:05 +0100';
+        $date = \DateTime::createFromFormat(\DateTime::RFC2822, 'Mon, 28 Feb 2022 11:24:05 +0100');
         $title = 'CMS PrestaShop : guide d\'installation manuelle de votre boutique ecommerce';
         $description = 'Vous souhaitez installer PrestaShop pour lancer votre boutique en ligne ?';
         $link = 'https://www.prestashop.com/fr/blog/comment-installer-prestashop';
@@ -45,7 +45,7 @@ class NewsBuilderTest extends MockeryTestCase
 
         $tools
             ->method('displayDate')
-            ->willReturn('2022-02-28 11:24:05');
+            ->willReturn($date->format('Y-m-d H:i:s'));
 
         $tools
             ->method('truncateString')

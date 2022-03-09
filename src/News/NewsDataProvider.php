@@ -138,9 +138,11 @@ class NewsDataProvider
                 continue;
             }
 
+            $date = \DateTime::createFromFormat(\DateTime::RFC2822, (string) $item->pubDate);
+
             $newsCollection->addNews(
                 $this->newsBuilder->build(
-                    (string) $item->pubDate,
+                    $date,
                     (string) $item->title,
                     (string) $item->description,
                     (string) $item->link,

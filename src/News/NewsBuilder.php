@@ -30,6 +30,7 @@ class NewsBuilder
      * @var string[]
      */
     private $analyticParams;
+
     /**
      * @var Tools
      */
@@ -41,7 +42,7 @@ class NewsBuilder
     }
 
     public function build(
-        string $date,
+        \Datetime $date,
         string $title,
         string $description,
         string $link,
@@ -58,11 +59,13 @@ class NewsBuilder
         );
     }
 
-    private function formatDate(string $date): string
+    private function formatDate(\Datetime $date): string
     {
-        $date = strtotime($date);
-
-        return $this->tools->displayDate(date('Y-m-d H:i:s', $date), null, false);
+        return $this->tools->displayDate(
+            $date->format('Y-m-d H:i:s'),
+            null,
+            false
+        );
     }
 
     private function formatTitle(string $title): string
