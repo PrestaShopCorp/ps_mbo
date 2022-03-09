@@ -36,7 +36,7 @@ trait UseAdminModuleExtraToolbarButton
      */
     public function hookActionAdminModuleExtraToolbarButton(array $params): array
     {
-        return $this->get('mbo.addon.toolbar')->getConnectionToolbar();
+        return $this->get('mbo.addons.toolbar')->getConnectionToolbar();
     }
 
     /**

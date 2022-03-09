@@ -17,34 +17,23 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Traits\Hooks;
+namespace PrestaShop\Module\Mbo\Module;
 
-use PrestaShop\Module\Mbo\Module\Module;
-
-trait UseAdminModuleInstallRetrieveSource
+interface RepositoryInterface
 {
     /**
-     * Hook actionAdminModuleInstallRetrieveSource.
+     * @return array<int, Module> retrieve a list of addons modules, regardless any $filter
      */
-    public function hookActionAdminModuleInstallRetrieveSource(array $params): ?string
-    {
-        if (empty($params['name'])) {
-            return null;
-        }
+    public function fetchAll(): array;
 
-        $moduleName = (string) $params['name'];
-
-        /** @var Module $module */
-        $module = $this->get('mbo.modules.repository')->getModule($moduleName);
-
-        if (null === $module) {
-            return null;
-        }
-
-        return $this->get('mbo.addons.data_provider')->downloadModule(
-            (int) $module->get('id')
-        );
-    }
+    /**
+     * Get the new module presenter class of the specified name provided.
+     * It contains data from its instance, the disk, the database and from the marketplace if exists.
+     *
+     * @param string $name The technical name of the module
+     *
+     * @return Module|null
+     */
+    public function getModule(string $name): ?Module;
 }

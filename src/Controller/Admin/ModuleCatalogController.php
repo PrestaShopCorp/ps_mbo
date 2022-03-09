@@ -23,11 +23,11 @@ namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use Exception;
 use PrestaShop\Module\Mbo\Addons\Toolbar;
-use PrestaShop\Module\Mbo\Modules\Collection;
-use PrestaShop\Module\Mbo\Modules\ModuleBuilderInterface;
-use PrestaShop\Module\Mbo\Modules\Presenter\ModulesForListingPresenter;
-use PrestaShop\Module\Mbo\Modules\Query\GetModulesForListing;
-use PrestaShop\Module\Mbo\Modules\RepositoryInterface;
+use PrestaShop\Module\Mbo\Module\Collection;
+use PrestaShop\Module\Mbo\Module\ModuleBuilderInterface;
+use PrestaShop\Module\Mbo\Module\Presenter\ModulesForListingPresenter;
+use PrestaShop\Module\Mbo\Module\Query\GetModulesForListing;
+use PrestaShop\Module\Mbo\Module\RepositoryInterface;
 use PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;

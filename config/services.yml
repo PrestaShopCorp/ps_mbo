@@ -6,7 +6,7 @@ services:
     public: true
 
   mbo.externalcontent.provider:
-    class: 'PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProvider'
+    class: 'PrestaShop\Module\Mbo\Service\ExternalContentProvider\ExternalContentProvider'
 
   mbo.recommendedmodules.presenter:
     class: 'PrestaShop\Module\Mbo\RecommendedModule\RecommendedModulePresenter'
@@ -22,7 +22,7 @@ services:
       - '@request_stack'
 
   mbo.modules.presenter.listing:
-    class: 'PrestaShop\Module\Mbo\Modules\Presenter\ModulesForListingPresenter'
+    class: 'PrestaShop\Module\Mbo\Module\Presenter\ModulesForListingPresenter'
     arguments:
       - '@prestashop.adapter.presenter.module'
       - '@twig'
@@ -33,7 +33,7 @@ services:
   mbo.controller.modules.catalog:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController'
     arguments:
-      - '@mbo.addon.toolbar'
+      - '@mbo.addons.toolbar'
       - '@mbo.modules.builder'
       - '@mbo.modules.repository'
       - '@prestashop.adapter.presenter.module'
@@ -64,7 +64,7 @@ services:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\AddonsController'
     arguments:
       - '@request_stack'
-      - '@mbo.addon.module.data_provider.addons'
+      - '@mbo.addons.data_provider'
       - '@prestashop.core.admin.data_provider.module_interface'
       - '@prestashop.module.manager'
       - '@mbo.modules.repository'
@@ -74,4 +74,4 @@ services:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\DashboardNewsController'
     arguments:
       - '@prestashop.adapter.legacy.context'
-      - '@mbo.service.news.provider'
+      - '@mbo.news.data_provider'

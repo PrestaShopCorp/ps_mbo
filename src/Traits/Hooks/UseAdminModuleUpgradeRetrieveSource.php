@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Exception\ModuleUpgradeNotNeededException;
-use PrestaShop\Module\Mbo\Modules\Module;
+use PrestaShop\Module\Mbo\Module\Module;
 
 trait UseAdminModuleUpgradeRetrieveSource
 {
@@ -53,7 +53,7 @@ trait UseAdminModuleUpgradeRetrieveSource
             throw new ModuleUpgradeNotNeededException();
         }
 
-        return $this->get('mbo.addon.module.data_provider.addons')->downloadModule(
+        return $this->get('mbo.addons.data_provider')->downloadModule(
             (int) $module->get('id')
         );
     }

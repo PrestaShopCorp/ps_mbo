@@ -24,10 +24,10 @@ namespace PrestaShop\Module\Mbo\Controller\Admin;
 use Configuration;
 use Exception;
 use PhpEncryption;
-use PrestaShop\Module\Mbo\Addons\DataProvider;
-use PrestaShop\Module\Mbo\Exception\ModuleUpgradeNotNeededException;
-use PrestaShop\Module\Mbo\Modules\Repository;
-use PrestaShop\PrestaShop\Core\Addon\Login\Exception\LoginErrorException;
+use PrestaShop\Module\Mbo\Addons\Exception\LoginErrorException;
+use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
+use PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeNotNeededException;
+use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -46,7 +46,7 @@ class AddonsController extends FrameworkBundleAdminController
     protected $requestStack;
 
     /**
-     * @var DataProvider
+     * @var AddonsDataProvider
      */
     private $addonsDataProvider;
 
@@ -72,7 +72,7 @@ class AddonsController extends FrameworkBundleAdminController
 
     public function __construct(
         RequestStack $requestStack,
-        DataProvider $addonsDataProvider,
+        AddonsDataProvider $addonsDataProvider,
         ModuleInterface $modulesDataProvider,
         ModuleManager $moduleManager,
         Repository $moduleRepository,

@@ -29,7 +29,8 @@
   },
   "autoload": {
     "psr-4": {
-      "PrestaShop\\Module\\Mbo\\": "src/"
+      "PrestaShop\\Module\\Mbo\\": "src/",
+      "PrestaShop\\Module\\Mbo\\Tests\\": "tests"
     },
     "classmap": ["ps_mbo.php"]
   },

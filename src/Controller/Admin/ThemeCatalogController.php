@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use PrestaShop\Module\Mbo\Addons\SelectionLinkProvider;
-use PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProviderInterface;
+use PrestaShop\Module\Mbo\Service\ExternalContentProvider\ExternalContentProviderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RequestStack;

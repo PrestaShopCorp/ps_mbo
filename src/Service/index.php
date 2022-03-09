@@ -17,34 +17,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-declare(strict_types=1);
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
 
-namespace PrestaShop\Module\Mbo\Traits\Hooks;
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
 
-use PrestaShop\Module\Mbo\Module\Module;
-
-trait UseAdminModuleInstallRetrieveSource
-{
-    /**
-     * Hook actionAdminModuleInstallRetrieveSource.
-     */
-    public function hookActionAdminModuleInstallRetrieveSource(array $params): ?string
-    {
-        if (empty($params['name'])) {
-            return null;
-        }
-
-        $moduleName = (string) $params['name'];
-
-        /** @var Module $module */
-        $module = $this->get('mbo.modules.repository')->getModule($moduleName);
-
-        if (null === $module) {
-            return null;
-        }
-
-        return $this->get('mbo.addons.data_provider')->downloadModule(
-            (int) $module->get('id')
-        );
-    }
-}
+header('Location: ../');
+exit;

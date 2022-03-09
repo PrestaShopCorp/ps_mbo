@@ -17,34 +17,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Traits\Hooks;
+namespace PrestaShop\Module\Mbo\Service\ExternalContentProvider;
 
-use PrestaShop\Module\Mbo\Module\Module;
-
-trait UseAdminModuleInstallRetrieveSource
+interface ExternalContentProviderInterface
 {
     /**
-     * Hook actionAdminModuleInstallRetrieveSource.
+     * @param string $url
+     * @param array $options
+     *
+     * @return string
      */
-    public function hookActionAdminModuleInstallRetrieveSource(array $params): ?string
-    {
-        if (empty($params['name'])) {
-            return null;
-        }
-
-        $moduleName = (string) $params['name'];
-
-        /** @var Module $module */
-        $module = $this->get('mbo.modules.repository')->getModule($moduleName);
-
-        if (null === $module) {
-            return null;
-        }
-
-        return $this->get('mbo.addons.data_provider')->downloadModule(
-            (int) $module->get('id')
-        );
-    }
+    public function getContent(string $url, array $options = []): string;
 }

@@ -17,34 +17,14 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Traits\Hooks;
+namespace PrestaShop\Module\Mbo\Module\Filters;
 
-use PrestaShop\Module\Mbo\Module\Module;
-
-trait UseAdminModuleInstallRetrieveSource
+class Device
 {
-    /**
-     * Hook actionAdminModuleInstallRetrieveSource.
-     */
-    public function hookActionAdminModuleInstallRetrieveSource(array $params): ?string
-    {
-        if (empty($params['name'])) {
-            return null;
-        }
+    public const COMPUTER = 1;
+    public const TABLET = 2;
+    public const MOBILE = 4;
 
-        $moduleName = (string) $params['name'];
-
-        /** @var Module $module */
-        $module = $this->get('mbo.modules.repository')->getModule($moduleName);
-
-        if (null === $module) {
-            return null;
-        }
-
-        return $this->get('mbo.addons.data_provider')->downloadModule(
-            (int) $module->get('id')
-        );
-    }
+    public const ALL = 7;
 }

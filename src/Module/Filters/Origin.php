@@ -17,34 +17,21 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Traits\Hooks;
+namespace PrestaShop\Module\Mbo\Module\Filters;
 
-use PrestaShop\Module\Mbo\Module\Module;
-
-trait UseAdminModuleInstallRetrieveSource
+class Origin
 {
-    /**
-     * Hook actionAdminModuleInstallRetrieveSource.
-     */
-    public function hookActionAdminModuleInstallRetrieveSource(array $params): ?string
-    {
-        if (empty($params['name'])) {
-            return null;
-        }
+    public const FLAG = 'origin';
 
-        $moduleName = (string) $params['name'];
+    /* Bitwise operators */
+    public const DISK = 1;
+    public const ADDONS_MUST_HAVE = 2;
+    public const ADDONS_SERVICE = 4;
+    public const ADDONS_NATIVE = 8;
+    public const ADDONS_NATIVE_ALL = 16;
+    public const ADDONS_CUSTOMER = 32;
+    public const ADDONS_ALL = 62;
 
-        /** @var Module $module */
-        $module = $this->get('mbo.modules.repository')->getModule($moduleName);
-
-        if (null === $module) {
-            return null;
-        }
-
-        return $this->get('mbo.addons.data_provider')->downloadModule(
-            (int) $module->get('id')
-        );
-    }
+    public const ALL = -1;
 }

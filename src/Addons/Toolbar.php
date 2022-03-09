@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons;
 
+use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -38,7 +39,7 @@ class Toolbar
     private $permissionChecker;
 
     /**
-     * @var DataProvider
+     * @var AddonsDataProvider
      */
     private $addonsDataProvider;
 
@@ -49,7 +50,7 @@ class Toolbar
 
     public function __construct(
         PermissionCheckerInterface $permissionChecker,
-        DataProvider $addonsDataProvider,
+        AddonsDataProvider $addonsDataProvider,
         TranslatorInterface $translator
     ) {
         $this->permissionChecker = $permissionChecker;
@@ -104,10 +105,10 @@ class Toolbar
      */
     public function getConnectionToolbar(): array
     {
-        if ($this->addonsDataProvider->isAddonsAuthenticated()) {
+        if ($this->addonsDataProvider->isUserAuthenticated()) {
             $toolbarButtons['addons_logout'] = [
                 'href' => '#',
-                'desc' => $this->addonsDataProvider->getAddonsEmail(),
+                'desc' => $this->addonsDataProvider->getAuthenticatedUserEmail(),
                 'icon' => 'exit_to_app',
                 'help' => $this->translator->trans('Synchronized with Addons marketplace!', [], 'Admin.Modules.Notification', $this->translator->getLocale()),
             ];

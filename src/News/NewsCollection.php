@@ -19,32 +19,46 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Traits\Hooks;
+namespace PrestaShop\Module\Mbo\News;
 
-use PrestaShop\Module\Mbo\Module\Module;
+use Countable;
 
-trait UseAdminModuleInstallRetrieveSource
+class NewsCollection implements Countable
 {
     /**
-     * Hook actionAdminModuleInstallRetrieveSource.
+     * An array containing the addons of this collection.
+     *
+     * @var array
      */
-    public function hookActionAdminModuleInstallRetrieveSource(array $params): ?string
+    protected $news;
+
+    /**
+     * @param News[] $news
+     */
+    public function __construct(array $news = [])
     {
-        if (empty($params['name'])) {
-            return null;
+        $this->news = $news;
+    }
+
+    public function addNews(News $news): NewsCollection
+    {
+        $this->news[] = $news;
+
+        return $this;
+    }
+
+    public function count(): int
+    {
+        return count($this->news);
+    }
+
+    public function toArray(): array
+    {
+        $collection = [];
+        foreach ($this->news as $news) {
+            $collection[] = $news->toArray();
         }
 
-        $moduleName = (string) $params['name'];
-
-        /** @var Module $module */
-        $module = $this->get('mbo.modules.repository')->getModule($moduleName);
-
-        if (null === $module) {
-            return null;
-        }
-
-        return $this->get('mbo.addons.data_provider')->downloadModule(
-            (int) $module->get('id')
-        );
+        return $collection;
     }
 }
