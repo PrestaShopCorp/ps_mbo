@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\AddonsThemesLinkProvider;
+use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
 
 trait UseDisplayAdminThemesListAfter
 {
@@ -33,11 +33,11 @@ trait UseDisplayAdminThemesListAfter
      */
     public function hookDisplayAdminThemesListAfter(array $params): string
     {
-        /** @var AddonsThemesLinkProvider $linkProvider */
-        $linkProvider = $this->get('mbo.addons_themes_link_provider');
+        /** @var LinksProvider $linksProvider */
+        $linksProvider = $this->get('mbo.addons.links_provider');
 
         $this->smarty->assign([
-            'recommendedThemesLink' => $linkProvider->getLinkUrl(),
+            'recommendedThemesLink' => $linksProvider->getThemesLinkUrl(),
             'recommendedThemesImgPath' => $this->_path . 'views/img/',
         ]);
 

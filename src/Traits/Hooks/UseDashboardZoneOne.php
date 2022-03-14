@@ -53,7 +53,7 @@ trait UseDashboardZoneOne
             $this->smarty->assign([
                 'img_path' => $this->imgPath,
                 'advice' => $weekAdvice,
-                'practical_links' => $this->get('mbo.addons.static_link_provider')->getDashboardPracticalLinks(),
+                'practical_links' => $this->get('mbo.addons.links_provider')->getDashboardPracticalLinks(),
             ]);
 
             return $this->display($this->name, 'dashboard-zone-one-connected.tpl');
