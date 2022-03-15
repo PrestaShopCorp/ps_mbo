@@ -117,7 +117,12 @@ class LinksProvider
     public function getDashboardPracticalLinks(): array
     {
         $idLang = $this->context->language->id;
-        $isoCode = mb_strtolower(Language::getIsoById($idLang));
+        $isoCode = Language::getIsoById($idLang);
+        if (false === $isoCode) {
+            $isoCode = self::DEFAULT_LANGUAGE;
+        }
+
+        $isoCode = mb_strtolower($isoCode);
 
         return PracticalLinks::getByIsoCode($isoCode);
     }
