@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev" source-language="en-GB" target-language="en-GB" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/hook/recommended-themes.tpl" source-language="en-US" target-language="en-US" datatype="plaintext">
     <body>
       <trans-unit id="859a82ffb385f9227c656960996025eb">
         <source>Visit the theme catalog</source>
         <target>Visit the theme catalog</target>
-        <note>Line: </note>
+        <note>Line: 33</note>
       </trans-unit>
       <trans-unit id="6fe78057f585de51da0f61d514143fe1">
         <source>Explore more than a thousand themes</source>
         <target>Explore more than a thousand themes</target>
-        <note>Line: </note>
+        <note>Line: 28</note>
       </trans-unit>
     </body>
   </file>
