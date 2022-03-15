@@ -80,7 +80,7 @@ class ThemeCatalogController extends FrameworkBundleAdminController
                 [
                     'pageContent' => $this->externalContentProvider->getContent($this->linksProvider->getSelectionLink()),
                     'layoutHeaderToolbarBtn' => [],
-                    'layoutTitle' => $this->trans('Themes Catalog', 'Admin.Navigation.Menu'),
+                    'layoutTitle' => $this->trans('Themes Catalog', 'Modules.Mbo.Themescatalog'),
                     'requireAddonsSearch' => true,
                     'requireBulkActions' => false,
                     'showContentHeader' => true,

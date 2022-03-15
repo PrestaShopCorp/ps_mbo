@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+    <body>
+      <trans-unit id="cff7b4047c79f112e869481322d2924e">
+        <source>Module %module% successfully upgraded.</source>
+        <target>Module %module% successfully upgraded.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="22d6960d922158c548d123998be8dd91">
+        <source>Upgrade of module %module% failed. %error%</source>
+        <target>Upgrade of module %module% failed. %error%</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="f8c9c7b6af2a8d50bc948bcf966c1d4b">
+        <source>Module %module% is already up to date</source>
+        <target>Module %module% is already up to date</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="6ea7071301eeb50e00bf88f5a46ded8e">
+        <source>Modules catalog</source>
+        <target>Modules catalog</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="385b04e1b2442530341b51c2d3b216a3">
+        <source>Cannot get catalog data, please try again later. Reason: %error_details%</source>
+        <target>Cannot get catalog data, please try again later. Reason: %error_details%</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004">
+        <source>Upload a module</source>
+        <target>Upload a module</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df">
+        <source>Synchronized with Addons marketplace!</source>
+        <target>Synchronized with Addons marketplace!</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="3b878279a04dc47d60932cb294d96259">
+        <source>Overview</source>
+        <target>Overview</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="0f68b904e33d9ac04605aecc958bcf52">
+        <source>Additional information</source>
+        <target>Additional information</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e654f7a86a4458b9cd662267e0f29b52">
+        <source>Benefits</source>
+        <target>Benefits</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="98f770b0af18ca763421bac22b4b6805">
+        <source>Features</source>
+        <target>Features</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="a5ad64d595144c185c9cf2065162dec3">
+        <source>Demo video</source>
+        <target>Demo video</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="c49182dc0c7a70b9cd2e10853d9ec6c7">
+        <source>Changelog</source>
+        <target>Changelog</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="87ad4793c12c9f9e5d56cc81386f77b8">
+        <source>No description found for this module :(</source>
+        <target>No description found for this module :(</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="a8fc81349d4f60335fc2f2d2dea6fb0c">
+        <source>Multistore compatibility:</source>
+        <target>Multistore compatibility:</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="9e3af2cc76136602790d15926c0406d2">
+        <source>This module is compatible with the multistore feature. It can be either:</source>
+        <target>This module is compatible with the multistore feature. It can be either:</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e773cb7097fe5225bf11e922d97d8303">
+        <source>configured differently from one store to another;</source>
+        <target>configured differently from one store to another;</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="524101c07f4d47a32a671461793b9aae">
+        <source>configured quickly in the same way on all stores thanks to the all shops context or to the group of shops;</source>
+        <target>configured quickly in the same way on all stores thanks to the all shops context or to the group of shops;</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e3e84332925aea492b9fa58f047cab00">
+        <source>or even activated for one store and deactivated for another.</source>
+        <target>or even activated for one store and deactivated for another.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e1257f9e396ab15c8e76d6d87bf30418">
+        <source>This module is partially compatible with the multistore feature. Some of its options might not be available.</source>
+        <target>This module is partially compatible with the multistore feature. Some of its options might not be available.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="d75acf5ccb6af024e45402c80c5901f5">
+        <source>This module is not compatible with the multistore feature because it would not be useful.</source>
+        <target>This module is not compatible with the multistore feature because it would not be useful.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="177915f8877b2d381c7f0c540ab7a17b">
+        <source>This module is not compatible with the multistore feature. It means that its configuration applies to all stores.</source>
+        <target>This module is not compatible with the multistore feature. It means that its configuration applies to all stores.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="a76e4258e8695991d6f5f62efdba70d6">
+        <source>No additional description provided for this module :(</source>
+        <target>No additional description provided for this module :(</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="1ed02f805424aac96756b590d51e2038">
+        <source>No feature list provided for this module :(</source>
+        <target>No feature list provided for this module :(</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="f2a854a84903f5f29c0b7a40ccbf4ee5">
+        <source>No customer benefits notes found for this module :(</source>
+        <target>No customer benefits notes found for this module :(</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="94d27c2e2294ddfe66621b814f2ac3e0">
+        <source>No demonstration video found for this module :(</source>
+        <target>No demonstration video found for this module :(</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="3072d199d2a0269893376e8c7d0049d6">
+        <source>No changelog provided for this module :(</source>
+        <target>No changelog provided for this module :(</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
+        <source>Free</source>
+        <target>Free</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

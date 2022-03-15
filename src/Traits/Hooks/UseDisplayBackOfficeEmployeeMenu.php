@@ -75,7 +75,7 @@ trait UseDisplayBackOfficeEmployeeMenu
                 new ActionsBarButton(
                     __CLASS__,
                     [
-                        'link' => $this->trans($link['url'], [], 'Admin.Navigation.Header'),
+                        'link' => $link['url'],
                         'icon' => $link['icon'],
                     ],
                     $this->trans($link['label'], [], 'Admin.Navigation.Header')

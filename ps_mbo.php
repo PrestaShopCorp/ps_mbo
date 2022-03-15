@@ -120,8 +120,8 @@ class ps_mbo extends Module
 
         $this->imgPath = $this->_path . 'views/img/';
 
-        $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
-        $this->description = $this->l('Browse the Addons marketplace directly from your back office to better meet your needs.');
+        $this->displayName = $this->trans('PrestaShop Marketplace in your Back Office', [], 'Modules.Mbo.Global');
+        $this->description = $this->trans('Browse the Addons marketplace directly from your back office to better meet your needs.', [], 'Modules.Mbo.Global');
 
         // Parse all traits to call boot method
         foreach ($this->getTraitNames() as $traitName) {
@@ -191,6 +191,11 @@ class ps_mbo extends Module
         }
 
         return $this->container->get($serviceName);
+    }
+
+    public function isUsingNewTranslationSystem(): bool
+    {
+        return true;
     }
 
     private function getTraitNames(): array

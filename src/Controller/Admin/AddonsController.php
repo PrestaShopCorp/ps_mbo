@@ -137,7 +137,7 @@ class AddonsController extends FrameworkBundleAdminController
                 'success' => 0,
                 'message' => $this->trans(
                     'PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.',
-                    'Admin.Notifications.Error'
+                    'Modules.Mbo.Errors'
                 ),
             ]);
         }
@@ -197,7 +197,7 @@ class AddonsController extends FrameworkBundleAdminController
             if ($upgradeResponse['status'] === true) {
                 $upgradeResponse['msg'] = $this->trans(
                     'Module %module% successfully upgraded.',
-                    'Admin.Modules.Notification',
+                    'Modules.Mbo.Modulescatalog',
                     ['%module%' => $moduleName]
                 );
                 $upgradeResponse['is_configurable'] = (bool) $this->coreModuleRepository
@@ -208,7 +208,7 @@ class AddonsController extends FrameworkBundleAdminController
                 $error = $this->moduleManager->getError($moduleName);
                 $upgradeResponse['msg'] = $this->trans(
                     'Upgrade of module %module% failed. %error%',
-                    'Admin.Modules.Notification',
+                    'Modules.Mbo.Modulescatalog',
                     [
                         '%module%' => $moduleName,
                         '%error%' => $error,
@@ -220,7 +220,7 @@ class AddonsController extends FrameworkBundleAdminController
                 $upgradeResponse['status'] = true;
                 $upgradeResponse['msg'] = $this->trans(
                     'Module %module% is already up to date',
-                    'Admin.Modules.Notification',
+                    'Modules.Mbo.Modulescatalog',
                     [
                         '%module%' => $moduleName,
                     ]
@@ -233,7 +233,7 @@ class AddonsController extends FrameworkBundleAdminController
 
                 $upgradeResponse['msg'] = $this->trans(
                     'Upgrade of module %module% failed. %error%',
-                    'Admin.Modules.Notification',
+                    'Modules.Mbo.Modulescatalog',
                     [
                         '%module%' => $moduleName,
                         '%error%' => $e->getMessage(),

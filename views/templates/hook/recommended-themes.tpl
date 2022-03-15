@@ -21,16 +21,16 @@
   <div class="card theme-card theme-catalog-card">
 
     <div class="text-center catalog-image">
-      <img src="{$recommendedThemesImgPath}icon_themes.png" alt="{l s='Visit the theme catalog' d='Admin.Design.Feature'}">
+      <img src="{$recommendedThemesImgPath}icon_themes.png" alt="{l s='Visit the theme catalog' d='Modules.Mbo.Recommendedthemes'}">
     </div>
 
     <div class="text-center catalog-description">
-      {l s='Explore more than a thousand themes' d='Admin.Design.Feature'}
+      {l s='Explore more than a thousand themes' d='Modules.Mbo.Recommendedthemes'}
     </div>
 
     <div class="actions-container active">
       <a class="btn btn-primary" href="{$recommendedThemesLink}" target="_blank">
-        {l s='Visit the theme catalog' d='Admin.Design.Feature'}
+        {l s='Visit the theme catalog' d='Modules.Mbo.Recommendedthemes'}
       </a>
     </div>
   </div>

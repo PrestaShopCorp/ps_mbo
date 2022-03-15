@@ -28,7 +28,7 @@
 <div class="btn-group module-actions">
   {% if url_active == 'buy' %}
     <a class="btn btn-primary btn-primary-reverse btn-block btn-outline-primary module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
-      {{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}
+      {{ 'Discover'|trans({}, 'Modules.Mbo.Modulescatalog') }}
     </a>
   {% elseif urls|length %}
     {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/action_button.html.twig' with {
@@ -44,7 +44,7 @@
       <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="caret"></span>
       </button>
-      <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
+      <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Modules.Mbo.Modulescatalog') }}</span>
       <div class="dropdown-menu">
         {% for module_action, module_url in urls %}
           {% if module_action != url_active %}
