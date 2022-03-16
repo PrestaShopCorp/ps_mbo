@@ -32,6 +32,7 @@ use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleExtraToolbarButton;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleInstallRetrieveSource;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleUpgradeRetrieveSource;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayAdminThemesListAfter;
@@ -48,6 +49,7 @@ class ps_mbo extends Module
     use PrestaShop\Module\Mbo\Traits\HaveTabs;
     // Hooks
     use UseDisplayBackOfficeEmployeeMenu;
+    use UseDashboardZoneOne;
     use UseDisplayAdminThemesListAfter;
     use UseDashboardZoneTwo;
     use UseDashboardZoneThree;
@@ -72,6 +74,7 @@ class ps_mbo extends Module
         'displayBackOfficeFooter',
         'displayBackOfficeEmployeeMenu',
         'displayModuleConfigureExtraButtons',
+        'dashboardZoneOne',
         'dashboardZoneTwo',
         'dashboardZoneThree',
     ];
@@ -93,6 +96,11 @@ class ps_mbo extends Module
     protected $permissionChecker;
 
     /**
+     * @var string
+     */
+    public $imgPath;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -110,12 +118,13 @@ class ps_mbo extends Module
 
         parent::__construct();
 
+        $this->imgPath = $this->_path . 'views/img/';
+
         $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
         $this->description = $this->l('Browse the Addons marketplace directly from your back office to better meet your needs.');
 
         // Parse all traits to call boot method
-        foreach (class_uses($this) as $trait) {
-            $traitName = (new UnicodeString($trait))->afterLast('\\')->toString();
+        foreach ($this->getTraitNames() as $traitName) {
             if (method_exists($this, "boot{$traitName}")) {
                 $this->{"boot{$traitName}"}();
             }
@@ -129,8 +138,19 @@ class ps_mbo extends Module
      */
     public function install(): bool
     {
-        return parent::install()
-            && $this->registerHook(static::HOOKS);
+        if (parent::install() && $this->registerHook(static::HOOKS)) {
+            // Do come extra operations on modules' registration like modifying orders
+            foreach ($this->getTraitNames() as $traitName) {
+                $traitName = lcfirst($traitName);
+                if (method_exists($this, "{$traitName}ExtraOperations")) {
+                    $this->{"{$traitName}ExtraOperations"}();
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -171,5 +191,15 @@ class ps_mbo extends Module
         }
 
         return $this->container->get($serviceName);
+    }
+
+    private function getTraitNames(): array
+    {
+        $traits = [];
+        foreach (class_uses($this) as $trait) {
+            $traits[] = (new UnicodeString($trait))->afterLast('\\')->toString();
+        }
+
+        return $traits;
     }
 }

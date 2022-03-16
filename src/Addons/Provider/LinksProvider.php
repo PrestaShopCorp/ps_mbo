@@ -19,18 +19,20 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Addons;
+namespace PrestaShop\Module\Mbo\Addons\Provider;
 
+use Language;
+use PrestaShop\Module\Mbo\Addons\PracticalLinks;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Foundation\Version;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Responsible for provide Addons url with Context params for Module Selection and Theme Catalog pages
- */
-class SelectionLinkProvider
+class LinksProvider
 {
+    const ADDONS_LANGUAGES = ['de', 'en', 'es', 'fr', 'it', 'nl', 'pl', 'pt', 'ru'];
+    const DEFAULT_LANGUAGE = 'en';
+
     /**
      * @var Version
      */
@@ -76,7 +78,7 @@ class SelectionLinkProvider
      *
      * @return string
      */
-    public function getLinkUrl(): string
+    public function getSelectionLink(): string
     {
         $link = 'https://addons.prestashop.com/iframe/search-1.7.php?psVersion=' . $this->version->getVersion()
             . '&isoLang=' . $this->context->getContext()->language->iso_code
@@ -90,5 +92,38 @@ class SelectionLinkProvider
         }
 
         return $link;
+    }
+
+    /**
+     * @return string
+     */
+    public function getThemesLinkUrl(): string
+    {
+        $isoCode = strtoupper($this->context->getLanguage()->iso_code);
+        $languageAddons = in_array(strtolower($isoCode), static::ADDONS_LANGUAGES) ? strtolower($isoCode) : static::DEFAULT_LANGUAGE;
+
+        return sprintf(
+            '%s?%s',
+            'https://addons.prestashop.com/' . $languageAddons . '/3-templates-prestashop',
+            http_build_query([
+                'utm_source' => 'back-office',
+                'utm_medium' => 'theme-button',
+                'utm_campaign' => 'back-office-' . $isoCode,
+                'utm_content' => 'download',
+            ])
+        );
+    }
+
+    public function getDashboardPracticalLinks(): array
+    {
+        $idLang = $this->context->language->id;
+        $isoCode = Language::getIsoById($idLang);
+        if (false === $isoCode) {
+            $isoCode = self::DEFAULT_LANGUAGE;
+        }
+
+        $isoCode = mb_strtolower($isoCode);
+
+        return PracticalLinks::getByIsoCode($isoCode);
     }
 }

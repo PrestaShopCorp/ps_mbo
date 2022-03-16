@@ -1,5 +1,4 @@
-<?php
-/**
+{**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -16,31 +15,19 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
- */
-declare(strict_types=1);
+ *}
 
-namespace PrestaShop\Module\Mbo\Traits\Hooks;
+<section id="mbo-advices-and-updates" class="panel widget">
+  <div class="panel-heading">
+    <i class="icon-puzzle-piece"></i> {l s='TIPS & UPDATES' mod='psaddonsconnect'}
+  </div>
 
-use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
+  <p> {l s='Connect to your account right now to enjoy updates (security and features) on all of your modules.' mod='psaddonsconnect'} </p><br>
+  <p> {l s='Once you are connected, you will also enjoy weekly tips directly from your back office.' mod='psaddonsconnect'} </p> <br>
 
-trait UseDisplayAdminThemesListAfter
-{
-    /**
-     * Hook displayAdminThemesListAfter.
-     * Includes content just after the themes list.
-     *
-     * @return string
-     */
-    public function hookDisplayAdminThemesListAfter(array $params): string
-    {
-        /** @var LinksProvider $linksProvider */
-        $linksProvider = $this->get('mbo.addons.links_provider');
-
-        $this->smarty->assign([
-            'recommendedThemesLink' => $linksProvider->getThemesLinkUrl(),
-            'recommendedThemesImgPath' => $this->_path . 'views/img/',
-        ]);
-
-        return $this->fetch('module:ps_mbo/views/templates/hook/recommended-themes.tpl');
-    }
-}
+  <div class="text-center">
+    <a class="btn btn-primary" id="page-header-desc-configuration-addons_connect" href="{$connect_button.href}" title="{$connect_button.help}">
+      <i class="material-icons">{$connect_button.icon}</i> {$connect_button.desc}
+    </a>
+  </div>
+</section>

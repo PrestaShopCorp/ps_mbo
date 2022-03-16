@@ -19,28 +19,47 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Traits\Hooks;
+namespace PrestaShop\Module\Mbo\Addons;
 
-use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
-
-trait UseDisplayAdminThemesListAfter
+class WeekAdvice
 {
     /**
-     * Hook displayAdminThemesListAfter.
-     * Includes content just after the themes list.
-     *
-     * @return string
+     * @var string
      */
-    public function hookDisplayAdminThemesListAfter(array $params): string
+    private $advice;
+
+    /**
+     * @var string|null
+     */
+    private $link;
+
+    public function __construct(string $advice, ?string $link = null)
     {
-        /** @var LinksProvider $linksProvider */
-        $linksProvider = $this->get('mbo.addons.links_provider');
+        $this->advice = $advice;
+        $this->link = $link;
+    }
 
-        $this->smarty->assign([
-            'recommendedThemesLink' => $linksProvider->getThemesLinkUrl(),
-            'recommendedThemesImgPath' => $this->_path . 'views/img/',
-        ]);
+    public function getAdvice(): string
+    {
+        return $this->advice;
+    }
 
-        return $this->fetch('module:ps_mbo/views/templates/hook/recommended-themes.tpl');
+    public function setAdvice(string $advice): WeekAdvice
+    {
+        $this->advice = $advice;
+
+        return $this;
+    }
+
+    public function getLink(): ?string
+    {
+        return $this->link;
+    }
+
+    public function setLink(?string $link): WeekAdvice
+    {
+        $this->link = $link;
+
+        return $this;
     }
 }

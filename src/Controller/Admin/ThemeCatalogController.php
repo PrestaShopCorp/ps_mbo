@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use PrestaShop\Module\Mbo\Addons\SelectionLinkProvider;
+use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
 use PrestaShop\Module\Mbo\Service\ExternalContentProvider\ExternalContentProviderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -45,24 +45,24 @@ class ThemeCatalogController extends FrameworkBundleAdminController
     protected $externalContentProvider;
 
     /**
-     * @var SelectionLinkProvider
+     * @var LinksProvider
      */
-    protected $selectionLinkProvider;
+    protected $linksProvider;
 
     /**
      * @param RequestStack $requestStack
      * @param ExternalContentProviderInterface $externalContentCollectionProvider
-     * @param SelectionLinkProvider $selectionLinkProvider
+     * @param LinksProvider $linksProvider
      */
     public function __construct(
         RequestStack $requestStack,
         ExternalContentProviderInterface $externalContentCollectionProvider,
-        SelectionLinkProvider $selectionLinkProvider
+        LinksProvider $linksProvider
     ) {
         parent::__construct();
         $this->requestStack = $requestStack;
         $this->externalContentProvider = $externalContentCollectionProvider;
-        $this->selectionLinkProvider = $selectionLinkProvider;
+        $this->linksProvider = $linksProvider;
     }
 
     /**
@@ -78,7 +78,7 @@ class ThemeCatalogController extends FrameworkBundleAdminController
             $response->setContent($this->renderView(
                 '@Modules/ps_mbo/views/templates/admin/controllers/theme_catalog/addons_store.html.twig',
                 [
-                    'pageContent' => $this->externalContentProvider->getContent($this->selectionLinkProvider->getLinkUrl()),
+                    'pageContent' => $this->externalContentProvider->getContent($this->linksProvider->getSelectionLink()),
                     'layoutHeaderToolbarBtn' => [],
                     'layoutTitle' => $this->trans('Themes Catalog', 'Admin.Navigation.Menu'),
                     'requireAddonsSearch' => true,

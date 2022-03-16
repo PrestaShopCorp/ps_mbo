@@ -106,21 +106,39 @@ class Toolbar
     public function getConnectionToolbar(): array
     {
         if ($this->addonsDataProvider->isUserAuthenticated()) {
-            $toolbarButtons['addons_logout'] = [
-                'href' => '#',
-                'desc' => $this->addonsDataProvider->getAuthenticatedUserEmail(),
-                'icon' => 'exit_to_app',
-                'help' => $this->translator->trans('Synchronized with Addons marketplace!', [], 'Admin.Modules.Notification', $this->translator->getLocale()),
-            ];
+            $toolbarButtons['addons_logout'] = $this->getAddonsLogoutButton();
         } else {
-            $toolbarButtons['addons_connect'] = [
-                'href' => '#',
-                'desc' => $this->translator->trans('Connect to Addons marketplace', [], 'Feature', $this->translator->getLocale()),
-                'icon' => 'vpn_key',
-                'help' => $this->translator->trans('Connect to Addons marketplace', [], 'Feature', $this->translator->getLocale()),
-            ];
+            $toolbarButtons['addons_connect'] = $this->getAddonsConnectButton();
         }
 
         return $toolbarButtons;
+    }
+
+    public function getAddonsConnectButton(): ?array
+    {
+        if ($this->addonsDataProvider->isUserAuthenticated()) {
+            return null;
+        }
+
+        return [
+            'href' => '#',
+            'desc' => $this->translator->trans('Connect to Addons marketplace', [], 'Feature', $this->translator->getLocale()),
+            'icon' => 'vpn_key',
+            'help' => $this->translator->trans('Connect to Addons marketplace', [], 'Feature', $this->translator->getLocale()),
+        ];
+    }
+
+    public function getAddonsLogoutButton(): ?array
+    {
+        if (!$this->addonsDataProvider->isUserAuthenticated()) {
+            return null;
+        }
+
+        return [
+            'href' => '#',
+            'desc' => $this->addonsDataProvider->getAuthenticatedUserEmail(),
+            'icon' => 'exit_to_app',
+            'help' => $this->translator->trans('Synchronized with Addons marketplace!', [], 'Admin.Modules.Notification', $this->translator->getLocale()),
+        ];
     }
 }
