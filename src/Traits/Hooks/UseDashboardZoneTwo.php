@@ -32,6 +32,12 @@ trait UseDashboardZoneTwo
      */
     public function hookDashboardZoneTwo(array $params)
     {
+        $this->context->smarty->assign(
+            [
+                'host_mode' => defined('_PS_HOST_MODE_'),
+            ]
+        );
+
         return $this->display($this->name, 'dashboard-zone-two.tpl');
     }
 }
