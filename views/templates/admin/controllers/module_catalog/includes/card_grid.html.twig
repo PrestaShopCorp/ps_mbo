@@ -57,9 +57,9 @@
       <div class="text-ellipsis small-text module-version-author-grid">
         {% block addon_version %}
           {% if module.attributes.product_type == "service" %}
-            {{ 'Service by %author%'|trans({'%author%' : '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
+            {{ 'Service by %author%'|trans({'%author%' : '<b>' ~ module.attributes.author ~ '</b>'}, 'Modules.Mbo.Modulescatalog')|raw }}
           {% else %}
-            {{ 'v%version% - by %author%'|trans({ '%version%' : module.attributes.version, '%author%' : '<b>' ~ module.attributes.author ~ '</b>' }, 'Admin.Modules.Feature')|raw }}
+            {{ 'v%version% - by %author%'|trans({ '%version%' : module.attributes.version, '%author%' : '<b>' ~ module.attributes.author ~ '</b>' }, 'Modules.Mbo.Modulescatalog')|raw }}
           {% endif %}
         {% endblock %}
       </div>
@@ -74,7 +74,7 @@
         </div>
         <div class="module-read-more-grid">
           {% if module.attributes.id != "0" %}
-            <a class="module-read-more-grid-btn url" href="{{ path('admin_mbo_module_see_more', {"moduleId": module.attributes.id }) }}" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Admin.Modules.Feature') }}</a>
+            <a class="module-read-more-grid-btn url" href="{{ path('admin_mbo_module_see_more', {"moduleId": module.attributes.id }) }}" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
           {% endif %}
         </div>
       {% endblock %}
@@ -99,7 +99,7 @@
       {% if module.attributes.url_active == 'buy' and module.attributes.price.raw != '0.00' %}
         {{ module.attributes.price.displayPrice }}
       {% elseif module.attributes.url_active != 'buy' %}
-        <span class="pt-2">{{ 'Free'|trans({}, 'Admin.Modules.Feature') }}</span>
+        <span class="pt-2">{{ 'Free'|trans({}, 'Modules.Mbo.Modulescatalog') }}</span>
       {% endif %}
       </div>
       {% if requireBulkActions is defined and requireBulkActions == true %}

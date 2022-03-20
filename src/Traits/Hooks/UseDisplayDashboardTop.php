@@ -143,7 +143,7 @@ trait UseDisplayDashboardTop
             'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModules(static::$RECOMMENDED_AFTER_CONTENT_TYPE),
             'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModules(static::$RECOMMENDED_BUTTON_TYPE),
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
-            'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services'),
+            'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services', [], 'Modules.Mbo.Recommendedmodulesandservices'),
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
             'recommendedModulesUrl' => $recommendedModulesUrl,
         ]);

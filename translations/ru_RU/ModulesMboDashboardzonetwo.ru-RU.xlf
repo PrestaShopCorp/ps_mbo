@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_mbo/views/templates/hook/dashboard-zone-two.tpl" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
+    <body>
+      <trans-unit id="2f310f524ccb95e1bf929cea106a8f24">
+        <source>Add more dashboard modules</source>
+        <target>Add more dashboard modules</target>
+        <note>Line: 22</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

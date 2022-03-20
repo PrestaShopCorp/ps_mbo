@@ -20,8 +20,8 @@
 {% block catalog_category_empty %}
   <div class="modules-list module-list-empty" data-name="{{ category.refMenu }}">
     <p>
-      {{ 'You do not have module in « %categoryName% ».' | trans({'%categoryName%': category.name}, 'Admin.Modules.Feature') }}<br/>
-      {{ 'Discover the best-selling modules of this category in the %link% page.' | trans({'%link%': '<a href="'~ path('admin_module_catalog', {filterCategoryRef: category.refMenu}) ~ '">'~category.name~'</a>'}, 'Admin.Modules.Feature') | raw }}
+      {{ 'You do not have module in « %categoryName% ».' | trans({'%categoryName%': category.name}, 'Modules.Mbo.Modulescatalog') }}<br/>
+      {{ 'Discover the best-selling modules of this category in the %link% page.' | trans({'%link%': '<a href="'~ path('admin_module_catalog', {filterCategoryRef: category.refMenu}) ~ '">'~category.name~'</a>'}, 'Modules.Mbo.Modulescatalog') | raw }}
     </p>
   </div>
 {% endblock %}

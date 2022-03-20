@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_mbo/views/templates/hook/dashboard-zone-three.tpl" source-language="pl-PL" target-language="pl-PL" datatype="plaintext">
+    <body>
+      <trans-unit id="f87dfb10a52e92f3fc08bef2802da23d">
+        <source>PrestaShop News</source>
+        <target>PrestaShop News</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="c9cd54b7c6c536dc09e7724c68412a56">
+        <source>Find more news</source>
+        <target>Find more news</target>
+        <note>Line: 36</note>
+      </trans-unit>
+      <trans-unit id="3baecdcf2a4503bac6d0b385146b5f3e">
+        <source>We stay by your side!</source>
+        <target>We stay by your side!</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="efdaf9f44ce968366fa78277263abc1d">
+        <source>Help Center</source>
+        <target>Help Center</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="9b3a8fd98f6da8d3a2e338d0faa771ea">
+        <source>Documentation, support, experts, training... PrestaShop and all of its community are here to guide you</source>
+        <target>Documentation, support, experts, training... PrestaShop and all of its community are here to guide you</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="1862c358989cfbd20d38ca9adf69e27a">
+        <source>PrestaShop Marketplace</source>
+        <target>PrestaShop Marketplace</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="44a9a480bd52a55b362fc1c3b885204c">
+        <source>Traffic, conversion rate, customer loyalty... Increase your sales with all of the PrestaShop modules and themes</source>
+        <target>Traffic, conversion rate, customer loyalty... Increase your sales with all of the PrestaShop modules and themes</target>
+        <note>Line: 60</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

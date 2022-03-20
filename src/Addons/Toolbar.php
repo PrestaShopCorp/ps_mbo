@@ -91,9 +91,9 @@ class Toolbar
         return [
             'add_module' => [
                 'href' => '#',
-                'desc' => $this->translator->trans('Upload a module', [], 'Admin.Modules.Feature', $this->translator->getLocale()),
+                'desc' => $this->translator->trans('Upload a module', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
                 'icon' => 'cloud_upload',
-                'help' => $this->translator->trans('Upload a module', [], 'Admin.Modules.Feature', $this->translator->getLocale()),
+                'help' => $this->translator->trans('Upload a module', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
             ],
         ];
     }
@@ -122,9 +122,9 @@ class Toolbar
 
         return [
             'href' => '#',
-            'desc' => $this->translator->trans('Connect to Addons marketplace', [], 'Feature', $this->translator->getLocale()),
+            'desc' => $this->translator->trans('Connect to Addons marketplace', [], 'Modules.Mbo.Addons', $this->translator->getLocale()),
             'icon' => 'vpn_key',
-            'help' => $this->translator->trans('Connect to Addons marketplace', [], 'Feature', $this->translator->getLocale()),
+            'help' => $this->translator->trans('Connect to Addons marketplace', [], 'Modules.Mbo.Addons', $this->translator->getLocale()),
         ];
     }
 
@@ -138,7 +138,7 @@ class Toolbar
             'href' => '#',
             'desc' => $this->addonsDataProvider->getAuthenticatedUserEmail(),
             'icon' => 'exit_to_app',
-            'help' => $this->translator->trans('Synchronized with Addons marketplace!', [], 'Admin.Modules.Notification', $this->translator->getLocale()),
+            'help' => $this->translator->trans('Synchronized with Addons marketplace!', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
         ];
     }
 }

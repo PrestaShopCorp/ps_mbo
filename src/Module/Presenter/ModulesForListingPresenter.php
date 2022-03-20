@@ -154,7 +154,11 @@ class ModulesForListingPresenter implements PresenterInterface
             [
                 'categories' => $categories['categories'],
                 'level' => $this->permissionChecker->getAuthorizationLevel(ModuleCatalogController::CONTROLLER_NAME),
-                'errorMessage' => $this->translator->trans('You do not have permission to add this.', [], 'Admin.Notifications.Error'),
+                'errorMessage' => $this->translator->trans(
+                    'You do not have permission to add this.',
+                    [],
+                    'Admin.Notifications.Error'
+                ),
             ]
         );
 
