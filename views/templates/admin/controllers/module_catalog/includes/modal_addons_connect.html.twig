@@ -40,7 +40,7 @@
               <div class="col-md-12">
                   <p>
                       {{ "Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?"|trans({}, 'Modules.Mbo.Modulescatalog') }}
-                      <a href="https://addons.prestashop.com/authentication.php" target="_blank">{{ 'Sign up now'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
+                      <a href="{{ signUpLink }}" target="_blank">{{ 'Sign up now'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
                   </p>
                   <form id="addons-connect-form"
                         action="{{ path('admin_mbo_addons_login') }}"

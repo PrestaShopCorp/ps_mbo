@@ -42,8 +42,6 @@
 {% block content %}
   <div class="row justify-content-center">
     <div class="col-lg-10 module-catalog-page">
-      {# Addons connect modal #}
-      {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
       {# PrestaTrust modal #}
       {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_confirm_prestatrust.html.twig' %}
       {# Contains toolbar-nav for module page #}

@@ -99,16 +99,15 @@ class LinksProvider
      */
     public function getThemesLinkUrl(): string
     {
-        $isoCode = strtoupper($this->context->getLanguage()->iso_code);
-        $languageAddons = in_array(strtolower($isoCode), static::ADDONS_LANGUAGES) ? strtolower($isoCode) : static::DEFAULT_LANGUAGE;
+        $isoCode = $this->getIsoCode();
 
         return sprintf(
             '%s?%s',
-            'https://addons.prestashop.com/' . $languageAddons . '/3-templates-prestashop',
+            'https://addons.prestashop.com/' . mb_strtolower($isoCode) . '/3-templates-prestashop',
             http_build_query([
                 'utm_source' => 'back-office',
                 'utm_medium' => 'theme-button',
-                'utm_campaign' => 'back-office-' . $isoCode,
+                'utm_campaign' => 'back-office-' . mb_strtoupper($isoCode),
                 'utm_content' => 'download',
             ])
         );
@@ -116,14 +115,29 @@ class LinksProvider
 
     public function getDashboardPracticalLinks(): array
     {
-        $idLang = $this->context->language->id;
+        $isoCode = mb_strtolower($this->getIsoCode());
+
+        return PracticalLinks::getByIsoCode($isoCode);
+    }
+
+    public function getSignUpLink(): string
+    {
+        $isoCode = mb_strtolower($this->getIsoCode());
+
+        return sprintf('https://auth.prestashop.com/%s/inscription', $isoCode)
+            . sprintf('?lang=%s', $isoCode)
+            . '&_ga=2.183749797.2029715227.1645605306-2047387021.1643627469'
+            . '&_gac=1.81371877.1644238612.CjwKCAiAo4OQBhBBEiwA5KWu_5UzrywbBPo4PKIYESy7K-noavdo7Z4riOZMJEoM9mE1IE3gks0thxoCZOwQAvD_BwE';
+    }
+
+    private function getIsoCode(): string
+    {
+        $idLang = $this->context->getLanguage()->id;
         $isoCode = Language::getIsoById($idLang);
         if (false === $isoCode) {
             $isoCode = self::DEFAULT_LANGUAGE;
         }
 
-        $isoCode = mb_strtolower($isoCode);
-
-        return PracticalLinks::getByIsoCode($isoCode);
+        return $isoCode;
     }
 }
