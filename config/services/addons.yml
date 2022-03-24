@@ -51,11 +51,3 @@ services:
 
   mbo.addons.week_advice_provider:
     class: PrestaShop\Module\Mbo\Addons\Provider\WeekAdviceProvider
-
-  # Event subscribers
-  mbo.addons.event_subscriber:
-    class: PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber
-    arguments:
-      - '@logger'
-    tags:
-      - { name: 'kernel.event_subscriber', event: 'module.install' }

@@ -1,5 +1,6 @@
 imports:
     - { resource: services/*.yml }
+    - { resource: services/addons.php }
 
 services:
   _defaults:
