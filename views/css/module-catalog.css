@@ -29,3 +29,9 @@
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
+
+.pstaggerTag { /* To prevent search input to be larger than its container */
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-width: 100%;
+}
