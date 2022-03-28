@@ -22,6 +22,8 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
+use PrestaShopBundle\Component\ActionBar\ActionsBarButton;
+use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 
 trait UseAdminModuleExtraToolbarButton
 {
@@ -32,11 +34,26 @@ trait UseAdminModuleExtraToolbarButton
      *
      * @param array $params
      *
-     * @return array
+     * @return ActionsBarButtonsCollection
      */
-    public function hookActionAdminModuleExtraToolbarButton(array $params): array
+    public function hookActionAdminModuleExtraToolbarButton(array $params): ActionsBarButtonsCollection
     {
-        return $this->get('mbo.addons.toolbar')->getConnectionToolbar();
+        /**
+         * @var ActionsBarButtonsCollection $extraToolbarButtons
+         */
+        $extraToolbarButtons = $params['toolbar_extra_buttons_collection'];
+        $toolbarButtons = $this->get('mbo.addons.toolbar')->getConnectionToolbar();
+
+        foreach ($toolbarButtons as $toolbarButtonLabel => $toolbarButtonDescription) {
+            $actionBarButton = new ActionsBarButton(
+                $toolbarButtonLabel,
+                $toolbarButtonDescription,
+                $toolbarButtonDescription['desc']
+            );
+            $extraToolbarButtons->add($actionBarButton);
+        }
+
+        return $extraToolbarButtons;
     }
 
     /**
