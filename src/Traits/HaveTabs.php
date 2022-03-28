@@ -112,13 +112,18 @@ trait HaveTabs
             $tabData['name']
         );
 
+        $idParent = empty($tabData['parent_class_name']) ? -1 : $this->tabRepository->findOneIdByClassName($tabData['parent_class_name']);
+
         $tab = new Tab();
         $tab->module = $this->name;
         $tab->class_name = $tabData['class_name'];
         $tab->position = $position;
-        $tab->id_parent = empty($tabData['parent_class_name']) ? -1 : $this->tabRepository->findOneIdByClassName($tabData['parent_class_name']);
+        $tab->id_parent = $idParent;
         $tab->name = $tabNameByLangId;
         $tab->active = true;
+
+        // This will reorder the tabs starting with 1
+        $tab->cleanPositions($idParent);
 
         if (false === $tab->add()) {
             return false;
