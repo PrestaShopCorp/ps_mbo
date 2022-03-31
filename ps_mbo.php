@@ -28,6 +28,7 @@ if (file_exists($autoloadPath)) {
 }
 
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseActionPresentModule;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleExtraToolbarButton;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleInstallRetrieveSource;
@@ -60,6 +61,7 @@ class ps_mbo extends Module
     use UseAdminModuleExtraToolbarButton;
     use UseDisplayBackOfficeFooter;
     use UseDisplayModuleConfigureExtraButtons;
+    use UseActionPresentModule;
 
     /**
      * @var array Hooks registered by the module
@@ -77,6 +79,7 @@ class ps_mbo extends Module
         'dashboardZoneOne',
         'dashboardZoneTwo',
         'dashboardZoneThree',
+        'actionPresentModule',
     ];
     /**
      * @var array An array of method that can be called to register media in the actionAdminControllerSetMedia hook
@@ -138,7 +141,7 @@ class ps_mbo extends Module
      */
     public function install(): bool
     {
-        if (parent::install() && $this->registerHook(static::HOOKS)) {
+        if (parent::install() && $this->registerHook($this->getUsedHooks())) {
             // Do come extra operations on modules' registration like modifying orders
             foreach ($this->getTraitNames() as $traitName) {
                 $traitName = lcfirst($traitName);
@@ -198,7 +201,7 @@ class ps_mbo extends Module
         return true;
     }
 
-    private function getTraitNames(): array
+    protected function getTraitNames(): array
     {
         $traits = [];
         foreach (class_uses($this) as $trait) {
@@ -206,6 +209,19 @@ class ps_mbo extends Module
         }
 
         return $traits;
+    }
+
+    protected function getUsedHooks(): array
+    {
+        $hooks = [];
+        $traits = $this->getTraitNames();
+        foreach ($traits as $trait) {
+            if (preg_match('#^Use([A-Z]\w+)#', $trait, $matches)) {
+                $hooks[] = lcfirst($matches[1]);
+            }
+        }
+
+        return $hooks;
     }
 
     /**
