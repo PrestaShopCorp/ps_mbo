@@ -33,7 +33,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    protected $logger;
 
     public function __construct(LoggerInterface $logger)
     {
@@ -102,7 +102,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         $this->logEvent(ModuleManagementEvent::RESET);
     }
 
-    private function logEvent(string $eventName)
+    protected function logEvent(string $eventName): void
     {
         $this->logger->info(sprintf('Event %s triggered', $eventName));
     }

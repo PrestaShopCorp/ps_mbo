@@ -207,4 +207,22 @@ class ps_mbo extends Module
 
         return $traits;
     }
+
+    /**
+     * Used to correctly check if the module is enabled or not whe registering services
+     *
+     * @return bool
+     */
+    public static function checkModuleStatus(): bool
+    {
+        $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`
+        FROM `' . _DB_PREFIX_ . 'module` m
+        LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
+        WHERE `name` = "ps_mbo"');
+        if ($result) {
+            return $result['active'] && $result['shop_active'];
+        } else {
+            return false;
+        }
+    }
 }
