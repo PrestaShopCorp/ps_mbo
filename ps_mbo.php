@@ -141,7 +141,7 @@ class ps_mbo extends Module
      */
     public function install(): bool
     {
-        if (parent::install() && $this->registerHook($this->getUsedHooks())) {
+        if (parent::install() && $this->registerHook(static::HOOKS)) {
             // Do come extra operations on modules' registration like modifying orders
             foreach ($this->getTraitNames() as $traitName) {
                 $traitName = lcfirst($traitName);
@@ -209,19 +209,6 @@ class ps_mbo extends Module
         }
 
         return $traits;
-    }
-
-    protected function getUsedHooks(): array
-    {
-        $hooks = [];
-        $traits = $this->getTraitNames();
-        foreach ($traits as $trait) {
-            if (preg_match('#^Use([A-Z]\w+)#', $trait, $matches)) {
-                $hooks[] = lcfirst($matches[1]);
-            }
-        }
-
-        return $hooks;
     }
 
     /**
