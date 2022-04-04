@@ -71,7 +71,7 @@ class NewsBuilderTest extends MockeryTestCase
 
         $this->assertSame([
             'date' => '2022-02-28 11:24:05',
-            'title' => 'CMS PrestaShop : guide d&#039;installation manuelle de votre boutique ecommerce',
+            'title' => 'CMS PrestaShop : guide d\'installation manuelle de votre boutique ecommerce',
             'short_desc' => $description,
             'link' => 'https://www.prestashop.com/fr/blog/comment-installer-prestashop?',
         ], $news->toArray());
