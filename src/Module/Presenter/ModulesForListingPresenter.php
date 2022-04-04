@@ -27,22 +27,21 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\Presenter;
 
+use Currency;
 use PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController;
 use PrestaShop\Module\Mbo\Module\Collection;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
-use PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
+use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class ModulesForListingPresenter implements PresenterInterface
 {
-    /**
-     * @var ModulePresenter
-     */
-    private $modulePresenter;
-
     /**
      * @var Environment
      */
@@ -63,14 +62,33 @@ class ModulesForListingPresenter implements PresenterInterface
      */
     private $translator;
 
+    /**
+     * @var PriceFormatter
+     */
+    private $priceFormatter;
+
+    /**
+     * @var LegacyContext
+     */
+    private $context;
+
+    /**
+     * @var CurrencyDataProvider
+     */
+    private $currencyDataProvider;
+
     public function __construct(
-        ModulePresenter $modulePresenter,
+        LegacyContext $context,
+        PriceFormatter $priceFormatter,
+        CurrencyDataProvider $currencyDataProvider,
         Environment $twig,
         TranslatorInterface $translator,
         PermissionCheckerInterface $permissionChecker,
         CategoriesProvider $categoriesProvider
     ) {
-        $this->modulePresenter = $modulePresenter;
+        $this->context = $context;
+        $this->priceFormatter = $priceFormatter;
+        $this->currencyDataProvider = $currencyDataProvider;
         $this->twig = $twig;
         $this->translator = $translator;
         $this->permissionChecker = $permissionChecker;
@@ -105,15 +123,14 @@ class ModulesForListingPresenter implements PresenterInterface
     protected function presentCategories(array $categories): array
     {
         foreach ($categories['categories']->subMenu as $category) {
-            $category->modules = $this->modulePresenter
-                ->presentCollection($category->modules);
+            $category->modules = $this->presentModulesCollection($category->modules);
         }
 
         return $categories;
     }
 
     /**
-     * Build template for the categories dropdown on the header of page.
+     * Build template for the categories' dropdown on the header of page.
      *
      * @param array $categories
      *
@@ -180,5 +197,100 @@ class ModulesForListingPresenter implements PresenterInterface
         return $this->categoriesProvider->getCategoriesMenu(
             $modules->getIterator()->getArrayCopy()
         );
+    }
+
+    /**
+     * @param ModuleInterface $module
+     *
+     * @return array
+     */
+    private function presentModule(ModuleInterface $module): array
+    {
+        $attributes = $module->attributes->all();
+        $attributes['price'] = $this->getModulePrice($attributes['price']);
+        // Round to the nearest 0.5
+        $attributes['starsRate'] = str_replace('.', '', (string) (round(floatval($attributes['avgRate']) * 2) / 2));
+
+        $moduleInstance = $module->getInstance();
+
+        if ($moduleInstance instanceof LegacyModule) {
+            $attributes['multistoreCompatibility'] = $moduleInstance->getMultistoreCompatibility();
+        }
+
+        $result = [
+            'attributes' => $attributes,
+            'disk' => $module->disk->all(),
+            'database' => $module->database->all(),
+        ];
+
+        return $result;
+    }
+
+    private function getModulePrice($prices)
+    {
+        $currencyCode = $this->context->getEmployeeCurrency()->iso_code;
+        if (array_key_exists($currencyCode, $prices)) {
+            $prices['displayPrice'] = $this->priceFormatter->convertAndFormat($prices[$currencyCode]);
+            $prices['raw'] = $prices[$currencyCode];
+        } else {
+            try {
+                $locale = \Tools::getContextLocale($this->context->getContext());
+
+                $installedDefaultCurrency = $this->getInstalledDefaultCurrency();
+                if (null === $installedDefaultCurrency) {
+                    throw new \Exception('None of the default currencies (USD, EUR, GBP) is installed');
+                }
+
+                $price = \Tools::convertPrice(
+                    $prices[$installedDefaultCurrency->iso_code],
+                    $installedDefaultCurrency,
+                    false, // from default currency to Locale
+                    $this->context->getContext()
+                );
+
+                $prices['displayPrice'] = $locale->formatPrice($price, $currencyCode);
+                $prices['raw'] = $locale->formatNumber($price);
+            } catch (\Exception $e) {
+                $prices['displayPrice'] = '$' . $prices['USD'];
+                $prices['raw'] = $prices['USD'];
+            }
+        }
+
+        return $prices;
+    }
+
+    /**
+     * Transform a collection of modules as a simple array of data.
+     *
+     * @param array $modules
+     *
+     * @return array
+     */
+    private function presentModulesCollection(array $modules): array
+    {
+        $presentedModules = [];
+        foreach ($modules as $name => $module) {
+            $presentedModules[$name] = $this->presentModule($module);
+        }
+
+        return $presentedModules;
+    }
+
+    /**
+     * Returns the currency between USD, GBP and EUR which is installed and consider it as default
+     *
+     * @return Currency
+     */
+    private function getInstalledDefaultCurrency(): ?Currency
+    {
+        foreach (['USD', 'EUR', 'GBP'] as $potentialDefaultCurrencyCode) {
+            $currency = $this->currencyDataProvider->getCurrencyByIsoCode($potentialDefaultCurrencyCode);
+
+            if (null !== $currency) {
+                return $currency;
+            }
+        }
+
+        return null;
     }
 }
