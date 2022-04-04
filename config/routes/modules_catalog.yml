@@ -4,7 +4,9 @@ admin_mbo_catalog_module:
   defaults:
     _controller: mbo.controller.modules.catalog:indexAction
     _legacy_controller: AdminPsMboModule
-    _legacy_link: AdminPsMboModule
+    _legacy_link:
+      - AdminPsMboModuleParent
+      - AdminPsMboModule
 
 admin_mbo_catalog_module_selection:
   path: /selection

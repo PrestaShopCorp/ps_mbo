@@ -39,16 +39,16 @@ trait HaveTabs
             'class_name' => 'AdminPsMboModuleParent',
             'parent_class_name' => 'AdminParentModulesSf',
         ],
-        'AdminPsMboModule' => [
-            'name' => 'Module catalog',
-            'visible' => true,
-            'class_name' => 'AdminPsMboModule',
-            'parent_class_name' => 'AdminPsMboModuleParent',
-        ],
         'AdminPsMboSelection' => [
             'name' => 'Module selection',
             'visible' => true,
             'class_name' => 'AdminPsMboSelection',
+            'parent_class_name' => 'AdminPsMboModuleParent',
+        ],
+        'AdminPsMboModule' => [
+            'name' => 'Module catalog',
+            'visible' => true,
+            'class_name' => 'AdminPsMboModule',
             'parent_class_name' => 'AdminPsMboModuleParent',
         ],
         'AdminPsMboRecommended' => [
@@ -63,6 +63,7 @@ trait HaveTabs
             'parent_class_name' => 'AdminParentThemes',
         ],
     ];
+
     /**
      * @var TabRepository
      */
@@ -120,7 +121,7 @@ trait HaveTabs
         $tab->position = $position;
         $tab->id_parent = $idParent;
         $tab->name = $tabNameByLangId;
-        $tab->active = true;
+        $tab->active = $tabData['visible'];
 
         // This will reorder the tabs starting with 1
         $tab->cleanPositions($idParent);
