@@ -25,7 +25,9 @@ services:
   mbo.modules.presenter.listing:
     class: 'PrestaShop\Module\Mbo\Module\Presenter\ModulesForListingPresenter'
     arguments:
-      - '@prestashop.adapter.presenter.module'
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.adapter.formatter.price'
+      - '@prestashop.adapter.data_provider.currency'
       - '@twig'
       - '@translator'
       - '@mbo.security.permission_checker'
