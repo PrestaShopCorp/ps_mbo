@@ -130,6 +130,68 @@ class LinksProvider
             . '&_gac=1.81371877.1644238612.CjwKCAiAo4OQBhBBEiwA5KWu_5UzrywbBPo4PKIYESy7K-noavdo7Z4riOZMJEoM9mE1IE3gks0thxoCZOwQAvD_BwE';
     }
 
+    public function getEmployeeMenuLinks(): array
+    {
+        $isoCode = mb_strtolower($this->getIsoCode());
+
+        return [
+            [
+                'url' => 'https://www.prestashop.com'
+                    . '/en' //should be language dependant, but not available yet
+                    . '/resources/documentations'
+                    . '?utm_source=back-office'
+                    . '&utm_medium=profile'
+                    . '&utm_campaign=resources-en' //should be language dependant, but not available yet
+                    . '&utm_content=download17',
+                'icon' => 'book',
+                'label' => 'Resources',
+            ],
+            [
+                'url' => 'https://www.prestashop.com'
+                    . '/en' //should be language dependant, but not available yet
+                    . '/training'
+                    . '?utm_source=back-office'
+                    . '&utm_medium=profile'
+                    . '&utm_campaign=training-en' //should be language dependant, but not available yet
+                    . '&utm_content=download17',
+                'icon' => 'school',
+                'label' => 'Training',
+            ],
+            [
+                'url' => 'https://www.prestashop.com'
+                    . sprintf('/%s', $isoCode)
+                    . '/experts'
+                    . '?utm_source=back-office'
+                    . '&utm_medium=profile'
+                    . sprintf('&utm_campaign=expert-%s', $isoCode)
+                    . '&utm_content=download17',
+                'icon' => 'person_pin_circle',
+                'label' => 'Find an Expert',
+            ],
+            [
+                'url' => 'https://addons.prestashop.com'
+                    . sprintf('/%s/', $isoCode)
+                    . '?utm_source=back-office'
+                    . '&utm_medium=profile'
+                    . sprintf('&utm_campaign=addons-%s', $isoCode)
+                    . '&utm_content=download17',
+                'icon' => 'extension',
+                'label' => 'PrestaShop Marketplace',
+            ],
+            [
+                'url' => 'https://www.prestashop.com'
+                    . sprintf('/%s', $isoCode)
+                    . '/contact'
+                    . '?utm_source=back-office'
+                    . '&utm_medium=profile'
+                    . sprintf('&utm_campaign=help-center-%s', $isoCode)
+                    . '&utm_content=download17',
+                'icon' => 'help',
+                'label' => 'Help Center',
+            ],
+        ];
+    }
+
     private function getIsoCode(): string
     {
         $idLang = $this->context->getLanguage()->id;
