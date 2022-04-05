@@ -23,7 +23,6 @@ services:
     class: PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider
     arguments:
       - '@mbo.addons.client.api'
-      - '@prestashop.module.zip.manager'
       - '@=service("mbo.addons.cookie_user.provider").getUser()'
       - '@=service("prestashop.adapter.legacy.configuration").get("ADDONS_API_MODULE_CHANNEL", "stable")'
     properties:
