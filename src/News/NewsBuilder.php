@@ -70,7 +70,7 @@ class NewsBuilder
 
     private function formatTitle(string $title): string
     {
-        return htmlentities($title, ENT_QUOTES, 'utf-8');
+        return mb_convert_encoding(htmlentities($title, ENT_QUOTES), 'UTF-8', 'HTML-ENTITIES');
     }
 
     private function formatDescription(string $description)
