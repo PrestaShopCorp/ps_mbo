@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use Symfony\Component\Finder\Finder;
+
 trait UseActionPresentModule
 {
     /**
@@ -36,18 +38,16 @@ trait UseActionPresentModule
         if (empty($module['presentedModule']['attributes']['badges'])) {
             return;
         }
+        $availableImages = (new Finder())->files()->in($this->getLocalPath() . '/views/img/badges');
 
         foreach ($module['presentedModule']['attributes']['badges'] as &$badge) {
+            $imageName = basename($badge['img']);
             // Remove 404 images
-            if (
-                preg_match('#savetime-module-of-the-year.png$#i', $badge['img']) ||
-                preg_match('#convert-partner.png$#i', $badge['img']) ||
-                preg_match('#savetime-partner.png$#i', $badge['img'])
-            ) {
+            if (!$availableImages->name($imageName)->hasResults()) {
                 $badge['img'] = false;
                 continue;
             }
-            $badge['img'] = basename($badge['img']);
+            $badge['img'] = $imageName;
         }
     }
 }
