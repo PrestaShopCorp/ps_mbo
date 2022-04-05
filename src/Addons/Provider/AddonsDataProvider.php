@@ -25,7 +25,6 @@ use Exception;
 use PhpEncryption;
 use PrestaShop\Module\Mbo\Addons\ApiClient;
 use PrestaShop\Module\Mbo\Addons\User\UserInterface;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 
 /**
  * This class will provide data from Addons API
@@ -75,11 +74,6 @@ class AddonsDataProvider implements DataProviderInterface
     protected $marketplaceClient;
 
     /**
-     * @var ModuleZipManager
-     */
-    protected $zipManager;
-
-    /**
      * @var PhpEncryption
      */
     protected $encryption;
@@ -101,18 +95,15 @@ class AddonsDataProvider implements DataProviderInterface
 
     /**
      * @param ApiClient $apiClient
-     * @param ModuleZipManager $zipManager
      * @param UserInterface $user
      * @param string|null $moduleChannel
      */
     public function __construct(
         ApiClient $apiClient,
-        ModuleZipManager $zipManager,
         UserInterface $user,
         ?string $moduleChannel = null
     ) {
         $this->marketplaceClient = $apiClient;
-        $this->zipManager = $zipManager;
         $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
         $this->moduleChannel = $moduleChannel ?? self::ADDONS_API_MODULE_CHANNEL_STABLE;
         $this->user = $user;
