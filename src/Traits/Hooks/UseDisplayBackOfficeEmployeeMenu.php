@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
 use PrestaShopBundle\Component\ActionBar\ActionsBarButton;
 use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 
@@ -42,35 +43,10 @@ trait UseDisplayBackOfficeEmployeeMenu
             return;
         }
 
-        $links = [
-            [
-                'url' => 'https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17',
-                'icon' => 'book',
-                'label' => 'Resources',
-            ],
-            [
-                'url' => 'https://www.prestashop.com/en/training?utm_source=back-office&utm_medium=profile&utm_campaign=training-en&utm_content=download17',
-                'icon' => 'school',
-                'label' => 'Training',
-            ],
-            [
-                'url' => 'https://www.prestashop.com/en/experts?utm_source=back-office&utm_medium=profile&utm_campaign=expert-en&utm_content=download17',
-                'icon' => 'person_pin_circle',
-                'label' => 'Find an Expert',
-            ],
-            [
-                'url' => 'https://addons.prestashop.com?utm_source=back-office&utm_medium=profile&utm_campaign=addons-en&utm_content=download17',
-                'icon' => 'extension',
-                'label' => 'PrestaShop Marketplace',
-            ],
-            [
-                'url' => 'https://www.prestashop.com/en/contact?utm_source=back-office&utm_medium=profile&utm_campaign=help-center-en&utm_content=download17',
-                'icon' => 'help',
-                'label' => 'Help Center',
-            ],
-        ];
+        /** @var LinksProvider $linksProvider */
+        $linksProvider = $this->get('mbo.addons.links_provider');
 
-        foreach ($links as $link) {
+        foreach ($linksProvider->getEmployeeMenuLinks() as $link) {
             $params['links']->add(
                 new ActionsBarButton(
                     __CLASS__,
