@@ -22,7 +22,7 @@ namespace PrestaShop\Module\Mbo\Module;
 
 use Exception;
 use Module as LegacyModule;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -183,10 +183,10 @@ class Module implements ModuleInterface
      *
      * @throws Exception
      */
-    public function getInstance()
+    public function getInstance(): ?LegacyModule
     {
         if (!$this->hasValidInstance()) {
-            return;
+            return null;
         }
 
         return $this->instance;

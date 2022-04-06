@@ -28,16 +28,21 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module\Presenter;
 
 use Currency;
+use Exception;
+use Module as LegacyModule;
 use PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController;
 use PrestaShop\Module\Mbo\Module\Collection;
+use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
+use Symfony\Component\Finder\Finder;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Tools;
 use Twig\Environment;
 
 class ModulesForListingPresenter implements PresenterInterface
@@ -73,6 +78,16 @@ class ModulesForListingPresenter implements PresenterInterface
     private $context;
 
     /**
+     * @var ModuleInterface
+     */
+    protected $mboModule;
+
+    /**
+     * @var Repository
+     */
+    protected $moduleRepository;
+
+    /**
      * @var CurrencyDataProvider
      */
     private $currencyDataProvider;
@@ -84,7 +99,8 @@ class ModulesForListingPresenter implements PresenterInterface
         Environment $twig,
         TranslatorInterface $translator,
         PermissionCheckerInterface $permissionChecker,
-        CategoriesProvider $categoriesProvider
+        CategoriesProvider $categoriesProvider,
+        Repository $moduleRepository
     ) {
         $this->context = $context;
         $this->priceFormatter = $priceFormatter;
@@ -93,6 +109,9 @@ class ModulesForListingPresenter implements PresenterInterface
         $this->translator = $translator;
         $this->permissionChecker = $permissionChecker;
         $this->categoriesProvider = $categoriesProvider;
+        $this->moduleRepository = $moduleRepository;
+
+        $this->mboModule = $this->moduleRepository->getModule('ps_mbo');
     }
 
     /**
@@ -208,6 +227,7 @@ class ModulesForListingPresenter implements PresenterInterface
     {
         $attributes = $module->attributes->all();
         $attributes['price'] = $this->getModulePrice($attributes['price']);
+        $attributes['badges'] = $this->getModuleBadges($attributes['badges']);
         // Round to the nearest 0.5
         $attributes['starsRate'] = str_replace('.', '', (string) (round(floatval($attributes['avgRate']) * 2) / 2));
 
@@ -234,14 +254,14 @@ class ModulesForListingPresenter implements PresenterInterface
             $prices['raw'] = $prices[$currencyCode];
         } else {
             try {
-                $locale = \Tools::getContextLocale($this->context->getContext());
+                $locale = Tools::getContextLocale($this->context->getContext());
 
                 $installedDefaultCurrency = $this->getInstalledDefaultCurrency();
                 if (null === $installedDefaultCurrency) {
-                    throw new \Exception('None of the default currencies (USD, EUR, GBP) is installed');
+                    throw new Exception('None of the default currencies (USD, EUR, GBP) is installed');
                 }
 
-                $price = \Tools::convertPrice(
+                $price = Tools::convertPrice(
                     $prices[$installedDefaultCurrency->iso_code],
                     $installedDefaultCurrency,
                     false, // from default currency to Locale
@@ -250,7 +270,7 @@ class ModulesForListingPresenter implements PresenterInterface
 
                 $prices['displayPrice'] = $locale->formatPrice($price, $currencyCode);
                 $prices['raw'] = $locale->formatNumber($price);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $prices['displayPrice'] = '$' . $prices['USD'];
                 $prices['raw'] = $prices['USD'];
             }
@@ -292,5 +312,30 @@ class ModulesForListingPresenter implements PresenterInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param array|null $badges
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
+    protected function getModuleBadges(array $badges = null): array
+    {
+        if (empty($badges) || !$this->mboModule) {
+            return [];
+        }
+        $availableImages = Finder::create()
+            ->files()
+            ->in($this->mboModule->getInstance()->getLocalPath() . '/views/img/badges');
+
+        foreach ($badges as &$badge) {
+            $imageName = basename($badge['img']);
+            // Remove 404 images
+            $badge['img'] = $availableImages->name($imageName)->hasResults() ? $imageName : false;
+        }
+
+        return $badges;
     }
 }

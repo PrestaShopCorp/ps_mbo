@@ -28,7 +28,6 @@ if (file_exists($autoloadPath)) {
 }
 
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseActionPresentModule;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleExtraToolbarButton;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleInstallRetrieveSource;
@@ -61,7 +60,6 @@ class ps_mbo extends Module
     use UseAdminModuleExtraToolbarButton;
     use UseDisplayBackOfficeFooter;
     use UseDisplayModuleConfigureExtraButtons;
-    use UseActionPresentModule;
 
     /**
      * @var array Hooks registered by the module
@@ -79,7 +77,6 @@ class ps_mbo extends Module
         'dashboardZoneOne',
         'dashboardZoneTwo',
         'dashboardZoneThree',
-        'actionPresentModule',
     ];
     /**
      * @var array An array of method that can be called to register media in the actionAdminControllerSetMedia hook
