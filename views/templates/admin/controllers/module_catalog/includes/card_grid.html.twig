@@ -85,7 +85,9 @@
           {% set badges = module.attributes.badges %}
           {% if badges %}
             {% set badge = badges|first %}
-            <img src="{{badge.img}}" alt="{{badge.label}}"/>
+            {% if badge.img %}
+              <img src="{{ asset('../modules/ps_mbo/views/img/badges/'~badge.img) }}" alt="{{badge.label}}"/>
+            {% endif %}
             {{badge.label}}
           {% endif %}
         </div>

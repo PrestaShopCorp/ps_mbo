@@ -198,7 +198,7 @@ class ps_mbo extends Module
         return true;
     }
 
-    private function getTraitNames(): array
+    protected function getTraitNames(): array
     {
         $traits = [];
         foreach (class_uses($this) as $trait) {

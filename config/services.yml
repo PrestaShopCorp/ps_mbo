@@ -32,6 +32,7 @@ services:
       - '@translator'
       - '@mbo.security.permission_checker'
       - '@prestashop.categories_provider'
+      - '@mbo.modules.repository'
 
   mbo.controller.modules.catalog:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController'
