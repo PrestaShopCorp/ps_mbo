@@ -179,7 +179,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @return LegacyModule|void
+     * @return LegacyModule|null
      *
      * @throws Exception
      */
