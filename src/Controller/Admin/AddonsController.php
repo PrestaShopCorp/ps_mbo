@@ -28,10 +28,9 @@ use PrestaShop\Module\Mbo\Addons\Exception\LoginErrorException;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeNotNeededException;
 use PrestaShop\Module\Mbo\Module\Repository;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -51,11 +50,6 @@ class AddonsController extends FrameworkBundleAdminController
     private $addonsDataProvider;
 
     /**
-     * @var ModuleInterface
-     */
-    private $modulesDataProvider;
-
-    /**
      * @var ModuleManager
      */
     private $moduleManager;
@@ -73,7 +67,6 @@ class AddonsController extends FrameworkBundleAdminController
     public function __construct(
         RequestStack $requestStack,
         AddonsDataProvider $addonsDataProvider,
-        ModuleInterface $modulesDataProvider,
         ModuleManager $moduleManager,
         Repository $moduleRepository,
         ModuleRepository $coreModuleRepository
@@ -81,7 +74,6 @@ class AddonsController extends FrameworkBundleAdminController
         parent::__construct();
         $this->requestStack = $requestStack;
         $this->addonsDataProvider = $addonsDataProvider;
-        $this->modulesDataProvider = $modulesDataProvider;
         $this->moduleManager = $moduleManager;
         $this->moduleRepository = $moduleRepository;
         $this->coreModuleRepository = $coreModuleRepository;
