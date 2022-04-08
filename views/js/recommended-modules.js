@@ -40,7 +40,7 @@ var mbo = {};
     toolbarLastElement: '.toolbar-icons a:last-of-type',
     recommendedModulesButton: '#recommended-modules-button',
     oldButton: '#page-header-desc-configuration-modules-list',
-    contentContainer: '#main-div .content-div > .row:last > .col-sm-12',
+    contentContainer: '#main-div .content-div',
     modulesListModal: '#modules_list_container',
     modulesListModalContainer: '#main-div .content-div',
     modulesListModalContent: '#modules_list_container_tab_modal',
@@ -128,10 +128,12 @@ var mbo = {};
      * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
      * @param {boolean} config.shouldAttachRecommendedModulesButton
      * @param {boolean} config.shouldUseLegacyTheme
+     * @param {object} pageMap
+     * @param {string} pageMap.contentContainer
      *
      * @return this
      */
-    this.insertRecommendedModules = function(config) {
+    this.insertRecommendedModules = function(config, pageMap) {
       if (pageMap.contentContainer) {
         var recommendedModulesRequest = $.ajax({
           type: 'GET',
@@ -141,7 +143,6 @@ var mbo = {};
 
         recommendedModulesRequest.done(function(data) {
           var recommendedModulesContainer = new RecommendedModulesContainer(config, data.content);
-
           $(pageMap.contentContainer).append(recommendedModulesContainer.getMarkup());
         });
 
@@ -441,7 +442,7 @@ var mbo = {};
     }
 
     if (config.shouldAttachRecommendedModulesAfterContent) {
-      page.insertRecommendedModules(config);
+      page.insertRecommendedModules(config, pageMap);
     }
   };
 
