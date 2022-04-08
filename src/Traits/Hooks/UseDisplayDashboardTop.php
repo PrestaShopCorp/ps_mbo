@@ -191,12 +191,12 @@ trait UseDisplayDashboardTop
     protected function loadMediaForDashboardTop(): void
     {
         // has to be loaded in header to prevent flash of content
-        $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
+        $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js') . '?v=' . $this->version;
 
         if ($this->shouldAttachRecommendedModules(static::$RECOMMENDED_BUTTON_TYPE)
             || $this->shouldAttachRecommendedModules(static::$RECOMMENDED_AFTER_CONTENT_TYPE)
         ) {
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css');
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css') . '?v=' . $this->version;
             $this->context->controller->addJs(
                 rtrim(__PS_BASE_URI__, '/')
                 . str_ireplace(
@@ -204,9 +204,7 @@ trait UseDisplayDashboardTop
                     '',
                     _PS_BO_ALL_THEMES_DIR_
                 )
-                . 'default/js/bundle/module/module_card.js?v='
-                . _PS_VERSION_
-            );
+                . 'default/js/bundle/module/module_card.js') . '?v=' . $this->version;
         }
     }
 }

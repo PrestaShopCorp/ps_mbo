@@ -57,7 +57,7 @@ trait UseDashboardZoneThree
             ]
         );
 
-        return $this->display($this->name, 'dashboard-zone-three.tpl');
+        return $this->display($this->name, 'views/templates/hook/dashboard-zone-three.tpl');
     }
 
     /**
@@ -93,8 +93,8 @@ trait UseDashboardZoneThree
     protected function loadMediaForDashboardColumnThree(): void
     {
         if (Tools::getValue('controller') === 'AdminDashboard') {
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/dashboard-news.js?v=' . $this->version);
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/dashboard.css?v=' . $this->version);
+            $this->context->controller->addJs($this->getPathUri() . 'views/js/dashboard-news.js') . '?v=' . $this->version;
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/dashboard.css') . '?v=' . $this->version;
         }
     }
 }

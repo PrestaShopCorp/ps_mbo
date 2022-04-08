@@ -77,6 +77,6 @@ trait UseAdminModuleExtraToolbarButton
      */
     protected function loadMediaModuleExtraToolbarButton(): void
     {
-        $this->context->controller->addJs($this->getPathUri() . 'views/js/addons-connector.js?v=' . $this->version);
+        $this->context->controller->addJs($this->getPathUri() . 'views/js/addons-connector.js') . '?v=' . $this->version;
     }
 }
