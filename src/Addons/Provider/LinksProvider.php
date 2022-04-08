@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Foundation\Version;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LinksProvider
 {
@@ -54,21 +55,29 @@ class LinksProvider
     protected $requestStack;
 
     /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
      * @param Version $version
      * @param LegacyContext $context
      * @param Configuration $configuration
      * @param RequestStack $requestStack
+     * @param TranslatorInterface $trans
      */
     public function __construct(
         Version $version,
         LegacyContext $context,
         Configuration $configuration,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        TranslatorInterface $trans
     ) {
         $this->version = $version;
         $this->context = $context;
         $this->configuration = $configuration;
         $this->requestStack = $requestStack;
+        $this->translator = $trans;
     }
 
     /**
@@ -118,6 +127,29 @@ class LinksProvider
         $isoCode = mb_strtolower($this->getIsoCode());
 
         return PracticalLinks::getByIsoCode($isoCode);
+    }
+
+    /**
+     * @param string $controllerName
+     *
+     * @return string|null
+     */
+    public function getAddonsLinkByControllerName(string $controllerName): ?string
+    {
+        $utm = '?utm_source=back-office&utm_medium=dispatch&utm_content=download&utm_campaign=back-office-' . $this->context->getLanguage()->iso_code;
+
+        switch ($controllerName) {
+            case 'AdminCarriers':
+                $link = $this->translator->trans('https://addons.prestashop.com/en/518-shipping-logistics', [], 'Modules.Mbo.Modulescatalog');
+                break;
+            case 'AdminPayment':
+                $link = $this->translator->trans('https://addons.prestashop.com/en/481-payment', [], 'Modules.Mbo.Modulescatalog');
+                break;
+            default:
+                $link = $this->translator->trans('https://addons.prestashop.com/en/', [], 'Modules.Mbo.Modulescatalog');
+        }
+
+        return $link . $utm;
     }
 
     public function getSignUpLink(): string

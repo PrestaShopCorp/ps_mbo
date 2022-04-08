@@ -21,9 +21,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
+use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
 use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModulePresenterInterface;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -48,27 +48,29 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
      * @var RecommendedModulePresenterInterface
      */
     protected $recommendedModulePresenter;
+
     /**
-     * @var LegacyContext
+     * @var LinksProvider
      */
-    protected $context;
+    protected $linksProvider;
 
     /**
      * @param RequestStack $requestStack
      * @param TabCollectionProviderInterface $tabCollectionProvider
      * @param RecommendedModulePresenterInterface $recommendedModulePresenter
+     * @param LinksProvider $linksProvider
      */
     public function __construct(
         RequestStack $requestStack,
         TabCollectionProviderInterface $tabCollectionProvider,
         RecommendedModulePresenterInterface $recommendedModulePresenter,
-        LegacyContext $legacyContext
+        LinksProvider $linksProvider
     ) {
         parent::__construct();
         $this->requestStack = $requestStack;
         $this->tabCollectionProvider = $tabCollectionProvider;
         $this->recommendedModulePresenter = $recommendedModulePresenter;
-        $this->context = $legacyContext;
+        $this->linksProvider = $linksProvider;
     }
 
     /**
@@ -87,7 +89,7 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
                     [
                         'recommendedModulesInstalled' => $this->recommendedModulePresenter->presentCollection($tab->getRecommendedModulesInstalled()),
                         'recommendedModulesNotInstalled' => $this->recommendedModulePresenter->presentCollection($tab->getRecommendedModulesNotInstalled()),
-                        'linkUrl' => $this->getAddonsLink($tabClassName),
+                        'linkUrl' => $this->linksProvider->getAddonsLinkByControllerName($tabClassName),
                     ]
                 ),
             ]);
@@ -100,28 +102,5 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
         }
 
         return $response;
-    }
-
-    /**
-     * @param string $tabClassName
-     *
-     * @return string|null
-     */
-    protected function getAddonsLink(string $tabClassName): ?string
-    {
-        $utm = '?utm_source=back-office&utm_medium=dispatch&utm_content=download&utm_campaign=back-office-' . $this->context->getLanguage()->iso_code;
-
-        switch ($tabClassName) {
-            case 'AdminCarriers':
-                $link = $this->trans('https://addons.prestashop.com/en/518-shipping-logistics', 'Modules.Mbo.Modulescatalog');
-                break;
-            case 'AdminPayment':
-                $link = $this->trans('https://addons.prestashop.com/en/481-payment', 'Modules.Mbo.Modulescatalog');
-                break;
-            default:
-                $link = $this->trans('https://addons.prestashop.com/en/', 'Modules.Mbo.Modulescatalog');
-        }
-
-        return $link . $utm;
     }
 }
