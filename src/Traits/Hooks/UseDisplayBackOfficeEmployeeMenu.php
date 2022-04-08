@@ -54,7 +54,7 @@ trait UseDisplayBackOfficeEmployeeMenu
                         'link' => $link['url'],
                         'icon' => $link['icon'],
                     ],
-                    $this->trans($link['label'], [], 'Admin.Navigation.Header')
+                    $link['label'],
                 )
             );
         }
