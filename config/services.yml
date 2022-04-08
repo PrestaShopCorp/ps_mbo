@@ -56,6 +56,7 @@ services:
       - '@request_stack'
       - '@mbo.tab.collection.provider'
       - '@mbo.recommendedmodules.presenter'
+      - '@prestashop.adapter.legacy.context'
 
   mbo.controller.themes.catalog:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController'
