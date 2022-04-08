@@ -40,8 +40,7 @@ class FilesManager
     public function __construct(
         AddonsDataProvider $addonsDataProvider,
         SourceHandlerFactory $sourceHandlerFactory
-    )
-    {
+    ) {
         $this->addonsDataProvider = $addonsDataProvider;
         $this->sourceHandlerFactory = $sourceHandlerFactory;
     }

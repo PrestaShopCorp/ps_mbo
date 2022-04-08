@@ -52,7 +52,7 @@ trait UseDisplayModuleConfigureExtraButtons
                     'url' => '#',
                     'icon' => 'process-icon-refresh',
                     'data_attributes' => [
-                        'module-name' => $params['name'],
+                        'module-name' => $params['module_name'],
                         'target' => $this->get('router')->generate('admin_mbo_addons_module_upgrade'),
                     ],
                 ],

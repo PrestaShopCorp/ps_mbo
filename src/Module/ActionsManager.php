@@ -46,8 +46,7 @@ class ActionsManager
         FilesManager $filesManager,
         CoreModuleRepository $coreModuleRepository,
         Repository $moduleRepository
-    )
-    {
+    ) {
         $this->filesManager = $filesManager;
         $this->coreModuleRepository = $coreModuleRepository;
         $this->moduleRepository = $moduleRepository;
@@ -55,6 +54,7 @@ class ActionsManager
 
     /**
      * @param Module $module
+     *
      * @throws SourceHandlerNotFoundException
      * @throws FileNotFoundException
      */
@@ -73,6 +73,7 @@ class ActionsManager
      * In the future, if it's changes, just duplicate the content of the "install" method and adjust
      *
      * @param Module $module
+     *
      * @throws SourceHandlerNotFoundException
      * @throws FileNotFoundException
      */
@@ -83,6 +84,11 @@ class ActionsManager
         $this->install($module);
     }
 
+    /**
+     * @param string $moduleName
+     *
+     * @return string|null
+     */
     public function findVersionForUpdate(string $moduleName): ?string
     {
         $coreModule = $this->coreModuleRepository->getModule($moduleName);
