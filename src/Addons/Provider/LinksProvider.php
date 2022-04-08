@@ -128,14 +128,15 @@ class LinksProvider
 
     /**
      * @param string $controllerName
+     * @param string $medium
      *
      * @return string|null
      */
-    public function getAddonsLinkByControllerName(string $controllerName): ?string
+    public function getAddonsLinkByControllerName(string $controllerName, string $medium): ?string
     {
         $utm = '?' . http_build_query([
            'utm_source' => 'back-office',
-           'utm_medium' => 'dispatch',
+           'utm_medium' => $medium,
            'utm_content' => 'download',
            'utm_campaign' => 'back-office-' . $this->context->getLanguage()->iso_code,
         ]);
@@ -145,6 +146,9 @@ class LinksProvider
                 break;
             case 'AdminPayment':
                 $link = $this->translator->trans('https://addons.prestashop.com/en/481-payment', [], 'Modules.Mbo.Links');
+                break;
+            case 'AdminController':
+                $link = $this->translator->trans('https://addons.prestashop.com/en/209-dashboards', [], 'Modules.Mbo.Links');
                 break;
             default:
                 $link = $this->translator->trans('https://addons.prestashop.com/en/', [], 'Modules.Mbo.Links');

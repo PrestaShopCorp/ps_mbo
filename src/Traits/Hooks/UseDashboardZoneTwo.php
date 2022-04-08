@@ -34,7 +34,7 @@ trait UseDashboardZoneTwo
     {
         $this->context->smarty->assign(
             [
-                'host_mode' => defined('_PS_HOST_MODE_'),
+                'link_url' => $this->get('mbo.addons.links_provider')->getAddonsLinkByControllerName('AdminController', 'dashboard'),
             ]
         );
 

@@ -89,7 +89,7 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
                     [
                         'recommendedModulesInstalled' => $this->recommendedModulePresenter->presentCollection($tab->getRecommendedModulesInstalled()),
                         'recommendedModulesNotInstalled' => $this->recommendedModulePresenter->presentCollection($tab->getRecommendedModulesNotInstalled()),
-                        'linkUrl' => $this->linksProvider->getAddonsLinkByControllerName($tabClassName),
+                        'linkUrl' => $this->linksProvider->getAddonsLinkByControllerName($tabClassName, 'dispatch'),
                     ]
                 ),
             ]);
