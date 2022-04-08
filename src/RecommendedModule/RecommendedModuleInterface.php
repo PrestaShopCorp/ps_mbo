@@ -20,7 +20,7 @@
 
 namespace PrestaShop\Module\Mbo\RecommendedModule;
 
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 
 interface RecommendedModuleInterface
 {

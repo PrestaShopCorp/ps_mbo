@@ -69,7 +69,6 @@ services:
     arguments:
       - '@request_stack'
       - '@mbo.addons.data_provider'
-      - '@prestashop.core.admin.data_provider.module_interface'
       - '@prestashop.module.manager'
       - '@mbo.modules.repository'
       - '@prestashop.core.admin.module.repository'
