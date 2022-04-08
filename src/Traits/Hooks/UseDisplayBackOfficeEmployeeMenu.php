@@ -54,7 +54,7 @@ trait UseDisplayBackOfficeEmployeeMenu
                         'link' => $link['url'],
                         'icon' => $link['icon'],
                     ],
-                    $link['label'],
+                    $link['label']
                 )
             );
         }
