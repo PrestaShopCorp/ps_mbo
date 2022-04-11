@@ -2,10 +2,6 @@
 
 namespace PrestaShop\Module\Mbo\Addons\Provider;
 
-use Doctrine\Common\Cache\FilesystemCache;
-use GuzzleHttp\Message\Request;
-use GuzzleHttp\Subscriber\Cache\CacheStorage;
-use GuzzleHttp\Subscriber\Cache\CacheSubscriber;
 use PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory;
 use PrestaShop\CircuitBreaker\Contract\FactoryInterface;
 use PrestaShop\CircuitBreaker\Contract\FactorySettingsInterface;
@@ -27,31 +23,20 @@ class WeekAdviceProvider
 
     const OPEN_THRESHOLD_SECONDS = 3600;
 
-    /** @var CacheSubscriber */
-    private $cacheSubscriber;
-
     /** @var FactoryInterface */
     private $factory;
 
     /** @var FactorySettingsInterface */
     private $factorySettings;
 
-    public function __construct()
+    public function __construct(DoctrineCache $doctrineCache)
     {
-        //Doctrine cache used for Guzzle and CircuitBreaker storage
-        $doctrineCache = new FilesystemCache(_PS_CACHE_DIR_ . '/addons_advice');
-
-        //Init Guzzle cache
-        $cacheStorage = new CacheStorage($doctrineCache, null, self::CACHE_DURATION);
-        $this->cacheSubscriber = new CacheSubscriber($cacheStorage, function (Request $request) { return true; });
-
         //Init circuit breaker factory
-        $storage = new DoctrineCache($doctrineCache);
         $this->factorySettings = new FactorySettings(self::CLOSED_ALLOWED_FAILURES, self::API_TIMEOUT_SECONDS, self::OPEN_THRESHOLD_SECONDS);
         $this->factorySettings
             ->setStrippedFailures(self::OPEN_ALLOWED_FAILURES)
             ->setStrippedTimeout(self::OPEN_TIMEOUT_SECONDS)
-            ->setStorage($storage)
+            ->setStorage($doctrineCache)
             ->setClientOptions(['method' => 'GET'])
         ;
         $this->factory = new AdvancedCircuitBreakerFactory();
