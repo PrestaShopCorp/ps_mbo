@@ -25,3 +25,16 @@ services:
       - '@router'
       - "@logger"
       - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
+
+  mbo.modules.files_manager:
+    class: PrestaShop\Module\Mbo\Module\FilesManager
+    arguments:
+      - '@mbo.addons.data_provider'
+      - '@prestashop.module.factory.sourcehandler'
+
+  mbo.modules.actions_manager:
+    class: PrestaShop\Module\Mbo\Module\ActionsManager
+    arguments:
+      - '@mbo.modules.files_manager'
+      - '@prestashop.core.admin.module.repository'
+      - '@mbo.modules.repository'

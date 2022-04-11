@@ -30,8 +30,8 @@ if (file_exists($autoloadPath)) {
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleExtraToolbarButton;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleInstallRetrieveSource;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleUpgradeRetrieveSource;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseBeforeInstallModule;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseBeforeUpgradeModule;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
@@ -55,8 +55,8 @@ class ps_mbo extends Module
     use UseDashboardZoneThree;
     use UseDisplayDashboardTop;
     use UseAdminControllerSetMedia;
-    use UseAdminModuleInstallRetrieveSource;
-    use UseAdminModuleUpgradeRetrieveSource;
+    use UseBeforeInstallModule;
+    use UseBeforeUpgradeModule;
     use UseAdminModuleExtraToolbarButton;
     use UseDisplayBackOfficeFooter;
     use UseDisplayModuleConfigureExtraButtons;
@@ -67,8 +67,8 @@ class ps_mbo extends Module
     public const HOOKS = [
         'actionAdminControllerSetMedia',
         'actionAdminModuleExtraToolbarButton',
-        'actionAdminModuleInstallRetrieveSource',
-        'actionAdminModuleUpgradeRetrieveSource',
+        'actionBeforeInstallModule',
+        'actionBeforeUpgradeModule',
         'displayAdminThemesListAfter',
         'displayDashboardTop',
         'displayBackOfficeFooter',
