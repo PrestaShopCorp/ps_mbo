@@ -24,7 +24,9 @@ const {$} = window;
     var pageMap = {
         addonsLoginButtonSelector: '#addons_login_btn',
         addonsConnectModalBtnSelector: '#page-header-desc-configuration-addons_connect',
+        addonsConnectModalBtnSelectorMobile: '#page-header-desc-floating-configuration-addons_connect',
         addonsLogoutModalBtnSelector: '#page-header-desc-configuration-addons_logout',
+        addonsLogoutModalBtnSelectorMobile: '#page-header-desc-floating-configuration-addons_logout',
         addonsImportModalBtnSelector: '#page-header-desc-configuration-add_module',
         addonsConnectModalSelector: '#module-modal-addons-connect',
         addonsLogoutModalSelector: '#module-modal-addons-logout',
@@ -35,7 +37,9 @@ const {$} = window;
         this.initConnect = function() {
             // Make addons connect modal ready to be clicked
             this.switchToModal(pageMap.addonsConnectModalBtnSelector, pageMap.addonsConnectModalSelector);
+            this.switchToModal(pageMap.addonsConnectModalBtnSelectorMobile, pageMap.addonsConnectModalSelector);
             this.switchToModal(pageMap.addonsLogoutModalBtnSelector, pageMap.addonsLogoutModalSelector);
+            this.switchToModal(pageMap.addonsLogoutModalBtnSelectorMobile, pageMap.addonsLogoutModalSelector);
 
             $('body').on('submit', pageMap.addonsConnectForm, function initializeBodySubmit(event) {
                 event.preventDefault();
