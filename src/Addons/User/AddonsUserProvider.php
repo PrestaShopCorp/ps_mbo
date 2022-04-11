@@ -21,14 +21,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons\User;
 
-class CookieUserProvider implements UserProviderInterface
+class AddonsUserProvider implements UserProviderInterface
 {
     /**
-     * @var CookieUser
+     * @var AddonsUser
      */
     protected $user;
 
-    public function __construct(CookieUser $user)
+    public function __construct(AddonsUser $user)
     {
         $this->user = $user;
     }

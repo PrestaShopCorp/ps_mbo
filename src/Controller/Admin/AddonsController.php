@@ -36,6 +36,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AddonsController extends FrameworkBundleAdminController
 {
@@ -108,17 +109,11 @@ class AddonsController extends FrameworkBundleAdminController
 
             Configuration::updateValue('PS_LOGGED_ON_ADDONS', 1);
 
-            $phpEncryption = new PhpEncryption(_NEW_COOKIE_KEY_);
-
-            $response->headers->setCookie(
-                new Cookie('username_addons', $phpEncryption->encrypt($params['username']))
-            );
-            $response->headers->setCookie(
-                new Cookie('password_addons', $phpEncryption->encrypt($params['password']))
-            );
-            $response->headers->setCookie(
-                new Cookie('is_contributor', (string) $json->is_contributor)
-            );
+            if ($request->get('addons_remember_me', false)) {
+                $response = $this->createCookieUser($response, $json, $params);
+            } else {
+                $response = $this->createSessionUser($response, $this->get('session'), $json, $params);
+            }
 
             $response->setData(['success' => 1, 'message' => '']);
 
@@ -166,6 +161,13 @@ class AddonsController extends FrameworkBundleAdminController
         $response->headers->clearCookie('username_addons');
         $response->headers->clearCookie('password_addons');
         $response->headers->clearCookie('is_contributor');
+
+        $session = $this->get('session');
+        $session->remove('username_addons');
+        $session->remove('password_addons');
+        $session->remove('is_contributor');
+
+        $request->setSession($session);
 
         return $response;
     }
@@ -235,5 +237,35 @@ class AddonsController extends FrameworkBundleAdminController
         }
 
         return new JsonResponse($upgradeResponse);
+    }
+
+    private function createCookieUser(Response $response, \stdClass $json, array $params): Response
+    {
+        $expiresAt = strtotime('+30 days');
+
+        $phpEncryption = new PhpEncryption(_NEW_COOKIE_KEY_);
+
+        $response->headers->setCookie(
+            new Cookie('username_addons', $phpEncryption->encrypt($params['username']), $expiresAt)
+        );
+        $response->headers->setCookie(
+            new Cookie('password_addons', $phpEncryption->encrypt($params['password']), $expiresAt)
+        );
+        $response->headers->setCookie(
+            new Cookie('is_contributor', (string) $json->is_contributor, $expiresAt)
+        );
+
+        return $response;
+    }
+
+    private function createSessionUser(Response $response, SessionInterface $session, \stdClass $json, array $params): Response
+    {
+        $phpEncryption = new PhpEncryption(_NEW_COOKIE_KEY_);
+
+        $session->set('username_addons', $phpEncryption->encrypt($params['username']));
+        $session->set('password_addons', $phpEncryption->encrypt($params['password']));
+        $session->set('is_contributor', (string) $json->is_contributor);
+
+        return $response;
     }
 }
