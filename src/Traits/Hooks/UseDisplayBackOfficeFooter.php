@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
 use PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController;
 
 trait UseDisplayBackOfficeFooter
@@ -35,9 +36,13 @@ trait UseDisplayBackOfficeFooter
      */
     public function hookDisplayBackOfficeFooter(array $params): string
     {
+        /** @var LinksProvider $linksProvider */
+        $linksProvider = $this->get('mbo.addons.links_provider');
+
         return $this->get('twig')->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig', [
-                'signUpLink' => $this->get('mbo.addons.links_provider')->getSignUpLink(),
+                'signUpLink' => $linksProvider->getSignUpLink(),
+                'passwordForgottenLink' => $linksProvider->getPasswordForgottenLink(),
                 'level' => $this->get('mbo.security.permission_checker')->getAuthorizationLevel(ModuleCatalogController::CONTROLLER_NAME),
                 'errorMessage' => $this->trans(
                     'You do not have permission to add this.',

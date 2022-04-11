@@ -166,6 +166,11 @@ class LinksProvider
             . '&_gac=1.81371877.1644238612.CjwKCAiAo4OQBhBBEiwA5KWu_5UzrywbBPo4PKIYESy7K-noavdo7Z4riOZMJEoM9mE1IE3gks0thxoCZOwQAvD_BwE';
     }
 
+    public function getPasswordForgottenLink(): string
+    {
+        return $this->translator->trans('https://auth.prestashop.com/en/password/request', [], 'Modules.Mbo.Links');
+    }
+
     public function getEmployeeMenuLinks(): array
     {
         $isoCode = mb_strtolower($this->getIsoCode());
