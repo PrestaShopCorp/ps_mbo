@@ -11,19 +11,21 @@ services:
     calls:
       - [ "setEmployeeId", ["@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.adapter.legacy.context').getContext().employee.id:0"]]
 
-  mbo.addons.cookie_user:
-    class: PrestaShop\Module\Mbo\Addons\User\CookieUser
-
-  mbo.addons.cookie_user.provider:
-    class: PrestaShop\Module\Mbo\Addons\User\CookieUserProvider
+  mbo.addons.user:
+    class: PrestaShop\Module\Mbo\Addons\User\AddonsUser
     arguments:
-      - "@mbo.addons.cookie_user"
+      - '@session'
+
+  mbo.addons.user.provider:
+    class: PrestaShop\Module\Mbo\Addons\User\AddonsUserProvider
+    arguments:
+      - "@mbo.addons.user"
 
   mbo.addons.data_provider:
     class: PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider
     arguments:
       - '@mbo.addons.client.api'
-      - '@=service("mbo.addons.cookie_user.provider").getUser()'
+      - '@=service("mbo.addons.user.provider").getUser()'
       - '@=service("prestashop.adapter.legacy.configuration").get("ADDONS_API_MODULE_CHANNEL", "stable")'
     properties:
       cacheDir: "%kernel.cache_dir%"

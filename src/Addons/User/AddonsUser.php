@@ -21,13 +21,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons\User;
 
+use Exception;
 use PhpEncryptionCore as PhpEncryption;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * This class will read user information stored in cookies
  */
-class CookieUser implements UserInterface
+class AddonsUser implements UserInterface
 {
     /**
      * @var PhpEncryption
@@ -39,10 +41,16 @@ class CookieUser implements UserInterface
      */
     private $request;
 
-    public function __construct()
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    public function __construct(SessionInterface $session)
     {
         $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
         $this->request = Request::createFromGlobals();
+        $this->session = $session;
     }
 
     /**
@@ -50,8 +58,7 @@ class CookieUser implements UserInterface
      */
     public function isAuthenticated(): bool
     {
-        return $this->getFromCookie('username_addons', false)
-            && $this->getFromCookie('password_addons', false);
+        return $this->hasCookieAuthenticated() || $this->hasSessionAuthenticated();
     }
 
     /**
@@ -77,25 +84,61 @@ class CookieUser implements UserInterface
 
     /**
      * @param string $key
-     * @param mixed $default
      *
      * @return mixed
      */
-    private function getFromCookie(string $key, $default = null)
+    private function getFromCookie(string $key)
     {
-        return $this->request->cookies->get($key, $default);
+        return $this->request->cookies->get($key);
     }
 
     /**
      * @param string $key
-     * @param null $default
      *
-     * @return bool|string
-     *
-     * @throws \Exception
+     * @return mixed
      */
-    private function getAndDecrypt(string $key, $default = null)
+    private function getFromSession(string $key)
     {
-        return $this->encryption->decrypt($this->getFromCookie($key, $default));
+        return $this->session->get($key);
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return string|null
+     *
+     * @throws Exception
+     */
+    private function getAndDecrypt(string $key): ?string
+    {
+        $sessionValue = $this->getFromSession($key);
+        if (null !== $sessionValue) {
+            return $this->encryption->decrypt($sessionValue);
+        }
+
+        $cookieValue = $this->getFromCookie($key);
+        if (null !== $cookieValue) {
+            return $this->encryption->decrypt($cookieValue);
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    private function hasCookieAuthenticated(): bool
+    {
+        return $this->getFromCookie('username_addons', false)
+            && $this->getFromCookie('password_addons', false);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    private function hasSessionAuthenticated(): bool
+    {
+        return $this->getFromSession('username_addons', false)
+            && $this->getFromSession('password_addons', false);
     }
 }
