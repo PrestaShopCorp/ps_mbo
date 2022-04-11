@@ -52,3 +52,5 @@ services:
 
   mbo.addons.week_advice_provider:
     class: PrestaShop\Module\Mbo\Addons\Provider\WeekAdviceProvider
+    arguments:
+      - '@mbo.circuit_breaker.storage'

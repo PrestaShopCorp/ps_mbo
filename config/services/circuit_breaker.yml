@@ -2,6 +2,23 @@ services:
   mbo.circuit_breaker.advanced_factory:
     class: PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory
 
+  mbo.circuit_breaker.cache:
+    class: Symfony\Component\Cache\Adapter\FilesystemAdapter
+    arguments:
+      - ''
+      - 0
+      - '@=service("prestashop.adapter.environment").getCacheDir() ~ "/mbo/circuit_breaker"'
+
+  mbo.circuit_breaker.doctrine_cache:
+    class: Symfony\Component\Cache\DoctrineProvider
+    arguments:
+      - '@mbo.circuit_breaker.cache'
+
+  mbo.circuit_breaker.storage:
+    class: PrestaShop\CircuitBreaker\Storage\DoctrineCache
+    arguments:
+      - "@mbo.circuit_breaker.doctrine_cache"
+
   mbo.news.circuit_breaker.settings:
     class: PrestaShop\CircuitBreaker\FactorySettings
     arguments:
