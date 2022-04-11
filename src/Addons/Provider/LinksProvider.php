@@ -168,23 +168,7 @@ class LinksProvider
 
     public function getPasswordForgottenLink(): string
     {
-        $passwordForgottenLinks = [
-            'en' => 'https://auth.prestashop.com/en/password/request',
-            'fr' => 'https://auth.prestashop.com/fr/mot-de-passe/demande-de-reinitialisation',
-            'de' => 'https://auth.prestashop.com/de/passwort/anforderung',
-            'es' => 'https://auth.prestashop.com/es/contrasena/solicitud',
-            'it' => 'https://auth.prestashop.com/it/password/richiesta',
-            'nl' => 'https://auth.prestashop.com/nl/wachtwoord/verzoek',
-            'pl' => 'https://auth.prestashop.com/pl/haslo/zadanie',
-            'pt' => 'https://auth.prestashop.com/pt/senha/solicite-uma-nova-senh',
-            'ru' => 'https://auth.prestashop.com/ru/%D0%BF%D0%B0%D1%80%D0%BE%D0%BB%D1%8C/%D0%B7%D0%B0%D0%BF%D1%80%D0%BE%D1%81',
-        ];
-
-        $isoCode = mb_strtolower($this->getIsoCode());
-
-        return array_key_exists($isoCode, $passwordForgottenLinks)
-            ? $passwordForgottenLinks[$isoCode]
-            : $passwordForgottenLinks[self::DEFAULT_LANGUAGE];
+        return $this->translator->trans('https://auth.prestashop.com/en/password/request', [], 'Modules.Mbo.Links');
     }
 
     public function getEmployeeMenuLinks(): array
