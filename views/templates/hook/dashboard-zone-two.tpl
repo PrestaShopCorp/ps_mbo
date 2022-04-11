@@ -18,7 +18,7 @@
  *}
 
 <div id="dashaddons" class="row-margin-bottom">
-  <a href="https://addons.prestashop.com/en/209-dashboards?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" target="_blank" rel="noopener noreferrer nofollow">
+  <a href="{$link_url}" target="_blank" rel="noopener noreferrer nofollow">
     <i class="icon-plus"></i> {l s='Add more dashboard modules' d='Modules.Mbo.Dashboardzonetwo'}
   </a>
 </div>

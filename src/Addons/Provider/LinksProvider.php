@@ -110,16 +110,13 @@ class LinksProvider
     {
         $isoCode = $this->getIsoCode();
 
-        return sprintf(
-            '%s?%s',
-            'https://addons.prestashop.com/' . mb_strtolower($isoCode) . '/3-templates-prestashop',
-            http_build_query([
+        return $this->translator->trans('https://addons.prestashop.com/en/3-templates-prestashop', [], 'Modules.Mbo.Links')
+            . '?' . http_build_query([
                 'utm_source' => 'back-office',
                 'utm_medium' => 'theme-button',
                 'utm_campaign' => 'back-office-' . mb_strtoupper($isoCode),
                 'utm_content' => 'download',
-            ])
-        );
+            ]);
     }
 
     public function getDashboardPracticalLinks(): array
@@ -131,22 +128,30 @@ class LinksProvider
 
     /**
      * @param string $controllerName
+     * @param string $medium
      *
      * @return string|null
      */
-    public function getAddonsLinkByControllerName(string $controllerName): ?string
+    public function getAddonsLinkByControllerName(string $controllerName, string $medium): ?string
     {
-        $utm = '?utm_source=back-office&utm_medium=dispatch&utm_content=download&utm_campaign=back-office-' . $this->context->getLanguage()->iso_code;
-
+        $utm = '?' . http_build_query([
+           'utm_source' => 'back-office',
+           'utm_medium' => $medium,
+           'utm_content' => 'download',
+           'utm_campaign' => 'back-office-' . $this->context->getLanguage()->iso_code,
+        ]);
         switch ($controllerName) {
             case 'AdminCarriers':
-                $link = $this->translator->trans('https://addons.prestashop.com/en/518-shipping-logistics', [], 'Modules.Mbo.Modulescatalog');
+                $link = $this->translator->trans('https://addons.prestashop.com/en/518-shipping-logistics', [], 'Modules.Mbo.Links');
                 break;
             case 'AdminPayment':
-                $link = $this->translator->trans('https://addons.prestashop.com/en/481-payment', [], 'Modules.Mbo.Modulescatalog');
+                $link = $this->translator->trans('https://addons.prestashop.com/en/481-payment', [], 'Modules.Mbo.Links');
+                break;
+            case 'AdminController':
+                $link = $this->translator->trans('https://addons.prestashop.com/en/209-dashboards', [], 'Modules.Mbo.Links');
                 break;
             default:
-                $link = $this->translator->trans('https://addons.prestashop.com/en/', [], 'Modules.Mbo.Modulescatalog');
+                $link = $this->translator->trans('https://addons.prestashop.com/en/', [], 'Modules.Mbo.Links');
         }
 
         return $link . $utm;
@@ -156,70 +161,55 @@ class LinksProvider
     {
         $isoCode = mb_strtolower($this->getIsoCode());
 
-        return sprintf('https://auth.prestashop.com/%s/inscription', $isoCode)
-            . sprintf('?lang=%s', $isoCode)
-            . '&_ga=2.183749797.2029715227.1645605306-2047387021.1643627469'
+        return $this->translator->trans('https://auth.prestashop.com/en/login', [], 'Modules.Mbo.Links')
+            . '?_ga=2.183749797.2029715227.1645605306-2047387021.1643627469'
             . '&_gac=1.81371877.1644238612.CjwKCAiAo4OQBhBBEiwA5KWu_5UzrywbBPo4PKIYESy7K-noavdo7Z4riOZMJEoM9mE1IE3gks0thxoCZOwQAvD_BwE';
     }
 
     public function getEmployeeMenuLinks(): array
     {
         $isoCode = mb_strtolower($this->getIsoCode());
+        $baseUtmString = '?' . http_build_query([
+                'utm_source' => 'back-office',
+                'utm_medium' => 'profile',
+                'utm_content' => 'download17',
+            ]);
 
         return [
             [
-                'url' => 'https://www.prestashop.com'
-                    . '/en' //should be language dependant, but not available yet
-                    . '/resources/documentations'
-                    . '?utm_source=back-office'
-                    . '&utm_medium=profile'
-                    . '&utm_campaign=resources-en' //should be language dependant, but not available yet
-                    . '&utm_content=download17',
+                'url' => $this->translator->trans('https://www.prestashop.com/en/resources', [], 'Modules.Mbo.Links')
+                    . $baseUtmString
+                    . sprintf('&utm_campaign=resources-%s', $isoCode),
                 'icon' => 'book',
-                'label' => 'Resources',
+                'label' => $this->translator->trans('Resources', [], 'Modules.Mbo.Links'),
             ],
             [
-                'url' => 'https://www.prestashop.com'
-                    . '/en' //should be language dependant, but not available yet
-                    . '/training'
-                    . '?utm_source=back-office'
-                    . '&utm_medium=profile'
-                    . '&utm_campaign=training-en' //should be language dependant, but not available yet
-                    . '&utm_content=download17',
+                'url' => $this->translator->trans('https://www.prestashop.com/en/training', [], 'Modules.Mbo.Links')
+                    . $baseUtmString
+                    . sprintf('&utm_campaign=training-%s', $isoCode),
                 'icon' => 'school',
-                'label' => 'Training',
+                'label' => $this->translator->trans('Training', [], 'Modules.Mbo.Links'),
             ],
             [
-                'url' => 'https://www.prestashop.com'
-                    . sprintf('/%s', $isoCode)
-                    . '/experts'
-                    . '?utm_source=back-office'
-                    . '&utm_medium=profile'
-                    . sprintf('&utm_campaign=expert-%s', $isoCode)
-                    . '&utm_content=download17',
+                'url' => $this->translator->trans('https://www.prestashop.com/en/experts', [], 'Modules.Mbo.Links')
+                    . $baseUtmString
+                    . sprintf('&utm_campaign=expert-%s', $isoCode),
                 'icon' => 'person_pin_circle',
-                'label' => 'Find an Expert',
+                'label' => $this->translator->trans('Find an Expert', [], 'Modules.Mbo.Links'),
             ],
             [
-                'url' => 'https://addons.prestashop.com'
-                    . sprintf('/%s/', $isoCode)
-                    . '?utm_source=back-office'
-                    . '&utm_medium=profile'
-                    . sprintf('&utm_campaign=addons-%s', $isoCode)
-                    . '&utm_content=download17',
+                'url' => $this->translator->trans('https://addons.prestashop.com/en/', [], 'Modules.Mbo.Links')
+                    . $baseUtmString
+                    . sprintf('&utm_campaign=addons-%s', $isoCode),
                 'icon' => 'extension',
-                'label' => 'PrestaShop Marketplace',
+                'label' => $this->translator->trans('PrestaShop Marketplace', [], 'Modules.Mbo.Links'),
             ],
             [
-                'url' => 'https://www.prestashop.com'
-                    . sprintf('/%s', $isoCode)
-                    . '/contact'
-                    . '?utm_source=back-office'
-                    . '&utm_medium=profile'
-                    . sprintf('&utm_campaign=help-center-%s', $isoCode)
-                    . '&utm_content=download17',
+                'url' => $this->translator->trans('https://www.prestashop.com/en/contact', [], 'Modules.Mbo.Links')
+                    . $baseUtmString
+                    . sprintf('&utm_campaign=help-center-%s', $isoCode),
                 'icon' => 'help',
-                'label' => 'Help Center',
+                'label' => $this->translator->trans('Help Center', [], 'Modules.Mbo.Links'),
             ],
         ];
     }
