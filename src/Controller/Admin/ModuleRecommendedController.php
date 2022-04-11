@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
+use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
 use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModulePresenterInterface;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -49,19 +50,27 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
     protected $recommendedModulePresenter;
 
     /**
+     * @var LinksProvider
+     */
+    protected $linksProvider;
+
+    /**
      * @param RequestStack $requestStack
      * @param TabCollectionProviderInterface $tabCollectionProvider
      * @param RecommendedModulePresenterInterface $recommendedModulePresenter
+     * @param LinksProvider $linksProvider
      */
     public function __construct(
         RequestStack $requestStack,
         TabCollectionProviderInterface $tabCollectionProvider,
-        RecommendedModulePresenterInterface $recommendedModulePresenter
+        RecommendedModulePresenterInterface $recommendedModulePresenter,
+        LinksProvider $linksProvider
     ) {
         parent::__construct();
         $this->requestStack = $requestStack;
         $this->tabCollectionProvider = $tabCollectionProvider;
         $this->recommendedModulePresenter = $recommendedModulePresenter;
+        $this->linksProvider = $linksProvider;
     }
 
     /**
@@ -80,6 +89,7 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
                     [
                         'recommendedModulesInstalled' => $this->recommendedModulePresenter->presentCollection($tab->getRecommendedModulesInstalled()),
                         'recommendedModulesNotInstalled' => $this->recommendedModulePresenter->presentCollection($tab->getRecommendedModulesNotInstalled()),
+                        'linkUrl' => $this->linksProvider->getAddonsLinkByControllerName($tabClassName),
                     ]
                 ),
             ]);

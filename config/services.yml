@@ -21,6 +21,7 @@ services:
       - '@prestashop.adapter.legacy.context'
       - '@prestashop.adapter.legacy.configuration'
       - '@request_stack'
+      - '@translator'
 
   mbo.modules.presenter.listing:
     class: 'PrestaShop\Module\Mbo\Module\Presenter\ModulesForListingPresenter'
@@ -56,6 +57,7 @@ services:
       - '@request_stack'
       - '@mbo.tab.collection.provider'
       - '@mbo.recommendedmodules.presenter'
+      - '@mbo.addons.links_provider'
 
   mbo.controller.themes.catalog:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController'
