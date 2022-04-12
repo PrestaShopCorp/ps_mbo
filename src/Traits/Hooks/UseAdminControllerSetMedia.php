@@ -37,6 +37,8 @@ trait UseAdminControllerSetMedia
             $this->context->controller->addJs($this->getPathUri() . 'views/js/catalog-see-more.js?v=' . $this->version);
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css?v=' . $this->version);
         }
+        // Add it to have all script work on all pages...
+        $this->context->controller->addJs('/admin-dev/themes/default/js/bundle/default.js');
     }
 
     /**
