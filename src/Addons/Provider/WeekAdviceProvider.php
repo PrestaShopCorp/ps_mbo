@@ -51,12 +51,7 @@ class WeekAdviceProvider
     {
         $circuitBreaker = $this->factory->create($this->factorySettings);
         $apiJsonResponse = $circuitBreaker->call(
-            self::ADDONS_API_URL . '/request/?' . http_build_query(['method' => 'week_advice', 'iso_lang' => $isoCode]),
-            [
-                'subscribers' => [
-                    $this->cacheSubscriber,
-                ],
-            ]
+            self::ADDONS_API_URL . '/request/?' . http_build_query(['method' => 'week_advice', 'iso_lang' => $isoCode])
         );
 
         $weekAdviceData = !empty($apiJsonResponse) ? json_decode($apiJsonResponse, true) : [];

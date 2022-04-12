@@ -105,11 +105,11 @@ class AddonsUser implements UserInterface
     /**
      * @param string $key
      *
-     * @return string|null
+     * @return string|bool|null
      *
      * @throws Exception
      */
-    private function getAndDecrypt(string $key): ?string
+    private function getAndDecrypt(string $key)
     {
         $sessionValue = $this->getFromSession($key);
         if (null !== $sessionValue) {
