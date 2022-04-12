@@ -106,24 +106,30 @@
 }
 
 #content.bootstrap #modules_list_container_content button.spinner {
-  color:#fff;
-  background-color:#fff;
-  width:40px;
-  width:2.5rem;
-  height:40px;
-  height:2.5rem;
-  border-radius:2.5rem;
-  border-right-color:#25b9d7;
-  border-bottom-color:#25b9d7;
-  border-width:3px;
-  border-width:.1875rem;
-  border-style:solid;
-  font-size:0;
-  outline:none;
-  display:inline-block;
-  border-left-color:#bbcdd2;
-  border-top-color:#bbcdd2;
-  animation:rotating 2s linear infinite;
+  display: inline-block;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 0;
+  color: #fff;
+  background-color: #fff;
+  border-style: solid;
+  border-width: .1875rem;
+  border-color: #bbcdd2 #25b9d7 #25b9d7 #bbcdd2;
+  border-radius: 2.5rem;
+  outline: 0;
+  -webkit-animation: rotatingMbo 2s linear infinite;
+  animation: rotatingMbo 2s linear infinite;
+}
+
+/** Mandatory for legacy pages **/
+@keyframes rotatingMbo {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 #content.bootstrap #tab_modules_list_installed > tbody > tr > td:nth-child(2),
