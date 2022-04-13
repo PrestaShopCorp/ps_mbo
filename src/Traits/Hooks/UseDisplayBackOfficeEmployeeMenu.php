@@ -22,8 +22,8 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
-use PrestaShopBundle\Component\ActionBar\ActionsBarButton;
-use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButton;
+use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButtonsCollection;
 
 trait UseDisplayBackOfficeEmployeeMenu
 {

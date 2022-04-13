@@ -61,10 +61,10 @@ trait UseGetAdminToolbarButtons
      *
      * @throws Exception
      */
-    public function bootUseAdminToolbarButtons(): void
+    public function bootUseGetAdminToolbarButtons(): void
     {
         if (method_exists($this, 'addAdminControllerMedia')) {
-            $this->addAdminControllerMedia('loadMediaAdminToolbarButtons');
+            $this->addAdminControllerMedia('loadMediaGetAdminToolbarButtons');
         }
     }
 
@@ -75,7 +75,7 @@ trait UseGetAdminToolbarButtons
      *
      * @return void
      */
-    protected function loadMediaAdminToolbarButtons(): void
+    protected function loadMediaGetAdminToolbarButtons(): void
     {
         $this->context->controller->addJs($this->getPathUri() . 'views/js/addons-connector.js?v=' . $this->version);
     }
