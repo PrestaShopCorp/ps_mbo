@@ -36,6 +36,7 @@ trait HaveTabs
         'AdminPsMboModuleParent' => [
             'name' => 'Module catalog',
             'visible' => true,
+            'position' => 1,
             'class_name' => 'AdminPsMboModuleParent',
             'parent_class_name' => 'AdminParentModulesSf',
         ],
@@ -107,7 +108,7 @@ trait HaveTabs
      */
     public function installTab(array $tabData): bool
     {
-        $position = 0;
+        $position = $tabData['position'] ?? 0;
         $tabNameByLangId = array_fill_keys(
             Language::getIDs(false),
             $tabData['name']
