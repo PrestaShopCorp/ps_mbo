@@ -51,12 +51,12 @@ function upgrade_module_2_0_0($module)
     }
 
     // We migrate Module Selections Tab to MBO
-    if (false === $module->installTab(ps_mbo::ADMIN_CONTROLLERS['AdminPsMboSelection'])) {
+    if (false === $module->installTab(ps_mbo::$ADMIN_CONTROLLERS['AdminPsMboSelection'])) {
         return false;
     }
 
     // We create Module Recommended Tab to MBO
-    if (false === $module->installTab(ps_mbo::ADMIN_CONTROLLERS['AdminPsMboRecommended'])) {
+    if (false === $module->installTab(ps_mbo::$ADMIN_CONTROLLERS['AdminPsMboRecommended'])) {
         return false;
     }
 
