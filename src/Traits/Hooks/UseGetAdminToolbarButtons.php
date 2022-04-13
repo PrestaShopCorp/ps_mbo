@@ -42,6 +42,11 @@ trait UseGetAdminToolbarButtons
          * @var ActionsBarButtonsCollection $extraToolbarButtons
          */
         $extraToolbarButtons = $params['toolbar_extra_buttons_collection'];
+
+        if (!in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CONNECTION_TOOLBAR)) {
+            return $extraToolbarButtons;
+        }
+
         $toolbarButtons = $this->get('mbo.addons.toolbar')->getConnectionToolbar();
 
         foreach ($toolbarButtons as $toolbarButtonLabel => $toolbarButtonDescription) {

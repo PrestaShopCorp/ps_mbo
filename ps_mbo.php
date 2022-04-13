@@ -80,6 +80,13 @@ class ps_mbo extends Module
         'dashboardZoneTwo',
         'dashboardZoneThree',
     ];
+
+    public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
+        'AdminPsMboModule',
+        'AdminModulesManage',
+        'AdminModulesSf',
+    ];
+
     /**
      * @var array An array of method that can be called to register media in the actionAdminControllerSetMedia hook
      *
