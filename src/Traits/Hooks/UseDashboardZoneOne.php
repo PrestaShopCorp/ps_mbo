@@ -82,7 +82,7 @@ trait UseDashboardZoneOne
     protected function loadMediaDashboardZoneOne(): void
     {
         $this->context->controller->addJs($this->getPathUri() . 'views/js/addons-connector.js?v=' . $this->version);
-        $this->context->controller->addJs($this->getPathUri() . 'views/css/addons-connect.css?v=' . $this->version);
+        $this->context->controller->addCSS($this->getPathUri() . 'views/css/addons-connect.css');
     }
 
     public function useDashboardZoneOneExtraOperations()
