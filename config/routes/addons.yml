@@ -1,0 +1,18 @@
+# Login and logout to Addons
+admin_mbo_addons_login:
+  path: /login
+  methods: [ POST ]
+  defaults:
+    _controller: mbo.controller.addons:loginAction
+
+admin_mbo_addons_logout:
+  path: /logout
+  methods: [ GET ]
+  defaults:
+    _controller: mbo.controller.addons:logoutAction
+
+admin_mbo_addons_module_upgrade:
+  path: /modules/upgrade
+  methods: [ POST ]
+  defaults:
+    _controller: mbo.controller.addons:upgradeModuleAction

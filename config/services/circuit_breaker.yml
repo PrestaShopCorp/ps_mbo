@@ -1,0 +1,37 @@
+services:
+  mbo.circuit_breaker.advanced_factory:
+    class: PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory
+
+  mbo.circuit_breaker.cache:
+    class: Symfony\Component\Cache\Adapter\FilesystemAdapter
+    arguments:
+      - ''
+      - 0
+      - '@=service("prestashop.adapter.environment").getCacheDir() ~ "/mbo/circuit_breaker"'
+
+  mbo.circuit_breaker.doctrine_cache:
+    class: Symfony\Component\Cache\DoctrineProvider
+    arguments:
+      - '@mbo.circuit_breaker.cache'
+
+  mbo.circuit_breaker.storage:
+    class: PrestaShop\CircuitBreaker\Storage\DoctrineCache
+    arguments:
+      - "@mbo.circuit_breaker.doctrine_cache"
+
+  mbo.news.circuit_breaker.settings:
+    class: PrestaShop\CircuitBreaker\FactorySettings
+    arguments:
+      - !php/const \PrestaShop\Module\Mbo\News\NewsDataProvider::CLOSED_ALLOWED_FAILURES
+      - !php/const \PrestaShop\Module\Mbo\News\NewsDataProvider::CLOSED_TIMEOUT_SECONDS
+      - !php/const \PrestaShop\Module\Mbo\News\NewsDataProvider::OPEN_THRESHOLD_SECONDS
+    calls:
+      - [ 'setStrippedFailures', [ !php/const \PrestaShop\Module\Mbo\News\NewsDataProvider::OPEN_ALLOWED_FAILURES ] ]
+      - [ 'setStrippedTimeout', [ !php/const \PrestaShop\Module\Mbo\News\NewsDataProvider::OPEN_TIMEOUT_SECONDS ] ]
+      - [ 'setStorage', [ '@prestashop.core.circuit_breaker.storage' ] ]
+
+  mbo.news.circuit_breaker:
+    class: 'PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface'
+    factory: [ "@mbo.circuit_breaker.advanced_factory", create ]
+    arguments:
+      - "@mbo.news.circuit_breaker.settings"

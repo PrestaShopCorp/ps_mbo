@@ -1,27 +1,28 @@
 <?php
 /**
- * 2007-2020 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use PrestaShop\Module\Mbo\AddonsSelectionLinkProvider;
-use PrestaShop\Module\Mbo\ExternalContentProvider\ExternalContentProviderInterface;
+use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
+use PrestaShop\Module\Mbo\Service\ExternalContentProvider\ExternalContentProviderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -36,32 +37,32 @@ class ThemeCatalogController extends FrameworkBundleAdminController
     /**
      * @var RequestStack
      */
-    private $requestStack;
+    protected $requestStack;
 
     /**
      * @var ExternalContentProviderInterface
      */
-    private $externalContentProvider;
+    protected $externalContentProvider;
 
     /**
-     * @var AddonsSelectionLinkProvider
+     * @var LinksProvider
      */
-    private $addonsSelectionLinkProvider;
+    protected $linksProvider;
 
     /**
      * @param RequestStack $requestStack
      * @param ExternalContentProviderInterface $externalContentCollectionProvider
-     * @param AddonsSelectionLinkProvider $addonsSelectionLinkProvider
+     * @param LinksProvider $linksProvider
      */
     public function __construct(
         RequestStack $requestStack,
         ExternalContentProviderInterface $externalContentCollectionProvider,
-        AddonsSelectionLinkProvider $addonsSelectionLinkProvider
+        LinksProvider $linksProvider
     ) {
         parent::__construct();
         $this->requestStack = $requestStack;
         $this->externalContentProvider = $externalContentCollectionProvider;
-        $this->addonsSelectionLinkProvider = $addonsSelectionLinkProvider;
+        $this->linksProvider = $linksProvider;
     }
 
     /**
@@ -69,7 +70,7 @@ class ThemeCatalogController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(): Response
     {
         $response = new Response();
 
@@ -77,9 +78,9 @@ class ThemeCatalogController extends FrameworkBundleAdminController
             $response->setContent($this->renderView(
                 '@Modules/ps_mbo/views/templates/admin/controllers/theme_catalog/addons_store.html.twig',
                 [
-                    'pageContent' => $this->externalContentProvider->getContent($this->addonsSelectionLinkProvider->getLinkUrl()),
+                    'pageContent' => $this->externalContentProvider->getContent($this->linksProvider->getSelectionLink()),
                     'layoutHeaderToolbarBtn' => [],
-                    'layoutTitle' => $this->trans('Themes Catalog', 'Admin.Navigation.Menu'),
+                    'layoutTitle' => $this->trans('Themes Catalog', 'Modules.Mbo.Themescatalog'),
                     'requireAddonsSearch' => true,
                     'requireBulkActions' => false,
                     'showContentHeader' => true,

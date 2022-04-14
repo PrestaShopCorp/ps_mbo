@@ -1,61 +1,63 @@
 <?php
 /**
- * 2007-2020 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
 namespace PrestaShop\Module\Mbo\RecommendedModule;
+
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 
 class RecommendedModule implements RecommendedModuleInterface
 {
     /**
      * @var string technical name of the recommended module
      */
-    private $moduleName;
+    protected $name;
 
     /**
      * @var int position of the recommended module
      */
-    private $position;
+    protected $position;
 
     /**
      * @var bool
      */
-    private $isInstalled;
+    protected $isInstalled;
 
     /**
-     * @var array
+     * @var ModuleInterface
      */
-    private $moduleData;
+    protected $module;
 
     /**
      * {@inheritdoc}
      */
-    public function getModuleName()
+    public function getName(): string
     {
-        return $this->moduleName;
+        return $this->name;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setModuleName($moduleName)
+    public function setName(string $name): RecommendedModuleInterface
     {
-        $this->moduleName = $moduleName;
+        $this->name = $name;
 
         return $this;
     }
@@ -63,7 +65,7 @@ class RecommendedModule implements RecommendedModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getPosition()
+    public function getPosition(): int
     {
         return $this->position;
     }
@@ -71,7 +73,7 @@ class RecommendedModule implements RecommendedModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function setPosition($position)
+    public function setPosition(int $position): RecommendedModuleInterface
     {
         $this->position = $position;
 
@@ -81,7 +83,7 @@ class RecommendedModule implements RecommendedModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function isInstalled()
+    public function isInstalled(): bool
     {
         return $this->isInstalled;
     }
@@ -89,7 +91,7 @@ class RecommendedModule implements RecommendedModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function setInstalled($isInstalled)
+    public function setInstalled(bool $isInstalled): RecommendedModuleInterface
     {
         $this->isInstalled = $isInstalled;
 
@@ -99,17 +101,17 @@ class RecommendedModule implements RecommendedModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function getModuleData()
+    public function getModule(): ModuleInterface
     {
-        return $this->moduleData;
+        return $this->module;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setModuleData($moduleData)
+    public function setModule(ModuleInterface $module): RecommendedModuleInterface
     {
-        $this->moduleData = $moduleData;
+        $this->module = $module;
 
         return $this;
     }

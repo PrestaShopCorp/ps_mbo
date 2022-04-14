@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    public: true
+
+  mbo.tab.collection.factory:
+    class: 'PrestaShop\Module\Mbo\Tab\TabCollectionFactory'
+    arguments:
+      - '@mbo.modules.repository'
+
+  mbo.tab.collection.provider:
+    class: 'PrestaShop\Module\Mbo\Tab\TabCollectionProvider'
+    arguments:
+      - '@prestashop.adapter.legacy.context'
+      - '@mbo.externalcontent.provider'
+      - '@mbo.tab.collection.factory'
+      - '@doctrine.cache.provider'

@@ -11,25 +11,35 @@
     }
   ],
   "config": {
-    "platform": {
-      "php": "5.6.0"
-    },
     "preferred-install": "dist",
     "optimize-autoloader": true,
     "prepend-autoloader": false
   },
   "require": {
-    "php": ">=5.6.0",
+    "php": ">=7.2.5",
     "ext-simplexml": "*",
-    "prestashop/circuit-breaker": "^3.0.0"
+    "prestashop/circuit-breaker": "^4",
+    "guzzlehttp/guzzle": "^7.4"
   },
   "require-dev": {
-    "prestashop/php-dev-tools": "^2.2"
+    "prestashop/php-dev-tools": "^4",
+    "phpunit/phpunit": "^8.5",
+    "mockery/mockery": "^1.3",
+    "phpstan/phpstan": "^1.4"
   },
   "autoload": {
     "psr-4": {
-      "PrestaShop\\Module\\Mbo\\": "src/"
+      "PrestaShop\\Module\\Mbo\\": "src/",
+      "PrestaShop\\Module\\Mbo\\Tests\\": "tests"
     },
     "classmap": ["ps_mbo.php"]
+  },
+  "scripts": {
+    "test": [
+      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit.xml"
+    ],
+    "lint": [
+      "@php ./vendor/bin/php-cs-fixer fix --no-interaction --dry-run --diff"
+    ]
   }
 }

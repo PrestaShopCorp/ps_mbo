@@ -1,21 +1,21 @@
 <?php
 /**
- * 2007-2020 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
 namespace PrestaShop\Module\Mbo\Tab;
@@ -33,71 +33,71 @@ interface TabInterface
      *
      * @return string
      */
-    public function getLegacyClassName();
+    public function getLegacyClassName(): string;
 
     /**
      * @param string $legacyClassName
      *
      * @return TabInterface
      */
-    public function setLegacyClassName($legacyClassName);
+    public function setLegacyClassName(string $legacyClassName): TabInterface;
 
     /**
      * Get the display mode of the tab.
      *
      * @return string
      */
-    public function getDisplayMode();
+    public function getDisplayMode(): string;
 
     /**
      * @param string $displayMode
      *
      * @return TabInterface
      */
-    public function setDisplayMode($displayMode);
+    public function setDisplayMode(string $displayMode): TabInterface;
 
     /**
      * Get the recommended modules of the tab.
      *
      * @return RecommendedModuleCollectionInterface
      */
-    public function getRecommendedModules();
+    public function getRecommendedModules(): RecommendedModuleCollectionInterface;
 
     /**
      * @param RecommendedModuleCollectionInterface $recommendedModules
      *
      * @return TabInterface
      */
-    public function setRecommendedModules(RecommendedModuleCollectionInterface $recommendedModules);
+    public function setRecommendedModules(RecommendedModuleCollectionInterface $recommendedModules): TabInterface;
 
     /**
      * Check if the tab has recommended modules.
      *
      * @return bool
      */
-    public function hasRecommendedModules();
+    public function hasRecommendedModules(): bool;
 
     /**
      * Get the installed recommended modules of the tab.
      *
      * @return RecommendedModuleCollectionInterface
      */
-    public function getRecommendedModulesInstalled();
+    public function getRecommendedModulesInstalled(): RecommendedModuleCollectionInterface;
 
     /**
      * Get the not installed recommended modules of the tab.
      *
      * @return RecommendedModuleCollectionInterface
      */
-    public function getRecommendedModulesNotInstalled();
+    public function getRecommendedModulesNotInstalled(): RecommendedModuleCollectionInterface;
 
     /**
      * @return bool
      */
-    public function shouldDisplayButton();
+    public function shouldDisplayButton(): bool;
 
     /**
      * @return bool
      */
-    public function shouldDisplayAfterContent();
+    public function shouldDisplayAfterContent(): bool;
 }

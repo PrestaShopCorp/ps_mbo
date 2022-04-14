@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    public: true
+
+  mbo.security.permission_checker:
+    class: PrestaShop\Module\Mbo\Security\PermissionChecker
+    arguments:
+      - '@prestashop.adapter.legacy.context'
