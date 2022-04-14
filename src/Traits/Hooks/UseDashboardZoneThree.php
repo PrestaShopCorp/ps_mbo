@@ -94,7 +94,7 @@ trait UseDashboardZoneThree
     {
         if (Tools::getValue('controller') === 'AdminDashboard') {
             $this->context->controller->addJs($this->getPathUri() . 'views/js/dashboard-news.js?v=' . $this->version);
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/dashboard.css?v=' . $this->version);
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/dashboard.css');
         }
     }
 }

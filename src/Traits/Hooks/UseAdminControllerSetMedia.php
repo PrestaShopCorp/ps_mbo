@@ -33,13 +33,8 @@ trait UseAdminControllerSetMedia
      */
     public function bootUseAdminControllerSetMedia(): void
     {
-        if (Tools::getValue('controller') === 'AdminPsMboModule') {
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/catalog-see-more.js?v=' . $this->version);
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css?v=' . $this->version);
-        }
-        if ($this->isAdminLegacyContext()) {
-            // Add it to have all script work on all pages...
-            $this->context->controller->addJs('/admin-dev/themes/default/js/bundle/default.js?v=' . _PS_VERSION_);
+        if (method_exists($this, 'addAdminControllerMedia')) {
+            $this->addAdminControllerMedia('loadMediaForAdminControllerSetMedia', 0);
         }
     }
 
@@ -77,5 +72,22 @@ trait UseAdminControllerSetMedia
             'method' => $setMediaMethod,
             'order' => $order,
         ];
+    }
+
+    /**
+     * Add JS and CSS file
+     *
+     * @return void
+     */
+    protected function loadMediaForAdminControllerSetMedia(): void
+    {
+        if (Tools::getValue('controller') === 'AdminPsMboModule') {
+            $this->context->controller->addJs($this->getPathUri() . 'views/js/catalog-see-more.js?v=' . $this->version);
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css');
+        }
+        if ($this->isAdminLegacyContext()) {
+            // Add it to have all script work on all pages...
+            $this->context->controller->addJs('/admin-dev/themes/default/js/bundle/default.js?v=' . _PS_VERSION_);
+        }
     }
 }
