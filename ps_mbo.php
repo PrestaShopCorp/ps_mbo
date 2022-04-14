@@ -27,6 +27,7 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
+use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleExtraToolbarButton;
@@ -41,6 +42,7 @@ use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayModuleConfigureExtraButtons;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\String\UnicodeString;
 
@@ -151,6 +153,31 @@ class ps_mbo extends Module
         }
 
         return false;
+    }
+
+    /**
+     * @inerhitDoc
+     */
+    public function uninstall()
+    {
+        if (!parent::uninstall()) {
+            return false;
+        }
+
+        /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher */
+        $eventDispatcher = $this->get('event_dispatcher');
+        if (!$eventDispatcher->hasListeners(ModuleManagementEvent::UNINSTALL)) {
+            return true;
+        }
+
+        foreach ($eventDispatcher->getListeners(ModuleManagementEvent::UNINSTALL) as $listener) {
+            if ($listener[0] instanceof ModuleManagementEventSubscriber) {
+                $eventDispatcher->removeSubscriber($listener[0]);
+                break;
+            }
+        }
+
+        return true;
     }
 
     /**
