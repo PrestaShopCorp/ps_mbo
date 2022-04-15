@@ -60,6 +60,7 @@ trait HaveTabs
         'AdminPsMboTheme' => [
             'name' => 'Theme catalog',
             'visible' => true,
+            'position' => 1,
             'class_name' => 'AdminPsMboTheme',
             'parent_class_name' => 'AdminParentThemes',
         ],
