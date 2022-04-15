@@ -36,7 +36,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
      */
     protected $logger;
     /**
-     * @var \PrestaShop\Module\Mbo\Module\Repository
+     * @var Repository
      */
     protected $moduleRepository;
 
