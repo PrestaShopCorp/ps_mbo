@@ -30,7 +30,7 @@ return static function (ContainerConfigurator $container) {
     //Only load event subscriber when module is enabled to avoid logging events if disabled
     if (ps_mbo::checkModuleStatus()) {
         $services->set('mbo.addons.event_subscriber', ModuleManagementEventSubscriber::class)
-        ->args([ref('logger')])
+        ->args([ref('logger'), ref('mbo.modules.repository')])
         ->public()
         ->tag('kernel.event_subscriber');
     }

@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons\Subscriber;
 
+use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -34,10 +35,15 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
      * @var LoggerInterface
      */
     protected $logger;
+    /**
+     * @var Repository
+     */
+    protected $moduleRepository;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, Repository $moduleRepository)
     {
         $this->logger = $logger;
+        $this->moduleRepository = $moduleRepository;
     }
 
     public static function getSubscribedEvents(): array
@@ -45,18 +51,23 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         return [
             ModuleManagementEvent::INSTALL => [
                 ['onInstall'],
+                ['clearCatalogCache'],
             ],
             ModuleManagementEvent::POST_INSTALL => [
                 ['onPostInstall'],
+                ['clearCatalogCache'],
             ],
             ModuleManagementEvent::UNINSTALL => [
                 ['onUninstall'],
+                ['clearCatalogCache'],
             ],
             ModuleManagementEvent::ENABLE => [
                 ['onEnable'],
+                ['clearCatalogCache'],
             ],
             ModuleManagementEvent::DISABLE => [
                 ['onDisable'],
+                ['clearCatalogCache'],
             ],
             ModuleManagementEvent::UPGRADE => [
                 ['onUpgrade'],
@@ -70,6 +81,11 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
     public function onInstall(ModuleManagementEvent $event): void
     {
         $this->logEvent(ModuleManagementEvent::INSTALL);
+    }
+
+    public function clearCatalogCache(): void
+    {
+        $this->moduleRepository->clearCache();
     }
 
     public function onPostInstall(ModuleManagementEvent $event): void
