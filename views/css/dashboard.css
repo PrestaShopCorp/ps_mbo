@@ -23,3 +23,12 @@
   font-size: 20px;
   color: #6c868e;
 }
+
+#hookDashboardZoneOne {
+  display: flex;
+  flex-flow: column wrap;
+}
+
+#mbo-advices-and-updates {
+  order: -1;
+}
