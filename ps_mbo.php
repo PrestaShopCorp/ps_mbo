@@ -189,8 +189,30 @@ class ps_mbo extends Module
      */
     public function enable($force_all = false): bool
     {
-        return parent::enable(true)
-            && $this->handleTabAction('install');
+        // Store previous context
+        $previousContextType = Shop::getContext();
+        $previousContextShopId = Shop::getContextShopID();
+
+        $allShops = Shop::getShops(true, null, true);
+
+        foreach ($allShops as $shop) {
+            if (!$this->enableByShop($shop)) {
+                return false;
+            }
+        }
+
+        // Restore previous context
+        Shop::setContext($previousContextType, $previousContextShopId);
+
+        return $this->handleTabAction('install');
+    }
+
+    private function enableByShop(int $shopId)
+    {
+        // Force context to all shops
+        Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
+
+        return parent::enable(true);
     }
 
     /**
@@ -202,8 +224,30 @@ class ps_mbo extends Module
      */
     public function disable($force_all = false): bool
     {
-        return parent::disable(true)
-            && $this->handleTabAction('uninstall');
+        // Store previous context
+        $previousContextType = Shop::getContext();
+        $previousContextShopId = Shop::getContextShopID();
+
+        $allShops = Shop::getShops(true, null, true);
+
+        foreach ($allShops as $shop) {
+            if (!$this->disableByShop($shop)) {
+                return false;
+            }
+        }
+
+        // Restore previous context
+        Shop::setContext($previousContextType, $previousContextShopId);
+
+        return $this->handleTabAction('uninstall');
+    }
+
+    private function disableByShop(int $shopId)
+    {
+        // Force context to all shops
+        Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
+
+        return parent::disable(true);
     }
 
     /**
