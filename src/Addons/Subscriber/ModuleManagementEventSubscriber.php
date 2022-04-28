@@ -71,6 +71,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
             ],
             ModuleManagementEvent::UPGRADE => [
                 ['onUpgrade'],
+                ['clearCatalogCache'],
             ],
             ModuleManagementEvent::RESET => [
                 ['onReset'],

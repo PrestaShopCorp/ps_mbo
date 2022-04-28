@@ -41,6 +41,7 @@ use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayModuleConfigureExtraButtons;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseGetAdminToolbarButtons;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseListModules;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -62,6 +63,7 @@ class ps_mbo extends Module
     use UseGetAdminToolbarButtons;
     use UseDisplayBackOfficeFooter;
     use UseDisplayModuleConfigureExtraButtons;
+    use UseListModules;
 
     /**
      * @var array Hooks registered by the module
@@ -71,6 +73,7 @@ class ps_mbo extends Module
         'actionGetAdminToolbarButtons',
         'actionBeforeInstallModule',
         'actionBeforeUpgradeModule',
+        'actionListModules',
         'displayAdminThemesListAfter',
         'displayDashboardTop',
         'displayBackOfficeFooter',
