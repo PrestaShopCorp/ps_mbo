@@ -231,7 +231,7 @@ class Repository implements RepositoryInterface
             'AND ms.`id_shop` IN (' . implode(',', array_map('intval', Shop::getContextListShopID())) . ')');
 
         $result['installed'] = true;
-        $result['active'] = (bool) (($result['active'] ?? false) && ($result['shop_active'] ?? false));
+        $result['active'] = ($result['active'] ?? false) && ($enableStatuses['shop_active'] ?? false);
         $result['active_on_mobile'] = (bool) ((int) ($enableStatuses['enable_device'] ?? 0) & Filters\Device::MOBILE);
 
         return $result;
