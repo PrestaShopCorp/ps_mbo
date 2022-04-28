@@ -30,7 +30,6 @@ if (file_exists($autoloadPath)) {
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminModuleExtraToolbarButton;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseBeforeInstallModule;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseBeforeUpgradeModule;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne;
@@ -41,6 +40,7 @@ use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeEmployeeMenu;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayModuleConfigureExtraButtons;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseGetAdminToolbarButtons;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -59,7 +59,7 @@ class ps_mbo extends Module
     use UseAdminControllerSetMedia;
     use UseBeforeInstallModule;
     use UseBeforeUpgradeModule;
-    use UseAdminModuleExtraToolbarButton;
+    use UseGetAdminToolbarButtons;
     use UseDisplayBackOfficeFooter;
     use UseDisplayModuleConfigureExtraButtons;
 
@@ -68,7 +68,7 @@ class ps_mbo extends Module
      */
     public const HOOKS = [
         'actionAdminControllerSetMedia',
-        'actionAdminModuleExtraToolbarButton',
+        'actionGetAdminToolbarButtons',
         'actionBeforeInstallModule',
         'actionBeforeUpgradeModule',
         'displayAdminThemesListAfter',

@@ -22,13 +22,13 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
-use PrestaShopBundle\Component\ActionBar\ActionsBarButton;
-use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
+use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
 
-trait UseAdminModuleExtraToolbarButton
+trait UseGetAdminToolbarButtons
 {
     /**
-     * Hook actionAdminModuleExtraToolbarButton.
+     * Hook actionGetAdminToolbarButtons.
      *
      * Retrieve buttons definitions to the Modules' toolbar
      *
@@ -36,7 +36,7 @@ trait UseAdminModuleExtraToolbarButton
      *
      * @return ActionsBarButtonsCollection
      */
-    public function hookActionAdminModuleExtraToolbarButton(array $params): ActionsBarButtonsCollection
+    public function hookActionGetAdminToolbarButtons(array $params): ActionsBarButtonsCollection
     {
         /**
          * @var ActionsBarButtonsCollection $extraToolbarButtons
@@ -61,10 +61,10 @@ trait UseAdminModuleExtraToolbarButton
      *
      * @throws Exception
      */
-    public function bootUseAdminModuleExtraToolbarButton(): void
+    public function bootUseAdminToolbarButtons(): void
     {
         if (method_exists($this, 'addAdminControllerMedia')) {
-            $this->addAdminControllerMedia('loadMediaModuleExtraToolbarButton');
+            $this->addAdminControllerMedia('loadMediaAdminToolbarButtons');
         }
     }
 
@@ -75,7 +75,7 @@ trait UseAdminModuleExtraToolbarButton
      *
      * @return void
      */
-    protected function loadMediaModuleExtraToolbarButton(): void
+    protected function loadMediaAdminToolbarButtons(): void
     {
         $this->context->controller->addJs($this->getPathUri() . 'views/js/addons-connector.js?v=' . $this->version);
     }
