@@ -42,6 +42,11 @@ trait UseGetAdminToolbarButtons
          * @var ActionsBarButtonsCollection $extraToolbarButtons
          */
         $extraToolbarButtons = $params['toolbar_extra_buttons_collection'];
+
+        if (!in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CONNECTION_TOOLBAR)) {
+            return $extraToolbarButtons;
+        }
+
         $toolbarButtons = $this->get('mbo.addons.toolbar')->getConnectionToolbar();
 
         foreach ($toolbarButtons as $toolbarButtonLabel => $toolbarButtonDescription) {
@@ -61,10 +66,10 @@ trait UseGetAdminToolbarButtons
      *
      * @throws Exception
      */
-    public function bootUseAdminToolbarButtons(): void
+    public function bootUseGetAdminToolbarButtons(): void
     {
         if (method_exists($this, 'addAdminControllerMedia')) {
-            $this->addAdminControllerMedia('loadMediaAdminToolbarButtons');
+            $this->addAdminControllerMedia('loadMediaGetAdminToolbarButtons');
         }
     }
 
@@ -75,7 +80,7 @@ trait UseGetAdminToolbarButtons
      *
      * @return void
      */
-    protected function loadMediaAdminToolbarButtons(): void
+    protected function loadMediaGetAdminToolbarButtons(): void
     {
         $this->context->controller->addJs($this->getPathUri() . 'views/js/addons-connector.js?v=' . $this->version);
     }
