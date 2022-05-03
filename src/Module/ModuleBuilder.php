@@ -43,8 +43,8 @@ class ModuleBuilder implements ModuleBuilderInterface
         'uninstall' => 'Admin.Actions',
         'enable' => 'Admin.Actions',
         'disable' => 'Admin.Actions',
-        'enable_mobile' => 'Modules.Mbo.Modulescatalog',
-        'disable_mobile' => 'Modules.Mbo.Modulescatalog',
+        'enableMobile' => 'Modules.Mbo.Modulescatalog',
+        'disableMobile' => 'Modules.Mbo.Modulescatalog',
         'reset' => 'Admin.Actions',
         'upgrade' => 'Admin.Actions',
         'configure' => 'Admin.Actions',
@@ -71,8 +71,8 @@ class ModuleBuilder implements ModuleBuilderInterface
         'uninstall',
         'enable',
         'disable',
-        'enable_mobile',
-        'disable_mobile',
+        'enableMobile',
+        'disableMobile',
         'reset',
         'upgrade',
     ];
@@ -199,9 +199,9 @@ class ModuleBuilder implements ModuleBuilderInterface
             }
 
             if (!$module->database->getBoolean('active_on_mobile')) {
-                unset($urls['disable_mobile']);
+                unset($urls['disableMobile']);
             } else {
-                unset($urls['enable_mobile']);
+                unset($urls['enableMobile']);
             }
         } elseif (
             !$module->attributes->has('origin')
@@ -213,8 +213,8 @@ class ModuleBuilder implements ModuleBuilderInterface
                 $urls['uninstall'],
                 $urls['enable'],
                 $urls['disable'],
-                $urls['enable_mobile'],
-                $urls['disable_mobile'],
+                $urls['enableMobile'],
+                $urls['disableMobile'],
                 $urls['reset'],
                 $urls['upgrade'],
                 $urls['configure']
