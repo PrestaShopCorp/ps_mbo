@@ -195,19 +195,13 @@ class ModuleBuilder implements ModuleBuilderInterface
             if ($module->canBeUpgraded()) {
                 $urlActive = 'upgrade';
             } else {
-                unset(
-                    $urls['upgrade']
-                );
+                unset($urls['upgrade']);
             }
+
             if (!$module->database->getBoolean('active_on_mobile')) {
                 unset($urls['disable_mobile']);
             } else {
                 unset($urls['enable_mobile']);
-            }
-            if (!$module->canBeUpgraded()) {
-                unset(
-                    $urls['upgrade']
-                );
             }
         } elseif (
             !$module->attributes->has('origin')
