@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Addons\Subscriber;
 
 use PrestaShop\Module\Mbo\Module\Repository;
+use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -39,11 +40,19 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
      * @var Repository
      */
     protected $moduleRepository;
+    /**
+     * @var TabCollectionProviderInterface
+     */
+    protected $tabCollectionProvider;
 
-    public function __construct(LoggerInterface $logger, Repository $moduleRepository)
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        Repository $moduleRepository,
+        TabCollectionProviderInterface $tabCollectionProvider
+    ) {
         $this->logger = $logger;
         $this->moduleRepository = $moduleRepository;
+        $this->tabCollectionProvider = $tabCollectionProvider;
     }
 
     public static function getSubscribedEvents(): array
@@ -87,6 +96,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
     public function clearCatalogCache(): void
     {
         $this->moduleRepository->clearCache();
+        $this->tabCollectionProvider->clearCache();
     }
 
     public function onPostInstall(ModuleManagementEvent $event): void
