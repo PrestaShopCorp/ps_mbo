@@ -22,8 +22,8 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
-use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
+use PrestaShopBundle\Component\ActionBar\ActionsBarButton;
+use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 
 trait UseGetAdminToolbarButtons
 {
