@@ -26,4 +26,9 @@ interface TabCollectionProviderInterface
      * @return TabCollectionInterface
      */
     public function getTabCollection(): TabCollectionInterface;
+
+    /**
+     * @return void
+     */
+    public function clearCache(): void;
 }

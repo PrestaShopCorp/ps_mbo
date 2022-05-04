@@ -31,11 +31,11 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
  */
 class TabCollectionProvider implements TabCollectionProviderInterface
 {
-    const CACHE_KEY = 'recommendedModules';
+    public const CACHE_KEY = 'recommendedModules';
 
-    const CACHE_LIFETIME_SECONDS = 604800;
+    public const CACHE_LIFETIME_SECONDS = 604800;
 
-    const API_URL = 'https://api.prestashop.com/xml/tab_modules_list_17.xml';
+    public const API_URL = 'https://api.prestashop.com/xml/tab_modules_list_17.xml';
 
     /**
      * @var LegacyContext
@@ -113,6 +113,16 @@ class TabCollectionProvider implements TabCollectionProviderInterface
     {
         return $this->cacheProvider
             && $this->cacheProvider->contains($this->getCacheKey());
+    }
+
+    /**
+     * @return void
+     */
+    public function clearCache(): void
+    {
+        if ($this->isTabCollectionCached()) {
+            $this->cacheProvider->delete($this->getCacheKey());
+        }
     }
 
     /**
