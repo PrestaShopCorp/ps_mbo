@@ -32,6 +32,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Module implements ModuleInterface
 {
+    public static $OFFICIAL_PARTNER_AUTHOR = 'PrestaShop Partners';
+
     /**
      * @var LegacyModule Module The instance of the legacy module
      */
@@ -102,6 +104,7 @@ class Module implements ModuleInterface
         // Generate addons urls
         'url_active' => null,
         'urls' => [],
+        'is_official_partner' => false,
     ];
 
     /**

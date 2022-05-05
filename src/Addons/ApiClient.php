@@ -26,8 +26,8 @@ use stdClass;
 
 class ApiClient
 {
-    const HTTP_METHOD_GET = 'GET';
-    const HTTP_METHOD_POST = 'POST';
+    public const HTTP_METHOD_GET = 'GET';
+    public const HTTP_METHOD_POST = 'POST';
 
     /**
      * @var Client
@@ -71,7 +71,7 @@ class ApiClient
         $this->httpClient = $httpClient;
     }
 
-    public function setDefaultParams(string $locale, $isoCode, string $domain, string $shopVersion): void
+    public function setDefaultParams(string $locale, $isoCode, ?string $domain, string $shopVersion): void
     {
         list($isoLang) = explode('-', $locale);
         $this->setQueryParams([
