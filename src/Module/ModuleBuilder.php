@@ -121,6 +121,8 @@ class ModuleBuilder implements ModuleBuilderInterface
             'path' => $this->moduleDirectory . $module->name,
         ];
 
+        // Author can be overrided by the legacyModule, so we have to do that here
+        $attributes['is_official_partner'] = $attributes['author'] === Module::$OFFICIAL_PARTNER_AUTHOR;
         if ($this->isModuleMainClassValid($module->name)) {
             $mainClassAttributes = [];
 
