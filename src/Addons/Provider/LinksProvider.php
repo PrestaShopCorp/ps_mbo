@@ -26,7 +26,10 @@ use PrestaShop\Module\Mbo\Addons\PracticalLinks;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Foundation\Version;
+use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
+use stdClass;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Router;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LinksProvider
@@ -60,6 +63,16 @@ class LinksProvider
     protected $translator;
 
     /**
+     * @var CategoriesProvider
+     */
+    private $categoriesProvider;
+
+    /**
+     * @var Router
+     */
+    private $router;
+
+    /**
      * @param Version $version
      * @param LegacyContext $context
      * @param Configuration $configuration
@@ -71,13 +84,17 @@ class LinksProvider
         LegacyContext $context,
         Configuration $configuration,
         RequestStack $requestStack,
-        TranslatorInterface $trans
+        CategoriesProvider $categoriesProvider,
+        TranslatorInterface $trans,
+        Router $router
     ) {
         $this->version = $version;
         $this->context = $context;
         $this->configuration = $configuration;
         $this->requestStack = $requestStack;
+        $this->categoriesProvider = $categoriesProvider;
         $this->translator = $trans;
+        $this->router = $router;
     }
 
     /**
@@ -215,6 +232,35 @@ class LinksProvider
                 'label' => $this->translator->trans('Help Center', [], 'Modules.Mbo.Links'),
             ],
         ];
+    }
+
+    public function getCategoryLink(string $categoryName): string
+    {
+        $category = $this->getCategoryByName($categoryName);
+
+        return $this->router->generate('admin_mbo_catalog_module', [
+            'filterCategoryRef' => $category ? $category->refMenu : '',
+        ]);
+    }
+
+    /**
+     * Returns a category object based on its name.
+     *
+     * @param string $categoryName
+     *
+     * @return stdClass|null
+     */
+    private function getCategoryByName(string $categoryName): ?stdClass
+    {
+        foreach ($this->categoriesProvider->getCategories() as $parentCategory) {
+            foreach ($parentCategory->subMenu as $childCategory) {
+                if ($childCategory->name === $categoryName) {
+                    return $childCategory;
+                }
+            }
+        }
+
+        return null;
     }
 
     private function getIsoCode(): string

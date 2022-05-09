@@ -21,7 +21,9 @@ services:
       - '@prestashop.adapter.legacy.context'
       - '@prestashop.adapter.legacy.configuration'
       - '@request_stack'
+      - '@prestashop.categories_provider'
       - '@translator'
+      - '@router'
 
   mbo.modules.presenter.listing:
     class: 'PrestaShop\Module\Mbo\Module\Presenter\ModulesForListingPresenter'

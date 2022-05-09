@@ -39,6 +39,7 @@ use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayAdminThemesListAfter;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeEmployeeMenu;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayModuleConfigureExtraButtons;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseGetAdminToolbarButtons;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseListModules;
@@ -64,6 +65,7 @@ class ps_mbo extends Module
     use UseDisplayBackOfficeFooter;
     use UseDisplayModuleConfigureExtraButtons;
     use UseListModules;
+    use UseDisplayEmptyModuleCategoryExtraMessage;
 
     /**
      * @var array Hooks registered by the module
@@ -78,6 +80,7 @@ class ps_mbo extends Module
         'displayDashboardTop',
         'displayBackOfficeFooter',
         'displayBackOfficeEmployeeMenu',
+        'displayEmptyModuleCategoryExtraMessage',
         'displayModuleConfigureExtraButtons',
         'dashboardZoneOne',
         'dashboardZoneTwo',
