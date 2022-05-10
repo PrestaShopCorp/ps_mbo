@@ -154,9 +154,7 @@ class Repository implements RepositoryInterface
                         $addon->version_available = $addon->version;
                     }
                     if (!isset($addon->product_type)) {
-                        $addon->product_type = isset($addonsType) ? rtrim($addonsType, 's') : 'module';
-                    } else {
-                        $addon->product_type = $addon->product_type;
+                        $addon->product_type = is_string($addonsType) ? rtrim($addonsType, 's') : 'module';
                     }
 
                     $listAddonsModules[$addon->name] = $this->moduleBuilder->build(
