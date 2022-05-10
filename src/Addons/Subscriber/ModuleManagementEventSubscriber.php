@@ -78,6 +78,14 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
                 ['onDisable'],
                 ['clearCatalogCache'],
             ],
+            ModuleManagementEvent::ENABLE_MOBILE => [
+                ['onEnableMobile'],
+                ['clearCatalogCache'],
+            ],
+            ModuleManagementEvent::DISABLE_MOBILE => [
+                ['onDisableMobile'],
+                ['clearCatalogCache'],
+            ],
             ModuleManagementEvent::UPGRADE => [
                 ['onUpgrade'],
                 ['clearCatalogCache'],
@@ -115,6 +123,16 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
     }
 
     public function onDisable(ModuleManagementEvent $event): void
+    {
+        $this->logEvent(ModuleManagementEvent::DISABLE);
+    }
+
+    public function onEnableMobile(ModuleManagementEvent $event): void
+    {
+        $this->logEvent(ModuleManagementEvent::ENABLE);
+    }
+
+    public function onDisableMobile(ModuleManagementEvent $event): void
     {
         $this->logEvent(ModuleManagementEvent::DISABLE);
     }
