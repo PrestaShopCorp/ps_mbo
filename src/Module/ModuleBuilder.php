@@ -40,14 +40,14 @@ class ModuleBuilder implements ModuleBuilderInterface
      */
     public const ACTIONS_TRANSLATION_DOMAINS = [
         'install' => 'Admin.Actions',
-        'uninstall' => 'Admin.Actions',
         'enable' => 'Admin.Actions',
-        'disable' => 'Admin.Actions',
+        'configure' => 'Admin.Actions',
+        'upgrade' => 'Admin.Actions',
         'enableMobile' => 'Modules.Mbo.Modulescatalog',
         'disableMobile' => 'Modules.Mbo.Modulescatalog',
+        'disable' => 'Admin.Actions',
         'reset' => 'Admin.Actions',
-        'upgrade' => 'Admin.Actions',
-        'configure' => 'Admin.Actions',
+        'uninstall' => 'Admin.Actions',
     ];
 
     /**
@@ -68,13 +68,13 @@ class ModuleBuilder implements ModuleBuilderInterface
 
     public const AVAILABLE_ACTIONS = [
         'install',
-        'uninstall',
         'enable',
-        'disable',
+        'upgrade',
         'enableMobile',
         'disableMobile',
+        'disable',
         'reset',
-        'upgrade',
+        'uninstall',
     ];
 
     /**
