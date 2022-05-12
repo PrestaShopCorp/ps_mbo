@@ -25,27 +25,27 @@ use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 
-trait UseGetModulesExtraDescription
+trait UseGetModulesAdditionalDescription
 {
     /**
      * @return void
      *
      * @throws \Exception
      */
-    public function bootUseGetModulesExtraDescription(): void
+    public function bootUseGetModulesAdditionalDescription(): void
     {
         if (method_exists($this, 'addAdminControllerMedia')) {
-            $this->addAdminControllerMedia('loadMediaForModuleExtraDescription');
+            $this->addAdminControllerMedia('loadMediaForModuleAdditionalDescription');
         }
     }
 
     /**
-     * Hook actionGetModulesExtraDescription.
-     * Returns an array of extra descriptions to display in front of the module in Module Manager page.
+     * Hook actionGetModulesAdditionalDescription.
+     * Returns an array of additional descriptions to display in front of the module in Module Manager page.
      *
      * @return array
      */
-    public function hookActionGetModulesExtraDescription(array $params): array
+    public function hookActionGetModulesAdditionalDescription(array $params): array
     {
         $modules = $params['module_collection'];
 
@@ -53,7 +53,7 @@ trait UseGetModulesExtraDescription
             return [];
         }
 
-        $modulesExtraDescriptions = [];
+        $modulesAdditionalDescriptions = [];
 
         /** @var ModuleInterface $module */
         foreach ($modules as $module) {
@@ -70,8 +70,8 @@ trait UseGetModulesExtraDescription
                 continue; // Unknown by addons
             }
 
-            $modulesExtraDescriptions[$moduleName] = $this->get('twig')->render(
-                '@Modules/ps_mbo/views/templates/hook/twig/module_manager_extra_description.html.twig', [
+            $modulesAdditionalDescriptions[$moduleName] = $this->get('twig')->render(
+                '@Modules/ps_mbo/views/templates/hook/twig/module_manager_additional_description.html.twig', [
                     'module' => [
                         'attributes' => [
                             'id' => $addonsModule->get('id'),
@@ -82,7 +82,7 @@ trait UseGetModulesExtraDescription
             );
         }
 
-        return $modulesExtraDescriptions;
+        return $modulesAdditionalDescriptions;
     }
 
     /**
@@ -92,7 +92,7 @@ trait UseGetModulesExtraDescription
      *
      * @return void
      */
-    protected function loadMediaForModuleExtraDescription(): void
+    protected function loadMediaForModuleAdditionalDescription(): void
     {
         if (\Tools::getValue('controller') === 'AdminModulesManage') {
             $this->context->controller->addJs($this->getPathUri() . 'views/js/catalog-see-more.js?v=' . $this->version);
