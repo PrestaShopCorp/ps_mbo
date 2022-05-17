@@ -104,6 +104,12 @@ trait UseDisplayDashboardTop
         'AdminCarriers',
     ];
 
+    protected static $ADMIN_MODULES_CONTROLLER = 'AdminModules';
+    protected static $MODULES_WITH_CONFIGURATION_PUSH = [
+        'contactform',
+        'blockreassurance',
+    ];
+
     /**
      * @return void
      *
@@ -121,8 +127,57 @@ trait UseDisplayDashboardTop
      * Includes content just below the toolbar.
      *
      * @return string
+     * @throws \Exception
      */
     public function hookDisplayDashboardTop(): string
+    {
+        $values = Tools::getAllValues();
+        //Check if we are on configuration page & if the module needs to have a push on this page
+        if(isset($values['controller']) && $values['controller'] === self::$ADMIN_MODULES_CONTROLLER
+            &&
+            isset($values['configure']) && in_array($values['configure'], self::$MODULES_WITH_CONFIGURATION_PUSH))
+        {
+            return $this->displayPushOnConfigurationPage($values['configure']);
+        }
+
+        return $this->displayRecommendedModules();
+    }
+
+    /**
+     * Insert a block on the top of the configuration with a link to addons
+     *
+     * @param string $moduleName
+     *
+     * @return string
+     */
+    protected function displayPushOnConfigurationPage(string $moduleName): string
+    {
+        switch ($moduleName) {
+            case 'contactform':
+                $this->smarty->assign([
+                    'catchPhrase' => $this->trans('For even more security on your website forms, consult our Security & Access modules category on the'),
+                    'linkTarget' => $this->trans('https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security'),
+                    'linkText' => $this->trans('PrestaShop Addons Marketplace'),
+                ]);
+                break;
+            case 'blockreassurance':
+                $this->smarty->assign([
+                    'catchPhrase' => $this->trans(''),
+                    'linkTarget' => $this->trans('https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN'),
+                    'linkText' => $this->trans('PrestaShop Addons Marketplace'),
+                ]);
+                break;
+        }
+        return $this->fetch('module:ps_mbo/views/templates/hook/push-configuration.tpl');
+    }
+
+    /**
+     * Compute & include data with recommended modules when needed
+     *
+     * @return string
+     * @throws \Exception
+     */
+    protected function displayRecommendedModules(): string
     {
         /** @var UrlGeneratorInterface $router */
         $router = $this->get('router');
