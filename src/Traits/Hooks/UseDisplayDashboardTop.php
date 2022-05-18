@@ -104,7 +104,17 @@ trait UseDisplayDashboardTop
         'AdminCarriers',
     ];
 
+    /**
+     * The controller of configuration page
+     *
+     * @var string
+     */
     protected static $ADMIN_MODULES_CONTROLLER = 'AdminModules';
+    /**
+     * Module with push content & link to addons on configuration page
+     *
+     * @var string[]
+     */
     protected static $MODULES_WITH_CONFIGURATION_PUSH = [
         'contactform',
         'blockreassurance',
@@ -127,16 +137,16 @@ trait UseDisplayDashboardTop
      * Includes content just below the toolbar.
      *
      * @return string
+     *
      * @throws \Exception
      */
     public function hookDisplayDashboardTop(): string
     {
         $values = Tools::getAllValues();
         //Check if we are on configuration page & if the module needs to have a push on this page
-        if(isset($values['controller']) && $values['controller'] === self::$ADMIN_MODULES_CONTROLLER
+        if (isset($values['controller']) && $values['controller'] === self::$ADMIN_MODULES_CONTROLLER
             &&
-            isset($values['configure']) && in_array($values['configure'], self::$MODULES_WITH_CONFIGURATION_PUSH))
-        {
+            isset($values['configure']) && in_array($values['configure'], self::$MODULES_WITH_CONFIGURATION_PUSH)) {
             return $this->displayPushOnConfigurationPage($values['configure']);
         }
 
@@ -162,12 +172,19 @@ trait UseDisplayDashboardTop
                 break;
             case 'blockreassurance':
                 $this->smarty->assign([
-                    'catchPhrase' => $this->trans(''),
+                    'catchPhrase' => $this->trans('Discover more modules to improve your shop on'),
                     'linkTarget' => $this->trans('https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN'),
                     'linkText' => $this->trans('PrestaShop Addons Marketplace'),
                 ]);
                 break;
+            default:
+                $this->smarty->assign([
+                    'catchPhrase' => $this->trans('Discover more modules to improve your shop on'),
+                    'linkTarget' => $this->trans('https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN'),
+                    'linkText' => $this->trans('PrestaShop Addons Marketplace'),
+                ]);
         }
+
         return $this->fetch('module:ps_mbo/views/templates/hook/push-configuration.tpl');
     }
 
@@ -175,6 +192,7 @@ trait UseDisplayDashboardTop
      * Compute & include data with recommended modules when needed
      *
      * @return string
+     *
      * @throws \Exception
      */
     protected function displayRecommendedModules(): string
