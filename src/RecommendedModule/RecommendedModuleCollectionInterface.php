@@ -33,19 +33,19 @@ interface RecommendedModuleCollectionInterface extends ArrayAccess, IteratorAggr
      *
      * @return self
      */
-    public function addRecommendedModule(RecommendedModuleInterface $recommendedModule);
+    public function addRecommendedModule(RecommendedModuleInterface $recommendedModule): RecommendedModuleCollectionInterface;
 
     /**
      * @param mixed $offset
      *
      * @return RecommendedModuleInterface
      */
-    public function offsetGet($offset);
+    public function offsetGet($offset): RecommendedModuleInterface;
 
     /**
      * @return bool
      */
-    public function isEmpty();
+    public function isEmpty(): bool;
 
     /**
      * Sort recommended modules by position
@@ -57,12 +57,12 @@ interface RecommendedModuleCollectionInterface extends ArrayAccess, IteratorAggr
      *
      * @return RecommendedModuleCollectionInterface
      */
-    public function getInstalled();
+    public function getInstalled(): RecommendedModuleCollectionInterface;
 
     /**
      * Get recommended modules not installed.
      *
      * @return RecommendedModuleCollectionInterface
      */
-    public function getNotInstalled();
+    public function getNotInstalled(): RecommendedModuleCollectionInterface;
 }

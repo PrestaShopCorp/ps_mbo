@@ -36,4 +36,13 @@ interface RepositoryInterface
      * @return Module|null
      */
     public function getModule(string $name): ?Module;
+
+    /**
+     * Get a module for the given id
+     *
+     * @param int $moduleId
+     *
+     * @return Module|null
+     */
+    public function getModuleById(int $moduleId): ?Module;
 }

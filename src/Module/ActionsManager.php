@@ -96,7 +96,7 @@ class ActionsManager
 
         // We need to clear cache to get fresh data from addons
         $this->moduleRepository->clearCache();
-        /** @var Module $module */
+        /** @var ?Module $module */
         $module = $this->moduleRepository->getModule($moduleName);
 
         if (null === $module) {

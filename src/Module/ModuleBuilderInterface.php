@@ -24,5 +24,17 @@ use stdClass;
 
 interface ModuleBuilderInterface
 {
+    /**
+     * @param \stdClass $module
+     *
+     * @return Module
+     */
     public function build(stdClass $module): Module;
+
+    /**
+     * @param Module $module
+     *
+     * @return void
+     */
+    public function generateAddonsUrls(Module $module): void;
 }

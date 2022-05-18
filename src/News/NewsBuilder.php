@@ -59,13 +59,18 @@ class NewsBuilder
         );
     }
 
+    /**
+     * @param \Datetime $date
+     *
+     * @return string
+     */
     private function formatDate(\Datetime $date): string
     {
-        return $this->tools->displayDate(
-            $date->format('Y-m-d H:i:s'),
-            null,
-            false
-        );
+        try {
+            return $this->tools->displayDate($date->format('Y-m-d H:i:s'));
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 
     private function formatTitle(string $title): string

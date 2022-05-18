@@ -239,7 +239,7 @@ class AddonsController extends FrameworkBundleAdminController
         return new JsonResponse($upgradeResponse);
     }
 
-    private function createCookieUser(Response $response, \stdClass $json, array $params): Response
+    private function createCookieUser(JsonResponse $response, \stdClass $json, array $params): JsonResponse
     {
         $expiresAt = strtotime('+30 days');
 
@@ -258,7 +258,7 @@ class AddonsController extends FrameworkBundleAdminController
         return $response;
     }
 
-    private function createSessionUser(Response $response, SessionInterface $session, \stdClass $json, array $params): Response
+    private function createSessionUser(JsonResponse $response, SessionInterface $session, \stdClass $json, array $params): JsonResponse
     {
         $phpEncryption = new PhpEncryption(_NEW_COOKIE_KEY_);
 

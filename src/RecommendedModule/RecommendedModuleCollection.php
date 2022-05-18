@@ -33,7 +33,7 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
     /**
      * {@inheritdoc}
      */
-    public function addRecommendedModule(RecommendedModuleInterface $recommendedModule)
+    public function addRecommendedModule(RecommendedModuleInterface $recommendedModule): RecommendedModuleCollectionInterface
     {
         $this->recommendedModules[] = $recommendedModule;
 
@@ -43,7 +43,7 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->recommendedModules);
     }
@@ -51,7 +51,7 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
     /**
      * {@inheritdoc}
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): RecommendedModuleInterface
     {
         return $this->recommendedModules[$offset];
     }
@@ -83,7 +83,7 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
     /**
      * {@inheritdoc}
      */
-    public function count()
+    public function count(): int
     {
         return count($this->recommendedModules);
     }
@@ -91,7 +91,7 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
     /**
      * {@inheritdoc}
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->recommendedModules);
     }
@@ -116,7 +116,7 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
     /**
      * {@inheritdoc}
      */
-    public function getInstalled()
+    public function getInstalled(): RecommendedModuleCollectionInterface
     {
         return $this->filter(function (RecommendedModuleInterface $recommendedModule) {
             return $recommendedModule->isInstalled();
@@ -126,7 +126,7 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
     /**
      * {@inheritdoc}
      */
-    public function getNotInstalled()
+    public function getNotInstalled(): RecommendedModuleCollectionInterface
     {
         return $this->filter(function (RecommendedModuleInterface $recommendedModule) {
             return !$recommendedModule->isInstalled();
@@ -138,9 +138,9 @@ class RecommendedModuleCollection implements RecommendedModuleCollectionInterfac
      *
      * @return RecommendedModuleCollection
      */
-    protected function filter(Closure $closure)
+    protected function filter(Closure $closure): RecommendedModuleCollectionInterface
     {
-        $recommendedModules = new static();
+        $recommendedModules = new self();
         $recommendedModules->recommendedModules = array_filter(
             $this->recommendedModules,
             $closure,
