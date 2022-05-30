@@ -1,0 +1,16 @@
+services:
+  PrestaShop\Module\Mbo\Api\Security\KMSClientInterface: '@PrestaShop\Module\Mbo\Api\Security\KMSClient'
+
+  PrestaShop\Module\Mbo\Api\Security\KMSClient:
+    class: PrestaShop\Module\Mbo\Api\Security\KMSClient
+    public: true
+    arguments:
+      - '%env(GOOGLE_APPLICATION_PROJECT)%'
+      - '%env(GOOGLE_APPLICATION_PROJECT_DEFAULT_LOCATION)%'
+      - '%env(GOOGLE_APPLICATION_KEY_RING)%'
+
+  PrestaShop\Module\Mbo\Api\Security\KeyProvider:
+    class: PrestaShop\Module\Mbo\Api\Security\KeyProvider
+    public: true
+    arguments:
+      - '@PrestaShop\Module\Mbo\Api\Security\KMSClientInterface'

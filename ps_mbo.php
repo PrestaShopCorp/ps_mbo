@@ -27,7 +27,9 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
+use Dotenv\Dotenv;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
+use PrestaShop\Module\Mbo\Api\DependencyInjection\ServiceContainer;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseBeforeInstallModule;
@@ -66,6 +68,11 @@ class ps_mbo extends Module
     use UseDisplayModuleConfigureExtraButtons;
     use UseListModules;
     use UseDisplayEmptyModuleCategoryExtraMessage;
+
+    /**
+     * @var string
+     */
+    const VERSION = '2.0.2';
 
     /**
      * @var array Hooks registered by the module
@@ -116,12 +123,17 @@ class ps_mbo extends Module
     public $imgPath;
 
     /**
+     * @var ServiceContainer
+     */
+    private $serviceContainer;
+
+    /**
      * Constructor.
      */
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '2.0.2';
+        $this->version = self::VERSION;
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -132,6 +144,11 @@ class ps_mbo extends Module
         ];
 
         parent::__construct();
+
+        $this->serviceContainer = new ServiceContainer(
+            $this->name,
+            $this->getLocalPath()
+        );
 
         $this->imgPath = $this->_path . 'views/img/';
 
@@ -144,6 +161,8 @@ class ps_mbo extends Module
                 $this->{"boot{$traitName}"}();
             }
         }
+
+        $this->loadEnv();
     }
 
     /**
@@ -277,6 +296,16 @@ class ps_mbo extends Module
         return $this->container->get($serviceName);
     }
 
+    /**
+     * @param string $serviceName
+     *
+     * @return mixed
+     */
+    public function getService($serviceName)
+    {
+        return $this->serviceContainer->getService($serviceName);
+    }
+
     public function isUsingNewTranslationSystem(): bool
     {
         return true;
@@ -307,6 +336,19 @@ class ps_mbo extends Module
             return $result['active'] && $result['shop_active'];
         } else {
             return false;
+        }
+    }
+
+    private function loadEnv()
+    {
+        if (file_exists(_PS_MODULE_DIR_ . 'ps_mbo/.env')) {
+            $dotenv = Dotenv::createUnsafeImmutable(_PS_MODULE_DIR_ . 'ps_mbo/');
+            $dotenv->load();
+        }
+
+        if (file_exists(_PS_MODULE_DIR_ . 'ps_mbo/.env.dist')) {
+            $dotenv = Dotenv::createUnsafeImmutable(_PS_MODULE_DIR_ . 'ps_mbo/', '.env.dist');
+            $dotenv->load();
         }
     }
 }
