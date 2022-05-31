@@ -42,7 +42,6 @@ use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayModuleConfigureExtraButtons;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseGetAdminToolbarButtons;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseGetModulesAdditionalDescription;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseListModules;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
@@ -64,7 +63,6 @@ class ps_mbo extends Module
     use UseBeforeUpgradeModule;
     use UseGetAdminToolbarButtons;
     use UseDisplayBackOfficeFooter;
-    use UseGetModulesAdditionalDescription;
     use UseDisplayModuleConfigureExtraButtons;
     use UseListModules;
     use UseDisplayEmptyModuleCategoryExtraMessage;
@@ -77,7 +75,6 @@ class ps_mbo extends Module
         'actionGetAdminToolbarButtons',
         'actionBeforeInstallModule',
         'actionBeforeUpgradeModule',
-        'actionGetModulesAdditionalDescription',
         'actionListModules',
         'displayAdminThemesListAfter',
         'displayDashboardTop',

@@ -57,6 +57,7 @@ trait UseListModules
                 'name' => $name,
                 'displayName' => $module->get('displayName'),
                 'description' => $module->get('description'),
+                'additional_description' => $this->getAdditionalDescription((int) $module->get('id'), $name),
                 'version' => $module->get('version'),
                 'version_available' => $module->get('version_available'),
                 'author' => $module->get('author'),
@@ -67,5 +68,19 @@ trait UseListModules
         }
 
         return $modules;
+    }
+
+    private function getAdditionalDescription(int $moduleId, string $moduleName)
+    {
+        return $this->get('twig')->render(
+            '@Modules/ps_mbo/views/templates/hook/twig/module_manager_additional_description.html.twig', [
+                'module' => [
+                    'attributes' => [
+                        'id' => $moduleId,
+                        'name' => $moduleName,
+                    ],
+                ],
+            ]
+        );
     }
 }
