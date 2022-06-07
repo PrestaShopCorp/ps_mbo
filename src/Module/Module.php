@@ -22,6 +22,7 @@ namespace PrestaShop\Module\Mbo\Module;
 
 use Exception;
 use Module as LegacyModule;
+use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -105,6 +106,7 @@ class Module implements ModuleInterface
         'url_active' => null,
         'urls' => [],
         'is_official_partner' => false,
+        'origin_filter_value' => '',
     ];
 
     /**
@@ -128,7 +130,7 @@ class Module implements ModuleInterface
     protected $database_default = [
         'installed' => 0,
         'active' => 0,
-        'active_on_mobile' => true,
+        'active_on_mobile' => 0,
         'version' => null,
         'last_access_date' => '0000-00-00 00:00:00',
         'date_add' => null,
@@ -493,5 +495,29 @@ class Module implements ModuleInterface
     public function getInstanceById(int $moduleId)
     {
         return LegacyModule::getInstanceById($moduleId);
+    }
+
+    public function getStatus(): string
+    {
+        if (false === (bool) $this->database->get('installed')) {
+            return ModuleStateMachine::STATUS_UNINSTALLED;
+        }
+
+        $isActiveOnMobile = (bool) $this->database->get('active_on_mobile');
+        $isActive = (bool) $this->database->get('active');
+
+        if ($isActive && $isActiveOnMobile) {
+            return ModuleStateMachine::STATUS_ENABLED__MOBILE_ENABLED;
+        }
+
+        if ($isActive && !$isActiveOnMobile) {
+            return ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED;
+        }
+
+        if (!$isActive && $isActiveOnMobile) {
+            return ModuleStateMachine::STATUS_DISABLED__MOBILE_ENABLED;
+        }
+
+        return ModuleStateMachine::STATUS_INSTALLED;
     }
 }

@@ -38,3 +38,6 @@ services:
       - '@mbo.modules.files_manager'
       - '@prestashop.core.admin.module.repository'
       - '@mbo.modules.repository'
+
+  mbo.modules.state_machine:
+    class: 'PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine'

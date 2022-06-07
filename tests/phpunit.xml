@@ -1,7 +1,7 @@
 <phpunit
     bootstrap="bootstrap.php">
   <testsuites>
-    <testsuite name="FacetedSearch">
+    <testsuite name="Mbo">
       <directory>.</directory>
     </testsuite>
   </testsuites>
