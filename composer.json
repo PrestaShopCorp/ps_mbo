@@ -20,7 +20,7 @@
     "ext-simplexml": "*",
     "prestashop/circuit-breaker": "^4",
     "guzzlehttp/guzzle": "^7.4",
-    "symfony/workflow": "^6.0"
+    "symfony/workflow": "^5.4"
   },
   "require-dev": {
     "prestashop/php-dev-tools": "^4",
