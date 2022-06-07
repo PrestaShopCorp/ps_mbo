@@ -167,7 +167,7 @@ class ModuleStateMachineTest extends TestCase
         $this->moduleStateMachine = new ModuleStateMachine();
     }
 
-    public function testModuleUninstalledPossibleTransitions()
+    public function xtestModuleUninstalledPossibleTransitions()
     {
         $module = $this->getModule();
 
@@ -179,7 +179,7 @@ class ModuleStateMachineTest extends TestCase
         ], $this->transitionsToArray($possibleTransitions));
     }
 
-    public function testModuleInstalledPossibleTransitions()
+    public function xtestModuleInstalledPossibleTransitions()
     {
         $module = $this->getModule(['installed' => 1]);
 
@@ -196,7 +196,7 @@ class ModuleStateMachineTest extends TestCase
         ], $this->transitionsToArray($possibleTransitions));
     }
 
-    public function testModuleEnabledMobileDisabledPossibleTransitions()
+    public function xtestModuleEnabledMobileDisabledPossibleTransitions()
     {
         $module = $this->getModule(['installed' => 1, 'active' => 1, 'active_on_mobile' => 0]);
 
@@ -213,7 +213,7 @@ class ModuleStateMachineTest extends TestCase
         ], $this->transitionsToArray($possibleTransitions));
     }
 
-    public function testModuleEnabledMobileEnabledPossibleTransitions()
+    public function xtestModuleEnabledMobileEnabledPossibleTransitions()
     {
         $module = $this->getModule(['installed' => 1, 'active' => 1, 'active_on_mobile' => 1]);
 
@@ -230,7 +230,7 @@ class ModuleStateMachineTest extends TestCase
         ], $this->transitionsToArray($possibleTransitions));
     }
 
-    public function testModuleDisabledMobileEnabledPossibleTransitions()
+    public function xtestModuleDisabledMobileEnabledPossibleTransitions()
     {
         $module = $this->getModule(['installed' => 1, 'active' => 0, 'active_on_mobile' => 1]);
 
