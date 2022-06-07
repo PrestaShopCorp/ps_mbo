@@ -19,8 +19,7 @@
     "php": ">=7.2.5",
     "ext-simplexml": "*",
     "prestashop/circuit-breaker": "^4",
-    "guzzlehttp/guzzle": "^7.4",
-    "symfony/workflow": "^5.4"
+    "guzzlehttp/guzzle": "^7.4"
   },
   "require-dev": {
     "prestashop/php-dev-tools": "^4",
