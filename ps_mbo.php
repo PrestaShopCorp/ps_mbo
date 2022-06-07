@@ -42,6 +42,7 @@ use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayModuleConfigureExtraButtons;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseGetAdminToolbarButtons;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseGetAlternativeSearchPanels;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseListModules;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
@@ -62,6 +63,7 @@ class ps_mbo extends Module
     use UseBeforeInstallModule;
     use UseBeforeUpgradeModule;
     use UseGetAdminToolbarButtons;
+    use UseGetAlternativeSearchPanels;
     use UseDisplayBackOfficeFooter;
     use UseDisplayModuleConfigureExtraButtons;
     use UseListModules;
@@ -73,6 +75,7 @@ class ps_mbo extends Module
     public const HOOKS = [
         'actionAdminControllerSetMedia',
         'actionGetAdminToolbarButtons',
+        'actionGetAlternativeSearchPanels',
         'actionBeforeInstallModule',
         'actionBeforeUpgradeModule',
         'actionListModules',
