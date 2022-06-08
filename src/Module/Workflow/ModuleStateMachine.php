@@ -21,8 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Workflow\DefinitionBuilder;
-use Symfony\Component\Workflow\MarkingStore\MethodMarkingStore;
 use Symfony\Component\Workflow\StateMachine;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Validator\StateMachineValidator;
@@ -40,39 +40,39 @@ class ModuleStateMachine extends StateMachine
     public const STATUS_UPGRADED = 'upgraded'; //virtual status
     public const STATUS_CONFIGURED = 'configured'; //virtual status
 
-    public const TRANSITION_INSTALLED__ENABLED_MOBILE_DISABLED = 'installed__enabled_mobile_disabled';
-    public const TRANSITION_INSTALLED__DISABLED_MOBILE_ENABLED = 'installed__disabled_mobile_enabled';
-    public const TRANSITION_INSTALLED__RESET = 'installed__reset';
-    public const TRANSITION_INSTALLED__CONFIGURED = 'installed__configured';
-    public const TRANSITION_INSTALLED__UPGRADED = 'installed__upgraded';
-    public const TRANSITION_INSTALLED__UNINSTALLED = 'installed__uninstalled';
+    public const TRANSITION_INSTALLED__ENABLED_MOBILE_DISABLED = 'installed_to_enabled_and_mobile_disabled';
+    public const TRANSITION_INSTALLED__DISABLED_MOBILE_ENABLED = 'installed_to_disabled_and_mobile_enabled';
+    public const TRANSITION_INSTALLED__RESET = 'installed_to_reset';
+    public const TRANSITION_INSTALLED__CONFIGURED = 'installed_to_configured';
+    public const TRANSITION_INSTALLED__UPGRADED = 'installed_to_upgraded';
+    public const TRANSITION_INSTALLED__UNINSTALLED = 'installed_to_uninstalled';
 
-    public const TRANSITION_ENABLED_MOBILE_ENABLED__ENABLED_MOBILE_DISABLED = 'enabled_mobile_enabled__enabled_mobile_disabled';
-    public const TRANSITION_ENABLED_MOBILE_ENABLED__DISABLED_MOBILE_ENABLED = 'enabled_mobile_enabled__disabled_mobile_enabled';
-    public const TRANSITION_ENABLED_MOBILE_ENABLED__RESET = 'enabled_mobile_enabled__reset';
-    public const TRANSITION_ENABLED_MOBILE_ENABLED__UPGRADED = 'enabled_mobile_enabled__upgraded';
-    public const TRANSITION_ENABLED_MOBILE_ENABLED__CONFIGURED = 'enabled_mobile_enabled__configured';
-    public const TRANSITION_ENABLED_MOBILE_ENABLED__UNINSTALLED = 'enabled_mobile_enabled__uninstalled';
+    public const TRANSITION_ENABLED_MOBILE_ENABLED__ENABLED_MOBILE_DISABLED = 'enabled_and_mobile_enabled_to_enabled_and_mobile_disabled';
+    public const TRANSITION_ENABLED_MOBILE_ENABLED__DISABLED_MOBILE_ENABLED = 'enabled_and_mobile_enabled_to_disabled_and_mobile_enabled';
+    public const TRANSITION_ENABLED_MOBILE_ENABLED__RESET = 'enabled_and_mobile_enabled_to_reset';
+    public const TRANSITION_ENABLED_MOBILE_ENABLED__UPGRADED = 'enabled_and_mobile_enabled_to_upgraded';
+    public const TRANSITION_ENABLED_MOBILE_ENABLED__CONFIGURED = 'enabled_and_mobile_enabled_to_configured';
+    public const TRANSITION_ENABLED_MOBILE_ENABLED__UNINSTALLED = 'enabled_and_mobile_enabled_to_uninstalled';
 
-    public const TRANSITION_ENABLED_MOBILE_DISABLED__INSTALLED = 'enabled_mobile_disabled__installed';
-    public const TRANSITION_ENABLED_MOBILE_DISABLED__ENABLED_MOBILE_ENABLED = 'enabled_mobile_disabled__enabled_mobile_enabled';
-    public const TRANSITION_ENABLED_MOBILE_DISABLED__RESET = 'enabled_mobile_disabled__reset';
-    public const TRANSITION_ENABLED_MOBILE_DISABLED__UPGRADED = 'enabled_mobile_disabled__upgraded';
-    public const TRANSITION_ENABLED_MOBILE_DISABLED__CONFIGURED = 'enabled_mobile_disabled__configured';
-    public const TRANSITION_ENABLED_MOBILE_DISABLED__UNINSTALLED = 'enabled_mobile_disabled__uninstalled';
+    public const TRANSITION_ENABLED_MOBILE_DISABLED__INSTALLED = 'enabled_and_mobile_disabled_to_installed';
+    public const TRANSITION_ENABLED_MOBILE_DISABLED__ENABLED_MOBILE_ENABLED = 'enabled_and_mobile_disabled_to_enabled_and_mobile_enabled';
+    public const TRANSITION_ENABLED_MOBILE_DISABLED__RESET = 'enabled_and_mobile_disabled_to_reset';
+    public const TRANSITION_ENABLED_MOBILE_DISABLED__UPGRADED = 'enabled_and_mobile_disabled_to_upgraded';
+    public const TRANSITION_ENABLED_MOBILE_DISABLED__CONFIGURED = 'enabled_and_mobile_disabled_to_configured';
+    public const TRANSITION_ENABLED_MOBILE_DISABLED__UNINSTALLED = 'enabled_and_mobile_disabled_to_uninstalled';
 
-    public const TRANSITION_DISABLED_MOBILE_ENABLED__INSTALLED = 'disabled_mobile_enabled__installed';
-    public const TRANSITION_DISABLED_MOBILE_ENABLED__ENABLED_MOBILE_ENABLED = 'disabled_mobile_enabled__enabled_mobile_enabled';
-    public const TRANSITION_DISABLED_MOBILE_ENABLED__RESET = 'disabled_mobile_enabled__reset';
-    public const TRANSITION_DISABLED_MOBILE_ENABLED__UPGRADED = 'disabled_mobile_enabled__upgraded';
-    public const TRANSITION_DISABLED_MOBILE_ENABLED__CONFIGURED = 'disabled_mobile_enabled__configured';
-    public const TRANSITION_DISABLED_MOBILE_ENABLED__UNINSTALLED = 'disabled_mobile_enabled__uninstalled';
+    public const TRANSITION_DISABLED_MOBILE_ENABLED__INSTALLED = 'disabled_and_mobile_enabled_to_installed';
+    public const TRANSITION_DISABLED_MOBILE_ENABLED__ENABLED_MOBILE_ENABLED = 'disabled_and_mobile_enabled_to_enabled_and_mobile_enabled';
+    public const TRANSITION_DISABLED_MOBILE_ENABLED__RESET = 'disabled_and_mobile_enabled_to_reset';
+    public const TRANSITION_DISABLED_MOBILE_ENABLED__UPGRADED = 'disabled_and_mobile_enabled_to_upgraded';
+    public const TRANSITION_DISABLED_MOBILE_ENABLED__CONFIGURED = 'disabled_and_mobile_enabled_to_configured';
+    public const TRANSITION_DISABLED_MOBILE_ENABLED__UNINSTALLED = 'disabled_and_mobile_enabled_to_uninstalled';
 
-    public const TRANSITION_UNINSTALLED__INSTALLED = 'uninstalled__installed';
+    public const TRANSITION_UNINSTALLED__INSTALLED = 'uninstalled_to_installed';
 
     protected $stateMachine;
 
-    public function __construct()
+    public function __construct(EventDispatcherInterface $dispatcher)
     {
         $definitionBuilder = new DefinitionBuilder();
         $definition = $definitionBuilder->addPlaces([
@@ -124,8 +124,8 @@ class ModuleStateMachine extends StateMachine
 
         $singleState = true; // true if the subject can be in only one state at a given time
         $property = 'status'; // subject property name where the state is stored
-        $markingStore = new MethodMarkingStore($singleState, $property);
+        $markingStore = new MarkingStore($singleState, $property);
 
-        parent::__construct($definition, $markingStore, null, self::MODULE_STATE_MACHINE_NAME);
+        parent::__construct($definition, $markingStore, $dispatcher, self::MODULE_STATE_MACHINE_NAME);
     }
 }

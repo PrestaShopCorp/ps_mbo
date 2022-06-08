@@ -41,3 +41,17 @@ services:
 
   mbo.modules.state_machine:
     class: 'PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine'
+    arguments:
+      - '@event_dispatcher'
+
+  mbo.modules.state_machine.transitions_manager:
+    class: 'PrestaShop\Module\Mbo\Module\Workflow\TransitionsManager'
+    arguments:
+      - '@prestashop.module.manager'
+
+  mbo.modules.state_machine.eventsubscriber.transition:
+    class: PrestaShop\Module\Mbo\Module\Workflow\Event\TransitionEventSubscriber
+    arguments:
+      - '@mbo.modules.state_machine.transitions_manager'
+    tags:
+      - { name: kernel.event_subscriber }
