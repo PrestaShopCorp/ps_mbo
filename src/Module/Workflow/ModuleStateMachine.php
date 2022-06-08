@@ -21,8 +21,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
+use PrestaShop\Module\Mbo\Module\Module;
+use PrestaShop\Module\Mbo\Module\Workflow\Exception\UnknownStatusException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Workflow\DefinitionBuilder;
+use Symfony\Component\Workflow\Exception\UndefinedTransitionException;
 use Symfony\Component\Workflow\StateMachine;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Validator\StateMachineValidator;
@@ -34,11 +37,22 @@ class ModuleStateMachine extends StateMachine
     public const STATUS_INSTALLED = 'installed';
     public const STATUS_UNINSTALLED = 'uninstalled';
     public const STATUS_ENABLED__MOBILE_ENABLED = 'enabled__mobile_enabled';
-    public const STATUS_ENABLED__MOBILE_DISABLED = 'enabled__mobile__disabled';
+    public const STATUS_ENABLED__MOBILE_DISABLED = 'enabled__mobile_disabled';
     public const STATUS_DISABLED__MOBILE_ENABLED = 'disabled__mobile_enabled';
     public const STATUS_RESET = 'reset'; //virtual status
     public const STATUS_UPGRADED = 'upgraded'; //virtual status
     public const STATUS_CONFIGURED = 'configured'; //virtual status
+
+    public const STATUSES = [
+        self::STATUS_INSTALLED,
+        self::STATUS_UNINSTALLED,
+        self::STATUS_ENABLED__MOBILE_ENABLED,
+        self::STATUS_ENABLED__MOBILE_DISABLED,
+        self::STATUS_DISABLED__MOBILE_ENABLED,
+        self::STATUS_RESET,
+        self::STATUS_UPGRADED,
+        self::STATUS_CONFIGURED,
+    ];
 
     public const TRANSITION_INSTALLED__ENABLED_MOBILE_DISABLED = 'installed_to_enabled_and_mobile_disabled';
     public const TRANSITION_INSTALLED__DISABLED_MOBILE_ENABLED = 'installed_to_disabled_and_mobile_enabled';
@@ -127,5 +141,42 @@ class ModuleStateMachine extends StateMachine
         $markingStore = new MarkingStore($singleState, $property);
 
         parent::__construct($definition, $markingStore, $dispatcher, self::MODULE_STATE_MACHINE_NAME);
+    }
+
+    public function getTransition(Module $module, string $targetStatus): string
+    {
+        if (!in_array($targetStatus, self::STATUSES)) {
+            throw new UnknownStatusException();
+        }
+
+        $originStatus = $module->getStatus();
+
+        $transitionName = mb_strtolower(sprintf(
+            '%s_to_%s',
+            str_replace('__', '_and_', ltrim($originStatus, 'STATUS_')),
+            str_replace('__', '_and_', ltrim($targetStatus, 'STATUS_'))
+        ));
+
+        $enabledTransitions = $this->getEnabledTransitions($module);
+
+        if (null === $this->searchTransitionByName($transitionName, $enabledTransitions)) {
+            throw new UndefinedTransitionException($module, $transitionName, $this);
+        }
+
+        return $transitionName;
+    }
+
+    private function searchTransitionByName(string $transitionName, array $transitions): ?Transition
+    {
+        /**
+         * @var Transition $transition
+         */
+        foreach ($transitions as $transition) {
+            if ($transitionName === $transition->getName()) {
+                return $transition;
+            }
+        }
+
+        return null;
     }
 }

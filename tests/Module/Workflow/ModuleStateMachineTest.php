@@ -25,7 +25,6 @@ use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Workflow\Event\TransitionEventSubscriber;
 use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionsManager;
-use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Workflow\Transition;
@@ -277,6 +276,16 @@ class ModuleStateMachineTest extends TestCase
         $this->assertTrue($moduleStateMachine->can($module, $transitionName));
 
         $moduleStateMachine->apply($module, $transitionName);
+    }
+
+    /**
+     * @dataProvider getModuleAttributesAndAppliedTransitions
+     */
+    public function testGetTransition(array $moduleAttributes, string $targetStatus, string $transitionName)
+    {
+        $module = $this->getModule($moduleAttributes);
+
+        $this->assertSame($transitionName, $this->moduleStateMachine->getTransition($module, $targetStatus));
     }
 
     public function getModuleAttributesAndAppliedTransitions()

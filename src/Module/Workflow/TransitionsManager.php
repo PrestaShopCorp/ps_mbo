@@ -220,7 +220,6 @@ class TransitionsManager
     public function disabledAndMobileEnabledToUninstalled(Module $module, string $marking, array $context): bool
     {
         return $this->uninstall($module);
-
     }
 
     /**

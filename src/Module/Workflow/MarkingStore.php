@@ -49,7 +49,7 @@ final class MarkingStore implements MarkingStoreInterface
      */
     public function getMarking($subject): Marking
     {
-        $method = 'get'.ucfirst($this->property);
+        $method = 'get' . ucfirst($this->property);
 
         if (!method_exists($subject, $method)) {
             throw new LogicException(sprintf('The method "%s::%s()" does not exist.', \get_class($subject), $method));
@@ -87,7 +87,7 @@ final class MarkingStore implements MarkingStoreInterface
             $marking = key($marking);
         }
 
-        $method = 'set'.ucfirst($this->property);
+        $method = 'set' . ucfirst($this->property);
 
         // Use the method defined in the context to perform transition
         if (isset($context['method'])) {
@@ -109,5 +109,4 @@ final class MarkingStore implements MarkingStoreInterface
 
         $subject->{$method}($marking, $context);
     }
-
 }
