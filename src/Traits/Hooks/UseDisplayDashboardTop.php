@@ -121,6 +121,15 @@ trait UseDisplayDashboardTop
     ];
 
     /**
+     * The hook is sometimes called multiple times in the same execution because it's called directly in tpl files & in
+     * some configurations, multiple files can call/extend those.
+     * Try to limit this behavior by adding this tiny boolean attribute and test it on exec.
+     *
+     * @var bool
+     */
+    protected $alreadyProcessedPage = false;
+
+    /**
      * @return void
      *
      * @throws \Exception
@@ -142,6 +151,12 @@ trait UseDisplayDashboardTop
      */
     public function hookDisplayDashboardTop(): string
     {
+        // Check if this page has already been processed by the hook to avoid duplciate content
+        if ($this->alreadyProcessedPage) {
+            return '';
+        }
+        $this->alreadyProcessedPage = true;
+
         $values = Tools::getAllValues();
         //Check if we are on configuration page & if the module needs to have a push on this page
         if (isset($values['controller']) && $values['controller'] === self::$ADMIN_MODULES_CONTROLLER
