@@ -43,7 +43,8 @@ final class TransitionEventSubscriber implements EventSubscriberInterface
     {
         $context = $event->getContext();
 
-        // Si la transition s'appelle "register", le context indiquera au MarkingStore d'aller voir si la fonction register est disponible
+        // Get the transitionName, transform it to camelCase and give it to the markingStore via the context
+        // The transformed transition name matches a method in the TransitionsManager class
         $transitionName = $event->getTransition()->getName();
 
         $context['transitionsManager'] = $this->transitionsManager;
