@@ -1,0 +1,6 @@
+services:
+  PrestaShop\Module\Mbo\Api\Service\ApiAuthorizationService:
+    class: PrestaShop\Module\Mbo\Api\Service\ApiAuthorizationService
+    public: true
+    arguments:
+      - '@PrestaShop\Module\Mbo\Api\Security\KMSClientInterface'
