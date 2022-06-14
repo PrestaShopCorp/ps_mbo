@@ -1,18 +1,20 @@
 imports:
-  - { resource: api/security.yml }
+#  - { resource: api/security.yml }
   - { resource: api/repository.yml }
   - { resource: api/service.yml }
   - { resource: api/context.yml }
+  - { resource: api/command/module.yml }
 
 services:
+  _defaults:
+    public: true
+
   ps_mbo.db:
     class: Db
-    public: true
     factory: [ 'Db', 'getInstance' ]
 
   ps_mbo:
     class: 'ps_mbo'
-    public: true
     factory: [ 'Module', 'getInstanceByName' ]
     arguments:
       - 'ps_mbo'
@@ -24,7 +26,6 @@ services:
 
   PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandler:
     class: PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandler
-    public: true
     arguments:
       - '@ps_mbo'
       - '@PrestaShop\Module\Mbo\Api\Config\Env'

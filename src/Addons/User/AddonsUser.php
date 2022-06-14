@@ -129,8 +129,8 @@ class AddonsUser implements UserInterface
      */
     private function hasCookieAuthenticated(): bool
     {
-        return $this->getFromCookie('username_addons', false)
-            && $this->getFromCookie('password_addons', false);
+        return $this->getFromCookie('username_addons')
+            && $this->getFromCookie('password_addons');
     }
 
     /**
@@ -138,7 +138,7 @@ class AddonsUser implements UserInterface
      */
     private function hasSessionAuthenticated(): bool
     {
-        return $this->getFromSession('username_addons', false)
-            && $this->getFromSession('password_addons', false);
+        return $this->getFromSession('username_addons')
+            && $this->getFromSession('password_addons');
     }
 }

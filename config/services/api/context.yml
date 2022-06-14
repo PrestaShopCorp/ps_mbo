@@ -1,40 +1,35 @@
 services:
+  _defaults:
+    public: true
+
   ps_mbo.context:
     class: 'Context'
-    public: true
     factory: ['PrestaShop\Module\Mbo\Api\Factory\ContextFactory', 'getContext']
 
   ps_mbo.controller:
     class: 'Controller'
-    public: true
     factory: ['PrestaShop\Module\Mbo\Api\Factory\ContextFactory', 'getController']
 
   ps_mbo.cookie:
     class: 'Cookie'
-    public: true
     factory: ['PrestaShop\Module\Mbo\Api\Factory\ContextFactory', 'getCookie']
 
   ps_mbo.language:
     class: 'Language'
-    public: true
     factory: ['PrestaShop\Module\Mbo\Api\Factory\ContextFactory', 'getLanguage']
 
   ps_mbo.currency:
     class: 'Currency'
-    public: true
     factory: ['PrestaShop\Module\Mbo\Api\Factory\ContextFactory', 'getCurrency']
 
   ps_mbo.smarty:
     class: 'Smarty'
-    public: true
     factory: ['PrestaShop\Module\Mbo\Api\Factory\ContextFactory', 'getSmarty']
 
   ps_mbo.shop:
     class: 'Shop'
-    public: true
     factory: ['PrestaShop\Module\Mbo\Api\Factory\ContextFactory', 'getShop']
 
   ps_mbo.link:
     class: 'Link'
-    public: true
     factory: ['PrestaShop\Module\Mbo\Api\Factory\ContextFactory', 'getLink']

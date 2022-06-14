@@ -30,7 +30,7 @@ use PrestaShop\Module\Mbo\Api\Exception\FirebaseException;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
 use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandler;
-use PrestaShop\Module\Mbo\Api\Service\ApiAuthorizationService;
+//use PrestaShop\Module\Mbo\Api\Service\ApiAuthorizationService;
 use PrestaShopDatabaseException;
 use ps_mbo;
 use Tools;
@@ -51,10 +51,10 @@ abstract class AbstractApiController extends ModuleFrontController
      */
     public $startTime;
 
-    /**
-     * @var ApiAuthorizationService
-     */
-    protected $authorizationService;
+//    /**
+//     * @var ApiAuthorizationService
+//     */
+//    protected $authorizationService;
 
     /**
      * @var ps_mbo
@@ -73,7 +73,7 @@ abstract class AbstractApiController extends ModuleFrontController
         $this->controller_type = 'module';
 
         $this->errorHandler = $this->module->getService(ErrorHandler::class);
-        $this->authorizationService = $this->module->getService(ApiAuthorizationService::class);
+//        $this->authorizationService = $this->module->getService(ApiAuthorizationService::class);
     }
 
     public function init(): void
@@ -104,10 +104,10 @@ abstract class AbstractApiController extends ModuleFrontController
     {
         $jobId = Tools::getValue('job_id', 'empty_job_id');
 
-        $authorizationResponse = $this->authorizationService->authorizeCall($jobId);
-        if (!$authorizationResponse) {
-            throw new UnauthorizedException('Not Authorized');
-        }
+//        $authorizationResponse = $this->authorizationService->authorizeCall($jobId);
+//        if (!$authorizationResponse) {
+//            throw new UnauthorizedException('Not Authorized');
+//        }
     }
 
     protected function exitWithResponse(array $response): void
