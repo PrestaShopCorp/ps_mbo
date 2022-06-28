@@ -1,11 +1,11 @@
 <?php
 
 use PrestaShop\Module\Mbo\Api\Config\Config;
-use PrestaShop\Module\Mbo\Api\Controller\AbstractApiController;
+use PrestaShop\Module\Mbo\Api\Controller\AbstractFrontApiController;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
 use PrestaShop\Module\Mbo\Api\Security\KeyProvider;
 
-class ps_MboSecurityGetKeyModuleFrontController extends AbstractApiController
+class ps_MboSecurityGetKeyModuleFrontControllerFront extends AbstractFrontApiController
 {
     public $type = Config::API_AUTHORIZATION;
 

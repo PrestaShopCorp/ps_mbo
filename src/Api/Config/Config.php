@@ -39,5 +39,6 @@ class Config
     ];
 
     const COLLECTION_SHOPS = 'shops';
+    const MODULE_ACTIONS = 'module_actions';
     const API_AUTHORIZATION = 'api_authorization';
 }

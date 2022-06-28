@@ -33,6 +33,14 @@ final class ModuleStatusTransitionCommandHandler
 {
     private const MAPPING_TRANSITION_COMMAND_TARGET_STATUS = [
         ModuleTransitionCommand::MODULE_COMMAND_INSTALL => ModuleStateMachine::STATUS_INSTALLED,
+        ModuleTransitionCommand::MODULE_COMMAND_ENABLE => ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED,
+        ModuleTransitionCommand::MODULE_COMMAND_DISABLE => ModuleStateMachine::STATUS_DISABLED__MOBILE_ENABLED,
+        ModuleTransitionCommand::MODULE_COMMAND_MOBILE_ENABLE => ModuleStateMachine::STATUS_ENABLED__MOBILE_ENABLED,
+        ModuleTransitionCommand::MODULE_COMMAND_MOBILE_DISABLE => ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED,
+        ModuleTransitionCommand::MODULE_COMMAND_CONFIGURE => ModuleStateMachine::STATUS_CONFIGURED,
+        ModuleTransitionCommand::MODULE_COMMAND_RESET => ModuleStateMachine::STATUS_RESET,
+        ModuleTransitionCommand::MODULE_COMMAND_UPGRADE => ModuleStateMachine::STATUS_UPGRADED,
+        ModuleTransitionCommand::MODULE_COMMAND_UNINSTALL => ModuleStateMachine::STATUS_UNINSTALLED,
     ];
 
     /**
@@ -76,9 +84,7 @@ final class ModuleStatusTransitionCommandHandler
 
         // Check if the transition asked is possible
         if (!$this->moduleStateMachine->can($module, $transitionName)) {
-            throw new UnauthorizedModuleTransitionException(
-                sprintf('Transition "%s" is not possible for module "%s"', $transitionCommand, $moduleName)
-            );
+            throw new UnauthorizedModuleTransitionException(sprintf('Transition "%s" is not possible for module "%s"', $transitionCommand, $moduleName));
         }
 
         // Execute the transition

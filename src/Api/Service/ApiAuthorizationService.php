@@ -21,61 +21,78 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Api\Service;
 
-use Google\ApiCore\ValidationException;
-use Google\Cloud\Kms\V1\CryptoKey;
-use Google\Cloud\Kms\V1\KeyRing;
-use PrestaShop\Module\Mbo\Api\Security\KMSClientInterface;
+use DateTime;
+use Doctrine\DBAL\Connection;
+use LogicException;
+use Tools;
 
 class ApiAuthorizationService
 {
     /**
-     * @var KMSClientInterface
+     * @var Connection
      */
-    private $KMSClient;
+    private $connection;
+    /**
+     * @var string
+     */
+    private $dbPrefix;
 
     public function __construct(
-        KMSClientInterface $KMSClient
+        Connection $connection,
+        string $dbPrefix
     ) {
-        $this->KMSClient = $KMSClient;
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
     }
 
     /**
-     * Authorizes if the call to endpoint is legit and creates sync state if needed
-     *
-     * @throws ValidationException
+     * This method will authorize the call.
+     * For now, it'll always return true because the token validation is done by the PS Admin itself.
+     * We use it to extend the token validity.
      */
     public function authorizeCall(): bool
     {
-        if (!$this->validateKey()) {
-            return false;
-        }
+        $this->extendTokenValidity();
 
         return true;
     }
 
-    /**
-     * @throws ValidationException
-     */
-    private function validateKey(): bool
+    public function updateConsent(bool $newConsentValue): bool
+    {
+        $consentParams = [
+            'consent' => $newConsentValue,
+        ];
+
+        if (true === $newConsentValue) {
+            // Token of the user who updated the value.
+            // By default, this token will be used to perform API calls.
+            // Maybe we'll need to generate a dedicated token.
+            $consentParams['token'] = Tools::getValue('token');
+            $consentParams['admin_dir'] = trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/');
+        }
+
+        // Here we need a call to the NEST API client to transmit consent values
+
+        return true;
+    }
+
+    private function extendTokenValidity(): void
     {
         try {
-            $keyRingsList = $this->KMSClient->listKeyRings();
-        } catch (\Exception $e) {
-            return false;
-        }
+            $token = Tools::getValue('token');
 
-        $keys = [];
-
-        /** @var KeyRing $keyRing */
-        foreach ($keyRingsList as $keyRing) {
-            $keyRingKeys = $this->KMSClient->listKeys($keyRing->getName());
-
-            /** @var CryptoKey $cryptoKey */
-            foreach ($keyRingKeys as $cryptoKey) {
-                $keys[] = $cryptoKey->getName();
+            if (empty($token)) {
+                throw new LogicException('Token was not supposed to be empty here');
             }
-        }
 
-        return !empty($keys);
+            $qb = $this->connection->createQueryBuilder();
+            $qb->update($this->dbPrefix . 'employee_session')
+                ->set('date_upd', (new DateTime())->format('Y-m-d H:i:s'));
+
+            $qb->execute();
+        } catch (\Exception $e) {
+            // Exception will remain silent because the call cannot be blocked when this task does not go well.
+            // Maybe add a log here
+        }
     }
 }

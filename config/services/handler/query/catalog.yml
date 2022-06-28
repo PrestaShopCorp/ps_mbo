@@ -1,4 +1,7 @@
 services:
+  _defaults:
+    public: true
+
   mbo.handlers.query.get_modules_for_listing_handler:
     class: 'PrestaShop\Module\Mbo\Module\QueryHandler\GetModulesForListingHandler'
     arguments:

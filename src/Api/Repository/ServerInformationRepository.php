@@ -77,14 +77,14 @@ class ServerInformationRepository
         ModuleRepository $moduleRepository,
         array $configuration
     ) {
+        $this->context = $context;
         $this->currencyRepository = $currencyRepository;
         $this->languageRepository = $languageRepository;
         $this->configurationRepository = $configurationRepository;
         $this->shopRepository = $shopRepository;
-        $this->context = $context;
+        $this->moduleRepository = $moduleRepository;
         $this->configuration = $configuration;
         $this->createdAt = $this->shopRepository->getCreatedAt();
-        $this->moduleRepository = $moduleRepository;
     }
 
     public function getServerInformation(?string $langIso = null): array
@@ -142,7 +142,6 @@ class ServerInformationRepository
             'ps_mbo' => $allTablesInstalled,
             'env' => [
                 'PS_MBO_PROXY_API_URL' => isset($this->configuration['PS_MBO_PROXY_API_URL']) ? $this->configuration['PS_MBO_PROXY_API_URL'] : null,
-                'PS_MBO_SYNC_API_URL' => isset($this->configuration['PS_MBO_SYNC_API_URL']) ? $this->configuration['PS_MBO_SYNC_API_URL'] : null,
             ],
         ];
     }

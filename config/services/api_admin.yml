@@ -1,0 +1,5 @@
+imports:
+#  - { resource: api/security.yml }
+  - { resource: api/service.yml }
+  - { resource: modules.yml }
+  - { resource: api/command/module.yml }

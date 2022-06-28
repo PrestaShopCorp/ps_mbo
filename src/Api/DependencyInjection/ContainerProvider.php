@@ -23,9 +23,12 @@ namespace PrestaShop\Module\Mbo\Api\DependencyInjection;
 
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class ContainerProvider
@@ -73,9 +76,15 @@ class ContainerProvider
             $this->cacheDirectory
         );
         $moduleConfigPath = $this->moduleLocalPath
-            . 'config/services'
+            . 'config/services/'
         ;
-        $loader = new YamlFileLoader($containerBuilder, new FileLocator($moduleConfigPath));
+        $fileLocator = new FileLocator($moduleConfigPath);
+        $loader = new YamlFileLoader($containerBuilder, $fileLocator);
+        $loader->setResolver(new LoaderResolver([
+            new PhpFileLoader($containerBuilder, $fileLocator),
+            new XmlFileLoader($containerBuilder, $fileLocator),
+        ]));
+
         $loader->load('api.yml');
         $containerBuilder->compile();
         $dumper = new PhpDumper($containerBuilder);

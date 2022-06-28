@@ -1,10 +1,10 @@
 <?php
 
 use PrestaShop\Module\Mbo\Api\Config\Config;
-use PrestaShop\Module\Mbo\Api\Controller\AbstractApiController;
+use PrestaShop\Module\Mbo\Api\Controller\AbstractFrontApiController;
 use PrestaShop\Module\Mbo\Api\Repository\ServerInformationRepository;
 
-class ps_MboApiInfoModuleFrontController extends AbstractApiController
+class ps_MboFrontApiInfoModuleFrontController extends AbstractFrontApiController
 {
     public $type = Config::COLLECTION_SHOPS;
 

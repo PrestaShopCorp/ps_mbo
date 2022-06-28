@@ -1,29 +1,26 @@
 services:
+  _defaults:
+    public: true
+
   PrestaShop\Module\Mbo\Api\Repository\LanguageRepository:
     class: PrestaShop\Module\Mbo\Api\Repository\LanguageRepository
-    public: true
 
   PrestaShop\Module\Mbo\Api\Repository\CurrencyRepository:
     class: PrestaShop\Module\Mbo\Api\Repository\CurrencyRepository
-    public: true
 
   PrestaShop\Module\Mbo\Api\Repository\ConfigurationRepository:
     class: PrestaShop\Module\Mbo\Api\Repository\ConfigurationRepository
-    public: true
 
   PrestaShop\Module\Mbo\Api\Repository\ModuleRepository:
     class: PrestaShop\Module\Mbo\Api\Repository\ModuleRepository
-    public: true
 
   PrestaShop\Module\Mbo\Api\Repository\ShopRepository:
     class: PrestaShop\Module\Mbo\Api\Repository\ShopRepository
-    public: true
     arguments:
       - '@ps_mbo.db'
 
   PrestaShop\Module\Mbo\Api\Repository\ServerInformationRepository:
     class: PrestaShop\Module\Mbo\Api\Repository\ServerInformationRepository
-    public: true
     arguments:
       - '@ps_mbo.context'
       - '@PrestaShop\Module\Mbo\Api\Repository\CurrencyRepository'
@@ -31,4 +28,4 @@ services:
       - '@PrestaShop\Module\Mbo\Api\Repository\ConfigurationRepository'
       - '@PrestaShop\Module\Mbo\Api\Repository\ShopRepository'
       - '@PrestaShop\Module\Mbo\Api\Repository\ModuleRepository'
-      - { PS_MBO_SYNC_API_URL: 'https://eventbus-sync.psessentials.net', PS_MBO_PROXY_API_URL: 'https://eventbus-sync.psessentials.net' }
+      - { PS_MBO_PROXY_API_URL: 'https://mbo.prestashop.com' }

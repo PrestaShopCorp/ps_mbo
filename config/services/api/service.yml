@@ -1,6 +1,9 @@
 services:
+  _defaults:
+    public: true
+
   PrestaShop\Module\Mbo\Api\Service\ApiAuthorizationService:
     class: PrestaShop\Module\Mbo\Api\Service\ApiAuthorizationService
-    public: true
     arguments:
-      - '@PrestaShop\Module\Mbo\Api\Security\KMSClientInterface'
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'

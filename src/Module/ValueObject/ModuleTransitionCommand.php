@@ -26,9 +26,25 @@ use PrestaShop\Module\Mbo\Module\Exception\UnknownModuleTransitionCommandExcepti
 class ModuleTransitionCommand
 {
     public const MODULE_COMMAND_INSTALL = 'module.install';
+    public const MODULE_COMMAND_ENABLE = 'module.enable';
+    public const MODULE_COMMAND_DISABLE = 'module.disable';
+    public const MODULE_COMMAND_MOBILE_ENABLE = 'module.mobile_enable';
+    public const MODULE_COMMAND_MOBILE_DISABLE = 'module.mobile_disable';
+    public const MODULE_COMMAND_RESET = 'module.reset';
+    public const MODULE_COMMAND_CONFIGURE = 'module.configure';
+    public const MODULE_COMMAND_UPGRADE = 'module.upgrade';
+    public const MODULE_COMMAND_UNINSTALL = 'module.uninstall';
 
     public const MODULE_COMMANDS = [
         self::MODULE_COMMAND_INSTALL,
+        self::MODULE_COMMAND_ENABLE,
+        self::MODULE_COMMAND_DISABLE,
+        self::MODULE_COMMAND_MOBILE_ENABLE,
+        self::MODULE_COMMAND_MOBILE_DISABLE,
+        self::MODULE_COMMAND_RESET,
+        self::MODULE_COMMAND_CONFIGURE,
+        self::MODULE_COMMAND_UPGRADE,
+        self::MODULE_COMMAND_UNINSTALL,
     ];
 
     /**

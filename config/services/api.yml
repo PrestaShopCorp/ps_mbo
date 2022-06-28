@@ -1,9 +1,6 @@
 imports:
-#  - { resource: api/security.yml }
   - { resource: api/repository.yml }
-  - { resource: api/service.yml }
   - { resource: api/context.yml }
-  - { resource: api/command/module.yml }
 
 services:
   _defaults:
