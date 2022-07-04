@@ -31,7 +31,6 @@ trait UseDispatcherBefore
 {
     /**
      * Hook actionDispatcherBefore.
-     *
      * @throws EmployeeException
      */
     public function hookActionDispatcherBefore(array $params): void

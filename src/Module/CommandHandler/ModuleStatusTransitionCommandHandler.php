@@ -62,6 +62,7 @@ final class ModuleStatusTransitionCommandHandler
     public function handle(ModuleStatusTransitionCommand $command)
     {
         $moduleName = $command->getModuleName();
+        $source = $command->getSource();
 
         // First get the module and don't go further if it doesn't exist
         $module = $this->moduleRepository->getModule($moduleName);
@@ -88,6 +89,8 @@ final class ModuleStatusTransitionCommandHandler
         }
 
         // Execute the transition
-        $this->moduleStateMachine->apply($module, $transitionName);
+        $this->moduleStateMachine->apply($module, $transitionName, [
+            'source' => $source,
+        ]);
     }
 }

@@ -23,11 +23,12 @@ class apiPsMboController extends AbstractAdminApiController
         try {
             $transition = Tools::getValue('action');
             $module = Tools::getValue('module');
+            $source = Tools::getValue('source', null);
 
             if (empty($transition) || empty($module)) {
                 throw new QueryParamsException('You need transition and module parameters');
             }
-            $command = new ModuleStatusTransitionCommand($transition, $module);
+            $command = new ModuleStatusTransitionCommand($transition, $module, $source);
             $this->module->get('mbo.handlers.command.module_status_transition_handler')->handle($command);
         } catch (\Exception $exception) {
             $this->exitWithExceptionMessage($exception);

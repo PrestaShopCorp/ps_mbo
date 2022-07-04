@@ -37,12 +37,25 @@ class ModuleStatusTransitionCommand
     private $moduleName;
 
     /**
+     * @var string|null
+     */
+    private $source;
+
+    /**
      * @throws UnknownModuleTransitionCommandException
      */
-    public function __construct(string $command, string $moduleName)
+    public function __construct(string $command, string $moduleName, ?string $source = null)
     {
         $this->command = new ModuleTransitionCommand($command);
         $this->moduleName = $moduleName;
+
+        // Read the source only if module is MBO. This feature is for testing purpose
+        if (
+            'steavisgarantis' === $moduleName &&
+            in_array($command, [ModuleTransitionCommand::MODULE_COMMAND_INSTALL, ModuleTransitionCommand::MODULE_COMMAND_UPGRADE])
+        ) {
+            $this->source = $source;
+        }
     }
 
     public function getCommand(): ModuleTransitionCommand
@@ -53,5 +66,13 @@ class ModuleStatusTransitionCommand
     public function getModuleName(): string
     {
         return $this->moduleName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSource(): ?string
+    {
+        return $this->source;
     }
 }

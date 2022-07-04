@@ -30,7 +30,6 @@ if (file_exists($autoloadPath)) {
 use Dotenv\Dotenv;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\DependencyInjection\ServiceContainer;
-use PrestaShop\Module\Mbo\Api\Service\ApiAuthorizationService;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseBeforeInstallModule;
