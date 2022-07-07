@@ -57,7 +57,6 @@ trait UseDispatcherBefore
             $this->context->employee = $apiUser;
             $this->context->cookie = $cookie;
             Context::getContext()->cookie = $cookie;
-            $isLogged = $apiUser->isLoggedBack();
         }
     }
 }

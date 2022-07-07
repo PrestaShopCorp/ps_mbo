@@ -19,14 +19,14 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Api\Service;
+namespace PrestaShop\Module\Mbo\Api\Security;
 
 use DateTime;
 use Doctrine\DBAL\Connection;
 use LogicException;
 use Tools;
 
-class ApiAuthorizationService
+class AdminAuthenticationProvider
 {
     /**
      * @var Connection
@@ -45,38 +45,7 @@ class ApiAuthorizationService
         $this->dbPrefix = $dbPrefix;
     }
 
-    /**
-     * This method will authorize the call.
-     * For now, it'll always return true because the token validation is done by the PS Admin itself.
-     * We use it to extend the token validity.
-     */
-    public function authorizeCall(): bool
-    {
-        $this->extendTokenValidity();
-
-        return true;
-    }
-
-    public function updateConsent(bool $newConsentValue): bool
-    {
-        $consentParams = [
-            'consent' => $newConsentValue,
-        ];
-
-        if (true === $newConsentValue) {
-            // Token of the user who updated the value.
-            // By default, this token will be used to perform API calls.
-            // Maybe we'll need to generate a dedicated token.
-            $consentParams['token'] = Tools::getValue('token');
-            $consentParams['admin_dir'] = trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/');
-        }
-
-        // Here we need a call to the NEST API client to transmit consent values
-
-        return true;
-    }
-
-    private function extendTokenValidity(): void
+    public function extendTokenValidity(): void
     {
         try {
             $token = Tools::getValue('token');

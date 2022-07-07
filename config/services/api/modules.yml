@@ -1,0 +1,26 @@
+services:
+  _defaults:
+    public: true
+
+  mbo.modules.state_machine:
+    class: 'PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine'
+    arguments:
+      - '@event_dispatcher'
+
+  mbo.modules.state_machine.transitions_manager:
+    class: 'PrestaShop\Module\Mbo\Module\Workflow\TransitionsManager'
+    arguments:
+      - '@prestashop.module.manager'
+
+  mbo.modules.state_machine.eventsubscriber.transition:
+    class: PrestaShop\Module\Mbo\Module\Workflow\Event\TransitionEventSubscriber
+    arguments:
+      - '@mbo.modules.state_machine.transitions_manager'
+    tags:
+      - { name: kernel.event_subscriber }
+
+  mbo.modules.state_machine.module_status_transition_handler:
+    class: 'PrestaShop\Module\Mbo\Module\CommandHandler\ModuleStatusTransitionCommandHandler'
+    arguments:
+      - '@mbo.modules.state_machine'
+      - '@mbo.modules.repository'

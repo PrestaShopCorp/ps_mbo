@@ -29,7 +29,6 @@ if (file_exists($autoloadPath)) {
 
 use Dotenv\Dotenv;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
-use PrestaShop\Module\Mbo\Api\DependencyInjection\ServiceContainer;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseBeforeInstallModule;
@@ -130,11 +129,6 @@ class ps_mbo extends Module
     public $imgPath;
 
     /**
-     * @var ServiceContainer
-     */
-    private $serviceContainer;
-
-    /**
      * Constructor.
      */
     public function __construct()
@@ -151,11 +145,6 @@ class ps_mbo extends Module
         ];
 
         parent::__construct();
-
-        $this->serviceContainer = new ServiceContainer(
-            $this->name,
-            $this->getLocalPath()
-        );
 
         $this->imgPath = $this->_path . 'views/img/';
 
@@ -305,16 +294,6 @@ class ps_mbo extends Module
         }
 
         return $this->container->get($serviceName);
-    }
-
-    /**
-     * @param string $serviceName
-     *
-     * @return mixed
-     */
-    public function getService($serviceName)
-    {
-        return $this->serviceContainer->getService($serviceName);
     }
 
     public function isUsingNewTranslationSystem(): bool

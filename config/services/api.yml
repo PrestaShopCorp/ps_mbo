@@ -1,6 +1,5 @@
 imports:
   - { resource: api/repository.yml }
-  - { resource: api/context.yml }
 
 services:
   _defaults:

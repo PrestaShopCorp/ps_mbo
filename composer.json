@@ -19,9 +19,9 @@
     "php": ">=7.2.5",
     "ext-simplexml": "*",
     "ext-bcmath": "*",
+    "ext-json": "*",
     "prestashop/circuit-breaker": "^4",
     "guzzlehttp/guzzle": "^7.4",
-    "google/cloud-kms": "^1.13",
     "vlucas/phpdotenv": "^5.4"
   },
   "require-dev": {

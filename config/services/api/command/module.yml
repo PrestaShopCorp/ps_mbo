@@ -1,9 +1,0 @@
-services:
-  _defaults:
-    public: true
-
-  mbo.handlers.command.module_status_transition_handler:
-    class: 'PrestaShop\Module\Mbo\Module\CommandHandler\ModuleStatusTransitionCommandHandler'
-    arguments:
-      - '@mbo.modules.state_machine'
-      - '@mbo.modules.repository'

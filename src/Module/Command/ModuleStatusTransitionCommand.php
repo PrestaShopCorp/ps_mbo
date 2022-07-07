@@ -51,7 +51,7 @@ class ModuleStatusTransitionCommand
 
         // Read the source only if module is MBO. This feature is for testing purpose
         if (
-            'steavisgarantis' === $moduleName &&
+            'ps_mbo' === $moduleName &&
             in_array($command, [ModuleTransitionCommand::MODULE_COMMAND_INSTALL, ModuleTransitionCommand::MODULE_COMMAND_UPGRADE])
         ) {
             $this->source = $source;

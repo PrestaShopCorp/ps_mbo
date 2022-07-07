@@ -1,9 +1,0 @@
-services:
-  _defaults:
-    public: true
-
-  PrestaShop\Module\Mbo\Api\Service\ApiAuthorizationService:
-    class: PrestaShop\Module\Mbo\Api\Service\ApiAuthorizationService
-    arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'

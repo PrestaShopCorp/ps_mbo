@@ -9,12 +9,6 @@ class apiPsMboController extends AbstractAdminApiController
 {
     public $type = Config::MODULE_ACTIONS;
 
-    public function init(): void
-    {
-        parent::init();
-        $this->setAllowAnonymous(true);
-    }
-
     /**
      * @return void
      */
@@ -29,7 +23,7 @@ class apiPsMboController extends AbstractAdminApiController
                 throw new QueryParamsException('You need transition and module parameters');
             }
             $command = new ModuleStatusTransitionCommand($transition, $module, $source);
-            $this->module->get('mbo.handlers.command.module_status_transition_handler')->handle($command);
+            $this->module->get('mbo.modules.state_machine.module_status_transition_handler')->handle($command);
         } catch (\Exception $exception) {
             $this->exitWithExceptionMessage($exception);
         }

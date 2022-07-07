@@ -2,30 +2,5 @@ services:
   _defaults:
     public: true
 
-  PrestaShop\Module\Mbo\Api\Repository\LanguageRepository:
-    class: PrestaShop\Module\Mbo\Api\Repository\LanguageRepository
-
-  PrestaShop\Module\Mbo\Api\Repository\CurrencyRepository:
-    class: PrestaShop\Module\Mbo\Api\Repository\CurrencyRepository
-
-  PrestaShop\Module\Mbo\Api\Repository\ConfigurationRepository:
-    class: PrestaShop\Module\Mbo\Api\Repository\ConfigurationRepository
-
   PrestaShop\Module\Mbo\Api\Repository\ModuleRepository:
     class: PrestaShop\Module\Mbo\Api\Repository\ModuleRepository
-
-  PrestaShop\Module\Mbo\Api\Repository\ShopRepository:
-    class: PrestaShop\Module\Mbo\Api\Repository\ShopRepository
-    arguments:
-      - '@ps_mbo.db'
-
-  PrestaShop\Module\Mbo\Api\Repository\ServerInformationRepository:
-    class: PrestaShop\Module\Mbo\Api\Repository\ServerInformationRepository
-    arguments:
-      - '@ps_mbo.context'
-      - '@PrestaShop\Module\Mbo\Api\Repository\CurrencyRepository'
-      - '@PrestaShop\Module\Mbo\Api\Repository\LanguageRepository'
-      - '@PrestaShop\Module\Mbo\Api\Repository\ConfigurationRepository'
-      - '@PrestaShop\Module\Mbo\Api\Repository\ShopRepository'
-      - '@PrestaShop\Module\Mbo\Api\Repository\ModuleRepository'
-      - { PS_MBO_PROXY_API_URL: 'https://mbo.prestashop.com' }
