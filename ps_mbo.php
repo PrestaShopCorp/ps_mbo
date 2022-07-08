@@ -27,6 +27,7 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
+use Configuration;
 use Dotenv\Dotenv;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
@@ -49,6 +50,7 @@ use PrestaShop\Module\Mbo\Traits\Hooks\UseListModules;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShopBundle\Event\ModuleManagementEvent;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\String\UnicodeString;
 
@@ -104,6 +106,11 @@ class ps_mbo extends Module
         'AdminPsMboModule',
         'AdminModulesManage',
         'AdminModulesSf',
+    ];
+
+    public $configurationList = [
+        'PS_MBO_SHOP_ADMIN_UUID' => '', // 'ADMIN' because there will be only one for all shops in a multishop context
+        'PS_MBO_SHOP_ADMIN_MAIL' => '',
     ];
 
     /**
@@ -168,7 +175,7 @@ class ps_mbo extends Module
      */
     public function install(): bool
     {
-        if (parent::install() && $this->registerHook(static::HOOKS)) {
+        if (parent::install() && $this->installConfiguration() && $this->registerHook(static::HOOKS)) {
             // Do come extra operations on modules' registration like modifying orders
             foreach ($this->getTraitNames() as $traitName) {
                 $traitName = lcfirst($traitName);
@@ -186,12 +193,47 @@ class ps_mbo extends Module
     }
 
     /**
+     * Install configuration for each shop
+     *
+     * @return bool
+     */
+    public function installConfiguration(): bool
+    {
+        $result = true;
+
+        // Values generated
+        $adminUuid = Uuid::uuid4();
+        $this->configurationList['PS_MBO_SHOP_ADMIN_UUID'] = $adminUuid;
+        $this->configurationList['PS_MBO_SHOP_ADMIN_MAIL'] = sprintf('mbo-%s@prestashop.com', $adminUuid);
+
+        foreach (\Shop::getShops(false, null, true) as $shopId) {
+            foreach ($this->configurationList as $name => $value) {
+                if (false === Configuration::hasKey($name, null, null, (int) $shopId)) {
+                    $result = $result && (bool) Configuration::updateValue(
+                            $name,
+                            $value,
+                            false,
+                            null,
+                            (int) $shopId
+                        );
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * @inerhitDoc
      */
     public function uninstall()
     {
         if (!parent::uninstall()) {
             return false;
+        }
+
+        foreach (array_keys($this->configurationList) as $name) {
+            Configuration::deleteByName($name);
         }
 
         /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher */
@@ -331,13 +373,13 @@ class ps_mbo extends Module
 
     private function loadEnv()
     {
-        if (file_exists(_PS_MODULE_DIR_ . 'ps_mbo/.env')) {
-            $dotenv = Dotenv::createUnsafeImmutable(_PS_MODULE_DIR_ . 'ps_mbo/');
+        if (file_exists(_PS_MODULE_DIR_ . 'ps_mbo/.env.dist')) {
+            $dotenv = Dotenv::createUnsafeImmutable(_PS_MODULE_DIR_ . 'ps_mbo/', '.env.dist');
             $dotenv->load();
         }
 
-        if (file_exists(_PS_MODULE_DIR_ . 'ps_mbo/.env.dist')) {
-            $dotenv = Dotenv::createUnsafeImmutable(_PS_MODULE_DIR_ . 'ps_mbo/', '.env.dist');
+        if (file_exists(_PS_MODULE_DIR_ . 'ps_mbo/.env')) {
+            $dotenv = Dotenv::createUnsafeImmutable(_PS_MODULE_DIR_ . 'ps_mbo/');
             $dotenv->load();
         }
     }
@@ -353,7 +395,7 @@ class ps_mbo extends Module
         $employee = new Employee();
         $employee->firstname = 'Prestashop';
         $employee->lastname = 'Marketplace';
-        $employee->email = sprintf('mbo-%s@prestashop.com', uniqid());
+        $employee->email = $this->configurationList['PS_MBO_SHOP_ADMIN_MAIL'];
         $employee->id_lang = $this->context->language->id;
         $employee->id_profile = _PS_ADMIN_PROFILE_;
         $employee->active = true;
@@ -376,14 +418,11 @@ class ps_mbo extends Module
         $qb = $connection->createQueryBuilder();
         $qb->select('e.id_employee')
             ->from($this->container->getParameter('database_prefix') . 'employee', 'e')
-            ->andWhere('e.firstname = :firstname')
-            ->andWhere('e.lastname = :lastname')
+            ->andWhere('e.email = :email')
             ->andWhere('e.active = :active')
-            ->andWhere('e.id_profile = :id_profile')
-            ->setParameter('firstname', 'Prestashop')
-            ->setParameter('lastname', 'Marketplace')
+            ->setParameter('email', $this->configurationList['PS_MBO_SHOP_ADMIN_MAIL'])
+
             ->setParameter('active', true)
-            ->setParameter('id_profile', _PS_ADMIN_PROFILE_)
             ->setMaxResults(1);
 
         $employees = $qb->execute()->fetchAll();

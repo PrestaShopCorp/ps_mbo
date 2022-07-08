@@ -22,7 +22,8 @@
     "ext-json": "*",
     "prestashop/circuit-breaker": "^4",
     "guzzlehttp/guzzle": "^7.4",
-    "vlucas/phpdotenv": "^5.4"
+    "vlucas/phpdotenv": "^5.4",
+    "ramsey/uuid": "^4.3"
   },
   "require-dev": {
     "prestashop/php-dev-tools": "^4",
