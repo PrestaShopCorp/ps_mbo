@@ -73,6 +73,7 @@ class AdminAuthenticationProvider
 
     /**
      * @return Employee
+     *
      * @throws EmployeeException
      * @throws PrestaShopException
      * @throws PrestaShopDatabaseException
@@ -129,7 +130,9 @@ class AdminAuthenticationProvider
 
     /**
      * @param Employee $apiUser
+     *
      * @return Cookie
+     *
      * @throws CoreException
      */
     public function apiUserLogin(Employee $apiUser): Cookie
@@ -173,6 +176,7 @@ class AdminAuthenticationProvider
 
     /**
      * @return Employee|null
+     *
      * @throws Exception
      */
     private function getApiUser(): ?Employee
