@@ -27,9 +27,9 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
-use Configuration;
 use Dotenv\Dotenv;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
+use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseBeforeInstallModule;
@@ -48,7 +48,6 @@ use PrestaShop\Module\Mbo\Traits\Hooks\UseGetAdminToolbarButtons;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseGetAlternativeSearchPanels;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseListModules;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -184,7 +183,7 @@ class ps_mbo extends Module
                 }
             }
 
-            $this->createApiUser();
+            $this->getAdminAuthenticationProvider()->createApiUser();
 
             return true;
         }
@@ -249,7 +248,7 @@ class ps_mbo extends Module
             }
         }
 
-        $this->deleteApiUser();
+        $this->getAdminAuthenticationProvider()->deleteApiUser();
 
         return true;
     }
@@ -384,98 +383,8 @@ class ps_mbo extends Module
         }
     }
 
-    private function createApiUser(): Employee
+    private function getAdminAuthenticationProvider(): AdminAuthenticationProvider
     {
-        $employee = $this->getApiUser();
-
-        if (null !== $employee) {
-            return $employee;
-        }
-
-        $employee = new Employee();
-        $employee->firstname = 'Prestashop';
-        $employee->lastname = 'Marketplace';
-        $employee->email = $this->configurationList['PS_MBO_SHOP_ADMIN_MAIL'];
-        $employee->id_lang = $this->context->language->id;
-        $employee->id_profile = _PS_ADMIN_PROFILE_;
-        $employee->active = true;
-        $employee->passwd = $this->get('prestashop.core.crypto.hashing')->hash(uniqid('', true));
-
-        if (!$employee->add()) {
-            throw new EmployeeException('Failed to add PsMBO API user');
-        }
-
-        return $employee;
-    }
-
-    private function getApiUser(): ?Employee
-    {
-        /**
-         * @var \Doctrine\DBAL\Connection $connection
-         */
-        $connection = $this->get('doctrine.dbal.default_connection');
-        //Get employee ID
-        $qb = $connection->createQueryBuilder();
-        $qb->select('e.id_employee')
-            ->from($this->container->getParameter('database_prefix') . 'employee', 'e')
-            ->andWhere('e.email = :email')
-            ->andWhere('e.active = :active')
-            ->setParameter('email', $this->configurationList['PS_MBO_SHOP_ADMIN_MAIL'])
-
-            ->setParameter('active', true)
-            ->setMaxResults(1);
-
-        $employees = $qb->execute()->fetchAll();
-
-        if (empty($employees)) {
-            return null;
-        }
-
-        return new Employee((int) $employees[0]['id_employee']);
-    }
-
-    /**
-     * @throws PrestaShopException
-     */
-    private function deleteApiUser()
-    {
-        $employee = $this->getApiUser();
-
-        if (null !== $employee) {
-            $employee->delete();
-        }
-    }
-
-    /**
-     * @throws EmployeeException
-     */
-    public function ensureApiUserExistence(): Employee
-    {
-        $apiUser = $this->getApiUser();
-
-        if (null === $apiUser) {
-            $apiUser = $this->createApiUser();
-        }
-
-        return $apiUser;
-    }
-
-    private function apiUserLogin(Employee $apiUser)
-    {
-        $cookie = new Cookie('apiPsMbo');
-        $cookie->id_employee = (int) $apiUser->id;
-        $cookie->email = $apiUser->email;
-        $cookie->profile = $apiUser->id_profile;
-        $cookie->passwd = $apiUser->passwd;
-        $cookie->remote_addr = $apiUser->remote_addr;
-        $cookie->registerSession(new EmployeeSession());
-
-        if (!Tools::getValue('stay_logged_in')) {
-            $cookie->last_activity = time();
-        }
-
-        $cookie->write();
-
-        return $cookie;
+        return $this->get('PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider');
     }
 }

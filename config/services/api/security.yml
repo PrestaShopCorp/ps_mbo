@@ -7,3 +7,5 @@ services:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+      - '@prestashop.core.crypto.hashing'
+      - '@prestashop.adapter.legacy.context'
