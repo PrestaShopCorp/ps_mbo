@@ -2,6 +2,14 @@ services:
   _defaults:
     public: true
 
+  PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider:
+    class: PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@prestashop.core.crypto.hashing'
+      - '@prestashop.adapter.legacy.context'
+
   mbo.security.permission_checker:
     class: PrestaShop\Module\Mbo\Security\PermissionChecker
     arguments:

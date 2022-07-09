@@ -1,4 +1,3 @@
 imports:
-  - { resource: api/security.yml }
   - { resource: modules.yml }
   - { resource: api/modules.yml }
