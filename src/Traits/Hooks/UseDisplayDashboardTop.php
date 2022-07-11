@@ -159,13 +159,16 @@ trait UseDisplayDashboardTop
 
         $values = Tools::getAllValues();
         //Check if we are on configuration page & if the module needs to have a push on this page
-        if (isset($values['controller']) && $values['controller'] === self::$ADMIN_MODULES_CONTROLLER
-            &&
-            isset($values['configure']) && in_array($values['configure'], self::$MODULES_WITH_CONFIGURATION_PUSH)) {
+        if (
+            isset($values['controller']) &&
+            ($values['controller'] === self::$ADMIN_MODULES_CONTROLLER) &&
+            isset($values['configure']) &&
+            in_array($values['configure'], self::$MODULES_WITH_CONFIGURATION_PUSH)
+        ) {
             return $this->displayPushOnConfigurationPage($values['configure']);
         }
 
-        return $this->displayRecommendedModules();
+        return $this->displayRecommendedModules($values['controller']);
     }
 
     /**
@@ -210,8 +213,32 @@ trait UseDisplayDashboardTop
      *
      * @throws \Exception
      */
-    protected function displayRecommendedModules(): string
+    protected function displayRecommendedModules(string $controllerName): string
     {
+        if (
+            !in_array($controllerName, [
+                  'AdminOrders',
+                  'AdminInvoices',
+                  'AdminSlip',
+                  'AdminDeliverySlip',
+                  'AdminProducts',
+                  'AdminFeatures',
+                  'AdminManufacturers',
+                  'AdminCartRules',
+                  'AdminSpecificPriceRule',
+                  'AdminCustomers',
+                  'AdminCustomerThreads',
+                  'AdminStats',
+                  'AdminCmsContent',
+                  'AdminImages',
+                  'AdminShipping',
+                  'AdminPayment',
+                  'AdminStatuses',
+            ])
+        ) {
+            return '';
+        }
+
         /** @var UrlGeneratorInterface $router */
         $router = $this->get('router');
 
