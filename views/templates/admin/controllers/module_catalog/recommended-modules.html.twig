@@ -20,50 +20,12 @@
 {% extends app.request.isxmlhttprequest ? '@Modules/ps_mbo/views/templates/admin/layout-ajax.html.twig' : '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  {% if recommendedModulesNotInstalled is not empty or recommendedModulesInstalled is not empty %}
-    <ul class="nav nav-tabs" role="tablist">
-      {% if recommendedModulesNotInstalled is not empty %}
-        <li class="nav-item active">
-          <a class="nav-link active" data-toggle="tab" href="#tab_modules_list_not_installed" role="tab">
-            {{ 'Not Installed'|trans({}, 'Modules.Mbo.Modulescatalog') }}
-          </a>
-        </li>
-      {% endif %}
-      {% if recommendedModulesInstalled is not empty %}
-        <li class="nav-item{% if recommendedModulesNotInstalled is empty %} active{% endif %}">
-          <a class="nav-link{% if recommendedModulesNotInstalled is empty %} active{% endif %}" data-toggle="tab" href="#tab_modules_list_installed" role="tab">
-            {{ 'Installed'|trans({}, 'Modules.Mbo.Modulescatalog') }}
-          </a>
-        </li>
-      {% endif %}
-    </ul>
-    <div id="modules_list_container_content" class="tab-content">
-      {% if recommendedModulesNotInstalled is not empty %}
-        <div class="tab-pane active" id="tab_modules_list_not_installed" role="tabpanel">
-          <table class="table">
-            {% for recommendedModuleNotInstalled in recommendedModulesNotInstalled %}
-              {{ include('@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/tab-module-line.html.twig',{'module': recommendedModuleNotInstalled}) }}
-            {% endfor %}
-          </table>
-        </div>
-      {% endif %}
-      {% if recommendedModulesInstalled is not empty %}
-        <div class="tab-pane {% if recommendedModulesNotInstalled is empty %}active{% endif %}" id="tab_modules_list_installed" role="tabpanel">
-          <table class="table">
-            {% for recommendedModuleInstalled in recommendedModulesInstalled %}
-              {{ include('@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/tab-module-line.html.twig',{'module': recommendedModuleInstalled}) }}
-            {% endfor %}
-          </table>
-        </div>
-      {% endif %}
-    </div>
-  {% endif %}
+    <script defer>
+        const renderRecommendations = window.mboCdc.renderRecommendations
 
-  <div class="alert alert-addons row-margin-top" role="alert">
-    <p class="alert-text">
-      <a href="{{ linkUrl }}" onclick="return !window.open(this.href);">
-        {{ 'More modules on addons.prestashop.com'|trans({}, 'Modules.Mbo.Modulescatalog') }}
-      </a>
-    </p>
-  </div>
+        const context = {{ shop_context|json_encode()|raw }};
+
+        renderRecommendations(context, '#cdc-container')
+    </script>
+    <div id="cdc-container"></div>
 {% endblock %}

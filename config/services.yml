@@ -61,6 +61,7 @@ services:
       - '@mbo.tab.collection.provider'
       - '@mbo.recommendedmodules.presenter'
       - '@mbo.addons.links_provider'
+      - '@mbo.cdc.context_builder'
 
   mbo.controller.themes.catalog:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController'

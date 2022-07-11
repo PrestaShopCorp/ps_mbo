@@ -24,6 +24,7 @@ namespace PrestaShop\Module\Mbo\Service\View;
 use Configuration;
 use Context;
 use Language;
+use PrestaShop\Module\Mbo\Tab\Tab;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use Tools;
 
@@ -55,6 +56,23 @@ class ContextBuilder
             // The token is constant string for now, it'll be replaced by the user's real token when security layer will be implemented
             'token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
             'prestaShopControllerClassName' => Tools::getValue('controller'),
+        ];
+    }
+
+    public function getRecommendedModulesContext(Tab $tab): array
+    {
+        $context = $this->getContext();
+        $language = $this->getLanguage();
+
+        return [
+            'currency' => $this->getCurrencyCode(),
+            'isoLang' => $language->getLanguageCode(),
+            'isoCode' => $language->getIsoCode(),
+            'shopVersion' => _PS_VERSION_,
+            'shopUrl' => $context->shop->getBaseURL(true, false),
+            // The token is constant string for now, it'll be replaced by the user's real token when security layer will be implemented
+            'token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
+            'prestaShopControllerClassName' => $tab->getLegacyClassName(),
         ];
     }
 
