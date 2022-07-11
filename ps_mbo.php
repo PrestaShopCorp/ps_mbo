@@ -27,6 +27,7 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
+use Dotenv\Dotenv;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
@@ -35,6 +36,7 @@ use PrestaShop\Module\Mbo\Traits\Hooks\UseBeforeUpgradeModule;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
+use PrestaShop\Module\Mbo\Traits\Hooks\UseDispatcherBefore;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayAdminThemesListAfter;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeEmployeeMenu;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;
@@ -46,6 +48,7 @@ use PrestaShop\Module\Mbo\Traits\Hooks\UseGetAlternativeSearchPanels;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseListModules;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\String\UnicodeString;
 
@@ -61,6 +64,7 @@ class ps_mbo extends Module
     use UseDisplayDashboardTop;
     use UseAdminControllerSetMedia;
     use UseBeforeInstallModule;
+    use UseDispatcherBefore;
     use UseBeforeUpgradeModule;
     use UseGetAdminToolbarButtons;
     use UseGetAlternativeSearchPanels;
@@ -68,6 +72,11 @@ class ps_mbo extends Module
     use UseDisplayModuleConfigureExtraButtons;
     use UseListModules;
     use UseDisplayEmptyModuleCategoryExtraMessage;
+
+    /**
+     * @var string
+     */
+    const VERSION = '4.0.0';
 
     /**
      * @var array Hooks registered by the module
@@ -78,6 +87,7 @@ class ps_mbo extends Module
         'actionGetAlternativeSearchPanels',
         'actionBeforeInstallModule',
         'actionBeforeUpgradeModule',
+        'actionDispatcherBefore',
         'actionListModules',
         'displayAdminThemesListAfter',
         'displayDashboardTop',
@@ -94,6 +104,11 @@ class ps_mbo extends Module
         'AdminPsMboModule',
         'AdminModulesManage',
         'AdminModulesSf',
+    ];
+
+    public $configurationList = [
+        'PS_MBO_SHOP_ADMIN_UUID' => '', // 'ADMIN' because there will be only one for all shops in a multishop context
+        'PS_MBO_SHOP_ADMIN_MAIL' => '',
     ];
 
     /**
@@ -124,7 +139,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '2.0.2';
+        $this->version = self::VERSION;
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -147,6 +162,8 @@ class ps_mbo extends Module
                 $this->{"boot{$traitName}"}();
             }
         }
+
+        $this->loadEnv();
     }
 
     /**
@@ -156,7 +173,7 @@ class ps_mbo extends Module
      */
     public function install(): bool
     {
-        if (parent::install() && $this->registerHook(static::HOOKS)) {
+        if (parent::install() && $this->installConfiguration() && $this->registerHook(static::HOOKS)) {
             // Do come extra operations on modules' registration like modifying orders
             foreach ($this->getTraitNames() as $traitName) {
                 $traitName = lcfirst($traitName);
@@ -165,10 +182,43 @@ class ps_mbo extends Module
                 }
             }
 
+            $this->createApiUser();
+
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Install configuration for each shop
+     *
+     * @return bool
+     */
+    public function installConfiguration(): bool
+    {
+        $result = true;
+
+        // Values generated
+        $adminUuid = Uuid::uuid4();
+        $this->configurationList['PS_MBO_SHOP_ADMIN_UUID'] = $adminUuid;
+        $this->configurationList['PS_MBO_SHOP_ADMIN_MAIL'] = sprintf('mbo-%s@prestashop.com', $adminUuid);
+
+        foreach (\Shop::getShops(false, null, true) as $shopId) {
+            foreach ($this->configurationList as $name => $value) {
+                if (false === Configuration::hasKey($name, null, null, (int) $shopId)) {
+                    $result = $result && (bool) Configuration::updateValue(
+                            $name,
+                            $value,
+                            false,
+                            null,
+                            (int) $shopId
+                        );
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -178,6 +228,12 @@ class ps_mbo extends Module
     {
         if (!parent::uninstall()) {
             return false;
+        }
+
+        $this->deleteApiUser();
+
+        foreach (array_keys($this->configurationList) as $name) {
+            Configuration::deleteByName($name);
         }
 
         /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher */
@@ -311,5 +367,93 @@ class ps_mbo extends Module
         } else {
             return false;
         }
+    }
+
+    private function loadEnv()
+    {
+        if (file_exists(_PS_MODULE_DIR_ . 'ps_mbo/.env.dist')) {
+            $dotenv = Dotenv::createUnsafeImmutable(_PS_MODULE_DIR_ . 'ps_mbo/', '.env.dist');
+            $dotenv->load();
+        }
+
+        if (file_exists(_PS_MODULE_DIR_ . 'ps_mbo/.env')) {
+            $dotenv = Dotenv::createUnsafeImmutable(_PS_MODULE_DIR_ . 'ps_mbo/');
+            $dotenv->load();
+        }
+    }
+
+    private function createApiUser(): Employee
+    {
+        $employee = $this->getApiUser();
+
+        if (null !== $employee) {
+            return $employee;
+        }
+
+        $employee = new Employee();
+        $employee->firstname = 'Prestashop';
+        $employee->lastname = 'Marketplace';
+        $employee->email = Configuration::get('PS_MBO_SHOP_ADMIN_MAIL');
+        $employee->id_lang = $this->context->language->id;
+        $employee->id_profile = _PS_ADMIN_PROFILE_;
+        $employee->active = true;
+        $employee->passwd = $this->get('prestashop.core.crypto.hashing')->hash(uniqid('', true));
+
+        if (!$employee->add()) {
+            throw new EmployeeException('Failed to add PsMBO API user');
+        }
+
+        return $employee;
+    }
+
+    private function getApiUser(): ?Employee
+    {
+        /**
+         * @var \Doctrine\DBAL\Connection $connection
+         */
+        $connection = $this->get('doctrine.dbal.default_connection');
+        //Get employee ID
+        $qb = $connection->createQueryBuilder();
+        $qb->select('e.id_employee')
+            ->from($this->container->getParameter('database_prefix') . 'employee', 'e')
+            ->andWhere('e.email = :email')
+            ->andWhere('e.active = :active')
+            ->setParameter('email', Configuration::get('PS_MBO_SHOP_ADMIN_MAIL'))
+            ->setParameter('active', true)
+            ->setMaxResults(1);
+
+        $employees = $qb->execute()->fetchAll();
+
+        if (empty($employees)) {
+            return null;
+        }
+
+        return new Employee((int) $employees[0]['id_employee']);
+    }
+
+    /**
+     * @throws PrestaShopException
+     */
+    private function deleteApiUser()
+    {
+        $employee = $this->getApiUser();
+
+        if (null !== $employee) {
+            $employee->delete();
+        }
+    }
+
+    /**
+     * @throws EmployeeException
+     */
+    public function ensureApiUserExistence(): Employee
+    {
+        $apiUser = $this->getApiUser();
+
+        if (null === $apiUser) {
+            $apiUser = $this->createApiUser();
+        }
+
+        return $apiUser;
     }
 }

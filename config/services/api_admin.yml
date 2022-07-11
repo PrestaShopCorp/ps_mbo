@@ -1,0 +1,3 @@
+imports:
+  - { resource: modules.yml }
+  - { resource: api/modules.yml }

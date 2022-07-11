@@ -1,0 +1,27 @@
+imports:
+  - { resource: api/repository.yml }
+
+services:
+  _defaults:
+    public: true
+
+  ps_mbo.db:
+    class: Db
+    factory: [ 'Db', 'getInstance' ]
+
+  ps_mbo:
+    class: 'ps_mbo'
+    factory: [ 'Module', 'getInstanceByName' ]
+    arguments:
+      - 'ps_mbo'
+
+  PrestaShop\Module\Mbo\Api\Config\Env:
+    class: PrestaShop\Module\Mbo\Api\Config\Env
+
+  PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandlerInterface: '@PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandler'
+
+  PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandler:
+    class: PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandler
+    arguments:
+      - '@ps_mbo'
+      - '@PrestaShop\Module\Mbo\Api\Config\Env'

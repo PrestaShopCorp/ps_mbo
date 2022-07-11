@@ -156,14 +156,16 @@ class ModuleBuilder implements ModuleBuilderInterface
      */
     public function generateAddonsUrls(Module $module): void
     {
+        $moduleName = $module->attributes->get('name');
+
         foreach (static::AVAILABLE_ACTIONS as $action) {
             $urls[$action] = $this->router->generate('admin_module_manage_action', [
                 'action' => $action,
-                'module_name' => $module->attributes->get('name'),
+                'module_name' => $moduleName,
             ]);
         }
         $urls['configure'] = $this->router->generate('admin_module_configure_action', [
-            'module_name' => $module->attributes->get('name'),
+            'module_name' => $moduleName,
         ]);
 
         if ($module->database->has('installed')

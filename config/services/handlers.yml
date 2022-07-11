@@ -1,2 +1,0 @@
-imports:
-  - { resource: handler/query/*.yml }

@@ -64,6 +64,13 @@ trait HaveTabs
             'class_name' => 'AdminPsMboTheme',
             'parent_class_name' => 'AdminParentThemes',
         ],
+        'ApiPsMbo' => [
+            'name' => 'MBO Api',
+            'visible' => false,
+            'position' => 1,
+            'class_name' => 'ApiPsMbo',
+            'parent_class_name' => 'AdminParentModulesSf',
+        ],
     ];
 
     /**
