@@ -92,5 +92,18 @@ trait UseAdminControllerSetMedia
             // Add it to have all script work on all pages...
             $this->context->controller->addJs('/admin-dev/themes/default/js/bundle/default.js?v=' . _PS_VERSION_);
         }
+
+        $this->loadCdcMedia();
+    }
+
+    private function loadCdcMedia(): void
+    {
+        $controllerName = Tools::getValue('controller');
+
+        if (!in_array($controllerName, static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON)) {
+            return;
+        }
+
+        $this->context->controller->addJs(getenv('MBO_CDC_URL'));
     }
 }

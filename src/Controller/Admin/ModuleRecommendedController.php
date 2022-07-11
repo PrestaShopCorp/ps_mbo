@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
 use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModulePresenterInterface;
+use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -64,13 +65,15 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
         RequestStack $requestStack,
         TabCollectionProviderInterface $tabCollectionProvider,
         RecommendedModulePresenterInterface $recommendedModulePresenter,
-        LinksProvider $linksProvider
+        LinksProvider $linksProvider,
+        ContextBuilder $cdcContextBuilder
     ) {
         parent::__construct();
         $this->requestStack = $requestStack;
         $this->tabCollectionProvider = $tabCollectionProvider;
         $this->recommendedModulePresenter = $recommendedModulePresenter;
         $this->linksProvider = $linksProvider;
+        $this->cdcContextBuilder = $cdcContextBuilder;
     }
 
     /**
@@ -87,6 +90,7 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
                 'content' => $this->renderView(
                     '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
                     [
+                        'shop_context' => $this->cdcContextBuilder->getRecommendedModulesContext($tab),
                         'recommendedModulesInstalled' => $this->recommendedModulePresenter->presentCollection($tab->getRecommendedModulesInstalled()),
                         'recommendedModulesNotInstalled' => $this->recommendedModulePresenter->presentCollection($tab->getRecommendedModulesNotInstalled()),
                         'linkUrl' => $this->linksProvider->getAddonsLinkByControllerName($tabClassName, 'dispatch'),

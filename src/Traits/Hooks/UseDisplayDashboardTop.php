@@ -42,58 +42,23 @@ trait UseDisplayDashboardTop
      * @var string[]
      */
     protected static $TABS_WITH_RECOMMENDED_MODULES_BUTTON = [
-        'AdminProducts',
-        'AdminCategories',
-        'AdminTracking',
-        'AdminAttributesGroups',
-        'AdminFeatures',
-        'AdminManufacturers',
-        'AdminSuppliers',
-        'AdminTags',
         'AdminOrders',
         'AdminInvoices',
-        'AdminReturn',
-        'AdminDeliverySlip',
         'AdminSlip',
-        'AdminStatuses',
-        'AdminOrderMessage',
-        'AdminCustomers',
-        'AdminAddresses',
-        'AdminGroups',
-        'AdminCarts',
-        'AdminCustomerThreads',
-        'AdminContacts',
+        'AdminDeliverySlip',
+        'AdminProducts',
+        'AdminFeatures',
+        'AdminManufacturers',
         'AdminCartRules',
         'AdminSpecificPriceRule',
-        'AdminShipping',
-        'AdminLocalization',
-        'AdminZones',
-        'AdminCountries',
-        'AdminCurrencies',
-        'AdminTaxes',
-        'AdminTaxRulesGroup',
-        'AdminTranslations',
-        'AdminPreferences',
-        'AdminOrderPreferences',
-        'AdminPPreferences',
-        'AdminCustomerPreferences',
-        'AdminThemes',
-        'AdminMeta',
+        'AdminCustomers',
+        'AdminCustomerThreads',
+        'AdminStats',
         'AdminCmsContent',
         'AdminImages',
-        'AdminSearchConf',
-        'AdminGeolocation',
-        'AdminInformation',
-        'AdminPerformance',
-        'AdminEmails',
-        'AdminImport',
-        'AdminBackup',
-        'AdminRequestSql',
-        'AdminLogs',
-        'AdminAdminPreferences',
-        'AdminStats',
-        'AdminSearchEngines',
-        'AdminReferrers',
+        'AdminShipping',
+        'AdminPayment',
+        'AdminStatuses',
     ];
     /**
      * @var string[]
@@ -215,27 +180,7 @@ trait UseDisplayDashboardTop
      */
     protected function displayRecommendedModules(string $controllerName): string
     {
-        if (
-            !in_array($controllerName, [
-                  'AdminOrders',
-                  'AdminInvoices',
-                  'AdminSlip',
-                  'AdminDeliverySlip',
-                  'AdminProducts',
-                  'AdminFeatures',
-                  'AdminManufacturers',
-                  'AdminCartRules',
-                  'AdminSpecificPriceRule',
-                  'AdminCustomers',
-                  'AdminCustomerThreads',
-                  'AdminStats',
-                  'AdminCmsContent',
-                  'AdminImages',
-                  'AdminShipping',
-                  'AdminPayment',
-                  'AdminStatuses',
-            ])
-        ) {
+        if (!in_array($controllerName, static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON)) {
             return '';
         }
 
