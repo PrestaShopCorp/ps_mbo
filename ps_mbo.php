@@ -31,6 +31,7 @@ use Dotenv\Dotenv;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -55,13 +56,6 @@ class ps_mbo extends Module
         'PS_MBO_SHOP_ADMIN_UUID' => '', // 'ADMIN' because there will be only one for all shops in a multishop context
         'PS_MBO_SHOP_ADMIN_MAIL' => '',
     ];
-
-    /**
-     * @var array An array of method that can be called to register media in the actionAdminControllerSetMedia hook
-     *
-     * @see UseAdminControllerSetMedia
-     */
-    protected $adminControllerMediaMethods = [];
 
     /**
      * @var ContainerInterface
@@ -101,7 +95,7 @@ class ps_mbo extends Module
         $this->displayName = $this->trans('PrestaShop Marketplace in your Back Office', [], 'Modules.Mbo.Global');
         $this->description = $this->trans('Browse the Addons marketplace directly from your back office to better meet your needs.', [], 'Modules.Mbo.Global');
 
-        if($this->active) {
+        if ($this->active) {
             //Boot hooks
             $this->bootHooks();
         }

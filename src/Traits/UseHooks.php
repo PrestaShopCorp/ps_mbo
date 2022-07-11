@@ -40,7 +40,7 @@ trait UseHooks
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayModuleConfigureExtraButtons;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionListModules;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
-
+    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionDispatcherBefore;
 
     /**
      * @var array An array of method that can be called to register media in the actionAdminControllerSetMedia hook
@@ -48,7 +48,6 @@ trait UseHooks
      * @see UseActionAdminControllerSetMedia
      */
     protected $adminControllerMediaMethods = [];
-
 
     /**
      * Try to call the "bootHookClassName" method on each hook class.
@@ -93,6 +92,7 @@ trait UseHooks
 
     /**
      * Parse all classes used by this trait, and extract them
+     *
      * @return string[]
      */
     protected function getTraitNames(): array
@@ -103,6 +103,7 @@ trait UseHooks
             //Get only the class name eg. 'UseAdminControllerSetMedia'
             $traits[] = (new UnicodeString($trait))->afterLast('\\')->toString();
         }
+
         return $traits;
     }
 }
