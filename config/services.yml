@@ -45,6 +45,7 @@ services:
       - '@mbo.modules.repository'
       - '@prestashop.adapter.presenter.module'
       - '@mbo.modules.presenter.listing'
+      - '@mbo.cdc.context_builder'
 
   mbo.controller.modules.selection:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleSelectionController'

@@ -28,6 +28,7 @@ use PrestaShop\Module\Mbo\Module\ModuleBuilderInterface;
 use PrestaShop\Module\Mbo\Module\Presenter\ModulesForListingPresenter;
 use PrestaShop\Module\Mbo\Module\Query\GetModulesForListing;
 use PrestaShop\Module\Mbo\Module\RepositoryInterface;
+use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -65,13 +66,18 @@ class ModuleCatalogController extends ModuleAbstractController
      * @var ModulesForListingPresenter
      */
     private $modulesForListingPresenter;
+    /**
+     * @var ContextBuilder
+     */
+    private $cdcContextBuilder;
 
     public function __construct(
         Toolbar $toolbar,
         ModuleBuilderInterface $moduleBuilder,
         RepositoryInterface $moduleRepository,
         ModulePresenter $modulePresenter,
-        ModulesForListingPresenter $modulesForListingPresenter
+        ModulesForListingPresenter $modulesForListingPresenter,
+        ContextBuilder $cdcContextBuilder
     ) {
         parent::__construct();
         $this->toolbar = $toolbar;
@@ -79,6 +85,7 @@ class ModuleCatalogController extends ModuleAbstractController
         $this->moduleRepository = $moduleRepository;
         $this->modulePresenter = $modulePresenter;
         $this->modulesForListingPresenter = $modulesForListingPresenter;
+        $this->cdcContextBuilder = $cdcContextBuilder;
     }
 
     /**
@@ -106,6 +113,8 @@ class ModuleCatalogController extends ModuleAbstractController
                 'help_link' => $this->generateSidebarLink('AdminModules'),
                 'requireFilterStatus' => false,
                 'level' => $this->authorizationLevel(static::CONTROLLER_NAME),
+                'cdc_url' => getenv('MBO_CDC_URL'),
+                'shop_context' => $this->cdcContextBuilder->getViewContext(),
                 'errorMessage' => $this->trans(
                     'You do not have permission to add this.',
                     'Admin.Notifications.Error'

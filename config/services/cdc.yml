@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    public: true
+
+  mbo.cdc.context_builder:
+    class: PrestaShop\Module\Mbo\Service\View\ContextBuilder
+    arguments:
+      - '@prestashop.adapter.legacy.context'
