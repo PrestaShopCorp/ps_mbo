@@ -24,14 +24,14 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 use Exception;
 use Tools;
 
-trait UseAdminControllerSetMedia
+trait UseActionAdminControllerSetMedia
 {
     /**
      * @return void
      *
      * @throws Exception
      */
-    public function bootUseAdminControllerSetMedia(): void
+    public function bootUseActionAdminControllerSetMedia(): void
     {
         if (method_exists($this, 'addAdminControllerMedia')) {
             $this->addAdminControllerMedia('loadMediaForAdminControllerSetMedia', 0);

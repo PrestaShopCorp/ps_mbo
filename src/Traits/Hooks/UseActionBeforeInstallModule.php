@@ -21,45 +21,32 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Module\ActionsManager;
-use PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeNotNeededException;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
-use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
-use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
-trait UseBeforeUpgradeModule
+trait UseActionBeforeInstallModule
 {
     /**
-     * Hook actionBeforeUpgradeModule.
-     *
-     * @param array $params
-     *
-     * @throws ModuleUpgradeNotNeededException
-     * @throws FileNotFoundException
-     * @throws SourceHandlerNotFoundException
+     * Hook actionBeforeInstallModule.
      */
-    public function hookActionBeforeUpgradeModule(array $params): void
+    public function hookActionBeforeInstallModule(array $params): void
     {
         /** @var ModuleDataProvider $moduleDataProvider */
         $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
 
-        if (empty($params['moduleName']) || !$moduleDataProvider->isOnDisk($params['moduleName'])) {
+        if (empty($params['moduleName']) || $moduleDataProvider->isOnDisk($params['moduleName'])) {
             return;
         }
 
         $moduleName = (string) $params['moduleName'];
 
-        /** @var ActionsManager $moduleActionsManager */
-        $moduleActionsManager = $this->get('mbo.modules.actions_manager');
-
-        if (null === $moduleActionsManager->findVersionForUpdate($moduleName)) {
-            throw new ModuleUpgradeNotNeededException(sprintf('Upgrade not needed for module %s', $moduleName));
-        }
-
         /** @var Module $module */
         $module = $this->get('mbo.modules.repository')->getModule($moduleName);
 
-        $moduleActionsManager->upgrade($module);
+        if (null === $module) {
+            return;
+        }
+
+        $this->get('mbo.modules.actions_manager')->install($module);
     }
 }

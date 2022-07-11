@@ -32,7 +32,7 @@ trait HaveTabs
     /**
      * @var array[]
      */
-    protected static $ADMIN_CONTROLLERS = [
+    public static $ADMIN_CONTROLLERS = [
         'AdminPsMboModuleParent' => [
             'name' => 'Module catalog',
             'visible' => true,

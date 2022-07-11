@@ -75,7 +75,7 @@ trait UseDashboardZoneOne
     /**
      * Add JS and CSS file
      *
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia
+     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
      *
      * @return void
      */

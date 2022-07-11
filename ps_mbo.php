@@ -30,75 +30,20 @@ if (file_exists($autoloadPath)) {
 use Dotenv\Dotenv;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseBeforeInstallModule;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseBeforeUpgradeModule;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseDispatcherBefore;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayAdminThemesListAfter;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeEmployeeMenu;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayModuleConfigureExtraButtons;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseGetAdminToolbarButtons;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseGetAlternativeSearchPanels;
-use PrestaShop\Module\Mbo\Traits\Hooks\UseListModules;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\String\UnicodeString;
 
 class ps_mbo extends Module
 {
     use PrestaShop\Module\Mbo\Traits\HaveTabs;
-    // Hooks
-    use UseDisplayBackOfficeEmployeeMenu;
-    use UseDashboardZoneOne;
-    use UseDisplayAdminThemesListAfter;
-    use UseDashboardZoneTwo;
-    use UseDashboardZoneThree;
-    use UseDisplayDashboardTop;
-    use UseAdminControllerSetMedia;
-    use UseBeforeInstallModule;
-    use UseDispatcherBefore;
-    use UseBeforeUpgradeModule;
-    use UseGetAdminToolbarButtons;
-    use UseGetAlternativeSearchPanels;
-    use UseDisplayBackOfficeFooter;
-    use UseDisplayModuleConfigureExtraButtons;
-    use UseListModules;
-    use UseDisplayEmptyModuleCategoryExtraMessage;
+    use \PrestaShop\Module\Mbo\Traits\UseHooks;
 
     /**
      * @var string
      */
     const VERSION = '4.0.0';
-
-    /**
-     * @var array Hooks registered by the module
-     */
-    public const HOOKS = [
-        'actionAdminControllerSetMedia',
-        'actionGetAdminToolbarButtons',
-        'actionGetAlternativeSearchPanels',
-        'actionBeforeInstallModule',
-        'actionBeforeUpgradeModule',
-        'actionDispatcherBefore',
-        'actionListModules',
-        'displayAdminThemesListAfter',
-        'displayDashboardTop',
-        'displayBackOfficeFooter',
-        'displayBackOfficeEmployeeMenu',
-        'displayEmptyModuleCategoryExtraMessage',
-        'displayModuleConfigureExtraButtons',
-        'dashboardZoneOne',
-        'dashboardZoneTwo',
-        'dashboardZoneThree',
-    ];
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminPsMboModule',
@@ -156,11 +101,9 @@ class ps_mbo extends Module
         $this->displayName = $this->trans('PrestaShop Marketplace in your Back Office', [], 'Modules.Mbo.Global');
         $this->description = $this->trans('Browse the Addons marketplace directly from your back office to better meet your needs.', [], 'Modules.Mbo.Global');
 
-        // Parse all traits to call boot method
-        foreach ($this->getTraitNames() as $traitName) {
-            if (method_exists($this, "boot{$traitName}")) {
-                $this->{"boot{$traitName}"}();
-            }
+        if($this->active) {
+            //Boot hooks
+            $this->bootHooks();
         }
 
         $this->loadEnv();
@@ -173,14 +116,9 @@ class ps_mbo extends Module
      */
     public function install(): bool
     {
-        if (parent::install() && $this->installConfiguration() && $this->registerHook(static::HOOKS)) {
+        if (parent::install() && $this->installConfiguration() && $this->registerHook($this->getHooksNames())) {
             // Do come extra operations on modules' registration like modifying orders
-            foreach ($this->getTraitNames() as $traitName) {
-                $traitName = lcfirst($traitName);
-                if (method_exists($this, "{$traitName}ExtraOperations")) {
-                    $this->{"{$traitName}ExtraOperations"}();
-                }
-            }
+            $this->installHooks();
 
             $this->createApiUser();
 
@@ -339,16 +277,6 @@ class ps_mbo extends Module
     public function isUsingNewTranslationSystem(): bool
     {
         return true;
-    }
-
-    protected function getTraitNames(): array
-    {
-        $traits = [];
-        foreach (class_uses($this) as $trait) {
-            $traits[] = (new UnicodeString($trait))->afterLast('\\')->toString();
-        }
-
-        return $traits;
     }
 
     /**
