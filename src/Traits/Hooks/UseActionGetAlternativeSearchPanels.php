@@ -23,7 +23,7 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\PrestaShop\Core\Search\SearchPanel;
 
-trait UseGetAlternativeSearchPanels
+trait UseActionGetAlternativeSearchPanels
 {
     /**
      * Hook actionGetAlternativeSearchPanels.

@@ -27,7 +27,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use Tab;
 use Tools;
 
-trait UseDispatcherBefore
+trait UseActionDispatcherBefore
 {
     /**
      * Hook actionDispatcherBefore.

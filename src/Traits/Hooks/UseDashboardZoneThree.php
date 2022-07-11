@@ -88,7 +88,7 @@ trait UseDashboardZoneThree
      *
      * @return void
      *
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia
+     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
      */
     protected function loadMediaForDashboardColumnThree(): void
     {

@@ -26,7 +26,7 @@ use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
 use Tools;
 
-trait UseGetAdminToolbarButtons
+trait UseActionGetAdminToolbarButtons
 {
     /**
      * Hook actionGetAdminToolbarButtons.
@@ -77,7 +77,7 @@ trait UseGetAdminToolbarButtons
     /**
      * Add JS and CSS file
      *
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia
+     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
      *
      * @return void
      */

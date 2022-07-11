@@ -25,7 +25,7 @@ use PrestaShop\Module\Mbo\Module\Collection;
 use PrestaShop\Module\Mbo\Module\Filters;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 
-trait UseListModules
+trait UseActionListModules
 {
     /**
      * Hook displayModuleConfigureExtraButtons.

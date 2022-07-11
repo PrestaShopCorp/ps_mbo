@@ -46,7 +46,12 @@ function upgrade_module_2_0_0($module)
     }
 
     // Some hooks are added, we register them.
-    if (false === $module->registerHook(ps_mbo::HOOKS)) {
+    if (
+        false === $module->registerHook([
+            'actionAdminControllerSetMedia',
+            'displayDashboardTop',
+            ])
+    ) {
         return false;
     }
 
