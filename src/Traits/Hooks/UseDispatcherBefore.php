@@ -41,7 +41,7 @@ trait UseDispatcherBefore
             \Dispatcher::FC_ADMIN == (int) $params['controller_type'] ||
             Tools::getValue('controller') === 'apiPsMbo'
         ) {
-            $apiUser = $this->getAdminAuthenticationProvider()->ensureApiUserExistence();
+            $apiUser = $this->ensureApiUserExistence();
         }
 
         if (Tools::getValue('controller') !== 'apiPsMbo') {

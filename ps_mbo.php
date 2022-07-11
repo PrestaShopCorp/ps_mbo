@@ -29,7 +29,6 @@ if (file_exists($autoloadPath)) {
 
 use Dotenv\Dotenv;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
-use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseAdminControllerSetMedia;
 use PrestaShop\Module\Mbo\Traits\Hooks\UseBeforeInstallModule;
@@ -183,7 +182,7 @@ class ps_mbo extends Module
                 }
             }
 
-            $this->getAdminAuthenticationProvider()->createApiUser();
+            $this->createApiUser();
 
             return true;
         }
@@ -231,6 +230,8 @@ class ps_mbo extends Module
             return false;
         }
 
+        $this->deleteApiUser();
+
         foreach (array_keys($this->configurationList) as $name) {
             Configuration::deleteByName($name);
         }
@@ -247,8 +248,6 @@ class ps_mbo extends Module
                 break;
             }
         }
-
-        $this->getAdminAuthenticationProvider()->deleteApiUser();
 
         return true;
     }
@@ -383,8 +382,78 @@ class ps_mbo extends Module
         }
     }
 
-    private function getAdminAuthenticationProvider(): AdminAuthenticationProvider
+    private function createApiUser(): Employee
     {
-        return $this->get('PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider');
+        $employee = $this->getApiUser();
+
+        if (null !== $employee) {
+            return $employee;
+        }
+
+        $employee = new Employee();
+        $employee->firstname = 'Prestashop';
+        $employee->lastname = 'Marketplace';
+        $employee->email = Configuration::get('PS_MBO_SHOP_ADMIN_MAIL');
+        $employee->id_lang = $this->context->language->id;
+        $employee->id_profile = _PS_ADMIN_PROFILE_;
+        $employee->active = true;
+        $employee->passwd = $this->get('prestashop.core.crypto.hashing')->hash(uniqid('', true));
+
+        if (!$employee->add()) {
+            throw new EmployeeException('Failed to add PsMBO API user');
+        }
+
+        return $employee;
+    }
+
+    private function getApiUser(): ?Employee
+    {
+        /**
+         * @var \Doctrine\DBAL\Connection $connection
+         */
+        $connection = $this->get('doctrine.dbal.default_connection');
+        //Get employee ID
+        $qb = $connection->createQueryBuilder();
+        $qb->select('e.id_employee')
+            ->from($this->container->getParameter('database_prefix') . 'employee', 'e')
+            ->andWhere('e.email = :email')
+            ->andWhere('e.active = :active')
+            ->setParameter('email', Configuration::get('PS_MBO_SHOP_ADMIN_MAIL'))
+            ->setParameter('active', true)
+            ->setMaxResults(1);
+
+        $employees = $qb->execute()->fetchAll();
+
+        if (empty($employees)) {
+            return null;
+        }
+
+        return new Employee((int) $employees[0]['id_employee']);
+    }
+
+    /**
+     * @throws PrestaShopException
+     */
+    private function deleteApiUser()
+    {
+        $employee = $this->getApiUser();
+
+        if (null !== $employee) {
+            $employee->delete();
+        }
+    }
+
+    /**
+     * @throws EmployeeException
+     */
+    public function ensureApiUserExistence(): Employee
+    {
+        $apiUser = $this->getApiUser();
+
+        if (null === $apiUser) {
+            $apiUser = $this->createApiUser();
+        }
+
+        return $apiUser;
     }
 }
