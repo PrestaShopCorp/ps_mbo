@@ -6,3 +6,5 @@ services:
     class: PrestaShop\Module\Mbo\Service\View\ContextBuilder
     arguments:
       - '@prestashop.adapter.legacy.context'
+      - '@prestashop.core.admin.module.repository'
+      - '@router'
