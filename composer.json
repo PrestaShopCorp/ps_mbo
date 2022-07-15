@@ -23,7 +23,8 @@
     "prestashop/circuit-breaker": "^4",
     "guzzlehttp/guzzle": "^7.4",
     "vlucas/phpdotenv": "^5.4",
-    "ramsey/uuid": "^4.2"
+    "ramsey/uuid": "^4.2",
+    "sentry/sentry": "^1.0"
   },
   "require-dev": {
     "prestashop/php-dev-tools": "^4",

@@ -36,26 +36,29 @@ class ErrorHandler implements ErrorHandlerInterface
 
     public function __construct(Module $module, Env $env)
     {
-//        try {
-//            $this->client = new Raven_Client(
-//                $env->get('SENTRY_CREDENTIALS'),
-//                [
-//                    'level' => 'warning',
-//                    'tags' => [
-//                        'shop_id' => '1',
-//                        'ps_mbo_version' => $module->version,
-//                        'ps_accounts_version' => false,
-//                        'php_version' => phpversion(),
-//                        'prestashop_version' => _PS_VERSION_,
-//                        'ps_mbo_is_enabled' => Module::isEnabled($module->name),
-//                        'ps_mbo_is_installed' => Module::isInstalled($module->name),
-//                        'env' => $env->get('SENTRY_ENVIRONMENT'),
-//                    ],
-//                ]
-//            );
-//            $this->client->set_user_data($accountsService->getPsAccountsService()->getShopUuid(), Configuration::get('PS_SHOP_EMAIL'));
-//        } catch (Exception $e) {
-//        }
+        try {
+            $shopUuid = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
+
+            $this->client = new Raven_Client(
+                $env->get('SENTRY_CREDENTIALS'),
+                [
+                    'level' => 'warning',
+                    'tags' => [
+                        'shop_id' => $shopUuid,
+                        'ps_mbo_version' => $module::VERSION,
+                        'php_version' => phpversion(),
+                        'prestashop_version' => _PS_VERSION_,
+                        'ps_mbo_is_enabled' => Module::isEnabled($module->name),
+                        'ps_mbo_is_installed' => Module::isInstalled($module->name),
+                        'env' => $env->get('SENTRY_ENVIRONMENT'),
+                    ],
+                ]
+            );
+            $idShop = (int) Configuration::get('PS_SHOP_DEFAULT');
+            $shopEmail = Configuration::get('PS_SHOP_EMAIL', null, null, $idShop);
+            $this->client->set_user_data($shopUuid, $shopEmail);
+        } catch (Exception $e) {
+        }
     }
 
     /**
