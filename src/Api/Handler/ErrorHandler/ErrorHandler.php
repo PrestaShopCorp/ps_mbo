@@ -23,40 +23,51 @@ namespace PrestaShop\Module\Mbo\Api\Handler\ErrorHandler;
 
 use Configuration;
 use Exception;
+use Http\Discovery\Psr17FactoryDiscovery;
+use Jean85\PrettyVersions;
 use Module;
+use Monolog\Logger;
 use PrestaShop\Module\Mbo\Api\Config\Env;
-use Raven_Client;
+use Sentry\Client;
+use Sentry\HttpClient\HttpClientFactory;
+use Sentry\Options;
+use Sentry\State\Scope;
+use Sentry\Transport\DefaultTransportFactory;
+use Sentry\UserDataBag;
 
 class ErrorHandler implements ErrorHandlerInterface
 {
     /**
-     * @var ?Raven_Client
+     * @var Client
      */
     protected $client;
 
-    public function __construct(Module $module, Env $env)
+    /**
+     * @var UserDataBag
+     */
+    protected $user;
+
+    public function __construct(Module $module, Env $env, Logger $logger)
     {
         try {
             $shopUuid = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
 
-            $this->client = new Raven_Client(
-                $env->get('SENTRY_CREDENTIALS'),
-                [
-                    'level' => 'warning',
-                    'tags' => [
-                        'shop_id' => $shopUuid,
-                        'ps_mbo_version' => $module::VERSION,
-                        'php_version' => phpversion(),
-                        'prestashop_version' => _PS_VERSION_,
-                        'ps_mbo_is_enabled' => Module::isEnabled($module->name),
-                        'ps_mbo_is_installed' => Module::isInstalled($module->name),
-                        'env' => $env->get('SENTRY_ENVIRONMENT'),
-                    ],
-                ]
-            );
-            $idShop = (int) Configuration::get('PS_SHOP_DEFAULT');
-            $shopEmail = Configuration::get('PS_SHOP_EMAIL', null, null, $idShop);
-            $this->client->set_user_data($shopUuid, $shopEmail);
+            $this->client = $this->getClient($logger, [
+                'dsn' => $env->get('SENTRY_CREDENTIALS'),
+                'tags' => [
+                    'shop_id' => $shopUuid,
+                    'ps_mbo_version' => $module::VERSION,
+                    'php_version' => phpversion(),
+                    'prestashop_version' => _PS_VERSION_,
+                    'ps_mbo_is_enabled' => (string) Module::isEnabled($module->name),
+                    'ps_mbo_is_installed' => (string) Module::isInstalled($module->name),
+                    'env' => $env->get('SENTRY_ENVIRONMENT'),
+                ],
+            ]);
+
+            $shopId = (int) Configuration::get('PS_SHOP_DEFAULT');
+            $shopEmail = Configuration::get('PS_SHOP_EMAIL', null, null, $shopId);
+            $this->user = new UserDataBag($shopUuid, $shopEmail); // we can add IP address and username later
         } catch (Exception $e) {
         }
     }
@@ -64,16 +75,61 @@ class ErrorHandler implements ErrorHandlerInterface
     /**
      * @throws Exception
      */
-    public function handle(Exception $error, $code = null, ?bool $throw = true, ?array $data = null): void
+    public function handle(Exception $error, $code = null, ?bool $throw = true, ?array $data = []): void
     {
         if (!$this->client) {
             return;
         }
-        $this->client->captureException($error, $data);
+
+        $scope = new Scope();
+        foreach ($data as $key => $value) {
+            $scope->setContext($key, $value);
+        }
+        $scope->setUser($this->user);
+
+        $this->client->captureException($error, $scope);
+        $this->client->flush();
         if ($code && true === $throw) {
             http_response_code($code);
             throw $error;
         }
+    }
+
+    private function getClient(Logger $logger, array $options): Client
+    {
+        $uriFactory = $uriFactory ?? Psr17FactoryDiscovery::findUriFactory();
+        $requestFactory = $requestFactory ?? Psr17FactoryDiscovery::findRequestFactory();
+        $responseFactory = $responseFactory ?? Psr17FactoryDiscovery::findResponseFactory();
+        $streamFactory = $streamFactory ?? Psr17FactoryDiscovery::findStreamFactory();
+
+        $sdkIdentifier = 'sentry.php';
+        $sdkVersion = PrettyVersions::getVersion('sentry/sentry')->getPrettyVersion();
+
+        $transportFactory = new DefaultTransportFactory(
+            $streamFactory,
+            $requestFactory,
+            new HttpClientFactory(
+                $uriFactory,
+                $responseFactory,
+                $streamFactory,
+                null,
+                $sdkIdentifier,
+                $sdkVersion
+            ),
+            $logger
+        );
+
+        $options = new Options($options);
+
+        return new Client(
+            $options,
+            $transportFactory->create($options),
+            $sdkIdentifier,
+            $sdkVersion,
+            null,
+            null,
+            $logger
+        );
     }
 
     /**
