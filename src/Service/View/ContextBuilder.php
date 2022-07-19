@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Service\View;
 
 use Configuration;
 use Context;
+use Doctrine\Common\Cache\CacheProvider;
 use Language;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Tab\Tab;
@@ -48,15 +49,28 @@ class ContextBuilder
      * @var Router
      */
     private $router;
+    /**
+     * @var CacheProvider
+     */
+    private $cacheProvider;
+
+    /**
+     * @var string
+     */
+    private $shopId;
 
     public function __construct(
         ContextAdapter $contextAdapter,
         ModuleRepository $moduleRepository,
-        Router $router
+        Router $router,
+        CacheProvider $cacheProvider
     ) {
         $this->contextAdapter = $contextAdapter;
         $this->moduleRepository = $moduleRepository;
         $this->router = $router;
+        $this->cacheProvider = $cacheProvider;
+
+        $this->shopId = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
     }
 
     public function getViewContext(): array
@@ -91,7 +105,21 @@ class ContextBuilder
             // The token is constant string for now, it'll be replaced by the user's real token when security layer will be implemented
             'token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
             'prestaShopControllerClassName' => $tab->getLegacyClassName(),
+            'installed_modules' => $this->getInstalledModules(),
         ];
+    }
+
+    public function clearCache(): bool
+    {
+        $cacheKey = $this->getCacheKey();
+
+        if ($this->cacheProvider->contains($cacheKey)) {
+            if (!$this->cacheProvider->delete($cacheKey)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function getContext(): Context
@@ -117,6 +145,12 @@ class ContextBuilder
 
     private function getInstalledModules(): array
     {
+        $cacheKey = $this->getCacheKey();
+
+        if ($this->cacheProvider->contains($cacheKey)) {
+            return $this->cacheProvider->fetch($cacheKey);
+        }
+
         $installedModulesCollection = $this->moduleRepository->getList();
 
         $installedModules = [];
@@ -144,6 +178,13 @@ class ContextBuilder
             $installedModules[] = (new InstalledModule($moduleId, $moduleName, $moduleStatus, $moduleVersion, $moduleConfigUrl))->toArray();
         }
 
-        return $installedModules;
+        $this->cacheProvider->save($cacheKey, $installedModules, 86400); // Lifetime for 24h, will be purged at every action on modules
+
+        return $this->cacheProvider->fetch($cacheKey);
+    }
+
+    private function getCacheKey(): string
+    {
+        return sprintf('installed_modules_%s', $this->shopId);
     }
 }

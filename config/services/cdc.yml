@@ -8,3 +8,4 @@ services:
       - '@prestashop.adapter.legacy.context'
       - '@prestashop.core.admin.module.repository'
       - '@router'
+      - '@doctrine.cache.provider'
