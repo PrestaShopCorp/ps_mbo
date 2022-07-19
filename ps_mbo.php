@@ -29,6 +29,7 @@ if (file_exists($autoloadPath)) {
 
 use Dotenv\Dotenv;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
+use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
@@ -377,5 +378,10 @@ class ps_mbo extends Module
         }
 
         return $apiUser;
+    }
+
+    public function getAdminAuthenticationProvider(): AdminAuthenticationProvider
+    {
+        return $this->get('PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider');
     }
 }

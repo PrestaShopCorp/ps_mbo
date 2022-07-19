@@ -77,6 +77,8 @@ abstract class AbstractAdminApiController extends ModuleAdminController
 
     protected function exitWithExceptionMessage(Exception $exception): void
     {
+        $this->errorHandler->handle($exception);
+
         $code = $exception->getCode() == 0 ? 500 : $exception->getCode();
 
         if ($exception instanceof QueryParamsException) {
