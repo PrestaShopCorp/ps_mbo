@@ -10,6 +10,12 @@ services:
       - '@prestashop.core.crypto.hashing'
       - '@prestashop.adapter.legacy.context'
 
+  PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker:
+    class: PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker
+    arguments:
+      - '@doctrine.cache.provider'
+      - '@mbo.cdc.client.nest_api'
+
   mbo.security.permission_checker:
     class: PrestaShop\Module\Mbo\Security\PermissionChecker
     arguments:

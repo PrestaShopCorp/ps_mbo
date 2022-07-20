@@ -9,3 +9,15 @@ services:
             Accept: "application/json"
         CURLOPT_FORBID_REUSE: true
         CURLOPT_FRESH_CONNECT: true
+
+
+  mbo.nest_api.client.http:
+    class: GuzzleHttp\Client
+    arguments:
+      $config:
+        base_uri: "%env(NEST_API_URL)%"
+        timeout: "7200"
+        headers:
+          Accept: "application/json"
+        CURLOPT_FORBID_REUSE: true
+        CURLOPT_FRESH_CONNECT: true

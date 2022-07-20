@@ -19,25 +19,8 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Api\Config;
+namespace PrestaShop\Module\Mbo\Api\Exception;
 
-class Config
+class IncompleteSignatureParamsException extends \Exception
 {
-    const DATABASE_QUERY_ERROR_CODE = 454;
-    const DATABASE_INSERT_ERROR_CODE = 455;
-    const INVALID_URL_QUERY = 458;
-    const UNAUTHORIZED_ERROR_CODE = 401;
-    const INCOMPLETE_SIGNATURE_ERROR_CODE = 459;
-    const RETRIEVE_NEW_KEY_ERROR_CODE = 460;
-
-    const HTTP_STATUS_MESSAGES = [
-        self::DATABASE_QUERY_ERROR_CODE => 'Database syntax error',
-        self::DATABASE_INSERT_ERROR_CODE => 'Failed to write to database',
-        self::INVALID_URL_QUERY => 'Invalid URL query',
-        self::UNAUTHORIZED_ERROR_CODE => 'Not authorized',
-        self::INCOMPLETE_SIGNATURE_ERROR_CODE => 'Incomplete signature',
-        self::RETRIEVE_NEW_KEY_ERROR_CODE => 'Failed to retrieve key',
-    ];
-
-    const MODULE_ACTIONS = 'module_actions';
 }

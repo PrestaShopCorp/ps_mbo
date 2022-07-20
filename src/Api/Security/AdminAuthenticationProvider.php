@@ -24,12 +24,9 @@ namespace PrestaShop\Module\Mbo\Api\Security;
 use Cookie;
 use DateTime;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception;
 use Employee;
 use EmployeeSession;
 use LogicException;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Tools;
 
@@ -45,26 +42,12 @@ class AdminAuthenticationProvider
      */
     private $dbPrefix;
 
-    /**
-     * @var Hashing
-     */
-    private $hashing;
-
-    /**
-     * @var LegacyContext
-     */
-    private $context;
-
     public function __construct(
         Connection $connection,
-        string $dbPrefix,
-        Hashing $hashing,
-        LegacyContext $context
+        string $dbPrefix
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
-        $this->hashing = $hashing;
-        $this->context = $context;
     }
 
     /**
