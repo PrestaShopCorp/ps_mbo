@@ -39,17 +39,14 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
      * @var RequestStack
      */
     protected $requestStack;
-
     /**
      * @var TabCollectionProviderInterface
      */
     protected $tabCollectionProvider;
-
     /**
      * @var RecommendedModulePresenterInterface
      */
     protected $recommendedModulePresenter;
-
     /**
      * @var LinksProvider
      */
@@ -86,11 +83,13 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
             $tabCollection = $this->tabCollectionProvider->getTabCollection();
             $tabClassName = $this->requestStack->getCurrentRequest()->get('tabClassName');
             $tab = $tabCollection->getTab($tabClassName);
+            $context = $this->cdcContextBuilder->getRecommendedModulesContext($tab);
+            $context['recommendationFormat'] = $tab->shouldDisplayAfterContent() ? 'card' : 'modal';
             $response->setData([
                 'content' => $this->renderView(
                     '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
                     [
-                        'shop_context' => $this->cdcContextBuilder->getRecommendedModulesContext($tab),
+                        'shop_context' => $context,
                         'recommendedModulesInstalled' => $this->recommendedModulePresenter->presentCollection($tab->getRecommendedModulesInstalled()),
                         'recommendedModulesNotInstalled' => $this->recommendedModulePresenter->presentCollection($tab->getRecommendedModulesNotInstalled()),
                         'linkUrl' => $this->linksProvider->getAddonsLinkByControllerName($tabClassName, 'dispatch'),
