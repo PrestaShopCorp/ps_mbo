@@ -142,8 +142,7 @@ var mbo = {};
         });
 
         recommendedModulesRequest.done(function(data) {
-          var recommendedModulesContainer = new RecommendedModulesContainer(config, data.content);
-          $(pageMap.contentContainer).append(recommendedModulesContainer.getMarkup());
+          $(pageMap.contentContainer).append(data.content);
         });
 
         recommendedModulesRequest.fail(function(jqXHR, textStatus, errorThrown) {
@@ -311,6 +310,14 @@ var mbo = {};
         '<div id="modules_list_container" class="modal modal-vcenter fade" role="dialog">\n' +
         '  <div class="modal-dialog">\n' +
         '    <div class="modal-content">\n' +
+        '      <div class="modal-header">\n' +
+        '        <h4 class="modal-title module-modal-title">\n' +
+        '          ' + config.translations['Recommended Modules and Services'] + '\n' +
+        '        </h4>\n' +
+        '        <button type="button" class="close" data-dismiss="modal" aria-label="' + config.translations['Close'] + '">\n' +
+        '          <span aria-hidden="true">&times;</span>\n' +
+        '        </button>\n' +
+        '      </div>\n' +
         '      <div class="modal-body row">\n' +
         '        <div id="modules_list_container_tab_modal" class="col-md-12" style="display:none;"></div>\n' +
         '        <div id="modules_list_loader" class="col-md-12 text-center">\n' +
