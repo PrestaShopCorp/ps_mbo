@@ -35,15 +35,26 @@ trait UseActionDispatcherBefore
      */
     public function hookActionDispatcherBefore(array $params): void
     {
-        // Whatever the call in the backoffice, we check if the MBO API user exists
+        $controllerName = Tools::getValue('controller');
+
+        // Registration failed on install, retry it
         if (
-            \Dispatcher::FC_ADMIN == (int) $params['controller_type'] ||
-            Tools::getValue('controller') === 'apiPsMbo'
+            in_array($controllerName, [
+                'AdminPsMboModuleParent',
+                'AdminPsMboRecommended',
+                'apiPsMbo',
+            ]) &&
+            file_exists($this->moduleCacheDir . 'registration.lock')
         ) {
+            $this->registerShop();
+        }
+
+        // Whatever the call in the MBO API, we check if the MBO API user exists
+        if (\Dispatcher::FC_ADMIN == (int) $params['controller_type'] || $controllerName === 'apiPsMbo') {
             $apiUser = $this->getAdminAuthenticationProvider()->ensureApiUserExistence();
         }
 
-        if (Tools::getValue('controller') !== 'apiPsMbo') {
+        if ($controllerName !== 'apiPsMbo') {
             return;
         }
 
