@@ -25,6 +25,7 @@ use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleNotFoundException;
 use PrestaShop\Module\Mbo\Module\Exception\TransitionCommandToModuleStatusException;
 use PrestaShop\Module\Mbo\Module\Exception\UnauthorizedModuleTransitionException;
+use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
 use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
@@ -53,13 +54,15 @@ final class ModuleStatusTransitionCommandHandler
      */
     private $moduleRepository;
 
-    public function __construct(ModuleStateMachine $moduleStateMachine, Repository $moduleRepository)
-    {
+    public function __construct(
+        ModuleStateMachine $moduleStateMachine,
+        Repository $moduleRepository
+    ) {
         $this->moduleStateMachine = $moduleStateMachine;
         $this->moduleRepository = $moduleRepository;
     }
 
-    public function handle(ModuleStatusTransitionCommand $command)
+    public function handle(ModuleStatusTransitionCommand $command): Module
     {
         $moduleName = $command->getModuleName();
         $source = $command->getSource();
@@ -92,5 +95,7 @@ final class ModuleStatusTransitionCommandHandler
         $this->moduleStateMachine->apply($module, $transitionName, [
             'source' => $source,
         ]);
+
+        return $this->moduleRepository->getModule($moduleName);
     }
 }

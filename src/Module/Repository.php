@@ -176,7 +176,11 @@ class Repository implements RepositoryInterface
     {
         $this->fetchAll();
 
-        return $this->cache[$name] ?? null;
+        $module = $this->cache[$name] ?? null;
+
+        $this->moduleBuilder->generateAddonsUrls($module);
+
+        return $module;
     }
 
     /**

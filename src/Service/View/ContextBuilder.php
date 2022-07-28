@@ -25,6 +25,7 @@ use Configuration;
 use Context;
 use Doctrine\Common\Cache\CacheProvider;
 use Language;
+use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Tab\Tab;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
@@ -41,14 +42,17 @@ class ContextBuilder
      * @var ContextAdapter
      */
     private $contextAdapter;
+
     /**
      * @var ModuleRepository
      */
     private $moduleRepository;
+
     /**
      * @var Router
      */
     private $router;
+
     /**
      * @var CacheProvider
      */
@@ -59,16 +63,23 @@ class ContextBuilder
      */
     private $shopId;
 
+    /**
+     * @var AdminAuthenticationProvider
+     */
+    private $adminAuthenticationProvider;
+
     public function __construct(
         ContextAdapter $contextAdapter,
         ModuleRepository $moduleRepository,
         Router $router,
-        CacheProvider $cacheProvider
+        CacheProvider $cacheProvider,
+        AdminAuthenticationProvider $adminAuthenticationProvider
     ) {
         $this->contextAdapter = $contextAdapter;
         $this->moduleRepository = $moduleRepository;
         $this->router = $router;
         $this->cacheProvider = $cacheProvider;
+        $this->adminAuthenticationProvider = $adminAuthenticationProvider;
 
         $this->shopId = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
     }
@@ -78,16 +89,18 @@ class ContextBuilder
         $context = $this->getContext();
         $language = $this->getLanguage();
 
+        $token = $this->adminAuthenticationProvider->getAdminToken();
+
         return [
             'currency' => $this->getCurrencyCode(),
-            'isoLang' => $language->getLanguageCode(),
-            'isoCode' => $language->getIsoCode(),
-            'shopVersion' => _PS_VERSION_,
-            'shopUrl' => $context->shop->getBaseURL(true, false),
-            'shopUuid' => $this->shopId,
+            'iso_lang' => $language->getLanguageCode(),
+            'iso_code' => $language->getIsoCode(),
+            'shop_version' => _PS_VERSION_,
+            'shop_url' => $context->shop->getBaseURL(true, false),
             // The token is constant string for now, it'll be replaced by the user's real token when security layer will be implemented
-            'token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
-            'prestaShopControllerClassName' => Tools::getValue('controller'),
+            'account_token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
+            'admin_token' => $token,
+            'prestaShop_controller_class_name' => Tools::getValue('controller'),
             'installed_modules' => $this->getInstalledModules(),
         ];
     }
@@ -97,16 +110,18 @@ class ContextBuilder
         $context = $this->getContext();
         $language = $this->getLanguage();
 
+        $token = $this->adminAuthenticationProvider->getAdminToken();
+
         return [
             'currency' => $this->getCurrencyCode(),
-            'isoLang' => $language->getLanguageCode(),
-            'isoCode' => $language->getIsoCode(),
-            'shopVersion' => _PS_VERSION_,
-            'shopUrl' => $context->shop->getBaseURL(true, false),
-            'shopUuid' => $this->shopId,
+            'iso_lang' => $language->getLanguageCode(),
+            'iso_code' => $language->getIsoCode(),
+            'shop_version' => _PS_VERSION_,
+            'shop_url' => $context->shop->getBaseURL(true, false),
             // The token is constant string for now, it'll be replaced by the user's real token when security layer will be implemented
-            'token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
-            'prestaShopControllerClassName' => $tab->getLegacyClassName(),
+            'account_token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
+            'admin_token' => $token,
+            'prestaShop_controller_class_name' => $tab->getLegacyClassName(),
             'installed_modules' => $this->getInstalledModules(),
         ];
     }
@@ -165,7 +180,7 @@ class ContextBuilder
 
             $module = new Module($moduleAttributes->all(), $moduleDiskAttributes->all(), $moduleDatabaseAttributes->all());
 
-            $moduleId = (int) $moduleDatabaseAttributes->get('id');
+            $moduleId = (int) $moduleAttributes->get('id');
             $moduleName = $module->get('name');
             $moduleStatus = $module->getStatus();
             $moduleVersion = $module->get('version');
@@ -187,6 +202,6 @@ class ContextBuilder
 
     private function getCacheKey(): string
     {
-        return sprintf('installed_modules_%s', $this->shopId);
+        return sprintf('mbo_installed_modules_list_%s', $this->shopId);
     }
 }

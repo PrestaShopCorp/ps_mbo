@@ -16,20 +16,28 @@ class apiPsMboController extends AbstractAdminApiController
     {
         try {
             $transition = Tools::getValue('action');
-            $module = Tools::getValue('module');
+            $moduleName = Tools::getValue('module');
             $source = Tools::getValue('source', null);
 
-            if (empty($transition) || empty($module)) {
+            if (empty($transition) || empty($moduleName)) {
                 throw new QueryParamsException('You need transition and module parameters');
             }
-            $command = new ModuleStatusTransitionCommand($transition, $module, $source);
-            $this->module->get('mbo.modules.state_machine.module_status_transition_handler')->handle($command);
+            $command = new ModuleStatusTransitionCommand($transition, $moduleName, $source);
+            /**
+             * @var \PrestaShop\Module\Mbo\Module\Module $module
+             */
+            $module = $this->module->get('mbo.modules.state_machine.module_status_transition_handler')->handle($command);
         } catch (\Exception $exception) {
             $this->exitWithExceptionMessage($exception);
         }
 
+        $moduleUrls = $module->get('urls');
+
         $this->exitWithResponse([
             'message' => $this->trans('Transition successfully executed'),
+            'module_status' => $module->getStatus(),
+            'version' => $module->get('version'),
+            'config_url' => (bool) $module->get('is_configurable') && isset($moduleUrls['configure']) ? $moduleUrls['configure'] : null,
         ]);
     }
 }

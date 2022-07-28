@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    public: true
+
+  # Distribution API Client
+  mbo.cdc.client.distribution_api:
+    class: PrestaShop\Module\Mbo\Distribution\Client
+    arguments:
+      - "@mbo.distribution_api.client.http"
+    calls:
+      - method: setDefaultParams

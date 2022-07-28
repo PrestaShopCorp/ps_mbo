@@ -30,9 +30,9 @@ if (file_exists($autoloadPath)) {
 use Dotenv\Dotenv;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
+use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -41,6 +41,8 @@ class ps_mbo extends Module
 {
     use PrestaShop\Module\Mbo\Traits\HaveTabs;
     use PrestaShop\Module\Mbo\Traits\UseHooks;
+
+    const DEFAULT_ENV = '';
 
     /**
      * @var string
@@ -62,6 +64,11 @@ class ps_mbo extends Module
      * @var ContainerInterface
      */
     protected $container;
+
+    /**
+     * @var \PrestaShop\Module\Mbo\DependencyInjection\ServiceContainer
+     */
+    private $serviceContainer;
 
     /**
      * @var PermissionCheckerInterface
@@ -115,7 +122,10 @@ class ps_mbo extends Module
             // Do come extra operations on modules' registration like modifying orders
             $this->installHooks();
 
-            $this->createApiUser();
+            $this->getAdminAuthenticationProvider()->clearCache();
+            $this->getAdminAuthenticationProvider()->createApiUser();
+
+            $this->registerShop();
 
             return true;
         }
@@ -133,7 +143,7 @@ class ps_mbo extends Module
         $result = true;
 
         // Values generated
-        $adminUuid = Uuid::uuid4();
+        $adminUuid = Uuid::uuid4()->toString();
         $this->configurationList['PS_MBO_SHOP_ADMIN_UUID'] = $adminUuid;
         $this->configurationList['PS_MBO_SHOP_ADMIN_MAIL'] = sprintf('mbo-%s@prestashop.com', $adminUuid);
 
@@ -163,7 +173,8 @@ class ps_mbo extends Module
             return false;
         }
 
-        $this->deleteApiUser();
+        $this->getAdminAuthenticationProvider()->deleteApiUser();
+        $this->getAdminAuthenticationProvider()->clearCache();
 
         foreach (array_keys($this->configurationList) as $name) {
             Configuration::deleteByName($name);
@@ -269,6 +280,24 @@ class ps_mbo extends Module
         return $this->container->get($serviceName);
     }
 
+    /**
+     * @param string $serviceName
+     *
+     * @return object|null
+     */
+    public function getService($serviceName)
+    {
+        if ($this->serviceContainer === null) {
+            $this->serviceContainer = new \PrestaShop\Module\Mbo\DependencyInjection\ServiceContainer(
+                $this->name . str_replace('.', '', $this->version),
+                $this->getLocalPath(),
+                $this->getModuleEnv()
+            );
+        }
+
+        return $this->serviceContainer->getService($serviceName);
+    }
+
     public function isUsingNewTranslationSystem(): bool
     {
         return true;
@@ -305,83 +334,44 @@ class ps_mbo extends Module
         }
     }
 
-    private function createApiUser(): Employee
-    {
-        $employee = $this->getApiUser();
-
-        if (null !== $employee) {
-            return $employee;
-        }
-
-        $employee = new Employee();
-        $employee->firstname = 'Prestashop';
-        $employee->lastname = 'Marketplace';
-        $employee->email = Configuration::get('PS_MBO_SHOP_ADMIN_MAIL');
-        $employee->id_lang = $this->context->language->id;
-        $employee->id_profile = _PS_ADMIN_PROFILE_;
-        $employee->active = true;
-        $employee->passwd = $this->get('prestashop.core.crypto.hashing')->hash(uniqid('', true));
-
-        if (!$employee->add()) {
-            throw new EmployeeException('Failed to add PsMBO API user');
-        }
-
-        return $employee;
-    }
-
-    private function getApiUser(): ?Employee
-    {
-        /**
-         * @var \Doctrine\DBAL\Connection $connection
-         */
-        $connection = $this->get('doctrine.dbal.default_connection');
-        //Get employee ID
-        $qb = $connection->createQueryBuilder();
-        $qb->select('e.id_employee')
-            ->from($this->container->getParameter('database_prefix') . 'employee', 'e')
-            ->andWhere('e.email = :email')
-            ->andWhere('e.active = :active')
-            ->setParameter('email', Configuration::get('PS_MBO_SHOP_ADMIN_MAIL'))
-            ->setParameter('active', true)
-            ->setMaxResults(1);
-
-        $employees = $qb->execute()->fetchAll();
-
-        if (empty($employees)) {
-            return null;
-        }
-
-        return new Employee((int) $employees[0]['id_employee']);
-    }
-
-    /**
-     * @throws PrestaShopException
-     */
-    private function deleteApiUser()
-    {
-        $employee = $this->getApiUser();
-
-        if (null !== $employee) {
-            $employee->delete();
-        }
-    }
-
-    /**
-     * @throws EmployeeException
-     */
-    public function ensureApiUserExistence(): Employee
-    {
-        $apiUser = $this->getApiUser();
-
-        if (null === $apiUser) {
-            $apiUser = $this->createApiUser();
-        }
-
-        return $apiUser;
-    }
-
     public function getAdminAuthenticationProvider(): AdminAuthenticationProvider
     {
-        return $this->get('PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider');
+        if (null === $this->container) {
+            $this->container = SymfonyContainer::getInstance();
+        }
+
+        return $this->container->has('PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider') ?
+                $this->get('PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider') :
+                new AdminAuthenticationProvider(
+                    $this->get('doctrine.dbal.default_connection'),
+                    $this->context,
+                    $this->get('prestashop.core.crypto.hashing'),
+                    $this->get('doctrine.cache.provider'),
+                    $this->container->getParameter('database_prefix')
+                );
+    }
+
+    private function registerShop()
+    {
+        try {
+            $token = $this->getAdminAuthenticationProvider()->getAdminToken();
+
+            /** @var Client $distributionApi */
+            $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
+
+            $distributionApi->registerShop($token);
+        } catch (Exception $exception) {
+            // What to do if the registration fails ??
+        }
+    }
+
+    private function getModuleEnvVar(): string
+    {
+        return strtoupper($this->name) . '_ENV';
+    }
+
+    private function getModuleEnv(?string $default = null): string
+    {
+        return getenv($this->getModuleEnvVar()) ?: $default ?: self::DEFAULT_ENV;
     }
 }

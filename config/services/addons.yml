@@ -2,15 +2,6 @@ services:
   _defaults:
     public: true
 
-  mbo.addons.data_prodiver:
-    class: PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider
-    arguments:
-      - "@prestashop.adapter.legacy.logger"
-      - "@translator"
-      - "@doctrine.orm.entity_manager"
-    calls:
-      - [ "setEmployeeId", ["@=service('prestashop.adapter.legacy.context').getContext().employee?service('prestashop.adapter.legacy.context').getContext().employee.id:0"]]
-
   mbo.addons.user:
     class: PrestaShop\Module\Mbo\Addons\User\AddonsUser
     arguments:

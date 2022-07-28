@@ -21,13 +21,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Api\Controller;
 
+use Configuration;
 use Exception;
 use ModuleAdminController;
 use PrestaShop\Module\Mbo\Api\Config\Config;
+use PrestaShop\Module\Mbo\Api\Exception\IncompleteSignatureParamsException;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
+use PrestaShop\Module\Mbo\Api\Exception\RetrieveNewKeyException;
+use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandler;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
+use PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker;
 use ps_mbo;
+use Tools;
 
 abstract class AbstractAdminApiController extends ModuleAdminController
 {
@@ -53,16 +59,35 @@ abstract class AbstractAdminApiController extends ModuleAdminController
      */
     public $errorHandler;
 
+    /**
+     * @var AuthorizationChecker
+     */
+    private $authorizationChecker;
+
     public function __construct()
     {
         parent::__construct();
 
         $this->errorHandler = $this->module->get(ErrorHandler::class);
         $this->adminAuthenticationProvider = $this->module->get(AdminAuthenticationProvider::class);
+        $this->authorizationChecker = $this->module->get(AuthorizationChecker::class);
     }
 
     public function init(): void
     {
+        try {
+            $this->authorize();
+        } catch (IncompleteSignatureParamsException $exception) {
+            $this->errorHandler->handle($exception);
+            $this->exitWithExceptionMessage($exception);
+        } catch (UnauthorizedException $exception) {
+            $this->errorHandler->handle($exception);
+            $this->exitWithExceptionMessage($exception);
+        } catch (RetrieveNewKeyException $exception) {
+            $this->errorHandler->handle($exception);
+            $this->exitWithExceptionMessage($exception);
+        }
+
         parent::init();
 
         $this->adminAuthenticationProvider->extendTokenValidity();
@@ -72,17 +97,25 @@ abstract class AbstractAdminApiController extends ModuleAdminController
     {
         $httpCode = isset($response['httpCode']) ? (int) $response['httpCode'] : 200;
 
+        $shopUuid = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
+
+        $response['shop_uuid'] = $shopUuid;
+
         $this->dieWithResponse($response, $httpCode);
     }
 
     protected function exitWithExceptionMessage(Exception $exception): void
     {
-        $this->errorHandler->handle($exception);
-
         $code = $exception->getCode() == 0 ? 500 : $exception->getCode();
 
         if ($exception instanceof QueryParamsException) {
             $code = Config::INVALID_URL_QUERY;
+        } elseif ($exception instanceof IncompleteSignatureParamsException) {
+            $code = Config::INCOMPLETE_SIGNATURE_ERROR_CODE;
+        } elseif ($exception instanceof UnauthorizedException) {
+            $code = Config::UNAUTHORIZED_ERROR_CODE;
+        } elseif ($exception instanceof RetrieveNewKeyException) {
+            $code = Config::RETRIEVE_NEW_KEY_ERROR_CODE;
         }
 
         $response = [
@@ -114,5 +147,40 @@ abstract class AbstractAdminApiController extends ModuleAdminController
         echo json_encode($response, JSON_UNESCAPED_SLASHES);
 
         exit;
+    }
+
+    /**
+     * @throws IncompleteSignatureParamsException
+     * @throws RetrieveNewKeyException
+     * @throws UnauthorizedException
+     */
+    private function authorize()
+    {
+        $keyVersion = \Tools::getValue('version');
+        $signature = isset($_SERVER['HTTP_MBO_SIGNATURE']) ? $_SERVER['HTTP_MBO_SIGNATURE'] : false;
+
+        // Payload elements
+        $action = Tools::getValue('action');
+        $module = Tools::getValue('module');
+        $actionUuid = Tools::getValue('action_uuid');
+
+        if (
+            !$keyVersion ||
+            !$signature ||
+            !$action ||
+            !$module ||
+            !$actionUuid
+        ) {
+            throw new IncompleteSignatureParamsException('Expected signature elements are not given');
+        }
+
+        $message = json_encode([
+            'action' => $action,
+            'module' => $module,
+            'action_uuid' => $actionUuid,
+            'version' => $keyVersion,
+        ]);
+
+        $this->authorizationChecker->verify($keyVersion, $signature, $message);
     }
 }
