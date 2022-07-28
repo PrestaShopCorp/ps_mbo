@@ -376,9 +376,9 @@ class ps_mbo extends Module
             if (file_exists($registrationLockFile)) {
                 unlink($registrationLockFile);
             }
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             // Create the lock file
-            if (! file_exists($registrationLockFile)) {
+            if (!file_exists($registrationLockFile)) {
                 $f = fopen($registrationLockFile, 'w+');
                 fclose($f);
             }
