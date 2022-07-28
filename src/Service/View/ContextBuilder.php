@@ -86,44 +86,20 @@ class ContextBuilder
 
     public function getViewContext(): array
     {
-        $context = $this->getContext();
-        $language = $this->getLanguage();
+        $context = $this->getCommonContextContent();
 
-        $token = $this->adminAuthenticationProvider->getAdminToken();
+        $context['prestaShop_controller_class_name'] = Tools::getValue('controller');
 
-        return [
-            'currency' => $this->getCurrencyCode(),
-            'iso_lang' => $language->getLanguageCode(),
-            'iso_code' => $language->getIsoCode(),
-            'shop_version' => _PS_VERSION_,
-            'shop_url' => $context->shop->getBaseURL(true, false),
-            // The token is constant string for now, it'll be replaced by the user's real token when security layer will be implemented
-            'account_token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
-            'admin_token' => $token,
-            'prestaShop_controller_class_name' => Tools::getValue('controller'),
-            'installed_modules' => $this->getInstalledModules(),
-        ];
+        return $context;
     }
 
     public function getRecommendedModulesContext(Tab $tab): array
     {
-        $context = $this->getContext();
-        $language = $this->getLanguage();
+        $context = $this->getCommonContextContent();
 
-        $token = $this->adminAuthenticationProvider->getAdminToken();
+        $context['prestaShop_controller_class_name'] = $tab->getLegacyClassName();
 
-        return [
-            'currency' => $this->getCurrencyCode(),
-            'iso_lang' => $language->getLanguageCode(),
-            'iso_code' => $language->getIsoCode(),
-            'shop_version' => _PS_VERSION_,
-            'shop_url' => $context->shop->getBaseURL(true, false),
-            // The token is constant string for now, it'll be replaced by the user's real token when security layer will be implemented
-            'account_token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
-            'admin_token' => $token,
-            'prestaShop_controller_class_name' => $tab->getLegacyClassName(),
-            'installed_modules' => $this->getInstalledModules(),
-        ];
+        return $context;
     }
 
     public function clearCache(): bool
@@ -137,6 +113,27 @@ class ContextBuilder
         }
 
         return true;
+    }
+
+    private function getCommonContextContent(): array
+    {
+        $context = $this->getContext();
+        $language = $this->getLanguage();
+
+        $token = $this->adminAuthenticationProvider->getAdminToken();
+
+        return [
+            'currency' => $this->getCurrencyCode(),
+            'iso_lang' => $language->getLanguageCode(),
+            'iso_code' => $language->getIsoCode(),
+            'shop_version' => _PS_VERSION_,
+            'shop_url' => $context->shop->getBaseURL(true, false),
+            'shop_uuid' => $this->shopId,
+            // The token is constant string for now, it'll be replaced by the user's real token when security layer will be implemented
+            'account_token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
+            'admin_token' => $token,
+            'installed_modules' => $this->getInstalledModules(),
+        ];
     }
 
     private function getContext(): Context
