@@ -86,6 +86,8 @@ trait UseActionAdminControllerSetMedia
             Tools::getValue('controller') === 'AdminModulesManage'
         ) {
             $this->context->controller->addJs($this->getPathUri() . 'views/js/catalog-see-more.js?v=' . $this->version);
+            $this->context->controller->addJs('/js/jquery/plugins/growl/jquery.growl.js?v=' . $this->version);
+            $this->context->controller->addCSS('/js/jquery/plugins/growl/jquery.growl.css');
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css');
         }
         if ($this->isAdminLegacyContext()) {

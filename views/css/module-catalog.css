@@ -20,6 +20,7 @@
 .module-read-more-grid {
   display: inline-block;
 }
+
 .module-read-more-grid .module-read-more-grid-btn {
   font-weight: 700;
 }
@@ -34,4 +35,28 @@
   white-space: pre-wrap;
   word-wrap: break-word;
   max-width: 100%;
+}
+
+.growl.growl-error {
+  color: #fff;
+  background-color: rgba(224, 143, 149, 0.8);
+  border: 0;
+}
+
+.growl.growl-notice {
+  color: #fff;
+  background-color: rgba(114, 194, 121, 0.8);
+  border: 0;
+}
+
+.growl.growl-warning {
+  color: #fff;
+  background-color: rgba(251, 187, 34, 0.8);
+  border: 0;
+}
+
+.growl.growl-default {
+  color: #fff;
+  background: #808080;
+  border: 0;
 }
