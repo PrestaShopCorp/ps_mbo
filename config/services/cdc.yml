@@ -9,11 +9,4 @@ services:
       - '@prestashop.core.admin.module.repository'
       - '@router'
       - '@doctrine.cache.provider'
-
-  # Nest API Client
-  mbo.cdc.client.nest_api:
-    class: PrestaShop\Module\Mbo\Api\Client\NestApiClient
-    arguments:
-      - "@mbo.nest_api.client.http"
-    calls:
-      - method: setDefaultParams
+      - '@PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider'

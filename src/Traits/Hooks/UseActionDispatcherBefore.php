@@ -24,7 +24,6 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 use Cache;
 use Context;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
-use Tab;
 use Tools;
 
 trait UseActionDispatcherBefore
@@ -41,7 +40,7 @@ trait UseActionDispatcherBefore
             \Dispatcher::FC_ADMIN == (int) $params['controller_type'] ||
             Tools::getValue('controller') === 'apiPsMbo'
         ) {
-            $apiUser = $this->ensureApiUserExistence();
+            $apiUser = $this->getAdminAuthenticationProvider()->ensureApiUserExistence();
         }
 
         if (Tools::getValue('controller') !== 'apiPsMbo') {
@@ -49,8 +48,6 @@ trait UseActionDispatcherBefore
         }
 
         if (!$apiUser->isLoggedBack()) { // Log the user
-            $idTab = Tab::getIdFromClassName('apiPsMbo');
-            $token = Tools::getAdminToken('apiPsMbo' . (int) $idTab . (int) $apiUser->id);
             $cookie = $this->getAdminAuthenticationProvider()->apiUserLogin($apiUser);
 
             Cache::clean('isLoggedBack' . $apiUser->id);

@@ -24,10 +24,9 @@ namespace PrestaShop\Module\Mbo\Api\Security;
 use Configuration;
 use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Exception\GuzzleException;
-use PrestaShop\Module\Mbo\Api\Client\NestApiClient;
-use PrestaShop\Module\Mbo\Api\Exception\IncompleteSignatureParamsException;
 use PrestaShop\Module\Mbo\Api\Exception\RetrieveNewKeyException;
 use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
+use PrestaShop\Module\Mbo\Distribution\Client;
 
 class AuthorizationChecker
 {
@@ -37,9 +36,9 @@ class AuthorizationChecker
     private $cacheProvider;
 
     /**
-     * @var NestApiClient
+     * @var Client
      */
-    private $nestApiClient;
+    private $distributionClient;
 
     /**
      * @var string
@@ -51,31 +50,18 @@ class AuthorizationChecker
      */
     private $keyCacheIndex;
 
-    public function __construct(CacheProvider $cacheProvider, NestApiClient $nestApiClient)
+    public function __construct(CacheProvider $cacheProvider, Client $distributionClient)
     {
         $this->cacheProvider = $cacheProvider;
-        $this->nestApiClient = $nestApiClient;
+        $this->distributionClient = $distributionClient;
 
         $shopUuid = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
         $this->keyVersionCacheIndex = 'api_key_version_' . $shopUuid;
         $this->keyCacheIndex = 'api_key_' . $shopUuid;
     }
 
-    public function verify(string $key, string $message)
+    public function verify(string $keyVersion, string $signature, string $message)
     {
-        $key = json_decode($key, true);
-        $message = json_decode($message, true);
-
-        if (
-            !is_array($key) ||
-            !isset($key['version']) ||
-            !is_array($message) ||
-            !isset($message['message']) ||
-            !isset($message['sign'])
-        ) {
-            throw new IncompleteSignatureParamsException('Expected signature elements are not given');
-        }
-
         $storedKeyVersion = null;
         if ($this->cacheProvider->contains($this->keyVersionCacheIndex)) {
             $storedKeyVersion = $this->cacheProvider->fetch($this->keyVersionCacheIndex);
@@ -83,7 +69,7 @@ class AuthorizationChecker
 
         if (
             null === $storedKeyVersion ||
-            $storedKeyVersion !== $key['version']
+            $storedKeyVersion !== $keyVersion
         ) {
             // Ask for a new key and store keyVersion and Key
             $this->retrieveNewKey();
@@ -91,7 +77,7 @@ class AuthorizationChecker
 
         $key = $this->cacheProvider->fetch($this->keyCacheIndex);
 
-        $verified = openssl_verify($message['message'], base64_decode($message['sign']), $key, OPENSSL_ALGO_SHA256);
+        $verified = openssl_verify($message, base64_decode($signature), $key, OPENSSL_ALGO_SHA256);
 
         if (1 !== $verified) {
             throw new UnauthorizedException('Caller authorization failed');
@@ -104,7 +90,7 @@ class AuthorizationChecker
     private function retrieveNewKey()
     {
         try {
-            $response = $this->nestApiClient->retrieveNewKey();
+            $response = $this->distributionClient->retrieveNewKey();
 
             $key = $response->key;
             $keyVersion = $response->version;

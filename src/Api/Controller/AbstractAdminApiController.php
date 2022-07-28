@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Api\Controller;
 
+use Configuration;
 use Exception;
 use ModuleAdminController;
 use PrestaShop\Module\Mbo\Api\Config\Config;
@@ -32,6 +33,7 @@ use PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandler;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker;
 use ps_mbo;
+use Tools;
 
 abstract class AbstractAdminApiController extends ModuleAdminController
 {
@@ -95,6 +97,10 @@ abstract class AbstractAdminApiController extends ModuleAdminController
     {
         $httpCode = isset($response['httpCode']) ? (int) $response['httpCode'] : 200;
 
+        $shopUuid = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
+
+        $response['shop_uuid'] = $shopUuid;
+
         $this->dieWithResponse($response, $httpCode);
     }
 
@@ -150,13 +156,31 @@ abstract class AbstractAdminApiController extends ModuleAdminController
      */
     private function authorize()
     {
-        $key = \Tools::getValue('key');
-        $message = \Tools::getValue('message');
+        $keyVersion = \Tools::getValue('version');
+        $signature = isset($_SERVER['HTTP_MBO_SIGNATURE']) ? $_SERVER['HTTP_MBO_SIGNATURE'] : false;
 
-        if (!$key || !$message) {
+        // Payload elements
+        $action = Tools::getValue('action');
+        $module = Tools::getValue('module');
+        $actionUuid = Tools::getValue('action_uuid');
+
+        if (
+            !$keyVersion ||
+            !$signature ||
+            !$action ||
+            !$module ||
+            !$actionUuid
+        ) {
             throw new IncompleteSignatureParamsException('Expected signature elements are not given');
         }
 
-        $this->authorizationChecker->verify($key, $message);
+        $message = json_encode([
+            'action' => $action,
+            'module' => $module,
+            'action_uuid' => $actionUuid,
+            'version' => $keyVersion,
+        ]);
+
+        $this->authorizationChecker->verify($keyVersion, $signature, $message);
     }
 }

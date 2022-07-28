@@ -21,13 +21,20 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Api\Security;
 
+use Configuration;
+use Context;
 use Cookie;
 use DateTime;
+use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\DBAL\Connection;
 use Employee;
 use EmployeeSession;
 use LogicException;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopException;
+use Tab;
 use Tools;
 
 class AdminAuthenticationProvider
@@ -41,13 +48,113 @@ class AdminAuthenticationProvider
      * @var string
      */
     private $dbPrefix;
+    /**
+     * @var Context
+     */
+    private $context;
+    /**
+     * @var Hashing
+     */
+    private $hashing;
+    /**
+     * @var CacheProvider
+     */
+    private $cacheProvider;
+
+    /**
+     * @var string
+     */
+    private $shopId;
 
     public function __construct(
         Connection $connection,
+        Context $context,
+        Hashing $hashing,
+        CacheProvider $cacheProvider,
         string $dbPrefix
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->context = $context;
+        $this->hashing = $hashing;
+        $this->cacheProvider = $cacheProvider;
+
+        $this->shopId = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
+    }
+
+    public function createApiUser(): Employee
+    {
+        $employee = $this->getApiUser();
+
+        if (null !== $employee) {
+            return $employee;
+        }
+
+        $employee = new Employee();
+        $employee->firstname = 'Prestashop';
+        $employee->lastname = 'Marketplace';
+        $employee->email = Configuration::get('PS_MBO_SHOP_ADMIN_MAIL');
+        $employee->id_lang = $this->context->language->id;
+        $employee->id_profile = _PS_ADMIN_PROFILE_;
+        $employee->active = true;
+        $employee->passwd = $this->hashing->hash(uniqid('', true));
+
+        if (!$employee->add()) {
+            throw new EmployeeException('Failed to add PsMBO API user');
+        }
+
+        return $employee;
+    }
+
+    public function getApiUser(): ?Employee
+    {
+        /**
+         * @var \Doctrine\DBAL\Connection $connection
+         */
+        $connection = $this->connection;
+        //Get employee ID
+        $qb = $connection->createQueryBuilder();
+        $qb->select('e.id_employee')
+            ->from($this->dbPrefix . 'employee', 'e')
+            ->andWhere('e.email = :email')
+            ->andWhere('e.active = :active')
+            ->setParameter('email', Configuration::get('PS_MBO_SHOP_ADMIN_MAIL'))
+            ->setParameter('active', true)
+            ->setMaxResults(1);
+
+        $employees = $qb->execute()->fetchAll();
+
+        if (empty($employees)) {
+            return null;
+        }
+
+        return new Employee((int) $employees[0]['id_employee']);
+    }
+
+    /**
+     * @throws PrestaShopException
+     */
+    public function deleteApiUser()
+    {
+        $employee = $this->getApiUser();
+
+        if (null !== $employee) {
+            $employee->delete();
+        }
+    }
+
+    /**
+     * @throws EmployeeException
+     */
+    public function ensureApiUserExistence(): Employee
+    {
+        $apiUser = $this->getApiUser();
+
+        if (null === $apiUser) {
+            $apiUser = $this->createApiUser();
+        }
+
+        return $apiUser;
     }
 
     /**
@@ -76,6 +183,24 @@ class AdminAuthenticationProvider
         return $cookie;
     }
 
+    public function getAdminToken(): string
+    {
+        $cacheKey = $this->getCacheKey();
+
+        if ($this->cacheProvider->contains($cacheKey)) {
+            return $this->cacheProvider->fetch($cacheKey);
+        }
+
+        $apiUser = $this->ensureApiUserExistence();
+        $idTab = Tab::getIdFromClassName('apiPsMbo');
+
+        $token = Tools::getAdminToken('apiPsMbo' . (int) $idTab . (int) $apiUser->id);
+
+        $this->cacheProvider->save($cacheKey, $token, 0); // Lifetime infinite, will be purged when MBO is uninstalled
+
+        return $this->cacheProvider->fetch($cacheKey);
+    }
+
     public function extendTokenValidity(): void
     {
         try {
@@ -94,5 +219,23 @@ class AdminAuthenticationProvider
             // Exception will remain silent because the call cannot be blocked when this task does not go well.
             // Maybe add a log here
         }
+    }
+
+    public function clearCache(): bool
+    {
+        $cacheKey = $this->getCacheKey();
+
+        if ($this->cacheProvider->contains($cacheKey)) {
+            if (!$this->cacheProvider->delete($cacheKey)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function getCacheKey(): string
+    {
+        return sprintf('mbo_admin_token_%s', $this->shopId);
     }
 }

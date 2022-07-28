@@ -11,11 +11,11 @@ services:
         CURLOPT_FRESH_CONNECT: true
 
 
-  mbo.nest_api.client.http:
+  mbo.distribution_api.client.http:
     class: GuzzleHttp\Client
     arguments:
       $config:
-        base_uri: "%env(NEST_API_URL)%"
+        base_uri: "%env(DISTRIBUTION_API_URL)%"
         timeout: "7200"
         headers:
           Accept: "application/json"
