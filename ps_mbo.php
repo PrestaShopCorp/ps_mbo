@@ -104,7 +104,7 @@ class ps_mbo extends Module
         parent::__construct();
 
         $this->imgPath = $this->_path . 'views/img/';
-        $this->moduleCacheDir = rtrim($this->getLocalPath(), '/') . '/var/cache/';
+        $this->moduleCacheDir = sprintf('%s/var/modules/%s/', rtrim(_PS_ROOT_DIR_, '/'), $this->name);
 
         $this->displayName = $this->trans('PrestaShop Marketplace in your Back Office', [], 'Modules.Mbo.Global');
         $this->description = $this->trans('Browse the Addons marketplace directly from your back office to better meet your needs.', [], 'Modules.Mbo.Global');
@@ -379,6 +379,9 @@ class ps_mbo extends Module
         } catch (Exception $exception) {
             // Create the lock file
             if (!file_exists($registrationLockFile)) {
+                if (!is_dir($this->moduleCacheDir)) {
+                    mkdir($this->moduleCacheDir);
+                }
                 $f = fopen($registrationLockFile, 'w+');
                 fclose($f);
             }
