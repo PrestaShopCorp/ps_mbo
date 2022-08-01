@@ -56,7 +56,7 @@ class Client
         'format',
         'method',
         'action',
-        'shop_id',
+        'shop_uuid',
         'shop_url',
     ];
 
