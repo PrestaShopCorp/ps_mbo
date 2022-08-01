@@ -120,7 +120,13 @@ class ContextBuilder
         $context = $this->getContext();
         $language = $this->getLanguage();
 
-        $token = $this->adminAuthenticationProvider->getAdminToken();
+//        $token = $this->adminAuthenticationProvider->getAdminToken();
+
+        $token = Tools::getValue('_token');
+
+        if (false === $token) {
+            $token = Tools::getValue('token');
+        }
 
         return [
             'currency' => $this->getCurrencyCode(),
@@ -131,7 +137,7 @@ class ContextBuilder
             'shop_uuid' => $this->shopId,
             // The token is constant string for now, it'll be replaced by the user's real token when security layer will be implemented
             'account_token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
-            'admin_token' => $token,
+            'user_id' => $context->cookie->id_employee,
             'installed_modules' => $this->getInstalledModules(),
         ];
     }

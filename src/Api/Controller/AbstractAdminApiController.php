@@ -162,6 +162,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
         // Payload elements
         $action = Tools::getValue('action');
         $module = Tools::getValue('module');
+        $userId = Tools::getValue('user_id');
         $actionUuid = Tools::getValue('action_uuid');
 
         if (
@@ -169,6 +170,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
             !$signature ||
             !$action ||
             !$module ||
+            !$userId ||
             !$actionUuid
         ) {
             throw new IncompleteSignatureParamsException('Expected signature elements are not given');
@@ -177,6 +179,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
         $message = json_encode([
             'action' => $action,
             'module' => $module,
+            'user_id' => $userId,
             'action_uuid' => $actionUuid,
             'version' => $keyVersion,
         ]);
