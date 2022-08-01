@@ -45,13 +45,13 @@ class apiPsMboController extends AbstractAdminApiController
 
     private function generateTokenizedModuleActionUrl($url)
     {
-        $userId = (int) Tools::getValue('user_id');
+        $adminToken = (int) Tools::getValue('admin_token');
 
-        $user = new Employee($userId);
-
-        $newToken = $this->get('security.csrf.token_manager')
-            ->getToken($user->email)
-            ->getValue();
+//        $user = new Employee($userId);
+//
+//        $newToken = $this->get('security.csrf.token_manager')
+//            ->getToken($user->email)
+//            ->getValue();
 
 //        $token = Tools::getAdminToken('AdminModules' . (int) Tab::getIdFromClassName('AdminModules') . (int) $userId);
 
@@ -64,7 +64,7 @@ class apiPsMboController extends AbstractAdminApiController
             parse_str($query, $queryParams);
         }
 
-        $queryParams['_token'] = $newToken;
+        $queryParams['_token'] = $adminToken;
 
         $url = $baseUrl . '?' . http_build_query($queryParams, '', '&');
         if (isset($components['fragment']) && $components['fragment'] !== '') {
