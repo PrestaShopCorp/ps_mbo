@@ -202,7 +202,7 @@ class Client
         $options['query'] = $this->queryParameters;
 
         return (string) $this->httpClient
-            ->request($method, $uri, $options)
+            ->request($method, '/api/' . ltrim($uri, '/'), $options)
             ->getBody();
     }
 }
