@@ -14,6 +14,7 @@ class apiPsMboController extends AbstractAdminApiController
      */
     public function postProcess()
     {
+        $module = null;
         try {
             $transition = Tools::getValue('action');
             $moduleName = Tools::getValue('module');
@@ -54,7 +55,7 @@ class apiPsMboController extends AbstractAdminApiController
             parse_str($query, $queryParams);
         }
 
-        if(!isset($queryParams['_token'])) {
+        if (!isset($queryParams['_token'])) {
             return $url;
         }
 
