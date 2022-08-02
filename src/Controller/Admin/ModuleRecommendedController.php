@@ -87,7 +87,7 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
             $tabClassName = $this->requestStack->getCurrentRequest()->get('tabClassName');
             $tab = $tabCollection->getTab($tabClassName);
             $context = $this->cdcContextBuilder->getRecommendedModulesContext($tab);
-            $context['recommendationFormat'] = $tab->shouldDisplayAfterContent() ? 'card' : 'modal';
+            $context['recommendation_format'] = $tab->shouldDisplayAfterContent() ? 'card' : 'modal';
             $response->setData([
                 'content' => $this->renderView(
                     '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
