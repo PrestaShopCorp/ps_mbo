@@ -8,18 +8,22 @@ class InstalledModule
      * @var int
      */
     private $id;
+
     /**
      * @var string
      */
     private $name;
+
     /**
      * @var string
      */
     private $status;
+
     /**
      * @var string
      */
     private $version;
+
     /**
      * @var string
      */

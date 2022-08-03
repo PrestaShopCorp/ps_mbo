@@ -24,9 +24,8 @@ class apiPsMboController extends AbstractAdminApiController
                 throw new QueryParamsException('You need transition and module parameters');
             }
             $command = new ModuleStatusTransitionCommand($transition, $moduleName, $source);
-            /**
-             * @var \PrestaShop\Module\Mbo\Module\Module $module
-             */
+
+            /** @var \PrestaShop\Module\Mbo\Module\Module $module */
             $module = $this->module->get('mbo.modules.state_machine.module_status_transition_handler')->handle($command);
         } catch (\Exception $exception) {
             $this->exitWithExceptionMessage($exception);
