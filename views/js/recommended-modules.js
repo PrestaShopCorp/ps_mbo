@@ -374,6 +374,11 @@ var mbo = {};
     };
 
     var openModulesList = function() {
+      var cdcContainer = $('#cdc-container')
+      if(cdcContainer.length > 0 && cdcContainer.html().length > 0) {
+        cdcContainer.html('')
+      }
+      $(pageMap.modulesListLoader).show();
       var recommendedModulesRequest = $.ajax({
         type: 'GET',
         dataType: 'json',
