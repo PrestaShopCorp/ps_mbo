@@ -30,6 +30,7 @@ var mbo = {};
     fancybox: '.fancybox-quick-view',
     contentContainer: '#content',
     modulesListModal: '#modules_list_container',
+    modulesListModalContainer: '#content',
     modulesListModalContent: '#modules_list_container_tab_modal',
     modulesListLoader: '#modules_list_loader',
   };
@@ -304,31 +305,33 @@ var mbo = {};
    */
   var RecommendedModulesModal = function(pageMap, config) {
     var $markup;
+    var loader = config.shouldUseLegacyTheme ?
+      '<div id="modules_list_loader" class="col-md-12 text-center"><img src="/img/loader.gif" /></div>'
+      :
+      '<div id="modules_list_loader" class="col-md-12 text-center">' +
+        '<button class="btn-primary-reverse onclick unbind spinner"></button>' +
+      '</div>';
 
-    if (!config.shouldUseLegacyTheme) {
-      $markup = $(
-        '<div id="modules_list_container" class="modal modal-vcenter fade" role="dialog">\n' +
-        '  <div class="modal-dialog">\n' +
-        '    <div class="modal-content">\n' +
-        '      <div class="modal-header">\n' +
-        '        <h4 class="modal-title module-modal-title">\n' +
-        '          ' + config.translations['Recommended Modules and Services'] + '\n' +
-        '        </h4>\n' +
-        '        <button type="button" class="close" data-dismiss="modal" aria-label="' + config.translations['Close'] + '">\n' +
-        '          <span aria-hidden="true">&times;</span>\n' +
-        '        </button>\n' +
-        '      </div>\n' +
-        '      <div class="modal-body row">\n' +
-        '        <div id="modules_list_container_tab_modal" class="col-md-12" style="display:none;"></div>\n' +
-        '        <div id="modules_list_loader" class="col-md-12 text-center">\n' +
-        '          <button class="btn-primary-reverse onclick unbind spinner"></button>\n' +
-        '        </div>\n' +
-        '      </div>\n' +
-        '    </div>\n' +
-        '  </div>\n' +
-        '</div>'
-      );
-    }
+    $markup = $(
+      '<div id="modules_list_container" class="modal modal-vcenter fade" role="dialog">\n' +
+      '  <div class="modal-dialog">\n' +
+      '    <div class="modal-content">\n' +
+      '      <div class="modal-header">\n' +
+      '        <h4 class="modal-title module-modal-title">\n' +
+      '          ' + config.translations['Recommended Modules and Services'] + '\n' +
+      '        </h4>\n' +
+      '        <button type="button" class="close" data-dismiss="modal" aria-label="' + config.translations['Close'] + '">\n' +
+      '          <span aria-hidden="true">&times;</span>\n' +
+      '        </button>\n' +
+      '      </div>\n' +
+      '      <div class="modal-body row">\n' +
+      '        <div id="modules_list_container_tab_modal" class="col-md-12" style="display:none;"></div>\n' +
+              loader +
+      '      </div>\n' +
+      '    </div>\n' +
+      '  </div>\n' +
+      '</div>'
+    );
 
     /**
      * Returns the button's markup
@@ -352,24 +355,9 @@ var mbo = {};
   var RecommendedModulesPopinHandler = function(pageMap, config) {
 
     var initPopin = function() {
-      if (config.shouldUseLegacyTheme) {
-        $(pageMap.fancybox).fancybox({
-          type: 'ajax',
-          autoDimensions: false,
-          autoSize: false,
-          width: 600,
-          height: 'auto',
-          helpers: {
-            overlay: {
-              locked: false
-            }
-          }
-        });
-      } else {
-        if (!$(pageMap.modulesListModal).length) {
-          var modal = new RecommendedModulesModal(pageMap, config);
-          $(pageMap.modulesListModalContainer).append(modal.getMarkup().get(0).outerHTML);
-        }
+      if ($(pageMap.modulesListModal).length === 0) {
+        var modal = new RecommendedModulesModal(pageMap, config);
+        $(pageMap.modulesListModalContainer).append(modal.getMarkup().get(0).outerHTML);
       }
     };
 
