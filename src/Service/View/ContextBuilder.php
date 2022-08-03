@@ -25,7 +25,6 @@ use Configuration;
 use Context;
 use Doctrine\Common\Cache\CacheProvider;
 use Language;
-use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Tab\Tab;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
@@ -63,23 +62,16 @@ class ContextBuilder
      */
     private $shopId;
 
-    /**
-     * @var AdminAuthenticationProvider
-     */
-    private $adminAuthenticationProvider;
-
     public function __construct(
         ContextAdapter $contextAdapter,
         ModuleRepository $moduleRepository,
         Router $router,
-        CacheProvider $cacheProvider,
-        AdminAuthenticationProvider $adminAuthenticationProvider
+        CacheProvider $cacheProvider
     ) {
         $this->contextAdapter = $contextAdapter;
         $this->moduleRepository = $moduleRepository;
         $this->router = $router;
         $this->cacheProvider = $cacheProvider;
-        $this->adminAuthenticationProvider = $adminAuthenticationProvider;
 
         $this->shopId = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
     }
@@ -119,8 +111,6 @@ class ContextBuilder
     {
         $context = $this->getContext();
         $language = $this->getLanguage();
-
-//        $token = $this->adminAuthenticationProvider->getAdminToken();
 
         $token = Tools::getValue('_token');
 
