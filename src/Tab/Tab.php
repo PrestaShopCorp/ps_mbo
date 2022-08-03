@@ -30,12 +30,10 @@ class Tab implements TabInterface
      * @var string class name of the tab
      */
     protected $legacyClassName;
-
     /**
      * @var string class name of the tab
      */
     protected $displayMode;
-
     /**
      * @var RecommendedModuleCollectionInterface recommended modules of the tab
      */
@@ -154,6 +152,7 @@ class Tab implements TabInterface
     public function shouldDisplayAfterContent(): bool
     {
         return $this->hasRecommendedModules()
-            && TabInterface::DISPLAY_MODE_AFTER_CONTENT === $this->getDisplayMode();
+            && (TabInterface::DISPLAY_MODE_AFTER_CONTENT === $this->getDisplayMode()
+                || $this->legacyClassName === 'AdminCarriers');
     }
 }

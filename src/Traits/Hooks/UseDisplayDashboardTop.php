@@ -180,7 +180,11 @@ trait UseDisplayDashboardTop
      */
     protected function displayRecommendedModules(string $controllerName): string
     {
-        if (!in_array($controllerName, static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON)) {
+        if (
+            !in_array($controllerName, static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON)
+            &&
+            !in_array($controllerName, static::$TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT)
+        ) {
             return '';
         }
 
@@ -220,7 +224,7 @@ trait UseDisplayDashboardTop
      */
     protected function shouldAttachRecommendedModules(string $type): bool
     {
-        $method = 'shouldDisplay' . (new UnicodeString($type))->camel();
+        $method = 'shouldDisplay' . ucfirst((new UnicodeString($type))->camel()->toString());
         if ($type === static::$RECOMMENDED_BUTTON_TYPE) {
             $modules = static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON;
         } elseif ($type === static::$RECOMMENDED_AFTER_CONTENT_TYPE) {
