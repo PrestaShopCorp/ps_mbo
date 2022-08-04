@@ -158,7 +158,7 @@ class Tab implements TabInterface
     /**
      * {@inheritdoc}
      */
-    public static function maydDisplayRecommendedModules(string $controllerName): bool
+    public static function mayDisplayRecommendedModules(string $controllerName): bool
     {
         return in_array($controllerName, static::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT)
             || in_array($controllerName, static::TABS_WITH_RECOMMENDED_MODULES_BUTTON);

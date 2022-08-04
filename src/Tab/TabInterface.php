@@ -143,5 +143,5 @@ interface TabInterface
      *
      * @return bool
      */
-    public static function maydDisplayRecommendedModules(string $controllerName): bool;
+    public static function mayDisplayRecommendedModules(string $controllerName): bool;
 }

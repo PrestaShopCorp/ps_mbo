@@ -102,7 +102,7 @@ trait UseActionAdminControllerSetMedia
     {
         $controllerName = Tools::getValue('controller');
 
-        if (!Tab::maydDisplayRecommendedModules($controllerName)) {
+        if (!Tab::mayDisplayRecommendedModules($controllerName)) {
             return;
         }
 
