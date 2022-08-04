@@ -101,7 +101,11 @@ trait UseActionAdminControllerSetMedia
     {
         $controllerName = Tools::getValue('controller');
 
-        if (!in_array($controllerName, static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON)) {
+        if (
+            !in_array($controllerName, static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON)
+            &&
+            !in_array($controllerName, static::$TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT)
+        ) {
             return;
         }
 
