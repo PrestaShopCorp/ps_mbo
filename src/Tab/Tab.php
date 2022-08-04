@@ -143,7 +143,8 @@ class Tab implements TabInterface
     public function shouldDisplayButton(): bool
     {
         return $this->hasRecommendedModules()
-            && TabInterface::DISPLAY_MODE_MODAL === $this->getDisplayMode();
+            && TabInterface::DISPLAY_MODE_MODAL === $this->getDisplayMode()
+            && $this->legacyClassName !== 'AdminCarriers';
     }
 
     /**

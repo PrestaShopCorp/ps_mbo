@@ -68,7 +68,6 @@ trait UseDisplayDashboardTop
         'AdminPayment',
         'AdminCarriers',
     ];
-
     /**
      * The controller of configuration page
      *
@@ -84,7 +83,6 @@ trait UseDisplayDashboardTop
         'contactform',
         'blockreassurance',
     ];
-
     /**
      * The hook is sometimes called multiple times in the same execution because it's called directly in tpl files & in
      * some configurations, multiple files can call/extend those.
@@ -207,7 +205,8 @@ trait UseDisplayDashboardTop
             'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModules(static::$RECOMMENDED_AFTER_CONTENT_TYPE),
             'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModules(static::$RECOMMENDED_BUTTON_TYPE),
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
-            'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services', [], 'Modules.Mbo.Recommendedmodulesandservices'),
+            'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services', [],
+                'Modules.Mbo.Recommendedmodulesandservices'),
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
             'recommendedModulesUrl' => $recommendedModulesUrl,
         ]);
@@ -238,7 +237,11 @@ trait UseDisplayDashboardTop
             $tabCollectionProvider = $this->get('mbo.tab.collection.provider');
             if ($tabCollectionProvider->isTabCollectionCached()) {
                 return $tabCollectionProvider->getTabCollection()->getTab(Tools::getValue('controller'))->{$method}()
-                    || 'AdminCarriers' === Tools::getValue('controller');
+                    || (
+                        $type === static::$RECOMMENDED_AFTER_CONTENT_TYPE
+                        && 'AdminCarriers' === Tools::getValue('controller'
+                        )
+                    );
             }
         }
 
@@ -248,9 +251,9 @@ trait UseDisplayDashboardTop
     /**
      * Add JS and CSS file
      *
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
-     *
      * @return void
+     *
+     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
      */
     protected function loadMediaForDashboardTop(): void
     {
