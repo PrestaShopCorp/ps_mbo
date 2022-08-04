@@ -81,6 +81,11 @@ class ps_mbo extends Module
     public $imgPath;
 
     /**
+     * @var string
+     */
+    public $moduleCacheDir;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -99,12 +104,12 @@ class ps_mbo extends Module
         parent::__construct();
 
         $this->imgPath = $this->_path . 'views/img/';
+        $this->moduleCacheDir = sprintf('%s/var/modules/%s/', rtrim(_PS_ROOT_DIR_, '/'), $this->name);
 
         $this->displayName = $this->trans('PrestaShop Marketplace in your Back Office', [], 'Modules.Mbo.Global');
         $this->description = $this->trans('Browse the Addons marketplace directly from your back office to better meet your needs.', [], 'Modules.Mbo.Global');
 
         if ($this->active) {
-            //Boot hooks
             $this->bootHooks();
         }
 
@@ -175,6 +180,11 @@ class ps_mbo extends Module
 
         $this->getAdminAuthenticationProvider()->deleteApiUser();
         $this->getAdminAuthenticationProvider()->clearCache();
+
+        $registrationLockFile = $this->moduleCacheDir . 'registration.lock';
+        if (file_exists($registrationLockFile)) {
+            unlink($registrationLockFile);
+        }
 
         foreach (array_keys($this->configurationList) as $name) {
             Configuration::deleteByName($name);
@@ -353,6 +363,8 @@ class ps_mbo extends Module
 
     private function registerShop()
     {
+        $registrationLockFile = $this->moduleCacheDir . 'registration.lock';
+
         try {
             $token = $this->getAdminAuthenticationProvider()->getAdminToken();
 
@@ -360,8 +372,19 @@ class ps_mbo extends Module
             $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
 
             $distributionApi->registerShop($token);
+
+            if (file_exists($registrationLockFile)) {
+                unlink($registrationLockFile);
+            }
         } catch (Exception $exception) {
-            // What to do if the registration fails ??
+            // Create the lock file
+            if (!file_exists($registrationLockFile)) {
+                if (!is_dir($this->moduleCacheDir)) {
+                    mkdir($this->moduleCacheDir);
+                }
+                $f = fopen($registrationLockFile, 'w+');
+                fclose($f);
+            }
         }
     }
 

@@ -48,14 +48,17 @@ class AdminAuthenticationProvider
      * @var string
      */
     private $dbPrefix;
+
     /**
      * @var Context
      */
     private $context;
+
     /**
      * @var Hashing
      */
     private $hashing;
+
     /**
      * @var CacheProvider
      */

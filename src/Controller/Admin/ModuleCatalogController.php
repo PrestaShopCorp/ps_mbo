@@ -167,7 +167,9 @@ class ModuleCatalogController extends ModuleAbstractController
     {
         $module = $this->moduleRepository->getModuleById($moduleId);
 
-        $this->moduleBuilder->generateAddonsUrls($module);
+        if (null !== $module) {
+            $this->moduleBuilder->generateAddonsUrls($module);
+        }
 
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/modal-read-more-content.html.twig',

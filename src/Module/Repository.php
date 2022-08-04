@@ -178,7 +178,9 @@ class Repository implements RepositoryInterface
 
         $module = $this->cache[$name] ?? null;
 
-        $this->moduleBuilder->generateAddonsUrls($module);
+        if ($module) {
+            $this->moduleBuilder->generateAddonsUrls($module);
+        }
 
         return $module;
     }

@@ -56,7 +56,7 @@ class Client
         'format',
         'method',
         'action',
-        'shop_id',
+        'shop_uuid',
         'shop_url',
     ];
 
@@ -128,12 +128,6 @@ class Client
      */
     public function retrieveNewKey(): stdClass
     {
-//        $response = new \stdClass();
-//        $response->key = "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEKKSl1Bhf2I7YV/mZVtJk5WCnixcv\nGgef1D9623Rl0mJwme+fVAx7uE9GYfoiGKZlLM3Fsiozn/k7r/mp6BlshA==\n-----END PUBLIC KEY-----\n";
-//        $response->version = '4';
-//
-//        return $response;
-
         return $this->processRequestAndReturn('shops/get-pub-key', null, self::HTTP_METHOD_GET);
     }
 
@@ -202,7 +196,7 @@ class Client
         $options['query'] = $this->queryParameters;
 
         return (string) $this->httpClient
-            ->request($method, $uri, $options)
+            ->request($method, '/api/' . ltrim($uri, '/'), $options)
             ->getBody();
     }
 }
