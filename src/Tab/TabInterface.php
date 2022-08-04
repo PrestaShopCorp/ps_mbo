@@ -24,9 +24,46 @@ use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModuleCollectionInterface
 
 interface TabInterface
 {
-    const DISPLAY_MODE_MODAL = 'slider_list';
+    /**
+     * @var string
+     */
+    public const RECOMMENDED_BUTTON_TYPE = 'button';
 
-    const DISPLAY_MODE_AFTER_CONTENT = 'default_list';
+    /**
+     * @var string
+     */
+    public const RECOMMENDED_AFTER_CONTENT_TYPE = 'after_content';
+
+    /**
+     * @var string[]
+     */
+    public const TABS_WITH_RECOMMENDED_MODULES_BUTTON = [
+        'AdminOrders',
+        'AdminInvoices',
+        'AdminSlip',
+        'AdminDeliverySlip',
+        'AdminProducts',
+        'AdminFeatures',
+        'AdminManufacturers',
+        'AdminCartRules',
+        'AdminSpecificPriceRule',
+        'AdminCustomers',
+        'AdminCustomerThreads',
+        'AdminStats',
+        'AdminCmsContent',
+        'AdminImages',
+        'AdminShipping',
+        'AdminStatuses',
+    ];
+
+    /**
+     * @var string[]
+     */
+    public const TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT = [
+        'AdminMarketing',
+        'AdminPayment',
+        'AdminCarriers',
+    ];
 
     /**
      * Get the class name of the tab.
@@ -100,4 +137,11 @@ interface TabInterface
      * @return bool
      */
     public function shouldDisplayAfterContent(): bool;
+
+    /**
+     * @param string $controllerName
+     *
+     * @return bool
+     */
+    public static function mayDisplayRecommendedModules(string $controllerName): bool;
 }

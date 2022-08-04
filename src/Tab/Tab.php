@@ -143,7 +143,7 @@ class Tab implements TabInterface
     public function shouldDisplayButton(): bool
     {
         return $this->hasRecommendedModules()
-            && TabInterface::DISPLAY_MODE_MODAL === $this->getDisplayMode();
+            && in_array($this->legacyClassName, static::TABS_WITH_RECOMMENDED_MODULES_BUTTON);
     }
 
     /**
@@ -152,7 +152,15 @@ class Tab implements TabInterface
     public function shouldDisplayAfterContent(): bool
     {
         return $this->hasRecommendedModules()
-            && (TabInterface::DISPLAY_MODE_AFTER_CONTENT === $this->getDisplayMode()
-                || $this->legacyClassName === 'AdminCarriers');
+            && in_array($this->legacyClassName, static::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function mayDisplayRecommendedModules(string $controllerName): bool
+    {
+        return in_array($controllerName, static::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT)
+            || in_array($controllerName, static::TABS_WITH_RECOMMENDED_MODULES_BUTTON);
     }
 }
