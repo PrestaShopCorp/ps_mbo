@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
+use PrestaShop\Module\Mbo\Tab\Tab;
 use Tools;
 
 trait UseActionAdminControllerSetMedia
@@ -101,11 +102,7 @@ trait UseActionAdminControllerSetMedia
     {
         $controllerName = Tools::getValue('controller');
 
-        if (
-            !in_array($controllerName, static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON)
-            &&
-            !in_array($controllerName, static::$TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT)
-        ) {
+        if (!Tab::maydDisplayRecommendedModules($controllerName)) {
             return;
         }
 

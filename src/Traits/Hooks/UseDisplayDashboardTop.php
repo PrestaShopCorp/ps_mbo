@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
+use PrestaShop\Module\Mbo\Tab\TabInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\String\UnicodeString;
 use ToolsCore as Tools;
@@ -30,44 +31,6 @@ use ValidateCore as Validate;
 
 trait UseDisplayDashboardTop
 {
-    /**
-     * @var string
-     */
-    protected static $RECOMMENDED_BUTTON_TYPE = 'button';
-    /**
-     * @var string
-     */
-    protected static $RECOMMENDED_AFTER_CONTENT_TYPE = 'after_content';
-    /**
-     * @var string[]
-     */
-    protected static $TABS_WITH_RECOMMENDED_MODULES_BUTTON = [
-        'AdminOrders',
-        'AdminInvoices',
-        'AdminSlip',
-        'AdminDeliverySlip',
-        'AdminProducts',
-        'AdminFeatures',
-        'AdminManufacturers',
-        'AdminCartRules',
-        'AdminSpecificPriceRule',
-        'AdminCustomers',
-        'AdminCustomerThreads',
-        'AdminStats',
-        'AdminCmsContent',
-        'AdminImages',
-        'AdminShipping',
-        'AdminPayment',
-        'AdminStatuses',
-    ];
-    /**
-     * @var string[]
-     */
-    protected static $TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT = [
-        'AdminMarketing',
-        'AdminPayment',
-        'AdminCarriers',
-    ];
     /**
      * The controller of configuration page
      *
@@ -131,7 +94,7 @@ trait UseDisplayDashboardTop
             return $this->displayPushOnConfigurationPage($values['configure']);
         }
 
-        return $this->displayRecommendedModules($values['controller']);
+        return $this->displayRecommendedModules();
     }
 
     /**
@@ -176,13 +139,12 @@ trait UseDisplayDashboardTop
      *
      * @throws \Exception
      */
-    protected function displayRecommendedModules(string $controllerName): string
+    protected function displayRecommendedModules(): string
     {
-        if (
-            !in_array($controllerName, static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON)
-            &&
-            !in_array($controllerName, static::$TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT)
-        ) {
+        $shouldAttachRecommendedModulesAfterContent = $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE);
+        $shouldAttachRecommendedModulesButton = $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_BUTTON_TYPE);
+
+        if (!$shouldAttachRecommendedModulesAfterContent && !$shouldAttachRecommendedModulesButton) {
             return '';
         }
 
@@ -202,8 +164,8 @@ trait UseDisplayDashboardTop
         }
 
         $this->smarty->assign([
-            'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModules(static::$RECOMMENDED_AFTER_CONTENT_TYPE),
-            'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModules(static::$RECOMMENDED_BUTTON_TYPE),
+            'shouldAttachRecommendedModulesAfterContent' => $shouldAttachRecommendedModulesAfterContent,
+            'shouldAttachRecommendedModulesButton' => $shouldAttachRecommendedModulesButton,
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
             'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services', [],
                 'Modules.Mbo.Recommendedmodulesandservices'),
@@ -224,10 +186,10 @@ trait UseDisplayDashboardTop
     protected function shouldAttachRecommendedModules(string $type): bool
     {
         $method = 'shouldDisplay' . ucfirst((new UnicodeString($type))->camel()->toString());
-        if ($type === static::$RECOMMENDED_BUTTON_TYPE) {
-            $modules = static::$TABS_WITH_RECOMMENDED_MODULES_BUTTON;
-        } elseif ($type === static::$RECOMMENDED_AFTER_CONTENT_TYPE) {
-            $modules = static::$TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT;
+        if ($type === TabInterface::RECOMMENDED_BUTTON_TYPE) {
+            $modules = TabInterface::TABS_WITH_RECOMMENDED_MODULES_BUTTON;
+        } elseif ($type === TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE) {
+            $modules = TabInterface::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT;
         } else {
             return false;
         }
@@ -236,12 +198,7 @@ trait UseDisplayDashboardTop
             /** @var TabCollectionProvider $tabCollectionProvider */
             $tabCollectionProvider = $this->get('mbo.tab.collection.provider');
             if ($tabCollectionProvider->isTabCollectionCached()) {
-                return $tabCollectionProvider->getTabCollection()->getTab(Tools::getValue('controller'))->{$method}()
-                    || (
-                        $type === static::$RECOMMENDED_AFTER_CONTENT_TYPE
-                        && 'AdminCarriers' === Tools::getValue('controller'
-                        )
-                    );
+                return $tabCollectionProvider->getTabCollection()->getTab(Tools::getValue('controller'))->{$method}();
             }
         }
 
@@ -260,8 +217,8 @@ trait UseDisplayDashboardTop
         // has to be loaded in header to prevent flash of content
         $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
 
-        if ($this->shouldAttachRecommendedModules(static::$RECOMMENDED_BUTTON_TYPE)
-            || $this->shouldAttachRecommendedModules(static::$RECOMMENDED_AFTER_CONTENT_TYPE)
+        if ($this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_BUTTON_TYPE)
+            || $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE)
         ) {
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css');
             $this->context->controller->addJs(
