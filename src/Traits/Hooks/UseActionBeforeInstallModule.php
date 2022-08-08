@@ -47,6 +47,6 @@ trait UseActionBeforeInstallModule
             return;
         }
 
-        $this->get('mbo.modules.actions_manager')->install($module);
+        $this->get('mbo.modules.actions_manager')->install((int) $module->get('id'));
     }
 }

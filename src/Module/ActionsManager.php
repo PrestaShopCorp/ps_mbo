@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module;
 
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
-use PrestaShop\PrestaShop\Core\Module\ModuleRepository as CoreModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
 class ActionsManager
@@ -33,36 +32,27 @@ class ActionsManager
     private $filesManager;
 
     /**
-     * @var CoreModuleRepository
-     */
-    private $coreModuleRepository;
-
-    /**
      * @var Repository
      */
     private $moduleRepository;
 
     public function __construct(
         FilesManager $filesManager,
-        CoreModuleRepository $coreModuleRepository,
         Repository $moduleRepository
     ) {
         $this->filesManager = $filesManager;
-        $this->coreModuleRepository = $coreModuleRepository;
         $this->moduleRepository = $moduleRepository;
     }
 
     /**
-     * @param Module $module
+     * @param int $moduleId
      *
      * @throws SourceHandlerNotFoundException
      * @throws FileNotFoundException
      */
-    public function install(Module $module): void
+    public function install(int $moduleId): void
     {
-        $moduleZip = $this->filesManager->downloadModule(
-            (int) $module->get('id')
-        );
+        $moduleZip = $this->filesManager->downloadModule($moduleId);
 
         $this->filesManager->installFromZip($moduleZip);
     }
@@ -72,42 +62,48 @@ class ActionsManager
      * The ModuleManager will do the rest
      * In the future, if it's changes, just duplicate the content of the "install" method and adjust
      *
-     * @param Module $module
+     * @param \stdClass $module
      *
      * @throws SourceHandlerNotFoundException
      * @throws FileNotFoundException
      */
-    public function upgrade(Module $module): void
+    public function upgrade(\stdClass $module): void
     {
         $this->filesManager->deleteModuleDirectory($module);
 
-        $this->install($module);
+        $this->install((int) $module->id);
     }
 
     /**
      * @param string $moduleName
      *
-     * @return string|null
+     * @return \stdClass|null
      */
-    public function findVersionForUpdate(string $moduleName): ?string
+    public function findVersionForUpdate(string $moduleName): ?\stdClass
     {
-        $coreModule = $this->coreModuleRepository->getModule($moduleName);
-        $moduleCurrentVersion = (string) $coreModule->get('version');
+        $db = \Db::getInstance();
+        $request = 'SELECT `version` FROM `' . _DB_PREFIX_ . "module` WHERE name='" . $moduleName . "'";
 
+        /** @var string|false $moduleCurrentVersion */
+        $moduleCurrentVersion = $db->getValue($request);
+
+        if (!$moduleCurrentVersion) {
+            return null;
+        }
         // We need to clear cache to get fresh data from addons
         $this->moduleRepository->clearCache();
-        /** @var Module $module */
-        $module = $this->moduleRepository->getModule($moduleName);
+
+        $module = $this->moduleRepository->getApiModule($moduleName);
 
         if (null === $module) {
             return null;
         }
 
-        $versionAvailable = (string) $module->get('version_available');
+        $versionAvailable = (string) $module->version_available;
 
         // If the current installed version is greater or equal than the one returned by Addons, do nothing
         if (version_compare($versionAvailable, $moduleCurrentVersion, 'gt')) {
-            return $versionAvailable;
+            return $module;
         }
 
         return null;

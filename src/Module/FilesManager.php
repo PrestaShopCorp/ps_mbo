@@ -65,11 +65,11 @@ class FilesManager
     }
 
     /**
-     * @param Module $module
+     * @param \stdClass $apiModule
      */
-    public function deleteModuleDirectory(Module $module): void
+    public function deleteModuleDirectory(\stdClass $apiModule): void
     {
-        $moduleDir = _PS_MODULE_DIR_ . $module->get('name');
+        $moduleDir = _PS_MODULE_DIR_ . $apiModule->name;
 
         if (!is_dir($moduleDir)) {
             return;
