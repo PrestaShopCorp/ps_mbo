@@ -22,6 +22,7 @@ namespace PrestaShop\Module\Mbo\Tests\Module\Workflow;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Module\Mbo\Module\Module;
+use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\Workflow\Event\TransitionEventSubscriber;
 use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionsManager;
@@ -174,7 +175,7 @@ class ModuleStateMachineTest extends TestCase
 
     public function testModuleUninstalledPossibleTransitions()
     {
-        $module = $this->getModule();
+        $module = $this->getTransitionModule('x_module', '1.0.0', false, false, false);
 
         $possibleTransitions = $this->moduleStateMachine->getEnabledTransitions($module);
 
@@ -186,7 +187,7 @@ class ModuleStateMachineTest extends TestCase
 
     public function testModuleInstalledPossibleTransitions()
     {
-        $module = $this->getModule(['installed' => 1]);
+        $module = $this->getTransitionModule('x_module', '1.0.0', true, false, false);
 
         $possibleTransitions = $this->moduleStateMachine->getEnabledTransitions($module);
 
@@ -203,7 +204,7 @@ class ModuleStateMachineTest extends TestCase
 
     public function testModuleEnabledMobileDisabledPossibleTransitions()
     {
-        $module = $this->getModule(['installed' => 1, 'active' => 1, 'active_on_mobile' => 0]);
+        $module = $this->getTransitionModule('x_module', '1.0.0', true, false, true);
 
         $possibleTransitions = $this->moduleStateMachine->getEnabledTransitions($module);
 
@@ -220,7 +221,7 @@ class ModuleStateMachineTest extends TestCase
 
     public function testModuleEnabledMobileEnabledPossibleTransitions()
     {
-        $module = $this->getModule(['installed' => 1, 'active' => 1, 'active_on_mobile' => 1]);
+        $module = $this->getTransitionModule('x_module', '1.0.0', true, true, true);
 
         $possibleTransitions = $this->moduleStateMachine->getEnabledTransitions($module);
 
@@ -237,7 +238,7 @@ class ModuleStateMachineTest extends TestCase
 
     public function testModuleDisabledMobileEnabledPossibleTransitions()
     {
-        $module = $this->getModule(['installed' => 1, 'active' => 0, 'active_on_mobile' => 1]);
+        $module = $this->getTransitionModule('x_module', '1.0.0', true, true, false);
 
         $possibleTransitions = $this->moduleStateMachine->getEnabledTransitions($module);
 
@@ -257,7 +258,13 @@ class ModuleStateMachineTest extends TestCase
      */
     public function testApplyTransitions(array $moduleAttributes, string $targetStatus, string $transitionName)
     {
-        $module = $this->getModule($moduleAttributes);
+        $module = $this->getTransitionModule(
+            $moduleAttributes['name'],
+            $moduleAttributes['version'],
+            $moduleAttributes['installed'],
+            $moduleAttributes['active_on_mobile'],
+            $moduleAttributes['active']
+        );
 
         $transitionsManager = $this->createMock(TransitionsManager::class);
         $methodName = (new UnicodeString($transitionName))->camel()->toString();
@@ -283,7 +290,13 @@ class ModuleStateMachineTest extends TestCase
      */
     public function testGetTransition(array $moduleAttributes, string $targetStatus, string $transitionName)
     {
-        $module = $this->getModule($moduleAttributes);
+        $module = $this->getTransitionModule(
+            $moduleAttributes['name'],
+            $moduleAttributes['version'],
+            $moduleAttributes['installed'],
+            $moduleAttributes['active_on_mobile'],
+            $moduleAttributes['active']
+        );
 
         $this->assertSame($transitionName, $this->moduleStateMachine->getTransition($module, $targetStatus));
     }
@@ -291,168 +304,171 @@ class ModuleStateMachineTest extends TestCase
     public function getModuleAttributesAndAppliedTransitions()
     {
         yield [
-            ['installed' => 1, 'active' => 0, 'active_on_mobile' => 0], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => false], //module attributes
             ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED, //targeted status
             ModuleStateMachine::TRANSITION_INSTALLED__ENABLED_MOBILE_DISABLED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 0, 'active_on_mobile' => 0], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => false], //module attributes
             ModuleStateMachine::STATUS_DISABLED__MOBILE_ENABLED, //targeted status
             ModuleStateMachine::TRANSITION_INSTALLED__DISABLED_MOBILE_ENABLED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 0, 'active_on_mobile' => 0], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => false], //module attributes
             ModuleStateMachine::STATUS_RESET, //targeted status
             ModuleStateMachine::TRANSITION_INSTALLED__RESET, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 0, 'active_on_mobile' => 0], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => false], //module attributes
             ModuleStateMachine::STATUS_CONFIGURED, //targeted status
             ModuleStateMachine::TRANSITION_INSTALLED__CONFIGURED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 0, 'active_on_mobile' => 0], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => false], //module attributes
             ModuleStateMachine::STATUS_UPGRADED, //targeted status
             ModuleStateMachine::TRANSITION_INSTALLED__UPGRADED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 0, 'active_on_mobile' => 0], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => false], //module attributes
             ModuleStateMachine::STATUS_UNINSTALLED, //targeted status
             ModuleStateMachine::TRANSITION_INSTALLED__UNINSTALLED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 1, 'active_on_mobile' => 1], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], //module attributes
             ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED, //targeted status
             ModuleStateMachine::TRANSITION_ENABLED_MOBILE_ENABLED__ENABLED_MOBILE_DISABLED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 1, 'active_on_mobile' => 1], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], //module attributes
             ModuleStateMachine::STATUS_DISABLED__MOBILE_ENABLED, //targeted status
             ModuleStateMachine::TRANSITION_ENABLED_MOBILE_ENABLED__DISABLED_MOBILE_ENABLED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 1, 'active_on_mobile' => 1], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], //module attributes
             ModuleStateMachine::STATUS_RESET, //targeted status
             ModuleStateMachine::TRANSITION_ENABLED_MOBILE_ENABLED__RESET, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 1, 'active_on_mobile' => 1], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], //module attributes
             ModuleStateMachine::STATUS_UPGRADED, //targeted status
             ModuleStateMachine::TRANSITION_ENABLED_MOBILE_ENABLED__UPGRADED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 1, 'active_on_mobile' => 1], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], //module attributes
             ModuleStateMachine::STATUS_CONFIGURED, //targeted status
             ModuleStateMachine::TRANSITION_ENABLED_MOBILE_ENABLED__CONFIGURED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 1, 'active_on_mobile' => 1], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], //module attributes
             ModuleStateMachine::STATUS_UNINSTALLED, //targeted status
             ModuleStateMachine::TRANSITION_ENABLED_MOBILE_ENABLED__UNINSTALLED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 1, 'active_on_mobile' => 0], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], //module attributes
             ModuleStateMachine::STATUS_ENABLED__MOBILE_ENABLED, //targeted status
             ModuleStateMachine::TRANSITION_ENABLED_MOBILE_DISABLED__ENABLED_MOBILE_ENABLED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 1, 'active_on_mobile' => 0], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], //module attributes
             ModuleStateMachine::STATUS_INSTALLED, //targeted status
             ModuleStateMachine::TRANSITION_ENABLED_MOBILE_DISABLED__INSTALLED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 1, 'active_on_mobile' => 0], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], //module attributes
             ModuleStateMachine::STATUS_RESET, //targeted status
             ModuleStateMachine::TRANSITION_ENABLED_MOBILE_DISABLED__RESET, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 1, 'active_on_mobile' => 0], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], //module attributes
             ModuleStateMachine::STATUS_UPGRADED, //targeted status
             ModuleStateMachine::TRANSITION_ENABLED_MOBILE_DISABLED__UPGRADED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 1, 'active_on_mobile' => 0], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], //module attributes
             ModuleStateMachine::STATUS_CONFIGURED, //targeted status
             ModuleStateMachine::TRANSITION_ENABLED_MOBILE_DISABLED__CONFIGURED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 1, 'active_on_mobile' => 0], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], //module attributes
             ModuleStateMachine::STATUS_UNINSTALLED, //targeted status
             ModuleStateMachine::TRANSITION_ENABLED_MOBILE_DISABLED__UNINSTALLED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 0, 'active_on_mobile' => 1], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], //module attributes
             ModuleStateMachine::STATUS_INSTALLED, //targeted status
             ModuleStateMachine::TRANSITION_DISABLED_MOBILE_ENABLED__INSTALLED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 0, 'active_on_mobile' => 1], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], //module attributes
             ModuleStateMachine::STATUS_ENABLED__MOBILE_ENABLED, //targeted status
             ModuleStateMachine::TRANSITION_DISABLED_MOBILE_ENABLED__ENABLED_MOBILE_ENABLED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 0, 'active_on_mobile' => 1], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], //module attributes
             ModuleStateMachine::STATUS_RESET, //targeted status
             ModuleStateMachine::TRANSITION_DISABLED_MOBILE_ENABLED__RESET, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 0, 'active_on_mobile' => 1], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], //module attributes
             ModuleStateMachine::STATUS_UPGRADED, //targeted status
             ModuleStateMachine::TRANSITION_DISABLED_MOBILE_ENABLED__UPGRADED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 0, 'active_on_mobile' => 1], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], //module attributes
             ModuleStateMachine::STATUS_CONFIGURED, //targeted status
             ModuleStateMachine::TRANSITION_DISABLED_MOBILE_ENABLED__CONFIGURED, //transitionName
         ];
 
         yield [
-            ['installed' => 1, 'active' => 0, 'active_on_mobile' => 1], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], //module attributes
             ModuleStateMachine::STATUS_UNINSTALLED, //targeted status
             ModuleStateMachine::TRANSITION_DISABLED_MOBILE_ENABLED__UNINSTALLED, //transitionName
         ];
 
         yield [
-            ['installed' => 0, 'active' => 0, 'active_on_mobile' => 0], //module attributes
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => false, 'active' => false, 'active_on_mobile' => false], //module attributes
             ModuleStateMachine::STATUS_INSTALLED, //targeted status
             ModuleStateMachine::TRANSITION_UNINSTALLED__INSTALLED, //transitionName
         ];
     }
 
-    private function getModule(?array $dbAttributes = null): Module
-    {
-        return new Module(null, null, $dbAttributes);
+    private function getTransitionModule(
+        string $name,
+        string $version,
+        bool $installed,
+        bool $activeOnMobile,
+        bool $active
+    ): TransitionModule {
+        return new TransitionModule($name, $version, $installed, $activeOnMobile, $active);
     }
 
     private function transitionsToArray(array $transitions): array
     {
         $convertedTransitions = [];
 
-        /**
-         * @var Transition $transition
-         */
+        /** @var Transition $transition */
         foreach ($transitions as $transition) {
             $convertedTransitions[] = [
                 'name' => $transition->getName(),

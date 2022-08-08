@@ -235,7 +235,7 @@ class Repository implements RepositoryInterface
         return $module;
     }
 
-    protected function findInDatabaseByName(string $name): ?array
+    public function findInDatabaseByName(string $name): ?array
     {
         $result = Db::getInstance()->getRow(
             'SELECT `id_module` as `id`, `active`, `version` FROM `' . $this->dbPrefix . 'module` WHERE `name` = "' . pSQL($name) . '"'

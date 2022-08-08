@@ -27,6 +27,7 @@ use PrestaShop\Module\Mbo\Module\Exception\TransitionCommandToModuleStatusExcept
 use PrestaShop\Module\Mbo\Module\Exception\UnauthorizedModuleTransitionException;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Repository;
+use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
 use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
 
@@ -67,12 +68,19 @@ final class ModuleStatusTransitionCommandHandler
         $moduleName = $command->getModuleName();
         $source = $command->getSource();
 
-        // First get the module and don't go further if it doesn't exist
-        $module = $this->moduleRepository->getModule($moduleName);
+        // First get the module from DB and don't go further if it doesn't exist
+        $moduleData = $this->moduleRepository->findInDatabaseByName($moduleName);
 
-        if (null === $module) {
+        if (null === $moduleData) {
             throw new ModuleNotFoundException(sprintf('Module %s not found', $moduleName));
         }
+        $module = new TransitionModule(
+            $moduleName,
+            $moduleData['version'],
+            $moduleData['installed'],
+            $moduleData['active_on_mobile'],
+            $moduleData['active']
+        );
 
         // Check if transition asked can be mapped to an existing target status
         $transitionCommand = $command->getCommand()->getValue();
