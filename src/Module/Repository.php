@@ -113,9 +113,9 @@ class Repository implements RepositoryInterface
         $this->cache = null;
     }
 
-    public function fetchAll(): array
+    public function fetchAll(bool $rawModules = false): array
     {
-        if ($this->cache !== null) {
+        if ($this->cache !== null && !$rawModules) {
             return $this->cache;
         }
 
@@ -132,6 +132,7 @@ class Repository implements RepositoryInterface
         }
 
         $listAddonsModules = [];
+        $apiModules = [];
 
         foreach ($requests as $actionFilterValue => $action) {
             try {
@@ -144,7 +145,7 @@ class Repository implements RepositoryInterface
                         continue;
                     }
 
-                    if (isset($listAddonsModules[$addon->name])) {
+                    if (isset($listAddonsModules[$addon->name]) || ($rawModules && isset($apiModules[$addon->name]))) {
                         continue;
                     }
 
@@ -157,19 +158,36 @@ class Repository implements RepositoryInterface
                         $addon->product_type = is_string($addonsType) ? rtrim($addonsType, 's') : 'module';
                     }
 
-                    $listAddonsModules[$addon->name] = $this->moduleBuilder->build(
-                        $addon,
-                        $this->findInDatabaseByName($addon->name)
-                    );
+                    if ($rawModules) {
+                        $apiModules[$addon->name] = $addon;
+                    } else {
+                        $listAddonsModules[$addon->name] = $this->moduleBuilder->build(
+                            $addon,
+                            $this->findInDatabaseByName($addon->name)
+                        );
+                    }
                 }
             } catch (Exception $e) {
                 $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache.');
             }
         }
 
+        if ($rawModules) {
+            return $apiModules;
+        }
         $this->cache = $listAddonsModules;
 
         return $this->cache;
+    }
+
+    public function getApiModule(string $name): ?stdClass
+    {
+        $modules = $this->fetchAll(true);
+        if (array_key_exists($name, $modules)) {
+            return $modules[$name];
+        }
+
+        return null;
     }
 
     public function getModule(string $name): ?Module
@@ -217,7 +235,7 @@ class Repository implements RepositoryInterface
         return $module;
     }
 
-    protected function findInDatabaseByName(string $name): ?array
+    public function findInDatabaseByName(string $name): ?array
     {
         $result = Db::getInstance()->getRow(
             'SELECT `id_module` as `id`, `active`, `version` FROM `' . $this->dbPrefix . 'module` WHERE `name` = "' . pSQL($name) . '"'

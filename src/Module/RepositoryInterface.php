@@ -23,9 +23,9 @@ namespace PrestaShop\Module\Mbo\Module;
 interface RepositoryInterface
 {
     /**
-     * @return array<int, Module> retrieve a list of addons modules, regardless any $filter
+     * @return array<int|string, Module|\stdClass> retrieve a list of addons modules, regardless any $filter
      */
-    public function fetchAll(): array;
+    public function fetchAll(bool $rawModules = false): array;
 
     /**
      * Get the new module presenter class of the specified name provided.
@@ -36,4 +36,11 @@ interface RepositoryInterface
      * @return Module|null
      */
     public function getModule(string $name): ?Module;
+
+    /**
+     * @param string $name
+     *
+     * @return \stdClass|null
+     */
+    public function getApiModule(string $name): ?\stdClass;
 }

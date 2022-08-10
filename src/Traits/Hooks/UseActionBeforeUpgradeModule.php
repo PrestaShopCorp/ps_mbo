@@ -23,7 +23,6 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Module\ActionsManager;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeNotNeededException;
-use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
@@ -53,12 +52,10 @@ trait UseActionBeforeUpgradeModule
         /** @var ActionsManager $moduleActionsManager */
         $moduleActionsManager = $this->get('mbo.modules.actions_manager');
 
-        if (null === $moduleActionsManager->findVersionForUpdate($moduleName)) {
+        $module = $moduleActionsManager->findVersionForUpdate($moduleName);
+        if (null === $module) {
             throw new ModuleUpgradeNotNeededException(sprintf('Upgrade not needed for module %s', $moduleName));
         }
-
-        /** @var Module $module */
-        $module = $this->get('mbo.modules.repository')->getModule($moduleName);
 
         $moduleActionsManager->upgrade($module);
     }

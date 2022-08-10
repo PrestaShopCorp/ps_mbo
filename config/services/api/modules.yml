@@ -11,6 +11,7 @@ services:
     class: 'PrestaShop\Module\Mbo\Module\Workflow\TransitionsManager'
     arguments:
       - '@prestashop.module.manager'
+      - '@mbo.modules.repository'
 
   mbo.modules.state_machine.eventsubscriber.transition:
     class: PrestaShop\Module\Mbo\Module\Workflow\Event\TransitionEventSubscriber

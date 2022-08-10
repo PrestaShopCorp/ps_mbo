@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
-use PrestaShop\Module\Mbo\Module\Module;
+use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\Workflow\Exception\UnknownStatusException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Workflow\DefinitionBuilder;
@@ -143,7 +143,7 @@ class ModuleStateMachine extends StateMachine
         parent::__construct($definition, $markingStore, $dispatcher, self::MODULE_STATE_MACHINE_NAME);
     }
 
-    public function getTransition(Module $module, string $targetStatus): string
+    public function getTransition(TransitionModule $module, string $targetStatus): string
     {
         if (!in_array($targetStatus, self::STATUSES)) {
             throw new UnknownStatusException();

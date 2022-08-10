@@ -36,5 +36,4 @@ services:
     class: PrestaShop\Module\Mbo\Module\ActionsManager
     arguments:
       - '@mbo.modules.files_manager'
-      - '@prestashop.core.admin.module.repository'
       - '@mbo.modules.repository'
