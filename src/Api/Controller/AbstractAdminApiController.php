@@ -162,7 +162,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
         // Payload elements
         $action = Tools::getValue('action');
         $module = Tools::getValue('module');
-        $userId = Tools::getValue('user_id');
+        $userId = Tools::getValue('user_id', null);
         $adminToken = Tools::getValue('admin_token');
         $actionUuid = Tools::getValue('action_uuid');
 
@@ -171,7 +171,6 @@ abstract class AbstractAdminApiController extends ModuleAdminController
             !$signature ||
             !$action ||
             !$module ||
-            !$userId ||
             !$adminToken ||
             !$actionUuid
         ) {
