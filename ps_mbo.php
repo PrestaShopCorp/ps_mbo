@@ -27,7 +27,6 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
-use Dotenv\Dotenv;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Distribution\Client;
@@ -36,18 +35,19 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Dotenv\Dotenv;
 
 class ps_mbo extends Module
 {
     use PrestaShop\Module\Mbo\Traits\HaveTabs;
     use PrestaShop\Module\Mbo\Traits\UseHooks;
 
-    const DEFAULT_ENV = '';
+    public const DEFAULT_ENV = '';
 
     /**
      * @var string
      */
-    const VERSION = '4.0.0';
+    public const VERSION = '4.0.0';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminPsMboModule',
@@ -331,17 +331,10 @@ class ps_mbo extends Module
         }
     }
 
-    private function loadEnv()
+    private function loadEnv(): void
     {
-        if (file_exists(_PS_MODULE_DIR_ . 'ps_mbo/.env.dist')) {
-            $dotenv = Dotenv::createUnsafeImmutable(_PS_MODULE_DIR_ . 'ps_mbo/', '.env.dist');
-            $dotenv->load();
-        }
-
-        if (file_exists(_PS_MODULE_DIR_ . 'ps_mbo/.env')) {
-            $dotenv = Dotenv::createUnsafeImmutable(_PS_MODULE_DIR_ . 'ps_mbo/');
-            $dotenv->load();
-        }
+        $dotenv = new Dotenv();
+        $dotenv->loadEnv(__DIR__ . '/.env');
     }
 
     public function getAdminAuthenticationProvider(): AdminAuthenticationProvider

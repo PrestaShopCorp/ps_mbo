@@ -22,7 +22,6 @@
     "ext-json": "*",
     "prestashop/circuit-breaker": "^4",
     "guzzlehttp/guzzle": "^7.4",
-    "vlucas/phpdotenv": "^5.4",
     "ramsey/uuid": "^4.2",
     "sentry/sdk": "^3.2"
   },
