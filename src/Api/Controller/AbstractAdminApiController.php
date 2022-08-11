@@ -162,7 +162,6 @@ abstract class AbstractAdminApiController extends ModuleAdminController
         // Payload elements
         $action = Tools::getValue('action');
         $module = Tools::getValue('module');
-        $userId = Tools::getValue('user_id');
         $adminToken = Tools::getValue('admin_token');
         $actionUuid = Tools::getValue('action_uuid');
 
@@ -171,7 +170,6 @@ abstract class AbstractAdminApiController extends ModuleAdminController
             !$signature ||
             !$action ||
             !$module ||
-            !$userId ||
             !$adminToken ||
             !$actionUuid
         ) {
@@ -181,7 +179,6 @@ abstract class AbstractAdminApiController extends ModuleAdminController
         $message = json_encode([
             'action' => $action,
             'module' => $module,
-            'user_id' => $userId,
             'admin_token' => $adminToken,
             'action_uuid' => $actionUuid,
             'version' => $keyVersion,
