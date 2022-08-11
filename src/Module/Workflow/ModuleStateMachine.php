@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
 use PrestaShop\Module\Mbo\Module\TransitionModule;
+use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
 use PrestaShop\Module\Mbo\Module\Workflow\Exception\UnknownStatusException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Workflow\DefinitionBuilder;
@@ -34,101 +35,120 @@ class ModuleStateMachine extends StateMachine
 {
     public const MODULE_STATE_MACHINE_NAME = 'module_state_machine';
 
-    public const STATUS_INSTALLED = 'installed';
     public const STATUS_UNINSTALLED = 'uninstalled';
     public const STATUS_ENABLED__MOBILE_ENABLED = 'enabled__mobile_enabled';
     public const STATUS_ENABLED__MOBILE_DISABLED = 'enabled__mobile_disabled';
     public const STATUS_DISABLED__MOBILE_ENABLED = 'disabled__mobile_enabled';
+    public const STATUS_DISABLED__MOBILE_DISABLED = 'disabled__mobile_disabled';
     public const STATUS_RESET = 'reset'; //virtual status
     public const STATUS_UPGRADED = 'upgraded'; //virtual status
     public const STATUS_CONFIGURED = 'configured'; //virtual status
 
     public const STATUSES = [
-        self::STATUS_INSTALLED,
         self::STATUS_UNINSTALLED,
         self::STATUS_ENABLED__MOBILE_ENABLED,
         self::STATUS_ENABLED__MOBILE_DISABLED,
         self::STATUS_DISABLED__MOBILE_ENABLED,
+        self::STATUS_DISABLED__MOBILE_DISABLED,
         self::STATUS_RESET,
         self::STATUS_UPGRADED,
         self::STATUS_CONFIGURED,
     ];
 
-    public const TRANSITION_INSTALLED__ENABLED_MOBILE_DISABLED = 'installed_to_enabled_and_mobile_disabled';
-    public const TRANSITION_INSTALLED__DISABLED_MOBILE_ENABLED = 'installed_to_disabled_and_mobile_enabled';
-    public const TRANSITION_INSTALLED__RESET = 'installed_to_reset';
-    public const TRANSITION_INSTALLED__CONFIGURED = 'installed_to_configured';
-    public const TRANSITION_INSTALLED__UPGRADED = 'installed_to_upgraded';
-    public const TRANSITION_INSTALLED__UNINSTALLED = 'installed_to_uninstalled';
+    // From any non-virtual status except UNINSTALLED to RESET
+    public const TRANSITION_ENABLED_MOBILE_ENABLED__RESET = 'enabled_and_mobile_enabled_to_reset';
+    public const TRANSITION_ENABLED_MOBILE_DISABLED__RESET = 'enabled_and_mobile_disabled_to_reset';
+    public const TRANSITION_DISABLED_MOBILE_ENABLED__RESET = 'disabled_and_mobile_enabled_to_reset';
+    public const TRANSITION_DISABLED_MOBILE_DISABLED__RESET = 'disabled_and_mobile_disabled_to_reset';
 
+    // From any non-virtual status except UNINSTALLED to CONFIGURED
+    public const TRANSITION_ENABLED_MOBILE_ENABLED__CONFIGURED = 'enabled_and_mobile_enabled_to_configured';
+    public const TRANSITION_ENABLED_MOBILE_DISABLED__CONFIGURED = 'enabled_and_mobile_disabled_to_configured';
+    public const TRANSITION_DISABLED_MOBILE_ENABLED__CONFIGURED = 'disabled_and_mobile_enabled_to_configured';
+    public const TRANSITION_DISABLED_MOBILE_DISABLED__CONFIGURED = 'disabled_and_mobile_disabled_to_configured';
+
+    // From any non-virtual status except UNINSTALLED to UPGRADED
+    public const TRANSITION_ENABLED_MOBILE_ENABLED__UPGRADED = 'enabled_and_mobile_enabled_to_upgraded';
+    public const TRANSITION_ENABLED_MOBILE_DISABLED__UPGRADED = 'enabled_and_mobile_disabled_to_upgraded';
+    public const TRANSITION_DISABLED_MOBILE_ENABLED__UPGRADED = 'disabled_and_mobile_enabled_to_upgraded';
+    public const TRANSITION_DISABLED_MOBILE_DISABLED__UPGRADED = 'disabled_and_mobile_disabled_to_upgraded';
+
+    // From any non-virtual status except UNINSTALLED to UNINSTALLED
+    public const TRANSITION_ENABLED_MOBILE_ENABLED__UNINSTALLED = 'enabled_and_mobile_enabled_to_uninstalled';
+    public const TRANSITION_ENABLED_MOBILE_DISABLED__UNINSTALLED = 'enabled_and_mobile_disabled_to_uninstalled';
+    public const TRANSITION_DISABLED_MOBILE_ENABLED__UNINSTALLED = 'disabled_and_mobile_enabled_to_uninstalled';
+    public const TRANSITION_DISABLED_MOBILE_DISABLED__UNINSTALLED = 'disabled_and_mobile_disabled_to_uninstalled';
+
+    // Transitions from UNINSTALLED
+    public const TRANSITION_UNINSTALLED__ENABLED_MOBILE_ENABLED = 'uninstalled_to_enabled_and_mobile_enabled';
+
+    // Transitions from ENABLED__MOBILE_ENABLED
     public const TRANSITION_ENABLED_MOBILE_ENABLED__ENABLED_MOBILE_DISABLED = 'enabled_and_mobile_enabled_to_enabled_and_mobile_disabled';
     public const TRANSITION_ENABLED_MOBILE_ENABLED__DISABLED_MOBILE_ENABLED = 'enabled_and_mobile_enabled_to_disabled_and_mobile_enabled';
-    public const TRANSITION_ENABLED_MOBILE_ENABLED__RESET = 'enabled_and_mobile_enabled_to_reset';
-    public const TRANSITION_ENABLED_MOBILE_ENABLED__UPGRADED = 'enabled_and_mobile_enabled_to_upgraded';
-    public const TRANSITION_ENABLED_MOBILE_ENABLED__CONFIGURED = 'enabled_and_mobile_enabled_to_configured';
-    public const TRANSITION_ENABLED_MOBILE_ENABLED__UNINSTALLED = 'enabled_and_mobile_enabled_to_uninstalled';
 
-    public const TRANSITION_ENABLED_MOBILE_DISABLED__INSTALLED = 'enabled_and_mobile_disabled_to_installed';
+    // Transitions from ENABLED__MOBILE_DISABLED
     public const TRANSITION_ENABLED_MOBILE_DISABLED__ENABLED_MOBILE_ENABLED = 'enabled_and_mobile_disabled_to_enabled_and_mobile_enabled';
-    public const TRANSITION_ENABLED_MOBILE_DISABLED__RESET = 'enabled_and_mobile_disabled_to_reset';
-    public const TRANSITION_ENABLED_MOBILE_DISABLED__UPGRADED = 'enabled_and_mobile_disabled_to_upgraded';
-    public const TRANSITION_ENABLED_MOBILE_DISABLED__CONFIGURED = 'enabled_and_mobile_disabled_to_configured';
-    public const TRANSITION_ENABLED_MOBILE_DISABLED__UNINSTALLED = 'enabled_and_mobile_disabled_to_uninstalled';
+    public const TRANSITION_ENABLED_MOBILE_DISABLED__DISABLED_MOBILE_DISABLED = 'enabled_and_mobile_disabled_to_disabled_and_mobile_disabled';
 
-    public const TRANSITION_DISABLED_MOBILE_ENABLED__INSTALLED = 'disabled_and_mobile_enabled_to_installed';
+    // Transitions from DISABLED__MOBILE_ENABLED
     public const TRANSITION_DISABLED_MOBILE_ENABLED__ENABLED_MOBILE_ENABLED = 'disabled_and_mobile_enabled_to_enabled_and_mobile_enabled';
-    public const TRANSITION_DISABLED_MOBILE_ENABLED__RESET = 'disabled_and_mobile_enabled_to_reset';
-    public const TRANSITION_DISABLED_MOBILE_ENABLED__UPGRADED = 'disabled_and_mobile_enabled_to_upgraded';
-    public const TRANSITION_DISABLED_MOBILE_ENABLED__CONFIGURED = 'disabled_and_mobile_enabled_to_configured';
-    public const TRANSITION_DISABLED_MOBILE_ENABLED__UNINSTALLED = 'disabled_and_mobile_enabled_to_uninstalled';
+    public const TRANSITION_DISABLED_MOBILE_ENABLED__DISABLED_MOBILE_DISABLED = 'disabled_and_mobile_enabled_to_disabled_and_mobile_disabled';
 
-    public const TRANSITION_UNINSTALLED__INSTALLED = 'uninstalled_to_installed';
+    // Transitions from DISABLED__MOBILE_DISABLED
+    public const TRANSITION_DISABLED_MOBILE_DISABLED__DISABLED_MOBILE_ENABLED = 'disabled_and_mobile_enabled_to_enabled_and_mobile_enabled';
+    public const TRANSITION_DISABLED_MOBILE_DISABLED__ENABLED_MOBILE_DISABLED = 'disabled_and_mobile_enabled_to_disabled_and_mobile_disabled';
 
     protected $stateMachine;
 
     public function __construct(EventDispatcherInterface $dispatcher)
     {
         $definitionBuilder = new DefinitionBuilder();
-        $definition = $definitionBuilder->addPlaces([
-            self::STATUS_INSTALLED,
-            self::STATUS_UNINSTALLED,
-            self::STATUS_ENABLED__MOBILE_ENABLED,
-            self::STATUS_ENABLED__MOBILE_DISABLED,
-            self::STATUS_DISABLED__MOBILE_ENABLED,
-            self::STATUS_RESET,
-            self::STATUS_UPGRADED,
-            self::STATUS_CONFIGURED,
-        ])
+        $definition = $definitionBuilder->addPlaces(self::STATUSES)
             // Transitions are defined with a unique name, an origin place and a destination place
-            ->addTransition(new Transition(self::TRANSITION_INSTALLED__ENABLED_MOBILE_DISABLED, self::STATUS_INSTALLED, self::STATUS_ENABLED__MOBILE_DISABLED))
-            ->addTransition(new Transition(self::TRANSITION_INSTALLED__DISABLED_MOBILE_ENABLED, self::STATUS_INSTALLED, self::STATUS_DISABLED__MOBILE_ENABLED))
-            ->addTransition(new Transition(self::TRANSITION_INSTALLED__CONFIGURED, self::STATUS_INSTALLED, self::STATUS_CONFIGURED))
-            ->addTransition(new Transition(self::TRANSITION_INSTALLED__RESET, self::STATUS_INSTALLED, self::STATUS_RESET))
-            ->addTransition(new Transition(self::TRANSITION_INSTALLED__UPGRADED, self::STATUS_INSTALLED, self::STATUS_UPGRADED))
-            ->addTransition(new Transition(self::TRANSITION_INSTALLED__UNINSTALLED, self::STATUS_INSTALLED, self::STATUS_UNINSTALLED))
 
+            // From any non-virtual status except UNINSTALLED to RESET
+            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_ENABLED__RESET, self::STATUS_ENABLED__MOBILE_ENABLED, self::STATUS_RESET))
+            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_DISABLED__RESET, self::STATUS_ENABLED__MOBILE_DISABLED, self::STATUS_RESET))
+            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_ENABLED__RESET, self::STATUS_DISABLED__MOBILE_ENABLED, self::STATUS_RESET))
+            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_DISABLED__RESET, self::STATUS_DISABLED__MOBILE_DISABLED, self::STATUS_RESET))
+
+            // From any non-virtual status except UNINSTALLED to CONFIGURED
+            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_ENABLED__CONFIGURED, self::STATUS_ENABLED__MOBILE_ENABLED, self::STATUS_CONFIGURED))
+            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_DISABLED__CONFIGURED, self::STATUS_ENABLED__MOBILE_DISABLED, self::STATUS_CONFIGURED))
+            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_ENABLED__CONFIGURED, self::STATUS_DISABLED__MOBILE_ENABLED, self::STATUS_CONFIGURED))
+            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_DISABLED__CONFIGURED, self::STATUS_DISABLED__MOBILE_DISABLED, self::STATUS_CONFIGURED))
+
+            // From any non-virtual status except UNINSTALLED to UPGRADED
+            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_ENABLED__UPGRADED, self::STATUS_ENABLED__MOBILE_ENABLED, self::STATUS_UPGRADED))
+            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_DISABLED__UPGRADED, self::STATUS_ENABLED__MOBILE_DISABLED, self::STATUS_UPGRADED))
+            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_ENABLED__UPGRADED, self::STATUS_DISABLED__MOBILE_ENABLED, self::STATUS_UPGRADED))
+            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_DISABLED__UPGRADED, self::STATUS_DISABLED__MOBILE_DISABLED, self::STATUS_UPGRADED))
+
+            // From any non-virtual status except UNINSTALLED to UNINSTALLED
+            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_ENABLED__UNINSTALLED, self::STATUS_ENABLED__MOBILE_ENABLED, self::STATUS_UNINSTALLED))
+            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_DISABLED__UNINSTALLED, self::STATUS_ENABLED__MOBILE_DISABLED, self::STATUS_UNINSTALLED))
+            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_ENABLED__UNINSTALLED, self::STATUS_DISABLED__MOBILE_ENABLED, self::STATUS_UNINSTALLED))
+            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_DISABLED__UNINSTALLED, self::STATUS_DISABLED__MOBILE_DISABLED, self::STATUS_UNINSTALLED))
+
+            // Transitions from UNINSTALLED
+            ->addTransition(new Transition(self::TRANSITION_UNINSTALLED__ENABLED_MOBILE_ENABLED, self::STATUS_UNINSTALLED, self::STATUS_ENABLED__MOBILE_ENABLED))
+
+            // Transitions from ENABLED__MOBILE_ENABLED
             ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_ENABLED__ENABLED_MOBILE_DISABLED, self::STATUS_ENABLED__MOBILE_ENABLED, self::STATUS_ENABLED__MOBILE_DISABLED))
             ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_ENABLED__DISABLED_MOBILE_ENABLED, self::STATUS_ENABLED__MOBILE_ENABLED, self::STATUS_DISABLED__MOBILE_ENABLED))
-            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_ENABLED__CONFIGURED, self::STATUS_ENABLED__MOBILE_ENABLED, self::STATUS_CONFIGURED))
-            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_ENABLED__RESET, self::STATUS_ENABLED__MOBILE_ENABLED, self::STATUS_RESET))
-            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_ENABLED__UPGRADED, self::STATUS_ENABLED__MOBILE_ENABLED, self::STATUS_UPGRADED))
-            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_ENABLED__UNINSTALLED, self::STATUS_ENABLED__MOBILE_ENABLED, self::STATUS_UNINSTALLED))
 
-            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_DISABLED__INSTALLED, self::STATUS_ENABLED__MOBILE_DISABLED, self::STATUS_INSTALLED))
+            // Transitions from ENABLED__MOBILE_DISABLED
             ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_DISABLED__ENABLED_MOBILE_ENABLED, self::STATUS_ENABLED__MOBILE_DISABLED, self::STATUS_ENABLED__MOBILE_ENABLED))
-            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_DISABLED__CONFIGURED, self::STATUS_ENABLED__MOBILE_DISABLED, self::STATUS_CONFIGURED))
-            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_DISABLED__RESET, self::STATUS_ENABLED__MOBILE_DISABLED, self::STATUS_RESET))
-            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_DISABLED__UPGRADED, self::STATUS_ENABLED__MOBILE_DISABLED, self::STATUS_UPGRADED))
-            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_DISABLED__UNINSTALLED, self::STATUS_ENABLED__MOBILE_DISABLED, self::STATUS_UNINSTALLED))
+            ->addTransition(new Transition(self::TRANSITION_ENABLED_MOBILE_DISABLED__DISABLED_MOBILE_DISABLED, self::STATUS_ENABLED__MOBILE_DISABLED, self::STATUS_DISABLED__MOBILE_DISABLED))
 
-            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_ENABLED__INSTALLED, self::STATUS_DISABLED__MOBILE_ENABLED, self::STATUS_INSTALLED))
+            // Transitions from DISABLED__MOBILE_ENABLED
             ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_ENABLED__ENABLED_MOBILE_ENABLED, self::STATUS_DISABLED__MOBILE_ENABLED, self::STATUS_ENABLED__MOBILE_ENABLED))
-            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_ENABLED__CONFIGURED, self::STATUS_DISABLED__MOBILE_ENABLED, self::STATUS_CONFIGURED))
-            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_ENABLED__RESET, self::STATUS_DISABLED__MOBILE_ENABLED, self::STATUS_RESET))
-            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_ENABLED__UPGRADED, self::STATUS_DISABLED__MOBILE_ENABLED, self::STATUS_UPGRADED))
-            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_ENABLED__UNINSTALLED, self::STATUS_DISABLED__MOBILE_ENABLED, self::STATUS_UNINSTALLED))
+            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_ENABLED__DISABLED_MOBILE_DISABLED, self::STATUS_DISABLED__MOBILE_ENABLED, self::STATUS_DISABLED__MOBILE_DISABLED))
 
-            ->addTransition(new Transition(self::TRANSITION_UNINSTALLED__INSTALLED, self::STATUS_UNINSTALLED, self::STATUS_INSTALLED))
+            // Transitions from DISABLED__MOBILE_DISABLED
+            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_DISABLED__DISABLED_MOBILE_ENABLED, self::STATUS_DISABLED__MOBILE_DISABLED, self::STATUS_DISABLED__MOBILE_ENABLED))
+            ->addTransition(new Transition(self::TRANSITION_DISABLED_MOBILE_DISABLED__ENABLED_MOBILE_DISABLED, self::STATUS_DISABLED__MOBILE_DISABLED, self::STATUS_ENABLED__MOBILE_DISABLED))
+
             ->build()
         ;
 
@@ -143,13 +163,30 @@ class ModuleStateMachine extends StateMachine
         parent::__construct($definition, $markingStore, $dispatcher, self::MODULE_STATE_MACHINE_NAME);
     }
 
-    public function getTransition(TransitionModule $module, string $targetStatus): string
+    public function getTransition(TransitionModule $module, string $transitionCommand): string
     {
+        $originStatus = $module->getStatus();
+
+        switch ($transitionCommand) {
+            case ModuleTransitionCommand::MODULE_COMMAND_ENABLE:
+                $targetStatus = $module->isActiveOnMobile() ? ModuleStateMachine::STATUS_ENABLED__MOBILE_ENABLED : ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED;
+                break;
+            case ModuleTransitionCommand::MODULE_COMMAND_DISABLE:
+                $targetStatus = $module->isActiveOnMobile() ? ModuleStateMachine::STATUS_DISABLED__MOBILE_ENABLED : ModuleStateMachine::STATUS_DISABLED__MOBILE_DISABLED;
+                break;
+            case ModuleTransitionCommand::MODULE_COMMAND_MOBILE_ENABLE:
+                $targetStatus = $module->isActive() ? ModuleStateMachine::STATUS_ENABLED__MOBILE_ENABLED : ModuleStateMachine::STATUS_DISABLED__MOBILE_ENABLED;
+                break;
+            case ModuleTransitionCommand::MODULE_COMMAND_MOBILE_DISABLE:
+                $targetStatus = $module->isActive() ? ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED : ModuleStateMachine::STATUS_DISABLED__MOBILE_DISABLED;
+                break;
+            default:
+                $targetStatus = ModuleTransitionCommand::MAPPING_TRANSITION_COMMAND_TARGET_STATUS[$transitionCommand];
+        }
+
         if (!in_array($targetStatus, self::STATUSES)) {
             throw new UnknownStatusException();
         }
-
-        $originStatus = $module->getStatus();
 
         $transitionName = mb_strtolower(sprintf(
             '%s_to_%s',

@@ -45,54 +45,9 @@ class TransitionsManager
         $this->moduleRepository = $moduleRepository;
     }
 
-    public function uninstalledToInstalled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function uninstalledToEnabledAndMobileEnabled(TransitionModule $transitionModule, string $marking, array $context): bool
     {
         return $this->install($transitionModule, $context);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function installedToEnabledAndMobileDisabled(TransitionModule $transitionModule, string $marking, array $context): bool
-    {
-        return $this->enable($transitionModule, $context) && $this->enableOnMobile($transitionModule);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function installedToDisabledAndMobileEnabled(TransitionModule $transitionModule, string $marking, array $context): bool
-    {
-        return $this->disable($transitionModule, $context) && $this->enableOnMobile($transitionModule);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function installedToReset(TransitionModule $transitionModule, string $marking, array $context): bool
-    {
-        return $this->reset($transitionModule, $context);
-    }
-
-    public function installedToConfigured(TransitionModule $transitionModule, string $marking, array $context): bool
-    {
-        return true;
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function installedToUpgraded(TransitionModule $transitionModule, string $marking, array $context): bool
-    {
-        return $this->upgrade($transitionModule, $context);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function installedToUninstalled(TransitionModule $transitionModule, string $marking, array $context): bool
-    {
-        return $this->uninstall($transitionModule, $context);
     }
 
     /**

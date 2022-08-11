@@ -23,7 +23,8 @@
     "prestashop/circuit-breaker": "^4",
     "guzzlehttp/guzzle": "^7.4",
     "ramsey/uuid": "^4.2",
-    "sentry/sdk": "^3.2"
+    "sentry/sdk": "^3.2",
+    "symfony/workflow": "^4"
   },
   "require-dev": {
     "prestashop/php-dev-tools": "^4",
