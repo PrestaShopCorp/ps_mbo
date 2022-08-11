@@ -56,19 +56,33 @@ final class ModuleStatusTransitionCommandHandler
         $moduleName = $command->getModuleName();
         $source = $command->getSource();
 
-        // First get the module from DB and don't go further if it doesn't exist
-        $moduleData = $this->moduleRepository->findInDatabaseByName($moduleName);
+        // First get the module from DB
+        // If not exist, get it from the Module Distribution API
+        $dbModule = $this->moduleRepository->findInDatabaseByName($moduleName);
 
-        if (null === $moduleData) {
+        if (null !== $dbModule) {
+            $module = new TransitionModule(
+                $moduleName,
+                $dbModule['version'],
+                $dbModule['installed'],
+                $dbModule['active_on_mobile'],
+                $dbModule['active']
+            );
+        } else {
+            $apiModule = $this->moduleRepository->getApiModule($moduleName);
+
+            $module = new TransitionModule(
+                $moduleName,
+                $apiModule->version,
+                false,
+                false,
+                false
+            );
+        }
+
+        if (null === $module) {
             throw new ModuleNotFoundException(sprintf('Module %s not found', $moduleName));
         }
-        $module = new TransitionModule(
-            $moduleName,
-            $moduleData['version'],
-            $moduleData['installed'],
-            $moduleData['active_on_mobile'],
-            $moduleData['active']
-        );
 
         // Check if transition asked can be mapped to an existing target status
         $transitionCommand = $command->getCommand()->getValue();
@@ -91,6 +105,8 @@ final class ModuleStatusTransitionCommandHandler
         $this->moduleStateMachine->apply($module, $transitionName, [
             'source' => $source,
         ]);
+
+        $this->moduleRepository->clearCache();
 
         return $this->moduleRepository->getModule($moduleName);
     }

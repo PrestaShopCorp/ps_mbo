@@ -95,8 +95,8 @@ class ModuleStateMachine extends StateMachine
     public const TRANSITION_DISABLED_MOBILE_ENABLED__DISABLED_MOBILE_DISABLED = 'disabled_and_mobile_enabled_to_disabled_and_mobile_disabled';
 
     // Transitions from DISABLED__MOBILE_DISABLED
-    public const TRANSITION_DISABLED_MOBILE_DISABLED__DISABLED_MOBILE_ENABLED = 'disabled_and_mobile_enabled_to_enabled_and_mobile_enabled';
-    public const TRANSITION_DISABLED_MOBILE_DISABLED__ENABLED_MOBILE_DISABLED = 'disabled_and_mobile_enabled_to_disabled_and_mobile_disabled';
+    public const TRANSITION_DISABLED_MOBILE_DISABLED__DISABLED_MOBILE_ENABLED = 'disabled_and_mobile_disabled_to_disabled_and_mobile_enabled';
+    public const TRANSITION_DISABLED_MOBILE_DISABLED__ENABLED_MOBILE_DISABLED = 'disabled_and_mobile_disabled_to_enabled_and_mobile_disabled';
 
     protected $stateMachine;
 

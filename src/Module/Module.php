@@ -236,7 +236,7 @@ class Module implements ModuleInterface
      */
     public function isMobileActive(): bool
     {
-        return (bool) $this->database->get('active');
+        return (bool) $this->database->get('active_on_mobile');
     }
 
     /**
@@ -508,8 +508,8 @@ class Module implements ModuleInterface
     {
         return (new TransitionModule(
             $this->get('name'),
-            $this->get('version'),
-            (bool) $this->get('installed'),
+            $this->disk->get('version'),
+            (bool) $this->database->get('installed'),
             $this->isMobileActive(),
             $this->isActive())
         )->getStatus();
