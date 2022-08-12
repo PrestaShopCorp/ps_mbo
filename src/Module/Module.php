@@ -22,7 +22,6 @@ namespace PrestaShop\Module\Mbo\Module;
 
 use Exception;
 use Module as LegacyModule;
-use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -237,7 +236,7 @@ class Module implements ModuleInterface
      */
     public function isMobileActive(): bool
     {
-        return (bool) $this->database->get('active');
+        return (bool) $this->database->get('active_on_mobile');
     }
 
     /**
@@ -507,25 +506,12 @@ class Module implements ModuleInterface
 
     public function getStatus(): string
     {
-        if (false === (bool) $this->database->get('installed')) {
-            return ModuleStateMachine::STATUS_UNINSTALLED;
-        }
-
-        $isActiveOnMobile = (bool) $this->database->get('active_on_mobile');
-        $isActive = (bool) $this->database->get('active');
-
-        if ($isActive && $isActiveOnMobile) {
-            return ModuleStateMachine::STATUS_ENABLED__MOBILE_ENABLED;
-        }
-
-        if ($isActive && !$isActiveOnMobile) {
-            return ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED;
-        }
-
-        if (!$isActive && $isActiveOnMobile) {
-            return ModuleStateMachine::STATUS_DISABLED__MOBILE_ENABLED;
-        }
-
-        return ModuleStateMachine::STATUS_INSTALLED;
+        return (new TransitionModule(
+            $this->get('name'),
+            $this->disk->get('version'),
+            (bool) $this->database->get('installed'),
+            $this->isMobileActive(),
+            $this->isActive())
+        )->getStatus();
     }
 }

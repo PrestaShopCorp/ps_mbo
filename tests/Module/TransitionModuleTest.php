@@ -18,13 +18,13 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  */
 
-namespace PrestaShop\Module\Mbo\Tests\Module\Workflow;
+namespace PrestaShop\Module\Mbo\Tests\Module;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\Module\Mbo\Module\Module;
+use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
 
-class ModuleTest extends TestCase
+class TransitionModuleTest extends TestCase
 {
     /**
      * @dataProvider getModuleAttributesAndStatus
@@ -39,63 +39,44 @@ class ModuleTest extends TestCase
     public function getModuleAttributesAndStatus()
     {
         yield [
-            [],
+            ['name' => 'my_module', 'version' => '1.0.0', 'installed' => false, 'active_on_mobile' => false, 'active' => false],
             ModuleStateMachine::STATUS_UNINSTALLED,
         ];
 
         yield [
-            ['installed' => 0, 'active' => 0, 'active_on_mobile' => 0],
+            ['name' => 'my_module', 'version' => '1.0.0', 'installed' => false, 'active_on_mobile' => true, 'active' => true],
             ModuleStateMachine::STATUS_UNINSTALLED,
         ];
 
         yield [
-            ['installed' => 1],
-            ModuleStateMachine::STATUS_INSTALLED,
-        ];
-
-        yield [
-            ['installed' => 1, 'active' => 0, 'active_on_mobile' => 0],
-            ModuleStateMachine::STATUS_INSTALLED,
-        ];
-
-        yield [
-            ['installed' => 1, 'active' => 0],
-            ModuleStateMachine::STATUS_INSTALLED,
-        ];
-
-        yield [
-            ['installed' => 1, 'active' => 1],
-            ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED,
-        ];
-
-        yield [
-            ['installed' => 1, 'active_on_mobile' => 0],
-            ModuleStateMachine::STATUS_INSTALLED,
-        ];
-
-        yield [
-            ['installed' => 1, 'active_on_mobile' => 1],
-            ModuleStateMachine::STATUS_DISABLED__MOBILE_ENABLED,
-        ];
-
-        yield [
-            ['installed' => 1, 'active' => 0, 'active_on_mobile' => 1],
-            ModuleStateMachine::STATUS_DISABLED__MOBILE_ENABLED,
-        ];
-
-        yield [
-            ['installed' => 1, 'active' => 1, 'active_on_mobile' => 0],
-            ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED,
-        ];
-
-        yield [
-            ['installed' => 1, 'active' => 1, 'active_on_mobile' => 1],
+            ['name' => 'my_module', 'version' => '1.0.0', 'installed' => true, 'active_on_mobile' => true, 'active' => true],
             ModuleStateMachine::STATUS_ENABLED__MOBILE_ENABLED,
+        ];
+
+        yield [
+            ['name' => 'my_module', 'version' => '1.0.0', 'installed' => true, 'active_on_mobile' => false, 'active' => true],
+            ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED,
+        ];
+
+        yield [
+            ['name' => 'my_module', 'version' => '1.0.0', 'installed' => true, 'active_on_mobile' => true, 'active' => false],
+            ModuleStateMachine::STATUS_DISABLED__MOBILE_ENABLED,
+        ];
+
+        yield [
+            ['name' => 'my_module', 'version' => '1.0.0', 'installed' => true, 'active_on_mobile' => false, 'active' => false],
+            ModuleStateMachine::STATUS_DISABLED__MOBILE_DISABLED,
         ];
     }
 
-    private function getModule(?array $dbAttributes = null): Module
+    private function getModule(array $attributes): TransitionModule
     {
-        return new Module(null, null, $dbAttributes);
+        return new TransitionModule(
+            $attributes['name'],
+            $attributes['version'],
+            $attributes['installed'],
+            $attributes['active_on_mobile'],
+            $attributes['active']
+        );
     }
 }

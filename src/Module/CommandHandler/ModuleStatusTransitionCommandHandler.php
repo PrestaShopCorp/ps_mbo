@@ -33,18 +33,6 @@ use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
 
 final class ModuleStatusTransitionCommandHandler
 {
-    private const MAPPING_TRANSITION_COMMAND_TARGET_STATUS = [
-        ModuleTransitionCommand::MODULE_COMMAND_INSTALL => ModuleStateMachine::STATUS_INSTALLED,
-        ModuleTransitionCommand::MODULE_COMMAND_ENABLE => ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED,
-        ModuleTransitionCommand::MODULE_COMMAND_DISABLE => ModuleStateMachine::STATUS_DISABLED__MOBILE_ENABLED,
-        ModuleTransitionCommand::MODULE_COMMAND_MOBILE_ENABLE => ModuleStateMachine::STATUS_ENABLED__MOBILE_ENABLED,
-        ModuleTransitionCommand::MODULE_COMMAND_MOBILE_DISABLE => ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED,
-        ModuleTransitionCommand::MODULE_COMMAND_CONFIGURE => ModuleStateMachine::STATUS_CONFIGURED,
-        ModuleTransitionCommand::MODULE_COMMAND_RESET => ModuleStateMachine::STATUS_RESET,
-        ModuleTransitionCommand::MODULE_COMMAND_UPGRADE => ModuleStateMachine::STATUS_UPGRADED,
-        ModuleTransitionCommand::MODULE_COMMAND_UNINSTALL => ModuleStateMachine::STATUS_UNINSTALLED,
-    ];
-
     /**
      * @var ModuleStateMachine
      */
@@ -68,30 +56,44 @@ final class ModuleStatusTransitionCommandHandler
         $moduleName = $command->getModuleName();
         $source = $command->getSource();
 
-        // First get the module from DB and don't go further if it doesn't exist
-        $moduleData = $this->moduleRepository->findInDatabaseByName($moduleName);
+        // First get the module from DB
+        // If not exist, get it from the Module Distribution API
+        $dbModule = $this->moduleRepository->findInDatabaseByName($moduleName);
 
-        if (null === $moduleData) {
+        if (null !== $dbModule) {
+            $module = new TransitionModule(
+                $moduleName,
+                $dbModule['version'],
+                $dbModule['installed'],
+                $dbModule['active_on_mobile'],
+                $dbModule['active']
+            );
+        } else {
+            $apiModule = $this->moduleRepository->getApiModule($moduleName);
+
+            $module = new TransitionModule(
+                $moduleName,
+                $apiModule->version,
+                false,
+                false,
+                false
+            );
+        }
+
+        if (null === $module) {
             throw new ModuleNotFoundException(sprintf('Module %s not found', $moduleName));
         }
-        $module = new TransitionModule(
-            $moduleName,
-            $moduleData['version'],
-            $moduleData['installed'],
-            $moduleData['active_on_mobile'],
-            $moduleData['active']
-        );
 
         // Check if transition asked can be mapped to an existing target status
         $transitionCommand = $command->getCommand()->getValue();
-        if (!array_key_exists($transitionCommand, self::MAPPING_TRANSITION_COMMAND_TARGET_STATUS)) {
+        if (!array_key_exists($transitionCommand, ModuleTransitionCommand::MAPPING_TRANSITION_COMMAND_TARGET_STATUS)) {
             throw new TransitionCommandToModuleStatusException(sprintf('Unable to map module transition command given %s', $transitionCommand));
         }
 
         // Compute the state machine transition name
         $transitionName = $this->moduleStateMachine->getTransition(
             $module,
-            self::MAPPING_TRANSITION_COMMAND_TARGET_STATUS[$transitionCommand]
+            $transitionCommand
         );
 
         // Check if the transition asked is possible
@@ -103,6 +105,8 @@ final class ModuleStatusTransitionCommandHandler
         $this->moduleStateMachine->apply($module, $transitionName, [
             'source' => $source,
         ]);
+
+        $this->moduleRepository->clearCache();
 
         return $this->moduleRepository->getModule($moduleName);
     }

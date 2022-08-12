@@ -107,6 +107,6 @@ class TransitionModule
             return ModuleStateMachine::STATUS_DISABLED__MOBILE_ENABLED;
         }
 
-        return ModuleStateMachine::STATUS_INSTALLED;
+        return ModuleStateMachine::STATUS_DISABLED__MOBILE_DISABLED;
     }
 }
