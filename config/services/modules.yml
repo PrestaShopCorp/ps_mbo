@@ -37,3 +37,11 @@ services:
     arguments:
       - '@mbo.modules.files_manager'
       - '@mbo.modules.repository'
+
+  mbo.modules.sourcehandler.url:
+    class: PrestaShop\Module\Mbo\Module\SourceHandler\UrlSourceHandler
+    arguments:
+      - '%modules_dir%'
+      - '@translator'
+    properties:
+      cacheDir: "%kernel.cache_dir%"

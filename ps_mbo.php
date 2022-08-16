@@ -114,6 +114,8 @@ class ps_mbo extends Module
         }
 
         $this->loadEnv();
+
+        $this->get('prestashop.module.factory.sourcehandler')->addHandler($this->get('mbo.modules.sourcehandler.url'));
     }
 
     /**
