@@ -4,12 +4,12 @@
     <body>
       <trans-unit id="859a82ffb385f9227c656960996025eb">
         <source>Visit the theme catalog</source>
-        <target>Visit the theme catalog</target>
+        <target>Odwiedź katalog szablonów</target>
         <note>Line: 33</note>
       </trans-unit>
       <trans-unit id="6fe78057f585de51da0f61d514143fe1">
         <source>Explore more than a thousand themes</source>
-        <target>Explore more than a thousand themes</target>
+        <target>Poznaj ponad tysiąc szablonów</target>
         <note>Line: 28</note>
       </trans-unit>
     </body>

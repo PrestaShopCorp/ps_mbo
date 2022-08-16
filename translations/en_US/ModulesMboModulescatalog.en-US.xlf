@@ -10,7 +10,7 @@
       <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df">
         <source>Synchronized with Addons marketplace!</source>
         <target>Synchronized with Addons marketplace!</target>
-        <note>Line: 113</note>
+        <note>Line: 141</note>
       </trans-unit>
     </body>
   </file>
@@ -19,17 +19,17 @@
       <trans-unit id="cff7b4047c79f112e869481322d2924e">
         <source>Module %module% successfully upgraded.</source>
         <target>Module %module% successfully upgraded.</target>
-        <note>Line: 199</note>
+        <note>Line: 193</note>
       </trans-unit>
       <trans-unit id="22d6960d922158c548d123998be8dd91">
         <source>Upgrade of module %module% failed. %error%</source>
         <target>Upgrade of module %module% failed. %error%</target>
-        <note>Line: 235</note>
+        <note>Line: 229</note>
       </trans-unit>
       <trans-unit id="f8c9c7b6af2a8d50bc948bcf966c1d4b">
         <source>Module %module% is already up to date</source>
         <target>Module %module% is already up to date</target>
-        <note>Line: 222</note>
+        <note>Line: 216</note>
       </trans-unit>
     </body>
   </file>
@@ -38,16 +38,16 @@
       <trans-unit id="6ea7071301eeb50e00bf88f5a46ded8e">
         <source>Modules catalog</source>
         <target>Modules catalog</target>
-        <note>Line: 101</note>
+        <note>Line: 108</note>
       </trans-unit>
       <trans-unit id="385b04e1b2442530341b51c2d3b216a3">
         <source>Cannot get catalog data, please try again later. Reason: %error_details%</source>
         <target>Cannot get catalog data, please try again later. Reason: %error_details%</target>
-        <note>Line: 140</note>
+        <note>Line: 149</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/controllers/theme_catalog/addons_store.html.twig" source-language="en-US" target-language="en-US" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="en-US" target-language="en-US" datatype="plaintext">
     <body>
       <trans-unit id="3b878279a04dc47d60932cb294d96259">
         <source>Overview</source>

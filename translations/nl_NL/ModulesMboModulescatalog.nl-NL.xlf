@@ -4,13 +4,13 @@
     <body>
       <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004">
         <source>Upload a module</source>
-        <target>Upload a module</target>
+        <target>Upload een module</target>
         <note>Line: 96</note>
       </trans-unit>
       <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df">
         <source>Synchronized with Addons marketplace!</source>
-        <target>Synchronized with Addons marketplace!</target>
-        <note>Line: 113</note>
+        <target>Gesynchroniseerd met Addons!</target>
+        <note>Line: 141</note>
       </trans-unit>
     </body>
   </file>
@@ -19,17 +19,17 @@
       <trans-unit id="cff7b4047c79f112e869481322d2924e">
         <source>Module %module% successfully upgraded.</source>
         <target>Module %module% successfully upgraded.</target>
-        <note>Line: 199</note>
+        <note>Line: 193</note>
       </trans-unit>
       <trans-unit id="22d6960d922158c548d123998be8dd91">
         <source>Upgrade of module %module% failed. %error%</source>
         <target>Upgrade of module %module% failed. %error%</target>
-        <note>Line: 235</note>
+        <note>Line: 229</note>
       </trans-unit>
       <trans-unit id="f8c9c7b6af2a8d50bc948bcf966c1d4b">
         <source>Module %module% is already up to date</source>
         <target>Module %module% is already up to date</target>
-        <note>Line: 222</note>
+        <note>Line: 216</note>
       </trans-unit>
     </body>
   </file>
@@ -37,56 +37,56 @@
     <body>
       <trans-unit id="6ea7071301eeb50e00bf88f5a46ded8e">
         <source>Modules catalog</source>
-        <target>Modules catalog</target>
-        <note>Line: 101</note>
+        <target>Modulecatalogus</target>
+        <note>Line: 108</note>
       </trans-unit>
       <trans-unit id="385b04e1b2442530341b51c2d3b216a3">
         <source>Cannot get catalog data, please try again later. Reason: %error_details%</source>
-        <target>Cannot get catalog data, please try again later. Reason: %error_details%</target>
-        <note>Line: 140</note>
+        <target>Kan geen catalogus informatie laden, probeer later. Reden: %error_details%</target>
+        <note>Line: 149</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/controllers/theme_catalog/addons_store.html.twig" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
     <body>
       <trans-unit id="3b878279a04dc47d60932cb294d96259">
         <source>Overview</source>
-        <target>Overview</target>
+        <target>Overzicht</target>
         <note>Line: 83</note>
       </trans-unit>
       <trans-unit id="0f68b904e33d9ac04605aecc958bcf52">
         <source>Additional information</source>
-        <target>Additional information</target>
+        <target>Aanvullende informatie</target>
         <note>Line: 87</note>
       </trans-unit>
       <trans-unit id="e654f7a86a4458b9cd662267e0f29b52">
         <source>Benefits</source>
-        <target>Benefits</target>
+        <target>Voordelen</target>
         <note>Line: 92</note>
       </trans-unit>
       <trans-unit id="98f770b0af18ca763421bac22b4b6805">
         <source>Features</source>
-        <target>Features</target>
+        <target>Functies</target>
         <note>Line: 97</note>
       </trans-unit>
       <trans-unit id="a5ad64d595144c185c9cf2065162dec3">
         <source>Demo video</source>
-        <target>Demo video</target>
+        <target>Demonstratie-video</target>
         <note>Line: 102</note>
       </trans-unit>
       <trans-unit id="c49182dc0c7a70b9cd2e10853d9ec6c7">
         <source>Changelog</source>
-        <target>Changelog</target>
+        <target>Wijzigingen</target>
         <note>Line: 107</note>
       </trans-unit>
       <trans-unit id="87ad4793c12c9f9e5d56cc81386f77b8">
         <source>No description found for this module :(</source>
-        <target>No description found for this module :(</target>
+        <target>Geen beschrijving gevonden voor deze module :(</target>
         <note>Line: 121</note>
       </trans-unit>
       <trans-unit id="a8fc81349d4f60335fc2f2d2dea6fb0c">
         <source>Multistore compatibility:</source>
-        <target>Multistore compatibility:</target>
+        <target>Multistore compatibiliteit:</target>
         <note>Line: 126</note>
       </trans-unit>
       <trans-unit id="9e3af2cc76136602790d15926c0406d2">
@@ -121,37 +121,37 @@
       </trans-unit>
       <trans-unit id="177915f8877b2d381c7f0c540ab7a17b">
         <source>This module is not compatible with the multistore feature. It means that its configuration applies to all stores.</source>
-        <target>This module is not compatible with the multistore feature. It means that its configuration applies to all stores.</target>
+        <target>Deze module is niet compatibel met de multistore-functie. Dit betekent dat de configuratie van toepassing is op alle winkels.</target>
         <note>Line: 139</note>
       </trans-unit>
       <trans-unit id="a76e4258e8695991d6f5f62efdba70d6">
         <source>No additional description provided for this module :(</source>
-        <target>No additional description provided for this module :(</target>
+        <target>Geen extra beschrijving van de voordelen gevonden voor deze module :(</target>
         <note>Line: 150</note>
       </trans-unit>
       <trans-unit id="1ed02f805424aac96756b590d51e2038">
         <source>No feature list provided for this module :(</source>
-        <target>No feature list provided for this module :(</target>
+        <target>Geen beschrijving van de kenmerken gevonden voor deze module :(</target>
         <note>Line: 160</note>
       </trans-unit>
       <trans-unit id="f2a854a84903f5f29c0b7a40ccbf4ee5">
         <source>No customer benefits notes found for this module :(</source>
-        <target>No customer benefits notes found for this module :(</target>
+        <target>Geen informatie over klantvoordelen gevonden voor deze module :(</target>
         <note>Line: 170</note>
       </trans-unit>
       <trans-unit id="94d27c2e2294ddfe66621b814f2ac3e0">
         <source>No demonstration video found for this module :(</source>
-        <target>No demonstration video found for this module :(</target>
+        <target>Geen demonstratie-video gevonden voor deze module :(</target>
         <note>Line: 180</note>
       </trans-unit>
       <trans-unit id="3072d199d2a0269893376e8c7d0049d6">
         <source>No changelog provided for this module :(</source>
-        <target>No changelog provided for this module :(</target>
+        <target>Geen logboek met wijzigingen gevonden voor deze module :(</target>
         <note>Line: 198</note>
       </trans-unit>
       <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
         <source>Free</source>
-        <target>Free</target>
+        <target>Gratis</target>
         <note>Line: 212</note>
       </trans-unit>
     </body>
