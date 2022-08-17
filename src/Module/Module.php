@@ -523,6 +523,6 @@ class Module implements ModuleInterface
             return $diskVersion;
         }
 
-        return $dbVersion ?? '';
+        return $this->database->get('version') ?? '';
     }
 }
