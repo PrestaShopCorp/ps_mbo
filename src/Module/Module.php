@@ -518,7 +518,6 @@ class Module implements ModuleInterface
     private function getVersion(): string
     {
         $diskVersion = $this->disk->get('version');
-        $dbVersion = $this->database->get('version');
 
         if (null !== $diskVersion) {
             return $diskVersion;
