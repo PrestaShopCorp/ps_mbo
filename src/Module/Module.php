@@ -508,10 +508,21 @@ class Module implements ModuleInterface
     {
         return (new TransitionModule(
             $this->get('name'),
-            $this->disk->get('version'),
+            $this->getVersion(),
             (bool) $this->database->get('installed'),
             $this->isMobileActive(),
             $this->isActive())
         )->getStatus();
+    }
+
+    private function getVersion(): string
+    {
+        $diskVersion = $this->disk->get('version');
+
+        if (null !== $diskVersion) {
+            return $diskVersion;
+        }
+
+        return $this->database->get('version') ?? '';
     }
 }
