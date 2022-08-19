@@ -67,7 +67,7 @@ trait UseActionGetAdminToolbarButtons
      *
      * @throws Exception
      */
-    public function bootUseGetAdminToolbarButtons(): void
+    public function bootUseActionGetAdminToolbarButtons(): void
     {
         if (method_exists($this, 'addAdminControllerMedia')) {
             $this->addAdminControllerMedia('loadMediaGetAdminToolbarButtons');
