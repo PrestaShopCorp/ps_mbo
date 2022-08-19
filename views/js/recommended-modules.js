@@ -325,8 +325,8 @@ var mbo = {};
       '        </button>\n' +
       '      </div>\n' +
       '      <div class="modal-body row">\n' +
-      '        <div id="modules_list_container_tab_modal" class="col-md-12" style="display:none;"></div>\n' +
               loader +
+      '        <div id="modules_list_container_tab_modal" class="col-md-12" style="display:none;"></div>\n' +
       '      </div>\n' +
       '    </div>\n' +
       '  </div>\n' +
@@ -376,7 +376,7 @@ var mbo = {};
       $(pageMap.modulesListModal).modal('show');
 
       recommendedModulesRequest.done(function (data) {
-        $(pageMap.modulesListModalContent).html(data.content).slideDown();
+        $(pageMap.modulesListModalContent).html(data.content).show();
         $(pageMap.modulesListLoader).hide();
       });
 
@@ -387,7 +387,7 @@ var mbo = {};
           content += jqXHR.responseJSON.content;
         }
 
-        $(pageMap.modulesListModalContent).html(content).slideDown();
+        $(pageMap.modulesListModalContent).html(content).show();
         $(pageMap.modulesListLoader).hide();
       });
     };
