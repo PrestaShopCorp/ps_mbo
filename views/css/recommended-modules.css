@@ -164,3 +164,16 @@
     width: 680px;
   }
 }
+
+#modules_list_container .modal-body {
+  min-height: 60px;
+}
+
+#modules_list_container .modal-title {
+  font-size: 1.25rem;
+}
+
+#modules_list_container .modal-header .close {
+  margin-top: -1.25rem;
+  font-weight: normal;
+}
