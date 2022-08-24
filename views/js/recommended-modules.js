@@ -32,7 +32,6 @@ var mbo = {};
     modulesListModal: '#modules_list_container',
     modulesListModalContainer: '#content',
     modulesListModalContent: '#modules_list_container_tab_modal',
-    modulesListLoader: '#modules_list_loader',
   };
 
   var pageMapNewTheme = {
@@ -45,7 +44,6 @@ var mbo = {};
     modulesListModal: '#modules_list_container',
     modulesListModalContainer: '#main-div .content-div',
     modulesListModalContent: '#modules_list_container_tab_modal',
-    modulesListLoader: '#modules_list_loader',
   };
 
   /**
@@ -304,15 +302,7 @@ var mbo = {};
    * @constructor
    */
   var RecommendedModulesModal = function(pageMap, config) {
-    var $markup;
-    var loader = config.shouldUseLegacyTheme ?
-      '<div id="modules_list_loader" class="col-md-12 text-center"><img src="/img/loader.gif" /></div>'
-      :
-      '<div id="modules_list_loader" class="col-md-12 text-center">' +
-        '<button class="btn-primary-reverse onclick unbind spinner"></button>' +
-      '</div>';
-
-    $markup = $(
+    let $markup = $(
       '<div id="modules_list_container" class="modal modal-vcenter fade" role="dialog">\n' +
       '  <div class="modal-dialog">\n' +
       '    <div class="modal-content">\n' +
@@ -325,7 +315,6 @@ var mbo = {};
       '        </button>\n' +
       '      </div>\n' +
       '      <div class="modal-body row">\n' +
-              loader +
       '        <div id="modules_list_container_tab_modal" class="col-md-12" style="display:none;"></div>\n' +
       '      </div>\n' +
       '    </div>\n' +
@@ -366,7 +355,6 @@ var mbo = {};
       if(cdcContainer.length > 0 && cdcContainer.html().length > 0) {
         cdcContainer.html('')
       }
-      $(pageMap.modulesListLoader).show();
       var recommendedModulesRequest = $.ajax({
         type: 'GET',
         dataType: 'json',
@@ -377,7 +365,6 @@ var mbo = {};
 
       recommendedModulesRequest.done(function (data) {
         $(pageMap.modulesListModalContent).html(data.content).show();
-        $(pageMap.modulesListLoader).hide();
       });
 
       recommendedModulesRequest.fail(function(jqXHR, textStatus, errorThrown) {
@@ -388,7 +375,6 @@ var mbo = {};
         }
 
         $(pageMap.modulesListModalContent).html(content).show();
-        $(pageMap.modulesListLoader).hide();
       });
     };
 
