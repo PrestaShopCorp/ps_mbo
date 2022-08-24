@@ -28,7 +28,6 @@ jobs:
         run: |
           rm .env.dist
           mv .env.integration .env.dist
-          zip -r ${{ github.event.repository.name }}.integration.zip ${{ github.event.repository.name }}
       - name: Create & upload artifact for integration
         uses: actions/upload-artifact@v1
         with:
