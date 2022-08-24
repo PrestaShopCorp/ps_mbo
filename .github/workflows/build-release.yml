@@ -19,14 +19,13 @@ jobs:
         run: composer install --no-dev -o
       - name: Clean-up project
         uses: PrestaShopCorp/github-action-clean-before-deploy@v1.0
-      - name: Create & upload artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: ${{ github.event.repository.name }}
-          path: ../
+      # - name: Create & upload artifact
+      #   uses: actions/upload-artifact@v1
+      #   with:
+      #     name: ${{ github.event.repository.name }}
+      #     path: ../
       - name: Prepare for artifact integration
         run: |
-          cd ${{ github.event.repository.name }}
           rm .env.dist
           mv .env.integration .env.dist
           zip -r ${{ github.event.repository.name }}.integration.zip ${{ github.event.repository.name }}
