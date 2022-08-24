@@ -24,6 +24,17 @@ jobs:
         with:
           name: ${{ github.event.repository.name }}
           path: ../
+      - name: Prepare for artifact integration
+        run: |
+          cd ${{ github.event.repository.name }}
+          rm .env.dist
+          mv .env.integration .env.dist
+          zip -r ${{ github.event.repository.name }}.integration.zip ${{ github.event.repository.name }}
+      - name: Create & upload artifact for integration
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ github.event.repository.name }}.integration
+          path: ../
   update_release_draft:
     runs-on: ubuntu-latest
     needs: [deploy]
@@ -41,24 +52,6 @@ jobs:
         run: |
           cd ${{ github.event.repository.name }}
           zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
-      - name: Prepare for Release integration
-        run: |
-          cd ${{ github.event.repository.name }}
-          rm .env.dist
-          mv .env.integration .env.dist
-          zip -r ${{ github.event.repository.name }}.integration.zip ${{ github.event.repository.name }}
-      - name: Prepare for Release prestabulle 1
-        run: |
-          cd ${{ github.event.repository.name }}
-          rm .env.dist
-          mv .env.prestabulle1 .env.dist
-          zip -r ${{ github.event.repository.name }}.prestabulle1.zip ${{ github.event.repository.name }}
-      - name: Prepare for Release prestabulle 2
-        run: |
-          cd ${{ github.event.repository.name }}
-          rm .env.dist
-          mv .env.prestabulle2 .env.dist
-          zip -r ${{ github.event.repository.name }}.prestabulle2.zip ${{ github.event.repository.name }}
       - name: Clean existing assets
         shell: bash
         run: |
@@ -78,31 +71,4 @@ jobs:
           upload_url: ${{ steps.release_info.outputs.upload_url }}
           asset_path: ./${{ github.event.repository.name }}/${{ github.event.repository.name }}.zip
           asset_name: ${{ github.event.repository.name }}.zip
-          asset_content_type: application/zip
-      - name: Publish to GitHub Release integration
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.release_info.outputs.upload_url }}
-          asset_path: ./${{ github.event.repository.name }}/${{ github.event.repository.name }}.integration.zip
-          asset_name: ${{ github.event.repository.name }}.integration.zip
-          asset_content_type: application/zip
-      - name: Publish to GitHub Release prestabulle 1
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.release_info.outputs.upload_url }}
-          asset_path: ./${{ github.event.repository.name }}/${{ github.event.repository.name }}.prestabulle1.zip
-          asset_name: ${{ github.event.repository.name }}.prestabulle1.zip
-          asset_content_type: application/zip
-      - name: Publish to GitHub Release prestabulle 2
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.release_info.outputs.upload_url }}
-          asset_path: ./${{ github.event.repository.name }}/${{ github.event.repository.name }}.prestabulle2.zip
-          asset_name: ${{ github.event.repository.name }}.prestabulle2.zip
           asset_content_type: application/zip
