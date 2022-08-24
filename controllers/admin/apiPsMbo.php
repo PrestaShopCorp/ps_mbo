@@ -27,13 +27,12 @@ class apiPsMboController extends AbstractAdminApiController
 
             /** @var \PrestaShop\Module\Mbo\Module\Module $module */
             $module = $this->module->get('mbo.modules.state_machine.module_status_transition_handler')->handle($command);
+
+            $moduleUrls = $module->get('urls');
+            $configUrl = (bool) $module->get('is_configurable') && isset($moduleUrls['configure']) ? $this->generateTokenizedModuleActionUrl($moduleUrls['configure']) : null;
         } catch (\Exception $exception) {
             $this->exitWithExceptionMessage($exception);
         }
-
-        $moduleUrls = $module->get('urls');
-        $configUrl = (bool) $module->get('is_configurable') && isset($moduleUrls['configure']) ? $moduleUrls['configure'] : null;
-        $configUrl = $this->generateTokenizedModuleActionUrl($configUrl);
 
         $this->exitWithResponse([
             'message' => $this->trans('Transition successfully executed'),
@@ -43,7 +42,7 @@ class apiPsMboController extends AbstractAdminApiController
         ]);
     }
 
-    private function generateTokenizedModuleActionUrl($url)
+    private function generateTokenizedModuleActionUrl($url): string
     {
         $components = parse_url($url);
         $baseUrl = ($components['path'] ?? '');
