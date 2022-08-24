@@ -24,6 +24,33 @@ jobs:
         with:
           name: ${{ github.event.repository.name }}
           path: ../
+      - name: Prepare for artifact integration
+        run: |
+          rm .env.dist
+          mv .env.integration .env.dist
+      - name: Create & upload artifact for integration
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ github.event.repository.name }}.integration
+          path: ../
+      - name: Prepare for artifact prestabulle1
+        run: |
+          rm .env.dist
+          mv .env.prestabulle1 .env.dist
+      - name: Create & upload artifact for prestabulle1
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ github.event.repository.name }}.prestabulle1
+          path: ../
+      - name: Prepare for artifact prestabulle2
+        run: |
+          rm .env.dist
+          mv .env.prestabulle2 .env.dist
+      - name: Create & upload artifact for prestabulle2
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ github.event.repository.name }}.prestabulle2
+          path: ../
   update_release_draft:
     runs-on: ubuntu-latest
     needs: [deploy]
