@@ -44,9 +44,9 @@ class TransitionsManager
     private $sourceRetriever;
 
     public function __construct(
-        ModuleManager            $moduleManager,
+        ModuleManager $moduleManager,
         SourceRetrieverInterface $sourceRetriever,
-        Repository               $moduleRepository
+        Repository $moduleRepository
     ) {
         $this->sourceRetriever = $sourceRetriever;
         $this->moduleManager = $moduleManager;
@@ -325,9 +325,7 @@ class TransitionsManager
         if (null !== $source) {
             $zipFilename = $this->sourceRetriever->get($source);
             if (!$this->sourceRetriever->validate($zipFilename, $moduleName)) {
-                throw new UnexpectedModuleSourceContentException(
-                    sprintf('The source given doesn\'t contains the expected module : %s', $moduleName)
-                );
+                throw new UnexpectedModuleSourceContentException(sprintf('The source given doesn\'t contains the expected module : %s', $moduleName));
             }
 
             $source = $zipFilename;
