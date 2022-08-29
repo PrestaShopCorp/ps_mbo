@@ -22,8 +22,9 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
 use Exception;
-use PrestaShop\Module\Mbo\Module\Module;
+use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\Module\Mbo\Module\Repository;
+use PrestaShop\Module\Mbo\Module\SourceRetriever\SourceRetrieverInterface;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 
@@ -39,8 +40,15 @@ class TransitionsManager
      */
     private $moduleRepository;
 
-    public function __construct(ModuleManager $moduleManager, Repository $moduleRepository)
-    {
+    /** @var SourceRetrieverInterface */
+    private $sourceRetriever;
+
+    public function __construct(
+        ModuleManager            $moduleManager,
+        SourceRetrieverInterface $sourceRetriever,
+        Repository               $moduleRepository
+    ) {
+        $this->sourceRetriever = $sourceRetriever;
         $this->moduleManager = $moduleManager;
         $this->moduleRepository = $moduleRepository;
     }
@@ -312,6 +320,18 @@ class TransitionsManager
         // We are calling install on purpose. If install is called for an already installed module, it'll perform an upgrade
         // Plus the "install" method allows us to provide an external source
         $moduleName = $transitionModule->getName();
+
+        // Validate that the module in the source is the one we want to upgrade
+        if (null !== $source) {
+            $zipFilename = $this->sourceRetriever->get($source);
+            if (!$this->sourceRetriever->validate($zipFilename, $moduleName)) {
+                throw new UnexpectedModuleSourceContentException(
+                    sprintf('The source given doesn\'t contains the expected module : %s', $moduleName)
+                );
+            }
+
+            $source = $zipFilename;
+        }
         if ($this->moduleManager->install($moduleName, $source)) {
             $module = $this->getModuleInstance($moduleName);
             if (null === $module) {
