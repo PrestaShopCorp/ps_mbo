@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Service\View;
 
 use Configuration;
 use Context;
+use Country;
 use Doctrine\Common\Cache\CacheProvider;
 use Language;
 use PrestaShop\Module\Mbo\Module\Module;
