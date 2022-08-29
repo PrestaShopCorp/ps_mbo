@@ -111,6 +111,7 @@ class ContextBuilder
     {
         $context = $this->getContext();
         $language = $this->getLanguage();
+        $country = $this->getCountry();
 
         $token = Tools::getValue('_token');
 
@@ -121,7 +122,7 @@ class ContextBuilder
         return [
             'currency' => $this->getCurrencyCode(),
             'iso_lang' => $language->getLanguageCode(),
-            'iso_code' => $language->getIsoCode(),
+            'iso_code' => mb_strtolower($country->iso_code),
             'shop_version' => _PS_VERSION_,
             'shop_url' => $context->shop->getBaseURL(true, false),
             'shop_uuid' => $this->shopId,
@@ -141,6 +142,11 @@ class ContextBuilder
     private function getLanguage(): Language
     {
         return $this->getContext()->language ?? new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+    }
+
+    private function getCountry(): Country
+    {
+        return $this->getContext()->country ?? new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
     }
 
     private function getCurrencyCode(): string
