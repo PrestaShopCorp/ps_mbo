@@ -21,10 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Distribution;
 
-use Configuration;
 use Context;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
+use PrestaShop\Module\Mbo\Helpers\Config;
 use ps_mbo;
 use Shop;
 use stdClass;
@@ -76,7 +76,7 @@ class Client
     public function __construct(HttpClient $httpClient)
     {
         $this->httpClient = $httpClient;
-        $this->shopUuid = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
+        $this->shopUuid = Config::getShopMboUuid();
         $shopId = (int) Context::getContext()->shop->id;
         $this->shopUrl = (new Shop($shopId))->getBaseUrl();
     }

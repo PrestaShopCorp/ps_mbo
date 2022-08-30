@@ -28,6 +28,7 @@ use Jean85\PrettyVersions;
 use Module;
 use Monolog\Logger;
 use PrestaShop\Module\Mbo\Api\Config\Env;
+use PrestaShop\Module\Mbo\Helpers\Config;
 use Sentry\Client;
 use Sentry\HttpClient\HttpClientFactory;
 use Sentry\Options;
@@ -50,7 +51,7 @@ class ErrorHandler implements ErrorHandlerInterface
     public function __construct(Module $module, Env $env, Logger $logger)
     {
         try {
-            $shopUuid = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
+            $shopUuid = Config::getShopMboUuid();
 
             $this->client = $this->getClient($logger, [
                 'dsn' => $env->get('SENTRY_CREDENTIALS'),

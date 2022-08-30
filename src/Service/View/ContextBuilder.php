@@ -26,6 +26,7 @@ use Context;
 use Country;
 use Doctrine\Common\Cache\CacheProvider;
 use Language;
+use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Tab\Tab;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
@@ -74,7 +75,7 @@ class ContextBuilder
         $this->router = $router;
         $this->cacheProvider = $cacheProvider;
 
-        $this->shopId = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
+        $this->shopId = Config::getShopMboUuid();
     }
 
     public function getViewContext(): array

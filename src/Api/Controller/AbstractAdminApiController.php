@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Api\Controller;
 
-use Configuration;
 use Exception;
 use ModuleAdminController;
 use PrestaShop\Module\Mbo\Api\Config\Config;
@@ -32,6 +31,7 @@ use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandler;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker;
+use PrestaShop\Module\Mbo\Helpers\Config as ConfigHelper;
 use ps_mbo;
 use Tools;
 
@@ -97,7 +97,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
     {
         $httpCode = isset($response['httpCode']) ? (int) $response['httpCode'] : 200;
 
-        $shopUuid = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
+        $shopUuid = ConfigHelper::getShopMboUuid();
 
         $response['shop_uuid'] = $shopUuid;
 

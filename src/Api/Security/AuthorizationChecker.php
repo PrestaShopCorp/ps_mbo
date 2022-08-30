@@ -21,12 +21,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Api\Security;
 
-use Configuration;
 use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Api\Exception\RetrieveNewKeyException;
 use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Distribution\Client;
+use PrestaShop\Module\Mbo\Helpers\Config;
 
 class AuthorizationChecker
 {
@@ -55,7 +55,7 @@ class AuthorizationChecker
         $this->cacheProvider = $cacheProvider;
         $this->distributionClient = $distributionClient;
 
-        $shopUuid = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
+        $shopUuid = Config::getShopMboUuid();
         $this->keyVersionCacheIndex = 'api_key_version_' . $shopUuid;
         $this->keyCacheIndex = 'api_key_' . $shopUuid;
     }
