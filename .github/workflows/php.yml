@@ -2,7 +2,7 @@ name: PHP tests
 on: [push, pull_request]
 jobs:
   php-linter:
-    name: PHP Syntax check 7.2|7.3|8.0
+    name: PHP Syntax check 7.2 => 8.1
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -11,8 +11,12 @@ jobs:
         uses: prestashop/github-action-php-lint/7.2@master
       - name: PHP syntax checker 7.3
         uses: prestashop/github-action-php-lint/7.3@master
-      - name: PHP syntax checker 8/0
+      - name: PHP syntax checker 7.4
+        uses: prestashop/github-action-php-lint/7.4@master
+      - name: PHP syntax checker 8.0
         uses: prestashop/github-action-php-lint/8.0@master
+      - name: PHP syntax checker 8.1
+        uses: prestashop/github-action-php-lint/8.1@master
   php-cs-fixer:
     name: PHP-CS-Fixer
     runs-on: ubuntu-latest
