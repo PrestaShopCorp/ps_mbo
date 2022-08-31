@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
+use Hook;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\Module\Mbo\Tab\TabInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -94,7 +95,21 @@ trait UseDisplayDashboardTop
             return $this->displayPushOnConfigurationPage($values['configure']);
         }
 
-        return $this->displayRecommendedModules();
+        return $this->displayRecommendedModules($values['controller'] ?? '');
+    }
+
+    public function useDisplayDashboardTopExtraOperations(): void
+    {
+        $hookName = 'actionMboRecommendedModules';
+
+        $id_hook = Hook::getIdByName($hookName, false);
+        if (!$id_hook) {
+            $new_hook = new Hook();
+            $new_hook->name = pSQL($hookName);
+            $new_hook->title = '';
+            $new_hook->position = true;
+            $new_hook->add();
+        }
     }
 
     /**
@@ -139,8 +154,20 @@ trait UseDisplayDashboardTop
      *
      * @throws \Exception
      */
-    protected function displayRecommendedModules(): string
+    protected function displayRecommendedModules(string $controller): string
     {
+        $recommendedModulesDisplayed = true;
+
+        // Ask to modules if recommended modules should be displayed in this context
+        Hook::exec('actionMboRecommendedModules', [
+            'recommendedModulesDisplayed' => &$recommendedModulesDisplayed,
+            'controller' => $controller,
+        ]);
+
+        if (!$recommendedModulesDisplayed) {
+            return '';
+        }
+
         $shouldAttachRecommendedModulesAfterContent = $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE);
         $shouldAttachRecommendedModulesButton = $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_BUTTON_TYPE);
 
