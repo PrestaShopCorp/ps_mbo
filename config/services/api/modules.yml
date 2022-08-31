@@ -7,10 +7,18 @@ services:
     arguments:
       - '@event_dispatcher'
 
+  mbo.modules.state_machine.source_retriever.url:
+    class: 'PrestaShop\Module\Mbo\Module\SourceRetriever\UrlSourceRetriever'
+    arguments:
+      - '@translator'
+    properties:
+      cacheDir: "%kernel.cache_dir%"
+
   mbo.modules.state_machine.transitions_manager:
     class: 'PrestaShop\Module\Mbo\Module\Workflow\TransitionsManager'
     arguments:
       - '@prestashop.module.manager'
+      - '@mbo.modules.state_machine.source_retriever.url'
       - '@mbo.modules.repository'
 
   mbo.modules.state_machine.eventsubscriber.transition:
