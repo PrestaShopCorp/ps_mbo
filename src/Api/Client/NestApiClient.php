@@ -21,10 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Api\Client;
 
-use Configuration;
 use Context;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use PrestaShop\Module\Mbo\Helpers\Config;
 use Shop;
 use stdClass;
 
@@ -69,7 +69,7 @@ class NestApiClient
 
     public function setDefaultParams(): void
     {
-        $shopUuid = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
+        $shopUuid = Config::getShopMboUuid();
 
         $shopId = (int) Context::getContext()->shop->id;
         $shopUrl = (new Shop($shopId))->getBaseUrl();

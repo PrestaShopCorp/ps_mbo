@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Api\Security;
 
-use Configuration;
 use Context;
 use Cookie;
 use DateTime;
@@ -30,6 +29,7 @@ use Doctrine\DBAL\Connection;
 use Employee;
 use EmployeeSession;
 use LogicException;
+use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -82,7 +82,7 @@ class AdminAuthenticationProvider
         $this->hashing = $hashing;
         $this->cacheProvider = $cacheProvider;
 
-        $this->shopId = Configuration::get('PS_MBO_SHOP_ADMIN_UUID');
+        $this->shopId = Config::getShopMboUuid();
     }
 
     public function createApiUser(): Employee
@@ -96,7 +96,7 @@ class AdminAuthenticationProvider
         $employee = new Employee();
         $employee->firstname = 'Prestashop';
         $employee->lastname = 'Marketplace';
-        $employee->email = Configuration::get('PS_MBO_SHOP_ADMIN_MAIL');
+        $employee->email = Config::getShopMboAdminMail();
         $employee->id_lang = $this->context->language->id;
         $employee->id_profile = _PS_ADMIN_PROFILE_;
         $employee->active = true;
@@ -121,7 +121,7 @@ class AdminAuthenticationProvider
             ->from($this->dbPrefix . 'employee', 'e')
             ->andWhere('e.email = :email')
             ->andWhere('e.active = :active')
-            ->setParameter('email', Configuration::get('PS_MBO_SHOP_ADMIN_MAIL'))
+            ->setParameter('email', Config::getShopMboAdminMail())
             ->setParameter('active', true)
             ->setMaxResults(1);
 
