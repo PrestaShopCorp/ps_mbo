@@ -29,7 +29,6 @@ if (file_exists($autoloadPath)) {
 
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
-use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
@@ -41,6 +40,7 @@ class ps_mbo extends Module
 {
     use PrestaShop\Module\Mbo\Traits\HaveTabs;
     use PrestaShop\Module\Mbo\Traits\UseHooks;
+    use PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService;
 
     public const DEFAULT_ENV = '';
 

@@ -41,6 +41,7 @@ trait UseHooks
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionListModules;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionDispatcherBefore;
+    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionObjectShopUrlUpdateAfter;
 
     /**
      * @var array An array of method that can be called to register media in the actionAdminControllerSetMedia hook
