@@ -266,6 +266,9 @@ class ps_mbo extends Module
         // Restore previous context
         Shop::setContext($previousContextType, $previousContextShopId);
 
+        // Unregister from online services
+        $this->unregisterShop();
+
         return $this->handleTabAction('uninstall');
     }
 
@@ -309,6 +312,9 @@ class ps_mbo extends Module
         return $this->serviceContainer->getService($serviceName);
     }
 
+    /**
+     * @inerhitDoc
+     */
     public function isUsingNewTranslationSystem(): bool
     {
         return true;
@@ -332,12 +338,22 @@ class ps_mbo extends Module
         }
     }
 
+    /**
+     * @return void
+     */
     private function loadEnv(): void
     {
         $dotenv = new Dotenv();
         $dotenv->loadEnv(__DIR__ . '/.env');
     }
 
+    /**
+     * Get an existing or build an instance of AdminAuthenticationProvider
+     *
+     * @return \PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider
+     *
+     * @throws \Exception
+     */
     public function getAdminAuthenticationProvider(): AdminAuthenticationProvider
     {
         if (null === $this->container) {
@@ -355,7 +371,15 @@ class ps_mbo extends Module
                 );
     }
 
-    private function registerShop()
+    /**
+     * Register a shop for online services delivered by API.
+     * So the module can correctly process actions (download, install, update..) on. modules
+     *
+     * @return void
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function registerShop(): void
     {
         $registrationLockFile = $this->moduleCacheDir . 'registration.lock';
 
@@ -380,6 +404,24 @@ class ps_mbo extends Module
                 fclose($f);
             }
         }
+    }
+
+    /**
+     * Unregister a shop of online services delivered by API.
+     * When the module is disabled or uninstalled, remove it from online services
+     *
+     * @return void
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function unregisterShop(): void
+    {
+        $token = $this->getAdminAuthenticationProvider()->getAdminToken();
+
+        /** @var Client $distributionApi */
+        $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
+
+        $distributionApi->unregisterShop($token);
     }
 
     private function getModuleEnvVar(): string
