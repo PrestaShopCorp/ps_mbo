@@ -130,8 +130,6 @@ class ps_mbo extends Module
             $this->getAdminAuthenticationProvider()->clearCache();
             $this->getAdminAuthenticationProvider()->createApiUser();
 
-            $this->registerShop();
-
             return true;
         }
 
@@ -229,6 +227,9 @@ class ps_mbo extends Module
 
         // Restore previous context
         Shop::setContext($previousContextType, $previousContextShopId);
+
+        // Register online services
+        $this->registerShop();
 
         return $this->handleTabAction('install');
     }
