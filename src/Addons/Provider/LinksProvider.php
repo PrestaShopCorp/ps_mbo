@@ -33,7 +33,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LinksProvider
 {
-    const ADDONS_LANGUAGES = ['de', 'en', 'es', 'fr', 'it', 'nl', 'pl', 'pt', 'ru'];
     const DEFAULT_LANGUAGE = 'en';
 
     /**
