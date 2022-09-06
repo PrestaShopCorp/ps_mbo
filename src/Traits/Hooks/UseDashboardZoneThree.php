@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use ToolsCore as Tools;
 
 trait UseDashboardZoneThree
@@ -46,8 +47,12 @@ trait UseDashboardZoneThree
      */
     public function hookDashboardZoneThree(array $params)
     {
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $moduleManager = $moduleManagerBuilder->build();
+
         $this->context->smarty->assign(
             [
+                'new_version_url' => Tools::getCurrentUrlProtocolPrefix() . _PS_API_DOMAIN_ . '/version/check_version.php?v=' . _PS_VERSION_ . '&lang=' . $this->context->language->iso_code . '&autoupgrade=' . (int) ($moduleManager->isInstalled('autoupgrade') && $moduleManager->isEnabled('autoupgrade')) . '&hosted_mode=' . (int) defined('_PS_HOST_MODE_'),
                 'shop_context' => json_encode($this->get('mbo.cdc.context_builder')->getViewContext()),
             ]
         );
