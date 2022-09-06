@@ -17,8 +17,12 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *}
 
-<div id="dashaddons" class="row-margin-bottom">
-  <a href="{$link_url}" target="_blank" rel="noopener noreferrer nofollow">
-    <i class="icon-plus"></i> {l s='Add more dashboard modules' d='Modules.Mbo.Dashboardzonetwo'}
-  </a>
-</div>
+<script defer>
+  const renderMoreModule = window.mboCdc.renderDashboardMoreModule
+
+  const context = {$shop_context};
+
+  renderMoreModule(context, '#cdc-more-module-container')
+</script>
+
+<div class="row-margin-bottom" id="cdc-more-module-container"></div>

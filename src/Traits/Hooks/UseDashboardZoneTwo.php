@@ -21,8 +21,22 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use ToolsCore as Tools;
+
 trait UseDashboardZoneTwo
 {
+    /**
+     * @return void
+     *
+     * @throws \Exception
+     */
+    public function bootUseDashboardZoneTwo(): void
+    {
+        if (method_exists($this, 'addAdminControllerMedia')) {
+            $this->addAdminControllerMedia('loadMediaForDashboardColumnTwo');
+        }
+    }
+
     /**
      * Display addons link on the middle column of the dashboard
      *
@@ -34,10 +48,24 @@ trait UseDashboardZoneTwo
     {
         $this->context->smarty->assign(
             [
-                'link_url' => $this->get('mbo.addons.links_provider')->getAddonsLinkByControllerName('AdminController', 'dashboard'),
+                'shop_context' => json_encode($this->get('mbo.cdc.context_builder')->getViewContext()),
             ]
         );
 
         return $this->display($this->name, 'dashboard-zone-two.tpl');
+    }
+
+    /**
+     * Add JS and CSS file
+     *
+     * @return void
+     *
+     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
+     */
+    protected function loadMediaForDashboardColumnTwo(): void
+    {
+        if (Tools::getValue('controller') === 'AdminDashboard') {
+            $this->context->controller->addJs(getenv('MBO_CDC_URL'));
+        }
     }
 }
