@@ -17,20 +17,6 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-.module-read-more-grid {
-  display: inline-block;
-}
-
-.module-read-more-grid .module-read-more-grid-btn {
-  font-weight: 700;
-}
-
-.module-modal-content .changelog-tab {
-  max-height: 300px;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
 .pstaggerTag { /* To prevent search input to be larger than its container */
   white-space: pre-wrap;
   word-wrap: break-word;
