@@ -1,7 +1,0 @@
-
-
-admin_mbo_dashboard_blog_rss:
-  path: /news/rss
-  methods: [GET]
-  defaults:
-    _controller: mbo.controller.dashboard.news:getBlogRssAction

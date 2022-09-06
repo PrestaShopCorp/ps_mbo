@@ -21,17 +21,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use Exception;
 use PrestaShop\Module\Mbo\Addons\Toolbar;
-use PrestaShop\Module\Mbo\Module\Collection;
 use PrestaShop\Module\Mbo\Module\ModuleBuilderInterface;
-use PrestaShop\Module\Mbo\Module\Query\GetModulesForListing;
 use PrestaShop\Module\Mbo\Module\RepositoryInterface;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

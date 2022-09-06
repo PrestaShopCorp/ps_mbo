@@ -25,18 +25,6 @@ services:
       - '@translator'
       - '@router'
 
-  mbo.modules.presenter.listing:
-    class: 'PrestaShop\Module\Mbo\Module\Presenter\ModulesForListingPresenter'
-    arguments:
-      - '@prestashop.adapter.legacy.context'
-      - '@prestashop.adapter.formatter.price'
-      - '@prestashop.adapter.data_provider.currency'
-      - '@twig'
-      - '@translator'
-      - '@mbo.security.permission_checker'
-      - '@prestashop.categories_provider'
-      - '@mbo.modules.repository'
-
   mbo.controller.modules.catalog:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController'
     arguments:
@@ -44,7 +32,6 @@ services:
       - '@mbo.modules.builder'
       - '@mbo.modules.repository'
       - '@prestashop.adapter.presenter.module'
-      - '@mbo.modules.presenter.listing'
       - '@mbo.cdc.context_builder'
 
   mbo.controller.modules.selection:

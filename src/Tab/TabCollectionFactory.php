@@ -23,8 +23,6 @@ namespace PrestaShop\Module\Mbo\Tab;
 
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Repository;
-use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModule;
-use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModuleCollection;
 
 class TabCollectionFactory implements TabCollectionFactoryInterface
 {
@@ -55,29 +53,11 @@ class TabCollectionFactory implements TabCollectionFactoryInterface
         }
 
         foreach ($data as $tabClassName => $tabData) {
-            $recommendedModuleCollection = new RecommendedModuleCollection();
+            $tab = new Tab();
+            $tab->setLegacyClassName($tabClassName);
+            $tab->setDisplayMode($tabData['displayMode']);
 
-            foreach ($tabData['recommendedModules'] as $position => $moduleName) {
-                if (isset($modulesData[$moduleName])) {
-                    $recommendedModule = new RecommendedModule();
-                    $recommendedModule->setName($moduleName);
-                    $recommendedModule->setPosition((int) $position);
-                    $recommendedModule->setInstalled((bool) $modulesData[$moduleName]->database->get('installed'));
-                    $recommendedModule->setModule($modulesData[$moduleName]);
-                    $recommendedModuleCollection->addRecommendedModule($recommendedModule);
-                }
-            }
-
-            if (!$recommendedModuleCollection->isEmpty()) {
-                $recommendedModuleCollection->sortByPosition();
-
-                $tab = new Tab();
-                $tab->setLegacyClassName($tabClassName);
-                $tab->setDisplayMode($tabData['displayMode']);
-                $tab->setRecommendedModules($recommendedModuleCollection);
-
-                $tabCollection->addTab($tab);
-            }
+            $tabCollection->addTab($tab);
         }
 
         return $tabCollection;

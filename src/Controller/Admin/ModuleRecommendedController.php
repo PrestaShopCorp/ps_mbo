@@ -93,9 +93,6 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
                     '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
                     [
                         'shop_context' => $context,
-                        'recommendedModulesInstalled' => $this->recommendedModulePresenter->presentCollection($tab->getRecommendedModulesInstalled()),
-                        'recommendedModulesNotInstalled' => $this->recommendedModulePresenter->presentCollection($tab->getRecommendedModulesNotInstalled()),
-                        'linkUrl' => $this->linksProvider->getAddonsLinkByControllerName($tabClassName, 'dispatch'),
                     ]
                 ),
             ]);
