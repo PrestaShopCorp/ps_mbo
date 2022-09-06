@@ -67,7 +67,7 @@ trait UseActionDispatcherBefore
     }
 
     /**
-     * @param string $controllerName
+     * @param string|bool $controllerName
      * @param array $params
      *
      * @return void
@@ -75,7 +75,7 @@ trait UseActionDispatcherBefore
      * @throws \PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException
      * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
      */
-    private function ensureApiUserExistAndIsLogged(string $controllerName, array $params): void
+    private function ensureApiUserExistAndIsLogged($controllerName, array $params): void
     {
         $apiUser = null;
         // Whatever the call in the MBO API, we check if the MBO API user exists
