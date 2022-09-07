@@ -20,8 +20,6 @@
 
 namespace PrestaShop\Module\Mbo\Tab;
 
-use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModuleCollectionInterface;
-
 interface TabInterface
 {
     /**
@@ -92,46 +90,6 @@ interface TabInterface
      * @return TabInterface
      */
     public function setDisplayMode(string $displayMode): TabInterface;
-
-    /**
-     * Get the recommended modules of the tab.
-     *
-     * @return RecommendedModuleCollectionInterface
-     */
-    public function getRecommendedModules(): RecommendedModuleCollectionInterface;
-
-    /**
-     * @param RecommendedModuleCollectionInterface $recommendedModules
-     *
-     * @return TabInterface
-     */
-    public function setRecommendedModules(RecommendedModuleCollectionInterface $recommendedModules): TabInterface;
-
-    /**
-     * Check if the tab has recommended modules.
-     *
-     * @return bool
-     */
-    public function hasRecommendedModules(): bool;
-
-    /**
-     * Get the installed recommended modules of the tab.
-     *
-     * @return RecommendedModuleCollectionInterface
-     */
-    public function getRecommendedModulesInstalled(): RecommendedModuleCollectionInterface;
-
-    /**
-     * Get the not installed recommended modules of the tab.
-     *
-     * @return RecommendedModuleCollectionInterface
-     */
-    public function getRecommendedModulesNotInstalled(): RecommendedModuleCollectionInterface;
-
-    /**
-     * @return bool
-     */
-    public function shouldDisplayButton(): bool;
 
     /**
      * @return bool

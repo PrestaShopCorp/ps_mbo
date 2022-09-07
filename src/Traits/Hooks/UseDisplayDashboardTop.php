@@ -23,12 +23,9 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
 use Hook;
-use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\Module\Mbo\Tab\TabInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\String\UnicodeString;
 use ToolsCore as Tools;
-use ValidateCore as Validate;
 
 trait UseDisplayDashboardTop
 {
@@ -212,21 +209,12 @@ trait UseDisplayDashboardTop
      */
     protected function shouldAttachRecommendedModules(string $type): bool
     {
-        $method = 'shouldDisplay' . ucfirst((new UnicodeString($type))->camel()->toString());
         if ($type === TabInterface::RECOMMENDED_BUTTON_TYPE) {
             $modules = TabInterface::TABS_WITH_RECOMMENDED_MODULES_BUTTON;
         } elseif ($type === TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE) {
             $modules = TabInterface::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT;
         } else {
             return false;
-        }
-        // AdminLogin should not call TabCollectionProvider
-        if (Validate::isLoadedObject($this->context->employee)) {
-            /** @var TabCollectionProvider $tabCollectionProvider */
-            $tabCollectionProvider = $this->get('mbo.tab.collection.provider');
-            if ($tabCollectionProvider->isTabCollectionCached()) {
-                return $tabCollectionProvider->getTabCollection()->getTab(Tools::getValue('controller'))->{$method}();
-            }
         }
 
         return in_array(Tools::getValue('controller'), $modules, true);
@@ -243,21 +231,5 @@ trait UseDisplayDashboardTop
     {
         // has to be loaded in header to prevent flash of content
         $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
-
-        if ($this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_BUTTON_TYPE)
-            || $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE)
-        ) {
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css');
-            $this->context->controller->addJs(
-                rtrim(__PS_BASE_URI__, '/')
-                . str_ireplace(
-                    _PS_CORE_DIR_,
-                    '',
-                    _PS_BO_ALL_THEMES_DIR_
-                )
-                . 'default/js/bundle/module/module_card.js?v='
-                . _PS_VERSION_
-            );
-        }
     }
 }

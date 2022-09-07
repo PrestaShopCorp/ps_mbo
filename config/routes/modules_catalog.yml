@@ -16,16 +16,6 @@ admin_mbo_catalog_module_selection:
     _legacy_controller: AdminPsMboSelection
     _legacy_link: AdminPsMboSelection
 
-admin_mbo_catalog_module_refresh:
-  path: /refresh/{category}/{keyword}
-  methods:  [GET]
-  defaults:
-    category:
-    keyword:
-    _controller: mbo.controller.modules.catalog:refreshAction
-    _legacy_controller: AdminPsMboModule
-    _legacy_link: AdminPsMboModule:refresh
-
 admin_mbo_module_see_more:
   path: /see_more/{moduleId}
   methods: [ GET ]

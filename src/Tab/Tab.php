@@ -21,9 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Tab;
 
-use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModuleCollection;
-use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModuleCollectionInterface;
-
 class Tab implements TabInterface
 {
     /**
@@ -34,18 +31,6 @@ class Tab implements TabInterface
      * @var string class name of the tab
      */
     protected $displayMode;
-    /**
-     * @var RecommendedModuleCollectionInterface recommended modules of the tab
-     */
-    protected $recommendedModules;
-
-    /**
-     * Tab constructor.
-     */
-    public function __construct()
-    {
-        $this->recommendedModules = new RecommendedModuleCollection();
-    }
 
     /**
      * {@inheritdoc}
@@ -86,73 +71,9 @@ class Tab implements TabInterface
     /**
      * {@inheritdoc}
      */
-    public function getRecommendedModules(): RecommendedModuleCollectionInterface
-    {
-        return $this->recommendedModules;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setRecommendedModules(RecommendedModuleCollectionInterface $recommendedModules): TabInterface
-    {
-        $this->recommendedModules = $recommendedModules;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function hasRecommendedModules(): bool
-    {
-        return !$this->recommendedModules->isEmpty();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRecommendedModulesInstalled(): RecommendedModuleCollectionInterface
-    {
-        $recommendedModulesInstalled = $this->getRecommendedModules();
-
-        if ($this->hasRecommendedModules()) {
-            return $recommendedModulesInstalled->getInstalled();
-        }
-
-        return $recommendedModulesInstalled;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRecommendedModulesNotInstalled(): RecommendedModuleCollectionInterface
-    {
-        $recommendedModulesNotInstalled = $this->getRecommendedModules();
-
-        if ($this->hasRecommendedModules()) {
-            return $recommendedModulesNotInstalled->getNotInstalled();
-        }
-
-        return $recommendedModulesNotInstalled;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function shouldDisplayButton(): bool
-    {
-        return $this->hasRecommendedModules()
-            && in_array($this->legacyClassName, static::TABS_WITH_RECOMMENDED_MODULES_BUTTON);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function shouldDisplayAfterContent(): bool
     {
-        return $this->hasRecommendedModules()
-            && in_array($this->legacyClassName, static::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT);
+        return in_array($this->legacyClassName, static::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT);
     }
 
     /**
