@@ -33,7 +33,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LinksProvider
 {
-    const DEFAULT_LANGUAGE = 'en';
+    public const DEFAULT_LANGUAGE = 'en';
 
     /**
      * @var Version
@@ -119,34 +119,19 @@ class LinksProvider
     }
 
     /**
-     * @param string $controllerName
-     * @param string $medium
-     *
-     * @return string|null
+     * @return string
      */
-    public function getAddonsLinkByControllerName(string $controllerName, string $medium): ?string
+    public function getThemesLinkUrl(): string
     {
-        $utm = '?' . http_build_query([
-           'utm_source' => 'back-office',
-           'utm_medium' => $medium,
-           'utm_content' => 'download',
-           'utm_campaign' => 'back-office-' . $this->context->getLanguage()->iso_code,
-        ]);
-        switch ($controllerName) {
-            case 'AdminCarriers':
-                $link = $this->translator->trans('https://addons.prestashop.com/en/518-shipping-logistics', [], 'Modules.Mbo.Links');
-                break;
-            case 'AdminPayment':
-                $link = $this->translator->trans('https://addons.prestashop.com/en/481-payment', [], 'Modules.Mbo.Links');
-                break;
-            case 'AdminController':
-                $link = $this->translator->trans('https://addons.prestashop.com/en/209-dashboards', [], 'Modules.Mbo.Links');
-                break;
-            default:
-                $link = $this->translator->trans('https://addons.prestashop.com/en/', [], 'Modules.Mbo.Links');
-        }
+        $isoCode = $this->getIsoCode();
 
-        return $link . $utm;
+        return $this->translator->trans('https://addons.prestashop.com/en/3-templates-prestashop', [], 'Modules.Mbo.Links')
+            . '?' . http_build_query([
+                'utm_source' => 'back-office',
+                'utm_medium' => 'theme-button',
+                'utm_campaign' => 'back-office-' . mb_strtoupper($isoCode),
+                'utm_content' => 'download',
+            ]);
     }
 
     public function getSignUpLink(): string
@@ -159,54 +144,6 @@ class LinksProvider
     public function getPasswordForgottenLink(): string
     {
         return $this->translator->trans('https://auth.prestashop.com/en/password/request', [], 'Modules.Mbo.Links');
-    }
-
-    public function getEmployeeMenuLinks(): array
-    {
-        $isoCode = mb_strtolower($this->getIsoCode());
-        $baseUtmString = '?' . http_build_query([
-                'utm_source' => 'back-office',
-                'utm_medium' => 'profile',
-                'utm_content' => 'download17',
-            ]);
-
-        return [
-            [
-                'url' => $this->translator->trans('https://www.prestashop.com/en/resources', [], 'Modules.Mbo.Links')
-                    . $baseUtmString
-                    . sprintf('&utm_campaign=resources-%s', $isoCode),
-                'icon' => 'book',
-                'label' => $this->translator->trans('Resources', [], 'Modules.Mbo.Links'),
-            ],
-            [
-                'url' => $this->translator->trans('https://www.prestashop.com/en/training', [], 'Modules.Mbo.Links')
-                    . $baseUtmString
-                    . sprintf('&utm_campaign=training-%s', $isoCode),
-                'icon' => 'school',
-                'label' => $this->translator->trans('Training', [], 'Modules.Mbo.Links'),
-            ],
-            [
-                'url' => $this->translator->trans('https://www.prestashop.com/en/experts', [], 'Modules.Mbo.Links')
-                    . $baseUtmString
-                    . sprintf('&utm_campaign=expert-%s', $isoCode),
-                'icon' => 'person_pin_circle',
-                'label' => $this->translator->trans('Find an Expert', [], 'Modules.Mbo.Links'),
-            ],
-            [
-                'url' => $this->translator->trans('https://addons.prestashop.com/en/', [], 'Modules.Mbo.Links')
-                    . $baseUtmString
-                    . sprintf('&utm_campaign=addons-%s', $isoCode),
-                'icon' => 'extension',
-                'label' => $this->translator->trans('PrestaShop Marketplace', [], 'Modules.Mbo.Links'),
-            ],
-            [
-                'url' => $this->translator->trans('https://www.prestashop.com/en/contact', [], 'Modules.Mbo.Links')
-                    . $baseUtmString
-                    . sprintf('&utm_campaign=help-center-%s', $isoCode),
-                'icon' => 'help',
-                'label' => $this->translator->trans('Help Center', [], 'Modules.Mbo.Links'),
-            ],
-        ];
     }
 
     public function getCategoryLink(string $categoryName): string

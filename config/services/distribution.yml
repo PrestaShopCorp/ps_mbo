@@ -7,5 +7,7 @@ services:
     class: PrestaShop\Module\Mbo\Distribution\Client
     arguments:
       - "@mbo.distribution_api.client.http"
+      - '@mbo.cdc.context_builder'
+      - '@doctrine.cache.provider'
     calls:
       - method: setDefaultParams
