@@ -141,7 +141,7 @@ class ContextBuilder
         return $this->contextAdapter->getContext();
     }
 
-    public function getLanguage(): Language
+    private function getLanguage(): Language
     {
         return $this->getContext()->language ?? new Language((int) Configuration::get('PS_LANG_DEFAULT'));
     }

@@ -172,15 +172,15 @@ class Client
      */
     public function getConf(): stdClass
     {
-        $language = Context::getContext()->language;
-        $cacheKey = __METHOD__ . $language->getLanguageCode() . _PS_VERSION_;
+        $languageCode = Context::getContext()->language->getLanguageCode();
+        $cacheKey = __METHOD__ . $languageCode . _PS_VERSION_;
 
         if ($this->cacheProvider->contains($cacheKey)) {
             return $this->cacheProvider->fetch($cacheKey);
         }
 
         $data = [
-            'isoLang' => $language->getLanguageCode(),
+            'isoLang' => $languageCode,
         ];
 
         $conf = $this->processRequestAndReturn(
