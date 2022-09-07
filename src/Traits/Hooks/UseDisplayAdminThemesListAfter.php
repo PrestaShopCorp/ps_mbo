@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
+use Exception;
 
 trait UseDisplayAdminThemesListAfter
 {
@@ -29,18 +29,47 @@ trait UseDisplayAdminThemesListAfter
      * Hook displayAdminThemesListAfter.
      * Includes content just after the themes list.
      *
+     * @param array $params
+     *
      * @return string
+     *
+     * @throws Exception
      */
     public function hookDisplayAdminThemesListAfter(array $params): string
     {
-        /** @var LinksProvider $linksProvider */
-        $linksProvider = $this->get('mbo.addons.links_provider');
+        $context = $this->get('mbo.cdc.context_builder')->getViewContext();
+        $context['recommendation_format'] = 'card';
 
         $this->smarty->assign([
-            'recommendedThemesLink' => $linksProvider->getThemesLinkUrl(),
-            'recommendedThemesImgPath' => $this->_path . 'views/img/',
+            'shop_context' => json_encode($context),
         ]);
 
         return $this->fetch('module:ps_mbo/views/templates/hook/recommended-themes.tpl');
+    }
+
+    /**
+     * @return void
+     *
+     * @throws Exception
+     */
+    public function bootUseDisplayAdminThemesListAfter(): void
+    {
+        if (method_exists($this, 'addAdminControllerMedia')) {
+            $this->addAdminControllerMedia('loadMediaAdminThemesListAfter');
+        }
+    }
+
+    /**
+     * Add JS and CSS file
+     *
+     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
+     *
+     * @return void
+     */
+    protected function loadMediaAdminThemesListAfter(): void
+    {
+        if (\Tools::getValue('controller') === 'AdminThemes') {
+            $this->context->controller->addJs(getenv('MBO_CDC_URL'));
+        }
     }
 }

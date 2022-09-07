@@ -119,22 +119,6 @@ class LinksProvider
     }
 
     /**
-     * @return string
-     */
-    public function getThemesLinkUrl(): string
-    {
-        $isoCode = $this->getIsoCode();
-
-        return $this->translator->trans('https://addons.prestashop.com/en/3-templates-prestashop', [], 'Modules.Mbo.Links')
-            . '?' . http_build_query([
-                'utm_source' => 'back-office',
-                'utm_medium' => 'theme-button',
-                'utm_campaign' => 'back-office-' . mb_strtoupper($isoCode),
-                'utm_content' => 'download',
-            ]);
-    }
-
-    /**
      * @param string $controllerName
      * @param string $medium
      *
