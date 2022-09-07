@@ -17,21 +17,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
-<div class="col-lg-3 col-md-4 col-sm-6 theme-card-container">
-  <div class="card theme-card theme-catalog-card">
+<script defer>
+  const renderExploreThemesCatalog = window.mboCdc.renderExploreThemeCatalog
 
-    <div class="text-center catalog-image">
-      <img src="{$recommendedThemesImgPath}icon_themes.png" alt="{l s='Visit the theme catalog' d='Modules.Mbo.Recommendedthemes'}">
-    </div>
+  const exploreThemesCatalogContext = {$shop_context};
 
-    <div class="text-center catalog-description">
-      {l s='Explore more than a thousand themes' d='Modules.Mbo.Recommendedthemes'}
-    </div>
+  renderExploreThemesCatalog(exploreThemesCatalogContext, '#cdc-explore-themes-catalog')
+</script>
 
-    <div class="actions-container active">
-      <a class="btn btn-primary" href="{$recommendedThemesLink}" target="_blank">
-        {l s='Visit the theme catalog' d='Modules.Mbo.Recommendedthemes'}
-      </a>
-    </div>
-  </div>
-</div>
+<div id="cdc-explore-themes-catalog" class="col-lg-3 col-md-4 col-sm-6 theme-card-container"></div>
+
