@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Helpers\Version;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
 
@@ -51,6 +52,11 @@ trait UseDisplayBackOfficeEmployeeMenu
                 return;
             }
             foreach ($config->userMenu as $link) {
+                $versionFrom = Version::convertFromApi($link->ps_version_from);
+                $versionTo = Version::convertFromApi($link->ps_version_to);
+                if (version_compare($versionFrom, _PS_VERSION_, '<') || version_compare(_PS_VERSION_, $versionTo, '>')) {
+                    continue;
+                }
                 $params['links']->add(
                     new ActionsBarButton(
                         __CLASS__,
