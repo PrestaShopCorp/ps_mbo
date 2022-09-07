@@ -17,11 +17,23 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *}
 <script defer>
-  const renderNews = window.mboCdc.renderDashboardNews
 
   const dashboardNewsContext = {$shop_context};
+  const dashboardStayByYourSideContext = {$shop_context};
+  const dashboardPrestashopUpdateContext = {$shop_context};
 
+  const renderNews = window.mboCdc.renderDashboardNews
   renderNews(dashboardNewsContext, '#cdc-dashboard-news')
+
+  const renderStayByYourSide = window.mboCdc.renderDashboardStayByYourSide
+  renderStayByYourSide(dashboardStayByYourSideContext, '#cdc-stay-by-your-side')
+
+  const renderPrestashopUpdate = window.mboCdc.renderDashboardPrestashopUpdate
+  renderPrestashopUpdate(dashboardPrestashopUpdateContext, '#cdc-dashboard-ps-update')
 </script>
 
 <section id="cdc-dashboard-news"></section>
+
+<section id="cdc-dashboard-ps-update"></section>
+
+<section id="cdc-stay-by-your-side"></section>
