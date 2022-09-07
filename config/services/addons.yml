@@ -40,8 +40,3 @@ services:
       - '@mbo.security.permission_checker'
       - '@mbo.addons.data_provider'
       - '@translator'
-
-  mbo.addons.week_advice_provider:
-    class: PrestaShop\Module\Mbo\Addons\Provider\WeekAdviceProvider
-    arguments:
-      - '@mbo.circuit_breaker.storage'

@@ -35,29 +35,13 @@ trait UseDashboardZoneOne
      */
     public function hookDashboardZoneOne(array $params)
     {
-        if (!$this->get('mbo.addons.data_provider')->isUserAuthenticated()) {
-            $connectButton = $this->get('mbo.addons.toolbar')->getAddonsConnectButton();
-            $this->smarty->assign(
-                [
-                    'connect_button' => $connectButton,
-                ]
-            );
+        $this->context->smarty->assign(
+            [
+                'shop_context' => json_encode($this->get('mbo.cdc.context_builder')->getViewContext()),
+            ]
+        );
 
-            return $this->display($this->name, 'dashboard-zone-one-not-connected.tpl');
-        } else {
-            $weekAdvice = $this->get('mbo.addons.week_advice_provider')->getByIsoCode(
-                $this->context->language->iso_code
-            );
-
-            // assign var to smarty
-            $this->smarty->assign([
-                'img_path' => $this->imgPath,
-                'advice' => $weekAdvice,
-                'practical_links' => $this->get('mbo.addons.links_provider')->getDashboardPracticalLinks(),
-            ]);
-
-            return $this->display($this->name, 'dashboard-zone-one-connected.tpl');
-        }
+        return $this->display($this->name, 'dashboard-zone-one.tpl');
     }
 
     /**
@@ -82,6 +66,7 @@ trait UseDashboardZoneOne
     protected function loadMediaDashboardZoneOne(): void
     {
         if (\Tools::getValue('controller') === 'AdminDashboard') {
+            $this->context->controller->addJs(getenv('MBO_CDC_URL'));
             $this->context->controller->addJs($this->getPathUri() . 'views/js/addons-connector.js?v=' . $this->version);
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/addons-connect.css');
         }

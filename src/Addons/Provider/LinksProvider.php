@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Addons\Provider;
 
 use Language;
-use PrestaShop\Module\Mbo\Addons\PracticalLinks;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Foundation\Version;
@@ -34,7 +33,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LinksProvider
 {
-    const ADDONS_LANGUAGES = ['de', 'en', 'es', 'fr', 'it', 'nl', 'pl', 'pt', 'ru'];
     const DEFAULT_LANGUAGE = 'en';
 
     /**
@@ -134,13 +132,6 @@ class LinksProvider
                 'utm_campaign' => 'back-office-' . mb_strtoupper($isoCode),
                 'utm_content' => 'download',
             ]);
-    }
-
-    public function getDashboardPracticalLinks(): array
-    {
-        $isoCode = mb_strtolower($this->getIsoCode());
-
-        return PracticalLinks::getByIsoCode($isoCode);
     }
 
     /**
