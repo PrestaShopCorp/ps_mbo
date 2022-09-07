@@ -26,7 +26,6 @@ use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Helpers\Config;
-use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use ps_mbo;
 use Shop;
 use stdClass;
@@ -40,10 +39,6 @@ class Client
      * @var HttpClient
      */
     protected $httpClient;
-    /**
-     * @var ContextBuilder
-     */
-    protected $contextBuilder;
 
     /**
      * @var CacheProvider
@@ -83,10 +78,9 @@ class Client
     /**
      * @param HttpClient $httpClient
      */
-    public function __construct(HttpClient $httpClient, ContextBuilder $contextBuilder, CacheProvider $cacheProvider)
+    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider)
     {
         $this->httpClient = $httpClient;
-        $this->contextBuilder = $contextBuilder;
         $this->cacheProvider = $cacheProvider;
         $this->shopUuid = Config::getShopMboUuid();
         $shopId = (int) Context::getContext()->shop->id;
@@ -178,7 +172,7 @@ class Client
      */
     public function getConf(): stdClass
     {
-        $language = $this->contextBuilder->getLanguage();
+        $language = Context::getContext()->language;
         $cacheKey = __METHOD__ . $language->getLanguageCode() . _PS_VERSION_;
 
         if ($this->cacheProvider->contains($cacheKey)) {
