@@ -35,7 +35,7 @@ class apiPsMboController extends AbstractAdminApiController
         }
 
         $this->exitWithResponse([
-            'message' => $this->trans('Transition successfully executed'),
+            'message' => 'Transition successfully executed',
             'module_status' => $module->getStatus(),
             'version' => $module->get('version'),
             'config_url' => $configUrl,
