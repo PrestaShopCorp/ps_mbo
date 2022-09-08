@@ -373,7 +373,7 @@ class ps_mbo extends Module
 
     /**
      * Register a shop for online services delivered by API.
-     * So the module can correctly process actions (download, install, update..) on. modules
+     * So the module can correctly process actions (download, install, update...) on modules
      *
      * @return void
      *
@@ -421,7 +421,12 @@ class ps_mbo extends Module
         /** @var Client $distributionApi */
         $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
 
-        $distributionApi->unregisterShop($token);
+        try {
+            $distributionApi->unregisterShop($token);
+        } catch (Exception $e) {
+            // Do nothing here, the exception is catched to avoid displaying an error to the client
+            // Furthermore, the operation can't be tried again later as the module is now disabled or uninstalled
+        }
     }
 
     private function getModuleEnvVar(): string

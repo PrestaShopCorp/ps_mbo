@@ -170,7 +170,6 @@ class Client
     {
         $data = [
             'uuid' => $this->shopUuid,
-            'shop_url' => $this->shopUrl,
             'auth_cookie' => $token,
         ];
 
