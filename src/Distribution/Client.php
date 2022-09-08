@@ -63,6 +63,7 @@ class Client
         'action',
         'shop_uuid',
         'shop_url',
+        'isoLang',
     ];
 
     /**
@@ -179,10 +180,10 @@ class Client
             return $this->cacheProvider->fetch($cacheKey);
         }
 
-        $data = [
+        $this->setQueryParams([
             'isoLang' => $languageCode,
-        ];
-        $conf = $this->processRequestAndReturn('shops/conf?' . http_build_query($data));
+        ]);
+        $conf = $this->processRequestAndReturn('shops/conf');
 
         $this->cacheProvider->save($cacheKey, $conf, 60 * 60 * 24); // A day
 
@@ -234,7 +235,6 @@ class Client
         array $options = []
     ): string {
         $options['query'] = $this->queryParameters;
-        dump($uri);
 
         return (string) $this->httpClient
             ->request($method, '/api/' . ltrim($uri, '/'), $options)
