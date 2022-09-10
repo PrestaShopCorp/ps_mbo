@@ -37,3 +37,4 @@ services:
     arguments:
       - '@mbo.modules.files_manager'
       - '@mbo.modules.repository'
+      - '@mbo.modules.state_machine.source_retriever.url'

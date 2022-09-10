@@ -33,7 +33,6 @@ trait UseHooks
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionBeforeInstallModule;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionBeforeUpgradeModule;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionGetAdminToolbarButtons;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionGetAlternativeSearchPanels;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;

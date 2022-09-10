@@ -35,6 +35,7 @@ class ModuleTransitionCommand
     public const MODULE_COMMAND_CONFIGURE = 'module.configure';
     public const MODULE_COMMAND_UPGRADE = 'module.upgrade';
     public const MODULE_COMMAND_UNINSTALL = 'module.uninstall';
+    public const MODULE_COMMAND_DOWNLOAD = 'module.download';
 
     public const MAPPING_TRANSITION_COMMAND_TARGET_STATUS = [
         self::MODULE_COMMAND_INSTALL => ModuleStateMachine::STATUS_ENABLED__MOBILE_ENABLED,
@@ -58,6 +59,7 @@ class ModuleTransitionCommand
         self::MODULE_COMMAND_CONFIGURE,
         self::MODULE_COMMAND_UPGRADE,
         self::MODULE_COMMAND_UNINSTALL,
+        self::MODULE_COMMAND_DOWNLOAD,
     ];
 
     /**

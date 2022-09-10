@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
 use Exception;
-use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Module\SourceRetriever\SourceRetrieverInterface;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
@@ -308,29 +307,17 @@ class TransitionsManager
     }
 
     /**
+     * Calling this action supposed that the source files are already upgraded.
+     * If not, please call ModuleStatusCommandHandler with "download" as command or
+     * directly ActionsManager::downloadAndReplaceModuleFiles to upgrade the module files
+     *
      * @throws Exception
      */
     private function upgrade(TransitionModule $transitionModule, ?array $context = []): bool
     {
-        $source = null;
-        if (isset($context['source'])) {
-            $source = (string) $context['source'];
-        }
-
-        // We are calling install on purpose. If install is called for an already installed module, it'll perform an upgrade
-        // Plus the "install" method allows us to provide an external source
         $moduleName = $transitionModule->getName();
 
-        // Validate that the module in the source is the one we want to upgrade
-        if (null !== $source) {
-            $zipFilename = $this->sourceRetriever->get($source);
-            if (!$this->sourceRetriever->validate($zipFilename, $moduleName)) {
-                throw new UnexpectedModuleSourceContentException(sprintf('The source given doesn\'t contains the expected module : %s', $moduleName));
-            }
-
-            $source = $zipFilename;
-        }
-        if ($this->moduleManager->install($moduleName, $source)) {
+        if ($this->moduleManager->upgrade($moduleName)) {
             $module = $this->getModuleInstance($moduleName);
             if (null === $module) {
                 return false;

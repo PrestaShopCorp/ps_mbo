@@ -33,3 +33,4 @@ services:
     arguments:
       - '@mbo.modules.state_machine'
       - '@mbo.modules.repository'
+      - '@mbo.modules.actions_manager'
