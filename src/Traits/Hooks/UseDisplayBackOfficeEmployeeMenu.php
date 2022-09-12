@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
+use PrestaShop\Module\Mbo\Helpers\Version;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
 
@@ -43,20 +43,33 @@ trait UseDisplayBackOfficeEmployeeMenu
             return;
         }
 
-        /** @var LinksProvider $linksProvider */
-        $linksProvider = $this->get('mbo.addons.links_provider');
+        /** @var \PrestaShop\Module\Mbo\Distribution\Client $apiClient */
+        $apiClient = $this->get('mbo.cdc.client.distribution_api');
 
-        foreach ($linksProvider->getEmployeeMenuLinks() as $link) {
-            $params['links']->add(
-                new ActionsBarButton(
-                    __CLASS__,
-                    [
-                        'link' => $link['url'],
-                        'icon' => $link['icon'],
-                    ],
-                    $link['label']
-                )
-            );
+        try {
+            $config = $apiClient->getConf();
+            if (empty($config) || empty($config->userMenu) || !is_array($config->userMenu)) {
+                return;
+            }
+            foreach ($config->userMenu as $link) {
+                $versionFrom = Version::convertFromApi($link->ps_version_from);
+                $versionTo = Version::convertFromApi($link->ps_version_to);
+                if (version_compare($versionFrom, _PS_VERSION_, '<') || version_compare(_PS_VERSION_, $versionTo, '>')) {
+                    continue;
+                }
+                $params['links']->add(
+                    new ActionsBarButton(
+                        __CLASS__,
+                        [
+                            'link' => $link->link,
+                            'icon' => $link->icon,
+                        ],
+                        $link->name
+                    )
+                );
+            }
+        } catch (\Exception $e) {
+            return;
         }
     }
 }

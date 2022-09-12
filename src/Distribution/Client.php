@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Distribution;
 
 use Context;
+use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Helpers\Config;
@@ -39,6 +40,10 @@ class Client
      */
     protected $httpClient;
 
+    /**
+     * @var CacheProvider
+     */
+    private $cacheProvider;
     /**
      * @var array<string, string>
      */
@@ -58,6 +63,7 @@ class Client
         'action',
         'shop_uuid',
         'shop_url',
+        'isoLang',
     ];
 
     /**
@@ -73,9 +79,10 @@ class Client
     /**
      * @param HttpClient $httpClient
      */
-    public function __construct(HttpClient $httpClient)
+    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider)
     {
         $this->httpClient = $httpClient;
+        $this->cacheProvider = $cacheProvider;
         $this->shopUuid = Config::getShopMboUuid();
         $shopId = (int) Context::getContext()->shop->id;
         $this->shopUrl = (new Shop($shopId))->getBaseUrl();
@@ -158,6 +165,32 @@ class Client
     }
 
     /**
+     * Retrieve the user menu from NEST Api
+     *
+     * @return \stdClass
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getConf(): stdClass
+    {
+        $languageCode = Context::getContext()->language->getLanguageCode();
+        $cacheKey = __METHOD__ . $languageCode . _PS_VERSION_;
+
+        if ($this->cacheProvider->contains($cacheKey)) {
+            return $this->cacheProvider->fetch($cacheKey);
+        }
+
+        $this->setQueryParams([
+            'isoLang' => $languageCode,
+        ]);
+        $conf = $this->processRequestAndReturn('shops/conf');
+
+        $this->cacheProvider->save($cacheKey, $conf, 60 * 60 * 24); // A day
+
+        return $this->cacheProvider->fetch($cacheKey);
+    }
+
+    /**
      * Process the request with the current parameters, given the $method, and return the $attribute from
      * the response body, or the default fallback value $default.
      *
@@ -169,8 +202,13 @@ class Client
      *
      * @throws GuzzleException
      */
-    private function processRequestAndReturn(string $uri, ?string $attributeToReturn = null, string $method = self::HTTP_METHOD_GET, array $options = [], $default = [])
-    {
+    private function processRequestAndReturn(
+        string $uri,
+        ?string $attributeToReturn = null,
+        string $method = self::HTTP_METHOD_GET,
+        array $options = [],
+        $default = []
+    ) {
         $response = json_decode($this->processRequest($method, $uri, $options));
 
         if (JSON_ERROR_NONE !== json_last_error()) {
@@ -191,8 +229,11 @@ class Client
      *
      * @throws GuzzleException
      */
-    private function processRequest(string $method = self::HTTP_METHOD_GET, string $uri = '', array $options = []): string
-    {
+    private function processRequest(
+        string $method = self::HTTP_METHOD_GET,
+        string $uri = '',
+        array $options = []
+    ): string {
         $options['query'] = $this->queryParameters;
 
         return (string) $this->httpClient
