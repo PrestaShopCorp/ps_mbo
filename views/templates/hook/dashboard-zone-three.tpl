@@ -32,7 +32,7 @@
   renderPrestashopUpdate(dashboardPrestashopUpdateContext, '#cdc-dashboard-ps-update')
 </script>
 
-<section id="cdc-dashboard-news"></section>
+<section id="cdc-dashboard-news" class="dash_news"></section>
 
 <section id="cdc-dashboard-ps-update"></section>
 
