@@ -26,7 +26,6 @@ use Context;
 use Country;
 use Doctrine\Common\Cache\CacheProvider;
 use Language;
-use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Tab\Tab;
@@ -64,23 +63,17 @@ class ContextBuilder
      * @var string
      */
     private $shopId;
-    /**
-     * @var AdminAuthenticationProvider
-     */
-    private $authenticationProvider;
 
     public function __construct(
         ContextAdapter $contextAdapter,
         ModuleRepository $moduleRepository,
         Router $router,
-        CacheProvider $cacheProvider,
-        AdminAuthenticationProvider $authenticationProvider
+        CacheProvider $cacheProvider
     ) {
         $this->contextAdapter = $contextAdapter;
         $this->moduleRepository = $moduleRepository;
         $this->router = $router;
         $this->cacheProvider = $cacheProvider;
-        $this->authenticationProvider = $authenticationProvider;
     }
 
     public function getViewContext(): array
@@ -126,7 +119,7 @@ class ContextBuilder
             $token = Tools::getValue('token');
         }
 
-        $refreshToken = $this->authenticationProvider->getRefreshToken();
+        $refreshUrl = Context::getContext()->link->getAdminLink('apiSecurityPsMbo');
 
         return [
             'currency' => $this->getCurrencyCode(),
@@ -139,7 +132,7 @@ class ContextBuilder
             'account_token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
             'user_id' => $context->cookie->id_employee,
             'admin_token' => $token,
-            'refresh_token' => $refreshToken,
+            'refresh_url' => $refreshUrl,
             'installed_modules' => $this->getInstalledModules(),
         ];
     }
