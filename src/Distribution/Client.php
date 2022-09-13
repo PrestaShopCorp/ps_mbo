@@ -69,11 +69,6 @@ class Client
     /**
      * @var string
      */
-    private $shopUuid;
-
-    /**
-     * @var string
-     */
     private $shopUrl;
 
     /**
@@ -83,7 +78,6 @@ class Client
     {
         $this->httpClient = $httpClient;
         $this->cacheProvider = $cacheProvider;
-        $this->shopUuid = Config::getShopMboUuid();
         $shopId = (int) Context::getContext()->shop->id;
         $this->shopUrl = (new Shop($shopId))->getBaseUrl();
     }
@@ -91,7 +85,7 @@ class Client
     public function setDefaultParams(): void
     {
         $this->setQueryParams([
-            'shop_uuid' => $this->shopUuid,
+            'shop_uuid' => Config::getShopMboUuid(),
             'shop_url' => $this->shopUrl,
         ]);
         $this->defaultQueryParameters = $this->queryParameters;
@@ -148,7 +142,7 @@ class Client
     public function registerShop(string $token): stdClass
     {
         $data = [
-            'uuid' => $this->shopUuid,
+            'uuid' => Config::getShopMboUuid(),
             'shop_url' => $this->shopUrl,
             'admin_path' => sprintf('/%s/', trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/')),
             'mbo_version' => ps_mbo::VERSION,

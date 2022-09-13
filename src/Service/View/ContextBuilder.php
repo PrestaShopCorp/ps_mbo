@@ -59,11 +59,6 @@ class ContextBuilder
      */
     private $cacheProvider;
 
-    /**
-     * @var string
-     */
-    private $shopId;
-
     public function __construct(
         ContextAdapter $contextAdapter,
         ModuleRepository $moduleRepository,
@@ -74,8 +69,6 @@ class ContextBuilder
         $this->moduleRepository = $moduleRepository;
         $this->router = $router;
         $this->cacheProvider = $cacheProvider;
-
-        $this->shopId = Config::getShopMboUuid();
     }
 
     public function getViewContext(): array
@@ -204,6 +197,6 @@ class ContextBuilder
 
     private function getCacheKey(): string
     {
-        return sprintf('mbo_installed_modules_list_%s', $this->shopId);
+        return sprintf('mbo_installed_modules_list_%s', Config::getShopMboUuid());
     }
 }
