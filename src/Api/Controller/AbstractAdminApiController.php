@@ -154,7 +154,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
      * @throws RetrieveNewKeyException
      * @throws UnauthorizedException
      */
-    private function authorize()
+    protected function authorize()
     {
         $keyVersion = \Tools::getValue('version');
         $signature = isset($_SERVER['HTTP_MBO_SIGNATURE']) ? $_SERVER['HTTP_MBO_SIGNATURE'] : false;

@@ -40,4 +40,5 @@ class Config
     ];
 
     const MODULE_ACTIONS = 'module_actions';
+    const SECURITY_ME = 'security_me';
 }

@@ -202,6 +202,28 @@ class AdminAuthenticationProvider
         return $this->cacheProvider->fetch($cacheKey);
     }
 
+    public function getRefreshToken(): string
+    {
+        $cacheKey = $this->getRefreshTokenCacheKey();
+
+        if ($this->cacheProvider->contains($cacheKey)) {
+            return $this->cacheProvider->fetch($cacheKey);
+        }
+
+        if (!isset(Context::getContext()->employee->id)) {
+            return '';
+        }
+
+        $userId = Context::getContext()->employee->id;
+        $idTab = Tab::getIdFromClassName('apiSecurityPsMbo');
+
+        $token = Tools::getAdminToken('apiSecurityPsMbo' . (int) $idTab . (int) $userId);
+
+        $this->cacheProvider->save($cacheKey, $token, 0); // Lifetime infinite, will be purged when MBO is uninstalled
+
+        return $this->cacheProvider->fetch($cacheKey);
+    }
+
     public function extendTokenValidity(): void
     {
         try {
@@ -224,7 +246,17 @@ class AdminAuthenticationProvider
 
     public function clearCache(): bool
     {
+        // Clear admin token cache
         $cacheKey = $this->getCacheKey();
+
+        if ($this->cacheProvider->contains($cacheKey)) {
+            if (!$this->cacheProvider->delete($cacheKey)) {
+                return false;
+            }
+        }
+
+        // Clear admin refresh token cache
+        $cacheKey = $this->getRefreshTokenCacheKey();
 
         if ($this->cacheProvider->contains($cacheKey)) {
             if (!$this->cacheProvider->delete($cacheKey)) {
@@ -238,5 +270,10 @@ class AdminAuthenticationProvider
     private function getCacheKey(): string
     {
         return sprintf('mbo_admin_token_%s', Config::getShopMboUuid());
+    }
+
+    private function getRefreshTokenCacheKey(): string
+    {
+        return sprintf('mbo_admin_refresh_token_%s', $this->shopId);
     }
 }

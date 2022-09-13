@@ -71,6 +71,13 @@ trait HaveTabs
             'class_name' => 'ApiPsMbo',
             'parent_class_name' => 'AdminParentModulesSf',
         ],
+        'ApiPsMboSecurity' => [
+            'name' => 'MBO Api Security',
+            'visible' => false,
+            'position' => 1,
+            'class_name' => 'ApiSecurityPsMbo',
+            'parent_class_name' => 'AdminParentModulesSf',
+        ],
     ];
 
     /**

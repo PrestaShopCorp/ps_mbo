@@ -9,3 +9,4 @@ services:
       - '@prestashop.core.admin.module.repository'
       - '@router'
       - '@doctrine.cache.provider'
+      - '@PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider'
