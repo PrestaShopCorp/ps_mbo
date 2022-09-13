@@ -89,8 +89,6 @@ abstract class AbstractAdminApiController extends ModuleAdminController
         }
 
         parent::init();
-
-        $this->adminAuthenticationProvider->extendTokenValidity();
     }
 
     protected function exitWithResponse(array $response): void
