@@ -44,3 +44,11 @@
 </script>
 
 <section id="cdc-tips-and-update-container"></section>
+
+<script src="{$urlAccountsCdn}"></script>
+
+<prestashop-accounts></prestashop-accounts>
+
+<script>
+  window.psaccountsVue.init();
+</script>

@@ -141,7 +141,7 @@ class Client
      *
      * @throws GuzzleException
      */
-    public function registerShop(string $token): stdClass
+    public function registerShop(string $token, string $accountsToken): stdClass
     {
         $data = [
             'uuid' => Config::getShopMboUuid(),
@@ -150,6 +150,7 @@ class Client
             'mbo_version' => ps_mbo::VERSION,
             'ps_version' => _PS_VERSION_,
             'auth_cookie' => $token,
+            'accounts_token' => $accountsToken,
         ];
 
         return $this->processRequestAndReturn(

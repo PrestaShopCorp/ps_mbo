@@ -35,9 +35,17 @@ trait UseDashboardZoneOne
      */
     public function hookDashboardZoneOne(array $params)
     {
+        $accountsFacade = $this->getService('ps_accounts.facade');
+        $accountsService = $accountsFacade->getPsAccountsService();
+        \Media::addJsDef([
+            'contextPsAccounts' => $accountsFacade->getPsAccountsPresenter()
+                ->present($this->name),
+        ]);
+
         $this->context->smarty->assign(
             [
                 'shop_context' => json_encode($this->get('mbo.cdc.context_builder')->getViewContext()),
+                'urlAccountsCdn' => $accountsService->getAccountsCdn(),
             ]
         );
 

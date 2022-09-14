@@ -122,6 +122,8 @@ class ps_mbo extends Module
      */
     public function install(): bool
     {
+        $this->getService('ps_accounts.installer')->install();
+
         if (parent::install() && $this->registerHook($this->getHooksNames())) {
             // Do come extra operations on modules' registration like modifying orders
             $this->installHooks();
