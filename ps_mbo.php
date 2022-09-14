@@ -29,11 +29,9 @@ if (file_exists($autoloadPath)) {
 
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
-use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
 
@@ -41,6 +39,7 @@ class ps_mbo extends Module
 {
     use PrestaShop\Module\Mbo\Traits\HaveTabs;
     use PrestaShop\Module\Mbo\Traits\UseHooks;
+    use PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService;
 
     public const DEFAULT_ENV = '';
 
@@ -134,37 +133,6 @@ class ps_mbo extends Module
         }
 
         return false;
-    }
-
-    /**
-     * Install configuration for each shop
-     *
-     * @return bool
-     */
-    public function installConfiguration(): bool
-    {
-        $result = true;
-
-        // Values generated
-        $adminUuid = Uuid::uuid4()->toString();
-        $this->configurationList['PS_MBO_SHOP_ADMIN_UUID'] = $adminUuid;
-        $this->configurationList['PS_MBO_SHOP_ADMIN_MAIL'] = sprintf('mbo-%s@prestashop.com', $adminUuid);
-
-        foreach (\Shop::getShops(false, null, true) as $shopId) {
-            foreach ($this->configurationList as $name => $value) {
-                if (false === Configuration::hasKey($name, null, null, (int) $shopId)) {
-                    $result = $result && (bool) Configuration::updateValue(
-                            $name,
-                            $value,
-                            false,
-                            null,
-                            (int) $shopId
-                        );
-                }
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -372,67 +340,6 @@ class ps_mbo extends Module
                     $this->get('doctrine.cache.provider'),
                     $this->container->getParameter('database_prefix')
                 );
-    }
-
-    /**
-     * Register a shop for online services delivered by API.
-     * So the module can correctly process actions (download, install, update...) on modules
-     *
-     * @return void
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    private function registerShop(): void
-    {
-        $registrationLockFile = $this->moduleCacheDir . 'registration.lock';
-
-        try {
-            // We have to install config here because the register method is called by parent::install -> module->enable
-            // Furthermore, this make a check and ensure existence in case of accidental removal
-            $this->installConfiguration();
-            $token = $this->getAdminAuthenticationProvider()->getAdminToken();
-
-            /** @var Client $distributionApi */
-            $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
-
-            $distributionApi->registerShop($token);
-
-            if (file_exists($registrationLockFile)) {
-                unlink($registrationLockFile);
-            }
-        } catch (Exception $exception) {
-            // Create the lock file
-            if (!file_exists($registrationLockFile)) {
-                if (!is_dir($this->moduleCacheDir)) {
-                    mkdir($this->moduleCacheDir);
-                }
-                $f = fopen($registrationLockFile, 'w+');
-                fclose($f);
-            }
-        }
-    }
-
-    /**
-     * Unregister a shop of online services delivered by API.
-     * When the module is disabled or uninstalled, remove it from online services
-     *
-     * @return void
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    private function unregisterShop(): void
-    {
-        $token = $this->getAdminAuthenticationProvider()->getAdminToken();
-
-        /** @var Client $distributionApi */
-        $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
-
-        try {
-            $distributionApi->unregisterShop($token);
-        } catch (Exception $e) {
-            // Do nothing here, the exception is catched to avoid displaying an error to the client
-            // Furthermore, the operation can't be tried again later as the module is now disabled or uninstalled
-        }
     }
 
     private function getModuleEnvVar(): string

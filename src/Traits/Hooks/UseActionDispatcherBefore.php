@@ -38,23 +38,52 @@ trait UseActionDispatcherBefore
         $controllerName = Tools::getValue('controller');
 
         // Registration failed on install, retry it
-        if (
-            in_array($controllerName, [
-                'AdminPsMboModuleParent',
-                'AdminPsMboRecommended',
-                'apiPsMbo',
-            ]) &&
-            file_exists($this->moduleCacheDir . 'registration.lock')
-        ) {
-            $this->registerShop();
+        if (in_array($controllerName, [
+            'AdminPsMboModuleParent',
+            'AdminPsMboRecommended',
+            'apiPsMbo',
+        ])) {
+            $this->ensureShopIsRegistered();
+            $this->ensureShopIsUpdated();
         }
 
+        $this->ensureApiUserExistAndIsLogged($controllerName, $params);
+    }
+
+    private function ensureShopIsRegistered(): void
+    {
+        if (!file_exists($this->moduleCacheDir . 'registerShop.lock')) {
+            return;
+        }
+        $this->registerShop();
+    }
+
+    private function ensureShopIsUpdated(): void
+    {
+        if (!file_exists($this->moduleCacheDir . 'updateShop.lock')) {
+            return;
+        }
+        $this->updateShop();
+    }
+
+    /**
+     * @param string|bool $controllerName
+     * @param array $params
+     *
+     * @return void
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException
+     * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
+     */
+    private function ensureApiUserExistAndIsLogged($controllerName, array $params): void
+    {
+        $apiUser = null;
         // Whatever the call in the MBO API, we check if the MBO API user exists
         if (\Dispatcher::FC_ADMIN == (int) $params['controller_type'] || $controllerName === 'apiPsMbo') {
             $apiUser = $this->getAdminAuthenticationProvider()->ensureApiUserExistence();
         }
 
-        if ($controllerName !== 'apiPsMbo') {
+        if ($controllerName !== 'apiPsMbo' || !$apiUser) {
             return;
         }
 
