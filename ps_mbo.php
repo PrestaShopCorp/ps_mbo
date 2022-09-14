@@ -228,10 +228,13 @@ class ps_mbo extends Module
         // Restore previous context
         Shop::setContext($previousContextType, $previousContextShopId);
 
+        // Install tab before registering shop, we need the tab to be active to create the good token
+        $this->handleTabAction('install');
+
         // Register online services
         $this->registerShop();
 
-        return $this->handleTabAction('install');
+        return true;
     }
 
     private function enableByShop(int $shopId)
@@ -384,6 +387,8 @@ class ps_mbo extends Module
         $registrationLockFile = $this->moduleCacheDir . 'registration.lock';
 
         try {
+            // We have to install config here because the register method is called by parent::install -> module->enable
+            // Furthermore, this make a check and ensure existence in case of accidental removal
             $this->installConfiguration();
             $token = $this->getAdminAuthenticationProvider()->getAdminToken();
 
