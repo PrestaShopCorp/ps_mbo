@@ -42,6 +42,20 @@ trait HaveShopOnExternalService
         $this->callServiceWithLockFile('registerShop');
     }
 
+    private function getAccountsToken(): string
+    {
+        /**
+         * @var \PrestaShop\Module\PsAccounts\Service\PsAccountsService $accountsService
+         */
+        $accountsService = $this->getService('mbo.ps_accounts.facade')->getPsAccountsService();
+
+        if (!$accountsService->isAccountLinked()) {
+            return '';
+        }
+
+        return $accountsService->getOrRefreshToken();
+    }
+
     /**
      * Update the shop in only services
      *
@@ -94,8 +108,9 @@ trait HaveShopOnExternalService
             }
 
             $token = $this->getAdminAuthenticationProvider()->getAdminToken();
+            $accountsToken = $this->getAccountsToken();
 
-            $distributionApi->{$method}($token);
+            $distributionApi->{$method}($token, $accountsToken);
 
             if (file_exists($lockFile)) {
                 unlink($lockFile);
