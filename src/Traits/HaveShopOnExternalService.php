@@ -81,6 +81,12 @@ trait HaveShopOnExternalService
     {
         $lockFile = $this->moduleCacheDir . $method . '.lock';
         try {
+            // If the module is installed via command line or somehow the ADMIN_DIR is not defined,
+            // we ignore the shop registration, so it will be done at any action on the backoffice
+            if (php_sapi_name() === "cli" || !defined('_PS_ADMIN_DIR_')) {
+                throw new \Exception();
+            }
+
             /** @var Client $distributionApi */
             $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
             if (!method_exists($distributionApi, $method)) {
@@ -96,7 +102,6 @@ trait HaveShopOnExternalService
             }
         } catch (\Exception $exception) {
             // Create the lock file
-            dd($exception);
             if (!file_exists($lockFile)) {
                 if (!is_dir($this->moduleCacheDir)) {
                     mkdir($this->moduleCacheDir);
