@@ -34,7 +34,7 @@ class Client
 {
     public const HTTP_METHOD_GET = 'GET';
     public const HTTP_METHOD_POST = 'POST';
-    public const HTTP_METHOD_PATCH = 'PATCH';
+    public const HTTP_METHOD_PUT = 'PUT';
     public const HTTP_METHOD_DELETE = 'DELETE';
 
     /**
@@ -185,9 +185,12 @@ class Client
     /**
      * Update shop on Distribution API.
      *
+     * @param string $token
+     *
      * @return stdClass
      *
-     * @throws GuzzleException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::updateShop
      */
     public function updateShop(string $token): stdClass
     {
@@ -201,9 +204,9 @@ class Client
         ];
 
         return $this->processRequestAndReturn(
-            'shops/' . $this->shopUuid,
+            'shops/' . Config::getShopMboUuid(),
             null,
-            self::HTTP_METHOD_PATCH,
+            self::HTTP_METHOD_PUT,
             ['form_params' => $data]
         );
     }
