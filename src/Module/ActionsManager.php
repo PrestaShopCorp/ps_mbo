@@ -21,8 +21,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module;
 
-use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
-use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
+use PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException;
+use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
+use PrestaShop\Module\Mbo\Module\SourceRetriever\SourceRetrieverInterface;
 
 class ActionsManager
 {
@@ -36,42 +37,34 @@ class ActionsManager
      */
     private $moduleRepository;
 
+    /**
+     * @var SourceRetrieverInterface
+     */
+    private $sourceRetriever;
+
     public function __construct(
         FilesManager $filesManager,
-        Repository $moduleRepository
+        Repository $moduleRepository,
+        SourceRetrieverInterface $sourceRetriever
     ) {
         $this->filesManager = $filesManager;
         $this->moduleRepository = $moduleRepository;
+        $this->sourceRetriever = $sourceRetriever;
     }
 
     /**
-     * @param int $moduleId
-     *
-     * @throws SourceHandlerNotFoundException
-     * @throws FileNotFoundException
+     * @throws UnexpectedModuleSourceContentException
+     * @throws ModuleNewVersionNotFoundException
      */
-    public function install(int $moduleId): void
+    public function downloadAndReplaceModuleFiles(\stdClass $module, ?string $source = null): void
     {
-        $moduleZip = $this->filesManager->downloadModule($moduleId);
+        $moduleZip = (null !== $source) ?
+            $this->downloadModuleFromUrl($module, $source) :
+            $this->downloadModuleFromModulesProvider($module);
 
-        $this->filesManager->installFromZip($moduleZip);
-    }
-
-    /**
-     * Right now, in MBO, upgrading a module results on deleting previous files and reinstall the module
-     * The ModuleManager will do the rest
-     * In the future, if it's changes, just duplicate the content of the "install" method and adjust
-     *
-     * @param \stdClass $module
-     *
-     * @throws SourceHandlerNotFoundException
-     * @throws FileNotFoundException
-     */
-    public function upgrade(\stdClass $module): void
-    {
         $this->filesManager->deleteModuleDirectory($module);
 
-        $this->install((int) $module->id);
+        $this->filesManager->installFromZip($moduleZip);
     }
 
     /**
@@ -79,7 +72,7 @@ class ActionsManager
      *
      * @return \stdClass|null
      */
-    public function findVersionForUpdate(string $moduleName): ?\stdClass
+    private function findVersionForUpdate(string $moduleName): ?\stdClass
     {
         $db = \Db::getInstance();
         $request = 'SELECT `version` FROM `' . _DB_PREFIX_ . "module` WHERE name='" . $moduleName . "'";
@@ -107,5 +100,27 @@ class ActionsManager
         }
 
         return null;
+    }
+
+    private function downloadModuleFromModulesProvider(\stdClass $module): string
+    {
+        $moduleName = (string) $module->name;
+
+        $module = $this->findVersionForUpdate($moduleName);
+        if (null === $module) {
+            throw new ModuleNewVersionNotFoundException(sprintf('A downloadable new version was not found for the module %s', $moduleName));
+        }
+
+        return $this->filesManager->downloadModule((int) $module->id);
+    }
+
+    private function downloadModuleFromUrl(\stdClass $module, string $source): string
+    {
+        $zipFilename = $this->sourceRetriever->get($source);
+        if (!$this->sourceRetriever->validate($zipFilename, $module->name)) {
+            throw new UnexpectedModuleSourceContentException(sprintf('The source given doesn\'t contains the expected module : %s', $module->name));
+        }
+
+        return $zipFilename;
     }
 }

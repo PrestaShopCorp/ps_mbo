@@ -21,10 +21,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\CommandHandler;
 
+use PrestaShop\Module\Mbo\Module\ActionsManager;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
+use PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleNotFoundException;
 use PrestaShop\Module\Mbo\Module\Exception\TransitionCommandToModuleStatusException;
 use PrestaShop\Module\Mbo\Module\Exception\UnauthorizedModuleTransitionException;
+use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
@@ -42,17 +45,31 @@ final class ModuleStatusTransitionCommandHandler
      * @var Repository
      */
     private $moduleRepository;
+    /**
+     * @var ActionsManager
+     */
+    private $actionsManager;
 
     public function __construct(
         ModuleStateMachine $moduleStateMachine,
-        Repository $moduleRepository
+        Repository $moduleRepository,
+        ActionsManager $actionsManager
     ) {
         $this->moduleStateMachine = $moduleStateMachine;
         $this->moduleRepository = $moduleRepository;
+        $this->actionsManager = $actionsManager;
     }
 
+    /**
+     * @throws UnexpectedModuleSourceContentException
+     * @throws ModuleNewVersionNotFoundException
+     * @throws ModuleNotFoundException
+     * @throws UnauthorizedModuleTransitionException
+     * @throws TransitionCommandToModuleStatusException
+     */
     public function handle(ModuleStatusTransitionCommand $command): Module
     {
+        $apiModule = null;
         $moduleName = $command->getModuleName();
         $source = $command->getSource();
 
@@ -86,25 +103,36 @@ final class ModuleStatusTransitionCommandHandler
 
         // Check if transition asked can be mapped to an existing target status
         $transitionCommand = $command->getCommand()->getValue();
-        if (!array_key_exists($transitionCommand, ModuleTransitionCommand::MAPPING_TRANSITION_COMMAND_TARGET_STATUS)) {
-            throw new TransitionCommandToModuleStatusException(sprintf('Unable to map module transition command given %s', $transitionCommand));
+
+        // Download a module before upgrade is not an actual module transition, so it cannot be handled by the StateMachine
+        if (ModuleTransitionCommand::MODULE_COMMAND_DOWNLOAD === $transitionCommand) {
+            $module = $apiModule ?? $this->moduleRepository->getApiModule($moduleName);
+            if (null === $module) {
+                throw new ModuleNotFoundException(sprintf('Module %s not found', $moduleName));
+            }
+
+            $this->actionsManager->downloadAndReplaceModuleFiles($module, $source);
+        } else {
+            if (!array_key_exists($transitionCommand, ModuleTransitionCommand::MAPPING_TRANSITION_COMMAND_TARGET_STATUS)) {
+                throw new TransitionCommandToModuleStatusException(sprintf('Unable to map module transition command given %s', $transitionCommand));
+            }
+
+            // Compute the state machine transition name
+            $transitionName = $this->moduleStateMachine->getTransition(
+                $module,
+                $transitionCommand
+            );
+
+            // Check if the transition asked is possible
+            if (!$this->moduleStateMachine->can($module, $transitionName)) {
+                throw new UnauthorizedModuleTransitionException(sprintf('Transition "%s" is not possible for module "%s"', $transitionCommand, $moduleName));
+            }
+
+            // Execute the transition
+            $this->moduleStateMachine->apply($module, $transitionName, [
+                'source' => $source,
+            ]);
         }
-
-        // Compute the state machine transition name
-        $transitionName = $this->moduleStateMachine->getTransition(
-            $module,
-            $transitionCommand
-        );
-
-        // Check if the transition asked is possible
-        if (!$this->moduleStateMachine->can($module, $transitionName)) {
-            throw new UnauthorizedModuleTransitionException(sprintf('Transition "%s" is not possible for module "%s"', $transitionCommand, $moduleName));
-        }
-
-        // Execute the transition
-        $this->moduleStateMachine->apply($module, $transitionName, [
-            'source' => $source,
-        ]);
 
         $this->moduleRepository->clearCache();
 
