@@ -81,8 +81,6 @@ class AdminAuthenticationProvider
         $this->context = $context;
         $this->hashing = $hashing;
         $this->cacheProvider = $cacheProvider;
-
-        $this->shopId = Config::getShopMboUuid();
     }
 
     public function createApiUser(): Employee
@@ -239,6 +237,6 @@ class AdminAuthenticationProvider
 
     private function getCacheKey(): string
     {
-        return sprintf('mbo_admin_token_%s', $this->shopId);
+        return sprintf('mbo_admin_token_%s', Config::getShopMboUuid());
     }
 }
