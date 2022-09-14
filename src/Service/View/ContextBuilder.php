@@ -120,7 +120,7 @@ class ContextBuilder
             'iso_code' => mb_strtolower($country->iso_code),
             'shop_version' => _PS_VERSION_,
             'shop_url' => $context->shop->getBaseURL(true, false),
-            'shop_uuid' => $this->shopId,
+            'shop_uuid' => Config::getShopMboUuid(),
             // The token is constant string for now, it'll be replaced by the user's real token when security layer will be implemented
             'account_token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
             'user_id' => $context->cookie->id_employee,

@@ -123,14 +123,12 @@ class ps_mbo extends Module
      */
     public function install(): bool
     {
-        if (parent::install() && $this->installConfiguration() && $this->registerHook($this->getHooksNames())) {
+        if (parent::install() && $this->registerHook($this->getHooksNames())) {
             // Do come extra operations on modules' registration like modifying orders
             $this->installHooks();
 
             $this->getAdminAuthenticationProvider()->clearCache();
             $this->getAdminAuthenticationProvider()->createApiUser();
-
-            $this->registerShop();
 
             return true;
         }
@@ -230,7 +228,13 @@ class ps_mbo extends Module
         // Restore previous context
         Shop::setContext($previousContextType, $previousContextShopId);
 
-        return $this->handleTabAction('install');
+        // Install tab before registering shop, we need the tab to be active to create the good token
+        $this->handleTabAction('install');
+
+        // Register online services
+        $this->registerShop();
+
+        return true;
     }
 
     private function enableByShop(int $shopId)
@@ -264,6 +268,9 @@ class ps_mbo extends Module
 
         // Restore previous context
         Shop::setContext($previousContextType, $previousContextShopId);
+
+        // Unregister from online services
+        $this->unregisterShop();
 
         return $this->handleTabAction('uninstall');
     }
@@ -308,6 +315,9 @@ class ps_mbo extends Module
         return $this->serviceContainer->getService($serviceName);
     }
 
+    /**
+     * @inerhitDoc
+     */
     public function isUsingNewTranslationSystem(): bool
     {
         return true;
@@ -331,12 +341,22 @@ class ps_mbo extends Module
         }
     }
 
+    /**
+     * @return void
+     */
     private function loadEnv(): void
     {
         $dotenv = new Dotenv();
         $dotenv->loadEnv(__DIR__ . '/.env');
     }
 
+    /**
+     * Get an existing or build an instance of AdminAuthenticationProvider
+     *
+     * @return \PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider
+     *
+     * @throws \Exception
+     */
     public function getAdminAuthenticationProvider(): AdminAuthenticationProvider
     {
         if (null === $this->container) {
@@ -354,11 +374,22 @@ class ps_mbo extends Module
                 );
     }
 
-    private function registerShop()
+    /**
+     * Register a shop for online services delivered by API.
+     * So the module can correctly process actions (download, install, update...) on modules
+     *
+     * @return void
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function registerShop(): void
     {
         $registrationLockFile = $this->moduleCacheDir . 'registration.lock';
 
         try {
+            // We have to install config here because the register method is called by parent::install -> module->enable
+            // Furthermore, this make a check and ensure existence in case of accidental removal
+            $this->installConfiguration();
             $token = $this->getAdminAuthenticationProvider()->getAdminToken();
 
             /** @var Client $distributionApi */
@@ -378,6 +409,29 @@ class ps_mbo extends Module
                 $f = fopen($registrationLockFile, 'w+');
                 fclose($f);
             }
+        }
+    }
+
+    /**
+     * Unregister a shop of online services delivered by API.
+     * When the module is disabled or uninstalled, remove it from online services
+     *
+     * @return void
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function unregisterShop(): void
+    {
+        $token = $this->getAdminAuthenticationProvider()->getAdminToken();
+
+        /** @var Client $distributionApi */
+        $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
+
+        try {
+            $distributionApi->unregisterShop($token);
+        } catch (Exception $e) {
+            // Do nothing here, the exception is catched to avoid displaying an error to the client
+            // Furthermore, the operation can't be tried again later as the module is now disabled or uninstalled
         }
     }
 

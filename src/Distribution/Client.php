@@ -34,6 +34,7 @@ class Client
 {
     public const HTTP_METHOD_GET = 'GET';
     public const HTTP_METHOD_POST = 'POST';
+    public const HTTP_METHOD_DELETE = 'DELETE';
 
     /**
      * @var HttpClient
@@ -154,6 +155,28 @@ class Client
             'shops',
             null,
             self::HTTP_METHOD_POST,
+            ['form_params' => $data]
+        );
+    }
+
+    /**
+     * Unregister a Shop on Distribution API.
+     *
+     * @return stdClass
+     *
+     * @throws GuzzleException
+     */
+    public function unregisterShop(string $token): stdClass
+    {
+        $data = [
+            'uuid' => Config::getShopMboUuid(),
+            'auth_cookie' => $token,
+        ];
+
+        return $this->processRequestAndReturn(
+            'shops',
+            null,
+            self::HTTP_METHOD_DELETE,
             ['form_params' => $data]
         );
     }
