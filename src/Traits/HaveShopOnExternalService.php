@@ -83,7 +83,7 @@ trait HaveShopOnExternalService
         try {
             // If the module is installed via command line or somehow the ADMIN_DIR is not defined,
             // we ignore the shop registration, so it will be done at any action on the backoffice
-            if (php_sapi_name() === "cli" || !defined('_PS_ADMIN_DIR_')) {
+            if (php_sapi_name() === 'cli' || !defined('_PS_ADMIN_DIR_')) {
                 throw new \Exception();
             }
 
