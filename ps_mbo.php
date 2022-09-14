@@ -123,7 +123,7 @@ class ps_mbo extends Module
      */
     public function install(): bool
     {
-        if (parent::install() && $this->installConfiguration() && $this->registerHook($this->getHooksNames())) {
+        if (parent::install() && $this->registerHook($this->getHooksNames())) {
             // Do come extra operations on modules' registration like modifying orders
             $this->installHooks();
 
@@ -384,6 +384,7 @@ class ps_mbo extends Module
         $registrationLockFile = $this->moduleCacheDir . 'registration.lock';
 
         try {
+            $this->installConfiguration();
             $token = $this->getAdminAuthenticationProvider()->getAdminToken();
 
             /** @var Client $distributionApi */

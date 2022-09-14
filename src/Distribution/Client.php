@@ -169,7 +169,7 @@ class Client
     public function unregisterShop(string $token): stdClass
     {
         $data = [
-            'uuid' => $this->shopUuid,
+            'uuid' => Config::getShopMboUuid(),
             'auth_cookie' => $token,
         ];
 

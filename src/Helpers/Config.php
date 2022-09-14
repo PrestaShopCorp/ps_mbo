@@ -56,7 +56,7 @@ class Config
         return self::$SHOP_MBO_UUID;
     }
 
-    public static function getShopMboAdminMail(): string
+    public static function getShopMboAdminMail(): ?string
     {
         if (null === self::$SHOP_MBO_ADMIN_MAIL) {
             // PS_MBO_SHOP_ADMIN_ADMIN_MAIL have the save value for all shops
@@ -68,7 +68,8 @@ class Config
                 'PS_MBO_SHOP_ADMIN_MAIL',
                 null,
                 $singleShop->id_shop_group,
-                $singleShop->id
+                $singleShop->id,
+                null
             );
         }
 
