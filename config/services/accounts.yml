@@ -13,3 +13,8 @@ services:
     public: true
     arguments:
       - "@mbo.ps_accounts.installer"
+
+  mbo.accounts.data_provider:
+    class: PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider
+    arguments:
+      - '@mbo.ps_accounts.facade'

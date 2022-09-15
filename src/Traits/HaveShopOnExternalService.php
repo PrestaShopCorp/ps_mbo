@@ -25,9 +25,6 @@ use Configuration;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Distribution\Client;
-use PrestaShop\Module\PsAccounts\Repository\UserTokenRepository;
-use PrestaShop\Module\PsAccounts\Service\PsAccountsService;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use Ramsey\Uuid\Uuid;
 use Shop;
 
@@ -45,54 +42,6 @@ trait HaveShopOnExternalService
         // Furthermore, this make a check and ensure existence in case of accidental removal
         $this->installConfiguration();
         $this->callServiceWithLockFile('registerShop');
-    }
-
-    private function getAccountsToken(): string
-    {
-        if (!$this->isAccountLinked()) {
-            return '';
-        }
-
-        $psAccountsModule = ServiceLocator::get('ps_accounts');
-
-        if (null === $psAccountsModule) {
-            return '';
-        }
-
-        /**
-         * @var UserTokenRepository $accountsUserTokenRepository
-         */
-        $accountsUserTokenRepository = $psAccountsModule->getService(\PrestaShop\Module\PsAccounts\Repository\UserTokenRepository::class);
-        try {
-            $token = $accountsUserTokenRepository->getOrRefreshToken();
-        } catch (Exception $e) {
-            return '';
-        }
-
-        return null === $token ? '' : (string) $token;
-    }
-
-    private function getAccountsShopId(): ?string
-    {
-        if (!$this->isAccountLinked()) {
-            return null;
-        }
-
-        return $this->getAccountsService()->getShopUuid() ?? null;
-    }
-
-    private function isAccountLinked(): bool
-    {
-        try {
-            return $this->getAccountsService()->isAccountLinked();
-        } catch (Exception $e) {
-            return false;
-        }
-    }
-
-    private function getAccountsService(): PsAccountsService
-    {
-        return $this->getService('mbo.ps_accounts.facade')->getPsAccountsService();
     }
 
     /**
@@ -145,8 +94,8 @@ trait HaveShopOnExternalService
             }
 
             $token = $this->getAdminAuthenticationProvider()->getAdminToken();
-            $accountsToken = $this->getAccountsToken();
-            $accountsShopId = $this->getAccountsShopId();
+            $accountsToken = $this->getAccountsDataProvider()->getAccountsToken();
+            $accountsShopId = $this->getAccountsDataProvider()->getAccountsShopId();
 
             $distributionApi->{$method}($token, $accountsToken, $accountsShopId);
 
