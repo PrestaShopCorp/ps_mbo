@@ -154,6 +154,11 @@ class AddonsDataProvider implements DataProviderInterface
         return $this->isUserAuthenticated() ? (string) $this->user->getEmail()['username'] : null;
     }
 
+    public function getAuthenticatedUserCredentials(): array
+    {
+        return $this->isServiceUp() && $this->isUserAuthenticated() ? $this->user->getCredentials() : [];
+    }
+
     /**
      * {@inheritdoc}
      *

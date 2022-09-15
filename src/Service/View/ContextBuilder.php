@@ -26,6 +26,7 @@ use Context;
 use Country;
 use Doctrine\Common\Cache\CacheProvider;
 use Language;
+use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Tab\Tab;
@@ -58,17 +59,23 @@ class ContextBuilder
      * @var CacheProvider
      */
     private $cacheProvider;
+    /**
+     * @var AddonsDataProvider
+     */
+    private $addonsDataProvider;
 
     public function __construct(
         ContextAdapter $contextAdapter,
         ModuleRepository $moduleRepository,
         Router $router,
-        CacheProvider $cacheProvider
+        CacheProvider $cacheProvider,
+        AddonsDataProvider $addonsDataProvider
     ) {
         $this->contextAdapter = $contextAdapter;
         $this->moduleRepository = $moduleRepository;
         $this->router = $router;
         $this->cacheProvider = $cacheProvider;
+        $this->addonsDataProvider = $addonsDataProvider;
     }
 
     public function getViewContext(): array
@@ -114,6 +121,8 @@ class ContextBuilder
             $token = Tools::getValue('token');
         }
 
+        $addonsCredentials = $this->addonsDataProvider->getAuthenticatedUserCredentials();
+
         return [
             'currency' => $this->getCurrencyCode(),
             'iso_lang' => $language->getLanguageCode(),
@@ -126,6 +135,8 @@ class ContextBuilder
             'user_id' => $context->cookie->id_employee,
             'admin_token' => $token,
             'installed_modules' => $this->getInstalledModules(),
+            'username_addons' => $addonsCredentials['username'] ?? '',
+            'password_addons' => $addonsCredentials['password'] ?? '',
         ];
     }
 
