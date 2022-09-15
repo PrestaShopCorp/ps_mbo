@@ -168,11 +168,12 @@ class Client
      *
      * @throws GuzzleException
      */
-    public function unregisterShop(string $token): stdClass
+    public function unregisterShop(string $token, string $accountsToken): stdClass
     {
         $data = [
             'uuid' => Config::getShopMboUuid(),
             'auth_cookie' => $token,
+            'accounts_token' => $accountsToken,
         ];
 
         return $this->processRequestAndReturn(
