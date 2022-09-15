@@ -27,7 +27,6 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use ps_mbo;
-use Shop;
 use stdClass;
 
 class Client
@@ -49,7 +48,7 @@ class Client
     /**
      * @var array<string, string>
      */
-    protected $queryParameters = ['format' => 'json'];
+    protected $queryParameters = [];
 
     /**
      * @var array<string, string>
@@ -69,26 +68,20 @@ class Client
     ];
 
     /**
-     * @var string
-     */
-    private $shopUrl;
-
-    /**
      * @param HttpClient $httpClient
+     * @param \Doctrine\Common\Cache\CacheProvider $cacheProvider
      */
     public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider)
     {
         $this->httpClient = $httpClient;
         $this->cacheProvider = $cacheProvider;
-        $shopId = (int) Context::getContext()->shop->id;
-        $this->shopUrl = (new Shop($shopId))->getBaseUrl();
     }
 
     public function setDefaultParams(): void
     {
         $this->setQueryParams([
             'shop_uuid' => Config::getShopMboUuid(),
-            'shop_url' => $this->shopUrl,
+            'shop_url' => Config::getShopUrl(),
         ]);
         $this->defaultQueryParameters = $this->queryParameters;
     }
@@ -145,7 +138,7 @@ class Client
     {
         $data = [
             'uuid' => Config::getShopMboUuid(),
-            'shop_url' => $this->shopUrl,
+            'shop_url' => Config::getShopUrl(),
             'admin_path' => sprintf('/%s/', trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/')),
             'mbo_version' => ps_mbo::VERSION,
             'ps_version' => _PS_VERSION_,
@@ -196,7 +189,7 @@ class Client
     {
         $data = [
             'uuid' => Config::getShopMboUuid(),
-            'shop_url' => $this->shopUrl,
+            'shop_url' => Config::getShopUrl(),
             'admin_path' => sprintf('/%s/', trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/')),
             'mbo_version' => ps_mbo::VERSION,
             'ps_version' => _PS_VERSION_,
