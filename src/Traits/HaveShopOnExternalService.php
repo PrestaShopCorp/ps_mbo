@@ -21,9 +21,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits;
 
+use Configuration;
+use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Distribution\Client;
+use PrestaShop\Module\PsAccounts\Repository\UserTokenRepository;
 use PrestaShop\Module\PsAccounts\Service\PsAccountsService;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use Ramsey\Uuid\Uuid;
+use Shop;
 
 trait HaveShopOnExternalService
 {
@@ -32,8 +38,6 @@ trait HaveShopOnExternalService
      * So the module can correctly process actions (download, install, update..) on. modules
      *
      * @return void
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function registerShop(): void
     {
@@ -45,42 +49,56 @@ trait HaveShopOnExternalService
 
     private function getAccountsToken(): string
     {
-        /**
-         * @var PsAccountsService $accountsService
-         */
-        $accountsService = $this->getService('mbo.ps_accounts.facade')->getPsAccountsService();
-
-        if (!$accountsService->isAccountLinked()) {
+        if (!$this->isAccountLinked()) {
             return '';
         }
 
-        return $accountsService->getOrRefreshToken();
+        $psAccountsModule = ServiceLocator::get('ps_accounts');
+
+        if (null === $psAccountsModule) {
+            return '';
+        }
+
+        /**
+         * @var UserTokenRepository $accountsUserTokenRepository
+         */
+        $accountsUserTokenRepository = $psAccountsModule->getService(\PrestaShop\Module\PsAccounts\Repository\UserTokenRepository::class);
+        try {
+            $token = $accountsUserTokenRepository->getOrRefreshToken();
+        } catch (Exception $e) {
+            return '';
+        }
+
+        return null === $token ? '' : (string) $token;
     }
 
     private function getAccountsShopId(): ?string
     {
-        /**
-         * @var PsAccountsService $accountsService
-         */
-        $accountsService = $this->getService('mbo.ps_accounts.facade')->getPsAccountsService();
-
-        try {
-            if (!$accountsService->isAccountLinked()) {
-                return null;
-            }
-        } catch (\Exception $e) {
+        if (!$this->isAccountLinked()) {
             return null;
         }
 
-        return $accountsService->getShopUuid() ?? null;
+        return $this->getAccountsService()->getShopUuid() ?? null;
+    }
+
+    private function isAccountLinked(): bool
+    {
+        try {
+            return $this->getAccountsService()->isAccountLinked();
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    private function getAccountsService(): PsAccountsService
+    {
+        return $this->getService('mbo.ps_accounts.facade')->getPsAccountsService();
     }
 
     /**
      * Update the shop in only services
      *
      * @return void
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function updateShop(): void
     {
@@ -93,18 +111,18 @@ trait HaveShopOnExternalService
      *
      * @return void
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     private function unregisterShop(): void
     {
-        $token = $this->getAdminAuthenticationProvider()->getAdminToken();
-
-        /** @var Client $distributionApi */
-        $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
-
         try {
+            $token = $this->getAdminAuthenticationProvider()->getAdminToken();
+
+            /** @var Client $distributionApi */
+            $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
+
             $distributionApi->unregisterShop($token);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Do nothing here, the exception is caught to avoid displaying an error to the client
             // Furthermore, the operation can't be tried again later as the module is now disabled or uninstalled
         }
@@ -117,7 +135,7 @@ trait HaveShopOnExternalService
             // If the module is installed via command line or somehow the ADMIN_DIR is not defined,
             // we ignore the shop registration, so it will be done at any action on the backoffice
             if (php_sapi_name() === 'cli' || !defined('_PS_ADMIN_DIR_')) {
-                throw new \Exception();
+                throw new Exception();
             }
 
             /** @var Client $distributionApi */
@@ -135,7 +153,7 @@ trait HaveShopOnExternalService
             if (file_exists($lockFile)) {
                 unlink($lockFile);
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // Create the lock file
             if (!file_exists($lockFile)) {
                 if (!is_dir($this->moduleCacheDir)) {
@@ -161,10 +179,10 @@ trait HaveShopOnExternalService
         $this->configurationList['PS_MBO_SHOP_ADMIN_UUID'] = $adminUuid;
         $this->configurationList['PS_MBO_SHOP_ADMIN_MAIL'] = sprintf('mbo-%s@prestashop.com', $adminUuid);
 
-        foreach (\Shop::getShops(false, null, true) as $shopId) {
+        foreach (Shop::getShops(false, null, true) as $shopId) {
             foreach ($this->configurationList as $name => $value) {
-                if (false === \Configuration::hasKey($name, null, null, (int) $shopId)) {
-                    $result = $result && (bool) \Configuration::updateValue(
+                if (false === Configuration::hasKey($name, null, null, (int) $shopId)) {
+                    $result = $result && (bool) Configuration::updateValue(
                             $name,
                             $value,
                             false,
