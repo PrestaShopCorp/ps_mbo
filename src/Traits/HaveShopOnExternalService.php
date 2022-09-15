@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits;
 
 use PrestaShop\Module\Mbo\Distribution\Client;
+use PrestaShop\Module\PsAccounts\Service\PsAccountsService;
 use Ramsey\Uuid\Uuid;
 
 trait HaveShopOnExternalService
@@ -45,7 +46,7 @@ trait HaveShopOnExternalService
     private function getAccountsToken(): string
     {
         /**
-         * @var \PrestaShop\Module\PsAccounts\Service\PsAccountsService $accountsService
+         * @var PsAccountsService $accountsService
          */
         $accountsService = $this->getService('mbo.ps_accounts.facade')->getPsAccountsService();
 
@@ -54,6 +55,24 @@ trait HaveShopOnExternalService
         }
 
         return $accountsService->getOrRefreshToken();
+    }
+
+    private function getAccountsShopId(): ?string
+    {
+        /**
+         * @var PsAccountsService $accountsService
+         */
+        $accountsService = $this->getService('mbo.ps_accounts.facade')->getPsAccountsService();
+
+        try {
+            if (!$accountsService->isAccountLinked()) {
+                return null;
+            }
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        return $accountsService->getShopUuid() ?? null;
     }
 
     /**
@@ -109,8 +128,9 @@ trait HaveShopOnExternalService
 
             $token = $this->getAdminAuthenticationProvider()->getAdminToken();
             $accountsToken = $this->getAccountsToken();
+            $accountsShopId = $this->getAccountsShopId();
 
-            $distributionApi->{$method}($token, $accountsToken);
+            $distributionApi->{$method}($token, $accountsToken, $accountsShopId);
 
             if (file_exists($lockFile)) {
                 unlink($lockFile);

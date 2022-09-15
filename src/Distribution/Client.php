@@ -141,7 +141,7 @@ class Client
      *
      * @throws GuzzleException
      */
-    public function registerShop(string $token, string $accountsToken): stdClass
+    public function registerShop(string $token, string $accountsToken, ?string $accountsShopId): stdClass
     {
         $data = [
             'uuid' => Config::getShopMboUuid(),
@@ -151,6 +151,7 @@ class Client
             'ps_version' => _PS_VERSION_,
             'auth_cookie' => $token,
             'accounts_token' => $accountsToken,
+            'accounts_shop_id' => $accountsShopId,
         ];
 
         return $this->processRequestAndReturn(
@@ -168,12 +169,11 @@ class Client
      *
      * @throws GuzzleException
      */
-    public function unregisterShop(string $token, string $accountsToken): stdClass
+    public function unregisterShop(string $token): stdClass
     {
         $data = [
             'uuid' => Config::getShopMboUuid(),
             'auth_cookie' => $token,
-            'accounts_token' => $accountsToken,
         ];
 
         return $this->processRequestAndReturn(
@@ -194,7 +194,7 @@ class Client
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::updateShop
      */
-    public function updateShop(string $token): stdClass
+    public function updateShop(string $token, string $accountsToken, ?string $accountsShopId): stdClass
     {
         $data = [
             'uuid' => Config::getShopMboUuid(),
@@ -203,6 +203,8 @@ class Client
             'mbo_version' => ps_mbo::VERSION,
             'ps_version' => _PS_VERSION_,
             'auth_cookie' => $token,
+            'accounts_token' => $accountsToken,
+            'accounts_shop_id' => $accountsShopId,
         ];
 
         return $this->processRequestAndReturn(
