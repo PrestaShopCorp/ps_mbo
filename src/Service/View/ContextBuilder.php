@@ -59,11 +59,6 @@ class ContextBuilder
      */
     private $cacheProvider;
 
-    /**
-     * @var string
-     */
-    private $shopId;
-
     public function __construct(
         ContextAdapter $contextAdapter,
         ModuleRepository $moduleRepository,
