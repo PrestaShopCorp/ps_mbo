@@ -114,6 +114,8 @@ class ContextBuilder
             $token = Tools::getValue('token');
         }
 
+        $refreshUrl = Context::getContext()->link->getAdminLink('apiSecurityPsMbo');
+
         return [
             'currency' => $this->getCurrencyCode(),
             'iso_lang' => $language->getLanguageCode(),
@@ -125,6 +127,7 @@ class ContextBuilder
             'account_token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
             'user_id' => $context->cookie->id_employee,
             'admin_token' => $token,
+            'refresh_url' => $refreshUrl,
             'installed_modules' => $this->getInstalledModules(),
         ];
     }

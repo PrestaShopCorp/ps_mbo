@@ -23,12 +23,10 @@ namespace PrestaShop\Module\Mbo\Api\Security;
 
 use Context;
 use Cookie;
-use DateTime;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\DBAL\Connection;
 use Employee;
 use EmployeeSession;
-use LogicException;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
@@ -202,28 +200,9 @@ class AdminAuthenticationProvider
         return $this->cacheProvider->fetch($cacheKey);
     }
 
-    public function extendTokenValidity(): void
-    {
-        try {
-            $token = Tools::getValue('token');
-
-            if (empty($token)) {
-                throw new LogicException('Token was not supposed to be empty here');
-            }
-
-            $qb = $this->connection->createQueryBuilder();
-            $qb->update($this->dbPrefix . 'employee_session')
-                ->set('date_upd', (new DateTime())->format('Y-m-d H:i:s'));
-
-            $qb->execute();
-        } catch (\Exception $e) {
-            // Exception will remain silent because the call cannot be blocked when this task does not go well.
-            // Maybe add a log here
-        }
-    }
-
     public function clearCache(): bool
     {
+        // Clear admin token cache
         $cacheKey = $this->getCacheKey();
 
         if ($this->cacheProvider->contains($cacheKey)) {

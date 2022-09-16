@@ -5,6 +5,10 @@ use PrestaShop\Module\Mbo\Api\Controller\AbstractAdminApiController;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
 
+/**
+ * This controller is responsible to execute actions on modules installed on the current shop.
+ * Caller have to be fully authenticated to perform actions given.
+ */
 class apiPsMboController extends AbstractAdminApiController
 {
     public $type = Config::MODULE_ACTIONS;

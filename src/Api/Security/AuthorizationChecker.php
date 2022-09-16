@@ -60,7 +60,11 @@ class AuthorizationChecker
         $this->keyCacheIndex = 'api_key_' . $shopUuid;
     }
 
-    public function verify(string $keyVersion, string $signature, string $message)
+    /**
+     * @throws UnauthorizedException
+     * @throws RetrieveNewKeyException
+     */
+    public function verify(string $keyVersion, string $signature, string $message): void
     {
         $storedKeyVersion = null;
         if ($this->cacheProvider->contains($this->keyVersionCacheIndex)) {
