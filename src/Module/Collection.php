@@ -67,7 +67,7 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function offsetGet($key)
+    public function offsetGet($key): mixed
     {
         return $this->offsetExists($key) ? $this->data[$key] : null;
     }

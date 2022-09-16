@@ -30,11 +30,14 @@ class Config
      * @var string
      */
     private static $SHOP_MBO_UUID;
-
     /**
      * @var string
      */
     private static $SHOP_MBO_ADMIN_MAIL;
+    /**
+     * @var string
+     */
+    private static $SHOP_URL;
 
     public static function getShopMboUuid(): ?string
     {
@@ -74,6 +77,41 @@ class Config
         }
 
         return self::$SHOP_MBO_ADMIN_MAIL;
+    }
+
+    /**
+     * The Tools::usingSecureMode used by Shop::getBaseUrl seems to not work in all situations
+     * To be sure to have the correct data, use shop configuration
+     *
+     * @return string|null
+     */
+    public static function getShopUrl(): ?string
+    {
+        if (null === self::$SHOP_URL) {
+            $singleShop = self::getSingleShop();
+
+            $useSecureProtocol = (bool) Configuration::get(
+                'PS_SSL_ENABLED_EVERYWHERE',
+                null,
+                $singleShop->id_shop_group,
+                $singleShop->id
+            );
+
+            $domainConfigKey = $useSecureProtocol ? 'PS_SHOP_DOMAIN_SSL' : 'PS_SHOP_DOMAIN';
+
+            $domain = Configuration::get(
+                $domainConfigKey,
+                null,
+                $singleShop->id_shop_group,
+                $singleShop->id
+            );
+
+            if ($domain) {
+                self::$SHOP_URL = ($useSecureProtocol ? 'https://' : 'http://') . $domain;
+            }
+        }
+
+        return self::$SHOP_URL;
     }
 
     private static function getSingleShop(): Shop
