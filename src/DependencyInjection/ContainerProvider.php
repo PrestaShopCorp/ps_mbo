@@ -97,6 +97,7 @@ class ContainerProvider
 
         $loader->load('http_clients.yml');
         $loader->load('distribution.yml');
+        $loader->load('accounts.yml');
 
         $containerBuilder->compile(true);
         $dumper = new PhpDumper($containerBuilder);

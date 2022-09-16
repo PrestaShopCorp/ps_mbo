@@ -27,6 +27,7 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
+use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
@@ -122,6 +123,12 @@ class ps_mbo extends Module
      */
     public function install(): bool
     {
+        try {
+            $this->getService('mbo.ps_accounts.installer')->install();
+        } catch (Exception $e) {
+            // For now, do nothing
+        }
+
         if (parent::install() && $this->registerHook($this->getHooksNames())) {
             // Do come extra operations on modules' registration like modifying orders
             $this->installHooks();
@@ -350,5 +357,10 @@ class ps_mbo extends Module
     private function getModuleEnv(?string $default = null): string
     {
         return getenv($this->getModuleEnvVar()) ?: $default ?: self::DEFAULT_ENV;
+    }
+
+    public function getAccountsDataProvider(): AccountsDataProvider
+    {
+        return $this->getService('mbo.accounts.data_provider');
     }
 }

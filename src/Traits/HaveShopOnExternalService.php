@@ -21,8 +21,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits;
 
+use Configuration;
+use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use Ramsey\Uuid\Uuid;
+use Shop;
 
 trait HaveShopOnExternalService
 {
@@ -31,8 +35,6 @@ trait HaveShopOnExternalService
      * So the module can correctly process actions (download, install, update..) on. modules
      *
      * @return void
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function registerShop(): void
     {
@@ -46,8 +48,6 @@ trait HaveShopOnExternalService
      * Update the shop in only services
      *
      * @return void
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     private function updateShop(): void
     {
@@ -60,18 +60,18 @@ trait HaveShopOnExternalService
      *
      * @return void
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     private function unregisterShop(): void
     {
-        $token = $this->getAdminAuthenticationProvider()->getAdminToken();
-
-        /** @var Client $distributionApi */
-        $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
-
         try {
+            $token = $this->getAdminAuthenticationProvider()->getAdminToken();
+
+            /** @var Client $distributionApi */
+            $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
+
             $distributionApi->unregisterShop($token);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Do nothing here, the exception is caught to avoid displaying an error to the client
             // Furthermore, the operation can't be tried again later as the module is now disabled or uninstalled
         }
@@ -84,7 +84,7 @@ trait HaveShopOnExternalService
             // If the module is installed via command line or somehow the ADMIN_DIR is not defined,
             // we ignore the shop registration, so it will be done at any action on the backoffice
             if (php_sapi_name() === 'cli' || !defined('_PS_ADMIN_DIR_')) {
-                throw new \Exception();
+                throw new Exception();
             }
 
             /** @var Client $distributionApi */
@@ -94,13 +94,15 @@ trait HaveShopOnExternalService
             }
 
             $token = $this->getAdminAuthenticationProvider()->getAdminToken();
+            $accountsToken = $this->getAccountsDataProvider()->getAccountsToken();
+            $accountsShopId = $this->getAccountsDataProvider()->getAccountsShopId();
 
-            $distributionApi->{$method}($token);
+            $distributionApi->{$method}($token, $accountsToken, $accountsShopId);
 
             if (file_exists($lockFile)) {
                 unlink($lockFile);
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // Create the lock file
             if (!file_exists($lockFile)) {
                 if (!is_dir($this->moduleCacheDir)) {
@@ -126,10 +128,10 @@ trait HaveShopOnExternalService
         $this->configurationList['PS_MBO_SHOP_ADMIN_UUID'] = $adminUuid;
         $this->configurationList['PS_MBO_SHOP_ADMIN_MAIL'] = sprintf('mbo-%s@prestashop.com', $adminUuid);
 
-        foreach (\Shop::getShops(false, null, true) as $shopId) {
+        foreach (Shop::getShops(false, null, true) as $shopId) {
             foreach ($this->configurationList as $name => $value) {
-                if (false === \Configuration::hasKey($name, null, null, (int) $shopId)) {
-                    $result = $result && (bool) \Configuration::updateValue(
+                if (false === Configuration::hasKey($name, null, null, (int) $shopId)) {
+                    $result = $result && (bool) Configuration::updateValue(
                             $name,
                             $value,
                             false,
