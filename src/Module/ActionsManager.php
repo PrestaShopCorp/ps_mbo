@@ -24,6 +24,8 @@ namespace PrestaShop\Module\Mbo\Module;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException;
 use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\Module\Mbo\Module\SourceRetriever\SourceRetrieverInterface;
+use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
 class ActionsManager
 {
@@ -50,6 +52,19 @@ class ActionsManager
         $this->filesManager = $filesManager;
         $this->moduleRepository = $moduleRepository;
         $this->sourceRetriever = $sourceRetriever;
+    }
+
+    /**
+     * @param int $moduleId
+     *
+     * @throws SourceHandlerNotFoundException
+     * @throws FileNotFoundException
+     */
+    public function install(int $moduleId): void
+    {
+        $moduleZip = $this->filesManager->downloadModule($moduleId);
+
+        $this->filesManager->installFromZip($moduleZip);
     }
 
     /**
