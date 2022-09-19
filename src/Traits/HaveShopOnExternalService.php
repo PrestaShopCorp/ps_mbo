@@ -51,7 +51,6 @@ trait HaveShopOnExternalService
      */
     private function updateShop(): void
     {
-        $this->getAdminAuthenticationProvider()->clearCache();
         $this->callServiceWithLockFile('updateShop');
     }
 
@@ -68,8 +67,8 @@ trait HaveShopOnExternalService
         try {
             /** @var Client $distributionApi */
             $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
-
-            $distributionApi->unregisterShop($token);
+            $distributionApi->setBearer($this->getAdminAuthenticationProvider()->getMboJWT());
+            $distributionApi->unregisterShop();
         } catch (Exception $e) {
             // Do nothing here, the exception is caught to avoid displaying an error to the client
             // Furthermore, the operation can't be tried again later as the module is now disabled or uninstalled
@@ -78,6 +77,7 @@ trait HaveShopOnExternalService
 
     private function callServiceWithLockFile(string $method): void
     {
+        $this->getAdminAuthenticationProvider()->clearCache();
         $lockFile = $this->moduleCacheDir . $method . '.lock';
         try {
             // If the module is installed via command line or somehow the ADMIN_DIR is not defined,
@@ -96,6 +96,7 @@ trait HaveShopOnExternalService
             $accountsToken = $this->getAccountsDataProvider()->getAccountsToken();
             $accountsShopId = $this->getAccountsDataProvider()->getAccountsShopId();
 
+            $distributionApi->setBearer($this->getAdminAuthenticationProvider()->getMboJWT());
             $distributionApi->{$method}($token, $accountsToken, $accountsShopId);
 
             if (file_exists($lockFile)) {

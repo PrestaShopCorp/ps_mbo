@@ -25,7 +25,6 @@ use Context;
 use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
-use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use ps_mbo;
 use stdClass;
@@ -45,10 +44,6 @@ class Client
      */
     private $cacheProvider;
     /**
-     * @var AdminAuthenticationProvider
-     */
-    private $adminAuthenticationProvider;
-    /**
      * @var array<string, string>
      */
     protected $queryParameters = [];
@@ -63,16 +58,19 @@ class Client
         'shop_url',
         'isoLang',
     ];
+    /**
+     * @var array<string, string>
+     */
+    protected $headers = [];
 
     /**
      * @param HttpClient $httpClient
      * @param \Doctrine\Common\Cache\CacheProvider $cacheProvider
      */
-    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider, AdminAuthenticationProvider $adminAuthenticationProvider)
+    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider)
     {
         $this->httpClient = $httpClient;
         $this->cacheProvider = $cacheProvider;
-        $this->adminAuthenticationProvider = $adminAuthenticationProvider;
     }
 
     /**
@@ -81,6 +79,7 @@ class Client
     public function reset(): void
     {
         $this->queryParameters = [];
+        $this->headers = [];
     }
 
     /**
@@ -92,6 +91,30 @@ class Client
     {
         $filteredParams = array_intersect_key($params, array_flip($this->possibleQueryParameters));
         $this->queryParameters = array_merge($this->queryParameters, $filteredParams);
+
+        return $this;
+    }
+
+    /**
+     * @param array $headers
+     *
+     * @return $this
+     */
+    public function setHeaders(array $headers): self
+    {
+        $this->headers = array_merge($this->headers, $headers);
+
+        return $this;
+    }
+
+    /**
+     * @param string $jwt
+     *
+     * @return $this
+     */
+    public function setBearer(string $jwt): self
+    {
+        $this->setHeaders(['Authorization' => 'Bearer ' . $jwt]);
 
         return $this;
     }
@@ -256,9 +279,7 @@ class Client
     ): string {
         $options = array_merge($options, [
             'query' => $this->queryParameters,
-            'headers' => [
-                'Authorization' => 'Bearer ' . $this->adminAuthenticationProvider->getMboJWT(),
-            ],
+            'headers' => $this->headers,
         ]);
 
         return (string) $this->httpClient

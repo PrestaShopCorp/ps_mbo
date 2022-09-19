@@ -16,6 +16,7 @@ services:
     arguments:
       - '@doctrine.cache.provider'
       - '@mbo.cdc.client.distribution_api'
+      - '@mbo.security.admin_authentication.provider'
 
   mbo.security.permission_checker:
     class: PrestaShop\Module\Mbo\Security\PermissionChecker
