@@ -65,8 +65,6 @@ trait HaveShopOnExternalService
     private function unregisterShop(): void
     {
         try {
-            $token = $this->getAdminAuthenticationProvider()->getAdminToken();
-
             /** @var Client $distributionApi */
             $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
 

@@ -144,18 +144,12 @@ class Client
      *
      * @throws GuzzleException
      */
-    public function unregisterShop(string $token): stdClass
+    public function unregisterShop(): stdClass
     {
-        $data = [
-            'uuid' => Config::getShopMboUuid(),
-            'mbo_api_user_token' => $token,
-        ];
-
         return $this->processRequestAndReturn(
-            'shops',
+            'shops/' . Config::getShopMboUuid(),
             null,
-            self::HTTP_METHOD_DELETE,
-            ['form_params' => $data]
+            self::HTTP_METHOD_DELETE
         );
     }
 
