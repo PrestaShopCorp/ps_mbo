@@ -183,7 +183,7 @@ class AdminAuthenticationProvider
 
     public function getAdminToken(): string
     {
-        $cacheKey = $this->getCacheKey();
+        $cacheKey = $this->getAdminTokenCacheKey();
 
         if ($this->cacheProvider->contains($cacheKey)) {
             return $this->cacheProvider->fetch($cacheKey);
@@ -201,18 +201,36 @@ class AdminAuthenticationProvider
 
     public function getMboJWT(): string
     {
+        $cacheKey = $this->getJwtTokenCacheKey();
+
+        if ($this->cacheProvider->contains($cacheKey)) {
+            return $this->cacheProvider->fetch($cacheKey);
+        }
+
         $mboUserToken = $this->getAdminToken();
 
         $shopUrl = Config::getShopUrl();
         $shopUuid = Config::getShopMboUuid();
 
-        return JWT::encode(['shop_url' => $shopUrl, 'shop_uuid' => $shopUuid], $mboUserToken, 'HS256');
+        $jwtToken = JWT::encode(['shop_url' => $shopUrl, 'shop_uuid' => $shopUuid], $mboUserToken, 'HS256');
+
+        $this->cacheProvider->save($cacheKey, $jwtToken, 0); // Lifetime infinite, will be purged when MBO is uninstalled
+
+        return $this->cacheProvider->fetch($cacheKey);
     }
 
     public function clearCache(): bool
     {
         // Clear admin token cache
-        $cacheKey = $this->getCacheKey();
+        $cacheKey = $this->getAdminTokenCacheKey();
+
+        if ($this->cacheProvider->contains($cacheKey)) {
+            if (!$this->cacheProvider->delete($cacheKey)) {
+                return false;
+            }
+        }
+        // Clear jwt token cache
+        $cacheKey = $this->getAdminTokenCacheKey();
 
         if ($this->cacheProvider->contains($cacheKey)) {
             if (!$this->cacheProvider->delete($cacheKey)) {
@@ -223,8 +241,13 @@ class AdminAuthenticationProvider
         return true;
     }
 
-    private function getCacheKey(): string
+    private function getAdminTokenCacheKey(): string
     {
         return sprintf('mbo_admin_token_%s', Config::getShopMboUuid());
+    }
+
+    private function getJwtTokenCacheKey(): string
+    {
+        return sprintf('mbo_jwt_token_%s', Config::getShopMboUuid());
     }
 }

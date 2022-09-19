@@ -45,12 +45,13 @@ trait HaveShopOnExternalService
     }
 
     /**
-     * Update the shop in only services
+     * Update the shop in online services
      *
      * @return void
      */
     private function updateShop(): void
     {
+        $this->getAdminAuthenticationProvider()->clearCache();
         $this->callServiceWithLockFile('updateShop');
     }
 
