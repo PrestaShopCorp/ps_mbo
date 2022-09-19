@@ -16,19 +16,19 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-#main-div #recommended-modules-container .alert-addons,
-#main-div #modules_list_container_tab_modal .alert-addons {
+#recommended-modules-container .alert-addons,
+#modules_list_container_tab_modal .alert-addons {
   border-color: #25b9d7;
 }
 
-#main-div #recommended-modules-container .alert-addons:before,
-#main-div #modules_list_container_tab_modal .alert-addons:before {
+#recommended-modules-container .alert-addons:before,
+#modules_list_container_tab_modal .alert-addons:before {
   color: #25b9d7;
   background-color: #dff5f9;
   content: "\E88F";
 }
 
-#main-div #modules_list_container_content .img-thumbnail {
+#modules_list_container_content .img-thumbnail {
   max-width: 56px;
   width: 56px;
 }
