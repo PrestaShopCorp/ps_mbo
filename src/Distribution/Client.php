@@ -142,7 +142,7 @@ class Client
             'admin_path' => sprintf('/%s/', trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/')),
             'mbo_version' => ps_mbo::VERSION,
             'ps_version' => _PS_VERSION_,
-            'auth_cookie' => $token,
+            'mbo_api_user_token' => $token,
             'accounts_token' => $accountsToken,
             'accounts_shop_id' => $accountsShopId,
         ];
@@ -166,7 +166,7 @@ class Client
     {
         $data = [
             'uuid' => Config::getShopMboUuid(),
-            'auth_cookie' => $token,
+            'mbo_api_user_token' => $token,
         ];
 
         return $this->processRequestAndReturn(
@@ -195,7 +195,7 @@ class Client
             'admin_path' => sprintf('/%s/', trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/')),
             'mbo_version' => ps_mbo::VERSION,
             'ps_version' => _PS_VERSION_,
-            'auth_cookie' => $token,
+            'mbo_api_user_token' => $token,
             'accounts_token' => $accountsToken,
             'accounts_shop_id' => $accountsShopId,
         ];

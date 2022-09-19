@@ -338,8 +338,8 @@ class ps_mbo extends Module
             $this->container = SymfonyContainer::getInstance();
         }
 
-        return $this->container->has('PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider') ?
-                $this->get('PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider') :
+        return $this->container->has('mbo.security.admin_authentication.provider') ?
+                $this->get('mbo.security.admin_authentication.provider') :
                 new AdminAuthenticationProvider(
                     $this->get('doctrine.dbal.default_connection'),
                     $this->context,

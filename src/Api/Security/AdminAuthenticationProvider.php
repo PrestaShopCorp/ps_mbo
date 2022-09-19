@@ -27,6 +27,7 @@ use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\DBAL\Connection;
 use Employee;
 use EmployeeSession;
+use Firebase\JWT\JWT;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
@@ -61,11 +62,6 @@ class AdminAuthenticationProvider
      * @var CacheProvider
      */
     private $cacheProvider;
-
-    /**
-     * @var string
-     */
-    private $shopId;
 
     public function __construct(
         Connection $connection,
@@ -167,9 +163,12 @@ class AdminAuthenticationProvider
     {
         $cookie = new Cookie('apiPsMbo');
         $cookie->id_employee = (int) $apiUser->id;
+        // @phpstan-ignore-next-line
         $cookie->email = $apiUser->email;
+        // @phpstan-ignore-next-line
         $cookie->profile = $apiUser->id_profile;
         $cookie->passwd = $apiUser->passwd;
+        // @phpstan-ignore-next-line
         $cookie->remote_addr = $apiUser->remote_addr;
         $cookie->registerSession(new EmployeeSession());
 
@@ -198,6 +197,16 @@ class AdminAuthenticationProvider
         $this->cacheProvider->save($cacheKey, $token, 0); // Lifetime infinite, will be purged when MBO is uninstalled
 
         return $this->cacheProvider->fetch($cacheKey);
+    }
+
+    public function getMboJWT(): string
+    {
+        $mboUserToken = $this->getAdminToken();
+
+        $shopUrl = Config::getShopUrl();
+        $shopUuid = Config::getShopMboUuid();
+
+        return JWT::encode(['shop_url' => $shopUrl, 'shop_uuid' => $shopUuid], $mboUserToken, 'HS256');
     }
 
     public function clearCache(): bool
