@@ -25,6 +25,7 @@ use Context;
 use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
+use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use ps_mbo;
 use stdClass;
@@ -35,26 +36,22 @@ class Client
     public const HTTP_METHOD_POST = 'POST';
     public const HTTP_METHOD_PUT = 'PUT';
     public const HTTP_METHOD_DELETE = 'DELETE';
-
     /**
      * @var HttpClient
      */
     protected $httpClient;
-
     /**
      * @var CacheProvider
      */
     private $cacheProvider;
     /**
-     * @var array<string, string>
+     * @var AdminAuthenticationProvider
      */
-    protected $queryParameters = [];
-
+    private $adminAuthenticationProvider;
     /**
      * @var array<string, string>
      */
-    protected $defaultQueryParameters;
-
+    protected $queryParameters = [];
     /**
      * @var array<int, string>
      */
@@ -71,19 +68,11 @@ class Client
      * @param HttpClient $httpClient
      * @param \Doctrine\Common\Cache\CacheProvider $cacheProvider
      */
-    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider)
+    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider, AdminAuthenticationProvider $adminAuthenticationProvider)
     {
         $this->httpClient = $httpClient;
         $this->cacheProvider = $cacheProvider;
-    }
-
-    public function setDefaultParams(): void
-    {
-        $this->setQueryParams([
-            'shop_uuid' => Config::getShopMboUuid(),
-            'shop_url' => Config::getShopUrl(),
-        ]);
-        $this->defaultQueryParameters = $this->queryParameters;
+        $this->adminAuthenticationProvider = $adminAuthenticationProvider;
     }
 
     /**
@@ -91,15 +80,7 @@ class Client
      */
     public function reset(): void
     {
-        $this->queryParameters = $this->defaultQueryParameters;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    public function getQueryParameters(): array
-    {
-        return $this->queryParameters;
+        $this->queryParameters = [];
     }
 
     /**
@@ -124,7 +105,7 @@ class Client
      */
     public function retrieveNewKey(): stdClass
     {
-        return $this->processRequestAndReturn('shops/get-pub-key', null, self::HTTP_METHOD_GET);
+        return $this->processRequestAndReturn('shops/get-pub-key');
     }
 
     /**
@@ -133,6 +114,7 @@ class Client
      * @return stdClass
      *
      * @throws GuzzleException
+     * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::registerShop
      */
     public function registerShop(string $token, string $accountsToken, ?string $accountsShopId): stdClass
     {
@@ -278,7 +260,12 @@ class Client
         string $uri = '',
         array $options = []
     ): string {
-        $options['query'] = $this->queryParameters;
+        $options = array_merge($options, [
+            'query' => $this->queryParameters,
+            'headers' => [
+                'Authorization' => 'Bearer ' . $this->adminAuthenticationProvider->getMboJWT(),
+            ],
+        ]);
 
         return (string) $this->httpClient
             ->request($method, '/api/' . ltrim($uri, '/'), $options)
