@@ -51,7 +51,13 @@ interface TabInterface
         'AdminCmsContent',
         'AdminImages',
         'AdminShipping',
-        'AdminStatuses',
+        'AdminStatuses', // Shop Parameters > Order Settings > Statuses
+        'AdminGroups', // Shop Parameters > Customer Settings > Groups
+        'AdminContacts', // Shop Parameters > Contact > Contact
+        'AdminMeta', // Shop Parameters > Traffic & SEO > SEO & URLs
+        'AdminSearchConf', // Shop Parameters > Search > Search
+        'AdminAdminPreferences', // Advanced Parameters > Administration
+        'AdminEmails', // Advanced Parameters > E-mail
     ];
 
     /**
