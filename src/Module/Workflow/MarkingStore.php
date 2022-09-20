@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
+use Exception;
+use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use Symfony\Component\Workflow\Exception\LogicException;
 use Symfony\Component\Workflow\Marking;
 use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
@@ -97,7 +99,13 @@ final class MarkingStore implements MarkingStoreInterface
                 isset($context['transitionsManager']) &&
                 method_exists($context['transitionsManager'], $method)
             ) {
-                $context['transitionsManager']->{$method}($subject, $marking, $context);
+                try {
+                    if (!$context['transitionsManager']->{$method}($subject, $marking, $context)) {
+                        throw new Exception(sprintf('Unable to execute transition %s', $method));
+                    }
+                } catch (Exception $e) {
+                    throw new TransitionFailedException(sprintf('Unable to execute transition : %s', $e->getMessage()), 0, $e);
+                }
 
                 return;
             }

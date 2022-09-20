@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
 use Exception;
+use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Module\SourceRetriever\SourceRetrieverInterface;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
@@ -365,6 +366,11 @@ class TransitionsManager
             }
 
             return $module->onInstall();
+        } else {
+            $error = $this->moduleManager->getError($moduleName);
+            if (!empty($error)) {
+                throw new TransitionFailedException($error);
+            }
         }
 
         return false;

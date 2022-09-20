@@ -26,6 +26,7 @@ use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleNotFoundException;
 use PrestaShop\Module\Mbo\Module\Exception\TransitionCommandToModuleStatusException;
+use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use PrestaShop\Module\Mbo\Module\Exception\UnauthorizedModuleTransitionException;
 use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\Module\Mbo\Module\Module;
@@ -66,6 +67,7 @@ final class ModuleStatusTransitionCommandHandler
      * @throws ModuleNotFoundException
      * @throws UnauthorizedModuleTransitionException
      * @throws TransitionCommandToModuleStatusException
+     * @throws TransitionFailedException
      */
     public function handle(ModuleStatusTransitionCommand $command): Module
     {
