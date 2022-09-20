@@ -87,17 +87,15 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
      *
      * {@inheritdoc}
      */
-    public function offsetUnset($module): bool
+    public function offsetUnset($module): void
     {
         $key = array_search($module, $this->data, true);
 
         if ($key === false) {
-            return false;
+            return;
         }
 
         unset($this->data[$key]);
-
-        return true;
     }
 
     /**
