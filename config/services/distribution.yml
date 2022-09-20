@@ -23,5 +23,3 @@ services:
     arguments:
       - "@mbo.distribution_api.client.http"
       - '@mbo.doctrine.cache.provider'
-    calls:
-      - method: setDefaultParams

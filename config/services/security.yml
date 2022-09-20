@@ -2,7 +2,7 @@ services:
   _defaults:
     public: true
 
-  PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider:
+  mbo.security.admin_authentication.provider:
     class: PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider
     arguments:
       - '@doctrine.dbal.default_connection'
@@ -16,6 +16,7 @@ services:
     arguments:
       - '@doctrine.cache.provider'
       - '@mbo.cdc.client.distribution_api'
+      - '@mbo.security.admin_authentication.provider'
 
   mbo.security.permission_checker:
     class: PrestaShop\Module\Mbo\Security\PermissionChecker

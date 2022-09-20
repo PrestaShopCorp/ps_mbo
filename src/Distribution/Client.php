@@ -35,12 +35,10 @@ class Client
     public const HTTP_METHOD_POST = 'POST';
     public const HTTP_METHOD_PUT = 'PUT';
     public const HTTP_METHOD_DELETE = 'DELETE';
-
     /**
      * @var HttpClient
      */
     protected $httpClient;
-
     /**
      * @var CacheProvider
      */
@@ -49,12 +47,6 @@ class Client
      * @var array<string, string>
      */
     protected $queryParameters = [];
-
-    /**
-     * @var array<string, string>
-     */
-    protected $defaultQueryParameters;
-
     /**
      * @var array<int, string>
      */
@@ -66,6 +58,10 @@ class Client
         'shop_url',
         'isoLang',
     ];
+    /**
+     * @var array<string, string>
+     */
+    protected $headers = [];
 
     /**
      * @param HttpClient $httpClient
@@ -77,29 +73,13 @@ class Client
         $this->cacheProvider = $cacheProvider;
     }
 
-    public function setDefaultParams(): void
-    {
-        $this->setQueryParams([
-            'shop_uuid' => Config::getShopMboUuid(),
-            'shop_url' => Config::getShopUrl(),
-        ]);
-        $this->defaultQueryParameters = $this->queryParameters;
-    }
-
     /**
      * In case you reuse the Client, you may want to clean the previous parameters.
      */
     public function reset(): void
     {
-        $this->queryParameters = $this->defaultQueryParameters;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    public function getQueryParameters(): array
-    {
-        return $this->queryParameters;
+        $this->queryParameters = [];
+        $this->headers = [];
     }
 
     /**
@@ -116,6 +96,28 @@ class Client
     }
 
     /**
+     * @param array $headers
+     *
+     * @return $this
+     */
+    public function setHeaders(array $headers): self
+    {
+        $this->headers = array_merge($this->headers, $headers);
+
+        return $this;
+    }
+
+    /**
+     * @param string $jwt
+     *
+     * @return $this
+     */
+    public function setBearer(string $jwt): self
+    {
+        return $this->setHeaders(['Authorization' => 'Bearer ' . $jwt]);
+    }
+
+    /**
      * Get a new key from Distribution API.
      *
      * @return stdClass
@@ -124,7 +126,7 @@ class Client
      */
     public function retrieveNewKey(): stdClass
     {
-        return $this->processRequestAndReturn('shops/get-pub-key', null, self::HTTP_METHOD_GET);
+        return $this->processRequestAndReturn('shops/get-pub-key');
     }
 
     /**
@@ -133,6 +135,7 @@ class Client
      * @return stdClass
      *
      * @throws GuzzleException
+     * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::registerShop
      */
     public function registerShop(string $token, string $accountsToken, ?string $accountsShopId): stdClass
     {
@@ -142,7 +145,7 @@ class Client
             'admin_path' => sprintf('/%s/', trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/')),
             'mbo_version' => ps_mbo::VERSION,
             'ps_version' => _PS_VERSION_,
-            'auth_cookie' => $token,
+            'mbo_api_user_token' => $token,
             'accounts_token' => $accountsToken,
             'accounts_shop_id' => $accountsShopId,
         ];
@@ -162,18 +165,12 @@ class Client
      *
      * @throws GuzzleException
      */
-    public function unregisterShop(string $token): stdClass
+    public function unregisterShop(): stdClass
     {
-        $data = [
-            'uuid' => Config::getShopMboUuid(),
-            'auth_cookie' => $token,
-        ];
-
         return $this->processRequestAndReturn(
-            'shops',
+            'shops/' . Config::getShopMboUuid(),
             null,
-            self::HTTP_METHOD_DELETE,
-            ['form_params' => $data]
+            self::HTTP_METHOD_DELETE
         );
     }
 
@@ -195,7 +192,7 @@ class Client
             'admin_path' => sprintf('/%s/', trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/')),
             'mbo_version' => ps_mbo::VERSION,
             'ps_version' => _PS_VERSION_,
-            'auth_cookie' => $token,
+            'mbo_api_user_token' => $token,
             'accounts_token' => $accountsToken,
             'accounts_shop_id' => $accountsShopId,
         ];
@@ -278,7 +275,10 @@ class Client
         string $uri = '',
         array $options = []
     ): string {
-        $options['query'] = $this->queryParameters;
+        $options = array_merge($options, [
+            'query' => $this->queryParameters,
+            'headers' => $this->headers,
+        ]);
 
         return (string) $this->httpClient
             ->request($method, '/api/' . ltrim($uri, '/'), $options)

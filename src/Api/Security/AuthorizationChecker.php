@@ -46,14 +46,20 @@ class AuthorizationChecker
     private $keyVersionCacheIndex;
 
     /**
+     * @var AdminAuthenticationProvider
+     */
+    private $adminAuthenticationProvider;
+
+    /**
      * @var string
      */
     private $keyCacheIndex;
 
-    public function __construct(CacheProvider $cacheProvider, Client $distributionClient)
+    public function __construct(CacheProvider $cacheProvider, Client $distributionClient, AdminAuthenticationProvider $adminAuthenticationProvider)
     {
         $this->cacheProvider = $cacheProvider;
         $this->distributionClient = $distributionClient;
+        $this->adminAuthenticationProvider = $adminAuthenticationProvider;
 
         $shopUuid = Config::getShopMboUuid();
         $this->keyVersionCacheIndex = 'api_key_version_' . $shopUuid;
@@ -94,6 +100,7 @@ class AuthorizationChecker
     private function retrieveNewKey()
     {
         try {
+            $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
             $response = $this->distributionClient->retrieveNewKey();
 
             $key = $response->key;

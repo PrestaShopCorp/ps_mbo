@@ -24,14 +24,14 @@ jobs:
         with:
           name: ${{ github.event.repository.name }}
           path: ../
-      - name: Prepare for artifact integration
+      - name: Prepare for artifact preprod
         run: |
           rm .env.dist
-          mv .env.integration .env.dist
-      - name: Create & upload artifact for integration
+          mv .env.preprod .env.dist
+      - name: Create & upload artifact for preprod
         uses: actions/upload-artifact@v1
         with:
-          name: ${{ github.event.repository.name }}.integration
+          name: ${{ github.event.repository.name }}.preprod
           path: ../
       - name: Prepare for artifact prestabulle1
         run: |

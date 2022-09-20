@@ -27,6 +27,7 @@ use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\DBAL\Connection;
 use Employee;
 use EmployeeSession;
+use Firebase\JWT\JWT;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
@@ -61,11 +62,6 @@ class AdminAuthenticationProvider
      * @var CacheProvider
      */
     private $cacheProvider;
-
-    /**
-     * @var string
-     */
-    private $shopId;
 
     public function __construct(
         Connection $connection,
@@ -167,9 +163,12 @@ class AdminAuthenticationProvider
     {
         $cookie = new Cookie('apiPsMbo');
         $cookie->id_employee = (int) $apiUser->id;
+        // @phpstan-ignore-next-line
         $cookie->email = $apiUser->email;
+        // @phpstan-ignore-next-line
         $cookie->profile = $apiUser->id_profile;
         $cookie->passwd = $apiUser->passwd;
+        // @phpstan-ignore-next-line
         $cookie->remote_addr = $apiUser->remote_addr;
         $cookie->registerSession(new EmployeeSession());
 
@@ -184,7 +183,7 @@ class AdminAuthenticationProvider
 
     public function getAdminToken(): string
     {
-        $cacheKey = $this->getCacheKey();
+        $cacheKey = $this->getAdminTokenCacheKey();
 
         if ($this->cacheProvider->contains($cacheKey)) {
             return $this->cacheProvider->fetch($cacheKey);
@@ -200,22 +199,39 @@ class AdminAuthenticationProvider
         return $this->cacheProvider->fetch($cacheKey);
     }
 
-    public function clearCache(): bool
+    public function getMboJWT(): string
     {
-        // Clear admin token cache
-        $cacheKey = $this->getCacheKey();
+        $cacheKey = $this->getJwtTokenCacheKey();
 
         if ($this->cacheProvider->contains($cacheKey)) {
-            if (!$this->cacheProvider->delete($cacheKey)) {
-                return false;
-            }
+            return $this->cacheProvider->fetch($cacheKey);
         }
 
-        return true;
+        $mboUserToken = $this->getAdminToken();
+
+        $shopUrl = Config::getShopUrl();
+        $shopUuid = Config::getShopMboUuid();
+
+        $jwtToken = JWT::encode(['shop_url' => $shopUrl, 'shop_uuid' => $shopUuid], $mboUserToken, 'HS256');
+
+        $this->cacheProvider->save($cacheKey, $jwtToken, 0); // Lifetime infinite, will be purged when MBO is uninstalled
+
+        return $this->cacheProvider->fetch($cacheKey);
     }
 
-    private function getCacheKey(): string
+    public function clearCache(): void
+    {
+        $this->cacheProvider->delete($this->getAdminTokenCacheKey());
+        $this->cacheProvider->delete($this->getJwtTokenCacheKey());
+    }
+
+    private function getAdminTokenCacheKey(): string
     {
         return sprintf('mbo_admin_token_%s', Config::getShopMboUuid());
+    }
+
+    private function getJwtTokenCacheKey(): string
+    {
+        return sprintf('mbo_jwt_token_%s', Config::getShopMboUuid());
     }
 }

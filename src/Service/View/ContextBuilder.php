@@ -26,6 +26,7 @@ use Context;
 use Country;
 use Doctrine\Common\Cache\CacheProvider;
 use Language;
+use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Tab\Tab;
@@ -59,16 +60,23 @@ class ContextBuilder
      */
     private $cacheProvider;
 
+    /**
+     * @var AdminAuthenticationProvider
+     */
+    private $adminAuthentificationProvider;
+
     public function __construct(
         ContextAdapter $contextAdapter,
         ModuleRepository $moduleRepository,
         Router $router,
-        CacheProvider $cacheProvider
+        CacheProvider $cacheProvider,
+        AdminAuthenticationProvider $adminAuthentificationProvider
     ) {
         $this->contextAdapter = $contextAdapter;
         $this->moduleRepository = $moduleRepository;
         $this->router = $router;
         $this->cacheProvider = $cacheProvider;
+        $this->adminAuthentificationProvider = $adminAuthentificationProvider;
     }
 
     public function getViewContext(): array
@@ -121,10 +129,9 @@ class ContextBuilder
             'iso_lang' => $language->getLanguageCode(),
             'iso_code' => mb_strtolower($country->iso_code),
             'shop_version' => _PS_VERSION_,
-            'shop_url' => $context->shop->getBaseURL(true, false),
+            'shop_url' => Config::getShopUrl(),
             'shop_uuid' => Config::getShopMboUuid(),
-            // The token is constant string for now, it'll be replaced by the user's real token when security layer will be implemented
-            'account_token' => 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJzdWxsaXZhbi5tb250ZWlyb0BwcmVzdGFzaG9wLmNvbSIsImlhdCI6MTUxNjIzOTAyMn0.2u4JjKhORcCbIfY6WqJ1Fks1nVfQiEaXSd4GGxMDghU',
+            'mbo_token' => $this->adminAuthentificationProvider->getMboJWT(),
             'user_id' => $context->cookie->id_employee,
             'admin_token' => $token,
             'refresh_url' => $refreshUrl,
