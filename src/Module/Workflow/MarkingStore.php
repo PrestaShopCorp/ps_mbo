@@ -101,7 +101,7 @@ final class MarkingStore implements MarkingStoreInterface
             ) {
                 try {
                     if (!$context['transitionsManager']->{$method}($subject, $marking, $context)) {
-                        throw new Exception(sprintf('Unable to execute transition %s', $method));
+                        throw new Exception(sprintf('Execution of method "%s" thrown an exception', $method));
                     }
                 } catch (Exception $e) {
                     throw new TransitionFailedException(sprintf('Unable to execute transition : %s', $e->getMessage()), 0, $e);

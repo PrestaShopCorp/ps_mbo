@@ -21,6 +21,7 @@
 namespace PrestaShop\Module\Mbo\Tests\Module\Workflow;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
@@ -284,6 +285,8 @@ class ModuleStateMachineTest extends TestCase
 
         $this->assertTrue($moduleStateMachine->can($module, $transitionName));
 
+        // Application will throw an exception because transitionManager object is a mock
+        $this->expectException(TransitionFailedException::class);
         $moduleStateMachine->apply($module, $transitionName);
     }
 
