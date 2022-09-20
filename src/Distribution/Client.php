@@ -114,9 +114,7 @@ class Client
      */
     public function setBearer(string $jwt): self
     {
-        $this->setHeaders(['Authorization' => 'Bearer ' . $jwt]);
-
-        return $this;
+        return $this->setHeaders(['Authorization' => 'Bearer ' . $jwt]);
     }
 
     /**

@@ -219,26 +219,10 @@ class AdminAuthenticationProvider
         return $this->cacheProvider->fetch($cacheKey);
     }
 
-    public function clearCache(): bool
+    public function clearCache(): void
     {
-        // Clear admin token cache
-        $cacheKey = $this->getAdminTokenCacheKey();
-
-        if ($this->cacheProvider->contains($cacheKey)) {
-            if (!$this->cacheProvider->delete($cacheKey)) {
-                return false;
-            }
-        }
-        // Clear jwt token cache
-        $cacheKey = $this->getAdminTokenCacheKey();
-
-        if ($this->cacheProvider->contains($cacheKey)) {
-            if (!$this->cacheProvider->delete($cacheKey)) {
-                return false;
-            }
-        }
-
-        return true;
+        $this->cacheProvider->delete($this->getAdminTokenCacheKey());
+        $this->cacheProvider->delete($this->getJwtTokenCacheKey());
     }
 
     private function getAdminTokenCacheKey(): string
