@@ -116,7 +116,7 @@ class Config
         $singleShop = self::getSingleShop();
 
         return (bool) Configuration::get(
-            'PS_SSL_ENABLED_EVERYWHERE',
+            'PS_SSL_ENABLED',
             null,
             $singleShop->id_shop_group,
             $singleShop->id
