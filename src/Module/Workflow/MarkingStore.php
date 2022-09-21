@@ -26,6 +26,7 @@ use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use Symfony\Component\Workflow\Exception\LogicException;
 use Symfony\Component\Workflow\Marking;
 use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @see \Symfony\Component\Workflow\MarkingStore\MethodMarkingStore
@@ -34,16 +35,21 @@ final class MarkingStore implements MarkingStoreInterface
 {
     private $singleState;
     private $property;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @param string $property Used to determine methods to call
      *                         The `getMarking` method will use `$subject->getProperty()`
      *                         The `setMarking` method will use `$subject->setProperty(string|array $places, array $context = array())`
      */
-    public function __construct(bool $singleState = false, string $property = 'marking')
+    public function __construct(TranslatorInterface $translator, bool $singleState = false, string $property = 'marking')
     {
         $this->singleState = $singleState;
         $this->property = $property;
+        $this->translator = $translator;
     }
 
     /**
@@ -101,7 +107,7 @@ final class MarkingStore implements MarkingStoreInterface
             ) {
                 try {
                     if (!$context['transitionsManager']->{$method}($subject, $marking, $context)) {
-                        throw new Exception(sprintf('Execution of method "%s" thrown an exception', $method));
+                        throw new Exception($this->translator->trans('Unfortunately, the module did not return additional details.', [], 'Admin.Modules.Notification'));
                     }
                 } catch (Exception $e) {
                     throw new TransitionFailedException(sprintf('Unable to execute transition : %s', $e->getMessage()), 0, $e);
