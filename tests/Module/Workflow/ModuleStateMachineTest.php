@@ -22,7 +22,6 @@ namespace PrestaShop\Module\Mbo\Tests\Module\Workflow;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
-use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
 use PrestaShop\Module\Mbo\Module\Workflow\Event\TransitionEventSubscriber;
@@ -31,6 +30,7 @@ use PrestaShop\Module\Mbo\Module\Workflow\TransitionsManager;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Workflow\Transition;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ModuleStateMachineTest extends TestCase
 {
@@ -169,10 +169,13 @@ class ModuleStateMachineTest extends TestCase
      */
     protected $moduleStateMachine;
 
+    protected $translator;
+
     protected function setUp(): void
     {
         $eventDispatcher = new EventDispatcher();
-        $this->moduleStateMachine = new ModuleStateMachine($eventDispatcher);
+        $this->translator = $this->mockTranslator('Unfortunately, the module did not return additional details.', [], 'Admin.Modules.Notification', 'Unfortunately, the module did not return additional details.');
+        $this->moduleStateMachine = new ModuleStateMachine($eventDispatcher, $this->translator);
     }
 
     public function testModuleUninstalledPossibleTransitions()
@@ -281,7 +284,7 @@ class ModuleStateMachineTest extends TestCase
         ;
         $eventDispatcher = new EventDispatcher();
         $eventDispatcher->addSubscriber(new TransitionEventSubscriber($transitionsManager));
-        $moduleStateMachine = new ModuleStateMachine($eventDispatcher);
+        $moduleStateMachine = new ModuleStateMachine($eventDispatcher, $this->translator);
 
         $this->assertTrue($moduleStateMachine->can($module, $transitionName));
 
@@ -501,5 +504,32 @@ class ModuleStateMachineTest extends TestCase
         }
 
         return $convertedTransitions;
+    }
+
+    /**
+     * Mock translator
+     *
+     * @param string|array $value
+     * @param array $params
+     * @param string $domain
+     * @param string $returnValue
+     */
+    private function mockTranslator($value, $params = [], $domain = '', $returnValue = null)
+    {
+        $translatorMock = \Mockery::mock(TranslatorInterface::class);
+
+        if (is_array($value)) {
+            foreach ($value as $val) {
+                $translatorMock->shouldReceive('trans')
+                    ->with($val[0][0], $val[0][1], $val[0][2])
+                    ->andReturn($val[1]);
+            }
+        } else {
+            $translatorMock->shouldReceive('trans')
+                ->with($value, $params, $domain)
+                ->andReturn($returnValue);
+        }
+
+        return $translatorMock;
     }
 }

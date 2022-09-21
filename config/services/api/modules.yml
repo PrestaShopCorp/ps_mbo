@@ -6,6 +6,7 @@ services:
     class: 'PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine'
     arguments:
       - '@event_dispatcher'
+      - '@translator'
 
   mbo.modules.state_machine.source_retriever.url:
     class: 'PrestaShop\Module\Mbo\Module\SourceRetriever\UrlSourceRetriever'

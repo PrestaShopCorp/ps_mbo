@@ -30,6 +30,7 @@ use Symfony\Component\Workflow\Exception\UndefinedTransitionException;
 use Symfony\Component\Workflow\StateMachine;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Validator\StateMachineValidator;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ModuleStateMachine extends StateMachine
 {
@@ -100,7 +101,7 @@ class ModuleStateMachine extends StateMachine
 
     protected $stateMachine;
 
-    public function __construct(EventDispatcherInterface $dispatcher)
+    public function __construct(EventDispatcherInterface $dispatcher, TranslatorInterface $translator)
     {
         $definitionBuilder = new DefinitionBuilder();
         $definition = $definitionBuilder->addPlaces(self::STATUSES)
@@ -158,7 +159,7 @@ class ModuleStateMachine extends StateMachine
 
         $singleState = true; // true if the subject can be in only one state at a given time
         $property = 'status'; // subject property name where the state is stored
-        $markingStore = new MarkingStore($singleState, $property);
+        $markingStore = new MarkingStore($translator, $singleState, $property);
 
         parent::__construct($definition, $markingStore, $dispatcher, self::MODULE_STATE_MACHINE_NAME);
     }
