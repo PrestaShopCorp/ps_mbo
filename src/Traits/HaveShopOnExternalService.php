@@ -47,11 +47,13 @@ trait HaveShopOnExternalService
     /**
      * Update the shop in online services
      *
+     * @param array $params the params to send to the update method in Client
+     *
      * @return void
      */
-    private function updateShop(): void
+    private function updateShop(array $params = []): void
     {
-        $this->callServiceWithLockFile('updateShop');
+        $this->callServiceWithLockFile('updateShop', $params);
     }
 
     /**
@@ -75,7 +77,7 @@ trait HaveShopOnExternalService
         }
     }
 
-    private function callServiceWithLockFile(string $method): void
+    private function callServiceWithLockFile(string $method, array $params = []): void
     {
         $this->getAdminAuthenticationProvider()->clearCache();
         $lockFile = $this->moduleCacheDir . $method . '.lock';
@@ -85,19 +87,20 @@ trait HaveShopOnExternalService
             if (php_sapi_name() === 'cli' || !defined('_PS_ADMIN_DIR_')) {
                 throw new Exception();
             }
-
             /** @var Client $distributionApi */
             $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
             if (!method_exists($distributionApi, $method)) {
                 return;
             }
 
-            $token = $this->getAdminAuthenticationProvider()->getAdminToken();
-            $accountsToken = $this->getAccountsDataProvider()->getAccountsToken();
-            $accountsShopId = $this->getAccountsDataProvider()->getAccountsShopId();
-
+            // Add the default params
+            $params = array_merge($params, [
+                'mbo_api_user_token' => $this->getAdminAuthenticationProvider()->getAdminToken(),
+                'accounts_token' => $this->getAccountsDataProvider()->getAccountsToken(),
+                'accounts_shop_id' => $this->getAccountsDataProvider()->getAccountsShopId(),
+            ]);
             $distributionApi->setBearer($this->getAdminAuthenticationProvider()->getMboJWT());
-            $distributionApi->{$method}($token, $accountsToken, $accountsShopId);
+            $distributionApi->{$method}($params);
 
             if (file_exists($lockFile)) {
                 unlink($lockFile);
