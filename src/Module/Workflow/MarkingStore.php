@@ -99,14 +99,14 @@ final class MarkingStore implements MarkingStoreInterface
 
         // Use the method defined in the context to perform transition
         if (isset($context['method'])) {
-            $method = $context['method'];
+            $transitionMethod = $context['method'];
 
             if (
                 isset($context['transitionsManager']) &&
-                method_exists($context['transitionsManager'], $method)
+                method_exists($context['transitionsManager'], $transitionMethod)
             ) {
                 try {
-                    if (!$context['transitionsManager']->{$method}($subject, $marking, $context)) {
+                    if (!$context['transitionsManager']->{$transitionMethod}($subject, $marking, $context)) {
                         throw new Exception($this->translator->trans('Unfortunately, the module did not return additional details.', [], 'Admin.Modules.Notification'));
                     }
                 } catch (Exception $e) {
