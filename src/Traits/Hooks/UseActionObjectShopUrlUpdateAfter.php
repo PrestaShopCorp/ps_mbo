@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Helpers\Config;
+
 trait UseActionObjectShopUrlUpdateAfter
 {
     /**
@@ -33,7 +35,16 @@ trait UseActionObjectShopUrlUpdateAfter
         if ($params['object']->main) {
             // Clear cache to be sure to load correctly the shop with good data whe building the service later
             \Cache::clean('Shop::setUrl_' . (int) $params['object']->id_shop);
-            $this->updateShop();
+
+            if (Config::isUsingSecureProtocol()) {
+                $url = 'https://' . preg_replace('#https?://#', '', $params['object']->domain_ssl);
+            } else {
+                $url = 'http://' . preg_replace('#https?://#', '', $params['object']->domain);
+            }
+
+            $this->updateShop([
+                'shop_url' => $url,
+            ]);
         }
 
         return true;

@@ -89,14 +89,7 @@ class Config
     {
         if (null === self::$SHOP_URL) {
             $singleShop = self::getSingleShop();
-
-            $useSecureProtocol = (bool) Configuration::get(
-                'PS_SSL_ENABLED_EVERYWHERE',
-                null,
-                $singleShop->id_shop_group,
-                $singleShop->id
-            );
-
+            $useSecureProtocol = self::isUsingSecureProtocol();
             $domainConfigKey = $useSecureProtocol ? 'PS_SHOP_DOMAIN_SSL' : 'PS_SHOP_DOMAIN';
 
             $domain = Configuration::get(
@@ -107,11 +100,27 @@ class Config
             );
 
             if ($domain) {
+                $domain = preg_replace('#(https?://)#', '', $domain);
                 self::$SHOP_URL = ($useSecureProtocol ? 'https://' : 'http://') . $domain;
             }
         }
 
         return self::$SHOP_URL;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isUsingSecureProtocol(): bool
+    {
+        $singleShop = self::getSingleShop();
+
+        return (bool) Configuration::get(
+            'PS_SSL_ENABLED_EVERYWHERE',
+            null,
+            $singleShop->id_shop_group,
+            $singleShop->id
+        );
     }
 
     private static function getSingleShop(): Shop

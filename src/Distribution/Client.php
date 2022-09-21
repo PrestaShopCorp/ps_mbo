@@ -132,29 +132,20 @@ class Client
     /**
      * Register new Shop on Distribution API.
      *
+     * @param array $params
+     *
      * @return stdClass
      *
-     * @throws GuzzleException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::registerShop
      */
-    public function registerShop(string $token, string $accountsToken, ?string $accountsShopId): stdClass
+    public function registerShop(array $params = []): stdClass
     {
-        $data = [
-            'uuid' => Config::getShopMboUuid(),
-            'shop_url' => Config::getShopUrl(),
-            'admin_path' => sprintf('/%s/', trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/')),
-            'mbo_version' => ps_mbo::VERSION,
-            'ps_version' => _PS_VERSION_,
-            'mbo_api_user_token' => $token,
-            'accounts_token' => $accountsToken,
-            'accounts_shop_id' => $accountsShopId,
-        ];
-
         return $this->processRequestAndReturn(
             'shops',
             null,
             self::HTTP_METHOD_POST,
-            ['form_params' => $data]
+            ['form_params' => $this->mergeShopDataWithParams($params)]
         );
     }
 
@@ -177,31 +168,20 @@ class Client
     /**
      * Update shop on Distribution API.
      *
-     * @param string $token
+     * @param array $params
      *
      * @return stdClass
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::updateShop
      */
-    public function updateShop(string $token, string $accountsToken, ?string $accountsShopId): stdClass
+    public function updateShop(array $params): stdClass
     {
-        $data = [
-            'uuid' => Config::getShopMboUuid(),
-            'shop_url' => Config::getShopUrl(),
-            'admin_path' => sprintf('/%s/', trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/')),
-            'mbo_version' => ps_mbo::VERSION,
-            'ps_version' => _PS_VERSION_,
-            'mbo_api_user_token' => $token,
-            'accounts_token' => $accountsToken,
-            'accounts_shop_id' => $accountsShopId,
-        ];
-
         return $this->processRequestAndReturn(
             'shops/' . Config::getShopMboUuid(),
             null,
             self::HTTP_METHOD_PUT,
-            ['form_params' => $data]
+            ['form_params' => $this->mergeShopDataWithParams($params)]
         );
     }
 
@@ -229,6 +209,17 @@ class Client
         $this->cacheProvider->save($cacheKey, $conf, 60 * 60 * 24); // A day
 
         return $this->cacheProvider->fetch($cacheKey);
+    }
+
+    private function mergeShopDataWithParams(array $params): array
+    {
+        return array_merge([
+            'uuid' => Config::getShopMboUuid(),
+            'shop_url' => Config::getShopUrl(),
+            'admin_path' => sprintf('/%s/', trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/')),
+            'mbo_version' => ps_mbo::VERSION,
+            'ps_version' => _PS_VERSION_,
+        ], $params);
     }
 
     /**
