@@ -115,17 +115,17 @@ jobs:
         uses: 'google-github-actions/auth@v0'
         with:
           credentials_json: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
-          create_credentials_file: false
+          #create_credentials_file: false
 
       - name: Copy env files
         run: |
           ls -alh
           pwd
-          rm -f .env.dist
           gcloud secrets versions access latest --project distribution-preprod --secret=mbo-module-env > .env
+          rm -f .env.dist
+          rm -f gha-creds-*.json
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
-        #working-directory: ./${{ github.event.repository.name }}
 
       - name: Create & upload artifact for preprod
         uses: 'actions/upload-artifact@v1'
