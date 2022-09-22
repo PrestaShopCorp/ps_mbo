@@ -24,33 +24,42 @@ jobs:
         with:
           name: ${{ github.event.repository.name }}
           path: ../
+      - name: Prepare for artifact prod
+        run: |
+          mv .env.prod .env
+          rm .env.*
+      - name: Create & upload artifact for prod
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{ github.event.repository.name }}.prod
+          path: ../
       - name: Prepare for artifact preprod
         run: |
-          rm .env.dist
-          mv .env.preprod .env.dist
+          mv .env.preprod .env
+          rm .env.*
       - name: Create & upload artifact for preprod
         uses: actions/upload-artifact@v1
         with:
           name: ${{ github.event.repository.name }}.preprod
           path: ../
-      - name: Prepare for artifact prestabulle1
-        run: |
-          rm .env.dist
-          mv .env.prestabulle1 .env.dist
-      - name: Create & upload artifact for prestabulle1
-        uses: actions/upload-artifact@v1
-        with:
-          name: ${{ github.event.repository.name }}.prestabulle1
-          path: ../
-      - name: Prepare for artifact prestabulle2
-        run: |
-          rm .env.dist
-          mv .env.prestabulle2 .env.dist
-      - name: Create & upload artifact for prestabulle2
-        uses: actions/upload-artifact@v1
-        with:
-          name: ${{ github.event.repository.name }}.prestabulle2
-          path: ../
+#      - name: Prepare for artifact prestabulle1
+#        run: |
+#          mv .env.prestabulle1 .env
+#          rm .env.*
+#      - name: Create & upload artifact for prestabulle1
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: ${{ github.event.repository.name }}.prestabulle1
+#          path: ../
+#      - name: Prepare for artifact prestabulle2
+#        run: |
+#          mv .env.prestabulle2 .env
+#          rm .env.*
+#      - name: Create & upload artifact for prestabulle2
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: ${{ github.event.repository.name }}.prestabulle2
+#          path: ../
   update_release_draft:
     runs-on: ubuntu-latest
     needs: [deploy]
@@ -59,15 +68,15 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v1
         with:
-          name: ${{ github.event.repository.name }}
+          name: ${{ github.event.repository.name }}.prod
       - id: release_info
         uses: toolmantim/release-drafter@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Prepare for Release
         run: |
-          cd ${{ github.event.repository.name }}
-          zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
+          cd ${{ github.event.repository.name }}.prod
+          zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}.prod
       - name: Clean existing assets
         shell: bash
         run: |
