@@ -78,6 +78,8 @@ jobs:
 
       - name: Copy env files
         run: |
+          ls -alh
+          pwd
           rm -f .env.dist
           gcloud secrets versions access latest --project distribution-integration --secret=mbo-module-${{ steps.get_bulle.outputs.BULLE }}-env > .env
         env:
