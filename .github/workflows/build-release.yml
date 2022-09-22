@@ -57,10 +57,18 @@ jobs:
           path: ./
           key: ${{ github.run_id }}
 
-      - name: Set up Cloud SDK
-        uses: 'google-github-actions/auth@v0'
-        with:
-          credentials_json: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
+      # - name: Set up Cloud SDK
+      #   uses: 'google-github-actions/auth@v0'
+      #   with:
+      #     credentials_json: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
+
+      - name: Manually perform GCP CLI authentication
+        run: |
+          echo $GOOGLE_JSON_CRED > token.json
+          gcloud auth activate-service-account --key-file=token.json
+          rm token.json
+        env:
+          GOOGLE_JSON_CRED: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
 
       - name: Setting up Bubble variable
         run: echo "::set-output name=BULLE::$BULLE$(echo $LABELS > labels.json && cat labels.json | jq -r '.[]|.name'|grep prestabulle)"
@@ -72,7 +80,6 @@ jobs:
           gcloud secrets versions access latest --project distribution-integration --secret=mbo-module-${{ steps.get_bulle.outputs.BULLE }}-env > .env
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
-        working-directory: ./${{ github.event.repository.name }}
 
       - name: Create & upload artifact for prestabulle
         uses: 'actions/upload-artifact@v1'
@@ -93,15 +100,9 @@ jobs:
           path: ./
           key: ${{ github.run_id }}
 
-      - name: Check if retrieved from cache
+      - name: Check if retrieved from cache was successfull
         if: steps.retrieve-cache.outputs.cache-hit != 'true'
         run: exit 1
-
-      # - name: Set up Cloud SDK
-      #   uses: 'google-github-actions/auth@v0'
-      #   with:
-      #     credentials_json: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
-      #     create_credentials_file: false
 
       - name: Manually perform GCP CLI authentication
         run: |
@@ -111,14 +112,10 @@ jobs:
         env:
           GOOGLE_JSON_CRED: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
 
-
       - name: Copy env files
         run: |
-          ls -alh
-          pwd
           gcloud secrets versions access latest --project distribution-preprod --secret=mbo-module-env > .env
           rm -f .env.dist
-          rm -f gha-creds-*.json
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
 
@@ -139,10 +136,13 @@ jobs:
         with:
           name: ${{ github.event.repository.name }}
 
-      - name: Set up Cloud SDK
-        uses: 'google-github-actions/auth@v0'
-        with:
-          credentials_json: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
+      - name: Manually perform GCP CLI authentication
+        run: |
+          echo $GOOGLE_JSON_CRED > token.json
+          gcloud auth activate-service-account --key-file=token.json
+          rm token.json
+        env:
+          GOOGLE_JSON_CRED: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
 
       - name: Copy env files
         run: |
@@ -150,7 +150,6 @@ jobs:
           gcloud secrets versions access latest --project distribution-production-308520 --secret=mbo-module-env > .env
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
-        working-directory: ./${{ github.event.repository.name }}
 
       - name: Prepare the production zip
         run: |
