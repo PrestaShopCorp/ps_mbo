@@ -105,9 +105,11 @@ jobs:
 
       - name: Manually perform GCP CLI authentication
         run: |
-          echo ${{ secrets.G_CREDENTIAL_PREPRODUCTION }} > token.json
+          echo $GOOGLE_JSON_CRED > token.json
           gcloud auth activate-service-account --key-file=token.json
           rm token.json
+        env:
+          GOOGLE_JSON_CRED: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
 
 
       - name: Copy env files
