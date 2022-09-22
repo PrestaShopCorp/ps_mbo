@@ -28,7 +28,9 @@ trait UseActionGeneralPageSave
      */
     public function hookActionGeneralPageSave(array $params): void
     {
-        // User may have updated the SSL configuration
-        $this->updateShop();
+        if (isset($params['route']) && $params['route'] === 'admin_preferences_save') {
+            // User may have updated the SSL configuration
+            $this->updateShop();
+        }
     }
 }
