@@ -21,6 +21,7 @@ jobs:
     steps:
       - name: Checkout
         uses: 'actions/checkout@v2.0.0'
+        path: ''
 
       - name: Install composer dependencies
         run: composer install --no-dev -o
@@ -31,7 +32,7 @@ jobs:
       - name: Cache module folder
         uses: actions/cache@v1
         with:
-          path: ${{ github.event.repository.name }}
+          path: ./
           key: ${{ github.run_id }}
 
 #      - name: Create & upload artifact
@@ -62,7 +63,7 @@ jobs:
       - name: Cache module folder
         uses: actions/cache@v1
         with:
-          path: ${{ github.event.repository.name }}
+          path: ./
           key: ${{ github.run_id }}
 
       - name: Set up Cloud SDK
@@ -102,10 +103,10 @@ jobs:
         id: retrieve-cache
         uses: actions/cache@v1
         with:
-          path: ${{ github.event.repository.name }}
+          path: ./
           key: ${{ github.run_id }}
 
-      - name: Generate Prime Numbers
+      - name: Check if retrieved from cache
         if: steps.retrieve-cache.outputs.cache-hit != 'true'
         run: exit 1
 
