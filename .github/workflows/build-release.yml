@@ -95,7 +95,6 @@ jobs:
       - name: Copy env files
         run: |
           rm -f .env.dist
-          gcloud components install
           gcloud secrets versions access latest --project distribution-preprod --secret=mbo-module-env > .env
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
@@ -126,7 +125,6 @@ jobs:
       - name: Copy env files
         run: |
           rm -f .env.dist
-          gcloud components install
           gcloud secrets versions access latest --project distribution-production-308520 --secret=mbo-module-env > .env
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
