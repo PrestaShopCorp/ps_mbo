@@ -1,4 +1,4 @@
-name: Build & Release draft
+name: Build & Release
 
 on:
   pull_request:
@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.0.0
+        uses: 'actions/checkout@v2.0.0'
 
       - name: Install composer dependencies
         run: composer install --no-dev -o
@@ -29,7 +29,7 @@ jobs:
         uses: PrestaShopCorp/github-action-clean-before-deploy@v1.0
 
       - name: Create & upload artifact
-        uses: actions/upload-artifact@v1
+        uses: 'actions/upload-artifact@v1'
         with:
           name: ${{ github.event.repository.name }}
           path: ../
@@ -49,16 +49,14 @@ jobs:
       contains(github.event.pull_request.labels.*.name, 'prestabulle9')
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v1
+        uses: 'actions/download-artifact@v1'
         with:
           name: ${{ github.event.repository.name }}
 
       - name: Set up Cloud SDK
         uses: 'google-github-actions/auth@v0'
         with:
-#          project_id: ${{ secrets.GCLOUD_PROJECT_INTEGRATION }}
           credentials_json: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
-#          export_default_credentials: true
 
       - name: Setting up Bubble variable
         run: echo "::set-output name=BULLE::$BULLE$(echo $LABELS > labels.json && cat labels.json | jq -r '.[]|.name'|grep prestabulle)"
@@ -66,14 +64,14 @@ jobs:
 
       - name: Copy env files
         run: |
-          rm .env*
-          gcloud components install
+          rm -f .env.dist
           gcloud secrets versions access latest --project distribution-integration --secret=mbo-module-${{ steps.get_bulle.outputs.BULLE }}-env > .env
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
+        working-directory: ./${{ github.event.repository.name }}
 
       - name: Create & upload artifact for prestabulle
-        uses: actions/upload-artifact@v1
+        uses: 'actions/upload-artifact@v1'
         with:
           name: ${{ github.event.repository.name }}.${{ steps.get_bulle.outputs.BULLE }}
           path: ../
@@ -84,27 +82,25 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v1
+        uses: 'actions/download-artifact@v1'
         with:
           name: ${{ github.event.repository.name }}
 
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
+        uses: 'google-github-actions/auth@v0'
         with:
-          project_id: ${{ secrets.GCLOUD_PROJECT_PREPRODUCTION }}
-          service_account_key: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
-          export_default_credentials: true
+          credentials_json: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
 
       - name: Copy env files
         run: |
-          rm .env*
+          rm -f .env.dist
           gcloud components install
           gcloud secrets versions access latest --project distribution-preprod --secret=mbo-module-env > .env
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
 
       - name: Create & upload artifact for preprod
-        uses: actions/upload-artifact@v1
+        uses: 'actions/upload-artifact@v1'
         with:
           name: ${{ github.event.repository.name }}.preprod
           path: ../
@@ -116,20 +112,18 @@ jobs:
     needs: deploy
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v1
+        uses: 'actions/download-artifact@v1'
         with:
           name: ${{ github.event.repository.name }}
 
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v0
+        uses: 'google-github-actions/auth@v0'
         with:
-          project_id: ${{ secrets.GCLOUD_PROJECT_PRODUCTION }}
-          service_account_key: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
-          export_default_credentials: true
+          credentials_json: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
 
       - name: Copy env files
         run: |
-          rm .env*
+          rm -f .env.dist
           gcloud components install
           gcloud secrets versions access latest --project distribution-production-308520 --secret=mbo-module-env > .env
         env:
@@ -141,7 +135,7 @@ jobs:
           zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }} -x '*.git*'
 
       - name: Publish the production zip
-        uses: actions/upload-release-asset@v1.0.1
+        uses: 'actions/upload-release-asset@v1.0.1'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
