@@ -97,11 +97,17 @@ jobs:
         if: steps.retrieve-cache.outputs.cache-hit != 'true'
         run: exit 1
 
-      - name: Set up Cloud SDK
-        uses: 'google-github-actions/auth@v0'
-        with:
-          credentials_json: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
-          create_credentials_file: false
+      # - name: Set up Cloud SDK
+      #   uses: 'google-github-actions/auth@v0'
+      #   with:
+      #     credentials_json: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
+      #     create_credentials_file: false
+
+      - name: Manually perform GCP CLI authentication
+        run: |
+          echo ${{ secrets.G_CREDENTIAL_PREPRODUCTION }} > token.json
+          gcloud auth activate-service-account --key-file=token.json
+          rm token.json
 
 
       - name: Copy env files
