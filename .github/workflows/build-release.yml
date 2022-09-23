@@ -130,7 +130,7 @@ jobs:
     name: Upload the production zip asset to the release
     runs-on: ubuntu-latest
 #    if: github.event_name == 'release'
-    if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+#    if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
     needs: deploy
     steps:
 
