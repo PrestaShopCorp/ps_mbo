@@ -162,6 +162,8 @@ jobs:
 
       - name: Prepare the production zip
         run: |
+          pwd
+          ls -lh
           zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }} -x '*.git*'
 
 
