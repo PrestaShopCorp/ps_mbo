@@ -81,11 +81,16 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
 
+      - name: Prepare the zip
+        run: |
+          cd ..
+          zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
+
       - name: Create & upload artifact for prestabulle
         uses: 'actions/upload-artifact@v1'
         with:
           name: ${{ github.event.repository.name }}.${{ steps.get_bulle.outputs.BULLE }}
-          path: ../
+          path: ../${{ github.event.repository.name }}.zip
 
   upload_asset_preproduction:
     runs-on: ubuntu-latest
@@ -127,8 +132,8 @@ jobs:
       - name: Create & upload artifact for preprod
         uses: 'actions/upload-artifact@v1'
         with:
-          name: ${{ github.event.repository.name }}.preprod.zip
-          path: ${{ github.event.repository.name }}.zip
+          name: ${{ github.event.repository.name }}.preprod
+          path: ../${{ github.event.repository.name }}.zip
 
   upload_release_asset_production:
     name: Upload the production zip asset to the release
