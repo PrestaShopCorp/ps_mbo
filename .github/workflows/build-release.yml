@@ -82,7 +82,7 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
 
       - name: Create & upload artifact for prestabulle
-        uses: 'actions/upload-artifact@v1'
+        uses: 'actions/upload-artifact@v3'
         with:
           name: ${{ github.event.repository.name }}.${{ steps.get_bulle.outputs.BULLE }}
           path: ../
@@ -90,8 +90,7 @@ jobs:
   upload_asset_preproduction:
     runs-on: ubuntu-latest
     needs: [deploy]
-    if: github.event_name == 'release'
-#    if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
     steps:
 
       - name: Retrieve from cache module folder
@@ -121,7 +120,7 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
 
       - name: Create & upload artifact for preprod
-        uses: 'actions/upload-artifact@v1'
+        uses: 'actions/upload-artifact@v3'
         with:
           name: ${{ github.event.repository.name }}.preprod
           path: ../
@@ -129,8 +128,7 @@ jobs:
   upload_release_asset_production:
     name: Upload the production zip asset to the release
     runs-on: ubuntu-latest
-#    if: github.event_name == 'release'
-#    if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+    if: github.event_name == 'release'
     needs: deploy
     steps:
 
@@ -163,24 +161,14 @@ jobs:
       - name: Prepare the production zip
         run: |
           cd ..
-          pwd
-          ls -lh
           zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
 
-
-      - name: Create & upload artifact for prod
-        uses: 'actions/upload-artifact@v1'
+      - name: Publish the production zip
+        uses: 'actions/upload-release-asset@v1.0.1'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: ${{ github.event.repository.name }}.prod.zip
-          path: ../${{ github.event.repository.name }}.zip
-
-
-#      - name: Publish the production zip
-#        uses: 'actions/upload-release-asset@v1.0.1'
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          upload_url: ${{ github.event.release.upload_url }}
-#          asset_path: ./${{ github.event.repository.name }}/${{ github.event.repository.name }}.zip
-#          asset_name: ${{ github.event.repository.name }}.zip
-#          asset_content_type: application/zip
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./${{ github.event.repository.name }}/${{ github.event.repository.name }}.zip
+          asset_name: ${{ github.event.repository.name }}.zip
+          asset_content_type: application/zip
