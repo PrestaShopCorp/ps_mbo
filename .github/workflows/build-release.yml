@@ -28,10 +28,10 @@ jobs:
         run: composer install --no-dev -o
 
       - name: Clean-up project
-        uses: PrestaShopCorp/github-action-clean-before-deploy@v1.0
+        uses: 'PrestaShopCorp/github-action-clean-before-deploy@v1.1'
 
       - name: Cache module folder
-        uses: actions/cache@v1
+        uses: 'actions/cache@v1'
         with:
           path: ./
           key: ${{ github.run_id }}
@@ -51,16 +51,16 @@ jobs:
       contains(github.event.pull_request.labels.*.name, 'prestabulle9')
     steps:
 
-      - name: Cache module folder
-        uses: actions/cache@v1
+      - name: Retrieve from cache module folder
+        id: retrieve-cache
+        uses: 'actions/cache@v1'
         with:
           path: ./
           key: ${{ github.run_id }}
 
-      # - name: Set up Cloud SDK
-      #   uses: 'google-github-actions/auth@v0'
-      #   with:
-      #     credentials_json: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
+      - name: Check if retrieved from cache was successful
+        if: steps.retrieve-cache.outputs.cache-hit != 'true'
+        run: exit 1
 
       - name: Manually perform GCP CLI authentication
         run: |
@@ -95,12 +95,12 @@ jobs:
 
       - name: Retrieve from cache module folder
         id: retrieve-cache
-        uses: actions/cache@v1
+        uses: 'actions/cache@v1'
         with:
           path: ./
           key: ${{ github.run_id }}
 
-      - name: Check if retrieved from cache was successfull
+      - name: Check if retrieved from cache was successful
         if: steps.retrieve-cache.outputs.cache-hit != 'true'
         run: exit 1
 
@@ -128,13 +128,21 @@ jobs:
   upload_release_asset_production:
     name: Upload the production zip asset to the release
     runs-on: ubuntu-latest
-    if: github.event_name == 'release'
+#    if: github.event_name == 'release'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
     needs: deploy
     steps:
-      - name: Download artifact
-        uses: 'actions/download-artifact@v1'
+
+      - name: Retrieve from cache module folder
+        id: retrieve-cache
+        uses: 'actions/cache@v1'
         with:
-          name: ${{ github.event.repository.name }}
+          path: ./
+          key: ${{ github.run_id }}
+
+      - name: Check if retrieved from cache was successful
+        if: steps.retrieve-cache.outputs.cache-hit != 'true'
+        run: exit 1
 
       - name: Manually perform GCP CLI authentication
         run: |
@@ -156,12 +164,20 @@ jobs:
           cd ${{ github.event.repository.name }}
           zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }} -x '*.git*'
 
-      - name: Publish the production zip
-        uses: 'actions/upload-release-asset@v1.0.1'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create & upload artifact for prod
+        uses: 'actions/upload-artifact@v1'
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./${{ github.event.repository.name }}/${{ github.event.repository.name }}.zip
-          asset_name: ${{ github.event.repository.name }}.zip
-          asset_content_type: application/zip
+          name: ${{ github.event.repository.name }}.prod
+          path: ../
+
+
+#      - name: Publish the production zip
+#        uses: 'actions/upload-release-asset@v1.0.1'
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          upload_url: ${{ github.event.release.upload_url }}
+#          asset_path: ./${{ github.event.repository.name }}/${{ github.event.repository.name }}.zip
+#          asset_name: ${{ github.event.repository.name }}.zip
+#          asset_content_type: application/zip
