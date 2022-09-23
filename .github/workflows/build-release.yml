@@ -172,7 +172,7 @@ jobs:
         uses: 'actions/upload-artifact@v1'
         with:
           name: ${{ github.event.repository.name }}.prod.zip
-          path: ${{ github.event.repository.name }}.zip
+          path: ../${{ github.event.repository.name }}.zip
 
 
 #      - name: Publish the production zip
