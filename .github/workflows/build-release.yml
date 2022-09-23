@@ -89,13 +89,13 @@ jobs:
       - name: Create & upload artifact for prestabulle
         uses: 'actions/upload-artifact@v1'
         with:
-          name: ${{ github.event.repository.name }}.${{ steps.get_bulle.outputs.BULLE }}.zip
+          name: ${{ github.event.repository.name }}.${{ steps.get_bulle.outputs.BULLE }}
           path: ../${{ github.event.repository.name }}.zip
 
   upload_asset_preproduction:
     runs-on: ubuntu-latest
     needs: [deploy]
-#    if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
     steps:
 
       - name: Retrieve from cache module folder
@@ -132,7 +132,7 @@ jobs:
       - name: Create & upload artifact for preprod
         uses: 'actions/upload-artifact@v1'
         with:
-          name: ${{ github.event.repository.name }}.preprod.zip
+          name: ${{ github.event.repository.name }}.preprod
           path: ../${{ github.event.repository.name }}.zip
 
   upload_release_asset_production:
