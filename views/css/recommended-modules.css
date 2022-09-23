@@ -1,34 +1,34 @@
 /**
- * 2007-2020 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-#main-div #recommended-modules-container .alert-addons,
-#main-div #modules_list_container_tab_modal .alert-addons {
+#recommended-modules-container .alert-addons,
+#modules_list_container_tab_modal .alert-addons {
   border-color: #25b9d7;
 }
 
-#main-div #recommended-modules-container .alert-addons:before,
-#main-div #modules_list_container_tab_modal .alert-addons:before {
+#recommended-modules-container .alert-addons:before,
+#modules_list_container_tab_modal .alert-addons:before {
   color: #25b9d7;
   background-color: #dff5f9;
   content: "\E88F";
 }
 
-#main-div #modules_list_container_content .img-thumbnail {
+#modules_list_container_content .img-thumbnail {
   max-width: 56px;
   width: 56px;
 }
@@ -106,24 +106,30 @@
 }
 
 #content.bootstrap #modules_list_container_content button.spinner {
-  color:#fff;
-  background-color:#fff;
-  width:40px;
-  width:2.5rem;
-  height:40px;
-  height:2.5rem;
-  border-radius:2.5rem;
-  border-right-color:#25b9d7;
-  border-bottom-color:#25b9d7;
-  border-width:3px;
-  border-width:.1875rem;
-  border-style:solid;
-  font-size:0;
-  outline:none;
-  display:inline-block;
-  border-left-color:#bbcdd2;
-  border-top-color:#bbcdd2;
-  animation:rotating 2s linear infinite;
+  display: inline-block;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 0;
+  color: #fff;
+  background-color: #fff;
+  border-style: solid;
+  border-width: .1875rem;
+  border-color: #bbcdd2 #25b9d7 #25b9d7 #bbcdd2;
+  border-radius: 2.5rem;
+  outline: 0;
+  -webkit-animation: rotatingMbo 2s linear infinite;
+  animation: rotatingMbo 2s linear infinite;
+}
+
+/** Mandatory for legacy pages **/
+@keyframes rotatingMbo {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 #content.bootstrap #tab_modules_list_installed > tbody > tr > td:nth-child(2),
@@ -157,4 +163,81 @@
   #content.bootstrap #modules_list_container .modal-dialog {
     width: 680px;
   }
+}
+
+/* Override all styling because of some legacy pages */
+#modules_list_container .modal-body {
+  min-height: 60px;
+  padding: 1.25rem 1.25rem 0;
+  position: relative;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -0.9375rem;
+  margin-left: -0.9375rem;
+}
+
+#modules_list_container .modal-title {
+  font-size: 1.25rem;
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: 0;
+  line-height: 1.5;
+  font-family: "Open Sans",helvetica,arial,sans-serif;
+  font-weight: 700;
+  color: #363a41;
+}
+
+#modules_list_container .modal-header .close {
+  padding: 1.25rem;
+  margin: -1.25rem -1.25rem -1.25rem auto;
+  font-size: 2rem;
+  cursor: pointer;
+  font-weight: normal;
+  background-color: transparent;
+  border: 0;
+  text-shadow: 0 1px 0 #fff;
+  float: right;
+  line-height: 1;
+  color: #000;
+  opacity: .5;
+  -webkit-appearance: button;
+  text-transform: none;
+  overflow: visible;
+}
+#growls.default {
+  top: 10px;
+  right: 10px;
+}
+#growls {
+  z-index: 50000;
+  position: fixed;
+}
+.growl.growl-error {
+  color: #363a41;
+  background-color: #fbc6c3;
+  border: 1px solid #f44336;
+}
+
+.growl.growl-notice {
+  color: #363a41;
+  background-color: #beeaf3;
+  border: 1px solid #25b9d7;
+}
+
+.growl.growl-warning {
+  color: #363a41;
+  background-color: #fffbd3;
+  border: 1px solid #fab000;
+}
+
+.growl.growl-default {
+  color: #363a41;
+  background-color: #cbf2d4;
+  border: 1px solid #53d572;
 }

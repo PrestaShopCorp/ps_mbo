@@ -1,10 +1,18 @@
-name: Build & Release draft
+name: Build & Release
 
 on:
   pull_request:
+    types: [opened, edited, reopened, synchronize, labeled]
+  release:
+    types: [released, prereleased]
   push:
     branches:
       - master
+      - 3.x
+      - 4.x
+
+env:
+  LABELS: ${{toJSON(github.event.pull_request.labels)}}
 
 jobs:
   deploy:
@@ -12,50 +20,165 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.0.0
+        uses: 'actions/checkout@v3'
+        with:
+          path: ''
+
       - name: Install composer dependencies
         run: composer install --no-dev -o
+
       - name: Clean-up project
-        uses: PrestaShopCorp/github-action-clean-before-deploy@v1.0
-      - name: Create & upload artifact
-        uses: actions/upload-artifact@v1
+        uses: 'PrestaShopCorp/github-action-clean-before-deploy@v1.1'
+
+      - name: Cache module folder
+        uses: 'actions/cache@v1'
         with:
-          name: ${{ github.event.repository.name }}
-          path: ../
-  update_release_draft:
+          path: ./
+          key: ${{ github.run_id }}
+
+  upload_prestabulle:
+    name: Create prestabulle zip
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: contains(github.event.pull_request.labels.*.name, 'prestabulle1') ||
+      contains(github.event.pull_request.labels.*.name, 'prestabulle2') ||
+      contains(github.event.pull_request.labels.*.name, 'prestabulle3') ||
+      contains(github.event.pull_request.labels.*.name, 'prestabulle4') ||
+      contains(github.event.pull_request.labels.*.name, 'prestabulle5') ||
+      contains(github.event.pull_request.labels.*.name, 'prestabulle6') ||
+      contains(github.event.pull_request.labels.*.name, 'prestabulle7') ||
+      contains(github.event.pull_request.labels.*.name, 'prestabulle8') ||
+      contains(github.event.pull_request.labels.*.name, 'prestabulle9')
+    steps:
+
+      - name: Retrieve from cache module folder
+        id: retrieve-cache
+        uses: 'actions/cache@v1'
+        with:
+          path: ./
+          key: ${{ github.run_id }}
+
+      - name: Check if retrieved from cache was successful
+        if: steps.retrieve-cache.outputs.cache-hit != 'true'
+        run: exit 1
+
+      - name: Manually perform GCP CLI authentication
+        run: |
+          echo $GOOGLE_JSON_CRED > token.json
+          gcloud auth activate-service-account --key-file=token.json
+          rm token.json
+        env:
+          GOOGLE_JSON_CRED: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
+
+      - name: Setting up Bubble variable
+        run: echo "::set-output name=BULLE::$BULLE$(echo $LABELS > labels.json && cat labels.json | jq -r '.[]|.name'|grep prestabulle)"
+        id: get_bulle
+
+      - name: Copy env files
+        run: |
+          rm -f .env.dist
+          gcloud secrets versions access latest --project distribution-integration --secret=mbo-module-${{ steps.get_bulle.outputs.BULLE }}-env > .env
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
+
+      - name: Prepare the zip
+        run: |
+          cd ..
+          zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
+
+      - name: Create & upload artifact for prestabulle
+        uses: 'actions/upload-artifact@v1'
+        with:
+          name: ${{ github.event.repository.name }}.${{ steps.get_bulle.outputs.BULLE }}
+          path: ../${{ github.event.repository.name }}.zip
+
+  upload_asset_preproduction:
     runs-on: ubuntu-latest
     needs: [deploy]
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/4.x'
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v1
+
+      - name: Retrieve from cache module folder
+        id: retrieve-cache
+        uses: 'actions/cache@v1'
         with:
-          name: ${{ github.event.repository.name }}
-      - id: release_info
-        uses: toolmantim/release-drafter@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Prepare for Release
+          path: ./
+          key: ${{ github.run_id }}
+
+      - name: Check if retrieved from cache was successful
+        if: steps.retrieve-cache.outputs.cache-hit != 'true'
+        run: exit 1
+
+      - name: Manually perform GCP CLI authentication
         run: |
-          cd ${{ github.event.repository.name }}
+          echo $GOOGLE_JSON_CRED > token.json
+          gcloud auth activate-service-account --key-file=token.json
+          rm token.json
+        env:
+          GOOGLE_JSON_CRED: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
+
+      - name: Copy env files
+        run: |
+          gcloud secrets versions access latest --project distribution-preprod --secret=mbo-module-env > .env
+          rm -f .env.dist
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
+
+      - name: Prepare the zip
+        run: |
+          cd ..
           zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
-      - name: Clean existing assets
-        shell: bash
+
+      - name: Create & upload artifact for preprod
+        uses: 'actions/upload-artifact@v1'
+        with:
+          name: ${{ github.event.repository.name }}.preprod
+          path: ../${{ github.event.repository.name }}.zip
+
+  upload_release_asset_production:
+    name: Upload the production zip asset to the release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    needs: deploy
+    steps:
+
+      - name: Retrieve from cache module folder
+        id: retrieve-cache
+        uses: 'actions/cache@v1'
+        with:
+          path: ./
+          key: ${{ github.run_id }}
+
+      - name: Check if retrieved from cache was successful
+        if: steps.retrieve-cache.outputs.cache-hit != 'true'
+        run: exit 1
+
+      - name: Manually perform GCP CLI authentication
         run: |
-          curl -fsSL https://github.com/github/hub/raw/master/script/get | bash -s 2.14.1
-          assets=`bin/hub api -t repos/${{ github.repository }}/releases/${{ steps.release_info.outputs.id }}/assets | awk '/\].url/ { print $2 }'`
-          for asset in $assets
-          do
-            bin/hub api -X DELETE $asset
-          done
+          echo $GOOGLE_JSON_CRED > token.json
+          gcloud auth activate-service-account --key-file=token.json
+          rm token.json
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Publish to GitHub Release
-        uses: actions/upload-release-asset@v1.0.1
+          GOOGLE_JSON_CRED: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
+
+      - name: Copy env files
+        run: |
+          rm -f .env.dist
+          gcloud secrets versions access latest --project distribution-production-308520 --secret=mbo-module-env > .env
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
+
+      - name: Prepare the production zip
+        run: |
+          cd ..
+          zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
+
+      - name: Publish the production zip
+        uses: 'actions/upload-release-asset@v1.0.1'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.release_info.outputs.upload_url }}
-          asset_path: ./${{ github.event.repository.name }}/${{ github.event.repository.name }}.zip
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ../${{ github.event.repository.name }}.zip
           asset_name: ${{ github.event.repository.name }}.zip
           asset_content_type: application/zip

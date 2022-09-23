@@ -1,4 +1,6 @@
-.php_cs.cache
+.php*.cache
 config_*.xml
 /vendor/
 !/vendor/index.php
+tests/.phpunit.result.cache
+.env

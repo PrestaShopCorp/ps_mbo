@@ -1,0 +1,37 @@
+services:
+  _defaults:
+    public: true
+
+  mbo.modules.state_machine:
+    class: 'PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine'
+    arguments:
+      - '@event_dispatcher'
+      - '@translator'
+
+  mbo.modules.state_machine.source_retriever.url:
+    class: 'PrestaShop\Module\Mbo\Module\SourceRetriever\UrlSourceRetriever'
+    arguments:
+      - '@translator'
+    properties:
+      cacheDir: "%kernel.cache_dir%"
+
+  mbo.modules.state_machine.transitions_manager:
+    class: 'PrestaShop\Module\Mbo\Module\Workflow\TransitionsManager'
+    arguments:
+      - '@prestashop.module.manager'
+      - '@mbo.modules.state_machine.source_retriever.url'
+      - '@mbo.modules.repository'
+
+  mbo.modules.state_machine.eventsubscriber.transition:
+    class: PrestaShop\Module\Mbo\Module\Workflow\Event\TransitionEventSubscriber
+    arguments:
+      - '@mbo.modules.state_machine.transitions_manager'
+    tags:
+      - { name: kernel.event_subscriber }
+
+  mbo.modules.state_machine.module_status_transition_handler:
+    class: 'PrestaShop\Module\Mbo\Module\CommandHandler\ModuleStatusTransitionCommandHandler'
+    arguments:
+      - '@mbo.modules.state_machine'
+      - '@mbo.modules.repository'
+      - '@mbo.modules.actions_manager'

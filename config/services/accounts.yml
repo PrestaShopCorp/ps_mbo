@@ -1,0 +1,20 @@
+services:
+  _defaults:
+    public: true
+
+  mbo.ps_accounts.installer:
+    class: 'PrestaShop\PsAccountsInstaller\Installer\Installer'
+    public: true
+    arguments:
+      - "5.2.5"
+
+  mbo.ps_accounts.facade:
+    class: 'PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts'
+    public: true
+    arguments:
+      - "@mbo.ps_accounts.installer"
+
+  mbo.accounts.data_provider:
+    class: PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider
+    arguments:
+      - '@mbo.ps_accounts.facade'

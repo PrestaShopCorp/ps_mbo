@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  PrestaShop\Module\Mbo\Api\Repository\ModuleRepository:
+    class: PrestaShop\Module\Mbo\Api\Repository\ModuleRepository

@@ -1,21 +1,21 @@
 'use strict';
 /**
- * 2007-2020 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
 var mbo = {};
@@ -30,8 +30,8 @@ var mbo = {};
     fancybox: '.fancybox-quick-view',
     contentContainer: '#content',
     modulesListModal: '#modules_list_container',
+    modulesListModalContainer: '#content',
     modulesListModalContent: '#modules_list_container_tab_modal',
-    modulesListLoader: '#modules_list_loader',
   };
 
   var pageMapNewTheme = {
@@ -40,11 +40,10 @@ var mbo = {};
     toolbarLastElement: '.toolbar-icons a:last-of-type',
     recommendedModulesButton: '#recommended-modules-button',
     oldButton: '#page-header-desc-configuration-modules-list',
-    contentContainer: '#main-div .content-div .container:last',
+    contentContainer: '#main-div .content-div',
     modulesListModal: '#modules_list_container',
     modulesListModalContainer: '#main-div .content-div',
     modulesListModalContent: '#modules_list_container_tab_modal',
-    modulesListLoader: '#modules_list_loader',
   };
 
   /**
@@ -128,10 +127,12 @@ var mbo = {};
      * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
      * @param {boolean} config.shouldAttachRecommendedModulesButton
      * @param {boolean} config.shouldUseLegacyTheme
+     * @param {object} pageMap
+     * @param {string} pageMap.contentContainer
      *
      * @return this
      */
-    this.insertRecommendedModules = function(config) {
+    this.insertRecommendedModules = function(config, pageMap) {
       if (pageMap.contentContainer) {
         var recommendedModulesRequest = $.ajax({
           type: 'GET',
@@ -140,9 +141,7 @@ var mbo = {};
         });
 
         recommendedModulesRequest.done(function(data) {
-          var recommendedModulesContainer = new RecommendedModulesContainer(config, data.content);
-
-          $(pageMap.contentContainer).append(recommendedModulesContainer.getMarkup());
+          $(pageMap.contentContainer).append(data.content);
         });
 
         recommendedModulesRequest.fail(function(jqXHR, textStatus, errorThrown) {
@@ -303,32 +302,25 @@ var mbo = {};
    * @constructor
    */
   var RecommendedModulesModal = function(pageMap, config) {
-    var $markup;
-
-    if (!config.shouldUseLegacyTheme) {
-      $markup = $(
-        '<div id="modules_list_container" class="modal modal-vcenter fade" role="dialog">\n' +
-        '  <div class="modal-dialog">\n' +
-        '    <div class="modal-content">\n' +
-        '      <div class="modal-header">\n' +
-        '        <h4 class="modal-title module-modal-title">\n' +
-        '          ' + config.translations['Recommended Modules and Services'] + '\n' +
-        '        </h4>\n' +
-        '        <button type="button" class="close" data-dismiss="modal" aria-label="' + config.translations['Close'] + '">\n' +
-        '          <span aria-hidden="true">&times;</span>\n' +
-        '        </button>\n' +
-        '      </div>\n' +
-        '      <div class="modal-body row">\n' +
-        '        <div id="modules_list_container_tab_modal" class="col-md-12" style="display:none;"></div>\n' +
-        '        <div id="modules_list_loader" class="col-md-12 text-center">\n' +
-        '          <button class="btn-primary-reverse onclick unbind spinner"></button>\n' +
-        '        </div>\n' +
-        '      </div>\n' +
-        '    </div>\n' +
-        '  </div>\n' +
-        '</div>'
-      );
-    }
+    let $markup = $(
+      '<div id="modules_list_container" class="modal modal-vcenter fade" role="dialog">\n' +
+      '  <div class="modal-dialog">\n' +
+      '    <div class="modal-content">\n' +
+      '      <div class="modal-header">\n' +
+      '        <h4 class="modal-title module-modal-title">\n' +
+      '          ' + config.translations['Recommended Modules and Services'] + '\n' +
+      '        </h4>\n' +
+      '        <button type="button" class="close" data-dismiss="modal" aria-label="' + config.translations['Close'] + '">\n' +
+      '          <span aria-hidden="true">&times;</span>\n' +
+      '        </button>\n' +
+      '      </div>\n' +
+      '      <div class="modal-body row">\n' +
+      '        <div id="modules_list_container_tab_modal" class="col-md-12" style="display:none;"></div>\n' +
+      '      </div>\n' +
+      '    </div>\n' +
+      '  </div>\n' +
+      '</div>'
+    );
 
     /**
      * Returns the button's markup
@@ -352,28 +344,17 @@ var mbo = {};
   var RecommendedModulesPopinHandler = function(pageMap, config) {
 
     var initPopin = function() {
-      if (config.shouldUseLegacyTheme) {
-        $(pageMap.fancybox).fancybox({
-          type: 'ajax',
-          autoDimensions: false,
-          autoSize: false,
-          width: 600,
-          height: 'auto',
-          helpers: {
-            overlay: {
-              locked: false
-            }
-          }
-        });
-      } else {
-        if (!$(pageMap.modulesListModal).length) {
-          var modal = new RecommendedModulesModal(pageMap, config);
-          $(pageMap.modulesListModalContainer).append(modal.getMarkup().get(0).outerHTML);
-        }
+      if ($(pageMap.modulesListModal).length === 0) {
+        var modal = new RecommendedModulesModal(pageMap, config);
+        $(pageMap.modulesListModalContainer).append(modal.getMarkup().get(0).outerHTML);
       }
     };
 
     var openModulesList = function() {
+      var cdcContainer = $('#cdc-container')
+      if(cdcContainer.length > 0 && cdcContainer.html().length > 0) {
+        cdcContainer.html('')
+      }
       var recommendedModulesRequest = $.ajax({
         type: 'GET',
         dataType: 'json',
@@ -383,8 +364,7 @@ var mbo = {};
       $(pageMap.modulesListModal).modal('show');
 
       recommendedModulesRequest.done(function (data) {
-        $(pageMap.modulesListModalContent).html(data.content).slideDown();
-        $(pageMap.modulesListLoader).hide();
+        $(pageMap.modulesListModalContent).html(data.content).show();
       });
 
       recommendedModulesRequest.fail(function(jqXHR, textStatus, errorThrown) {
@@ -394,8 +374,7 @@ var mbo = {};
           content += jqXHR.responseJSON.content;
         }
 
-        $(pageMap.modulesListModalContent).html(content).slideDown();
-        $(pageMap.modulesListLoader).hide();
+        $(pageMap.modulesListModalContent).html(content).show();
       });
     };
 
@@ -441,7 +420,7 @@ var mbo = {};
     }
 
     if (config.shouldAttachRecommendedModulesAfterContent) {
-      page.insertRecommendedModules(config);
+      page.insertRecommendedModules(config, pageMap);
     }
   };
 
