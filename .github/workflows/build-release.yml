@@ -82,7 +82,7 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
 
       - name: Create & upload artifact for prestabulle
-        uses: 'actions/upload-artifact@v3'
+        uses: 'actions/upload-artifact@v1'
         with:
           name: ${{ github.event.repository.name }}.${{ steps.get_bulle.outputs.BULLE }}
           path: ../
@@ -120,7 +120,7 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
 
       - name: Create & upload artifact for preprod
-        uses: 'actions/upload-artifact@v3'
+        uses: 'actions/upload-artifact@v1'
         with:
           name: ${{ github.event.repository.name }}.preprod
           path: ../
