@@ -162,9 +162,10 @@ jobs:
 
       - name: Prepare the production zip
         run: |
+          cd ..
           pwd
           ls -lh
-          zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }} -x '*.git*'
+          zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
 
 
       - name: Create & upload artifact for prod
