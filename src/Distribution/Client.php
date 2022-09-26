@@ -198,7 +198,7 @@ class Client
         $cacheKey = __METHOD__ . $languageIsoCode . _PS_VERSION_;
 
         if ($this->cacheProvider->contains($cacheKey)) {
-//            return $this->cacheProvider->fetch($cacheKey);
+            return $this->cacheProvider->fetch($cacheKey);
         }
 
         $this->setQueryParams([
