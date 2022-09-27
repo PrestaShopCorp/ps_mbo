@@ -87,7 +87,7 @@ class ActionsManager
      *
      * @return \stdClass|null
      */
-    private function findVersionForUpdate(string $moduleName): ?\stdClass
+    public function findVersionForUpdate(string $moduleName): ?\stdClass
     {
         $db = \Db::getInstance();
         $request = 'SELECT `version` FROM `' . _DB_PREFIX_ . "module` WHERE name='" . $moduleName . "'";
