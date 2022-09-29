@@ -1,7 +1,18 @@
+<script defer>
+  if(!window.renderModal) {
+    window.renderModal = window.mboCdc.renderModal;
+  }
+  if(!window.shopContext) {
+    window.shopContext = {{ shop_context|json_encode|raw }};
+  }
+</script>
+
 <span class="module-read-more-grid">
     {% if module.attributes.id != "0" %}
-        <a class="module-read-more-list-btn url" href="{{ path('admin_mbo_module_see_more', {"moduleId": module.attributes.id }) }}" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
+        <a class="module-read-more-list-btn url"
+           onclick="window.renderModal(window.shopContext, null, {{ module.attributes.id }})"
+           href="javascript:void(0)"
+        >{{ 'Read More'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
 
-        {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default('') } %}
     {% endif %}
 </span>
