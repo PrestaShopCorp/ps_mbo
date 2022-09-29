@@ -86,7 +86,6 @@ trait UseActionAdminControllerSetMedia
             Tools::getValue('controller') === 'AdminPsMboModule' ||
             Tools::getValue('controller') === 'AdminModulesManage'
         ) {
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/catalog-see-more.js?v=' . $this->version);
             $this->context->controller->addJs('/js/jquery/plugins/growl/jquery.growl.js?v=' . $this->version);
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css');
         }
@@ -94,7 +93,6 @@ trait UseActionAdminControllerSetMedia
             // Add it to have all script work on all pages...
             $this->context->controller->addJs('/admin-dev/themes/default/js/bundle/default.js?v=' . _PS_VERSION_);
         }
-
         $this->loadCdcMedia();
     }
 
@@ -102,7 +100,9 @@ trait UseActionAdminControllerSetMedia
     {
         $controllerName = Tools::getValue('controller');
 
-        if (!Tab::mayDisplayRecommendedModules($controllerName)) {
+        if (!Tab::mayDisplayRecommendedModules($controllerName) &&
+            $controllerName !== 'AdminPsMboModule' &&
+            $controllerName !== 'AdminModulesManage') {
             return;
         }
 
