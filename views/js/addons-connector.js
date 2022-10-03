@@ -18,8 +18,6 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-const {$} = window;
-
 (function() {
     var pageMap = {
         addonsLoginButtonSelector: '#addons_login_btn',
@@ -41,26 +39,26 @@ const {$} = window;
             this.switchToModal(pageMap.addonsLogoutModalBtnSelector, pageMap.addonsLogoutModalSelector);
             this.switchToModal(pageMap.addonsLogoutModalBtnSelectorMobile, pageMap.addonsLogoutModalSelector);
 
-            $('body').on('submit', pageMap.addonsConnectForm, function initializeBodySubmit(event) {
+            window.$('body').on('submit', pageMap.addonsConnectForm, function initializeBodySubmit(event) {
                 event.preventDefault();
                 event.stopPropagation();
 
-                $.ajax({
+                window.$.ajax({
                     method: 'POST',
-                    url: $(this).attr('action'),
+                    url: window.$(this).attr('action'),
                     dataType: 'json',
-                    data: $(this).serialize(),
+                    data: window.$(this).serialize(),
                     beforeSend: () => {
-                        $(pageMap.addonsLoginButtonSelector).show();
-                        $('button.btn[type="submit"]', pageMap.addonsConnectForm).hide();
+                        window.$(pageMap.addonsLoginButtonSelector).show();
+                        window.$('button.btn[type="submit"]', pageMap.addonsConnectForm).hide();
                     },
                 }).done((response) => {
                     if (response.success === 1) {
                         window.location.reload();
                     } else {
-                        $.growl.error({message: response.message});
-                        $(pageMap.addonsLoginButtonSelector).hide();
-                        $('button.btn[type="submit"]', pageMap.addonsConnectForm).fadeIn();
+                        window.$.growl.error({message: response.message});
+                        window.$(pageMap.addonsLoginButtonSelector).hide();
+                        window.$('button.btn[type="submit"]', pageMap.addonsConnectForm).fadeIn();
                     }
                 });
             });
@@ -70,18 +68,18 @@ const {$} = window;
          * @private
          */
         this.switchToModal = function(element, target) {
-            if ($(element).attr('href') === '#') {
+            if (window.$(element).attr('href') === '#') {
                 // modify jQuery cache
-                $(element).data('toggle', 'modal');
-                $(element).data('target', target);
+                window.$(element).data('toggle', 'modal');
+                window.$(element).data('target', target);
                 // modify the DOM
-                $(element).attr('data-toggle', 'modal');
-                $(element).attr('data-target', target);
+                window.$(element).attr('data-toggle', 'modal');
+                window.$(element).attr('data-target', target);
             }
         }
     }
 
-    $(document).ready(function() {
+    window.$(document).ready(function() {
         var addonsConnector = new AddonsConnector(pageMap);
         addonsConnector.initConnect();
     })

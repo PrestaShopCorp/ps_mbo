@@ -77,12 +77,15 @@ trait UseActionGetAdminToolbarButtons
     /**
      * Add JS and CSS file
      *
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
-     *
      * @return void
+     *
+     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
      */
     protected function loadMediaGetAdminToolbarButtons(): void
     {
+        if (!in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CONNECTION_TOOLBAR)) {
+            return;
+        }
         $this->context->controller->addJs($this->getPathUri() . 'views/js/addons-connector.js?v=' . $this->version);
     }
 }
