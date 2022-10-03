@@ -126,7 +126,7 @@ class ContextBuilder
 
         return [
             'currency' => $this->getCurrencyCode(),
-            'iso_lang' => $language->getLanguageCode(),
+            'iso_lang' => $language->getIsoCode(),
             'iso_code' => mb_strtolower($country->iso_code),
             'shop_version' => _PS_VERSION_,
             'shop_url' => Config::getShopUrl(),

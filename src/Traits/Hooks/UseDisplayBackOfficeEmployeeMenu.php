@@ -47,7 +47,6 @@ trait UseDisplayBackOfficeEmployeeMenu
         $apiClient = $this->get('mbo.cdc.client.distribution_api');
 
         try {
-            $apiClient->setBearer($this->getAdminAuthenticationProvider()->getMboJWT());
             $config = $apiClient->getConf();
             if (empty($config) || empty($config->userMenu) || !is_array($config->userMenu)) {
                 return;

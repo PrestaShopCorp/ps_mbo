@@ -24,18 +24,6 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 trait UseDisplayModuleConfigureExtraButtons
 {
     /**
-     * @return void
-     *
-     * @throws \Exception
-     */
-    public function bootUseDisplayModuleConfigureExtraButtons(): void
-    {
-        if (method_exists($this, 'addAdminControllerMedia')) {
-            $this->addAdminControllerMedia('loadMediaForModuleConfigureExtraButtons');
-        }
-    }
-
-    /**
      * Hook displayModuleConfigureExtraButtons.
      * Add additional buttons on the module configure page's toolbar.
      *
@@ -47,32 +35,12 @@ trait UseDisplayModuleConfigureExtraButtons
             'configure_toolbar_extra_buttons' => [
                 [
                     'class' => 'btn-primary',
-                    'id' => 'mbo-desc-module-update',
-                    'title' => 'Check for updates',
-                    'url' => '#',
-                    'icon' => 'process-icon-refresh',
-                    'data_attributes' => [
-                        'module-name' => $params['module_name'],
-                        'target' => $this->get('router')->generate('admin_mbo_addons_module_upgrade'),
-                    ],
+                    'title' => $this->trans('Check for updates'),
+                    'url' => $this->get('router')->generate('admin_module_updates'),
                 ],
             ],
         ]);
 
         return $this->fetch('module:ps_mbo/views/templates/hook/configure-toolbar.tpl');
-    }
-
-    /**
-     * Add JS and CSS file
-     *
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
-     *
-     * @return void
-     */
-    protected function loadMediaForModuleConfigureExtraButtons(): void
-    {
-        if (\Tools::getValue('controller') === 'AdminModule') {
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/module-configure-extra-buttons.js?v=' . $this->version);
-        }
     }
 }

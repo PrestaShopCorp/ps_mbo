@@ -42,6 +42,7 @@ trait UseHooks
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionDispatcherBefore;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionObjectShopUrlUpdateAfter;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionGeneralPageSave;
+    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionBeforeUpgradeModule;
 
     /**
      * @var array An array of method that can be called to register media in the actionAdminControllerSetMedia hook

@@ -194,15 +194,15 @@ class Client
      */
     public function getConf(): stdClass
     {
-        $languageCode = Context::getContext()->language->getLanguageCode();
-        $cacheKey = __METHOD__ . $languageCode . _PS_VERSION_;
+        $languageIsoCode = Context::getContext()->language->getIsoCode();
+        $cacheKey = __METHOD__ . $languageIsoCode . _PS_VERSION_;
 
         if ($this->cacheProvider->contains($cacheKey)) {
             return $this->cacheProvider->fetch($cacheKey);
         }
 
         $this->setQueryParams([
-            'isoLang' => $languageCode,
+            'isoLang' => $languageIsoCode,
         ]);
         $conf = $this->processRequestAndReturn('shops/conf');
 
