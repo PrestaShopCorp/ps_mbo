@@ -1,4 +1,6 @@
-{#**
+'use strict';
+
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -15,23 +17,26 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
- *#}
-{% extends '@PrestaShop/Admin/Module/common.html.twig' %}
+ */
 
-{% block javascripts %}
-    {{ parent() }}
-    <script src="{{ cdc_url }}" type="text/javascript"></script>
-    <script defer>
-        const renderModules = window.mboCdc.renderModules
+(function() {
+    function registerMboSeeMoreBtnEventHandler() {
+        $('body').on(
+            'click',
+            'a.module-read-more-grid-btn, a.module-read-more-list-btn',
+            (event) => {
+                event.preventDefault();
+                const modulePoppin = $(event.target).data('target');
 
-        const context = {{ shop_context|json_encode()|raw }};
+                $.get(event.target.href, (data) => {
+                    $(modulePoppin).html(data);
+                    $(modulePoppin).modal();
+                });
+            },
+        );
+    }
 
-        renderModules(context, '#cdc-container')
-    </script>
-{% endblock %}
-
-{% block content %}
-    <div class="card" id="cdc-container"></div>
-
-    {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
-{% endblock %}
+    $(document).on('ready', function() {
+        registerMboSeeMoreBtnEventHandler();
+    })
+})();

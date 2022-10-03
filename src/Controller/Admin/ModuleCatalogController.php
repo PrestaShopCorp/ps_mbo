@@ -22,9 +22,13 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use PrestaShop\Module\Mbo\Addons\Toolbar;
+use PrestaShop\Module\Mbo\Module\ModuleBuilderInterface;
+use PrestaShop\Module\Mbo\Module\RepositoryInterface;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
+use PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -40,16 +44,36 @@ class ModuleCatalogController extends ModuleAbstractController
     private $toolbar;
 
     /**
+     * @var RepositoryInterface
+     */
+    private $moduleRepository;
+
+    /**
+     * @var ModuleBuilderInterface
+     */
+    private $moduleBuilder;
+
+    /**
+     * @var ModulePresenter
+     */
+    private $modulePresenter;
+    /**
      * @var ContextBuilder
      */
     private $cdcContextBuilder;
 
     public function __construct(
         Toolbar $toolbar,
+        ModuleBuilderInterface $moduleBuilder,
+        RepositoryInterface $moduleRepository,
+        ModulePresenter $modulePresenter,
         ContextBuilder $cdcContextBuilder
     ) {
         parent::__construct();
         $this->toolbar = $toolbar;
+        $this->moduleBuilder = $moduleBuilder;
+        $this->moduleRepository = $moduleRepository;
+        $this->modulePresenter = $modulePresenter;
         $this->cdcContextBuilder = $cdcContextBuilder;
     }
 
@@ -78,11 +102,36 @@ class ModuleCatalogController extends ModuleAbstractController
                 'help_link' => $this->generateSidebarLink('AdminModules'),
                 'requireFilterStatus' => false,
                 'level' => $this->authorizationLevel(static::CONTROLLER_NAME),
+                'cdc_url' => getenv('MBO_CDC_URL'),
                 'shop_context' => $this->cdcContextBuilder->getViewContext(),
                 'errorMessage' => $this->trans(
                     'You do not have permission to add this.',
                     'Admin.Notifications.Error'
                 ),
+            ]
+        );
+    }
+
+    /**
+     * Responsible of displaying the data inside the modal when user clicks on "See more" on module card
+     *
+     * @param int $moduleId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function seeMoreAction(int $moduleId): Response
+    {
+        $module = $this->moduleRepository->getModuleById($moduleId);
+
+        if (null !== $module) {
+            $this->moduleBuilder->generateAddonsUrls($module);
+        }
+
+        return $this->render(
+            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/modal-read-more-content.html.twig',
+            [
+                'module' => $this->modulePresenter->present($module),
+                'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
             ]
         );
     }

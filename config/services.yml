@@ -29,6 +29,9 @@ services:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController'
     arguments:
       - '@mbo.addons.toolbar'
+      - '@mbo.modules.builder'
+      - '@mbo.modules.repository'
+      - '@prestashop.adapter.presenter.module'
       - '@mbo.cdc.context_builder'
 
   mbo.controller.modules.selection:
