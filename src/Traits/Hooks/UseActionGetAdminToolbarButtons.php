@@ -78,8 +78,8 @@ trait UseActionGetAdminToolbarButtons
      * Add JS and CSS file
      *
      * @return void
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
      *
+     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
      */
     protected function loadMediaGetAdminToolbarButtons(): void
     {
