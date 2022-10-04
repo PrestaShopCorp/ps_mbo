@@ -189,6 +189,7 @@ class Client
      * Retrieve the user menu from NEST Api
      *
      * @return false|\stdClass
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getConf()
