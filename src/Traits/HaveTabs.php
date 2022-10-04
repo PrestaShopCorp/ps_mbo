@@ -34,31 +34,31 @@ trait HaveTabs
      */
     public static $ADMIN_CONTROLLERS = [
         'AdminPsMboModuleParent' => [
-            'name' => 'Module catalog',
+            'name' => 'Catalogue de modules',
             'visible' => true,
             'position' => 1,
             'class_name' => 'AdminPsMboModuleParent',
             'parent_class_name' => 'AdminParentModulesSf',
         ],
         'AdminPsMboSelection' => [
-            'name' => 'Module selection',
+            'name' => 'Sélection de modules',
             'visible' => true,
             'class_name' => 'AdminPsMboSelection',
             'parent_class_name' => 'AdminPsMboModuleParent',
         ],
         'AdminPsMboModule' => [
-            'name' => 'Module catalog',
+            'name' => 'Catalogue de modules',
             'visible' => true,
             'class_name' => 'AdminPsMboModule',
             'parent_class_name' => 'AdminPsMboModuleParent',
         ],
         'AdminPsMboRecommended' => [
-            'name' => 'Module recommended',
+            'name' => 'Modules recommandés',
             'visible' => true,
             'class_name' => 'AdminPsMboRecommended',
         ],
         'AdminPsMboTheme' => [
-            'name' => 'Theme catalog',
+            'name' => 'Catalogue de thèmes',
             'visible' => true,
             'position' => 1,
             'class_name' => 'AdminPsMboTheme',
