@@ -74,7 +74,6 @@ trait UseActionListModules
     {
         return $this->get('twig')->render(
             '@Modules/ps_mbo/views/templates/hook/twig/module_manager_additional_description.html.twig', [
-                'shop_context' => $this->get('mbo.cdc.context_builder')->getViewContext(),
                 'module' => [
                     'attributes' => [
                         'id' => $moduleId,

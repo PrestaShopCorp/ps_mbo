@@ -55,6 +55,13 @@ class ps_mbo extends Module
         'AdminModulesSf',
     ];
 
+    public const CONTROLLERS_WITH_CDC_SCRIPT = [
+        'AdminPsMboModule',
+        'AdminModulesNotifications',
+        'AdminModulesUpdates',
+        'AdminModulesManage',
+    ];
+
     public $configurationList = [
         'PS_MBO_SHOP_ADMIN_UUID' => '', // 'ADMIN' because there will be only one for all shops in a multishop context
         'PS_MBO_SHOP_ADMIN_MAIL' => '',
