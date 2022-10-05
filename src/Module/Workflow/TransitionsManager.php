@@ -138,6 +138,14 @@ class TransitionsManager
     /**
      * @throws Exception
      */
+    public function disabledAndMobileDisabledToReset(TransitionModule $transitionModule, string $marking, array $context): bool
+    {
+        return $this->reset($transitionModule, $context);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function enabledAndMobileDisabledToUpgraded(TransitionModule $transitionModule, string $marking, array $context): bool
     {
         return $this->upgrade($transitionModule, $context);

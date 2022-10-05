@@ -191,12 +191,15 @@ class ContextBuilder
             $moduleVersion = $module->get('version');
             $moduleConfigUrl = null;
 
+            if (!$moduleName || !$moduleVersion || !$moduleStatus) {
+                continue;
+            }
+
             if ($installedModule->isConfigurable()) {
                 $moduleConfigUrl = $this->router->generate('admin_module_configure_action', [
                     'module_name' => $moduleName,
                 ]);
             }
-
             $installedModules[] = (new InstalledModule($moduleId, $moduleName, $moduleStatus, $moduleVersion, $moduleConfigUrl))->toArray();
         }
 
