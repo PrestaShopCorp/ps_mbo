@@ -158,12 +158,14 @@ class ps_mbo extends Module
             return false;
         }
 
-        $this->getAdminAuthenticationProvider()->deleteApiUser();
+        $this->getAdminAuthenticationProvider()->deletePossibleApiUser();
         $this->getAdminAuthenticationProvider()->clearCache();
 
-        $registrationLockFile = $this->moduleCacheDir . 'registration.lock';
-        if (file_exists($registrationLockFile)) {
-            unlink($registrationLockFile);
+        $lockFiles = ['registerShop', 'updateShop'];
+        foreach ($lockFiles as $lockFile) {
+            if (file_exists($this->moduleCacheDir . $lockFile . '.lock')) {
+                unlink($this->moduleCacheDir . $lockFile . '.lock');
+            }
         }
 
         foreach (array_keys($this->configurationList) as $name) {

@@ -70,7 +70,7 @@ trait HaveShopOnExternalService
             /** @var Client $distributionApi */
             $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
             $distributionApi->setBearer($this->getAdminAuthenticationProvider()->getMboJWT());
-            $distributionApi->unregisterShop();
+            $t = $distributionApi->unregisterShop();
         } catch (Exception $e) {
             // Do nothing here, the exception is caught to avoid displaying an error to the client
             // Furthermore, the operation can't be tried again later as the module is now disabled or uninstalled
