@@ -188,11 +188,11 @@ class Client
     /**
      * Retrieve the user menu from NEST Api
      *
-     * @return \stdClass
+     * @return false|\stdClass
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getConf(): stdClass
+    public function getConf()
     {
         $languageIsoCode = Context::getContext()->language->getIsoCode();
         $cacheKey = __METHOD__ . $languageIsoCode . _PS_VERSION_;
@@ -204,8 +204,14 @@ class Client
         $this->setQueryParams([
             'isoLang' => $languageIsoCode,
         ]);
-        $conf = $this->processRequestAndReturn('shops/conf');
-
+        try {
+            $conf = $this->processRequestAndReturn('shops/conf');
+        } catch (\Exception $e) {
+            return false;
+        }
+        if (empty($conf)) {
+            return false;
+        }
         $this->cacheProvider->save($cacheKey, $conf, 60 * 60 * 24); // A day
 
         return $this->cacheProvider->fetch($cacheKey);
