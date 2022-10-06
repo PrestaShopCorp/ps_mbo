@@ -156,7 +156,7 @@ class Client
      *
      * @throws GuzzleException
      */
-    public function unregisterShop(): stdClass
+    public function unregisterShop()
     {
         return $this->processRequestAndReturn(
             'shops/' . Config::getShopMboUuid(),
