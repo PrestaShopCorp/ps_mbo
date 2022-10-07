@@ -2,6 +2,11 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="modules/ps_mbo/src/Addons/Toolbar.php" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
     <body>
+      <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004">
+        <source>Upload a module</source>
+        <target>Upload een module</target>
+        <note>Line: 96</note>
+      </trans-unit>
       <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df">
         <source>Synchronized with Addons marketplace!</source>
         <target>Gesynchroniseerd met Addons!</target>
@@ -33,31 +38,21 @@
       <trans-unit id="6ea7071301eeb50e00bf88f5a46ded8e">
         <source>Modules catalog</source>
         <target>Modulecatalogus</target>
-        <note>Line: 97</note>
+        <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/action_menu.html.twig" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayModuleConfigureExtraButtons.php" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
     <body>
-      <trans-unit id="abfc3a65538a6ec86502b2b498b6b4a6">
-        <source>Discover</source>
-        <target>Ontdek</target>
-        <note>Line: 31</note>
-      </trans-unit>
-      <trans-unit id="90406afefae30826692e7f7480f7467c">
-        <source>Toggle Dropdown</source>
-        <target>Menu in-/uitklappen</target>
-        <note>Line: 47</note>
+      <trans-unit id="eb1b4bb3667dd670210c7822badc2f1d">
+        <source>Check for updates</source>
+        <target>Controleer op update</target>
+        <note>Line: 38</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
     <body>
-      <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
-        <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
-        <target>Koppel uw winkel aan uw Addons-account om automatisch belangrijke updates te ontvangen voor de modules die u hebt gekocht. Hebt u nog geen account?</target>
-        <note>Line: 42</note>
-      </trans-unit>
       <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
         <source>Sign up now</source>
         <target>Nu aanmelden</target>
@@ -67,192 +62,6 @@
         <source>Yes, log out</source>
         <target>Ja, uitloggen</target>
         <note>Line: 99</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_import.html.twig" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
-    <body>
-      <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004">
-        <source>Upload a module</source>
-        <target>Upload een module</target>
-        <note>Line: 24</note>
-      </trans-unit>
-      <trans-unit id="7c8701c300f85e9799c74e83f4adea64">
-        <source>Drop your module archive here or [1]select file[/1]</source>
-        <target>Sleep uw modulebestand hier naartoe of [1]selecteer bestand[/1]</target>
-        <note>Line: 45</note>
-      </trans-unit>
-      <trans-unit id="2b11276d6a162d7c1b9894abe5febfdc">
-        <source>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</source>
-        <target>Upload slechts 1 bestand per keer, .zip- of tarball-formaat (.tar, .tar.gz of .tgz).</target>
-        <note>Line: 48</note>
-      </trans-unit>
-      <trans-unit id="e781acd6cefcfbbfce5aa2804d59a4c5">
-        <source>Your module will be installed right after that.</source>
-        <target>Uw module wordt daarna gelijk geïnstalleerd.</target>
-        <note>Line: 49</note>
-      </trans-unit>
-      <trans-unit id="c3dbf8925ec4c77ef5317e1e27317b70">
-        <source>Installing module...</source>
-        <target>Module installeren...</target>
-        <note>Line: 55</note>
-      </trans-unit>
-      <trans-unit id="a26f56145fea2d3af35bf0d6ac83c28a">
-        <source>It will close as soon as the module is installed. It won't be long!</source>
-        <target>Het wordt gesloten zodra de module is geïnstalleerd. Het zal niet lang duren!</target>
-        <note>Line: 57</note>
-      </trans-unit>
-      <trans-unit id="f48a5ae14fa2b0c85442d1199a08b3b4">
-        <source>Module installed!</source>
-        <target>Module geïnstalleerd!</target>
-        <note>Line: 62</note>
-      </trans-unit>
-      <trans-unit id="824e2fcb263ee94399a6a261ee1ec7c1">
-        <source>Oops... Upload failed.</source>
-        <target>Oeps... uploaden niet gelukt.</target>
-        <note>Line: 68</note>
-      </trans-unit>
-      <trans-unit id="fa692d85f08c92a585ed8b3fed7f1d52">
-        <source>What happened?</source>
-        <target>Wat is er gebeurd?</target>
-        <note>Line: 69</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/modal-read-more-content.html.twig" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
-    <body>
-      <trans-unit id="031f3657c3601889e98df488db139b75">
-        <source>Service by %author%</source>
-        <target>Service door %author%</target>
-        <note>Line: 59</note>
-      </trans-unit>
-      <trans-unit id="bc3b3665bd89d8eb6e3c7b0789fa98c5">
-        <source>v%version% by %author%</source>
-        <target>v%version% door %author%</target>
-        <note>Line: 61</note>
-      </trans-unit>
-      <trans-unit id="3b878279a04dc47d60932cb294d96259">
-        <source>Overview</source>
-        <target>Overzicht</target>
-        <note>Line: 83</note>
-      </trans-unit>
-      <trans-unit id="0f68b904e33d9ac04605aecc958bcf52">
-        <source>Additional information</source>
-        <target>Aanvullende informatie</target>
-        <note>Line: 87</note>
-      </trans-unit>
-      <trans-unit id="e654f7a86a4458b9cd662267e0f29b52">
-        <source>Benefits</source>
-        <target>Voordelen</target>
-        <note>Line: 92</note>
-      </trans-unit>
-      <trans-unit id="98f770b0af18ca763421bac22b4b6805">
-        <source>Features</source>
-        <target>Functies</target>
-        <note>Line: 97</note>
-      </trans-unit>
-      <trans-unit id="a5ad64d595144c185c9cf2065162dec3">
-        <source>Demo video</source>
-        <target>Demonstratie-video</target>
-        <note>Line: 102</note>
-      </trans-unit>
-      <trans-unit id="c49182dc0c7a70b9cd2e10853d9ec6c7">
-        <source>Changelog</source>
-        <target>Wijzigingen</target>
-        <note>Line: 107</note>
-      </trans-unit>
-      <trans-unit id="87ad4793c12c9f9e5d56cc81386f77b8">
-        <source>No description found for this module :(</source>
-        <target>Geen beschrijving gevonden voor deze module :(</target>
-        <note>Line: 121</note>
-      </trans-unit>
-      <trans-unit id="a8fc81349d4f60335fc2f2d2dea6fb0c">
-        <source>Multistore compatibility:</source>
-        <target>Multistore compatibiliteit:</target>
-        <note>Line: 126</note>
-      </trans-unit>
-      <trans-unit id="9e3af2cc76136602790d15926c0406d2">
-        <source>This module is compatible with the multistore feature. It can be either:</source>
-        <target>Deze module is compatibel met de multistore functie. Het kan ofwel:</target>
-        <note>Line: 128</note>
-      </trans-unit>
-      <trans-unit id="e773cb7097fe5225bf11e922d97d8303">
-        <source>configured differently from one store to another;</source>
-        <target>verschillend geconfigureerd van de ene winkel tot de andere;</target>
-        <note>Line: 130</note>
-      </trans-unit>
-      <trans-unit id="524101c07f4d47a32a671461793b9aae">
-        <source>configured quickly in the same way on all stores thanks to the all shops context or to the group of shops;</source>
-        <target>configured quickly in the same way on all stores thanks to the all shops context or to the group of shops;</target>
-        <note>Line: 131</note>
-      </trans-unit>
-      <trans-unit id="e3e84332925aea492b9fa58f047cab00">
-        <source>or even activated for one store and deactivated for another.</source>
-        <target>or even activated for one store and deactivated for another.</target>
-        <note>Line: 132</note>
-      </trans-unit>
-      <trans-unit id="e1257f9e396ab15c8e76d6d87bf30418">
-        <source>This module is partially compatible with the multistore feature. Some of its options might not be available.</source>
-        <target>Deze module is gedeeltelijk compatibel met de multistore functie. Sommige van de opties zijn mogelijk niet beschikbaar.</target>
-        <note>Line: 135</note>
-      </trans-unit>
-      <trans-unit id="d75acf5ccb6af024e45402c80c5901f5">
-        <source>This module is not compatible with the multistore feature because it would not be useful.</source>
-        <target>This module is not compatible with the multistore feature because it would not be useful.</target>
-        <note>Line: 137</note>
-      </trans-unit>
-      <trans-unit id="177915f8877b2d381c7f0c540ab7a17b">
-        <source>This module is not compatible with the multistore feature. It means that its configuration applies to all stores.</source>
-        <target>Deze module is niet compatibel met de multistore-functie. Dit betekent dat de configuratie van toepassing is op alle winkels.</target>
-        <note>Line: 139</note>
-      </trans-unit>
-      <trans-unit id="a76e4258e8695991d6f5f62efdba70d6">
-        <source>No additional description provided for this module :(</source>
-        <target>Geen extra beschrijving van de voordelen gevonden voor deze module :(</target>
-        <note>Line: 150</note>
-      </trans-unit>
-      <trans-unit id="1ed02f805424aac96756b590d51e2038">
-        <source>No feature list provided for this module :(</source>
-        <target>Geen beschrijving van de kenmerken gevonden voor deze module :(</target>
-        <note>Line: 160</note>
-      </trans-unit>
-      <trans-unit id="f2a854a84903f5f29c0b7a40ccbf4ee5">
-        <source>No customer benefits notes found for this module :(</source>
-        <target>Geen informatie over klantvoordelen gevonden voor deze module :(</target>
-        <note>Line: 170</note>
-      </trans-unit>
-      <trans-unit id="94d27c2e2294ddfe66621b814f2ac3e0">
-        <source>No demonstration video found for this module :(</source>
-        <target>Geen demonstratie-video gevonden voor deze module :(</target>
-        <note>Line: 180</note>
-      </trans-unit>
-      <trans-unit id="3072d199d2a0269893376e8c7d0049d6">
-        <source>No changelog provided for this module :(</source>
-        <target>Geen logboek met wijzigingen gevonden voor deze module :(</target>
-        <note>Line: 198</note>
-      </trans-unit>
-      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
-        <source>Free</source>
-        <target>Gratis</target>
-        <note>Line: 212</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_additional_description.html.twig" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
-    <body>
-      <trans-unit id="decbe415d8accca7c2c16d48a79ee934">
-        <source>Read More</source>
-        <target>Lees meer</target>
-        <note>Line: 3</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
-    <body>
-      <trans-unit id="10dc2676c1cfa668956517a07c6405bf">
-        <source>Discover the best-selling modules of this category in the %link% page.</source>
-        <target>Ontdek de bestverkopende modules van deze categorie op de %link% pagina.</target>
-        <note>Line: 1</note>
       </trans-unit>
     </body>
   </file>

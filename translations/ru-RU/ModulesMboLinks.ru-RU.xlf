@@ -2,80 +2,15 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="modules/ps_mbo/src/Addons/Provider/LinksProvider.php" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
     <body>
-      <trans-unit id="52b2cd72719b5db17851e1381bda7e45">
-        <source>https://addons.prestashop.com/en/518-shipping-logistics</source>
-        <target>https://addons.prestashop.com/ru/518-shipping-logistics</target>
-        <note>Line: 137</note>
-      </trans-unit>
-      <trans-unit id="00bbd2367baeaa5e29047e126af3ddc2">
-        <source>https://addons.prestashop.com/en/481-payment</source>
-        <target>https://addons.prestashop.com/ru/481-payment</target>
-        <note>Line: 140</note>
-      </trans-unit>
-      <trans-unit id="33c2a695d416325b09ff665af486aa59">
-        <source>https://addons.prestashop.com/en/209-dashboards</source>
-        <target>https://addons.prestashop.com/ru/209-dashboards</target>
-        <note>Line: 143</note>
-      </trans-unit>
-      <trans-unit id="81324f330130172c5911d1dbb3542a18">
-        <source>https://addons.prestashop.com/en/</source>
-        <target>https://addons.prestashop.com/ru/</target>
-        <note>Line: 196</note>
-      </trans-unit>
       <trans-unit id="ab9f0d838086d8699f9bc0f6b6bf0d59">
         <source>https://accounts.distribution.prestashop.net/en/sign-up</source>
         <target>https://accounts.distribution.prestashop.net/en/sign-up</target>
-        <note>Line: 154</note>
+        <note>Line: 123</note>
       </trans-unit>
       <trans-unit id="b14fa168a9724da44a82a09d80a98a7c">
         <source>https://auth.prestashop.com/en/password/request</source>
         <target>https://auth.prestashop.com/ru/пароль/запрос1</target>
-        <note>Line: 161</note>
-      </trans-unit>
-      <trans-unit id="26e4eb9c28e12a563095b6d6a56cb75c">
-        <source>https://www.prestashop.com/en/resources</source>
-        <target>https://help-center.prestashop.com/en</target>
-        <note>Line: 175</note>
-      </trans-unit>
-      <trans-unit id="ddcf50c29294d4414f3f7c1bbc892cb5">
-        <source>Resources</source>
-        <target>Ресурсы</target>
-        <note>Line: 179</note>
-      </trans-unit>
-      <trans-unit id="dbd0baf6aac853ffb3ba3a625a399c27">
-        <source>https://www.prestashop.com/en/training</source>
-        <target>https://www.prestashop.com/en/training</target>
-        <note>Line: 182</note>
-      </trans-unit>
-      <trans-unit id="cf270e40d273f9e7fd7c3061729060c3">
-        <source>Training</source>
-        <target>Тренировка</target>
-        <note>Line: 186</note>
-      </trans-unit>
-      <trans-unit id="73c248fea6100b0c88348952a18d477a">
-        <source>https://www.prestashop.com/en/experts</source>
-        <target>https://www.prestashop.com/en/experts</target>
-        <note>Line: 189</note>
-      </trans-unit>
-      <trans-unit id="1611190db36358b26ea894c16023ab12">
-        <source>Find an Expert</source>
-        <target>Найти профессионала</target>
-        <note>Line: 193</note>
-      </trans-unit>
-      <trans-unit id="1862c358989cfbd20d38ca9adf69e27a">
-        <source>PrestaShop Marketplace</source>
-        <target>Маркет PrestaShop</target>
-        <note>Line: 200</note>
-      </trans-unit>
-      <trans-unit id="bb5299441a879c24fef9626457d1042a">
-        <source>https://www.prestashop.com/en/contact</source>
-        <target>https://www.prestashop.com/en/contact</target>
-        <note>Line: 203</note>
-      </trans-unit>
-      <trans-unit id="efdaf9f44ce968366fa78277263abc1d">
-        <source>Help Center</source>
-        <target>Справочный центр</target>
-        <note>Line: 207</note>
+        <note>Line: 130</note>
       </trans-unit>
     </body>
   </file>
