@@ -30,6 +30,7 @@ if (file_exists($autoloadPath)) {
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
+use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
@@ -171,6 +172,9 @@ class ps_mbo extends Module
         foreach (array_keys($this->configurationList) as $name) {
             Configuration::deleteByName($name);
         }
+
+        // This will reset cached configuration values (uuid, mail, ...) to avoid reusing them
+        Config::resetConfigValues();
 
         /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = $this->get('event_dispatcher');
