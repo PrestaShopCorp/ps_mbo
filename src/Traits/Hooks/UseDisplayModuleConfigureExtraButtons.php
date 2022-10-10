@@ -35,7 +35,7 @@ trait UseDisplayModuleConfigureExtraButtons
             'configure_toolbar_extra_buttons' => [
                 [
                     'class' => 'btn-primary',
-                    'title' => $this->trans('Check for updates'),
+                    'title' => $this->trans('Check for updates', [], 'Modules.Mbo.Modulescatalog'),
                     'url' => $this->get('router')->generate('admin_module_updates'),
                 ],
             ],
