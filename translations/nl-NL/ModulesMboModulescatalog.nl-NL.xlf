@@ -46,7 +46,7 @@
     <body>
       <trans-unit id="eb1b4bb3667dd670210c7822badc2f1d">
         <source>Check for updates</source>
-        <target>Controleer op update</target>
+        <target>Op updates controleren</target>
         <note>Line: 38</note>
       </trans-unit>
     </body>
