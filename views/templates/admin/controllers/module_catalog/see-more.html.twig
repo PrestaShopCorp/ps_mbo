@@ -1,13 +1,7 @@
 {% if module.attributes.id != "0" %}
   <script defer>
-    if (!window.renderModal && window.mboCdc) {
-      window.renderModal = window.mboCdc.renderModal;
-    }
     if (!window.shopContext) {
       window.shopContext = {{ shop_context|json_encode|raw }};
     }
-      if (window.renderModal && window.shopContext) {
-        window.renderModal(window.shopContext, null, {{ module.attributes.id }})
-      }
 </script>
 {% endif %}
