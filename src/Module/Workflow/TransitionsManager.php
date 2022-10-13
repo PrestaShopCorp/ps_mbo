@@ -138,6 +138,14 @@ class TransitionsManager
     /**
      * @throws Exception
      */
+    public function disabledAndMobileDisabledToReset(TransitionModule $transitionModule, string $marking, array $context): bool
+    {
+        return $this->reset($transitionModule, $context);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function enabledAndMobileDisabledToUpgraded(TransitionModule $transitionModule, string $marking, array $context): bool
     {
         return $this->upgrade($transitionModule, $context);
@@ -295,13 +303,14 @@ class TransitionsManager
     private function reset(TransitionModule $transitionModule, ?array $context = []): bool
     {
         $moduleName = $transitionModule->getName();
-        if ($this->moduleManager->reset($moduleName)) {
-            $module = $this->getModuleInstance($moduleName);
-            if (null === $module) {
-                return false;
-            }
 
-            return $module->onReset();
+        if ($this->moduleManager->reset($moduleName)) {
+            return true;
+        }
+
+        $error = $this->moduleManager->getError($moduleName);
+        if (!empty($error)) {
+            throw new TransitionFailedException($error);
         }
 
         return false;
@@ -318,16 +327,7 @@ class TransitionsManager
     {
         $moduleName = $transitionModule->getName();
 
-        if ($this->moduleManager->upgrade($moduleName)) {
-            $module = $this->getModuleInstance($moduleName);
-            if (null === $module) {
-                return false;
-            }
-
-            return $module->onUpgrade($transitionModule->getVersion());
-        }
-
-        return false;
+        return $this->moduleManager->upgrade($moduleName);
     }
 
     /**
@@ -336,16 +336,8 @@ class TransitionsManager
     private function uninstall(TransitionModule $transitionModule, ?array $context = []): bool
     {
         $moduleName = $transitionModule->getName();
-        if ($this->moduleManager->uninstall($moduleName)) {
-            $module = $this->getModuleInstance($moduleName);
-            if (null === $module) {
-                return false;
-            }
 
-            return $module->onUninstall();
-        }
-
-        return false;
+        return $this->moduleManager->uninstall($moduleName);
     }
 
     /**
@@ -359,18 +351,14 @@ class TransitionsManager
         }
 
         $moduleName = $transitionModule->getName();
-        if ($this->moduleManager->install($moduleName, $source)) {
-            $module = $this->getModuleInstance($moduleName);
-            if (null === $module) {
-                return false;
-            }
 
-            return $module->onInstall();
-        } else {
-            $error = $this->moduleManager->getError($moduleName);
-            if (!empty($error)) {
-                throw new TransitionFailedException($error);
-            }
+        if ($this->moduleManager->install($moduleName, $source)) {
+            return true;
+        }
+
+        $error = $this->moduleManager->getError($moduleName);
+        if (!empty($error)) {
+            throw new TransitionFailedException($error);
         }
 
         return false;

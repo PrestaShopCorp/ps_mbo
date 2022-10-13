@@ -32,7 +32,6 @@ use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
 use Tab;
 use Tools;
 
@@ -85,6 +84,8 @@ class AdminAuthenticationProvider
             return $employee;
         }
 
+        $this->deletePossibleApiUser();
+
         $employee = new Employee();
         $employee->firstname = 'Prestashop';
         $employee->lastname = 'Marketplace';
@@ -127,18 +128,6 @@ class AdminAuthenticationProvider
     }
 
     /**
-     * @throws PrestaShopException
-     */
-    public function deleteApiUser()
-    {
-        $employee = $this->getApiUser();
-
-        if (null !== $employee) {
-            $employee->delete();
-        }
-    }
-
-    /**
      * @throws EmployeeException
      */
     public function ensureApiUserExistence(): Employee
@@ -150,6 +139,17 @@ class AdminAuthenticationProvider
         }
 
         return $apiUser;
+    }
+
+    public function deletePossibleApiUser(): void
+    {
+        $connection = $this->connection;
+
+        $qb = $connection->createQueryBuilder();
+        $qb->delete($this->dbPrefix . 'employee')
+            ->where("email LIKE 'mbo-%prestashop.com'");
+
+        $qb->execute();
     }
 
     /**

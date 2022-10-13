@@ -39,6 +39,13 @@ class Config
      */
     private static $SHOP_URL;
 
+    public static function resetConfigValues(): void
+    {
+        self::$SHOP_MBO_UUID = null;
+        self::$SHOP_MBO_ADMIN_MAIL = null;
+        self::$SHOP_URL = null;
+    }
+
     public static function getShopMboUuid(): ?string
     {
         if (null === self::$SHOP_MBO_UUID) {

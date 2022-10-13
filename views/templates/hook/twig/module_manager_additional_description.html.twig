@@ -1,7 +1,23 @@
-<span class="module-read-more-grid">
-    {% if module.attributes.id != "0" %}
-        <a class="module-read-more-list-btn url" href="{{ path('admin_mbo_module_see_more', {"moduleId": module.attributes.id }) }}" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
-
-        {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default('') } %}
-    {% endif %}
-</span>
+{% if module.attributes.id != "0" %}
+  <span class="mbo-module-read-more-grid">
+          <a class="mbo-module-read-more-list-btn url"
+             id="see-more-{{ module.attributes.name }}"
+             href="javascript:void(0)"
+          >{{ 'Read More'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
+  </span>
+  <script type="application/javascript">
+    $('a#see-more-{{ module.attributes.name }}').on('click', function (event) {
+      $.get('{{ path('admin_mbo_module_see_more', {"moduleId": module.attributes.id }) }}', (data) => {
+        $("#module-read-more").html(data);
+      }).then(() => {
+        if (!window.renderModal && window.mboCdc) {
+          window.renderModal = window.mboCdc.renderModal;
+        }
+        if (window.renderModal && window.shopContext) {
+          window.renderModal(window.shopContext, null, {{ module.attributes.id }})
+        }
+      });
+    })
+  </script>
+  <span id="module-read-more"></span>
+{% endif %}

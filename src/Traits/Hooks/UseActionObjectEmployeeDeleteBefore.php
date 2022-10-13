@@ -1,5 +1,4 @@
-'use strict';
-
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -18,25 +17,27 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
-(function() {
-    function registerMboSeeMoreBtnEventHandler() {
-        $('body').on(
-            'click',
-            'a.module-read-more-grid-btn, a.module-read-more-list-btn',
-            (event) => {
-                event.preventDefault();
-                const modulePoppin = $(event.target).data('target');
+namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-                $.get(event.target.href, (data) => {
-                    $(modulePoppin).html(data);
-                    $(modulePoppin).modal();
-                });
-            },
-        );
+trait UseActionObjectEmployeeDeleteBefore
+{
+    /**
+     * Hook ActionObjectEmployeeDeleteBefore.
+     */
+    public function hookActionObjectEmployeeDeleteBefore($params): void
+    {
+        if (empty($params) || empty($params['object']) || !$params['object'] instanceof \Employee) {
+            return;
+        }
+        $currentApiUser = $this->getAdminAuthenticationProvider()->getApiUser();
+        if (!$currentApiUser) {
+            return;
+        }
+        if ($params['object']->id === $currentApiUser->id) {
+            // Just set the ID to null, so the delete action can't be done
+            $params['object']->id = null;
+        }
     }
-
-    $(document).on('ready', function() {
-        registerMboSeeMoreBtnEventHandler();
-    })
-})();
+}

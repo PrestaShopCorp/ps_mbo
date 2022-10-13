@@ -82,11 +82,7 @@ trait UseActionAdminControllerSetMedia
      */
     protected function loadMediaForAdminControllerSetMedia(): void
     {
-        if (
-            Tools::getValue('controller') === 'AdminPsMboModule' ||
-            Tools::getValue('controller') === 'AdminModulesManage'
-        ) {
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/catalog-see-more.js?v=' . $this->version);
+        if (in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CDC_SCRIPT)) {
             $this->context->controller->addJs('/js/jquery/plugins/growl/jquery.growl.js?v=' . $this->version);
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css');
         }
@@ -94,15 +90,15 @@ trait UseActionAdminControllerSetMedia
             // Add it to have all script work on all pages...
             $this->context->controller->addJs('/admin-dev/themes/default/js/bundle/default.js?v=' . _PS_VERSION_);
         }
-
         $this->loadCdcMedia();
     }
 
     private function loadCdcMedia(): void
     {
         $controllerName = Tools::getValue('controller');
-
-        if (!Tab::mayDisplayRecommendedModules($controllerName)) {
+        if (!Tab::mayDisplayRecommendedModules($controllerName) &&
+            !in_array($controllerName, self::CONTROLLERS_WITH_CDC_SCRIPT)
+        ) {
             return;
         }
 

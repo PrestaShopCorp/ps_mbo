@@ -1,0 +1,7 @@
+{% if module.attributes.id != "0" %}
+  <script defer>
+    if (!window.shopContext) {
+      window.shopContext = {{ shop_context|json_encode|raw }};
+    }
+</script>
+{% endif %}

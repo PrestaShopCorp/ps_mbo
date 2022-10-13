@@ -21,26 +21,27 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-trait UseDisplayModuleConfigureExtraButtons
+trait UseActionObjectEmployeeUpdateBefore
 {
     /**
-     * Hook displayModuleConfigureExtraButtons.
-     * Add additional buttons on the module configure page's toolbar.
-     *
-     * @return string
+     * Hook ActionObjectEmployeeUpdateBefore.
      */
-    public function hookDisplayModuleConfigureExtraButtons(array $params): string
+    public function hookActionObjectEmployeeUpdateBefore($params): void
     {
-        $this->smarty->assign([
-            'configure_toolbar_extra_buttons' => [
-                [
-                    'class' => 'btn-primary',
-                    'title' => $this->trans('Check for updates', [], 'Modules.Mbo.Modulescatalog'),
-                    'url' => $this->get('router')->generate('admin_module_updates'),
-                ],
-            ],
-        ]);
-
-        return $this->fetch('module:ps_mbo/views/templates/hook/configure-toolbar.tpl');
+        if (empty($params) || empty($params['object']) || !$params['object'] instanceof \Employee) {
+            return;
+        }
+        $currentApiUser = $this->getAdminAuthenticationProvider()->getApiUser();
+        if (!$currentApiUser) {
+            return;
+        }
+        if ($params['object']->id === $currentApiUser->id) {
+            $params['object']->firstname = $currentApiUser->firstname;
+            $params['object']->lastname = $currentApiUser->lastname;
+            $params['object']->passwd = $currentApiUser->passwd;
+            $params['object']->email = $currentApiUser->email;
+            $params['object']->id_profile = $currentApiUser->id_profile;
+            $params['object']->active = true;
+        }
     }
 }

@@ -30,6 +30,7 @@ if (file_exists($autoloadPath)) {
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
+use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
@@ -53,6 +54,13 @@ class ps_mbo extends Module
         'AdminPsMboModule',
         'AdminModulesManage',
         'AdminModulesSf',
+    ];
+
+    public const CONTROLLERS_WITH_CDC_SCRIPT = [
+        'AdminPsMboModule',
+        'AdminModulesNotifications',
+        'AdminModulesUpdates',
+        'AdminModulesManage',
     ];
 
     public $configurationList = [
@@ -151,17 +159,22 @@ class ps_mbo extends Module
             return false;
         }
 
-        $this->getAdminAuthenticationProvider()->deleteApiUser();
+        $this->getAdminAuthenticationProvider()->deletePossibleApiUser();
         $this->getAdminAuthenticationProvider()->clearCache();
 
-        $registrationLockFile = $this->moduleCacheDir . 'registration.lock';
-        if (file_exists($registrationLockFile)) {
-            unlink($registrationLockFile);
+        $lockFiles = ['registerShop', 'updateShop'];
+        foreach ($lockFiles as $lockFile) {
+            if (file_exists($this->moduleCacheDir . $lockFile . '.lock')) {
+                unlink($this->moduleCacheDir . $lockFile . '.lock');
+            }
         }
 
         foreach (array_keys($this->configurationList) as $name) {
             Configuration::deleteByName($name);
         }
+
+        // This will reset cached configuration values (uuid, mail, ...) to avoid reusing them
+        Config::resetConfigValues();
 
         /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = $this->get('event_dispatcher');
