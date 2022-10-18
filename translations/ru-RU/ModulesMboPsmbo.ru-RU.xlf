@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="ru" datatype="plaintext">
     <body>
       <trans-unit id="3b89e163ae0b446bd02e13de8dcf70d3">
         <source><![CDATA[For even more security on your website forms, consult our Security & Access modules category on the]]></source>
-        <target><![CDATA[Для еще большей безопасности форм вашего сайта, обратитесь к нашей категории модулей Security & Access:]]></target>
+        <target state="translated"><![CDATA[Для еще большей безопасности форм вашего сайта, обратитесь к нашей категории модулей Security & Access:]]></target>
         <note>Line: 124</note>
       </trans-unit>
       <trans-unit id="9d86b7d3c7427a887c6e182f75deb3e0">
         <source><![CDATA[https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security]]></source>
-        <target><![CDATA[https://addons.prestashop.com/ru/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-RU&utm_content=security]]></target>
+        <target state="translated"><![CDATA[https://addons.prestashop.com/ru/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-RU&utm_content=security]]></target>
         <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6">
         <source>PrestaShop Addons Marketplace</source>
-        <target>Магазин расширений PrestaShop Addons</target>
+        <target state="translated">Магазин расширений PrestaShop Addons</target>
         <note>Line: 140</note>
       </trans-unit>
       <trans-unit id="71f716ae5452ef886e40d36f14afed87">
         <source>Discover more modules to improve your shop on</source>
-        <target>Узнайте больше модулей для улучшения работы вашего магазина на</target>
+        <target state="translated">Узнайте больше модулей для улучшения работы вашего магазина на</target>
         <note>Line: 138</note>
       </trans-unit>
       <trans-unit id="198214f6abf95fc35f5f0fb3b70946a3">
         <source><![CDATA[https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></source>
-        <target><![CDATA[https://addons.prestashop.com/ru/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-RU]]></target>
+        <target state="translated"><![CDATA[https://addons.prestashop.com/ru/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-RU]]></target>
         <note>Line: 132</note>
       </trans-unit>
       <trans-unit id="f9baae88cd2cd24d7c8b13fd1906aab6">
         <source><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></source>
-        <target><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-RU]]></target>
+        <target state="translated"><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-RU]]></target>
         <note>Line: 139</note>
       </trans-unit>
     </body>
