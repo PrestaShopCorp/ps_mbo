@@ -7,6 +7,7 @@ pull_request_labels:
 files:
   - source: /translations/en-US/*.en-US.xlf
     translation: /translations/%locale%/%file_name%.%locale%.xlf
+    dest: %file_name%.xlf
     type: xliff
     translation_replace:
       "en-US.": ""
