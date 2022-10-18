@@ -5,8 +5,8 @@ pull_request_title: "Update translations for language : %language%"
 pull_request_labels:
   - translations
 files:
-  - source: /translations/*/*.xlf
-    translation: /translations/%locale%/%file_name%.%locale%.%file_extension%
+  - source: /translations/en-US/*.en-US.xlf
+    translation: /translations/%locale%/%file_name%.%locale%.xlf
     type: xliff
     translation_replace:
       "en-US.": ""
