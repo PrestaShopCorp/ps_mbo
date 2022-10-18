@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="de-DE" target-language="de-DE" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="de" datatype="plaintext">
     <body>
       <trans-unit id="3b89e163ae0b446bd02e13de8dcf70d3">
         <source><![CDATA[For even more security on your website forms, consult our Security & Access modules category on the]]></source>
-        <target>Weitere Module zur Datensicherheit finden Sie bei PrestaShop Addons im Bereich "Sicherheit und Berechtigungen":</target>
+        <target state="translated"><![CDATA[Weitere Module zur Datensicherheit finden Sie bei PrestaShop Addons im Bereich "Sicherheit und Berechtigungen":]]></target>
         <note>Line: 124</note>
       </trans-unit>
       <trans-unit id="9d86b7d3c7427a887c6e182f75deb3e0">
         <source><![CDATA[https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security]]></source>
-        <target><![CDATA[https://addons.prestashop.com/de/429-sicherheit-berechtigungen?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-DE&utm_content=security]]></target>
+        <target state="translated"><![CDATA[https://addons.prestashop.com/de/429-sicherheit-berechtigungen?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-DE&utm_content=security]]></target>
         <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6">
         <source>PrestaShop Addons Marketplace</source>
-        <target>PrestaShop Addons Marktplatz</target>
+        <target state="translated">PrestaShop Addons Marktplatz</target>
         <note>Line: 140</note>
       </trans-unit>
       <trans-unit id="71f716ae5452ef886e40d36f14afed87">
         <source>Discover more modules to improve your shop on</source>
-        <target>Entdecken Sie weitere Module zur Verbesserung Ihres Shops auf</target>
+        <target state="translated">Entdecken Sie weitere Module zur Verbesserung Ihres Shops auf</target>
         <note>Line: 138</note>
       </trans-unit>
       <trans-unit id="198214f6abf95fc35f5f0fb3b70946a3">
         <source><![CDATA[https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></source>
-        <target><![CDATA[https://addons.prestashop.com/de/517-blocks-reiter-banner?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-DE]]></target>
+        <target state="translated"><![CDATA[https://addons.prestashop.com/de/517-blocks-reiter-banner?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-DE]]></target>
         <note>Line: 132</note>
       </trans-unit>
       <trans-unit id="f9baae88cd2cd24d7c8b13fd1906aab6">
         <source><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></source>
-        <target><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-DE]]></target>
+        <target state="translated"><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-DE]]></target>
         <note>Line: 139</note>
       </trans-unit>
     </body>
