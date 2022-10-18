@@ -8,7 +8,7 @@ files:
   - source: /translations/en-US/*.xlf
     dest: module.php
     translation: /translations/%locale%/%original_file_name%
-    type: xlf
+    type: xliff
     labels:
       - ps_mbo
       - module
