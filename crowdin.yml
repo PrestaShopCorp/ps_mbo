@@ -9,4 +9,4 @@ files:
     translation: /translations/%locale%/%file_name%.%locale%.%file_extension%
     type: xliff
     translation_replace:
-      "en-US.": ""
+      "%locale%.": ""
