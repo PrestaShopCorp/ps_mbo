@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="pl-PL" target-language="pl-PL" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="pl" datatype="plaintext">
     <body>
       <trans-unit id="4b33fbf5ea2c4ced9800228574cfcc50">
         <source>Recommended Modules and Services</source>
-        <target>Zalecane moduły i usługi</target>
+        <target state="translated">Zalecane moduły i usługi</target>
         <note>Line: 194</note>
       </trans-unit>
     </body>
