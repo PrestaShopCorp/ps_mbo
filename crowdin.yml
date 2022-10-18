@@ -1,11 +1,11 @@
 preserve_hierarchy: false
 commit_message: 'fix: New (%language%) translations'
-append_commit_message: false 
+append_commit_message: false
 pull_request_title: "Update translations for language : %language%"
 pull_request_labels:
   - translations
 files:
-  - source: /translations/*/*.en-US.xlf
+  - source: /translations/*/*.xlf
     translation: /translations/%locale%/%file_name%.%locale%.%file_extension%
     type: xliff
     translation_replace:
