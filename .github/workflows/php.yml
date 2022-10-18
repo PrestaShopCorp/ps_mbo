@@ -83,3 +83,35 @@ jobs:
 
       - run: composer install
       - run: make phpunit
+
+  sync-translations:
+    name: Extract translations and submit a PR
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'translations_update')
+    steps:
+      - name: Checkout module-translation-tool
+        uses: actions/checkout@v2.0.0
+        with:
+          repository: PrestaShopCorp/module-translation-tool
+          ref: main
+      - name: Create env file for module-translation-tool
+        run: |
+          cp ./.env.dist ./.env
+          sed -i 's/^GITHUB_TOKEN.*/GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"/g' ./.env
+          echo "${{ secrets.GITHUB_TOKEN }}"
+          cat ./.env
+      - name: Create config for module-translation-tool
+        run: |
+          cp ./module.cfg.example ./module.cfg
+          sed -i 's/^MODULE_NAME.*/MODULE_NAME="ps_mbo"/g' ./module.cfg
+          sed -i 's/^GIT_REPO_USERNAME.*/GIT_REPO_USERNAME="PrestaShopCorp"/g' ./module.cfg
+          sed -i 's/^GIT_REPO_NAME.*/GIT_REPO_NAME="ps_mbo"/g' ./module.cfg
+          sed -i 's/^BRANCH.*/BRANCH="${{ github.base_ref }}"/g' ./module.cfg
+      - name: Setup git config
+        run: |
+          git config --global user.name "Github Actions - Module translation tool"
+          git config --global user.email "<>"
+          git config --global credential.helper 'cache --timeout 3600'
+      - run: composer install
+      - name: Extract translations and push
+        run: ./scripts/extractCatalogue.sh && ./scripts/pushAndCreatePullRequest.sh

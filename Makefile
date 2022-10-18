@@ -49,3 +49,11 @@ endif
 
 phpunit-cleanup:
 	-docker container rm -f test-phpunit
+
+# target: translations-export                                - Extract translations introduced in the branch nd make a Pull Request
+translations-export:
+	rm -rf module-translation-tool
+	git clone git@github.com:PrestaShopCorp/module-translation-tool.git
+	cd module-translation-tool && composer install
+	./module-translation-tool/scripts/extractCatalogue.sh && ./module-translation-tool/scripts/pushAndCreatePullRequest.sh
+	rm -rf module-translation-tool
