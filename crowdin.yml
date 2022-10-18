@@ -1,0 +1,14 @@
+preserve_hierarchy: true
+commit_message: 'fix: New (%language%) translations'
+append_commit_message: false
+pull_request_title: 'Update translations for language : (%language%)'
+pull_request_labels:
+  - translations
+files:
+  - source: /translations/en/*.xlf
+    dest: module.php
+    translation: /translations/%two_letters_code%/%original_file_name%
+    type: xlf
+    labels:
+      - ps_mbo
+      - module
