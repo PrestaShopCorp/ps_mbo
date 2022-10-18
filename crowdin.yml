@@ -11,5 +11,4 @@ files:
       en-US: "%locale%"
     type: xliff
     labels:
-      - ps_mbo
-      - module
+      - translations
