@@ -25,6 +25,7 @@ use Context;
 use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Promise\PromiseInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use ps_mbo;
 use stdClass;
@@ -217,6 +218,23 @@ class Client
         return $this->cacheProvider->fetch($cacheKey);
     }
 
+    /**
+     * Send a tracking to the API
+     * Send it asynchronously to avoid blocking process for this feature
+     *
+     * @param array $eventData
+     *
+     * @return PromiseInterface
+     */
+    public function trackEvent(array $eventData): PromiseInterface
+    {
+        return $this->processAsyncRequest(
+            self::HTTP_METHOD_POST,
+            'track-event',
+            ['form_params' => $eventData]
+        );
+    }
+
     private function mergeShopDataWithParams(array $params): array
     {
         return array_merge([
@@ -280,5 +298,28 @@ class Client
         return (string) $this->httpClient
             ->request($method, '/api/' . ltrim($uri, '/'), $options)
             ->getBody();
+    }
+
+    /**
+     * Process the request with the current parameters, given the $method, return the body as string
+     *
+     * @param string $method
+     * @param string $uri
+     * @param array $options
+     *
+     * @return PromiseInterface
+     */
+    private function processAsyncRequest(
+        string $method = self::HTTP_METHOD_GET,
+        string $uri = '',
+        array $options = []
+    ): PromiseInterface {
+        $options = array_merge($options, [
+            'query' => $this->queryParameters,
+            'headers' => $this->headers,
+        ]);
+
+        return $this->httpClient
+            ->requestAsync($method, '/api/' . ltrim($uri, '/'), $options);
     }
 }
