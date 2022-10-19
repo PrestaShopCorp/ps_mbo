@@ -72,7 +72,7 @@ jobs:
           GOOGLE_JSON_CRED: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
 
       - name: Setting up Bubble variable
-        run: echo "::set-output name=BULLE::$BULLE$(echo $LABELS > labels.json && cat labels.json | jq -r '.[]|.name'|grep prestabulle)"
+        run: echo "BULLE=$BULLE$(echo $LABELS > labels.json && cat labels.json | jq -r '.[]|.name'|grep prestabulle)" >> $GITHUB_OUTPUT
         id: get_bulle
 
       - name: Copy env files
