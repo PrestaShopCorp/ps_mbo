@@ -165,7 +165,10 @@ class ContextBuilder
         return $currency->iso_code;
     }
 
-    private function getInstalledModules(): array
+    /**
+     * @return array<InstalledModule>
+     */
+    public function getInstalledModules(): array
     {
         $cacheKey = $this->getCacheKey();
 
