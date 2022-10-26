@@ -66,9 +66,18 @@ final class Applier
      */
     private function canBeApplied(Config $config, string $psVersion, string $mboVersion): bool
     {
-        return $psVersion === $config->getPsVersion() && $mboVersion === $config->getMboVersion();
+        return $psVersion === $config->getPsVersion() &&
+            $mboVersion === $config->getMboVersion() &&
+            true !== $config->isApplied();
     }
 
+    /**
+     * @param Config $config
+     *
+     * @return bool|void
+     *
+     * @throws InvalidConfigException
+     */
     private function applyConfig(Config $config)
     {
         $applier = $this->appliersFactory->get($config->getConfigKey());
@@ -77,6 +86,15 @@ final class Applier
             return true;
         }
 
-        return $applier->apply($config);
+        if ($applier->apply($config) && null !== $config->getConfigId()) {
+            $sql = [];
+            $sql[] = 'UPDATE `' . _DB_PREFIX_ . 'mbo_api_config` SET `applied` = 1 WHERE `id_mbo_api_config`=' . $config->getConfigId();
+
+            foreach ($sql as $query) {
+                if (Db::getInstance()->execute($query) == false) {
+                    throw new QueryException($this->db->getMsgError());
+                }
+            }
+        }
     }
 }
