@@ -2,8 +2,12 @@
 
 use PrestaShop\Module\Mbo\Api\Config\Config;
 use PrestaShop\Module\Mbo\Api\Controller\AbstractAdminApiController;
+use PrestaShop\Module\Mbo\Api\Exception\IncompleteSignatureParamsException;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
+use PrestaShop\Module\Mbo\Api\Exception\RetrieveNewKeyException;
+use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
+use Tools;
 
 /**
  * This controller is responsible to execute actions on modules installed on the current shop.
@@ -46,6 +50,37 @@ class apiPsMboController extends AbstractAdminApiController
             'module_status' => $module->getStatus(),
             'version' => $module->get('version'),
             'config_url' => $configUrl,
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function buildSignatureMessage(): string
+    {
+        // Payload elements
+        $action = Tools::getValue('action');
+        $module = Tools::getValue('module');
+        $adminToken = Tools::getValue('admin_token');
+        $actionUuid = Tools::getValue('action_uuid');
+
+        if (
+            !$action ||
+            !$module ||
+            !$adminToken ||
+            !$actionUuid
+        ) {
+            throw new IncompleteSignatureParamsException('Expected signature elements are not given');
+        }
+
+        $keyVersion = Tools::getValue('version');
+
+        return json_encode([
+            'action' => $action,
+            'module' => $module,
+            'admin_token' => $adminToken,
+            'action_uuid' => $actionUuid,
+            'version' => $keyVersion,
         ]);
     }
 

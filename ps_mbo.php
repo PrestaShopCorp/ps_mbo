@@ -138,6 +138,8 @@ class ps_mbo extends Module
         }
 
         if (parent::install() && $this->registerHook($this->getHooksNames())) {
+            $this->installTables();
+
             // Do come extra operations on modules' registration like modifying orders
             $this->installHooks();
 
@@ -175,6 +177,8 @@ class ps_mbo extends Module
 
         // This will reset cached configuration values (uuid, mail, ...) to avoid reusing them
         Config::resetConfigValues();
+
+        $this->uninstallTables();
 
         /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = $this->get('event_dispatcher');
@@ -370,6 +374,42 @@ class ps_mbo extends Module
     private function getModuleEnv(?string $default = null): string
     {
         return getenv($this->getModuleEnvVar()) ?: $default ?: self::DEFAULT_ENV;
+    }
+
+    private function installTables(): bool
+    {
+        $sqlQueries = [];
+        $sqlQueries[] = ' CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'mbo_api_config` (
+            `id_mbo_api_config` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+            `config_key` varchar(255) NULL,
+            `config_value` varchar(255) NULL,
+            `ps_version` varchar(255) NULL,
+            `mbo_version` varchar(255) NULL,
+            `applied` TINYINT(1) NOT NULL DEFAULT \'0\',
+            `date_add` datetime NOT NULL,
+            PRIMARY KEY (`id_mbo_api_config`)
+        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=UTF8;';
+
+        foreach ($sqlQueries as $query) {
+            if (!Db::getInstance()->execute($query)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function uninstallTables(): bool
+    {
+        $sqlQueries[] = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'mbo_api_config`';
+
+        foreach ($sqlQueries as $query) {
+            if (!Db::getInstance()->execute($query)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function getAccountsDataProvider(): AccountsDataProvider

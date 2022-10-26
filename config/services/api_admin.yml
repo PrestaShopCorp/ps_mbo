@@ -1,3 +1,4 @@
 imports:
   - { resource: modules.yml }
   - { resource: api/modules.yml }
+  - { resource: api/distribution.yml }
