@@ -4,7 +4,6 @@ namespace PrestaShop\Module\Mbo\Distribution\Config\Appliers;
 
 use PrestaShop\Module\Mbo\Distribution\Config\Config;
 use PrestaShop\Module\Mbo\Distribution\Config\Exception\InvalidConfigException;
-use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
 use Tab;
 use Validate;
 
@@ -15,6 +14,9 @@ class ThemeCatalogMenuConfigApplier implements ConfigApplierInterface
         return $configKey === 'theme_catalog_menu_link';
     }
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function apply(Config $config): bool
     {
         $themeCatalogMenu = $this->getThemeCatalogMenu();

@@ -23,6 +23,8 @@ namespace PrestaShop\Module\Mbo\Addons\Subscriber;
 
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Distribution\Client;
+use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
+use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
@@ -62,13 +64,25 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
      */
     private $adminAuthenticationProvider;
 
+    /**
+     * @var VersionChangeApplyConfigCommandHandler
+     */
+    private $versionChangeApplyConfigCommandHandler;
+
+    /**
+     * @var ModuleRepository
+     */
+    private $coreModuleRepository;
+
     public function __construct(
         LoggerInterface $logger,
         Repository $moduleRepository,
         TabCollectionProviderInterface $tabCollectionProvider,
         ContextBuilder $contextBuilder,
         Client $distributionClient,
-        AdminAuthenticationProvider $adminAuthenticationProvider
+        AdminAuthenticationProvider $adminAuthenticationProvider,
+        ContextBuilder $contextBuilder,
+        VersionChangeApplyConfigCommandHandler $versionChangeApplyConfigCommandHandler
     ) {
         $this->logger = $logger;
         $this->moduleRepository = $moduleRepository;
@@ -76,6 +90,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         $this->contextBuilder = $contextBuilder;
         $this->distributionClient = $distributionClient;
         $this->adminAuthenticationProvider = $adminAuthenticationProvider;
+        $this->versionChangeApplyConfigCommandHandler = $versionChangeApplyConfigCommandHandler;
     }
 
     public static function getSubscribedEvents(): array
@@ -164,6 +179,15 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
     public function onUpgrade(ModuleManagementEvent $event): void
     {
         $this->logEvent(ModuleManagementEvent::UPGRADE, $event);
+
+        if ('ps_mbo' === $event->getModule()->get('name')) {
+            $command = new VersionChangeApplyConfigCommand(
+                _PS_VERSION_,
+                $event->getModule()->disk->get('version')
+            );
+        }
+
+        $configCollection = $this->versionChangeApplyConfigCommandHandler->handle($command);
     }
 
     public function onReset(ModuleManagementEvent $event): void

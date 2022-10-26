@@ -19,33 +19,47 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Distribution\Config\CommandHandler;
+namespace PrestaShop\Module\Mbo\Distribution\Config\Command;
 
-use PrestaShop\Module\Mbo\Distribution\Config\Applier;
-use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
-use PrestaShop\Module\Mbo\Distribution\Config\Factory;
-
-final class ConfigChangeCommandHandler
+class VersionChangeApplyConfigCommand
 {
     /**
-     * @var Factory
+     * This is the current PS version in the instance. May be just upgraded.
+     *
+     * @var string
      */
-    private $configFactory;
+    private $psVersion;
 
     /**
-     * @var Applier
+     * This is the current MBO module version in the instance. May be just upgraded.
+     *
+     * @var string
      */
-    private $configApplier;
+    private $mboVersion;
 
-    public function __construct(Factory $configFactory, Applier $configApplier)
+    /**
+     * @param string $psVersion
+     * @param string $mboVersion
+     */
+    public function __construct(string $psVersion, string $mboVersion)
     {
-        $this->configFactory = $configFactory;
-        $this->configApplier = $configApplier;
+        $this->psVersion = $psVersion;
+        $this->mboVersion = $mboVersion;
     }
 
-    public function handle(ConfigChangeCommand $command): void
+    /**
+     * @return string
+     */
+    public function getPsVersion(): string
     {
-        $collection = $this->configFactory->buildAndSave($command->getConfig());
-        $this->configApplier->apply($collection, $command->getPsVersion(), $command->getMboVersion());
+        return $this->psVersion;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMboVersion(): string
+    {
+        return $this->mboVersion;
     }
 }

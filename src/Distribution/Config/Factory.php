@@ -67,7 +67,7 @@ final class Factory
             throw new CannotSaveConfigException('Unable to save the config given.');
         }
 
-        return $collection;
+        return $this->getCollectionFromDB();
     }
 
     private function assertConfigIsValid(array $config): bool
@@ -106,7 +106,9 @@ final class Factory
                 $singleConfig['config_key'],
                 $singleConfig['config_value'],
                 $singleConfig['ps_version'],
-                $singleConfig['mbo_version']
+                $singleConfig['mbo_version'],
+                isset($singleConfig['applied']) ? (bool) $singleConfig['applied'] : false,
+                isset($singleConfig['id_mbo_api_config']) ? (int) $singleConfig['id_mbo_api_config'] : null
             );
         }
 
@@ -117,14 +119,15 @@ final class Factory
      * @throws PrestaShopDatabaseException
      * @throws InvalidConfigException
      */
-    private function getCollectionFromDB(): array
+    public function getCollectionFromDB(): array
     {
         $query = 'SELECT
            `id_mbo_api_config`,
            `config_key`,
            `config_value`,
            `ps_version`,
-           `mbo_version`
+           `mbo_version`,
+           `applied`
         FROM ' . _DB_PREFIX_ . 'mbo_api_config';
 
         /** @var array $results */
@@ -155,17 +158,18 @@ final class Factory
         }
 
         $dateAdd = time();
-        $sql = "INSERT INTO `" . _DB_PREFIX_ . "mbo_api_config`(`config_key`,`config_value`,`ps_version`,`mbo_version`,`date_add`) VALUES ";
+        $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'mbo_api_config`(`config_key`,`config_value`,`ps_version`,`mbo_version`,`applied`,`date_add`) VALUES ';
         /**
          * @var Config $config
          */
         foreach ($collection as $config) {
             $sql .= sprintf(
-                "('%s', '%s', '%s', '%s', '%s'),",
+                "('%s', '%s', '%s', '%s', '%d', '%s'),",
                 $config->getConfigKey(),
                 $config->getConfigValue(),
                 $config->getPsVersion(),
                 $config->getMboVersion(),
+                $config->isApplied(),
                 $dateAdd
             );
         }

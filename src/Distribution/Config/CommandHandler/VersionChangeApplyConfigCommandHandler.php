@@ -22,10 +22,10 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Distribution\Config\CommandHandler;
 
 use PrestaShop\Module\Mbo\Distribution\Config\Applier;
-use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
+use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\Factory;
 
-final class ConfigChangeCommandHandler
+class VersionChangeApplyConfigCommandHandler
 {
     /**
      * @var Factory
@@ -43,9 +43,9 @@ final class ConfigChangeCommandHandler
         $this->configApplier = $configApplier;
     }
 
-    public function handle(ConfigChangeCommand $command): void
+    public function handle(VersionChangeApplyConfigCommand $command): void
     {
-        $collection = $this->configFactory->buildAndSave($command->getConfig());
+        $collection = $this->configFactory->getCollectionFromDB();
         $this->configApplier->apply($collection, $command->getPsVersion(), $command->getMboVersion());
     }
 }

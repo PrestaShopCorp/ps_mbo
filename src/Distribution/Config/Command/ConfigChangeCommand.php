@@ -89,4 +89,3 @@ class ConfigChangeCommand
         return $this->mboVersion;
     }
 }
-

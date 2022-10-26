@@ -36,6 +36,11 @@ class Config
     ];
 
     /**
+     * @var int|null
+     */
+    private $configId;
+
+    /**
      * @var string
      */
     private $configKey;
@@ -56,55 +61,62 @@ class Config
     private $mboVersion;
 
     /**
+     * @var bool
+     */
+    private $applied;
+
+    /**
      * @throws InvalidConfigException
      */
     public function __construct(
         string $configKey,
         string $configValue,
         string $psVersion,
-        string $mboVersion
+        string $mboVersion,
+        bool $applied,
+        ?int $configId = null
     ) {
         $this->assertConfigKeyIsValid($configKey);
         $this->assertConfigValueIsValid($configKey, $configValue);
         $this->assertPsVersionIsValid($psVersion);
         $this->assertMboVersionIsValid($mboVersion);
 
+        $this->configId = $configId;
         $this->configKey = $configKey;
         $this->configValue = $configValue;
         $this->psVersion = $psVersion;
         $this->mboVersion = $mboVersion;
+        $this->applied = $applied;
     }
 
-    /**
-     * @return string
-     */
+    public function getConfigId(): ?int
+    {
+        return $this->configId;
+    }
+
     public function getConfigKey(): string
     {
         return $this->configKey;
     }
 
-    /**
-     * @return string
-     */
     public function getConfigValue(): string
     {
         return $this->configValue;
     }
 
-    /**
-     * @return string
-     */
     public function getPsVersion(): string
     {
         return $this->psVersion;
     }
 
-    /**
-     * @return string
-     */
     public function getMboVersion(): string
     {
         return $this->mboVersion;
+    }
+
+    public function isApplied(): bool
+    {
+        return $this->applied;
     }
 
     private function assertConfigKeyIsValid(string $configKey)

@@ -22,10 +22,14 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Distribution\Config\Appliers;
 
 use PrestaShop\Module\Mbo\Distribution\Config\Config;
+use PrestaShop\Module\Mbo\Distribution\Config\Exception\InvalidConfigException;
 
 interface ConfigApplierInterface
 {
     public function supports(string $configKey): bool;
 
+    /**
+     * @throws InvalidConfigException
+     */
     public function apply(Config $config): bool;
 }
