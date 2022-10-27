@@ -25,6 +25,7 @@ use Configuration;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Distribution\Client;
+use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
 use Ramsey\Uuid\Uuid;
 use Shop;
 
@@ -42,6 +43,7 @@ trait HaveShopOnExternalService
         // Furthermore, this make a check and ensure existence in case of accidental removal
         $this->installConfiguration();
         $this->callServiceWithLockFile('registerShop');
+        $this->syncApiConfig();
     }
 
     /**
@@ -130,6 +132,7 @@ trait HaveShopOnExternalService
         $adminUuid = Uuid::uuid4()->toString();
         $this->configurationList['PS_MBO_SHOP_ADMIN_UUID'] = $adminUuid;
         $this->configurationList['PS_MBO_SHOP_ADMIN_MAIL'] = sprintf('mbo-%s@prestashop.com', $adminUuid);
+        $this->configurationList['PS_MBO_LAST_PS_VERSION_API_CONFIG'] = _PS_VERSION_;
 
         foreach (Shop::getShops(false, null, true) as $shopId) {
             foreach ($this->configurationList as $name => $value) {
@@ -146,5 +149,30 @@ trait HaveShopOnExternalService
         }
 
         return $result;
+    }
+
+    private function syncApiConfig()
+    {return;
+        if (file_exists($this->moduleCacheDir . 'registerShop.lock')) {
+            // The shop is not registered yet, do nothing
+            return;
+        }
+
+        /** @var Client $distributionApi */
+        $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
+
+        // Add the default params
+        $params = array_merge($params, [
+            'mbo_api_user_token' => $this->getAdminAuthenticationProvider()->getAdminToken(),
+        ]);
+        $distributionApi->setBearer($this->getAdminAuthenticationProvider()->getMboJWT());
+        $apiConfig = $distributionApi->getApiConf();
+
+        if (empty($apiConfig) || empty($apiConfig->config)) {
+            return;
+        }
+
+        $command = new ConfigChangeCommand($apiConfig->config, _PS_VERSION_, $this->version);
+        $configCollection = $this->getService('mbo.distribution.api_config_change_handler')->handle($command);
     }
 }

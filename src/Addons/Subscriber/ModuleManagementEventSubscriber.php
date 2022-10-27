@@ -185,9 +185,9 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
                 _PS_VERSION_,
                 $event->getModule()->disk->get('version')
             );
-        }
 
-        $configCollection = $this->versionChangeApplyConfigCommandHandler->handle($command);
+            $configCollection = $this->versionChangeApplyConfigCommandHandler->handle($command);
+        }
     }
 
     public function onReset(ModuleManagementEvent $event): void

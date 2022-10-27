@@ -49,7 +49,7 @@ class Config
     public static function getShopMboUuid(): ?string
     {
         if (null === self::$SHOP_MBO_UUID) {
-            // PS_MBO_SHOP_ADMIN_UUID have the save value for all shops
+            // PS_MBO_SHOP_ADMIN_UUID have the same value for all shops
             // to prevent errors in a multishop context,
             // we request the shops list and get the config value for the 1st one
             $singleShop = self::getSingleShop();
@@ -69,7 +69,7 @@ class Config
     public static function getShopMboAdminMail(): ?string
     {
         if (null === self::$SHOP_MBO_ADMIN_MAIL) {
-            // PS_MBO_SHOP_ADMIN_ADMIN_MAIL have the save value for all shops
+            // PS_MBO_SHOP_ADMIN_ADMIN_MAIL have the same value for all shops
             // to prevent errors in a multishop context,
             // we request the shops list and get the config value for the 1st one
             $singleShop = self::getSingleShop();
@@ -127,6 +127,21 @@ class Config
             null,
             $singleShop->id_shop_group,
             $singleShop->id
+        );
+    }
+    public static function getLastPsVersionApiConfig(): ?string
+    {
+        // PS_MBO_LAST_PS_VERSION_API_CONFIG have the same value for all shops
+        // to prevent errors in a multishop context,
+        // we request the shops list and get the config value for the 1st one
+        $singleShop = self::getSingleShop();
+
+        return Configuration::get(
+            'PS_MBO_LAST_PS_VERSION_API_CONFIG',
+            null,
+            $singleShop->id_shop_group,
+            $singleShop->id,
+            null
         );
     }
 

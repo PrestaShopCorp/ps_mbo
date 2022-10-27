@@ -22,7 +22,10 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Cache;
+use Configuration;
 use Context;
+use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
+use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use Tools;
 
@@ -45,6 +48,7 @@ trait UseActionDispatcherBefore
         ])) {
             $this->ensureShopIsRegistered();
             $this->ensureShopIsUpdated();
+            $this->ensureApiConfigIsApplied();
         }
 
         $this->ensureApiUserExistAndIsLogged($controllerName, $params);
@@ -64,6 +68,35 @@ trait UseActionDispatcherBefore
             return;
         }
         $this->updateShop();
+    }
+
+    private function ensureApiConfigIsApplied(): void
+    {
+        $cacheProvider = $this->get('doctrine.cache.provider');
+        $cacheKey = 'mbo_last_ps_version_api_config_check';
+
+        if ($cacheProvider->contains($cacheKey)) {
+            $lastCheck = $cacheProvider->fetch($cacheKey);
+
+            $timeSinceLastCheck = (strtotime('now') - strtotime($lastCheck)) / (60*60);
+            if ($timeSinceLastCheck < 3) { // If last check happened lss than 3hrs, do nothing
+                return;
+            }
+        }
+
+        if (_PS_VERSION_ === Config::getLastPsVersionApiConfig()) {
+            // Config already applied for this version of PS
+            return;
+        }
+
+        // Apply the config for the new PS version
+        $command = new VersionChangeApplyConfigCommand(_PS_VERSION_, $this->version);
+        $configCollection = $this->get('mbo.distribution.api_version_change_config_apply_handler')->handle($command);
+
+        // Update the PS_MBO_LAST_PS_VERSION_API_CONFIG
+        Configuration::updateValue('PS_MBO_LAST_PS_VERSION_API_CONFIG', _PS_VERSION_);
+
+        $cacheProvider->save($cacheKey, (new \DateTime())->format('Y-m-d H:i:s'), 0);
     }
 
     /**

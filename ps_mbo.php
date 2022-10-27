@@ -66,6 +66,7 @@ class ps_mbo extends Module
     public $configurationList = [
         'PS_MBO_SHOP_ADMIN_UUID' => '', // 'ADMIN' because there will be only one for all shops in a multishop context
         'PS_MBO_SHOP_ADMIN_MAIL' => '',
+        'PS_MBO_LAST_PS_VERSION_API_CONFIG' => '',
     ];
 
     /**
