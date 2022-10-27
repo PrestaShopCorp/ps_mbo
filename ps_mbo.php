@@ -139,14 +139,14 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '2.0.2';
+        $this->version = '2.0.3';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
             'min' => '1.7.5.0',
-            'max' => _PS_VERSION_,
+            'max' => '8.0.0',
         ];
 
         parent::__construct();
@@ -310,6 +310,13 @@ class ps_mbo extends Module
      */
     public function hookActionAdminControllerSetMedia()
     {
+        if (strpos(_PS_VERSION_, '8') === 0) {
+            if (Tools::getValue('controller') === 'AdminDashboard') {
+                $this->context->controller->addCSS($this->getPathUri() . 'views/css/push-new-version-legacy.css');
+            }
+
+            return;
+        }
         // has to be loaded in header to prevent flash of content
         $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
 
@@ -338,6 +345,17 @@ class ps_mbo extends Module
      */
     public function hookDisplayDashboardTop()
     {
+        if (strpos(_PS_VERSION_, '8') === 0) {
+            if (Tools::getValue('controller') === 'AdminDashboard') {
+                $this->smarty->assign([
+                    'newVesionUrl' => 'https://prestashop.com/edition',
+                ]);
+
+                return $this->fetch('module:ps_mbo/views/templates/hook/push-new-version-legacy.tpl');
+            }
+
+            return '';
+        }
         /** @var UrlGeneratorInterface $router */
         $router = $this->get('router');
 

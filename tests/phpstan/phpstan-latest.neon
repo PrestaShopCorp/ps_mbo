@@ -6,6 +6,5 @@ parameters:
 	dynamicConstantNames:
 		- _PS_VERSION_
 	ignoreErrors:
-		- '#Parameter \#1 \$idProfile of static method ProfileCore::getProfileAccess\(\) expects int, string given.#'
 
 	level: 5
