@@ -138,9 +138,8 @@ class ps_mbo extends Module
             // For now, do nothing
         }
 
+        $this->installTables();
         if (parent::install() && $this->registerHook($this->getHooksNames())) {
-            $this->installTables();
-
             // Do come extra operations on modules' registration like modifying orders
             $this->installHooks();
 
@@ -149,6 +148,9 @@ class ps_mbo extends Module
 
             return true;
         }
+
+        // If installation fails, we remove the tables previously created
+        $this->uninstallTables();
 
         return false;
     }

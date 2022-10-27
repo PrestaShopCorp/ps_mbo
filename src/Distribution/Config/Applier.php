@@ -66,24 +66,22 @@ final class Applier
      */
     private function canBeApplied(Config $config, string $psVersion, string $mboVersion): bool
     {
-        return $psVersion === $config->getPsVersion() &&
-            $mboVersion === $config->getMboVersion() &&
+        return version_compare($psVersion, $config->getPsVersion(), '==') &&
+            version_compare($mboVersion, $config->getMboVersion(), '==') &&
             true !== $config->isApplied();
     }
 
     /**
      * @param Config $config
      *
-     * @return bool|void
-     *
      * @throws InvalidConfigException
      */
-    private function applyConfig(Config $config)
+    private function applyConfig(Config $config): void
     {
         $applier = $this->appliersFactory->get($config->getConfigKey());
 
         if (null === $applier) {
-            return true;
+            return;
         }
 
         if ($applier->apply($config) && null !== $config->getConfigId()) {

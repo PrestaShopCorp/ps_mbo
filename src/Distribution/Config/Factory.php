@@ -157,7 +157,7 @@ final class Factory
             return true;
         }
 
-        $dateAdd = time();
+        $dateAdd = (new \DateTime())->format('Y-m-d H:i:s');
         $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'mbo_api_config`(`config_key`,`config_value`,`ps_version`,`mbo_version`,`applied`,`date_add`) VALUES ';
         /**
          * @var Config $config

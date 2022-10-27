@@ -78,7 +78,7 @@ trait UseActionDispatcherBefore
         if ($cacheProvider->contains($cacheKey)) {
             $lastCheck = $cacheProvider->fetch($cacheKey);
 
-            $timeSinceLastCheck = (strtotime('now') - strtotime($lastCheck)) / (60*60);
+            $timeSinceLastCheck = (strtotime('now') - strtotime($lastCheck)) / (60 * 60);
             if ($timeSinceLastCheck < 3) { // If last check happened lss than 3hrs, do nothing
                 return;
             }
