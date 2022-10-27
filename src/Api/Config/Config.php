@@ -39,6 +39,7 @@ class Config
         self::RETRIEVE_NEW_KEY_ERROR_CODE => 'Failed to retrieve key',
     ];
 
+    const API_CONFIG = 'api_config';
     const MODULE_ACTIONS = 'module_actions';
     const SECURITY_ME = 'security_me';
 }

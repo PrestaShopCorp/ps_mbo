@@ -21,20 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Distribution\Config;
 
-use PrestaShop\Module\Mbo\Distribution\Config\Exception\InvalidConfigException;
-
 class Config
 {
-    private const AVAILABLE_CONFIG_KEYS = [
-        'menu_test',
-        'theme_catalog_menu_link',
-    ];
-
-    private const AVAILABLE_CONFIG_VALUES = [
-        'menu_test' => ['hide', 'show'],
-        'theme_catalog_menu_link' => ['hide', 'show'],
-    ];
-
     /**
      * @var int|null
      */
@@ -65,9 +53,6 @@ class Config
      */
     private $applied;
 
-    /**
-     * @throws InvalidConfigException
-     */
     public function __construct(
         string $configKey,
         string $configValue,
@@ -76,11 +61,6 @@ class Config
         bool $applied,
         ?int $configId = null
     ) {
-        $this->assertConfigKeyIsValid($configKey);
-        $this->assertConfigValueIsValid($configKey, $configValue);
-        $this->assertPsVersionIsValid($psVersion);
-        $this->assertMboVersionIsValid($mboVersion);
-
         $this->configId = $configId;
         $this->configKey = $configKey;
         $this->configValue = $configValue;
@@ -117,32 +97,5 @@ class Config
     public function isApplied(): bool
     {
         return $this->applied;
-    }
-
-    private function assertConfigKeyIsValid(string $configKey)
-    {
-        if (!in_array($configKey, self::AVAILABLE_CONFIG_KEYS)) {
-            throw new InvalidConfigException();
-        }
-    }
-
-    private function assertConfigValueIsValid(string $configKey, string $configValue)
-    {
-        if (
-            isset(self::AVAILABLE_CONFIG_VALUES[$configKey])
-            && !in_array($configValue, self::AVAILABLE_CONFIG_VALUES[$configKey])
-        ) {
-            throw new InvalidConfigException();
-        }
-    }
-
-    private function assertPsVersionIsValid(string $configKey)
-    {
-        // No validation yet
-    }
-
-    private function assertMboVersionIsValid(string $configKey)
-    {
-        // No validation yet
     }
 }

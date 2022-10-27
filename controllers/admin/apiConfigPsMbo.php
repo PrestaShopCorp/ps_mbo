@@ -20,14 +20,15 @@
 use PrestaShop\Module\Mbo\Api\Config\Config;
 use PrestaShop\Module\Mbo\Api\Controller\AbstractAdminApiController;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
+use PrestaShop\Module\Mbo\Distribution\Config\Exception\InvalidConfigException;
 
 /**
- * This controller is responsible to execute actions on modules installed on the current shop.
+ * This controller is responsible to receive api config, save it and apply modifications needed.
  * Caller have to be fully authenticated to perform actions given.
  */
 class apiConfigPsMboController extends AbstractAdminApiController
 {
-    public $type = Config::MODULE_ACTIONS;
+    public $type = Config::API_CONFIG;
 
     /**
      * @return void
@@ -35,8 +36,18 @@ class apiConfigPsMboController extends AbstractAdminApiController
     public function postProcess()
     {
         try {
+            try {
+                $config = json_decode(Tools::getValue('conf'), true);
+            } catch (\JsonException $exception) {
+                throw new InvalidConfigException($exception->getMessage());
+            }
+
+            if ($config === null && json_last_error() !== JSON_ERROR_NONE) {
+                throw new InvalidConfigException('Config given is invalid. Please check the structure.');
+            }
+
             $command = new ConfigChangeCommand(
-                Tools::getValue('config'),
+                $config,
                 _PS_VERSION_,
                 $this->module->version
             );

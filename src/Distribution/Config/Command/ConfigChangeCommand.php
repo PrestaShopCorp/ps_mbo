@@ -21,8 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Distribution\Config\Command;
 
-use PrestaShop\Module\Mbo\Distribution\Config\Exception\InvalidConfigException;
-
 class ConfigChangeCommand
 {
     /**
@@ -45,22 +43,13 @@ class ConfigChangeCommand
     private $mboVersion;
 
     /**
-     * @param string $config
+     * @param array $config
      * @param string $psVersion
      * @param string $mboVersion
      */
-    public function __construct(string $config, string $psVersion, string $mboVersion)
+    public function __construct(array $config, string $psVersion, string $mboVersion)
     {
-        try {
-            $this->config = json_decode($config, true);
-        } catch (\JsonException $exception) {
-            throw new InvalidConfigException($exception->getMessage());
-        }
-
-        if ($this->config === null && json_last_error() !== JSON_ERROR_NONE) {
-            throw new InvalidConfigException('Config given is invalid. Please check the structure.');
-        }
-
+        $this->config = $config;
         $this->psVersion = $psVersion;
         $this->mboVersion = $mboVersion;
     }

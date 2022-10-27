@@ -216,24 +216,18 @@ class Client
 
         return $this->cacheProvider->fetch($cacheKey);
     }
+
     /**
-     * Register new Shop on Distribution API.
+     * Retrieve API config from Distribution API.
      *
-     * @param array $params
-     *
-     * @return stdClass
+     * @return array
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::registerShop
      */
-    public function getApiConf(array $params = []): stdClass
+    public function getApiConf(): array
     {
-        return $this->processRequestAndReturn(
-            'shops/conf/' . Config::getShopMboUuid(),
-            null,
-            self::HTTP_METHOD_GET,
-            ['form_params' => $this->mergeShopDataWithParams($params)]
-        );
+        return $this->processRequestAndReturn('shops/conf-mbo');
     }
 
     /**

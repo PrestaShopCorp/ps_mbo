@@ -129,6 +129,7 @@ class Config
             $singleShop->id
         );
     }
+
     public static function getLastPsVersionApiConfig(): ?string
     {
         // PS_MBO_LAST_PS_VERSION_API_CONFIG have the same value for all shops

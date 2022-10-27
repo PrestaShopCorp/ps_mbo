@@ -152,7 +152,7 @@ trait HaveShopOnExternalService
     }
 
     private function syncApiConfig()
-    {return;
+    {
         if (file_exists($this->moduleCacheDir . 'registerShop.lock')) {
             // The shop is not registered yet, do nothing
             return;
@@ -161,18 +161,17 @@ trait HaveShopOnExternalService
         /** @var Client $distributionApi */
         $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
 
-        // Add the default params
-        $params = array_merge($params, [
-            'mbo_api_user_token' => $this->getAdminAuthenticationProvider()->getAdminToken(),
-        ]);
         $distributionApi->setBearer($this->getAdminAuthenticationProvider()->getMboJWT());
-        $apiConfig = $distributionApi->getApiConf();
+        $config = $distributionApi->getApiConf();
 
-        if (empty($apiConfig) || empty($apiConfig->config)) {
+        if (empty($config)) {
             return;
         }
 
-        $command = new ConfigChangeCommand($apiConfig->config, _PS_VERSION_, $this->version);
+        // We need that conversion to ensure we have an array instead of stdClass
+        $config = json_decode(json_encode($config), true);
+
+        $command = new ConfigChangeCommand($config, _PS_VERSION_, $this->version);
         $configCollection = $this->getService('mbo.distribution.api_config_change_handler')->handle($command);
     }
 }
