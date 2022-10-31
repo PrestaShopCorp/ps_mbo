@@ -25,7 +25,7 @@ use Context;
 use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Promise\PromiseInterface;
+use PrestaShop\Module\Mbo\Helpers\AsyncClient;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use ps_mbo;
 use stdClass;
@@ -224,15 +224,17 @@ class Client
      *
      * @param array $eventData
      *
-     * @return PromiseInterface
+     * @return bool
      */
-    public function trackEvent(array $eventData): PromiseInterface
+    public function trackEvent(array $eventData)
     {
-        return $this->processAsyncRequest(
-            self::HTTP_METHOD_POST,
-            'track-event',
-            ['form_params' => $eventData]
-        );
+//        return $this->processRequestAndReturn(
+//            'shops/events',
+//            null,
+//            self::HTTP_METHOD_POST,
+//            ['form_params' => $eventData]
+//        );
+        return $this->processAsyncRequest('shops/events', $eventData);
     }
 
     private function mergeShopDataWithParams(array $params): array
@@ -301,25 +303,30 @@ class Client
     }
 
     /**
-     * Process the request with the current parameters, given the $method, return the body as string
+     * Process a custom async request
      *
-     * @param string $method
      * @param string $uri
-     * @param array $options
+     * @param array $data
+     * @param string $method
      *
-     * @return PromiseInterface
+     * @return bool
      */
     private function processAsyncRequest(
-        string $method = self::HTTP_METHOD_GET,
         string $uri = '',
-        array $options = []
-    ): PromiseInterface {
-        $options = array_merge($options, [
-            'query' => $this->queryParameters,
-            'headers' => $this->headers,
-        ]);
+        array $data = [],
+        string $method = self::HTTP_METHOD_POST
+    ): bool {
+        $uri = rtrim(getenv('DISTRIBUTION_API_URL'), '/') . '/api/' . ltrim($uri, '/');
+        if (!empty($this->queryParameters)) {
+            $uri .= '?' . http_build_query($this->queryParameters);
+        }
 
-        return $this->httpClient
-            ->requestAsync($method, '/api/' . ltrim($uri, '/'), $options);
+        // Build headers for async request
+        $headers = [];
+        foreach ($this->headers as $key => $value) {
+            $headers[] = $key . ': ' . $value;
+        }
+
+        return AsyncClient::request($uri, $data, $headers, $method);
     }
 }

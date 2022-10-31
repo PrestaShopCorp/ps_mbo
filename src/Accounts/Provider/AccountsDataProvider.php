@@ -73,6 +73,13 @@ class AccountsDataProvider
         return $this->getAccountsService()->getShopUuid() ?? null;
     }
 
+    public function getAccountsUserId(): ?string
+    {
+        $userUuid = $this->getAccountsService()->getUserUuid();
+
+        return $userUuid ? $userUuid : null;
+    }
+
     private function isAccountLinked(): bool
     {
         try {

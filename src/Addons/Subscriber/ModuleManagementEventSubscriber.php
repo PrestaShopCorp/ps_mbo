@@ -189,8 +189,10 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         $data['modules'] = array_map(function ($module) {
             return $module['name'];
         }, $this->contextBuilder->getInstalledModules());
-        $data['user_id'] = $this->accountsDataProvider->getAccountsToken();
+        $data['user_id'] = $this->accountsDataProvider->getAccountsUserId();
         $data['shop_id'] = $this->accountsDataProvider->getAccountsShopId();
+        $data['iso_lang'] = $this->contextBuilder->getLanguage()->getIsoCode();
+        $data['iso_code'] = $this->contextBuilder->getCountry()->iso_code;
 
         $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
         $this->distributionClient->trackEvent($data);

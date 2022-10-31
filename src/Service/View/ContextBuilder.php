@@ -144,12 +144,12 @@ class ContextBuilder
         return $this->contextAdapter->getContext();
     }
 
-    private function getLanguage(): Language
+    public function getLanguage(): Language
     {
         return $this->getContext()->language ?? new Language((int) Configuration::get('PS_LANG_DEFAULT'));
     }
 
-    private function getCountry(): Country
+    public function getCountry(): Country
     {
         return $this->getContext()->country ?? new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
     }
