@@ -167,12 +167,12 @@ class ContextBuilder
         return $this->contextAdapter->getContext();
     }
 
-    public function getLanguage(): Language
+    private function getLanguage(): Language
     {
         return $this->getContext()->language ?? new Language((int) Configuration::get('PS_LANG_DEFAULT'));
     }
 
-    public function getCountry(): Country
+    private function getCountry(): Country
     {
         return $this->getContext()->country ?? new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
     }
@@ -191,7 +191,7 @@ class ContextBuilder
     /**
      * @return array<InstalledModule>
      */
-    public function getInstalledModules(): array
+    private function getInstalledModules(): array
     {
         $cacheKey = $this->getCacheKey();
 
