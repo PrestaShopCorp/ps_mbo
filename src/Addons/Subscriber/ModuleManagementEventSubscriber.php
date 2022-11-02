@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons\Subscriber;
 
-use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Module\Repository;
@@ -63,19 +62,13 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
      */
     private $adminAuthenticationProvider;
 
-    /**
-     * @var AccountsDataProvider
-     */
-    private $accountsDataProvider;
-
     public function __construct(
         LoggerInterface $logger,
         Repository $moduleRepository,
         TabCollectionProviderInterface $tabCollectionProvider,
         ContextBuilder $contextBuilder,
         Client $distributionClient,
-        AdminAuthenticationProvider $adminAuthenticationProvider,
-        AccountsDataProvider $accountsDataProvider
+        AdminAuthenticationProvider $adminAuthenticationProvider
     ) {
         $this->logger = $logger;
         $this->moduleRepository = $moduleRepository;
@@ -83,7 +76,6 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         $this->contextBuilder = $contextBuilder;
         $this->distributionClient = $distributionClient;
         $this->adminAuthenticationProvider = $adminAuthenticationProvider;
-        $this->accountsDataProvider = $accountsDataProvider;
     }
 
     public static function getSubscribedEvents(): array
@@ -181,18 +173,9 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
 
     protected function logEvent(string $eventName, ModuleManagementEvent $event): void
     {
-        $this->logger->info(sprintf('Event %s triggered', $eventName));
-
-        $data = [];
+        $data = $this->contextBuilder->getEventContext();
         $data['event_name'] = $eventName;
         $data['module_name'] = $event->getModule()->get('name');
-        $data['modules'] = array_map(function ($module) {
-            return $module['name'];
-        }, $this->contextBuilder->getInstalledModules());
-        $data['user_id'] = $this->accountsDataProvider->getAccountsUserId();
-        $data['shop_id'] = $this->accountsDataProvider->getAccountsShopId();
-        $data['iso_lang'] = $this->contextBuilder->getLanguage()->getIsoCode();
-        $data['iso_code'] = $this->contextBuilder->getCountry()->iso_code;
 
         $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
         $this->distributionClient->trackEvent($data);

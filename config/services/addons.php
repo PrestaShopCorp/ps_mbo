@@ -37,7 +37,6 @@ return static function (ContainerConfigurator $container) {
             ref('mbo.cdc.context_builder'),
             ref('mbo.cdc.client.distribution_api'),
             ref('mbo.security.admin_authentication.provider'),
-            ref('mbo.accounts.data_provider'),
         ])
         ->public()
         ->tag('kernel.event_subscriber');
