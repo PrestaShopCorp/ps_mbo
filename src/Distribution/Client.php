@@ -228,12 +228,6 @@ class Client
      */
     public function trackEvent(array $eventData)
     {
-//        return $this->processRequestAndReturn(
-//            'shops/events',
-//            null,
-//            self::HTTP_METHOD_POST,
-//            ['form_params' => $eventData]
-//        );
         return $this->processAsyncRequest('shops/events', $eventData);
     }
 

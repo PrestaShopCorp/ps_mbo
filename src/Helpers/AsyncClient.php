@@ -43,7 +43,6 @@ class AsyncClient
     private static function get(array $endpointParts, $socket, array $customHeaders = []): bool
     {
         if (!empty($endpointParts['query'])) {
-            $contentLength = strlen($endpointParts['query']);
             $endpointParts['path'] .= '?' . $endpointParts['query'];
         }
         $request = "GET {$endpointParts['path']} HTTP/1.1\r\n";
@@ -51,10 +50,7 @@ class AsyncClient
         foreach ($customHeaders as $header) {
             $request .= "{$header}\r\n";
         }
-        $request .= "Content-Type:application/x-www-form-urlencoded\r\n";
-        if (isset($contentLength)) {
-            $request .= "Content-Length: {$contentLength}\r\n";
-        }
+        $request .= "Content-Type: application/json\r\n\r\n";
         $request .= "Connection:Close\r\n\r\n";
 
         fwrite($socket, $request);
@@ -65,18 +61,18 @@ class AsyncClient
 
     private static function post(array $endpointParts, $socket, array $postData = [], array $customHeaders = []): bool
     {
-        $encodedPostData = json_encode($postData);
+        $encodedPostData = http_build_query($postData, '', '&');
         $contentLength = strlen($encodedPostData);
 
         $request = "POST {$endpointParts['path']} HTTP/1.1\r\n";
+        $request .= "Accept: application/json\r\n";
+        $request .= "Content-Type: application/x-www-form-urlencoded\r\n";
         $request .= "Host: {$endpointParts['host']}\r\n";
         foreach ($customHeaders as $header) {
             $request .= "{$header}\r\n";
         }
-        $request .= "Content-Type: application/json\r\n\r\n";
-        $request .= "Content-Length: {$contentLength}\r\n";
+        $request .= "Content-Length: {$contentLength}\r\n\r\n";
         $request .= $encodedPostData;
-        $request .= "Connection:Close\r\n\r\n";
 
         fwrite($socket, $request);
         fclose($socket);
@@ -87,7 +83,7 @@ class AsyncClient
     private static function openSocket(string $host, int $port)
     {
         try {
-            return fsockopen($host, $port);
+            return fsockopen($host, $port, $errno, $errstr, 0.1);
         } catch (\Exception $e) {
             return false;
         }
