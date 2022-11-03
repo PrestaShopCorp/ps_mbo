@@ -121,23 +121,23 @@ trait UseDisplayDashboardTop
         switch ($moduleName) {
             case 'contactform':
                 $this->smarty->assign([
-                    'catchPhrase' => $this->trans('For even more security on your website forms, consult our Security & Access modules category on the'),
-                    'linkTarget' => $this->trans('https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security'),
-                    'linkText' => $this->trans('PrestaShop Addons Marketplace'),
+                    'catchPhrase' => $this->trans('For even more security on your website forms, consult our Security & Access modules category on the', 'Modules.Mbo.Global'),
+                    'linkTarget' => $this->trans('https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security', 'Modules.Mbo.Links'),
+                    'linkText' => $this->trans('PrestaShop Addons Marketplace', 'Modules.Mbo.Global'),
                 ]);
                 break;
             case 'blockreassurance':
                 $this->smarty->assign([
-                    'catchPhrase' => $this->trans('Discover more modules to improve your shop on'),
-                    'linkTarget' => $this->trans('https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN'),
+                    'catchPhrase' => $this->trans('Discover more modules to improve your shop on', 'Modules.Mbo.Global'),
+                    'linkTarget' => $this->trans('https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN', 'Modules.Mbo.Links'),
                     'linkText' => $this->trans('PrestaShop Addons Marketplace'),
                 ]);
                 break;
             default:
                 $this->smarty->assign([
-                    'catchPhrase' => $this->trans('Discover more modules to improve your shop on'),
-                    'linkTarget' => $this->trans('https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN'),
-                    'linkText' => $this->trans('PrestaShop Addons Marketplace'),
+                    'catchPhrase' => $this->trans('Discover more modules to improve your shop on', 'Modules.Mbo.Global'),
+                    'linkTarget' => $this->trans('https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN', 'Modules.Mbo.Links'),
+                    'linkText' => $this->trans('PrestaShop Addons Marketplace', 'Modules.Mbo.Global'),
                 ]);
         }
 
