@@ -379,19 +379,22 @@ class ps_mbo extends Module
         return getenv($this->getModuleEnvVar()) ?: $default ?: self::DEFAULT_ENV;
     }
 
-    private function installTables(): bool
+    public function installTables(?string $table = null): bool
     {
         $sqlQueries = [];
-        $sqlQueries[] = ' CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'mbo_api_config` (
-            `id_mbo_api_config` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-            `config_key` varchar(255) NULL,
-            `config_value` varchar(255) NULL,
-            `ps_version` varchar(255) NULL,
-            `mbo_version` varchar(255) NULL,
-            `applied` TINYINT(1) NOT NULL DEFAULT \'0\',
-            `date_add` datetime NOT NULL,
-            PRIMARY KEY (`id_mbo_api_config`)
-        ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=UTF8;';
+
+        if (null === $table || 'mbo_api_config' === $table) {
+            $sqlQueries[] = ' CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'mbo_api_config` (
+                `id_mbo_api_config` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `config_key` varchar(255) NULL,
+                `config_value` varchar(255) NULL,
+                `ps_version` varchar(255) NULL,
+                `mbo_version` varchar(255) NULL,
+                `applied` TINYINT(1) NOT NULL DEFAULT \'0\',
+                `date_add` datetime NOT NULL,
+                PRIMARY KEY (`id_mbo_api_config`)
+            ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=UTF8;';
+        }
 
         foreach ($sqlQueries as $query) {
             if (!Db::getInstance()->execute($query)) {
