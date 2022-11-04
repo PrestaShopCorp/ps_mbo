@@ -42,6 +42,7 @@ class ps_mbo extends Module
     use PrestaShop\Module\Mbo\Traits\HaveTabs;
     use PrestaShop\Module\Mbo\Traits\UseHooks;
     use PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService;
+    use PrestaShop\Module\Mbo\Traits\HaveConfigurationPage;
 
     public const DEFAULT_ENV = '';
 
