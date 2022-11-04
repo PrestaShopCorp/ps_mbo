@@ -38,62 +38,6 @@ jobs:
           path: ./
           key: ${{ github.run_id }}
 
-  upload_prestabulle:
-    name: Create prestabulle zip
-    runs-on: ubuntu-latest
-    needs: deploy
-    if: contains(github.event.pull_request.labels.*.name, 'prestabulle1') ||
-      contains(github.event.pull_request.labels.*.name, 'prestabulle2') ||
-      contains(github.event.pull_request.labels.*.name, 'prestabulle3') ||
-      contains(github.event.pull_request.labels.*.name, 'prestabulle4') ||
-      contains(github.event.pull_request.labels.*.name, 'prestabulle5') ||
-      contains(github.event.pull_request.labels.*.name, 'prestabulle6') ||
-      contains(github.event.pull_request.labels.*.name, 'prestabulle7') ||
-      contains(github.event.pull_request.labels.*.name, 'prestabulle8') ||
-      contains(github.event.pull_request.labels.*.name, 'prestabulle9')
-    steps:
-
-      - name: Retrieve from cache module folder
-        id: retrieve-cache
-        uses: 'actions/cache@v3'
-        with:
-          path: ./
-          key: ${{ github.run_id }}
-
-      - name: Check if retrieved from cache was successful
-        if: steps.retrieve-cache.outputs.cache-hit != 'true'
-        run: exit 1
-
-      - name: Manually perform GCP CLI authentication
-        run: |
-          echo $GOOGLE_JSON_CRED > token.json
-          gcloud auth activate-service-account --key-file=token.json
-          rm token.json
-        env:
-          GOOGLE_JSON_CRED: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
-
-      - name: Setting up Bubble variable
-        run: echo "BULLE=$BULLE$(echo $LABELS > labels.json && cat labels.json | jq -r '.[]|.name'|grep prestabulle)" >> $GITHUB_OUTPUT
-        id: get_bulle
-
-      - name: Copy env files
-        run: |
-          rm -f .env.dist
-          gcloud secrets versions access latest --project distribution-integration --secret=mbo-module-${{ steps.get_bulle.outputs.BULLE }}-env > .env
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
-
-      - name: Prepare the zip
-        run: |
-          cd ..
-          zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
-
-      - name: Create & upload artifact for prestabulle
-        uses: 'actions/upload-artifact@v1'
-        with:
-          name: ${{ github.event.repository.name }}.${{ steps.get_bulle.outputs.BULLE }}
-          path: ../${{ github.event.repository.name }}.zip
-
   upload_asset_preproduction:
     runs-on: ubuntu-latest
     needs: [deploy]
@@ -169,6 +113,11 @@ jobs:
           gcloud secrets versions access latest --project distribution-production-308520 --secret=mbo-module-env > .env
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
+
+      - name: Remove test settings files
+        run: |
+          rm -f ./src/Traits/HaveConfigurationPage.php
+          sed -i '/HaveConfigurationPage/d' ps_mbo.php
 
       - name: Prepare the production zip
         run: |
