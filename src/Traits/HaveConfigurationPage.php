@@ -5,6 +5,7 @@ namespace PrestaShop\Module\Mbo\Traits;
 use AdminController;
 use Configuration;
 use HelperForm;
+use Symfony\Component\Dotenv\Dotenv;
 use Tools;
 
 trait HaveConfigurationPage
@@ -81,7 +82,13 @@ trait HaveConfigurationPage
         $envData = file_get_contents($envFilePath);
         $envData = preg_replace('#MBO_CDC_URL=".*"#', 'MBO_CDC_URL="' . $cdcUrl . '"', $envData);
         $envData = preg_replace('#DISTRIBUTION_API_URL=".*"#', 'DISTRIBUTION_API_URL="' . $apiUrl . '"', $envData);
+
+        // Update the .env file
         file_put_contents($envFilePath, $envData);
+
+        // Force reload of the .env file
+        $dotenv = new Dotenv();
+        $dotenv->overload($envFilePath);
 
         return 'Configuration updated to <b>' . ucfirst($newValue) . "</b>.Don't forget to reset the module.";
     }
@@ -154,7 +161,7 @@ trait HaveConfigurationPage
         $currentCdcUrl = getenv('MBO_CDC_URL');
 
         if (strpos($currentCdcUrl, 'prestabulle') !== false) {
-            preg_match('#prestabulle(\d+)#', $currentCdcUrl, $matches);
+            preg_match('#(prestabulle(?:\d+))#', $currentCdcUrl, $matches);
             $currentValue = $matches[1];
         } elseif (strpos($currentCdcUrl, 'preprod') !== false) {
             $currentValue = 'preprod';
