@@ -25,6 +25,7 @@ use Context;
 use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
+use PrestaShop\Module\Mbo\Helpers\AsyncClient;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use ps_mbo;
 use stdClass;
@@ -217,6 +218,19 @@ class Client
         return $this->cacheProvider->fetch($cacheKey);
     }
 
+    /**
+     * Send a tracking to the API
+     * Send it asynchronously to avoid blocking process for this feature
+     *
+     * @param array $eventData
+     *
+     * @return bool
+     */
+    public function trackEvent(array $eventData)
+    {
+        return $this->processAsyncRequest('shops/events', $eventData);
+    }
+
     private function mergeShopDataWithParams(array $params): array
     {
         return array_merge([
@@ -280,5 +294,33 @@ class Client
         return (string) $this->httpClient
             ->request($method, '/api/' . ltrim($uri, '/'), $options)
             ->getBody();
+    }
+
+    /**
+     * Process a custom async request
+     *
+     * @param string $uri
+     * @param array $data
+     * @param string $method
+     *
+     * @return bool
+     */
+    private function processAsyncRequest(
+        string $uri = '',
+        array $data = [],
+        string $method = self::HTTP_METHOD_POST
+    ): bool {
+        $uri = rtrim(getenv('DISTRIBUTION_API_URL'), '/') . '/api/' . ltrim($uri, '/');
+        if (!empty($this->queryParameters)) {
+            $uri .= '?' . http_build_query($this->queryParameters);
+        }
+
+        // Build headers for async request
+        $headers = [];
+        foreach ($this->headers as $key => $value) {
+            $headers[] = $key . ': ' . $value;
+        }
+
+        return AsyncClient::request($uri, $data, $headers, $method);
     }
 }
