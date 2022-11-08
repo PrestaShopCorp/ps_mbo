@@ -25,6 +25,11 @@
  */
 function upgrade_module_4_1_0($module)
 {
+    // We install MBO Api Config Tab
+    if (false === $module->installTab(ps_mbo::$ADMIN_CONTROLLERS['ApiPsMboConfig'])) {
+        return false;
+    }
+
     // We migrate Module Selections Tab to MBO
     if (false === $module->installTables('mbo_api_config')) {
         return false;
