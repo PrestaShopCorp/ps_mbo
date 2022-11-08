@@ -153,12 +153,12 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
 
     public function onEnableMobile(ModuleManagementEvent $event): void
     {
-        $this->logEvent(ModuleManagementEvent::ENABLE, $event);
+        $this->logEvent(ModuleManagementEvent::ENABLE_MOBILE, $event);
     }
 
     public function onDisableMobile(ModuleManagementEvent $event): void
     {
-        $this->logEvent(ModuleManagementEvent::DISABLE, $event);
+        $this->logEvent(ModuleManagementEvent::DISABLE_MOBILE, $event);
     }
 
     public function onUpgrade(ModuleManagementEvent $event): void
