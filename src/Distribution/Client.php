@@ -204,6 +204,7 @@ class Client
 
         $this->setQueryParams([
             'isoLang' => $languageIsoCode,
+            'shopVersion' => _PS_VERSION_,
         ]);
         try {
             $conf = $this->processRequestAndReturn('shops/conf');
