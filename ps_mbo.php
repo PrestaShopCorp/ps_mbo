@@ -96,6 +96,11 @@ class ps_mbo extends Module
     public $moduleCacheDir;
 
     /**
+     * @var array
+     */
+    private $translators;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -221,6 +226,9 @@ class ps_mbo extends Module
             }
         }
 
+        // Clear cache to reload translations
+        $this->reloadTranslationsCache();
+
         // Restore previous context
         Shop::setContext($previousContextType, $previousContextShopId);
 
@@ -291,6 +299,18 @@ class ps_mbo extends Module
         }
 
         return $this->container->get($serviceName);
+    }
+
+    /**
+     * Retrieve parameter from Symfony container
+     */
+    public function getParameter($paramaterName)
+    {
+        if (null === $this->container) {
+            $this->container = SymfonyContainer::getInstance();
+        }
+
+        return $this->container->getParameter($paramaterName);
     }
 
     /**
@@ -422,5 +442,24 @@ class ps_mbo extends Module
     public function getAccountsDataProvider(): AccountsDataProvider
     {
         return $this->getService('mbo.accounts.data_provider');
+    }
+
+    private function reloadTranslationsCache(): void
+    {
+        $cacheDir = sprintf('%s/translations', $this->getParameter('kernel.cache_dir'));
+
+        $cacheFiles = \Symfony\Component\Finder\Finder::create()
+            ->files()
+            ->in($cacheDir)
+            ->depth('==0')
+            ->name('*');
+
+        (new \Symfony\Component\Filesystem\Filesystem())->remove($cacheFiles);
+
+        $this->get('prestashop.adapter.module.repository.module_repository')->clearActiveModulesPaths();
+
+        foreach (\Language::getLanguages() as $lang) {
+            $this->translators[$lang['id_lang']] = \Context::getContext()->getTranslatorFromLocale($lang['locale']);
+        }
     }
 }

@@ -34,31 +34,41 @@ trait HaveTabs
      */
     public static $ADMIN_CONTROLLERS = [
         'AdminPsMboModuleParent' => [
-            'name' => 'Marketplace',
+            'name' => 'Modules catalog',
+            'wording' => 'Modules catalog',
+            'wording_domain' => 'Modules.Mbo.Modulescatalog',
             'visible' => true,
             'position' => 1,
             'class_name' => 'AdminPsMboModuleParent',
             'parent_class_name' => 'AdminParentModulesSf',
         ],
         'AdminPsMboSelection' => [
-            'name' => 'Sélection de modules',
+            'name' => 'Module selection',
+            'wording' => 'Module selection',
+            'wording_domain' => 'Modules.Mbo.Modulesselection',
             'visible' => true,
             'class_name' => 'AdminPsMboSelection',
             'parent_class_name' => 'AdminPsMboModuleParent',
         ],
         'AdminPsMboModule' => [
-            'name' => 'Marketplace',
+            'name' => 'Modules catalog',
+            'wording' => 'Modules catalog',
+            'wording_domain' => 'Modules.Mbo.Modulescatalog',
             'visible' => true,
             'class_name' => 'AdminPsMboModule',
             'parent_class_name' => 'AdminPsMboModuleParent',
         ],
         'AdminPsMboRecommended' => [
-            'name' => 'Modules recommandés',
+            'name' => 'Recommended Modules and Services',
+            'wording' => 'Recommended Modules and Services',
+            'wording_domain' => 'Modules.Mbo.Recommendedmodulesandservices',
             'visible' => true,
             'class_name' => 'AdminPsMboRecommended',
         ],
         'AdminPsMboTheme' => [
-            'name' => 'Catalogue de thèmes',
+            'name' => 'Themes catalog',
+            'wording' => 'Themes catalog',
+            'wording_domain' => 'Modules.Mbo.Themescatalog',
             'visible' => true,
             'position' => 1,
             'class_name' => 'AdminPsMboTheme',
@@ -66,6 +76,8 @@ trait HaveTabs
         ],
         'ApiPsMbo' => [
             'name' => 'MBO Api',
+            'wording' => 'MBO Api',
+            'wording_domain' => 'Modules.Mbo.Global',
             'visible' => false,
             'position' => 1,
             'class_name' => 'ApiPsMbo',
@@ -73,6 +85,8 @@ trait HaveTabs
         ],
         'ApiSecurityPsMbo' => [
             'name' => 'MBO Api Security',
+            'wording' => 'MBO Api Security',
+            'wording_domain' => 'Modules.Mbo.Global',
             'visible' => false,
             'position' => 1,
             'class_name' => 'ApiSecurityPsMbo',
@@ -117,10 +131,6 @@ trait HaveTabs
     public function installTab(array $tabData): bool
     {
         $position = $tabData['position'] ?? 0;
-        $tabNameByLangId = array_fill_keys(
-            Language::getIDs(false),
-            $tabData['name']
-        );
 
         $idParent = empty($tabData['parent_class_name']) ? -1 : $tabId = Tab::getIdFromClassName($tabData['parent_class_name']);
 
@@ -129,8 +139,13 @@ trait HaveTabs
         $tab->class_name = $tabData['class_name'];
         $tab->position = $position;
         $tab->id_parent = $idParent;
-        $tab->name = $tabNameByLangId;
+        $tab->wording = $tabData['wording'];
+        $tab->wording_domain = $tabData['wording_domain'];
         $tab->active = $tabData['visible'];
+
+        foreach (Language::getLanguages() as $lang) {
+            $tab->name[$lang['id_lang']] = $this->translators[$lang['id_lang']]->trans($tabData['wording'], [], $tabData['wording_domain'], $lang['locale']);
+        }
 
         // This will reorder the tabs starting with 1
         $tab->cleanPositions($idParent);
