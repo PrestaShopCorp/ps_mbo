@@ -81,7 +81,6 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         ContextBuilder $contextBuilder,
         Client $distributionClient,
         AdminAuthenticationProvider $adminAuthenticationProvider,
-        ContextBuilder $contextBuilder,
         VersionChangeApplyConfigCommandHandler $versionChangeApplyConfigCommandHandler
     ) {
         $this->logger = $logger;
