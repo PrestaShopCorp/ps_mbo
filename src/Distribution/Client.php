@@ -25,7 +25,6 @@ use Context;
 use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
-use PrestaShop\Module\Mbo\Helpers\AsyncClient;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use ps_mbo;
 use stdClass;
@@ -189,9 +188,7 @@ class Client
     /**
      * Retrieve the user menu from NEST Api
      *
-     * @return false|\stdClass
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return false|stdClass
      */
     public function getConf()
     {
@@ -208,7 +205,7 @@ class Client
         ]);
         try {
             $conf = $this->processRequestAndReturn('shops/conf');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return false;
         }
         if (empty($conf)) {
@@ -224,12 +221,19 @@ class Client
      * Send it asynchronously to avoid blocking process for this feature
      *
      * @param array $eventData
-     *
-     * @return bool
      */
-    public function trackEvent(array $eventData)
+    public function trackEvent(array $eventData): void
     {
-        return $this->processAsyncRequest('shops/events', $eventData);
+        try {
+            $this->processRequestAndReturn(
+                'shops/events',
+                null,
+                self::HTTP_METHOD_POST,
+                ['form_params' => $eventData]
+            );
+        } catch (\Throwable $e) {
+            // Do nothing if the tracking fails
+        }
     }
 
     private function mergeShopDataWithParams(array $params): array
@@ -247,8 +251,10 @@ class Client
      * Process the request with the current parameters, given the $method, and return the $attribute from
      * the response body, or the default fallback value $default.
      *
+     * @param string $uri
      * @param string|null $attributeToReturn
      * @param string $method
+     * @param array $options
      * @param mixed $default
      *
      * @return mixed
@@ -278,6 +284,10 @@ class Client
     /**
      * Process the request with the current parameters, given the $method, return the body as string
      *
+     * @param string $method
+     * @param string $uri
+     * @param array $options
+     *
      * @return string
      *
      * @throws GuzzleException
@@ -295,33 +305,5 @@ class Client
         return (string) $this->httpClient
             ->request($method, '/api/' . ltrim($uri, '/'), $options)
             ->getBody();
-    }
-
-    /**
-     * Process a custom async request
-     *
-     * @param string $uri
-     * @param array $data
-     * @param string $method
-     *
-     * @return bool
-     */
-    private function processAsyncRequest(
-        string $uri = '',
-        array $data = [],
-        string $method = self::HTTP_METHOD_POST
-    ): bool {
-        $uri = rtrim(getenv('DISTRIBUTION_API_URL'), '/') . '/api/' . ltrim($uri, '/');
-        if (!empty($this->queryParameters)) {
-            $uri .= '?' . http_build_query($this->queryParameters);
-        }
-
-        // Build headers for async request
-        $headers = [];
-        foreach ($this->headers as $key => $value) {
-            $headers[] = $key . ': ' . $value;
-        }
-
-        return AsyncClient::request($uri, $data, $headers, $method);
     }
 }
