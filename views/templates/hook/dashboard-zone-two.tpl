@@ -18,11 +18,19 @@
  *}
 
 <script defer>
-  const renderMoreModule = window.mboCdc.renderDashboardMoreModule
+  if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
+    if (typeof renderCdcError !== undefined) {
+      window.$(document).ready(function() {
+        renderCdcError($('#cdc-more-module-container'));
+      });
+    }
+  } else {
+    const renderMoreModule = window.mboCdc.renderDashboardMoreModule
 
-  const context = {$shop_context};
+    const context = {$shop_context};
 
-  renderMoreModule(context, '#cdc-more-module-container')
+    renderMoreModule(context, '#cdc-more-module-container')
+  }
 </script>
 
-<div class="row-margin-bottom" id="cdc-more-module-container"></div>
+<div class="row-margin-bottom cdc-container" id="cdc-more-module-container" data-error-path="{$cdcErrorUrl}"></div>

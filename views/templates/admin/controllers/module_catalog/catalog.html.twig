@@ -21,16 +21,24 @@
 {% block javascripts %}
     {{ parent() }}
     <script defer>
+      if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
+        if (typeof renderCdcError !== undefined) {
+          window.$(document).ready(function() {
+            renderCdcError($('#cdc-container'));
+          });
+        }
+      } else {
         const renderModules = window.mboCdc.renderModules
 
         const context = {{ shop_context|json_encode()|raw }};
 
         renderModules(context, '#cdc-container')
+      }
     </script>
 {% endblock %}
 
 {% block content %}
-    <div class="card" id="cdc-container"></div>
+    <div class="card cdc-container" id="cdc-container" data-error-path="{{ path('admin_mbo_module_cdc_error') }}"></div>
 
     {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
 {% endblock %}

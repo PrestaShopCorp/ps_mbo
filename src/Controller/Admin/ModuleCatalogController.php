@@ -108,4 +108,16 @@ class ModuleCatalogController extends ModuleAbstractController
             ]
         );
     }
+
+    /**
+     * Responsible for displaying error block when CDC cannot be loaded.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cdcErrorAction(): Response
+    {
+        return $this->render(
+            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/cdc-error.html.twig'
+        );
+    }
 }

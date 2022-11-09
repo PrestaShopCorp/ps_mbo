@@ -23,3 +23,9 @@ admin_mbo_module_see_more:
     _controller: mbo.controller.modules.catalog:seeMoreAction
   requirements:
     moduleId: \d+
+
+admin_mbo_module_cdc_error:
+  path: /cdc_error
+  methods: [ GET ]
+  defaults:
+    _controller: mbo.controller.modules.catalog:cdcErrorAction
