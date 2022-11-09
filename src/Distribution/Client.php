@@ -57,6 +57,7 @@ class Client
         'shop_uuid',
         'shop_url',
         'isoLang',
+        'shopVersion',
     ];
     /**
      * @var array<string, string>
