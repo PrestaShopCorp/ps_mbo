@@ -30,6 +30,7 @@ use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Module\Module;
+use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
 use PrestaShop\Module\Mbo\Tab\Tab;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Module\Module as CoreModule;
@@ -107,9 +108,13 @@ class ContextBuilder
 
     public function getEventContext(): array
     {
-        $modules = array_map(function ($module) {
-            return $module['name'];
-        }, $this->getInstalledModules());
+        $modules = [];
+        // Filter : remove uninstalled modules
+        foreach ($this->getInstalledModules() as $installedModule) {
+            if ($installedModule['status'] !== ModuleStateMachine::STATUS_UNINSTALLED) {
+                $modules[] = $installedModule['name'];
+            }
+        }
 
         return [
             'modules' => $modules,
@@ -189,7 +194,7 @@ class ContextBuilder
     }
 
     /**
-     * @return array<InstalledModule>
+     * @return array<array>
      */
     private function getInstalledModules(): array
     {
