@@ -19,6 +19,7 @@
  */
 use PrestaShop\Module\Mbo\Api\Config\Config;
 use PrestaShop\Module\Mbo\Api\Controller\AbstractAdminApiController;
+use PrestaShop\Module\Mbo\Api\Exception\IncompleteSignatureParamsException;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\Exception\InvalidConfigException;
 
@@ -59,6 +60,31 @@ class apiConfigPsMboController extends AbstractAdminApiController
 
         $this->exitWithResponse([
             'message' => 'Config successfully applied',
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function buildSignatureMessage(): string
+    {
+        // Payload elements
+        $conf = Tools::getValue('conf');
+        $actionUuid = Tools::getValue('action_uuid');
+
+        if (
+            !$conf ||
+            !$actionUuid
+        ) {
+            throw new IncompleteSignatureParamsException('Expected signature elements are not given');
+        }
+
+        $keyVersion = Tools::getValue('version');
+
+        return json_encode([
+            'conf' => $conf,
+            'action_uuid' => $actionUuid,
+            'version' => $keyVersion,
         ]);
     }
 }
