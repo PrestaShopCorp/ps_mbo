@@ -33,6 +33,7 @@ use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker;
 use PrestaShop\Module\Mbo\Helpers\Config as ConfigHelper;
 use ps_mbo;
+use Psr\Log\LoggerInterface;
 use Tools;
 
 abstract class AbstractAdminApiController extends ModuleAdminController
@@ -64,6 +65,11 @@ abstract class AbstractAdminApiController extends ModuleAdminController
      */
     private $authorizationChecker;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     public function __construct()
     {
         parent::__construct();
@@ -71,11 +77,13 @@ abstract class AbstractAdminApiController extends ModuleAdminController
         $this->errorHandler = $this->module->get(ErrorHandler::class);
         $this->adminAuthenticationProvider = $this->module->get('mbo.security.admin_authentication.provider');
         $this->authorizationChecker = $this->module->get(AuthorizationChecker::class);
+        $this->logger = $this->module->get('logger');
     }
 
     public function init(): void
     {
         try {
+            $this->logger->info('API Call received = ' . $_SERVER['REQUEST_URI']);
             $this->authorize();
         } catch (IncompleteSignatureParamsException $exception) {
             $this->errorHandler->handle($exception);
