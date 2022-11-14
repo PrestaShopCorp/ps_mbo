@@ -23,12 +23,15 @@
  *
  * @return bool
  */
-function upgrade_module_4_1_0($module)
+function upgrade_module_4_1_0(Module $module): bool
 {
     // We migrate Module Selections Tab to MBO
     if (false === $module->installTables('mbo_api_config')) {
         return false;
     }
+
+    $module->updateHooks();
+    $module->updateTabs();
 
     return true;
 }

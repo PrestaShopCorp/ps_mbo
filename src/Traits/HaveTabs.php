@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits;
 
+use Db;
 use LanguageCore as Language;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Symfony\Component\String\UnicodeString;
@@ -71,7 +72,7 @@ trait HaveTabs
             'class_name' => 'ApiPsMbo',
             'parent_class_name' => 'AdminParentModulesSf',
         ],
-        'ApiPsMboSecurity' => [
+        'ApiSecurityPsMbo' => [
             'name' => 'MBO Api Security',
             'visible' => false,
             'position' => 1,
@@ -178,19 +179,53 @@ trait HaveTabs
             return false;
         }
 
-        if (isset($tabData['core_reference'])) {
-            $tabCoreId = $this->tabRepository->findOneIdByClassName($tabData['core_reference']);
-            $tabCore = new Tab($tabCoreId);
+        return true;
+    }
 
-            if (Validate::isLoadedObject($tabCore)) {
-                $tabCore->active = true;
-            }
+    /**
+     * Update tabs in DB.
+     * Search current tabs registered in DB and compare them with the tabs declared in the module.
+     * If a tab is missing, it will be added. If a tab is not declared in the module, it will be removed.
+     *
+     * @return void
+     */
+    public function updateTabs(): void
+    {
+        $tabData = Db::getInstance()->executeS('
+            SELECT class_name
+            FROM `' . _DB_PREFIX_ . 'tab`
+            WHERE `module` = "' . pSQL($this->name) . '"'
+        );
 
-            if (false === $tabCore->save()) {
-                return false;
+        //Flatten $tabData array
+        $tabData = array_unique(array_map('current', $tabData));
+        $currentModuleTabs = array_keys(static::$ADMIN_CONTROLLERS);
+
+        $oldTabs = [];
+        $newTabs = [];
+
+        // Iterate on DB tabs to get only the old ones
+        foreach ($tabData as $tabInDb) {
+            if (!in_array($tabInDb, $currentModuleTabs)) {
+                $oldTabs[] = $tabInDb;
             }
         }
 
-        return true;
+        // Iterate on module tabs to get only the new ones
+        foreach ($currentModuleTabs as $tab) {
+            if (!in_array($tab, $tabData)) {
+                $newTabs[] = $tab;
+            }
+        }
+
+        $tabRepository = $this->get('prestashop.core.admin.tab.repository');
+        $this->tabRepository = $tabRepository;
+
+        foreach ($oldTabs as $oldTab) {
+            $this->uninstallTab(['class_name' => $oldTab]);
+        }
+        foreach ($newTabs as $newTab) {
+            $this->installTab(static::$ADMIN_CONTROLLERS[$newTab]);
+        }
     }
 }
