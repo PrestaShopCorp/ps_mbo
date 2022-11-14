@@ -49,6 +49,7 @@ jobs:
         run: |
           docker run -tid --rm -v ps-volume:/var/www/html --name tempps prestashop/prestashop:${{ matrix.presta-versions }}
           docker ps -a
+          docker pull phpstan/phpstan:0.11.19
           sleep 10
           docker ps -a
           docker run --rm --volumes-from tempps -v $PWD:/web/module -e _PS_ROOT_DIR_=/var/www/html --workdir=/web/module phpstan/phpstan:0.11.19 analyse --configuration=/web/module/tests/phpstan/phpstan-${{ matrix.presta-versions }}.neon
