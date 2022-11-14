@@ -23,7 +23,7 @@ class ConfigApplyExecutor implements ServiceExecutorInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function canExecute(string $service): bool
     {
@@ -31,7 +31,7 @@ class ConfigApplyExecutor implements ServiceExecutorInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function execute(...$parameters): array
     {

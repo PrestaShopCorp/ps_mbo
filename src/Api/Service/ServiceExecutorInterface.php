@@ -21,5 +21,4 @@ interface ServiceExecutorInterface
      * @return array
      */
     public function execute(...$parameters): array;
-
 }

@@ -22,7 +22,7 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function canExecute(string $service): bool
     {
@@ -30,7 +30,7 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function execute(...$parameters): array
     {
