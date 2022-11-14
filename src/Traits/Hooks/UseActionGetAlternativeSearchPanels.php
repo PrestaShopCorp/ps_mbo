@@ -38,12 +38,19 @@ trait UseActionGetAlternativeSearchPanels
     {
         $searchedExpression = $params['bo_query'];
 
+        $version = defined('_PS_VERSION_') ? _PS_VERSION_ : '';
+        if ($lastDotIndex = strrpos($version, '.')) {
+            $trailingVersion = str_replace('.', '', substr($version, 0, $lastDotIndex));
+        } else {
+            $trailingVersion = '';
+        }
+
         $queryParams = [
             'search_query' => $searchedExpression,
             'utm_source' => 'back-office',
             'utm_medium' => 'search',
             'utm_campaign' => 'back-office-' . $this->context->language->iso_code,
-            'utm_content' => 'download',
+            'utm_content' => 'download' . $trailingVersion,
         ];
 
         $searchPanels = [];
