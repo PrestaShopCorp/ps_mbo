@@ -62,5 +62,4 @@ final class Factory
             throw new UnknownServiceException(sprintf('Unknown service given : %s', $service));
         }
     }
-
 }

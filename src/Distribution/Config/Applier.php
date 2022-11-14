@@ -66,8 +66,8 @@ final class Applier
      */
     private function canBeApplied(Config $config, string $psVersion, string $mboVersion): bool
     {
-        return version_compare($psVersion, $config->getPsVersion(), '==') &&
-            version_compare($mboVersion, $config->getMboVersion(), '==') &&
+        return $this->versionCompareWithSemVer($psVersion, $config->getPsVersion(), '==') &&
+            $this->versionCompareWithSemVer($mboVersion, $config->getMboVersion(), '==') &&
             true !== $config->isApplied();
     }
 
@@ -94,5 +94,18 @@ final class Applier
                 }
             }
         }
+    }
+
+    private function versionCompareWithSemVer(string $a, string $b, string $operator)
+    {
+        $a = explode('.', $a);
+        $b = explode('.', $b);
+
+        $minSize = count($a) <= count($b) ? count($a) : count($b);
+
+        $versionA = implode('.', array_slice($a, 0, $minSize));
+        $versionB = implode('.', array_slice($b, 0, $minSize));
+
+        return version_compare($versionA, $versionB, $operator);
     }
 }
