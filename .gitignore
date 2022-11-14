@@ -4,3 +4,23 @@ config_*.xml
 !/vendor/index.php
 tests/.phpunit.result.cache
 .env
+
+## Directory-based project format:
+
+### PhpStorm ###
+.idea/
+
+### NetBeans ###
+nbproject/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+.nb-gradle/
+
+### Eclipse ###
+.buildpath
+.project
+.settings/
+.externalToolBuilders/
