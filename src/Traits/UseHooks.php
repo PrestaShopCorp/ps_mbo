@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits;
 
+use Db;
 use Symfony\Component\String\UnicodeString;
 
 trait UseHooks
@@ -109,5 +110,55 @@ trait UseHooks
         }
 
         return $traits;
+    }
+
+    /**
+     * Update hooks in DB.
+     * Search current hooks registered in DB and compare them with the hooks declared in the module.
+     * If a hook is missing, it will be added. If a hook is not declared in the module, it will be removed.
+     *
+     * @return void
+     */
+    public function updateHooks(): void
+    {
+        $hookData = Db::getInstance()->executeS('
+            SELECT DISTINCT(phm.id_hook), name
+            FROM `' . _DB_PREFIX_ . 'hook_module` phm
+            JOIN `' . _DB_PREFIX_ . 'hook` ph ON ph.id_hook=phm.id_hook
+            WHERE `id_module` = ' . (int) $this->id
+        );
+
+        $currentModuleHooks = $this->getHooksNames();
+
+        $oldHooks = [];
+        $newHooks = [];
+
+        // Iterate on DB hooks to get only the old ones
+        foreach ($hookData as $hook) {
+            if (!in_array(strtolower($hook['name']), array_map('strtolower', $currentModuleHooks))) {
+                $oldHooks[] = $hook;
+            }
+        }
+
+        // Iterate on module hooks to get only the new ones
+        foreach ($currentModuleHooks as $moduleHook) {
+            $isNew = true;
+            foreach ($hookData as $hookInDb) {
+                if (strtolower($moduleHook) === strtolower($hookInDb['name'])) {
+                    $isNew = false;
+                    break;
+                }
+            }
+            if ($isNew) {
+                $newHooks[] = $moduleHook;
+            }
+        }
+
+        foreach ($oldHooks as $oldHook) {
+            $this->unregisterHook($oldHook['id']);
+        }
+        if (!empty($newHooks)) {
+            $this->registerHook($newHooks);
+        }
     }
 }
