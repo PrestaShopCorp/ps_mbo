@@ -47,11 +47,11 @@ jobs:
       - run: composer install
       - name: Pull PrestaShop files (Tag ${{ matrix.presta-versions }})
         run: |
-          docker run -tid --rm -v ps-volume:/var/www/html --name temp-ps prestashop/prestashop:${{ matrix.presta-versions }}
+          docker run -tid --rm -v ps-volume:/var/www/html --name tempps prestashop/prestashop:${{ matrix.presta-versions }}
           docker ps -a
           sleep 10
           docker ps -a
-          docker run --rm --volumes-from temp-ps -v $PWD:/web/module -e _PS_ROOT_DIR_=/var/www/html --workdir=/web/module phpstan/phpstan:0.11.19 analyse --configuration=/web/module/tests/phpstan/phpstan-${{ matrix.presta-versions }}.neon
+          docker run --rm --volumes-from tempps -v $PWD:/web/module -e _PS_ROOT_DIR_=/var/www/html --workdir=/web/module phpstan/phpstan:0.11.19 analyse --configuration=/web/module/tests/phpstan/phpstan-${{ matrix.presta-versions }}.neon
 
   phpunit:
     name: PHPUnit
