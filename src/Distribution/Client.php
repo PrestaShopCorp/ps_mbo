@@ -218,6 +218,19 @@ class Client
     }
 
     /**
+     * Retrieve API config from Distribution API.
+     *
+     * @return array
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::registerShop
+     */
+    public function getApiConf(): array
+    {
+        return $this->processRequestAndReturn('shops/conf-mbo');
+    }
+
+    /**
      * Send a tracking to the API
      * Send it asynchronously to avoid blocking process for this feature
      *

@@ -17,28 +17,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-use PrestaShop\Module\Mbo\Api\Config\Config;
-use PrestaShop\Module\Mbo\Api\Controller\AbstractAdminApiController;
+declare(strict_types=1);
 
-/**
- * This controller only checks if the user is connected using the token given in parameter.
- * Note that if the token is valid, the user session is extended.
- */
-class apiSecurityPsMboController extends AbstractAdminApiController
+namespace PrestaShop\Module\Mbo\Distribution\Config\Exception;
+
+class InvalidConfigException extends \Exception
 {
-    public $type = Config::SECURITY_ME;
-
-    /**
-     * @return void
-     */
-    public function postProcess()
-    {
-        $this->exitWithResponse([
-            'message' => 'User still connected',
-        ]);
-    }
-
-    protected function authorize(): void
-    {
-    }
 }

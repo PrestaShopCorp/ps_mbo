@@ -17,28 +17,35 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-use PrestaShop\Module\Mbo\Api\Config\Config;
-use PrestaShop\Module\Mbo\Api\Controller\AbstractAdminApiController;
+declare(strict_types=1);
 
-/**
- * This controller only checks if the user is connected using the token given in parameter.
- * Note that if the token is valid, the user session is extended.
- */
-class apiSecurityPsMboController extends AbstractAdminApiController
+namespace PrestaShop\Module\Mbo\Distribution\Config\CommandHandler;
+
+use PrestaShop\Module\Mbo\Distribution\Config\Applier;
+use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
+use PrestaShop\Module\Mbo\Distribution\Config\Factory;
+
+final class ConfigChangeCommandHandler
 {
-    public $type = Config::SECURITY_ME;
+    /**
+     * @var Factory
+     */
+    private $configFactory;
 
     /**
-     * @return void
+     * @var Applier
      */
-    public function postProcess()
+    private $configApplier;
+
+    public function __construct(Factory $configFactory, Applier $configApplier)
     {
-        $this->exitWithResponse([
-            'message' => 'User still connected',
-        ]);
+        $this->configFactory = $configFactory;
+        $this->configApplier = $configApplier;
     }
 
-    protected function authorize(): void
+    public function handle(ConfigChangeCommand $command): void
     {
+        $collection = $this->configFactory->buildAndSave($command->getConfig());
+        $this->configApplier->apply($collection, $command->getPsVersion(), $command->getMboVersion());
     }
 }
