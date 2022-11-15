@@ -40,7 +40,7 @@ trait UseActionGetAlternativeSearchPanels
 
         $version = defined('_PS_VERSION_') ? _PS_VERSION_ : '';
         if ($lastDotIndex = strrpos($version, '.')) {
-            $trailingVersion = str_replace('.', '', substr($version, 0, $lastDotIndex));
+            $trailingVersion = str_replace('.', '_', substr($version, 0, $lastDotIndex));
         } else {
             $trailingVersion = '';
         }
