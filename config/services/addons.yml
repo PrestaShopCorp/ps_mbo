@@ -32,7 +32,7 @@ services:
           - "@=service('translator').getLocale()"
           - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
           - "@=service('prestashop.adapter.legacy.configuration').get('_PS_BASE_URL_')"
-          - "@=service('prestashop.core.foundation.version').getVersion()"
+          - "@=service('prestashop.core.foundation.version').getSemVersion()"
 
   mbo.addons.toolbar:
     class: PrestaShop\Module\Mbo\Addons\Toolbar
