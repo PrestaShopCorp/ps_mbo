@@ -75,7 +75,11 @@ class AccountsDataProvider
 
     public function getAccountsUserId(): ?string
     {
-        $userUuid = $this->getAccountsService()->getUserUuid();
+        try {
+            $userUuid = $this->getAccountsService()->getUserUuid();
+        } catch (Exception $e) {
+            $userUuid = null;
+        }
 
         return $userUuid ? $userUuid : null;
     }
