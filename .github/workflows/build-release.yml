@@ -11,6 +11,7 @@ on:
       - 3.x
       - 4.x
       - 4.0.x
+      - 4.1.x
 
 env:
   LABELS: ${{toJSON(github.event.pull_request.labels)}}
