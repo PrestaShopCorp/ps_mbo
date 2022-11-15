@@ -13,11 +13,15 @@ services:
   mbo.distribution.theme_catalog_menu_config_applier:
     class: PrestaShop\Module\Mbo\Distribution\Config\Appliers\ThemeCatalogMenuConfigApplier
 
+  mbo.distribution.module_selection_menu_config_applier:
+    class: PrestaShop\Module\Mbo\Distribution\Config\Appliers\ModuleSelectionMenuConfigApplier
+
   mbo.distribution.config_appliers_factory:
     class: 'PrestaShop\Module\Mbo\Distribution\Config\Appliers\Factory'
     arguments:
       - [
-          '@mbo.distribution.theme_catalog_menu_config_applier'
+          '@mbo.distribution.theme_catalog_menu_config_applier',
+          '@mbo.distribution.module_selection_menu_config_applier'
       ]
 
   mbo.distribution.api_config_change_handler:
