@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Module\ActionsManager;
-use PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeNotNeededException;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 
 trait UseActionBeforeUpgradeModule
@@ -33,7 +32,6 @@ trait UseActionBeforeUpgradeModule
      * @param array $params
      *
      * @throws \PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException
-     * @throws \PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeNotNeededException
      * @throws \PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException
      */
     public function hookActionBeforeUpgradeModule(array $params): void
@@ -54,11 +52,9 @@ trait UseActionBeforeUpgradeModule
         $moduleActionsManager = $this->get('mbo.modules.actions_manager');
 
         $module = $moduleActionsManager->findVersionForUpdate($moduleName);
-        if (null === $module) {
-            throw new ModuleUpgradeNotNeededException(sprintf('Upgrade not needed for module %s', $moduleName));
+        if (null !== $module) {
+            $moduleActionsManager->downloadAndReplaceModuleFiles($module);
         }
-
-        $moduleActionsManager->downloadAndReplaceModuleFiles($module);
     }
 
     /**
