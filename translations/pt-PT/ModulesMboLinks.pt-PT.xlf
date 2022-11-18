@@ -33,4 +33,23 @@
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="pt-PT" target-language="pt-PT" datatype="plaintext">
+    <body>
+      <trans-unit id="9d86b7d3c7427a887c6e182f75deb3e0">
+        <source><![CDATA[https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security]]></source>
+        <target><![CDATA[https://addons.prestashop.com/pt/429-seguranca-acesso?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-PT&utm_content=security]]></target>
+        <note>Line: 125</note>
+      </trans-unit>
+      <trans-unit id="198214f6abf95fc35f5f0fb3b70946a3">
+        <source><![CDATA[https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></source>
+        <target><![CDATA[https://addons.prestashop.com/pt/517-blocos-guias-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-PT]]></target>
+        <note>Line: 132</note>
+      </trans-unit>
+      <trans-unit id="f9baae88cd2cd24d7c8b13fd1906aab6">
+        <source><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></source>
+        <target><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-PT]]></target>
+        <note>Line: 139</note>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>
