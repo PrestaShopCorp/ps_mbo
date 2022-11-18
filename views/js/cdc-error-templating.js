@@ -1,4 +1,5 @@
-{**
+'use strict';
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -15,23 +16,15 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
- *}
+ */
 
-<script defer>
-  if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
-    if (typeof renderCdcError !== undefined) {
-      window.$(document).ready(function() {
-        renderCdcError($('#cdc-explore-themes-catalog'));
+const renderCdcError = ((container) => {
+  if (container.length) {
+    const url = container.data('error-path')
+    if (url) {
+      $.get(url, (data) => {
+        container.html(data);
       });
     }
-  } else {
-    const renderExploreThemesCatalog = window.mboCdc.renderExploreThemeCatalog
-
-    const exploreThemesCatalogContext = {$shop_context};
-
-    renderExploreThemesCatalog(exploreThemesCatalogContext, '#cdc-explore-themes-catalog')
   }
-</script>
-
-<div id="cdc-explore-themes-catalog" class="col-lg-3 col-md-4 col-sm-6 theme-card-container cdc-container" data-error-path="{$cdcErrorUrl}"></div>
-
+});

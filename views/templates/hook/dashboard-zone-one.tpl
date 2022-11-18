@@ -36,11 +36,19 @@
  *}
 
 <script defer>
-  const renderTipsAndUpdate = window.mboCdc.renderDashboardTipsAndUpdate
+  if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
+    if (typeof renderCdcError !== undefined) {
+      window.$(document).ready(function() {
+        renderCdcError($('#cdc-tips-and-update-container'));
+      });
+    }
+  } else {
+    const renderTipsAndUpdate = window.mboCdc.renderDashboardTipsAndUpdate
 
-  const dashboardTipsAndUpdateContext = {$shop_context};
+    const dashboardTipsAndUpdateContext = {$shop_context};
 
-  renderTipsAndUpdate(dashboardTipsAndUpdateContext, '#cdc-tips-and-update-container')
+    renderTipsAndUpdate(dashboardTipsAndUpdateContext, '#cdc-tips-and-update-container')
+  }
 </script>
 
-<section id="cdc-tips-and-update-container"></section>
+<section id="cdc-tips-and-update-container" class="cdc-container" data-error-path="{$cdcErrorUrl}"></section>

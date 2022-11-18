@@ -125,12 +125,12 @@ trait HaveConfigurationPage
         $form = [
             'form' => [
                 'legend' => [
-                    'title' => $this->l('Settings'),
+                    'title' => $this->trans('Settings', [], 'Admin.Global'),
                 ],
                 'input' => [
                     [
                         'type' => 'select',
-                        'label' => $this->l('Configuration value'),
+                        'label' => $this->trans('Configuration value', [], 'Admin.Global'),
                         'name' => 'DISTRIBUTION_ENVIRONMENT',
                         'options' => [
                             'id' => 'value',
@@ -141,7 +141,7 @@ trait HaveConfigurationPage
                     ],
                 ],
                 'submit' => [
-                    'title' => $this->l('Save'),
+                    'title' => $this->trans('Save', [], 'Admin.Global'),
                     'class' => 'btn btn-default pull-right',
                 ],
             ],

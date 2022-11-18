@@ -39,11 +39,19 @@
 
 {% block content %}
   <script defer>
-    if (typeof window.mboRenderRecommendations === 'undefined') {
-      window.mboRenderRecommendations = window.mboCdc.renderRecommendations
-    }
+    if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
+      if (typeof renderCdcError !== undefined) {
+        window.$(document).ready(function() {
+          renderCdcError($('#cdc-container'));
+        });
+      }
+    } else {
+      if (typeof window.mboRenderRecommendations === 'undefined') {
+        window.mboRenderRecommendations = window.mboCdc.renderRecommendations
+      }
 
-    window.mboRenderRecommendations({{ shop_context|json_encode()|raw }}, '#cdc-container')
+      window.mboRenderRecommendations({{ shop_context|json_encode()|raw }}, '#cdc-container')
+    }
   </script>
-  <div id="cdc-container"></div>
+  <div id="cdc-container" class="cdc-container" data-error-path="{{ path('admin_mbo_module_cdc_error') }}"></div>
 {% endblock %}
