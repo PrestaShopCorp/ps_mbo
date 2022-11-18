@@ -24,6 +24,7 @@ namespace PrestaShop\Module\Mbo\Module;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException;
 use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\Module\Mbo\Module\SourceRetriever\SourceRetrieverInterface;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
@@ -44,14 +45,21 @@ class ActionsManager
      */
     private $sourceRetriever;
 
+    /**
+     * @var SymfonyCacheClearer
+     */
+    private $cacheClearer;
+
     public function __construct(
         FilesManager $filesManager,
         Repository $moduleRepository,
-        SourceRetrieverInterface $sourceRetriever
+        SourceRetrieverInterface $sourceRetriever,
+        SymfonyCacheClearer $cacheClearer
     ) {
         $this->filesManager = $filesManager;
         $this->moduleRepository = $moduleRepository;
         $this->sourceRetriever = $sourceRetriever;
+        $this->cacheClearer = $cacheClearer;
     }
 
     /**
@@ -80,6 +88,8 @@ class ActionsManager
         $this->filesManager->deleteModuleDirectory($module);
 
         $this->filesManager->installFromZip($moduleZip);
+
+        $this->cacheClearer->clear();
     }
 
     /**
