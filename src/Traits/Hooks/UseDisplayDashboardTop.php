@@ -130,7 +130,7 @@ trait UseDisplayDashboardTop
                 $this->smarty->assign([
                     'catchPhrase' => $this->trans('Discover more modules to improve your shop on', 'Modules.Mbo.Global'),
                     'linkTarget' => $this->trans('https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN', 'Modules.Mbo.Links'),
-                    'linkText' => $this->trans('PrestaShop Addons Marketplace'),
+                    'linkText' => $this->trans('PrestaShop Addons Marketplace', 'Modules.Mbo.Global'),
                 ]);
                 break;
             default:
