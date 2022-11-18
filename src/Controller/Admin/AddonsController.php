@@ -246,13 +246,13 @@ class AddonsController extends FrameworkBundleAdminController
         $phpEncryption = new PhpEncryption(_NEW_COOKIE_KEY_);
 
         $response->headers->setCookie(
-            new Cookie('username_addons', $phpEncryption->encrypt($params['username']), $expiresAt)
+            new Cookie('username_addons', $phpEncryption->encrypt($params['username']), $expiresAt, null, null, null, false)
         );
         $response->headers->setCookie(
-            new Cookie('password_addons', $phpEncryption->encrypt($params['password']), $expiresAt)
+            new Cookie('password_addons', $phpEncryption->encrypt($params['password']), $expiresAt, null, null, null, false)
         );
         $response->headers->setCookie(
-            new Cookie('is_contributor', (string) $json->is_contributor, $expiresAt)
+            new Cookie('is_contributor', (string) $json->is_contributor, $expiresAt, null, null, null, false)
         );
 
         return $response;
