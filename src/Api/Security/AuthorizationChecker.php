@@ -58,7 +58,7 @@ class AuthorizationChecker
     public function __construct(
         CacheProvider $cacheProvider,
         Client $distributionClient,
-        AdminAuthenticationProvider $adminAuthenticationProvider,
+        AdminAuthenticationProvider $adminAuthenticationProvider
     ) {
         $this->cacheProvider = $cacheProvider;
         $this->distributionClient = $distributionClient;
