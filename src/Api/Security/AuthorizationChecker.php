@@ -27,7 +27,6 @@ use PrestaShop\Module\Mbo\Api\Exception\RetrieveNewKeyException;
 use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Helpers\Config;
-use Psr\Log\LoggerInterface;
 
 class AuthorizationChecker
 {
@@ -56,21 +55,14 @@ class AuthorizationChecker
      */
     private $keyCacheIndex;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
         CacheProvider $cacheProvider,
         Client $distributionClient,
         AdminAuthenticationProvider $adminAuthenticationProvider,
-        LoggerInterface $logger
     ) {
         $this->cacheProvider = $cacheProvider;
         $this->distributionClient = $distributionClient;
         $this->adminAuthenticationProvider = $adminAuthenticationProvider;
-        $this->logger = $logger;
 
         $shopUuid = Config::getShopMboUuid();
         $this->keyVersionCacheIndex = 'api_key_version_' . $shopUuid;
