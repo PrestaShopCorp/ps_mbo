@@ -34,6 +34,9 @@ class apiPsMboController extends AbstractAdminApiController
 
             $moduleUrls = $module->get('urls');
             $configUrl = (bool) $module->get('is_configurable') && isset($moduleUrls['configure']) ? $this->generateTokenizedModuleActionUrl($moduleUrls['configure']) : null;
+
+            // Clear the cache after download to force reload module services
+            $this->module->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
         } catch (\Exception $exception) {
             $this->exitWithExceptionMessage($exception);
         }
