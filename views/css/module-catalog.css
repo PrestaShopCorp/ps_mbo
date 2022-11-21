@@ -31,10 +31,16 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.pstaggerTag { /* To prevent search input to be larger than its container */
+.pstaggerTag {
+  /* To prevent search input to be larger than its container */
   white-space: pre-wrap;
   word-wrap: break-word;
   max-width: 100%;
+}
+
+/* override the padding around the catalog */
+.mbo-catalog-wrapper {
+  margin: -16px -15px;
 }
 
 #growls.default {
