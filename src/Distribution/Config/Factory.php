@@ -136,6 +136,10 @@ final class Factory
             /** @var array $results */
             $results = $this->db->executeS($query);
 
+            if (!is_array($results)) {
+                throw new PrestaShopDatabaseException(sprintf('Retrieving config from DB returns a non array : %s. Query was : %s', gettype($results), $query));
+            }
+
             $collection = $this->buildConfigCollection($results);
         }
 
