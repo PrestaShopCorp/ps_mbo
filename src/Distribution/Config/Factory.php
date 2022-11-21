@@ -121,19 +121,25 @@ final class Factory
      */
     public function getCollectionFromDB(): array
     {
-        $query = 'SELECT
-           `id_mbo_api_config`,
-           `config_key`,
-           `config_value`,
-           `ps_version`,
-           `mbo_version`,
-           `applied`
-        FROM ' . _DB_PREFIX_ . 'mbo_api_config';
+        $collection = [];
 
-        /** @var array $results */
-        $results = $this->db->executeS($query);
+        if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \'' . _DB_PREFIX_ . 'mbo_api_config\' '))) { //check if table exist
+            $query = 'SELECT
+               `id_mbo_api_config`,
+               `config_key`,
+               `config_value`,
+               `ps_version`,
+               `mbo_version`,
+               `applied`
+            FROM ' . _DB_PREFIX_ . 'mbo_api_config';
 
-        return $this->buildConfigCollection($results);
+            /** @var array $results */
+            $results = $this->db->executeS($query);
+
+            $collection = $this->buildConfigCollection($results);
+        }
+
+        return $collection;
     }
 
     private function cleanConfig(): void
