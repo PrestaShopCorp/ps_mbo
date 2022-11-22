@@ -42,13 +42,14 @@ class ps_mbo extends Module
     use PrestaShop\Module\Mbo\Traits\HaveTabs;
     use PrestaShop\Module\Mbo\Traits\UseHooks;
     use PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService;
+    use PrestaShop\Module\Mbo\Traits\HaveConfigurationPage;
 
     public const DEFAULT_ENV = '';
 
     /**
      * @var string
      */
-    public const VERSION = '4.0.1';
+    public const VERSION = '4.1.0';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminPsMboModule',
@@ -66,6 +67,7 @@ class ps_mbo extends Module
     public $configurationList = [
         'PS_MBO_SHOP_ADMIN_UUID' => '', // 'ADMIN' because there will be only one for all shops in a multishop context
         'PS_MBO_SHOP_ADMIN_MAIL' => '',
+        'PS_MBO_LAST_PS_VERSION_API_CONFIG' => '',
     ];
 
     /**
@@ -99,7 +101,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = self::VERSION;
+        $this->version = '4.1.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -137,6 +139,7 @@ class ps_mbo extends Module
             // For now, do nothing
         }
 
+        $this->installTables();
         if (parent::install() && $this->registerHook($this->getHooksNames())) {
             // Do come extra operations on modules' registration like modifying orders
             $this->installHooks();
@@ -146,6 +149,9 @@ class ps_mbo extends Module
 
             return true;
         }
+
+        // If installation fails, we remove the tables previously created
+        $this->uninstallTables();
 
         return false;
     }
@@ -175,6 +181,8 @@ class ps_mbo extends Module
 
         // This will reset cached configuration values (uuid, mail, ...) to avoid reusing them
         Config::resetConfigValues();
+
+        $this->uninstallTables();
 
         /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = $this->get('event_dispatcher');
@@ -370,6 +378,45 @@ class ps_mbo extends Module
     private function getModuleEnv(?string $default = null): string
     {
         return getenv($this->getModuleEnvVar()) ?: $default ?: self::DEFAULT_ENV;
+    }
+
+    public function installTables(?string $table = null): bool
+    {
+        $sqlQueries = [];
+
+        if (null === $table || 'mbo_api_config' === $table) {
+            $sqlQueries[] = ' CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'mbo_api_config` (
+                `id_mbo_api_config` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `config_key` varchar(255) NULL,
+                `config_value` varchar(255) NULL,
+                `ps_version` varchar(255) NULL,
+                `mbo_version` varchar(255) NULL,
+                `applied` TINYINT(1) NOT NULL DEFAULT \'0\',
+                `date_add` datetime NOT NULL,
+                PRIMARY KEY (`id_mbo_api_config`)
+            ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=UTF8;';
+        }
+
+        foreach ($sqlQueries as $query) {
+            if (!Db::getInstance()->execute($query)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function uninstallTables(): bool
+    {
+        $sqlQueries[] = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'mbo_api_config`';
+
+        foreach ($sqlQueries as $query) {
+            if (!Db::getInstance()->execute($query)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function getAccountsDataProvider(): AccountsDataProvider

@@ -102,6 +102,16 @@ trait UseActionAdminControllerSetMedia
             return;
         }
 
-        $this->context->controller->addJs(getenv('MBO_CDC_URL'));
+        $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error-templating.js');
+        $this->context->controller->addCss($this->getPathUri() . 'views/css/cdc-error-templating.css');
+
+        $cdcJsFile = getenv('MBO_CDC_URL');
+        if (false === $cdcJsFile || !is_string($cdcJsFile) || empty($cdcJsFile)) {
+            $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error.js');
+
+            return;
+        }
+
+        $this->context->controller->addJs($cdcJsFile);
     }
 }

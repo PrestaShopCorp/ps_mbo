@@ -55,8 +55,11 @@ class AuthorizationChecker
      */
     private $keyCacheIndex;
 
-    public function __construct(CacheProvider $cacheProvider, Client $distributionClient, AdminAuthenticationProvider $adminAuthenticationProvider)
-    {
+    public function __construct(
+        CacheProvider $cacheProvider,
+        Client $distributionClient,
+        AdminAuthenticationProvider $adminAuthenticationProvider
+    ) {
         $this->cacheProvider = $cacheProvider;
         $this->distributionClient = $distributionClient;
         $this->adminAuthenticationProvider = $adminAuthenticationProvider;

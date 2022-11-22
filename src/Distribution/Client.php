@@ -57,6 +57,7 @@ class Client
         'shop_uuid',
         'shop_url',
         'isoLang',
+        'shopVersion',
     ];
     /**
      * @var array<string, string>
@@ -188,9 +189,7 @@ class Client
     /**
      * Retrieve the user menu from NEST Api
      *
-     * @return false|\stdClass
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return false|stdClass
      */
     public function getConf()
     {
@@ -203,10 +202,11 @@ class Client
 
         $this->setQueryParams([
             'isoLang' => $languageIsoCode,
+            'shopVersion' => _PS_VERSION_,
         ]);
         try {
             $conf = $this->processRequestAndReturn('shops/conf');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return false;
         }
         if (empty($conf)) {
@@ -215,6 +215,39 @@ class Client
         $this->cacheProvider->save($cacheKey, $conf, 60 * 60 * 24); // A day
 
         return $this->cacheProvider->fetch($cacheKey);
+    }
+
+    /**
+     * Retrieve API config from Distribution API.
+     *
+     * @return array
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::registerShop
+     */
+    public function getApiConf(): array
+    {
+        return $this->processRequestAndReturn('shops/conf-mbo');
+    }
+
+    /**
+     * Send a tracking to the API
+     * Send it asynchronously to avoid blocking process for this feature
+     *
+     * @param array $eventData
+     */
+    public function trackEvent(array $eventData): void
+    {
+        try {
+            $this->processRequestAndReturn(
+                'shops/events',
+                null,
+                self::HTTP_METHOD_POST,
+                ['form_params' => $eventData]
+            );
+        } catch (\Throwable $e) {
+            // Do nothing if the tracking fails
+        }
     }
 
     private function mergeShopDataWithParams(array $params): array
@@ -232,8 +265,10 @@ class Client
      * Process the request with the current parameters, given the $method, and return the $attribute from
      * the response body, or the default fallback value $default.
      *
+     * @param string $uri
      * @param string|null $attributeToReturn
      * @param string $method
+     * @param array $options
      * @param mixed $default
      *
      * @return mixed
@@ -262,6 +297,10 @@ class Client
 
     /**
      * Process the request with the current parameters, given the $method, return the body as string
+     *
+     * @param string $method
+     * @param string $uri
+     * @param array $options
      *
      * @return string
      *

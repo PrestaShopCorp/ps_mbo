@@ -26,9 +26,11 @@ use Context;
 use Country;
 use Doctrine\Common\Cache\CacheProvider;
 use Language;
+use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Module\Module;
+use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
 use PrestaShop\Module\Mbo\Tab\Tab;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Module\Module as CoreModule;
@@ -63,20 +65,27 @@ class ContextBuilder
     /**
      * @var AdminAuthenticationProvider
      */
-    private $adminAuthentificationProvider;
+    private $adminAuthenticationProvider;
+
+    /**
+     * @var AccountsDataProvider
+     */
+    private $accountsDataProvider;
 
     public function __construct(
         ContextAdapter $contextAdapter,
         ModuleRepository $moduleRepository,
         Router $router,
         CacheProvider $cacheProvider,
-        AdminAuthenticationProvider $adminAuthentificationProvider
+        AdminAuthenticationProvider $adminAuthenticationProvider,
+        AccountsDataProvider $accountsDataProvider
     ) {
         $this->contextAdapter = $contextAdapter;
         $this->moduleRepository = $moduleRepository;
         $this->router = $router;
         $this->cacheProvider = $cacheProvider;
-        $this->adminAuthentificationProvider = $adminAuthentificationProvider;
+        $this->adminAuthenticationProvider = $adminAuthenticationProvider;
+        $this->accountsDataProvider = $accountsDataProvider;
     }
 
     public function getViewContext(): array
@@ -95,6 +104,25 @@ class ContextBuilder
         $context['prestaShop_controller_class_name'] = $tab->getLegacyClassName();
 
         return $context;
+    }
+
+    public function getEventContext(): array
+    {
+        $modules = [];
+        // Filter : remove uninstalled modules
+        foreach ($this->getInstalledModules() as $installedModule) {
+            if ($installedModule['status'] !== ModuleStateMachine::STATUS_UNINSTALLED) {
+                $modules[] = $installedModule['name'];
+            }
+        }
+
+        return [
+            'modules' => $modules,
+            'user_id' => $this->accountsDataProvider->getAccountsUserId(),
+            'shop_id' => $this->accountsDataProvider->getAccountsShopId(),
+            'iso_lang' => $this->getLanguage()->getIsoCode(),
+            'iso_code' => $this->getCountry()->iso_code,
+        ];
     }
 
     public function clearCache(): bool
@@ -131,7 +159,7 @@ class ContextBuilder
             'shop_version' => _PS_VERSION_,
             'shop_url' => Config::getShopUrl(),
             'shop_uuid' => Config::getShopMboUuid(),
-            'mbo_token' => $this->adminAuthentificationProvider->getMboJWT(),
+            'mbo_token' => $this->adminAuthenticationProvider->getMboJWT(),
             'user_id' => $context->cookie->id_employee,
             'admin_token' => $token,
             'refresh_url' => $refreshUrl,
@@ -165,6 +193,9 @@ class ContextBuilder
         return $currency->iso_code;
     }
 
+    /**
+     * @return array<array>
+     */
     private function getInstalledModules(): array
     {
         $cacheKey = $this->getCacheKey();

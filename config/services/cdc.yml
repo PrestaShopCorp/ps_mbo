@@ -10,3 +10,4 @@ services:
       - '@router'
       - '@doctrine.cache.provider'
       - '@mbo.security.admin_authentication.provider'
+      - '@mbo.accounts.data_provider'

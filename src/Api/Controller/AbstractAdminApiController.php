@@ -33,6 +33,7 @@ use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker;
 use PrestaShop\Module\Mbo\Helpers\Config as ConfigHelper;
 use ps_mbo;
+use Psr\Log\LoggerInterface;
 use Tools;
 
 abstract class AbstractAdminApiController extends ModuleAdminController
@@ -64,6 +65,11 @@ abstract class AbstractAdminApiController extends ModuleAdminController
      */
     private $authorizationChecker;
 
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
     public function __construct()
     {
         parent::__construct();
@@ -71,11 +77,13 @@ abstract class AbstractAdminApiController extends ModuleAdminController
         $this->errorHandler = $this->module->get(ErrorHandler::class);
         $this->adminAuthenticationProvider = $this->module->get('mbo.security.admin_authentication.provider');
         $this->authorizationChecker = $this->module->get(AuthorizationChecker::class);
+        $this->logger = $this->module->get('logger');
     }
 
     public function init(): void
     {
         try {
+            $this->logger->info('API Call received = ' . $_SERVER['REQUEST_URI']);
             $this->authorize();
         } catch (IncompleteSignatureParamsException $exception) {
             $this->errorHandler->handle($exception);
@@ -154,34 +162,46 @@ abstract class AbstractAdminApiController extends ModuleAdminController
      */
     protected function authorize()
     {
-        $keyVersion = \Tools::getValue('version');
+        $keyVersion = Tools::getValue('version');
         $signature = isset($_SERVER['HTTP_MBO_SIGNATURE']) ? $_SERVER['HTTP_MBO_SIGNATURE'] : false;
 
+        if (!$keyVersion || !$signature) {
+            throw new IncompleteSignatureParamsException('Expected signature elements are not given');
+        }
+
+        $message = $this->buildSignatureMessage();
+
+        $this->authorizationChecker->verify($keyVersion, $signature, $message);
+    }
+
+    /**
+     * Generate elements composing the signature.
+     * This is the standard composition.
+     * Please build your own if other elements are included to the signature.
+     *
+     * @return string
+     *
+     * @throws IncompleteSignatureParamsException
+     */
+    protected function buildSignatureMessage(): string
+    {
         // Payload elements
-        $action = Tools::getValue('action');
-        $module = Tools::getValue('module');
         $adminToken = Tools::getValue('admin_token');
         $actionUuid = Tools::getValue('action_uuid');
 
         if (
-            !$keyVersion ||
-            !$signature ||
-            !$action ||
-            !$module ||
             !$adminToken ||
             !$actionUuid
         ) {
             throw new IncompleteSignatureParamsException('Expected signature elements are not given');
         }
 
-        $message = json_encode([
-            'action' => $action,
-            'module' => $module,
+        $keyVersion = Tools::getValue('version');
+
+        return json_encode([
             'admin_token' => $adminToken,
             'action_uuid' => $actionUuid,
             'version' => $keyVersion,
         ]);
-
-        $this->authorizationChecker->verify($keyVersion, $signature, $message);
     }
 }

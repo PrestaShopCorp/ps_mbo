@@ -42,6 +42,7 @@ trait UseDisplayAdminThemesListAfter
 
         $this->smarty->assign([
             'shop_context' => json_encode($context),
+            'cdcErrorUrl' => $this->get('router')->generate('admin_mbo_module_cdc_error'),
         ]);
 
         return $this->fetch('module:ps_mbo/views/templates/hook/recommended-themes.tpl');
@@ -69,7 +70,17 @@ trait UseDisplayAdminThemesListAfter
     protected function loadMediaAdminThemesListAfter(): void
     {
         if (\Tools::getValue('controller') === 'AdminThemes') {
-            $this->context->controller->addJs(getenv('MBO_CDC_URL'));
+            $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error-templating.js');
+            $this->context->controller->addCss($this->getPathUri() . 'views/css/cdc-error-templating.css');
+
+            $cdcJsFile = getenv('MBO_CDC_URL');
+            if (false === $cdcJsFile || !is_string($cdcJsFile) || empty($cdcJsFile)) {
+                $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error.js');
+
+                return;
+            }
+
+            $this->context->controller->addJs($cdcJsFile);
         }
     }
 }
