@@ -2,9 +2,11 @@
 
 namespace PrestaShop\Module\Mbo\Api\Service;
 
+use http\Exception\InvalidArgumentException;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
 use PrestaShop\Module\Mbo\Module\CommandHandler\ModuleStatusTransitionCommandHandler;
+use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
 use Tools;
 
 class ModuleTransitionExecutor implements ServiceExecutorInterface
@@ -34,6 +36,12 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
      */
     public function execute(...$parameters): array
     {
+        if (!$parameters[0] instanceof \Module) {
+            throw new InvalidArgumentException();
+        }
+
+        $psMbo = $parameters[0];
+
         $transition = Tools::getValue('action');
         $moduleName = Tools::getValue('module');
         $source = Tools::getValue('source', null);
@@ -48,6 +56,11 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
 
         $moduleUrls = $module->get('urls');
         $configUrl = (bool) $module->get('is_configurable') && isset($moduleUrls['configure']) ? $this->generateTokenizedModuleActionUrl($moduleUrls['configure']) : null;
+
+        if (ModuleTransitionCommand::MODULE_COMMAND_DOWNLOAD === $transition) {
+            // Clear the cache after download to force reload module services
+            $psMbo->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
+        }
 
         return [
             'message' => 'Transition successfully executed',
