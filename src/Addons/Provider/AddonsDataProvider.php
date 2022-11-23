@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Addons\Provider;
 
 use Exception;
-use PhpEncryption;
 use PrestaShop\Module\Mbo\Addons\ApiClient;
 use PrestaShop\Module\Mbo\Addons\User\UserInterface;
 
@@ -74,11 +73,6 @@ class AddonsDataProvider implements DataProviderInterface
     protected $marketplaceClient;
 
     /**
-     * @var PhpEncryption
-     */
-    protected $encryption;
-
-    /**
      * @var string the cache directory location
      */
     public $cacheDir;
@@ -104,7 +98,6 @@ class AddonsDataProvider implements DataProviderInterface
         ?string $moduleChannel = null
     ) {
         $this->marketplaceClient = $apiClient;
-        $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
         $this->moduleChannel = $moduleChannel ?? self::ADDONS_API_MODULE_CHANNEL_STABLE;
         $this->user = $user;
     }

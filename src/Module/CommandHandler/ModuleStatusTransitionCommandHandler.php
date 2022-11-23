@@ -90,6 +90,10 @@ final class ModuleStatusTransitionCommandHandler
         } else {
             $apiModule = $this->moduleRepository->getApiModule($moduleName);
 
+            if (null === $apiModule) {
+                throw new ModuleNotFoundException(sprintf('Module %s not found', $moduleName));
+            }
+
             $module = new TransitionModule(
                 $moduleName,
                 $apiModule->version,
