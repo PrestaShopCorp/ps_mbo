@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Addons\User;
 
 use Exception;
-use PhpEncryptionCore as PhpEncryption;
+use PrestaShop\Module\Mbo\Addons\User\CredentialsEncryptor;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -32,9 +32,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class AddonsUser implements UserInterface
 {
     /**
-     * @var PhpEncryption
+     * @var CredentialsEncryptor
      */
-    private $encryption;
+    protected $encryption;
 
     /**
      * @var Request
@@ -46,9 +46,9 @@ class AddonsUser implements UserInterface
      */
     private $session;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session, CredentialsEncryptor $encryption)
     {
-        $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
+        $this->encryption = $encryption;
         $this->request = Request::createFromGlobals();
         $this->session = $session;
     }

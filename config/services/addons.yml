@@ -2,10 +2,16 @@ services:
   _defaults:
     public: true
 
+  mbo.addons.user.credentials_encryptor:
+    class: PrestaShop\Module\Mbo\Addons\User\CredentialsEncryptor
+    arguments:
+      - '@mbo.security.admin_authentication.provider'
+
   mbo.addons.user:
     class: PrestaShop\Module\Mbo\Addons\User\AddonsUser
     arguments:
       - '@session'
+      - '@mbo.addons.user.credentials_encryptor'
 
   mbo.addons.user.provider:
     class: PrestaShop\Module\Mbo\Addons\User\AddonsUserProvider

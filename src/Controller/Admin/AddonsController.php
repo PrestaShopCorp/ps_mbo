@@ -23,9 +23,9 @@ namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use Configuration;
 use Exception;
-use PhpEncryption;
 use PrestaShop\Module\Mbo\Addons\Exception\LoginErrorException;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
+use PrestaShop\Module\Mbo\Addons\User\CredentialsEncryptor;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeNotNeededException;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
@@ -65,12 +65,18 @@ class AddonsController extends FrameworkBundleAdminController
      */
     private $coreModuleRepository;
 
+    /**
+     * @var CredentialsEncryptor
+     */
+    protected $encryption;
+
     public function __construct(
         RequestStack $requestStack,
         AddonsDataProvider $addonsDataProvider,
         ModuleManager $moduleManager,
         Repository $moduleRepository,
-        ModuleRepository $coreModuleRepository
+        ModuleRepository $coreModuleRepository,
+        CredentialsEncryptor $encryption
     ) {
         parent::__construct();
         $this->requestStack = $requestStack;
@@ -78,6 +84,7 @@ class AddonsController extends FrameworkBundleAdminController
         $this->moduleManager = $moduleManager;
         $this->moduleRepository = $moduleRepository;
         $this->coreModuleRepository = $coreModuleRepository;
+        $this->encryption = $encryption;
     }
 
     /**
@@ -243,13 +250,11 @@ class AddonsController extends FrameworkBundleAdminController
     {
         $expiresAt = strtotime('+30 days');
 
-        $phpEncryption = new PhpEncryption(_NEW_COOKIE_KEY_);
-
         $response->headers->setCookie(
-            new Cookie('username_addons', $phpEncryption->encrypt($params['username']), $expiresAt, null, null, null, false)
+            new Cookie('username_addons', $this->encryption->encrypt($params['username']), $expiresAt, null, null, null, false)
         );
         $response->headers->setCookie(
-            new Cookie('password_addons', $phpEncryption->encrypt($params['password']), $expiresAt, null, null, null, false)
+            new Cookie('password_addons', $this->encryption->encrypt($params['password']), $expiresAt, null, null, null, false)
         );
         $response->headers->setCookie(
             new Cookie('is_contributor', (string) $json->is_contributor, $expiresAt, null, null, null, false)
@@ -260,10 +265,8 @@ class AddonsController extends FrameworkBundleAdminController
 
     private function createSessionUser(Response $response, SessionInterface $session, \stdClass $json, array $params): Response
     {
-        $phpEncryption = new PhpEncryption(_NEW_COOKIE_KEY_);
-
-        $session->set('username_addons', $phpEncryption->encrypt($params['username']));
-        $session->set('password_addons', $phpEncryption->encrypt($params['password']));
+        $session->set('username_addons', $this->encryption->encrypt($params['username']));
+        $session->set('password_addons', $this->encryption->encrypt($params['password']));
         $session->set('is_contributor', (string) $json->is_contributor);
 
         return $response;
