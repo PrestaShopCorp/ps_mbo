@@ -31,6 +31,7 @@ services:
     class: PrestaShop\Module\Mbo\Api\Service\ModuleTransitionExecutor
     arguments:
       - '@mbo.modules.state_machine.module_status_transition_handler'
+      - '@mbo.addons.user.credentials_encryptor'
 
   mbo.api.service.executors.config_apply:
     class: PrestaShop\Module\Mbo\Api\Service\ConfigApplyExecutor

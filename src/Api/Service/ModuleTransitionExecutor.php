@@ -3,6 +3,7 @@
 namespace PrestaShop\Module\Mbo\Api\Service;
 
 use http\Exception\InvalidArgumentException;
+use PrestaShop\Module\Mbo\Addons\User\CredentialsEncryptor;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
 use PrestaShop\Module\Mbo\Module\CommandHandler\ModuleStatusTransitionCommandHandler;
@@ -19,9 +20,18 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
      */
     private $moduleStatusTransitionCommandHandler;
 
-    public function __construct(ModuleStatusTransitionCommandHandler $moduleStatusTransitionCommandHandler)
+    /**
+     * @var CredentialsEncryptor
+     */
+    private $encryption;
+
+    public function __construct(
+        ModuleStatusTransitionCommandHandler $moduleStatusTransitionCommandHandler,
+        CredentialsEncryptor $encryption
+    )
     {
         $this->moduleStatusTransitionCommandHandler = $moduleStatusTransitionCommandHandler;
+        $this->encryption = $encryption;
     }
 
     /**
@@ -116,8 +126,8 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
             return;
         }
 
-        $session->set('username_addons', $credentials['addons_username']);
-        $session->set('password_addons', $credentials['addons_pwd']);
+        $session->set('username_addons', $this->encrytion->decrypt($credentials['addons_username']));
+        $session->set('password_addons', $this->encrytion->decrypt($credentials['addons_pwd']));
         $session->set('is_contributor', '0');
     }
 }
