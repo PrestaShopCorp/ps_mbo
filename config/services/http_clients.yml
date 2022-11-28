@@ -3,7 +3,7 @@ services:
     class: GuzzleHttp\Client
     arguments:
       $config:
-        base_uri: "https://api-addons.prestashop.com"
+        base_uri: "%env(ADDONS_API_URL)%"
         timeout: "7200"
         headers:
             Accept: "application/json"

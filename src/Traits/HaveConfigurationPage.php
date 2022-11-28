@@ -14,18 +14,22 @@ trait HaveConfigurationPage
         'local' => [
             'cdc' => 'http://localhost:8080/mbo-cdc.umd.js',
             'api' => 'http://localhost:3000',
+            'addons' => 'https://preprod-api-addons.prestashop.com',
         ],
         'prestabulle' => [
             'cdc' => 'https://integration-assets.prestashop3.com/dst/mbo/#prestabulle#/mbo-cdc.umd.js',
             'api' => 'https://mbo-api-#prestabulle#.prestashop.com',
+            'addons' => 'https://preprod-api-addons.prestashop.com',
         ],
         'preprod' => [
             'cdc' => 'https://preproduction-assets.prestashop3.com/dst/mbo/latest/mbo-cdc.umd.js',
             'api' => 'https://mbo-api-preprod.prestashop.com',
+            'addons' => 'https://preprod-api-addons.prestashop.com',
         ],
         'prod' => [
             'cdc' => 'https://assets.prestashop3.com/dst/mbo/latest/mbo-cdc.umd.js',
             'api' => 'https://mbo-api.prestashop.com',
+            'addons' => 'https://api-addons.prestashop.com',
         ],
     ];
 
@@ -74,14 +78,17 @@ trait HaveConfigurationPage
         if (strpos($newValue, 'prestabulle') !== false) {
             $cdcUrl = str_replace('#prestabulle#', $newValue, $this->environmentData['prestabulle']['cdc']);
             $apiUrl = str_replace('#prestabulle#', $newValue, $this->environmentData['prestabulle']['api']);
+            $addonsUrl = str_replace('#prestabulle#', $newValue, $this->environmentData['prestabulle']['addons']);
         } else {
             $cdcUrl = $this->environmentData[$newValue]['cdc'];
             $apiUrl = $this->environmentData[$newValue]['api'];
+            $addonsUrl = $this->environmentData[$newValue]['addons'];
         }
 
         $envData = file_get_contents($envFilePath);
         $envData = preg_replace('#MBO_CDC_URL=".*"#', 'MBO_CDC_URL="' . $cdcUrl . '"', $envData);
         $envData = preg_replace('#DISTRIBUTION_API_URL=".*"#', 'DISTRIBUTION_API_URL="' . $apiUrl . '"', $envData);
+        $envData = preg_replace('#ADDONS_API_URL=".*"#', 'ADDONS_API_URL="' . $addonsUrl . '"', $envData);
 
         // Update the .env file
         file_put_contents($envFilePath, $envData);
