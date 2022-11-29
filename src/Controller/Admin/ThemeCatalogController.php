@@ -21,8 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
-use PrestaShop\Module\Mbo\Service\ExternalContentProvider\ExternalContentProviderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -40,29 +38,13 @@ class ThemeCatalogController extends FrameworkBundleAdminController
     protected $requestStack;
 
     /**
-     * @var ExternalContentProviderInterface
-     */
-    protected $externalContentProvider;
-
-    /**
-     * @var LinksProvider
-     */
-    protected $linksProvider;
-
-    /**
      * @param RequestStack $requestStack
-     * @param ExternalContentProviderInterface $externalContentCollectionProvider
-     * @param LinksProvider $linksProvider
      */
     public function __construct(
-        RequestStack $requestStack,
-        ExternalContentProviderInterface $externalContentCollectionProvider,
-        LinksProvider $linksProvider
+        RequestStack $requestStack
     ) {
         parent::__construct();
         $this->requestStack = $requestStack;
-        $this->externalContentProvider = $externalContentCollectionProvider;
-        $this->linksProvider = $linksProvider;
     }
 
     /**
@@ -78,7 +60,9 @@ class ThemeCatalogController extends FrameworkBundleAdminController
             $response->setContent($this->renderView(
                 '@Modules/ps_mbo/views/templates/admin/controllers/theme_catalog/addons_store.html.twig',
                 [
-                    'pageContent' => $this->externalContentProvider->getContent($this->linksProvider->getSelectionLink()),
+                    'pageContent' => $this->get('mbo.externalcontent.provider')->getContent(
+                        $this->get('mbo.addons.links_provider')->getSelectionLink()
+                    ),
                     'layoutHeaderToolbarBtn' => [],
                     'layoutTitle' => $this->trans('Themes Catalog', 'Modules.Mbo.Themescatalog'),
                     'requireAddonsSearch' => true,
