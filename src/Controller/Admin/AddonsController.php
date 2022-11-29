@@ -24,10 +24,7 @@ namespace PrestaShop\Module\Mbo\Controller\Admin;
 use Configuration;
 use Exception;
 use PrestaShop\Module\Mbo\Addons\Exception\LoginErrorException;
-use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
-use PrestaShop\Module\Mbo\Addons\User\CredentialsEncryptor;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeNotNeededException;
-use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -46,45 +43,24 @@ class AddonsController extends FrameworkBundleAdminController
     protected $requestStack;
 
     /**
-     * @var AddonsDataProvider
-     */
-    private $addonsDataProvider;
-
-    /**
      * @var ModuleManager
      */
     private $moduleManager;
 
     /**
-     * @var Repository
+     * @var ModuleRepository
      */
     private $moduleRepository;
 
-    /**
-     * @var ModuleRepository
-     */
-    private $coreModuleRepository;
-
-    /**
-     * @var CredentialsEncryptor
-     */
-    protected $encryption;
-
     public function __construct(
         RequestStack $requestStack,
-        AddonsDataProvider $addonsDataProvider,
         ModuleManager $moduleManager,
-        Repository $moduleRepository,
-        ModuleRepository $coreModuleRepository,
-        CredentialsEncryptor $encryption
+        ModuleRepository $moduleRepository
     ) {
         parent::__construct();
         $this->requestStack = $requestStack;
-        $this->addonsDataProvider = $addonsDataProvider;
         $this->moduleManager = $moduleManager;
         $this->moduleRepository = $moduleRepository;
-        $this->coreModuleRepository = $coreModuleRepository;
-        $this->encryption = $encryption;
     }
 
     /**
@@ -105,7 +81,7 @@ class AddonsController extends FrameworkBundleAdminController
         ];
 
         try {
-            $json = $this->addonsDataProvider->request('check_customer', $params);
+            $json = $this->get('mbo.addons.data_provider')->request('check_customer', $params);
             if ($json === null) {
                 throw new LoginErrorException();
             }
@@ -125,7 +101,7 @@ class AddonsController extends FrameworkBundleAdminController
             $response->setData(['success' => 1, 'message' => '']);
 
             // Clear previously filtered modules search
-            $this->moduleRepository->clearCache();
+            $this->get('mbo.modules.repository')->clearCache();
         } catch (Exception $e) {
             $response->setData([
                 'success' => 0,
@@ -147,7 +123,7 @@ class AddonsController extends FrameworkBundleAdminController
     public function logoutAction()
     {
         // Clear previously filtered modules search
-        $this->moduleRepository->clearCache();
+        $this->get('mbo.modules.repository')->clearCache();
 
         $request = $this->requestStack->getCurrentRequest();
 
@@ -201,7 +177,7 @@ class AddonsController extends FrameworkBundleAdminController
                     'Modules.Mbo.Modulescatalog',
                     ['%module%' => $moduleName]
                 );
-                $upgradeResponse['is_configurable'] = (bool) $this->coreModuleRepository
+                $upgradeResponse['is_configurable'] = (bool) $this->moduleRepository
                     ->getModule($moduleName)
                     ->attributes
                     ->get('is_configurable');
@@ -248,13 +224,14 @@ class AddonsController extends FrameworkBundleAdminController
 
     private function createCookieUser(Response $response, \stdClass $json, array $params): Response
     {
+        $encryptor = $this->get('mbo.addons.user.credentials_encryptor');
         $expiresAt = strtotime('+30 days');
 
         $response->headers->setCookie(
-            new Cookie('username_addons', $this->encryption->encrypt($params['username']), $expiresAt, null, null, null, false)
+            new Cookie('username_addons', $encryptor->encrypt($params['username']), $expiresAt, null, null, null, false)
         );
         $response->headers->setCookie(
-            new Cookie('password_addons', $this->encryption->encrypt($params['password']), $expiresAt, null, null, null, false)
+            new Cookie('password_addons', $encryptor->encrypt($params['password']), $expiresAt, null, null, null, false)
         );
         $response->headers->setCookie(
             new Cookie('is_contributor', (string) $json->is_contributor, $expiresAt, null, null, null, false)
@@ -265,8 +242,10 @@ class AddonsController extends FrameworkBundleAdminController
 
     private function createSessionUser(Response $response, SessionInterface $session, \stdClass $json, array $params): Response
     {
-        $session->set('username_addons', $this->encryption->encrypt($params['username']));
-        $session->set('password_addons', $this->encryption->encrypt($params['password']));
+        $encryptor = $this->get('mbo.addons.user.credentials_encryptor');
+
+        $session->set('username_addons', $encryptor->encrypt($params['username']));
+        $session->set('password_addons', $encryptor->encrypt($params['password']));
         $session->set('is_contributor', (string) $json->is_contributor);
 
         return $response;
