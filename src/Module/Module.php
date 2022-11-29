@@ -32,8 +32,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class Module implements ModuleInterface
 {
-    public static $OFFICIAL_PARTNER_AUTHOR = 'PrestaShop Partners';
-
     /**
      * @var LegacyModule Module The instance of the legacy module
      */
@@ -94,18 +92,13 @@ class Module implements ModuleInterface
             'USD' => 0,
             'GBP' => 0,
         ],
-        'type' => '',
         // From the marketplace
         'url' => null,
         'avgRate' => 0,
         'nbRates' => 0,
         'fullDescription' => '',
-        'confirmUninstall' => '',
         // Generate addons urls
-        'url_active' => null,
-        'urls' => [],
         'is_official_partner' => false,
-        'origin_filter_value' => '',
     ];
 
     /**
@@ -175,7 +168,6 @@ class Module implements ModuleInterface
         $this->fillLogo();
 
         $this->attributes->set('version', $version);
-        $this->attributes->set('type', $this->convertType($this->get('origin_filter_value')));
 
         // Unfortunately, we can sometime have an array, and sometimes an object.
         // This is the first place where this value *always* exists
@@ -406,21 +398,6 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @param string $value
-     *
-     * @return string
-     */
-    protected function convertType(string $value): string
-    {
-        $conversionTable = [
-            Filters\Origin::ADDONS_CUSTOMER => 'addonsBought',
-            Filters\Origin::ADDONS_MUST_HAVE => 'addonsMustHave',
-        ];
-
-        return $conversionTable[$value] ?? '';
-    }
-
-    /**
      * Set the module logo.
      */
     public function fillLogo(): void
@@ -440,49 +417,6 @@ class Module implements ModuleInterface
                 break;
             }
         }
-    }
-
-    /**
-     * Inform the merchant an upgrade is waiting to be applied from the disk or the marketplace.
-     *
-     * @return bool
-     */
-    public function canBeUpgraded(): bool
-    {
-        if ($this->database->get('installed') == 0) {
-            return false;
-        }
-
-        // Potential update from API
-        if ($this->canBeUpgradedFromAddons()) {
-            return true;
-        }
-
-        // Potential update from disk
-        return version_compare($this->database->get('version'), $this->disk->get('version'), '<');
-    }
-
-    /**
-     * Only check if an upgrade is available on the marketplace.
-     *
-     * @return bool
-     */
-    public function canBeUpgradedFromAddons(): bool
-    {
-        return $this->attributes->get('version_available') !== 0
-            && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<');
-    }
-
-    /**
-     * Return installed modules.
-     *
-     * @param int $position Take only positionable modules
-     *
-     * @return array Modules
-     */
-    public function getModulesInstalled(int $position = 0): array
-    {
-        return LegacyModule::getModulesInstalled($position);
     }
 
     /**

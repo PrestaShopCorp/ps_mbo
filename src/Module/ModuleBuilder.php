@@ -36,21 +36,6 @@ use Validate;
 class ModuleBuilder implements ModuleBuilderInterface
 {
     /**
-     * @const array giving a translation domain key for each module action
-     */
-    public const ACTIONS_TRANSLATION_DOMAINS = [
-        'install' => 'Admin.Actions',
-        'enable' => 'Admin.Actions',
-        'configure' => 'Admin.Actions',
-        'upgrade' => 'Admin.Actions',
-        'enableMobile' => 'Modules.Mbo.Modulescatalog',
-        'disableMobile' => 'Modules.Mbo.Modulescatalog',
-        'disable' => 'Admin.Actions',
-        'reset' => 'Admin.Actions',
-        'uninstall' => 'Admin.Actions',
-    ];
-
-    /**
      * @var array
      */
     public const MAIN_CLASS_ATTRIBUTES = [
@@ -63,18 +48,6 @@ class ModuleBuilder implements ModuleBuilderInterface
         'author_address',
         'limited_countries',
         'need_instance',
-        'confirmUninstall',
-    ];
-
-    public const AVAILABLE_ACTIONS = [
-        'install',
-        'enable',
-        'upgrade',
-        'enableMobile',
-        'disableMobile',
-        'disable',
-        'reset',
-        'uninstall',
     ];
 
     /**
@@ -88,7 +61,7 @@ class ModuleBuilder implements ModuleBuilderInterface
     protected $router;
 
     /**
-     * Path to the module directory, coming from Confiuration class.
+     * Path to the module directory, coming from Configuration class.
      *
      * @var string
      */
@@ -121,15 +94,13 @@ class ModuleBuilder implements ModuleBuilderInterface
             'path' => $this->moduleDirectory . $module->name,
         ];
 
-        // Author can be overrided by the legacyModule, so we have to do that here
-        $attributes['is_official_partner'] = $attributes['author'] === Module::$OFFICIAL_PARTNER_AUTHOR;
         if ($this->isModuleMainClassValid($module->name)) {
             $mainClassAttributes = [];
 
             // We load the main class of the module, and get its properties
             $tmpModule = LegacyModule::getInstanceByName($module->name);
             foreach (static::MAIN_CLASS_ATTRIBUTES as $dataToRetrieve) {
-                if (isset($tmpModule->{$dataToRetrieve})) {
+                if (isset($tmpModule->{$dataToRetrieve}) && empty($attributes[$dataToRetrieve])) {
                     $mainClassAttributes[$dataToRetrieve] = $tmpModule->{$dataToRetrieve};
                 }
             }
@@ -143,98 +114,7 @@ class ModuleBuilder implements ModuleBuilderInterface
             $attributes = array_merge($attributes, $mainClassAttributes);
         }
 
-        $module = new Module($attributes, $disk, $database);
-        $this->generateAddonsUrls($module);
-
-        return $module;
-    }
-
-    /**
-     * @param Module $module
-     *
-     * @return void
-     */
-    public function generateAddonsUrls(Module $module): void
-    {
-        $moduleName = $module->attributes->get('name');
-
-        foreach (static::AVAILABLE_ACTIONS as $action) {
-            $urls[$action] = $this->router->generate('admin_module_manage_action', [
-                'action' => $action,
-                'module_name' => $moduleName,
-            ]);
-        }
-        $urls['configure'] = $this->router->generate('admin_module_configure_action', [
-            'module_name' => $moduleName,
-        ]);
-
-        if ($module->database->has('installed')
-            && $module->database->getBoolean('installed')
-        ) {
-            if (!$module->database->getBoolean('active')) {
-                $urlActive = 'enable';
-                unset(
-                    $urls['install'],
-                    $urls['disable']
-                );
-            } elseif ($module->attributes->getBoolean('is_configurable')) {
-                $urlActive = 'configure';
-                unset(
-                    $urls['enable'],
-                    $urls['install']
-                );
-            } else {
-                $urlActive = 'disable';
-                unset(
-                    $urls['install'],
-                    $urls['enable'],
-                    $urls['configure']
-                );
-            }
-
-            if (!$module->attributes->getBoolean('is_configurable')) {
-                unset($urls['configure']);
-            }
-
-            if ($module->canBeUpgraded()) {
-                $urlActive = 'upgrade';
-            } else {
-                unset($urls['upgrade']);
-            }
-
-            if (!$module->database->getBoolean('active_on_mobile')) {
-                unset($urls['disableMobile']);
-            } else {
-                unset($urls['enableMobile']);
-            }
-        } elseif (
-            !$module->attributes->has('origin')
-            || $module->disk->getBoolean('is_present')
-            || in_array($module->attributes->get('origin'), ['native', 'native_all', 'partner', 'customer'], true)
-        ) {
-            $urlActive = 'install';
-            unset(
-                $urls['uninstall'],
-                $urls['enable'],
-                $urls['disable'],
-                $urls['enableMobile'],
-                $urls['disableMobile'],
-                $urls['reset'],
-                $urls['upgrade'],
-                $urls['configure']
-            );
-        } else {
-            $urlActive = 'buy';
-        }
-
-        $module->attributes->set('urls', $urls);
-        $module->attributes->set('actionTranslationDomains', self::ACTIONS_TRANSLATION_DOMAINS);
-
-        if ($urlActive === 'buy' || array_key_exists($urlActive, $urls)) {
-            $module->attributes->set('url_active', $urlActive);
-        } else {
-            $module->attributes->set('url_active', key($urls));
-        }
+        return new Module($attributes, $disk, $database);
     }
 
     /**
