@@ -44,4 +44,3 @@ services:
       - '@request_stack'
       - '@prestashop.module.manager'
       - '@prestashop.core.admin.module.repository'
-      - '@mbo.addons.user.credentials_encryptor'
