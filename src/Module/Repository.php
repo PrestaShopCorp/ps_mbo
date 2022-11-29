@@ -24,7 +24,11 @@ namespace PrestaShop\Module\Mbo\Module;
 use Db;
 use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
+<<<<<<< HEAD
 use PrestaShop\Module\Mbo\Distribution\ConnectedClient;
+=======
+use PrestaShop\Module\Mbo\Distribution\Client;
+>>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
 use Psr\Log\LoggerInterface;
 use Shop;
 use stdClass;
@@ -35,9 +39,15 @@ use stdClass;
 class Repository implements RepositoryInterface
 {
     /**
+<<<<<<< HEAD
      * @var ConnectedClient
      */
     protected $connectedClient;
+=======
+     * @var Client
+     */
+    protected $distributionClient;
+>>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
 
     /**
      * @var LoggerInterface
@@ -79,7 +89,11 @@ class Repository implements RepositoryInterface
     protected $dbPrefix;
 
     public function __construct(
+<<<<<<< HEAD
         ConnectedClient $connectedClient,
+=======
+        Client $distributionClient,
+>>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
         ModuleBuilder $moduleBuilder,
         LoggerInterface $logger,
         string $localeCode,
@@ -87,7 +101,11 @@ class Repository implements RepositoryInterface
         string $dbPrefix,
         AdminAuthenticationProvider $adminAuthenticationProvider
     ) {
+<<<<<<< HEAD
         $this->connectedClient = $connectedClient;
+=======
+        $this->distributionClient = $distributionClient;
+>>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
         $this->dbPrefix = $dbPrefix;
         $this->logger = $logger;
         $this->adminAuthenticationProvider = $adminAuthenticationProvider;
@@ -123,11 +141,16 @@ class Repository implements RepositoryInterface
     public function fetchAll(bool $rawModules = false): array
     {
         if ($this->cache !== null && !$rawModules) {
-            return $this->cache;
+//            return $this->cache;
         }
 
+<<<<<<< HEAD
         $this->connectedClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
         $addons = $this->connectedClient->getModulesList();
+=======
+        $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
+        $addons = $this->distributionClient->getModulesList();
+>>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
 
         $listAddonsModules = [];
         $apiModules = [];

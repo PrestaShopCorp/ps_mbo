@@ -23,6 +23,7 @@ services:
     arguments:
       - "@mbo.distribution_api.client.http"
       - '@mbo.doctrine.cache.provider'
+<<<<<<< HEAD
 
   # Distribution API Client with addons user
   mbo.cdc.client.connected_distribution_api:
@@ -30,4 +31,6 @@ services:
     arguments:
       - "@mbo.distribution_api.client.http"
       - '@mbo.doctrine.cache.provider'
+=======
+>>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
       - '@=service("mbo.addons.user.provider").getUser()'

@@ -23,11 +23,112 @@ namespace PrestaShop\Module\Mbo\Distribution;
 
 use Context;
 use GuzzleHttp\Exception\GuzzleException;
+use PrestaShop\Module\Mbo\Addons\User\UserInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use stdClass;
 
 class Client extends BaseClient
 {
+<<<<<<< HEAD
+=======
+    public const HTTP_METHOD_GET = 'GET';
+    public const HTTP_METHOD_POST = 'POST';
+    public const HTTP_METHOD_PUT = 'PUT';
+    public const HTTP_METHOD_DELETE = 'DELETE';
+    /**
+     * @var HttpClient
+     */
+    protected $httpClient;
+    /**
+     * @var CacheProvider
+     */
+    private $cacheProvider;
+    /**
+     * @var UserInterface
+     */
+    private $user;
+    /**
+     * @var array<string, string>
+     */
+    protected $queryParameters = [];
+    /**
+     * @var array<int, string>
+     */
+    protected $possibleQueryParameters = [
+        'format',
+        'method',
+        'action',
+        'shop_uuid',
+        'shop_url',
+        'isoLang',
+        'shopVersion',
+        'ps_version',
+        'iso_lang',
+        'iso_code',
+        'addons_username',
+        'addons_pwd',
+    ];
+    /**
+     * @var array<string, string>
+     */
+    protected $headers = [];
+
+    /**
+     * @param HttpClient $httpClient
+     * @param \Doctrine\Common\Cache\CacheProvider $cacheProvider
+     */
+    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider, UserInterface $user)
+    {
+        $this->httpClient = $httpClient;
+        $this->cacheProvider = $cacheProvider;
+        $this->user = $user;
+    }
+
+    /**
+     * In case you reuse the Client, you may want to clean the previous parameters.
+     */
+    public function reset(): void
+    {
+        $this->queryParameters = [];
+        $this->headers = [];
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return $this
+     */
+    public function setQueryParams(array $params): self
+    {
+        $filteredParams = array_intersect_key($params, array_flip($this->possibleQueryParameters));
+        $this->queryParameters = array_merge($this->queryParameters, $filteredParams);
+
+        return $this;
+    }
+
+    /**
+     * @param array $headers
+     *
+     * @return $this
+     */
+    public function setHeaders(array $headers): self
+    {
+        $this->headers = array_merge($this->headers, $headers);
+
+        return $this;
+    }
+
+    /**
+     * @param string $jwt
+     *
+     * @return $this
+     */
+    public function setBearer(string $jwt): self
+    {
+        return $this->setHeaders(['Authorization' => 'Bearer ' . $jwt]);
+    }
+
+>>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
     /**
      * Get a new key from Distribution API.
      *
@@ -120,6 +221,50 @@ class Client extends BaseClient
             return false;
         }
         $this->cacheProvider->save($cacheKey, $conf, 60 * 60 * 24); // A day
+
+        return $this->cacheProvider->fetch($cacheKey);
+    }
+
+    /**
+     * Retrieve the modules list from NEST Api
+     */
+    public function getModulesList(): array
+    {
+        $languageIsoCode = Context::getContext()->language->getIsoCode();
+        $countryIsoCode = mb_strtolower(Context::getContext()->country->iso_code);
+
+        $userCacheKey = '';
+        $credentials = [];
+        if ($this->user->isAuthenticated()) {
+            $credentials = $this->user->getCredentials();
+            $userCacheKey = md5($credentials['username'] . $credentials['password']);
+            $this->setQueryParams([
+               'addons_username' => $credentials['username'],
+               'addons_pwd' => $credentials['password'],
+            ]);
+        }
+
+        $cacheKey = __METHOD__ . $languageIsoCode . $countryIsoCode . $userCacheKey . _PS_VERSION_;
+
+        if ($this->cacheProvider->contains($cacheKey)) {
+            return $this->cacheProvider->fetch($cacheKey);
+        }
+
+        $this->setQueryParams([
+            'iso_lang' => $languageIsoCode,
+            'iso_code' => $countryIsoCode,
+            'ps_version' => _PS_VERSION_,
+            'shop_url' => Config::getShopUrl(),
+        ]);
+        try {
+            $modulesList = $this->processRequestAndReturn('modules');
+        } catch (\Throwable $e) {
+            return [];
+        }
+        if (empty($modulesList)) {
+            return [];
+        }
+        $this->cacheProvider->save($cacheKey, $modulesList, 60 * 60 * 24); // A day
 
         return $this->cacheProvider->fetch($cacheKey);
     }

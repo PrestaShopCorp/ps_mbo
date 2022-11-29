@@ -114,6 +114,7 @@ class ModuleBuilder implements ModuleBuilderInterface
             $attributes = array_merge($attributes, $mainClassAttributes);
         }
 
+<<<<<<< HEAD
         $module = new Module($attributes, $disk, $database);
         $this->generateAddonsUrls($module);
 
@@ -140,6 +141,9 @@ class ModuleBuilder implements ModuleBuilderInterface
                 ]),
             ]);
         }
+=======
+        return new Module($attributes, $disk, $database);
+>>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
     }
 
     /**
