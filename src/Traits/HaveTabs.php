@@ -35,7 +35,7 @@ trait HaveTabs
      */
     public static $ADMIN_CONTROLLERS = [
         'AdminPsMboModuleParent' => [
-            'name' => 'Catalogue de modules',
+            'name' => 'Marketplace',
             'visible' => true,
             'position' => 1,
             'class_name' => 'AdminPsMboModuleParent',
@@ -48,7 +48,7 @@ trait HaveTabs
             'parent_class_name' => 'AdminPsMboModuleParent',
         ],
         'AdminPsMboModule' => [
-            'name' => 'Catalogue de modules',
+            'name' => 'Marketplace',
             'visible' => true,
             'class_name' => 'AdminPsMboModule',
             'parent_class_name' => 'AdminPsMboModuleParent',
