@@ -36,30 +36,6 @@ class FiltersTest extends MockeryTestCase
     }
 
     /**
-     * @dataProvider getOrigins
-     */
-    public function testSetOrigin(int $origin, array $expectedValues)
-    {
-        $this->filters->setOrigin($origin);
-
-        // Check after everything have been computed
-        foreach ($expectedValues as $expected) {
-            $this->assertTrue(
-                $this->filters->hasOrigin($expected)
-            );
-        }
-    }
-
-    public function getOrigins()
-    {
-        return [
-            [Filters\Origin::ALL & Filters\Origin::ADDONS_NATIVE, [Filters\Origin::ADDONS_NATIVE]],
-            [Filters\Origin::ALL & Filters\Origin::DISK | Filters\Origin::ADDONS_NATIVE, [Filters\Origin::DISK, Filters\Origin::ADDONS_NATIVE]],
-            [Filters\Origin::ADDONS_SERVICE ^ Filters\Origin::DISK, [Filters\Origin::DISK, Filters\Origin::ADDONS_SERVICE]],
-        ];
-    }
-
-    /**
      * @dataProvider getStatuses
      */
     public function testSetStatus(int $status, array $expectedValues, bool $bool)
