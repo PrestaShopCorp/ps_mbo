@@ -98,11 +98,6 @@ class CollectionFactory
                 }
             }
 
-            // Part Three : Remove addons not related to the proper source (ex Addons)
-            if (!$filters->hasOrigin($module->get('origin_filter_value'))) {
-                continue;
-            }
-
             $result[$key] = $module;
         }
 

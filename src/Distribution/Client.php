@@ -25,6 +25,7 @@ use Context;
 use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
+use PrestaShop\Module\Mbo\Addons\User\UserInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use ps_mbo;
 use stdClass;
@@ -44,6 +45,10 @@ class Client
      */
     private $cacheProvider;
     /**
+     * @var UserInterface
+     */
+    private $user;
+    /**
      * @var array<string, string>
      */
     protected $queryParameters = [];
@@ -58,6 +63,11 @@ class Client
         'shop_url',
         'isoLang',
         'shopVersion',
+        'ps_version',
+        'iso_lang',
+        'iso_code',
+        'addons_username',
+        'addons_pwd',
     ];
     /**
      * @var array<string, string>
@@ -68,10 +78,11 @@ class Client
      * @param HttpClient $httpClient
      * @param \Doctrine\Common\Cache\CacheProvider $cacheProvider
      */
-    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider)
+    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider, UserInterface $user)
     {
         $this->httpClient = $httpClient;
         $this->cacheProvider = $cacheProvider;
+        $this->user = $user;
     }
 
     /**
@@ -213,6 +224,50 @@ class Client
             return false;
         }
         $this->cacheProvider->save($cacheKey, $conf, 60 * 60 * 24); // A day
+
+        return $this->cacheProvider->fetch($cacheKey);
+    }
+
+    /**
+     * Retrieve the modules list from NEST Api
+     */
+    public function getModulesList(): array
+    {
+        $languageIsoCode = Context::getContext()->language->getIsoCode();
+        $countryIsoCode = mb_strtolower(Context::getContext()->country->iso_code);
+
+        $userCacheKey = '';
+        $credentials = [];
+        if ($this->user->isAuthenticated()) {
+            $credentials = $this->user->getCredentials();
+            $userCacheKey = md5($credentials['username'] . $credentials['password']);
+            $this->setQueryParams([
+               'addons_username' => $credentials['username'],
+               'addons_pwd' => $credentials['password'],
+            ]);
+        }
+
+        $cacheKey = __METHOD__ . $languageIsoCode . $countryIsoCode . $userCacheKey . _PS_VERSION_;
+
+        if ($this->cacheProvider->contains($cacheKey)) {
+            return $this->cacheProvider->fetch($cacheKey);
+        }
+
+        $this->setQueryParams([
+            'iso_lang' => $languageIsoCode,
+            'iso_code' => $countryIsoCode,
+            'ps_version' => _PS_VERSION_,
+            'shop_url' => Config::getShopUrl(),
+        ]);
+        try {
+            $modulesList = $this->processRequestAndReturn('modules');
+        } catch (\Throwable $e) {
+            return [];
+        }
+        if (empty($modulesList)) {
+            return [];
+        }
+        $this->cacheProvider->save($cacheKey, $modulesList, 60 * 60 * 24); // A day
 
         return $this->cacheProvider->fetch($cacheKey);
     }
