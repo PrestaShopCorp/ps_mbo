@@ -104,20 +104,15 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
 
     private function authenticateAddonsUser(Session $session): void
     {
-        $addonsCredentials = Tools::getValue('addons_credentials', null);
+        $addonsUsername = Tools::getValue('addons_username', null);
+        $addonsPwd = Tools::getValue('addons_pwd', null);
 
-        if (null === $addonsCredentials) {
+        if (!isset($addonsUsername) || !isset($addonsPwd)) {
             return;
         }
 
-        $credentials = json_decode($addonsCredentials, true);
-
-        if (!is_array($credentials) || !isset($credentials['addons_username']) || !isset($credentials['addons_pwd'])) {
-            return;
-        }
-
-        $session->set('username_addons', $credentials['addons_username']);
-        $session->set('password_addons', $credentials['addons_pwd']);
+        $session->set('username_addons', $addonsUsername);
+        $session->set('password_addons', $addonsPwd);
         $session->set('is_contributor', '0');
     }
 }
