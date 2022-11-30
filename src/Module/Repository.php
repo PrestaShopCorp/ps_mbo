@@ -141,7 +141,7 @@ class Repository implements RepositoryInterface
     public function fetchAll(bool $rawModules = false): array
     {
         if ($this->cache !== null && !$rawModules) {
-//            return $this->cache;
+            return $this->cache;
         }
 
 <<<<<<< HEAD

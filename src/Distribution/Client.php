@@ -261,7 +261,7 @@ class Client extends BaseClient
         } catch (\Throwable $e) {
             return [];
         }
-        if (empty($modulesList)) {
+        if (empty($modulesList) || !is_array($modulesList)) {
             return [];
         }
         $this->cacheProvider->save($cacheKey, $modulesList, 60 * 60 * 24); // A day
