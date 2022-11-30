@@ -317,16 +317,18 @@ class ps_mbo extends Module
             || $this->shouldAttachRecommendedModulesAfterContent()
         ) {
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css');
-            $this->context->controller->addJs(
-                rtrim(__PS_BASE_URI__, '/')
-                . str_ireplace(
-                    _PS_CORE_DIR_,
-                    '',
-                    _PS_BO_ALL_THEMES_DIR_
-                )
-                . 'default/js/bundle/module/module_card.js?v='
-                . _PS_VERSION_
-            );
+            if (Tools::getValue('controller') !== 'AdminProducts') {
+                $this->context->controller->addJs(
+                    rtrim(__PS_BASE_URI__, '/')
+                    . str_ireplace(
+                        _PS_CORE_DIR_,
+                        '',
+                        _PS_BO_ALL_THEMES_DIR_
+                    )
+                    . 'default/js/bundle/module/module_card.js?v='
+                    . _PS_VERSION_
+                );
+            }
         }
     }
 
