@@ -7,10 +7,14 @@ services:
     class: PrestaShop\Module\Mbo\Module\Repository
     arguments:
 <<<<<<< HEAD
+<<<<<<< HEAD
       - "@mbo.cdc.client.connected_distribution_api"
 =======
       - "@mbo.cdc.client.distribution_api"
 >>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
+=======
+      - "@mbo.cdc.client.connected_distribution_api"
+>>>>>>> 037cd82 (fix(Services): Separate distribution services)
       - "@mbo.modules.builder"
       - "@logger"
       - "@=service('translator').getLocale()"

@@ -25,10 +25,14 @@ use Db;
 use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 <<<<<<< HEAD
+<<<<<<< HEAD
 use PrestaShop\Module\Mbo\Distribution\ConnectedClient;
 =======
 use PrestaShop\Module\Mbo\Distribution\Client;
 >>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
+=======
+use PrestaShop\Module\Mbo\Distribution\ConnectedClient;
+>>>>>>> 037cd82 (fix(Services): Separate distribution services)
 use Psr\Log\LoggerInterface;
 use Shop;
 use stdClass;
@@ -40,6 +44,7 @@ class Repository implements RepositoryInterface
 {
     /**
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @var ConnectedClient
      */
     protected $connectedClient;
@@ -48,6 +53,11 @@ class Repository implements RepositoryInterface
      */
     protected $distributionClient;
 >>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
+=======
+     * @var ConnectedClient
+     */
+    protected $connectedClient;
+>>>>>>> 037cd82 (fix(Services): Separate distribution services)
 
     /**
      * @var LoggerInterface
@@ -90,10 +100,14 @@ class Repository implements RepositoryInterface
 
     public function __construct(
 <<<<<<< HEAD
+<<<<<<< HEAD
         ConnectedClient $connectedClient,
 =======
         Client $distributionClient,
 >>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
+=======
+        ConnectedClient $connectedClient,
+>>>>>>> 037cd82 (fix(Services): Separate distribution services)
         ModuleBuilder $moduleBuilder,
         LoggerInterface $logger,
         string $localeCode,
@@ -102,10 +116,14 @@ class Repository implements RepositoryInterface
         AdminAuthenticationProvider $adminAuthenticationProvider
     ) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         $this->connectedClient = $connectedClient;
 =======
         $this->distributionClient = $distributionClient;
 >>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
+=======
+        $this->connectedClient = $connectedClient;
+>>>>>>> 037cd82 (fix(Services): Separate distribution services)
         $this->dbPrefix = $dbPrefix;
         $this->logger = $logger;
         $this->adminAuthenticationProvider = $adminAuthenticationProvider;
@@ -145,12 +163,17 @@ class Repository implements RepositoryInterface
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         $this->connectedClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
         $addons = $this->connectedClient->getModulesList();
 =======
         $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
         $addons = $this->distributionClient->getModulesList();
 >>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
+=======
+        $this->connectedClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
+        $addons = $this->connectedClient->getModulesList();
+>>>>>>> 037cd82 (fix(Services): Separate distribution services)
 
         $listAddonsModules = [];
         $apiModules = [];

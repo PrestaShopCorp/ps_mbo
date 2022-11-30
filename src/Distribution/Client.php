@@ -23,12 +23,12 @@ namespace PrestaShop\Module\Mbo\Distribution;
 
 use Context;
 use GuzzleHttp\Exception\GuzzleException;
-use PrestaShop\Module\Mbo\Addons\User\UserInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use stdClass;
 
 class Client extends BaseClient
 {
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     public const HTTP_METHOD_GET = 'GET';
@@ -129,6 +129,8 @@ class Client extends BaseClient
     }
 
 >>>>>>> dc25ea4 (refactor: :sparkles: Change calls from addons to Nest to retrieve modules)
+=======
+>>>>>>> 037cd82 (fix(Services): Separate distribution services)
     /**
      * Get a new key from Distribution API.
      *
@@ -221,50 +223,6 @@ class Client extends BaseClient
             return false;
         }
         $this->cacheProvider->save($cacheKey, $conf, 60 * 60 * 24); // A day
-
-        return $this->cacheProvider->fetch($cacheKey);
-    }
-
-    /**
-     * Retrieve the modules list from NEST Api
-     */
-    public function getModulesList(): array
-    {
-        $languageIsoCode = Context::getContext()->language->getIsoCode();
-        $countryIsoCode = mb_strtolower(Context::getContext()->country->iso_code);
-
-        $userCacheKey = '';
-        $credentials = [];
-        if ($this->user->isAuthenticated()) {
-            $credentials = $this->user->getCredentials();
-            $userCacheKey = md5($credentials['username'] . $credentials['password']);
-            $this->setQueryParams([
-               'addons_username' => $credentials['username'],
-               'addons_pwd' => $credentials['password'],
-            ]);
-        }
-
-        $cacheKey = __METHOD__ . $languageIsoCode . $countryIsoCode . $userCacheKey . _PS_VERSION_;
-
-        if ($this->cacheProvider->contains($cacheKey)) {
-            return $this->cacheProvider->fetch($cacheKey);
-        }
-
-        $this->setQueryParams([
-            'iso_lang' => $languageIsoCode,
-            'iso_code' => $countryIsoCode,
-            'ps_version' => _PS_VERSION_,
-            'shop_url' => Config::getShopUrl(),
-        ]);
-        try {
-            $modulesList = $this->processRequestAndReturn('modules');
-        } catch (\Throwable $e) {
-            return [];
-        }
-        if (empty($modulesList) || !is_array($modulesList)) {
-            return [];
-        }
-        $this->cacheProvider->save($cacheKey, $modulesList, 60 * 60 * 24); // A day
 
         return $this->cacheProvider->fetch($cacheKey);
     }
