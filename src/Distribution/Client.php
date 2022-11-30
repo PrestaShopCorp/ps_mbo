@@ -22,113 +22,12 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Distribution;
 
 use Context;
-use Doctrine\Common\Cache\CacheProvider;
-use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
-use PrestaShop\Module\Mbo\Addons\User\UserInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
-use ps_mbo;
 use stdClass;
 
-class Client
+class Client extends BaseClient
 {
-    public const HTTP_METHOD_GET = 'GET';
-    public const HTTP_METHOD_POST = 'POST';
-    public const HTTP_METHOD_PUT = 'PUT';
-    public const HTTP_METHOD_DELETE = 'DELETE';
-    /**
-     * @var HttpClient
-     */
-    protected $httpClient;
-    /**
-     * @var CacheProvider
-     */
-    private $cacheProvider;
-    /**
-     * @var UserInterface
-     */
-    private $user;
-    /**
-     * @var array<string, string>
-     */
-    protected $queryParameters = [];
-    /**
-     * @var array<int, string>
-     */
-    protected $possibleQueryParameters = [
-        'format',
-        'method',
-        'action',
-        'shop_uuid',
-        'shop_url',
-        'isoLang',
-        'shopVersion',
-        'ps_version',
-        'iso_lang',
-        'iso_code',
-        'addons_username',
-        'addons_pwd',
-    ];
-    /**
-     * @var array<string, string>
-     */
-    protected $headers = [];
-
-    /**
-     * @param HttpClient $httpClient
-     * @param \Doctrine\Common\Cache\CacheProvider $cacheProvider
-     */
-    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider, UserInterface $user)
-    {
-        $this->httpClient = $httpClient;
-        $this->cacheProvider = $cacheProvider;
-        $this->user = $user;
-    }
-
-    /**
-     * In case you reuse the Client, you may want to clean the previous parameters.
-     */
-    public function reset(): void
-    {
-        $this->queryParameters = [];
-        $this->headers = [];
-    }
-
-    /**
-     * @param array $params
-     *
-     * @return $this
-     */
-    public function setQueryParams(array $params): self
-    {
-        $filteredParams = array_intersect_key($params, array_flip($this->possibleQueryParameters));
-        $this->queryParameters = array_merge($this->queryParameters, $filteredParams);
-
-        return $this;
-    }
-
-    /**
-     * @param array $headers
-     *
-     * @return $this
-     */
-    public function setHeaders(array $headers): self
-    {
-        $this->headers = array_merge($this->headers, $headers);
-
-        return $this;
-    }
-
-    /**
-     * @param string $jwt
-     *
-     * @return $this
-     */
-    public function setBearer(string $jwt): self
-    {
-        return $this->setHeaders(['Authorization' => 'Bearer ' . $jwt]);
-    }
-
     /**
      * Get a new key from Distribution API.
      *
@@ -138,7 +37,7 @@ class Client
      */
     public function retrieveNewKey(): stdClass
     {
-        return $this->processRequestAndReturn('shops/get-pub-key');
+        return $this->processRequestAndDecode('shops/get-pub-key');
     }
 
     /**
@@ -153,9 +52,8 @@ class Client
      */
     public function registerShop(array $params = []): stdClass
     {
-        return $this->processRequestAndReturn(
+        return $this->processRequestAndDecode(
             'shops',
-            null,
             self::HTTP_METHOD_POST,
             ['form_params' => $this->mergeShopDataWithParams($params)]
         );
@@ -170,9 +68,8 @@ class Client
      */
     public function unregisterShop()
     {
-        return $this->processRequestAndReturn(
+        return $this->processRequestAndDecode(
             'shops/' . Config::getShopMboUuid(),
-            null,
             self::HTTP_METHOD_DELETE
         );
     }
@@ -189,9 +86,8 @@ class Client
      */
     public function updateShop(array $params): stdClass
     {
-        return $this->processRequestAndReturn(
+        return $this->processRequestAndDecode(
             'shops/' . Config::getShopMboUuid(),
-            null,
             self::HTTP_METHOD_PUT,
             ['form_params' => $this->mergeShopDataWithParams($params)]
         );
@@ -216,7 +112,7 @@ class Client
             'shopVersion' => _PS_VERSION_,
         ]);
         try {
-            $conf = $this->processRequestAndReturn('shops/conf');
+            $conf = $this->processRequestAndDecode('shops/conf');
         } catch (\Throwable $e) {
             return false;
         }
@@ -224,50 +120,6 @@ class Client
             return false;
         }
         $this->cacheProvider->save($cacheKey, $conf, 60 * 60 * 24); // A day
-
-        return $this->cacheProvider->fetch($cacheKey);
-    }
-
-    /**
-     * Retrieve the modules list from NEST Api
-     */
-    public function getModulesList(): array
-    {
-        $languageIsoCode = Context::getContext()->language->getIsoCode();
-        $countryIsoCode = mb_strtolower(Context::getContext()->country->iso_code);
-
-        $userCacheKey = '';
-        $credentials = [];
-        if ($this->user->isAuthenticated()) {
-            $credentials = $this->user->getCredentials();
-            $userCacheKey = md5($credentials['username'] . $credentials['password']);
-            $this->setQueryParams([
-               'addons_username' => $credentials['username'],
-               'addons_pwd' => $credentials['password'],
-            ]);
-        }
-
-        $cacheKey = __METHOD__ . $languageIsoCode . $countryIsoCode . $userCacheKey . _PS_VERSION_;
-
-        if ($this->cacheProvider->contains($cacheKey)) {
-            return $this->cacheProvider->fetch($cacheKey);
-        }
-
-        $this->setQueryParams([
-            'iso_lang' => $languageIsoCode,
-            'iso_code' => $countryIsoCode,
-            'ps_version' => _PS_VERSION_,
-            'shop_url' => Config::getShopUrl(),
-        ]);
-        try {
-            $modulesList = $this->processRequestAndReturn('modules');
-        } catch (\Throwable $e) {
-            return [];
-        }
-        if (empty($modulesList) || !is_array($modulesList)) {
-            return [];
-        }
-        $this->cacheProvider->save($cacheKey, $modulesList, 60 * 60 * 24); // A day
 
         return $this->cacheProvider->fetch($cacheKey);
     }
@@ -282,7 +134,7 @@ class Client
      */
     public function getApiConf(): array
     {
-        return $this->processRequestAndReturn('shops/conf-mbo');
+        return $this->processRequestAndDecode('shops/conf-mbo');
     }
 
     /**
@@ -294,85 +146,13 @@ class Client
     public function trackEvent(array $eventData): void
     {
         try {
-            $this->processRequestAndReturn(
+            $this->processRequestAndDecode(
                 'shops/events',
-                null,
                 self::HTTP_METHOD_POST,
                 ['form_params' => $eventData]
             );
         } catch (\Throwable $e) {
             // Do nothing if the tracking fails
         }
-    }
-
-    private function mergeShopDataWithParams(array $params): array
-    {
-        return array_merge([
-            'uuid' => Config::getShopMboUuid(),
-            'shop_url' => Config::getShopUrl(),
-            'admin_path' => sprintf('/%s/', trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/')),
-            'mbo_version' => ps_mbo::VERSION,
-            'ps_version' => _PS_VERSION_,
-        ], $params);
-    }
-
-    /**
-     * Process the request with the current parameters, given the $method, and return the $attribute from
-     * the response body, or the default fallback value $default.
-     *
-     * @param string $uri
-     * @param string|null $attributeToReturn
-     * @param string $method
-     * @param array $options
-     * @param mixed $default
-     *
-     * @return mixed
-     *
-     * @throws GuzzleException
-     */
-    private function processRequestAndReturn(
-        string $uri,
-        ?string $attributeToReturn = null,
-        string $method = self::HTTP_METHOD_GET,
-        array $options = [],
-        $default = []
-    ) {
-        $response = json_decode($this->processRequest($method, $uri, $options));
-
-        if (JSON_ERROR_NONE !== json_last_error()) {
-            return $default;
-        }
-
-        if ($attributeToReturn) {
-            return $response->{$attributeToReturn} ?? $default;
-        }
-
-        return $response;
-    }
-
-    /**
-     * Process the request with the current parameters, given the $method, return the body as string
-     *
-     * @param string $method
-     * @param string $uri
-     * @param array $options
-     *
-     * @return string
-     *
-     * @throws GuzzleException
-     */
-    private function processRequest(
-        string $method = self::HTTP_METHOD_GET,
-        string $uri = '',
-        array $options = []
-    ): string {
-        $options = array_merge($options, [
-            'query' => $this->queryParameters,
-            'headers' => $this->headers,
-        ]);
-
-        return (string) $this->httpClient
-            ->request($method, '/api/' . ltrim($uri, '/'), $options)
-            ->getBody();
     }
 }
