@@ -121,8 +121,13 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
             return;
         }
 
+<<<<<<< HEAD
         $session->set('username_addons_v2', $addonsUsername);
         $session->set('password_addons_v2', $addonsPwd);
+=======
+        $session->set('username_addons', $addonsUsername);
+        $session->set('password_addons', $addonsPwd);
+>>>>>>> d616fb7 (Fix way to get addons credentials on API module transition request)
         $session->set('is_contributor', '0');
     }
 }
