@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Addons\User;
 
 use Exception;
-use PrestaShop\Module\Mbo\Addons\User\CredentialsEncryptor;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -64,9 +63,14 @@ class AddonsUser implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getCredentials(): array
+    public function getCredentials(bool $encrypted = false): array
     {
-        return [
+        return $encrypted ?
+            [
+                'username' => $this->get('username_addons'),
+                'password' => $this->get('password_addons'),
+            ]
+            : [
             'username' => $this->getAndDecrypt('username_addons'),
             'password' => $this->getAndDecrypt('password_addons'),
         ];
@@ -105,23 +109,35 @@ class AddonsUser implements UserInterface
     /**
      * @param string $key
      *
-     * @return string|bool|null
+     * @return string|null
      *
      * @throws Exception
      */
-    private function getAndDecrypt(string $key)
+    private function getAndDecrypt(string $key): ?string
     {
-        $sessionValue = $this->getFromSession($key);
-        if (null !== $sessionValue) {
-            return $this->encryption->decrypt($sessionValue);
-        }
-
-        $cookieValue = $this->getFromCookie($key);
-        if (null !== $cookieValue) {
-            return $this->encryption->decrypt($cookieValue);
+        $value = $this->get($key);
+        if (null !== $value) {
+            return $this->encryption->decrypt($value);
         }
 
         return null;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return string|null
+     *
+     * @throws Exception
+     */
+    private function get(string $key): ?string
+    {
+        $sessionValue = $this->getFromSession($key);
+        if (null !== $sessionValue) {
+            return $sessionValue;
+        }
+
+        return $this->getFromCookie($key);
     }
 
     /**

@@ -6,7 +6,7 @@ services:
   mbo.modules.repository:
     class: PrestaShop\Module\Mbo\Module\Repository
     arguments:
-      - "@mbo.cdc.client.distribution_api"
+      - "@mbo.cdc.client.connected_distribution_api"
       - "@mbo.modules.builder"
       - "@logger"
       - "@=service('translator').getLocale()"

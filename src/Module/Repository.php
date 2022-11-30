@@ -24,7 +24,7 @@ namespace PrestaShop\Module\Mbo\Module;
 use Db;
 use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
-use PrestaShop\Module\Mbo\Distribution\Client;
+use PrestaShop\Module\Mbo\Distribution\ConnectedClient;
 use Psr\Log\LoggerInterface;
 use Shop;
 use stdClass;
@@ -35,9 +35,9 @@ use stdClass;
 class Repository implements RepositoryInterface
 {
     /**
-     * @var Client
+     * @var ConnectedClient
      */
-    protected $distributionClient;
+    protected $connectedClient;
 
     /**
      * @var LoggerInterface
@@ -79,7 +79,7 @@ class Repository implements RepositoryInterface
     protected $dbPrefix;
 
     public function __construct(
-        Client $distributionClient,
+        ConnectedClient $connectedClient,
         ModuleBuilder $moduleBuilder,
         LoggerInterface $logger,
         string $localeCode,
@@ -87,7 +87,7 @@ class Repository implements RepositoryInterface
         string $dbPrefix,
         AdminAuthenticationProvider $adminAuthenticationProvider
     ) {
-        $this->distributionClient = $distributionClient;
+        $this->connectedClient = $connectedClient;
         $this->dbPrefix = $dbPrefix;
         $this->logger = $logger;
         $this->adminAuthenticationProvider = $adminAuthenticationProvider;
@@ -126,8 +126,8 @@ class Repository implements RepositoryInterface
             return $this->cache;
         }
 
-        $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
-        $addons = $this->distributionClient->getModulesList();
+        $this->connectedClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
+        $addons = $this->connectedClient->getModulesList();
 
         $listAddonsModules = [];
         $apiModules = [];
