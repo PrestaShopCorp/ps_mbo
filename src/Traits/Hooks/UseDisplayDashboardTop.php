@@ -53,6 +53,11 @@ trait UseDisplayDashboardTop
      */
     protected $alreadyProcessedPage = false;
 
+    protected $controllersWithRecommendedModules = [
+        TabInterface::RECOMMENDED_BUTTON_TYPE => TabInterface::TABS_WITH_RECOMMENDED_MODULES_BUTTON,
+        TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE => TabInterface::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT,
+    ];
+
     /**
      * @return void
      *
@@ -161,8 +166,21 @@ trait UseDisplayDashboardTop
             'controller' => $controller,
         ]);
 
+        // We want to "hide" recommended modules from this controller
         if (!$recommendedModulesDisplayed) {
-            return '';
+            // If we are trying to display as button, hide the button
+            if (in_array($controller, $this->controllersWithRecommendedModules[TabInterface::RECOMMENDED_BUTTON_TYPE])) {
+                return '';
+            } elseif (in_array($controller, $this->controllersWithRecommendedModules[TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE])) {
+                // We are trying to display after content, so move them to button adn remove from after content
+                foreach ($this->controllersWithRecommendedModules[TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE] as $k => $afterContentController) {
+                    if ($afterContentController === $controller) {
+                        unset($this->controllersWithRecommendedModules[TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE][$k]);
+                        break;
+                    }
+                }
+                $this->controllersWithRecommendedModules[TabInterface::RECOMMENDED_BUTTON_TYPE][] = $controller;
+            }
         }
 
         $shouldAttachRecommendedModulesAfterContent = $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE);
@@ -180,6 +198,7 @@ trait UseDisplayDashboardTop
                 'admin_mbo_recommended_modules',
                 [
                     'tabClassName' => Tools::getValue('controller'),
+                    'recommendation_format' => $shouldAttachRecommendedModulesButton ? 'modal' : 'card',
                 ]
             );
         } catch (Exception $exception) {
@@ -210,9 +229,9 @@ trait UseDisplayDashboardTop
     protected function shouldAttachRecommendedModules(string $type): bool
     {
         if ($type === TabInterface::RECOMMENDED_BUTTON_TYPE) {
-            $modules = TabInterface::TABS_WITH_RECOMMENDED_MODULES_BUTTON;
+            $modules = $this->controllersWithRecommendedModules[TabInterface::RECOMMENDED_BUTTON_TYPE];
         } elseif ($type === TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE) {
-            $modules = TabInterface::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT;
+            $modules = $this->controllersWithRecommendedModules[TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE];
         } else {
             return false;
         }
