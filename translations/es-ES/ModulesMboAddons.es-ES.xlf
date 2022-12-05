@@ -10,12 +10,12 @@
       <trans-unit id="b09249132bbed9baecd987cf73200b44">
         <source>Confirm logout</source>
         <target>Confirmar el cierre de sesión</target>
-        <note>Line: 85</note>
+        <note>Line: 89</note>
       </trans-unit>
       <trans-unit id="df776a9024ce6c10ec1d1d763cee0301">
         <source>You are about to log out your Addons account. You might miss important updates of Addons you've bought.</source>
         <target>Estás a punto de salir de tu cuenta en Addons. Podrías perderte actualizaciones importantes de los Complementos que has comprado.</target>
-        <note>Line: 92</note>
+        <note>Line: 96</note>
       </trans-unit>
     </body>
   </file>
