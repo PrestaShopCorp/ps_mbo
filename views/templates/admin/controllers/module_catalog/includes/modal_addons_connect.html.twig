@@ -42,6 +42,10 @@
                       {{ "Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?"|trans({}, 'Modules.Mbo.Modulescatalog') }}
                       <a href="{{ signUpLink }}" target="_blank">{{ 'Sign up now'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
                   </p>
+                  <p>
+                      {{ "If you created your account using Google, please follow the forgotten password procedure of Addons Marketplace to create your password : "|trans({}, 'Modules.Mbo.Modulescatalog') }}
+                      <a href="{{ passwordForgottenLink }}" target="_blank">{{ 'Reset your password'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
+                  </p>
                   <form id="addons-connect-form"
                         action="{{ path('admin_mbo_addons_login') }}"
                         method="POST"

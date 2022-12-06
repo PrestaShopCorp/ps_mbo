@@ -14,26 +14,26 @@
       <trans-unit id="cff7b4047c79f112e869481322d2924e">
         <source>Module %module% successfully upgraded.</source>
         <target>Moduł %module% został pomyślnie zaktualizowany.</target>
-        <note>Line: 193</note>
+        <note>Line: 176</note>
       </trans-unit>
       <trans-unit id="22d6960d922158c548d123998be8dd91">
         <source>Upgrade of module %module% failed. %error%</source>
         <target>Aktualizacja modułu %modułe% nie powiodła się. %error%</target>
-        <note>Line: 229</note>
+        <note>Line: 212</note>
       </trans-unit>
       <trans-unit id="f8c9c7b6af2a8d50bc948bcf966c1d4b">
         <source>Module %module% is already up to date</source>
         <target>Moduł %module% jest już aktualny</target>
-        <note>Line: 216</note>
+        <note>Line: 199</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/ps_mbo/src/Controller/Admin/ModuleCatalogController.php" source-language="pl-PL" target-language="pl-PL" datatype="plaintext">
     <body>
-      <trans-unit id="6ea7071301eeb50e00bf88f5a46ded8e">
-        <source>Modules catalog</source>
-        <target>Katalog</target>
-        <note>Line: 73</note>
+      <trans-unit id="675e31b94580e2642405e2f8586d112e">
+        <source>Marketplace</source>
+        <target>Marketplace</target>
+        <note>Line: 52</note>
       </trans-unit>
     </body>
   </file>
@@ -62,9 +62,19 @@
   </file>
   <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig" source-language="pl-PL" target-language="pl-PL" datatype="plaintext">
     <body>
+      <trans-unit id="32fe59513f5bbdd353b4527cc6af55ce">
+        <source>Reset your password</source>
+        <target>Zmień swoje hasło</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="43a3d8f3d278fff326a75c8137b62352">
+        <source>If you created your account using Google, please follow the forgotten password procedure of Addons Marketplace to create your password : </source>
+        <target>Jeśli utworzyłeś swoje konto za pomocą Google, proszę postępuj zgodnie z procedurą zapomnianego hasła w Addons Marketplace, aby utworzyć hasło : </target>
+        <note>Line: 46</note>
+      </trans-unit>
       <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
         <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
-        <target>Połącz swój sklep z kontem Addons, aby automatycznie otrzymywać ważne aktualizacje do zakupionych modułów. Nie masz jeszcze konta?</target>
+        <target>Połącz swój sklep z kontem Addons, aby automatycznie otrzymywać ważne aktualizacje dla zakupionych modułów. Nie masz jeszcze konta?</target>
         <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
@@ -75,7 +85,7 @@
       <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
         <source>Yes, log out</source>
         <target>Tak, wyloguj się</target>
-        <note>Line: 99</note>
+        <note>Line: 103</note>
       </trans-unit>
     </body>
   </file>
