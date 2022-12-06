@@ -92,12 +92,8 @@ class AddonsController extends FrameworkBundleAdminController
 
             Configuration::updateValue('PS_LOGGED_ON_ADDONS', 1);
 
-            if ($request->get('addons_remember_me', false)) {
-                $response = $this->createCookieUser($response, $json, $params);
-            } else {
-                $response = $this->createSessionUser($response, $this->get('session'), $json, $params);
-            }
-
+            $cookieExpirationTime = $request->get('addons_remember_me', false) ? strtotime('+30 days') : strtotime('+1 days');
+            $response = $this->createCookieUser($response, $json, $params, $cookieExpirationTime);
             $response->setData(['success' => 1, 'message' => '']);
 
             // Clear previously filtered modules search
@@ -222,10 +218,9 @@ class AddonsController extends FrameworkBundleAdminController
         return new JsonResponse($upgradeResponse);
     }
 
-    private function createCookieUser(Response $response, \stdClass $json, array $params): Response
+    private function createCookieUser(Response $response, \stdClass $json, array $params, int $expiresAt = -1): Response
     {
         $encryptor = $this->get('mbo.addons.user.credentials_encryptor');
-        $expiresAt = strtotime('+30 days');
 
         $response->headers->setCookie(
             new Cookie('username_addons', $encryptor->encrypt($params['username']), $expiresAt, null, null, null, false)
