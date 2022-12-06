@@ -64,22 +64,22 @@
     <body>
       <trans-unit id="32fe59513f5bbdd353b4527cc6af55ce">
         <source>Reset your password</source>
-        <target>Restablecer su contraseña</target>
+        <target>Restablecer contraseña</target>
         <note>Line: 47</note>
       </trans-unit>
       <trans-unit id="43a3d8f3d278fff326a75c8137b62352">
         <source>If you created your account using Google, please follow the forgotten password procedure of Addons Marketplace to create your password : </source>
-        <target>If you created your account using Google, please follow the forgotten password procedure of Addons Marketplace to create your password : </target>
+        <target>Si has creado tu cuenta utilizando Google, sigue el procedimiento de contraseña olvidada de Addons Marketplace para crear tu contraseña : </target>
         <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
         <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
-        <target>Vincular tu tienda a su tuenta Addons para recibir automáticamente actualizaciones importantes de los módulos que compraste. ¿Aún no tienes una cuenta?</target>
+        <target>Vincula tu tienda a tu cuenta de Addons para recibir automáticamente actualizaciones importantes de los módulos que hayas adquirido. ¿Aún no tiene una cuenta?</target>
         <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
         <source>Sign up now</source>
-        <target>Registrarse ahora</target>
+        <target>Regístrate ahora</target>
         <note>Line: 43</note>
       </trans-unit>
       <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
