@@ -41,6 +41,7 @@
 /* override the padding around the catalog */
 .mbo-catalog-wrapper {
   margin: -16px -15px;
+  background-color: #FFFFFF;
 }
 
 #growls.default {

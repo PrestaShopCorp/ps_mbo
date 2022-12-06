@@ -67,12 +67,12 @@ class AddonsUser implements UserInterface
     {
         return $encrypted ?
             [
-                'username' => $this->get('username_addons'),
-                'password' => $this->get('password_addons'),
+                'username' => $this->get('username_addons_v2'),
+                'password' => $this->get('password_addons_v2'),
             ]
             : [
-            'username' => $this->getAndDecrypt('username_addons'),
-            'password' => $this->getAndDecrypt('password_addons'),
+            'username' => $this->getAndDecrypt('username_addons_v2'),
+            'password' => $this->getAndDecrypt('password_addons_v2'),
         ];
     }
 
@@ -82,7 +82,7 @@ class AddonsUser implements UserInterface
     public function getEmail(): array
     {
         return [
-            'username' => $this->getAndDecrypt('username_addons'),
+            'username' => $this->getAndDecrypt('username_addons_v2'),
         ];
     }
 
@@ -145,8 +145,8 @@ class AddonsUser implements UserInterface
      */
     private function hasCookieAuthenticated(): bool
     {
-        return $this->getFromCookie('username_addons')
-            && $this->getFromCookie('password_addons');
+        return $this->getFromCookie('username_addons_v2')
+            && $this->getFromCookie('password_addons_v2');
     }
 
     /**
@@ -154,7 +154,7 @@ class AddonsUser implements UserInterface
      */
     private function hasSessionAuthenticated(): bool
     {
-        return $this->getFromSession('username_addons')
-            && $this->getFromSession('password_addons');
+        return $this->getFromSession('username_addons_v2')
+            && $this->getFromSession('password_addons_v2');
     }
 }
