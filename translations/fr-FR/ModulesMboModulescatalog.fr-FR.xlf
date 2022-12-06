@@ -69,17 +69,17 @@
       </trans-unit>
       <trans-unit id="43a3d8f3d278fff326a75c8137b62352">
         <source>If you created your account using Google, please follow the forgotten password procedure of Addons Marketplace to create your password : </source>
-        <target>If you created your account using Google, please follow the forgotten password procedure of Addons Marketplace to create your password : </target>
+        <target>Si vous avez créé votre compte avec Google, veuillez suivre la procédure de mot de passe oublié de Addons Marketplace pour créer votre mot de passe : </target>
         <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
         <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
-        <target>Liez votre boutique à votre compte Addons : vos modules achetés seront automatiquement importés. Vous n'avez pas encore de compte ?</target>
+        <target>Liez votre boutique à votre compte Addons pour recevoir automatiquement les mises à jour importantes des modules que vous avez achetés. Vous n'avez pas encore de compte ?</target>
         <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
         <source>Sign up now</source>
-        <target>Inscrivez-vous</target>
+        <target>Inscrivez-vous maintenant</target>
         <note>Line: 43</note>
       </trans-unit>
       <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
