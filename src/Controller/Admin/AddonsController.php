@@ -92,12 +92,8 @@ class AddonsController extends FrameworkBundleAdminController
 
             Configuration::updateValue('PS_LOGGED_ON_ADDONS', 1);
 
-            if ($request->get('addons_remember_me', false)) {
-                $response = $this->createCookieUser($response, $json, $params);
-            } else {
-                $response = $this->createSessionUser($response, $this->get('session'), $json, $params);
-            }
-
+            $cookieExpirationTime = $request->get('addons_remember_me', false) ? strtotime('+30 days') : strtotime('+1 days');
+            $response = $this->createCookieUser($response, $json, $params, $cookieExpirationTime);
             $response->setData(['success' => 1, 'message' => '']);
 
             // Clear previously filtered modules search
@@ -141,14 +137,14 @@ class AddonsController extends FrameworkBundleAdminController
             }
             $response = new RedirectResponse($url);
         }
-        $response->headers->clearCookie('username_addons');
-        $response->headers->clearCookie('password_addons');
-        $response->headers->clearCookie('is_contributor');
+        $response->headers->clearCookie('username_addons_v2');
+        $response->headers->clearCookie('password_addons_v2');
+        $response->headers->clearCookie('is_contributor_v2');
 
         $session = $this->get('session');
-        $session->remove('username_addons');
-        $session->remove('password_addons');
-        $session->remove('is_contributor');
+        $session->remove('username_addons_v2');
+        $session->remove('password_addons_v2');
+        $session->remove('is_contributor_v2');
 
         $request->setSession($session);
 
@@ -222,19 +218,18 @@ class AddonsController extends FrameworkBundleAdminController
         return new JsonResponse($upgradeResponse);
     }
 
-    private function createCookieUser(Response $response, \stdClass $json, array $params): Response
+    private function createCookieUser(Response $response, \stdClass $json, array $params, int $expiresAt = -1): Response
     {
         $encryptor = $this->get('mbo.addons.user.credentials_encryptor');
-        $expiresAt = strtotime('+30 days');
 
         $response->headers->setCookie(
-            new Cookie('username_addons', $encryptor->encrypt($params['username']), $expiresAt, null, null, null, false)
+            new Cookie('username_addons_v2', $encryptor->encrypt($params['username']), $expiresAt, null, null, null, false)
         );
         $response->headers->setCookie(
-            new Cookie('password_addons', $encryptor->encrypt($params['password']), $expiresAt, null, null, null, false)
+            new Cookie('password_addons_v2', $encryptor->encrypt($params['password']), $expiresAt, null, null, null, false)
         );
         $response->headers->setCookie(
-            new Cookie('is_contributor', (string) $json->is_contributor, $expiresAt, null, null, null, false)
+            new Cookie('is_contributor_v2', (string) $json->is_contributor, $expiresAt, null, null, null, false)
         );
 
         return $response;
@@ -244,9 +239,9 @@ class AddonsController extends FrameworkBundleAdminController
     {
         $encryptor = $this->get('mbo.addons.user.credentials_encryptor');
 
-        $session->set('username_addons', $encryptor->encrypt($params['username']));
-        $session->set('password_addons', $encryptor->encrypt($params['password']));
-        $session->set('is_contributor', (string) $json->is_contributor);
+        $session->set('username_addons_v2', $encryptor->encrypt($params['username']));
+        $session->set('password_addons_v2', $encryptor->encrypt($params['password']));
+        $session->set('is_contributor_v2', (string) $json->is_contributor);
 
         return $response;
     }
