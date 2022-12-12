@@ -111,8 +111,8 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
             return;
         }
 
-        $session->set('username_addons', $addonsUsername);
-        $session->set('password_addons', $addonsPwd);
+        $session->set('username_addons_v2', $addonsUsername);
+        $session->set('password_addons_v2', $addonsPwd);
         $session->set('is_contributor', '0');
     }
 }
