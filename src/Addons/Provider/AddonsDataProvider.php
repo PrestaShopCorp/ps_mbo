@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Addons\Provider;
 
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use PrestaShop\Module\Mbo\Addons\ApiClient;
 use PrestaShop\Module\Mbo\Addons\User\UserInterface;
 
@@ -120,6 +121,13 @@ class AddonsDataProvider implements DataProviderInterface
                 'Error sent by Addons. You may be not allowed to download this module.'
                 : 'Error sent by Addons. You may need to be logged.';
 
+            if ($e instanceof ClientException) {
+                $rawContent = $e->getResponse()->getBody()->getContents();
+                $jsonContent = json_decode($rawContent, true);
+                if (is_array($jsonContent) && isset($jsonContent['errors']['label'])) {
+                    $message = 'Error sent by Addons. ' . $jsonContent['errors']['label'];
+                }
+            }
             throw new Exception($message, 0, $e);
         }
 
@@ -180,7 +188,6 @@ class AddonsDataProvider implements DataProviderInterface
             return $this->marketplaceClient->{self::ADDONS_API_MODULE_ACTIONS[$action]}($params);
         } catch (Exception $e) {
             self::$is_addons_up = false;
-
             throw $e;
         }
     }
