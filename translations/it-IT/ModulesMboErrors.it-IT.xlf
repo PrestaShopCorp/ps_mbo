@@ -6,10 +6,14 @@
         <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
         <target>PrestaShop non ha potuto accedere ad Addons. Si prega di controllare le tue credenziali e la tua connessione Internet.</target>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <note>Line: 105</note>
 =======
         <note>Line: 109</note>
 >>>>>>> 327bb7b (Add a phrase to Addons modal connect + translations)
+=======
+        <note>Line: 105</note>
+>>>>>>> db9c773 (Addons connect modal : Translate Button label and Remember me)
       </trans-unit>
     </body>
   </file>
