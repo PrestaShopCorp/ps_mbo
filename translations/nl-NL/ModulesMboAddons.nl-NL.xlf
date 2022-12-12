@@ -7,6 +7,16 @@
         <target>Maak verbinding met Addons</target>
         <note>Line: 24</note>
       </trans-unit>
+      <trans-unit id="878530871f0db73f004f5bd6591eeb76">
+        <source>Remember me</source>
+        <target>Onthoud mij</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="634efc0701950e9b2b97384327c8d5d2">
+        <source>Let's go!</source>
+        <target>Laten we starten!</target>
+        <note>Line: 70</note>
+      </trans-unit>
       <trans-unit id="b09249132bbed9baecd987cf73200b44">
         <source>Confirm logout</source>
         <target>Bevestig uitloggen</target>
