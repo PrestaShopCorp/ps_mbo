@@ -63,11 +63,11 @@
                     <label>
                       <input type="checkbox" name="addons_remember_me">
                       <i class="md-checkbox-control"></i>
-                      {{ 'Remember me'|trans({}, 'Admin.Global') }}
+                        {{ 'Remember me'|trans({}, 'Modules.Mbo.Addons') }}
                     </label>
                   </div>
                   <div class="text-center">
-                    <button type="submit" class="btn btn-primary">{{ "Let's go!"|trans({}, 'Admin.Actions') }}</button>
+                      <button type="submit" class="btn btn-primary">{{ "Let's go!"|trans({}, 'Modules.Mbo.Addons') }}</button>
                     <div id="addons_login_btn" class="spinner" style="display:none;"></div>
                   </div>
                 </form>
@@ -103,6 +103,6 @@
           <a class="btn btn-primary uppercase" href="{{ path('admin_mbo_addons_logout') }}" id="module-modal-addons-logout-ack">{{ 'Yes, log out'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
       </div>
 
+        </div>
     </div>
-  </div>
 </div>
