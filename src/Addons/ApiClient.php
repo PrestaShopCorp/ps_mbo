@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Addons;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use stdClass;
 
 class ApiClient
@@ -278,6 +279,8 @@ class ApiClient
      * Process the request with the current parameters, given the $method, return the body as string
      *
      * @return string
+     *
+     * @throws GuzzleException
      */
     public function processRequest(string $method = self::HTTP_METHOD_GET): string
     {
