@@ -14,17 +14,17 @@
       <trans-unit id="cff7b4047c79f112e869481322d2924e">
         <source>Module %module% successfully upgraded.</source>
         <target>Módulo %module% actualizado com sucesso.</target>
-        <note>Line: 176</note>
+        <note>Line: 172</note>
       </trans-unit>
       <trans-unit id="22d6960d922158c548d123998be8dd91">
         <source>Upgrade of module %module% failed. %error%</source>
         <target>Actualização do módulo %module% falhou. %error%</target>
-        <note>Line: 212</note>
+        <note>Line: 208</note>
       </trans-unit>
       <trans-unit id="f8c9c7b6af2a8d50bc948bcf966c1d4b">
         <source>Module %module% is already up to date</source>
         <target>Módulo %module% já está actualizado</target>
-        <note>Line: 199</note>
+        <note>Line: 195</note>
       </trans-unit>
     </body>
   </file>
@@ -62,16 +62,6 @@
   </file>
   <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig" source-language="pt-PT" target-language="pt-PT" datatype="plaintext">
     <body>
-      <trans-unit id="32fe59513f5bbdd353b4527cc6af55ce">
-        <source>Reset your password</source>
-        <target>Redefinir a sua palavra-passe</target>
-        <note>Line: 47</note>
-      </trans-unit>
-      <trans-unit id="43a3d8f3d278fff326a75c8137b62352">
-        <source>If you created your account using Google, please follow the forgotten password procedure of Addons Marketplace to create your password : </source>
-        <target>Se criou a sua conta utilizando o Google, por favor siga o procedimento de esquecimento de palavra-passe do Addons Marketplace para criar a sua palavra-passe : </target>
-        <note>Line: 46</note>
-      </trans-unit>
       <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
         <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
         <target>Ligue a sua loja à sua conta Addons para receber automaticamente actualizações importantes para os módulos que adquiriu. Ainda não tem uma conta?</target>
@@ -81,6 +71,16 @@
         <source>Sign up now</source>
         <target>Inscreva-se agora</target>
         <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="43a3d8f3d278fff326a75c8137b62352">
+        <source>If you created your account using Google, please follow the forgotten password procedure of Addons Marketplace to create your password : </source>
+        <target>Se criou a sua conta utilizando o Google, por favor siga o procedimento de esquecimento de palavra-passe do Addons Marketplace para criar a sua palavra-passe : </target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="32fe59513f5bbdd353b4527cc6af55ce">
+        <source>Reset your password</source>
+        <target>Redefinir a sua palavra-passe</target>
+        <note>Line: 47</note>
       </trans-unit>
       <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
         <source>Yes, log out</source>
