@@ -110,7 +110,7 @@ class Repository implements RepositoryInterface
     public function __destruct()
     {
         if ($this->cache !== null) {
-            $this->cacheProvider->save($this->cacheName, $this->cache, 60 * 60 * 24);
+            $this->cacheProvider->save($this->cacheName, $this->cache, 60 * 60 * 24); // A day of cache maximum.
         }
     }
 
