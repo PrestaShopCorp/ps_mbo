@@ -114,7 +114,32 @@ class ModuleBuilder implements ModuleBuilderInterface
             $attributes = array_merge($attributes, $mainClassAttributes);
         }
 
-        return new Module($attributes, $disk, $database);
+        $module = new Module($attributes, $disk, $database);
+        $this->generateAddonsUrls($module);
+
+        return $module;
+    }
+
+    /**
+     * @param Module $module
+     *
+     * @return void
+     */
+    protected function generateAddonsUrls(Module $module): void
+    {
+        $moduleName = $module->attributes->get('name');
+
+        if (
+            $module->database->has('installed')
+            && $module->database->getBoolean('installed')
+            && $module->attributes->getBoolean('is_configurable')
+        ) {
+            $module->attributes->set('urls', [
+                'configure' => $this->router->generate('admin_module_configure_action', [
+                    'module_name' => $moduleName,
+                ]),
+            ]);
+        }
     }
 
     /**
