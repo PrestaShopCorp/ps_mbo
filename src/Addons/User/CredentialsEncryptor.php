@@ -29,7 +29,7 @@ class CredentialsEncryptor
      * @var AdminAuthenticationProvider
      */
     private $adminAuthenticationProvider;
-    
+
     public function __construct(AdminAuthenticationProvider $adminAuthenticationProvider)
     {
         $this->adminAuthenticationProvider = $adminAuthenticationProvider;
@@ -37,14 +37,14 @@ class CredentialsEncryptor
 
     public function encrypt(string $value): string
     {
-        return base64_encode(sprintf('%s%s', $value, $this->getSalt()));        
+        return base64_encode(sprintf('%s%s', $value, $this->getSalt()));
     }
 
     public function decrypt(string $value): string
-    {        
+    {
         return str_replace($this->getSalt(), '', base64_decode($value));
     }
-    
+
     private function getSalt(): string
     {
         return $this->adminAuthenticationProvider->getAdminToken();
