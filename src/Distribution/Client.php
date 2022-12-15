@@ -201,7 +201,7 @@ class Client extends BaseClient
      *
      * @return false|stdClass
      */
-    public function getConf()
+    public function getEmployeeMenu()
     {
         $languageIsoCode = Context::getContext()->language->getIsoCode();
         $cacheKey = __METHOD__ . $languageIsoCode . _PS_VERSION_;
@@ -215,7 +215,7 @@ class Client extends BaseClient
             'shopVersion' => _PS_VERSION_,
         ]);
         try {
-            $conf = $this->processRequestAndDecode('shops/conf');
+            $conf = $this->processRequestAndDecode('shops/employee-menu');
         } catch (\Throwable $e) {
             return false;
         }
