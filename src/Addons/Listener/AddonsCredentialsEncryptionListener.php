@@ -61,7 +61,6 @@ final class AddonsCredentialsEncryptionListener
 
             $this->session->remove('username_addons_v2');
             $this->session->remove('password_addons_v2');
-//            $this->session->save();
 
             $event->setResponse($response);
         }
