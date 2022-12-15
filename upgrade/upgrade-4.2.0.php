@@ -23,21 +23,9 @@
  *
  * @return bool
  */
-function upgrade_module_4_1_1(Module $module): bool
+function upgrade_module_4_2_0(Module $module): bool
 {
-    $parentTab = Tab::getInstanceFromClassName('AdminPsMboModuleParent');
-    $moduleTab = Tab::getInstanceFromClassName('AdminPsMboModule');
-    $languages = Language::getIDs(false);
-    $tabNameByLangId = array_fill_keys($languages, 'Marketplace');
-
-    if (Validate::isLoadedObject($parentTab)) {
-        $parentTab->name = $tabNameByLangId;
-        $parentTab->save();
-    }
-    if (Validate::isLoadedObject($moduleTab)) {
-        $moduleTab->name = $tabNameByLangId;
-        $moduleTab->save();
-    }
+    $module->updateHooks();
 
     return true;
 }
