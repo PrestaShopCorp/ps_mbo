@@ -241,3 +241,13 @@
   background-color: #cbf2d4;
   border: 1px solid #53d572;
 }
+
+
+/** Legacy controllers */
+body.ps_back-office div#main #modules_list_container .modal-header {
+  border-bottom: none;
+  padding: 1.25rem;
+}
+body.ps_back-office div#main #modules_list_container .modal-body {
+  margin: 0 auto;
+}
