@@ -164,8 +164,9 @@ class ContextBuilder
             'admin_token' => $token,
             'refresh_url' => $refreshUrl,
             'installed_modules' => $this->getInstalledModules(),
-            'account_user_id' => $this->accountsDataProvider->getAccountsUserId(),
-            'account_shop_id' => $this->accountsDataProvider->getAccountsShopId(),
+            'accounts_user_id' => $this->accountsDataProvider->getAccountsUserId(),
+            'accounts_shop_id' => $this->accountsDataProvider->getAccountsShopId(),
+            'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
         ];
     }
 
