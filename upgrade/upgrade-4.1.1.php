@@ -23,7 +23,7 @@
  *
  * @return bool
  */
-function upgrade_module_4_1_0(Module $module): bool
+function upgrade_module_4_1_1(Module $module): bool
 {
     $parentTab = Tab::getInstanceFromClassName('AdminPsMboModuleParent');
     $moduleTab = Tab::getInstanceFromClassName('AdminPsMboModule');
