@@ -23,7 +23,6 @@ namespace PrestaShop\Module\Mbo\Traits;
 
 use Db;
 use LanguageCore as Language;
-use PrestaShopBundle\Entity\Repository\TabRepository;
 use Symfony\Component\String\UnicodeString;
 use TabCore as Tab;
 use ValidateCore as Validate;
@@ -82,11 +81,6 @@ trait HaveTabs
     ];
 
     /**
-     * @var TabRepository
-     */
-    protected $tabRepository;
-
-    /**
      * Apply given method on all Tabs
      * Values can be 'install' or 'uninstall'
      *
@@ -102,9 +96,7 @@ trait HaveTabs
         if (!method_exists($this, $methodName)) {
             return false;
         }
-        /** @var TabRepository $tabRepository */
-        $tabRepository = $this->get('prestashop.core.admin.tab.repository');
-        $this->tabRepository = $tabRepository;
+
         foreach (static::$ADMIN_CONTROLLERS as $tabData) {
             if (false === $this->{$methodName}($tabData)) {
                 return false;
@@ -130,7 +122,7 @@ trait HaveTabs
             $tabData['name']
         );
 
-        $idParent = empty($tabData['parent_class_name']) ? -1 : $this->tabRepository->findOneIdByClassName($tabData['parent_class_name']);
+        $idParent = empty($tabData['parent_class_name']) ? -1 : $tabId = Tab::getIdFromClassName($tabData['parent_class_name']);
 
         $tab = new Tab();
         $tab->module = $this->name;
@@ -168,7 +160,7 @@ trait HaveTabs
      */
     public function uninstallTab(array $tabData): bool
     {
-        $tabId = $this->tabRepository->findOneIdByClassName($tabData['class_name']);
+        $tabId = Tab::getIdFromClassName($tabData['class_name']);
         $tab = new Tab($tabId);
 
         if (false === Validate::isLoadedObject($tab)) {
@@ -217,9 +209,6 @@ trait HaveTabs
                 $newTabs[] = $tab;
             }
         }
-
-        $tabRepository = $this->get('prestashop.core.admin.tab.repository');
-        $this->tabRepository = $tabRepository;
 
         foreach ($oldTabs as $oldTab) {
             $this->uninstallTab(['class_name' => $oldTab]);
