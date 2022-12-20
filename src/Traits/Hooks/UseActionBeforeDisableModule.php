@@ -27,12 +27,12 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-trait UseActionBeforeResetModule
+trait UseActionBeforeDisableModule
 {
     /**
-     * Hook actionBeforeResetModule.
+     * Hook actionBeforeDisableModule.
      */
-    public function hookActionBeforeResetModule(array $params): void
+    public function hookActionBeforeDisableModule(array $params): void
     {
         /** @var ModuleDataProvider $moduleDataProvider */
         $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
@@ -44,7 +44,7 @@ trait UseActionBeforeResetModule
         $moduleName = (string) $params['moduleName'];
 
         if ('ps_mbo' === $moduleName) {
-            $this->storeAddonsCredentials($params, 'reset');
+            $this->storeAddonsCredentials($params, 'disable');
         }
     }
 }
