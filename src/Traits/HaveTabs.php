@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Traits;
 
 use Db;
 use LanguageCore as Language;
+use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use Symfony\Component\String\UnicodeString;
 use TabCore as Tab;
 use ValidateCore as Validate;
@@ -81,8 +82,11 @@ trait HaveTabs
     ];
 
     /**
+     * This method is called when module is enabled/disabled.
+     *
      * Apply given method on all Tabs
      * Values can be 'install' or 'uninstall'
+     * If action is install, the tabs are activated if relevant.
      *
      * @param string $action
      *
@@ -103,18 +107,22 @@ trait HaveTabs
             }
         }
 
+        // Re-Apply config to handle tabs to hide/show
+        $command = new VersionChangeApplyConfigCommand(_PS_VERSION_, $this->version);
+        $this->getService('mbo.distribution.api_version_change_config_apply_handler')->handle($command);
+
         return true;
     }
 
     /**
      * Install Tab.
-     * Used in upgrade script.
+     * Used when modue is enabled and in upgrade script.
      *
      * @param array $tabData
      *
      * @return bool
      */
-    public function installTab(array $tabData): bool
+    public function installTab(array $tabData, bool $activate = true): bool
     {
         $position = $tabData['position'] ?? 0;
         $tabNameByLangId = array_fill_keys(
@@ -130,7 +138,7 @@ trait HaveTabs
         $tab->position = $position;
         $tab->id_parent = $idParent;
         $tab->name = $tabNameByLangId;
-        $tab->active = $tabData['visible'];
+        $tab->active = $tabData['visible'] && $activate ? $tabData['visible'] : false;
 
         // This will reorder the tabs starting with 1
         $tab->cleanPositions($idParent);
@@ -214,7 +222,7 @@ trait HaveTabs
             $this->uninstallTab(['class_name' => $oldTab]);
         }
         foreach ($newTabs as $newTab) {
-            $this->installTab(static::$ADMIN_CONTROLLERS[$newTab]);
+            $this->installTab(static::$ADMIN_CONTROLLERS[$newTab], false);
         }
     }
 }
