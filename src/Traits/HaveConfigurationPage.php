@@ -22,7 +22,7 @@ trait HaveConfigurationPage
             'addons' => 'https://preprod-api-addons.prestashop.com',
         ],
         'preprod' => [
-            'cdc' => 'https://preproduction-assets.prestashop3.com/dst/mbo/latest/mbo-cdc.umd.js',
+            'cdc' => 'https://preproduction-assets.prestashop3.com/dst/mbo/main/mbo-cdc.umd.js',
             'api' => 'https://mbo-api-preprod.prestashop.com',
             'addons' => 'https://preprod-api-addons.prestashop.com',
         ],
