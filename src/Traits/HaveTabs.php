@@ -107,10 +107,6 @@ trait HaveTabs
             }
         }
 
-        // Re-Apply config to handle tabs to hide/show
-        $command = new VersionChangeApplyConfigCommand(_PS_VERSION_, $this->version);
-        $this->getService('mbo.distribution.api_version_change_config_apply_handler')->handle($command);
-
         return true;
     }
 
@@ -138,7 +134,11 @@ trait HaveTabs
         $tab->position = $position;
         $tab->id_parent = $idParent;
         $tab->name = $tabNameByLangId;
-        $tab->active = $tabData['visible'] && $activate ? $tabData['visible'] : false;
+        $tab->active = $tabData['visible'] ? $tabData['visible'] : false;
+
+        if (false === $activate) { // This case will happen when upgrading the module. We disable all the tabs
+            $tab->active = false;
+        }
 
         // This will reorder the tabs starting with 1
         $tab->cleanPositions($idParent);
@@ -183,6 +183,10 @@ trait HaveTabs
     }
 
     /**
+     * This method is called on module upgrade.
+     * Tabs will be updated if the module is active.
+     * But they will be all unactivated.
+     *
      * Update tabs in DB.
      * Search current tabs registered in DB and compare them with the tabs declared in the module.
      * If a tab is missing, it will be added. If a tab is not declared in the module, it will be removed.
@@ -191,6 +195,12 @@ trait HaveTabs
      */
     public function updateTabs(): void
     {
+        if (false === $this->active) {
+            // If the MBO module is not active.
+            // We don't update the tabs, it will be done when the module is enabled.
+            return;
+        }
+
         $tabData = Db::getInstance()->executeS('
             SELECT class_name
             FROM `' . _DB_PREFIX_ . 'tab`
@@ -218,9 +228,11 @@ trait HaveTabs
             }
         }
 
+        // Delete the tabs that are not relevant anymore
         foreach ($oldTabs as $oldTab) {
             $this->uninstallTab(['class_name' => $oldTab]);
         }
+        // Install the new tabs
         foreach ($newTabs as $newTab) {
             $this->installTab(static::$ADMIN_CONTROLLERS[$newTab], false);
         }
