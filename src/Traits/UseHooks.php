@@ -186,8 +186,8 @@ trait UseHooks
                 /** @var SessionInterface $session */
                 $session = $this->get('session');
 
-                $session->set('username_addons_v2', $encryptor->decrypt($addonsUsername));
-                $session->set('password_addons_v2', $encryptor->decrypt($addonsPassword));
+                $session->set('username_addons_v2_decrypted', $encryptor->decrypt($addonsUsername));
+                $session->set('password_addons_v2_decrypted', $encryptor->decrypt($addonsPassword));
 
                 $session->set('credentials_decrypted_before_change', 1);
             }
