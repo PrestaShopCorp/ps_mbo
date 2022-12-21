@@ -112,7 +112,7 @@ trait HaveTabs
 
     /**
      * Install Tab.
-     * Used when modue is enabled and in upgrade script.
+     * Used when module is enabled and in upgrade script.
      *
      * @param array $tabData
      *
