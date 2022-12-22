@@ -38,7 +38,7 @@
 {% extends app.request.isxmlhttprequest ? '@Modules/ps_mbo/views/templates/admin/layout-ajax.html.twig' : '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <script defer>
+  <script>
     if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
       if (typeof renderCdcError === 'function') {
         window.$(document).ready(function() {

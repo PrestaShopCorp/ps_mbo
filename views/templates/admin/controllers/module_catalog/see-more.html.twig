@@ -17,7 +17,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *#}
 {% if module.attributes.id != "0" %}
-  <script defer>
+  <script>
     if (!window.shopContext) {
       window.shopContext = {{ shop_context|json_encode|raw }};
     }

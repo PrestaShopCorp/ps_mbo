@@ -58,7 +58,6 @@ class ps_mbo extends Module
     ];
 
     public const CONTROLLERS_WITH_CDC_SCRIPT = [
-        'AdminPsMboModule',
         'AdminModulesNotifications',
         'AdminModulesUpdates',
         'AdminModulesManage',
