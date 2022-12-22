@@ -195,7 +195,7 @@ trait HaveTabs
      */
     public function updateTabs(): void
     {
-        if (false === $this->active) {
+        if (false === self::checkModuleStatus()) {
             // If the MBO module is not active.
             // We don't update the tabs, it will be done when the module is enabled.
             return;

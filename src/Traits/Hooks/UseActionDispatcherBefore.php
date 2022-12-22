@@ -51,7 +51,9 @@ trait UseActionDispatcherBefore
             $this->ensureApiConfigIsApplied();
         }
 
-        $this->ensureApiUserExistAndIsLogged($controllerName, $params);
+        if (self::checkModuleStatus()) { // If the module is not active, config values are not set yet
+            $this->ensureApiUserExistAndIsLogged($controllerName, $params);
+        }
     }
 
     private function ensureShopIsRegistered(): void
