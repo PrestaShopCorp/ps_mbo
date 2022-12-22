@@ -22,6 +22,9 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits;
 
 use Db;
+use PrestaShop\Module\Mbo\Addons\User\CredentialsEncryptor;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\String\UnicodeString;
 
 trait UseHooks
@@ -33,8 +36,10 @@ trait UseHooks
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia;
+    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionBeforeDisableModule;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionBeforeInstallModule;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionBeforeResetModule;
+    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionBeforeUninstallModule;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionGetAdminToolbarButtons;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionGetAlternativeSearchPanels;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;
@@ -160,6 +165,32 @@ trait UseHooks
         }
         if (!empty($newHooks)) {
             $this->registerHook($newHooks);
+        }
+    }
+
+    protected function storeAddonsCredentials(array $params, string $action)
+    {
+        if (!empty($params['request']) && $params['request']->get('action') === $action) {
+            /**
+             * @var Request $request
+             */
+            $request = $params['request'];
+
+            $addonsUsername = $request->cookies->get('username_addons_v2');
+            $addonsPassword = $request->cookies->get('password_addons_v2');
+
+            if (null !== $addonsUsername && null !== $addonsPassword) {
+                /** @var CredentialsEncryptor $encryptor */
+                $encryptor = $this->get('mbo.addons.user.credentials_encryptor');
+
+                /** @var SessionInterface $session */
+                $session = $this->get('session');
+
+                $session->set('username_addons_v2_decrypted', $encryptor->decrypt($addonsUsername));
+                $session->set('password_addons_v2_decrypted', $encryptor->decrypt($addonsPassword));
+
+                $session->set('credentials_decrypted_before_change', 1);
+            }
         }
     }
 }
