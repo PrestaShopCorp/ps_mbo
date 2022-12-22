@@ -160,6 +160,10 @@ class ContextBuilder
             'shop_url' => Config::getShopUrl(),
             'shop_uuid' => Config::getShopMboUuid(),
             'mbo_token' => $this->adminAuthenticationProvider->getMboJWT(),
+            'mbo_reset_url' => $this->router->generate('admin_module_manage_action', [
+                'action' => 'reset',
+                'module_name' => 'ps_mbo',
+            ]),
             'user_id' => $context->cookie->id_employee,
             'admin_token' => $token,
             'refresh_url' => $refreshUrl,
