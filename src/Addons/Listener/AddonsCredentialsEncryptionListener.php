@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Addons\Listener;
 
 use PrestaShop\Module\Mbo\Addons\User\CredentialsEncryptor;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
@@ -90,7 +91,7 @@ final class AddonsCredentialsEncryptionListener
                 // We made this check because Validate::isEmail doesn't check the length of the doain extension
 
                 if (!$isValid) {
-                    $this->clearAddonsCookiesFromResponse($reponse);
+                    $this->clearAddonsCookiesFromResponse($response);
                     $event->setResponse($response);
                 }
             }
