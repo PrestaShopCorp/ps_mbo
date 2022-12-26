@@ -53,7 +53,7 @@ trait HaveShopOnExternalService
      *
      * @return void
      */
-    private function updateShop(array $params = []): void
+    public function updateShop(array $params = []): void
     {
         $this->callServiceWithLockFile('updateShop', $params);
     }
