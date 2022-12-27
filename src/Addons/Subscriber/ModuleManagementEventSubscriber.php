@@ -28,6 +28,7 @@ use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyC
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -179,13 +180,15 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
     {
         $this->logEvent(ModuleManagementEvent::UPGRADE, $event);
 
-        if ('ps_mbo' === $event->getModule()->get('name')) {
-            $command = new VersionChangeApplyConfigCommand(
-                _PS_VERSION_,
-                $event->getModule()->disk->get('version')
-            );
+        $module = $event->getModule();
+        if ('ps_mbo' === $module->get('name')) {
+            // Update shop config to transmit correct versions to Distribution API
+            /** @var \ps_mbo $psMbo */
+            $psMbo = $module->getInstance();
+            $psMbo->updateShop();
 
-            $configCollection = $this->versionChangeApplyConfigCommandHandler->handle($command);
+            // Apply config dur to PS and MBO version changes
+            $this->applyConfigOnVersionChange($module);
         }
     }
 
@@ -202,5 +205,15 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
 
         $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
         $this->distributionClient->trackEvent($data);
+    }
+
+    private function applyConfigOnVersionChange(ModuleInterface $module)
+    {
+        $command = new VersionChangeApplyConfigCommand(
+            _PS_VERSION_,
+            $module->disk->get('version')
+        );
+
+        $configCollection = $this->versionChangeApplyConfigCommandHandler->handle($command);
     }
 }
