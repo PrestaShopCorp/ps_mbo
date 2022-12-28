@@ -51,6 +51,14 @@ final class AddonsCredentialsEncryptionListener
         $response = $event->getResponse();
         $request = $event->getRequest();
 
+        // There must be an action on MBO module to perform something on this listener
+        if (
+            $request->get('_controller') !== 'PrestaShopBundle\Controller\Admin\Improve\ModuleController::moduleAction'
+            || 'ps_mbo' !== $request->get('module_name')
+        ) {
+            return;
+        }
+
         // If the module is being uninstalled, we remove the addons credentials from the cookies
         if ('uninstall' === $request->get('action')) {
             $response = $this->clearAddonsCookiesFromResponse($response);
