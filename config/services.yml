@@ -9,11 +9,6 @@ services:
   mbo.externalcontent.provider:
     class: 'PrestaShop\Module\Mbo\Service\ExternalContentProvider\ExternalContentProvider'
 
-  mbo.recommendedmodules.presenter:
-    class: 'PrestaShop\Module\Mbo\RecommendedModule\RecommendedModulePresenter'
-    arguments:
-      - '@prestashop.adapter.presenter.module'
-
   mbo.addons.links_provider:
     class: 'PrestaShop\Module\Mbo\Addons\Provider\LinksProvider'
     arguments:
@@ -27,38 +22,25 @@ services:
 
   mbo.controller.modules.catalog:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController'
-    arguments:
-      - '@mbo.addons.toolbar'
-      - '@mbo.cdc.context_builder'
 
   mbo.controller.modules.selection:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleSelectionController'
     arguments:
       - '@request_stack'
-      - '@mbo.externalcontent.provider'
-      - '@mbo.addons.links_provider'
 
   mbo.controller.modules.recommended:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleRecommendedController'
     arguments:
       - '@request_stack'
-      - '@mbo.tab.collection.provider'
-      - '@mbo.recommendedmodules.presenter'
-      - '@mbo.addons.links_provider'
-      - '@mbo.cdc.context_builder'
 
   mbo.controller.themes.catalog:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController'
     arguments:
       - '@request_stack'
-      - '@mbo.externalcontent.provider'
-      - '@mbo.addons.links_provider'
 
   mbo.controller.addons:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\AddonsController'
     arguments:
       - '@request_stack'
-      - '@mbo.addons.data_provider'
       - '@prestashop.module.manager'
-      - '@mbo.modules.repository'
       - '@prestashop.core.admin.module.repository'

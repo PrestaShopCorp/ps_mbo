@@ -6,12 +6,13 @@ services:
   mbo.modules.repository:
     class: PrestaShop\Module\Mbo\Module\Repository
     arguments:
-      - "@mbo.addons.data_provider"
+      - "@mbo.cdc.client.connected_distribution_api"
       - "@mbo.modules.builder"
       - "@logger"
       - "@=service('translator').getLocale()"
       - "@doctrine.cache.provider"
       - "@=service('prestashop.adapter.legacy.configuration').get('_DB_PREFIX_')"
+      - "@mbo.security.admin_authentication.provider"
 
   mbo.modules.filters.factory:
     class: PrestaShop\Module\Mbo\Module\FiltersFactory

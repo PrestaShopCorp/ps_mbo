@@ -22,10 +22,6 @@ namespace PrestaShop\Module\Mbo\Module;
 
 interface FiltersInterface
 {
-    public function setOrigin(int $origin): FiltersInterface;
-
-    public function hasOrigin(int $origin): bool;
-
     public function setStatus(int $status): FiltersInterface;
 
     public function hasStatus(int $status): bool;

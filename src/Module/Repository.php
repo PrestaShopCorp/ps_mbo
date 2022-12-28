@@ -23,8 +23,8 @@ namespace PrestaShop\Module\Mbo\Module;
 
 use Db;
 use Doctrine\Common\Cache\CacheProvider;
-use Exception;
-use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
+use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
+use PrestaShop\Module\Mbo\Distribution\ConnectedClient;
 use Psr\Log\LoggerInterface;
 use Shop;
 use stdClass;
@@ -35,9 +35,9 @@ use stdClass;
 class Repository implements RepositoryInterface
 {
     /**
-     * @var AddonsDataProvider
+     * @var ConnectedClient
      */
-    protected $dataProvider;
+    protected $connectedClient;
 
     /**
      * @var LoggerInterface
@@ -64,6 +64,11 @@ class Repository implements RepositoryInterface
     protected $cacheProvider;
 
     /**
+     * @var AdminAuthenticationProvider
+     */
+    protected $adminAuthenticationProvider;
+
+    /**
      * @var string
      */
     protected $cacheName;
@@ -74,16 +79,18 @@ class Repository implements RepositoryInterface
     protected $dbPrefix;
 
     public function __construct(
-        AddonsDataProvider $dataProvider,
+        ConnectedClient $connectedClient,
         ModuleBuilder $moduleBuilder,
         LoggerInterface $logger,
         string $localeCode,
         CacheProvider $cacheProvider,
-        string $dbPrefix
+        string $dbPrefix,
+        AdminAuthenticationProvider $adminAuthenticationProvider
     ) {
-        $this->dataProvider = $dataProvider;
+        $this->connectedClient = $connectedClient;
         $this->dbPrefix = $dbPrefix;
         $this->logger = $logger;
+        $this->adminAuthenticationProvider = $adminAuthenticationProvider;
 
         $this->cacheName = sprintf(
             '%s_addons_modules',
@@ -103,7 +110,7 @@ class Repository implements RepositoryInterface
     public function __destruct()
     {
         if ($this->cache !== null) {
-            $this->cacheProvider->save($this->cacheName, $this->cache, 60 * 60 * 24);
+            $this->cacheProvider->save($this->cacheName, $this->cache, 60 * 60 * 24); // A day of cache maximum.
         }
     }
 
@@ -119,56 +126,33 @@ class Repository implements RepositoryInterface
             return $this->cache;
         }
 
-        $params = ['format' => 'json'];
-        $requests = [
-            Filters\Origin::ADDONS_MUST_HAVE => 'must-have',
-            Filters\Origin::ADDONS_SERVICE => 'service',
-            Filters\Origin::ADDONS_NATIVE => 'native',
-            Filters\Origin::ADDONS_NATIVE_ALL => 'native_all',
-        ];
-
-        if ($this->dataProvider->isUserAuthenticated()) {
-            $requests[Filters\Origin::ADDONS_CUSTOMER] = 'customer';
-        }
+        $this->connectedClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
+        $addons = $this->connectedClient->getModulesList();
 
         $listAddonsModules = [];
         $apiModules = [];
+        /** @var stdClass $addon */
+        foreach ($addons as $addonsType => $addon) {
+            if (empty($addon->name)) {
+                $this->logger->error(sprintf('The addon with id %s does not have name.', $addon->id));
 
-        foreach ($requests as $actionFilterValue => $action) {
-            try {
-                $addons = $this->dataProvider->request($action, $params);
-                /** @var stdClass $addon */
-                foreach ($addons as $addonsType => $addon) {
-                    if (empty($addon->name)) {
-                        $this->logger->error(sprintf('The addon with id %s does not have name.', $addon->id));
+                continue;
+            }
 
-                        continue;
-                    }
+            if (isset($addon->version)) {
+                $addon->version_available = $addon->version;
+            }
+            if (!isset($addon->product_type)) {
+                $addon->product_type = is_string($addonsType) ? rtrim($addonsType, 's') : 'module';
+            }
 
-                    if (isset($listAddonsModules[$addon->name]) || ($rawModules && isset($apiModules[$addon->name]))) {
-                        continue;
-                    }
-
-                    $addon->origin = $action;
-                    $addon->origin_filter_value = $actionFilterValue;
-                    if (isset($addon->version)) {
-                        $addon->version_available = $addon->version;
-                    }
-                    if (!isset($addon->product_type)) {
-                        $addon->product_type = is_string($addonsType) ? rtrim($addonsType, 's') : 'module';
-                    }
-
-                    if ($rawModules) {
-                        $apiModules[$addon->name] = $addon;
-                    } else {
-                        $listAddonsModules[$addon->name] = $this->moduleBuilder->build(
-                            $addon,
-                            $this->findInDatabaseByName($addon->name)
-                        );
-                    }
-                }
-            } catch (Exception $e) {
-                $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache.');
+            if ($rawModules) {
+                $apiModules[$addon->name] = $addon;
+            } else {
+                $listAddonsModules[$addon->name] = $this->moduleBuilder->build(
+                    $addon,
+                    $this->findInDatabaseByName($addon->name)
+                );
             }
         }
 
@@ -194,45 +178,7 @@ class Repository implements RepositoryInterface
     {
         $this->fetchAll();
 
-        $module = $this->cache[$name] ?? null;
-
-        if ($module) {
-            $this->moduleBuilder->generateAddonsUrls($module);
-        }
-
-        return $module;
-    }
-
-    /**
-     * @param int $moduleId
-     *
-     * @return array
-     */
-    public function getModuleAttributesById(int $moduleId): array
-    {
-        return (array) $this->dataProvider->request('module', ['id_module' => $moduleId]);
-    }
-
-    /**
-     * Send request to get module details on the marketplace, then merge the data received in Module instance.
-     *
-     * @param int $moduleId
-     *
-     * @return Module
-     */
-    public function getModuleById(int $moduleId): ?Module
-    {
-        $moduleAttributes = $this->getModuleAttributesById($moduleId);
-
-        $module = $this->getModule($moduleAttributes['name']);
-
-        foreach ($moduleAttributes as $name => $value) {
-            if (!$module->attributes->has($name)) {
-                $module->attributes->set($name, $value);
-            }
-        }
-
-        return $module;
+        return $this->cache[$name] ?? null;
     }
 
     public function findInDatabaseByName(string $name): ?array

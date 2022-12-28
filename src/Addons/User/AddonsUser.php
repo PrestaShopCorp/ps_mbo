@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Addons\User;
 
 use Exception;
-use PhpEncryptionCore as PhpEncryption;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -32,9 +31,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class AddonsUser implements UserInterface
 {
     /**
-     * @var PhpEncryption
+     * @var CredentialsEncryptor
      */
-    private $encryption;
+    protected $encryption;
 
     /**
      * @var Request
@@ -46,9 +45,9 @@ class AddonsUser implements UserInterface
      */
     private $session;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(SessionInterface $session, CredentialsEncryptor $encryption)
     {
-        $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
+        $this->encryption = $encryption;
         $this->request = Request::createFromGlobals();
         $this->session = $session;
     }
@@ -64,11 +63,16 @@ class AddonsUser implements UserInterface
     /**
      * {@inheritdoc}
      */
-    public function getCredentials(): array
+    public function getCredentials(bool $encrypted = false): array
     {
-        return [
-            'username' => $this->getAndDecrypt('username_addons'),
-            'password' => $this->getAndDecrypt('password_addons'),
+        return $encrypted ?
+            [
+                'username' => $this->get('username_addons_v2'),
+                'password' => $this->get('password_addons_v2'),
+            ]
+            : [
+            'username' => $this->getAndDecrypt('username_addons_v2'),
+            'password' => $this->getAndDecrypt('password_addons_v2'),
         ];
     }
 
@@ -78,7 +82,7 @@ class AddonsUser implements UserInterface
     public function getEmail(): array
     {
         return [
-            'username' => $this->getAndDecrypt('username_addons'),
+            'username' => $this->getAndDecrypt('username_addons_v2'),
         ];
     }
 
@@ -105,23 +109,35 @@ class AddonsUser implements UserInterface
     /**
      * @param string $key
      *
-     * @return string|bool|null
+     * @return string|null
      *
      * @throws Exception
      */
-    private function getAndDecrypt(string $key)
+    private function getAndDecrypt(string $key): ?string
     {
-        $sessionValue = $this->getFromSession($key);
-        if (null !== $sessionValue) {
-            return $this->encryption->decrypt($sessionValue);
-        }
-
-        $cookieValue = $this->getFromCookie($key);
-        if (null !== $cookieValue) {
-            return $this->encryption->decrypt($cookieValue);
+        $value = $this->get($key);
+        if (null !== $value) {
+            return $this->encryption->decrypt($value);
         }
 
         return null;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return string|null
+     *
+     * @throws Exception
+     */
+    private function get(string $key): ?string
+    {
+        $sessionValue = $this->getFromSession($key);
+        if (null !== $sessionValue) {
+            return $sessionValue;
+        }
+
+        return $this->getFromCookie($key);
     }
 
     /**
@@ -129,8 +145,8 @@ class AddonsUser implements UserInterface
      */
     private function hasCookieAuthenticated(): bool
     {
-        return $this->getFromCookie('username_addons')
-            && $this->getFromCookie('password_addons');
+        return $this->getFromCookie('username_addons_v2')
+            && $this->getFromCookie('password_addons_v2');
     }
 
     /**
@@ -138,7 +154,7 @@ class AddonsUser implements UserInterface
      */
     private function hasSessionAuthenticated(): bool
     {
-        return $this->getFromSession('username_addons')
-            && $this->getFromSession('password_addons');
+        return $this->getFromSession('username_addons_v2')
+            && $this->getFromSession('password_addons_v2');
     }
 }

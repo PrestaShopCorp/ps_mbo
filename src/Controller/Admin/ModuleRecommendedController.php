@@ -21,10 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
-use PrestaShop\Module\Mbo\RecommendedModule\RecommendedModulePresenterInterface;
-use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
-use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -41,39 +37,13 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
     protected $requestStack;
 
     /**
-     * @var TabCollectionProviderInterface
-     */
-    protected $tabCollectionProvider;
-
-    /**
-     * @var RecommendedModulePresenterInterface
-     */
-    protected $recommendedModulePresenter;
-
-    /**
-     * @var LinksProvider
-     */
-    protected $linksProvider;
-
-    /**
      * @param RequestStack $requestStack
-     * @param TabCollectionProviderInterface $tabCollectionProvider
-     * @param RecommendedModulePresenterInterface $recommendedModulePresenter
-     * @param LinksProvider $linksProvider
      */
     public function __construct(
-        RequestStack $requestStack,
-        TabCollectionProviderInterface $tabCollectionProvider,
-        RecommendedModulePresenterInterface $recommendedModulePresenter,
-        LinksProvider $linksProvider,
-        ContextBuilder $cdcContextBuilder
+        RequestStack $requestStack
     ) {
         parent::__construct();
         $this->requestStack = $requestStack;
-        $this->tabCollectionProvider = $tabCollectionProvider;
-        $this->recommendedModulePresenter = $recommendedModulePresenter;
-        $this->linksProvider = $linksProvider;
-        $this->cdcContextBuilder = $cdcContextBuilder;
     }
 
     /**
@@ -83,11 +53,11 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
     {
         $response = new JsonResponse();
         try {
-            $tabCollection = $this->tabCollectionProvider->getTabCollection();
+            $tabCollection = $this->get('mbo.tab.collection.provider')->getTabCollection();
             $tabClassName = $this->requestStack->getCurrentRequest()->get('tabClassName');
             $tab = $tabCollection->getTab($tabClassName);
-            $context = $this->cdcContextBuilder->getRecommendedModulesContext($tab);
-            $context['recommendation_format'] = $tab->shouldDisplayAfterContent() ? 'card' : 'modal';
+            $context = $this->get('mbo.cdc.context_builder')->getRecommendedModulesContext($tab);
+            $context['recommendation_format'] = $this->requestStack->getCurrentRequest()->get('recommendation_format');
             $response->setData([
                 'content' => $this->renderView(
                     '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',
