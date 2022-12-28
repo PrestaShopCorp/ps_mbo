@@ -170,7 +170,7 @@ class ContextBuilder
             'installed_modules' => $this->getInstalledModules(),
             'accounts_user_id' => $this->accountsDataProvider->getAccountsUserId(),
             'accounts_shop_id' => $this->accountsDataProvider->getAccountsShopId(),
-            'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
+            'accounts_token' => '',
         ];
     }
 
