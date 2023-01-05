@@ -57,7 +57,7 @@ class AddonsUser implements UserInterface
      */
     public function isAuthenticated(): bool
     {
-        return $this->hasCookieAuthenticated() || $this->hasSessionAuthenticated();
+        return $this->hasAccountsTokenInSession() || $this->hasCookieAuthenticated() || $this->hasSessionAuthenticated();
     }
 
     /**
@@ -65,6 +65,12 @@ class AddonsUser implements UserInterface
      */
     public function getCredentials(bool $encrypted = false): array
     {
+        $accountsToken = $this->getFromSession('accounts_token');
+
+        if (null !== $accountsToken) {
+            return ['accounts_token' => $accountsToken];
+        }
+
         return $encrypted ?
             [
                 'username' => $this->get('username_addons_v2'),
@@ -156,5 +162,10 @@ class AddonsUser implements UserInterface
     {
         return $this->getFromSession('username_addons_v2')
             && $this->getFromSession('password_addons_v2');
+    }
+
+    private function hasAccountsTokenInSession(): bool
+    {
+        return null !== $this->getFromSession('accounts_token');
     }
 }

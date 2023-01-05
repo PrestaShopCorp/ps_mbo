@@ -171,9 +171,18 @@ class AddonsDataProvider implements DataProviderInterface
             throw new Exception("Action '{$action}' not found in actions list.");
         }
 
+        $this->marketplaceClient->reset();
+
         // We merge the addons credentials
         if ($this->isUserAuthenticated()) {
-            $params = array_merge($this->user->getCredentials(), $params);
+            $credentials = $this->user->getCredentials();
+            if (array_key_exists('accounts_token', $credentials)) {
+                $this->marketplaceClient->setHeaders([
+                    'Authorization' => 'Bearer ' . $credentials['accounts_token'],
+                ]);
+            } else {
+                $params = array_merge($credentials, $params);
+            }
         }
 
         if ($action === 'module_download') {
@@ -181,8 +190,6 @@ class AddonsDataProvider implements DataProviderInterface
         } elseif ($action === 'native_all') {
             $params['iso_code'] = 'all';
         }
-
-        $this->marketplaceClient->reset();
 
         try {
             return $this->marketplaceClient->{self::ADDONS_API_MODULE_ACTIONS[$action]}($params);
