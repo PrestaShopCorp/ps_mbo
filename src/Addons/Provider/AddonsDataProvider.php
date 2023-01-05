@@ -180,6 +180,13 @@ class AddonsDataProvider implements DataProviderInterface
                 $this->marketplaceClient->setHeaders([
                     'Authorization' => 'Bearer ' . $credentials['accounts_token'],
                 ]);
+
+                // This is a bug for now, we need to give a couple of username/password even if a token is given
+                // It has to be cleaned once the bug fixed
+                $params = array_merge([
+                    'username' => 'name@domain.com',
+                    'password' => 'fakepwd',
+                ], $params);
             } else {
                 $params = array_merge($credentials, $params);
             }
