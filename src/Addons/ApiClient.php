@@ -40,6 +40,8 @@ class ApiClient
      */
     protected $queryParameters = ['format' => 'json'];
 
+    protected $headers = [];
+
     /**
      * @var array<string, string>
      */
@@ -90,6 +92,7 @@ class ApiClient
     public function reset(): void
     {
         $this->queryParameters = $this->defaultQueryParameters;
+        $this->headers = [];
     }
 
     /**
@@ -98,6 +101,11 @@ class ApiClient
     public function getQueryParameters(): array
     {
         return $this->queryParameters;
+    }
+
+    public function getHeaders(): array
+    {
+        return $this->headers;
     }
 
     /**
@@ -284,8 +292,15 @@ class ApiClient
      */
     public function processRequest(string $method = self::HTTP_METHOD_GET): string
     {
+        $options = ['query' => $this->queryParameters];
+
+        $headers = $this->getHeaders();
+        if (!empty($headers)) {
+            $options['headers'] = $headers;
+        }
+
         return (string) $this->httpClient
-            ->request($method, '', ['query' => $this->queryParameters])
+            ->request($method, '', $options)
             ->getBody();
     }
 
@@ -310,6 +325,13 @@ class ApiClient
     {
         $filteredParams = array_intersect_key($params, array_flip($this->possibleQueryParameters));
         $this->queryParameters = array_merge($this->queryParameters, $filteredParams);
+
+        return $this;
+    }
+
+    public function setHeaders(array $headers): self
+    {
+        $this->headers = array_merge($this->headers, $headers);
 
         return $this;
     }
