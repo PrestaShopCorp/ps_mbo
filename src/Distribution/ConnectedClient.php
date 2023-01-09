@@ -59,8 +59,15 @@ class ConnectedClient extends BaseClient
 
             if (array_key_exists('accounts_token', $credentials)) {
                 $userCacheKey = md5($credentials['accounts_token']);
+                $this->setHeaders([
+                    'Authorization' => 'Bearer ' . $credentials['accounts_token'],
+                ]);
+
+                // This is a bug for now, we need to give a couple of username/password even if a token is given
+                // It has to be cleaned once the bug fixed
                 $this->setQueryParams([
-                    'accounts_token' => $credentials['accounts_token'],
+                    'username' => 'name@domain.com',
+                    'password' => 'fakepwd',
                 ]);
             } else {
                 $userCacheKey = md5($credentials['username'] . $credentials['password']);
