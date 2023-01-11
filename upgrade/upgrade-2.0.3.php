@@ -30,6 +30,7 @@ function upgrade_module_2_0_3($module)
 {
     $return = true;
 
+    // Rename tabs
     $tabsToRename = [
         'AdminPsMboModule' => 'Marketplace',
         'AdminModulesCatalog' => 'Marketplace',
@@ -37,7 +38,7 @@ function upgrade_module_2_0_3($module)
     ];
     foreach ($tabsToRename as $className => $name) {
         $tabNameByLangId = [];
-        foreach(Language::getIDs(false) as $langId) {
+        foreach (Language::getIDs(false) as $langId) {
             $language = new Language($langId);
             $tabNameByLangId[$langId] = $name;
         }
@@ -52,6 +53,10 @@ function upgrade_module_2_0_3($module)
             $return &= $tab->save();
         }
     }
+
+    // Change tabs positions
+    $return &= $module->changeTabPosition('AdminParentModulesCatalog', 0);
+    $return &= $module->changeTabPosition('AdminModulesSf', 1);
 
     (new UpgradeTracker())->postTracking($module, $module->version);
 

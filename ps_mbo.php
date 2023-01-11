@@ -185,7 +185,7 @@ class ps_mbo extends Module
     public function enable($force_all = false)
     {
         return parent::enable($force_all)
-            && $this->renameCoreTabs()
+            && $this->organizeCoreTabs()
             && $this->installTabs();
     }
 
@@ -194,28 +194,48 @@ class ps_mbo extends Module
      *
      * @return bool
      */
-    public function renameCoreTabs($restore = false)
+    public function organizeCoreTabs($restore = false)
     {
         $return = true;
 
+        // Rename tabs
         foreach (static::CORE_TABS_RENAMED as $className => $names) {
             $name = $restore ? $names['old_name'] : $names['new_name'];
             $tabNameByLangId = [];
-            foreach(Language::getIDs(false) as $langId) {
+            foreach (Language::getIDs(false) as $langId) {
+                $langId = (int) $langId;
                 $language = new Language($langId);
-                $tabNameByLangId[$langId] = $this->trans($name, [], 'Admin.Navigation.Menu');
+                $tabNameByLangId[$langId] = (string) $this->trans($name, [], 'Admin.Navigation.Menu');
             }
 
-            $tabCoreId = Tab::getIdFromClassName($className);
+            $tabId = Tab::getIdFromClassName($className);
 
-            if ($tabCoreId !== false) {
-                $tabCore = new Tab($tabCoreId);
-                $tabCore->name = $tabNameByLangId;
-                $return &= $tabCore->save();
+            if ($tabId !== false) {
+                $tab = new Tab($tabId);
+                $tab->name = $tabNameByLangId;
+                $return &= $tab->save();
             }
         }
 
-       return $return;
+        // Change tabs positions
+        $return &= $this->changeTabPosition('AdminParentModulesCatalog', $restore ? 1 : 0);
+        $return &= $this->changeTabPosition('AdminModulesSf', $restore ? 0 : 1);
+
+        return (bool) $return;
+    }
+
+    public function changeTabPosition($className, $newPosition)
+    {
+        $return = true;
+        $tabId = Tab::getIdFromClassName($className);
+
+        if ($tabId !== false) {
+            $tab = new Tab($tabId);
+            $tab->position = $newPosition;
+            $return &= $tab->save();
+        }
+
+        return $return;
     }
 
     /**
@@ -290,7 +310,7 @@ class ps_mbo extends Module
     public function disable($force_all = false)
     {
         return parent::disable($force_all)
-            && $this->renameCoreTabs(true)
+            && $this->organizeCoreTabs(true)
             && $this->uninstallTabs();
     }
 
