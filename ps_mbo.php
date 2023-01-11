@@ -94,9 +94,20 @@ class ps_mbo extends Module
         'AdminCarriers',
     ];
 
+    const CORE_TABS_RENAMED = [
+        'AdminModulesCatalog' => [
+            'old_name' => 'Modules catalog',
+            'new_name' => 'Marketplace',
+        ],
+        'AdminParentModulesCatalog' => [
+            'old_name' => 'Modules catalog',
+            'new_name' => 'Marketplace',
+        ],
+    ];
+
     const ADMIN_CONTROLLERS = [
         'AdminPsMboModule' => [
-            'name' => 'Module catalog',
+            'name' => 'Marketplace',
             'visible' => true,
             'class_name' => 'AdminPsMboModule',
             'parent_class_name' => 'AdminParentModulesCatalog',
@@ -174,7 +185,37 @@ class ps_mbo extends Module
     public function enable($force_all = false)
     {
         return parent::enable($force_all)
+            && $this->renameCoreTabs()
             && $this->installTabs();
+    }
+
+    /**
+     * This method is here if we need to rename some Core tabs.
+     *
+     * @return bool
+     */
+    public function renameCoreTabs($restore = false)
+    {
+        $return = true;
+
+        foreach (static::CORE_TABS_RENAMED as $className => $names) {
+            $name = $restore ? $names['old_name'] : $names['new_name'];
+            $tabNameByLangId = [];
+            foreach(Language::getIDs(false) as $langId) {
+                $language = new Language($langId);
+                $tabNameByLangId[$langId] = $this->trans($name, [], 'Admin.Navigation.Menu');
+            }
+
+            $tabCoreId = Tab::getIdFromClassName($className);
+
+            if ($tabCoreId !== false) {
+                $tabCore = new Tab($tabCoreId);
+                $tabCore->name = $tabNameByLangId;
+                $return &= $tabCore->save();
+            }
+        }
+
+       return $return;
     }
 
     /**
@@ -249,6 +290,7 @@ class ps_mbo extends Module
     public function disable($force_all = false)
     {
         return parent::disable($force_all)
+            && $this->renameCoreTabs(true)
             && $this->uninstallTabs();
     }
 
