@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,11 +18,13 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons\User;
 
 use Exception;
+use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -45,11 +48,20 @@ class AddonsUser implements UserInterface
      */
     private $session;
 
-    public function __construct(SessionInterface $session, CredentialsEncryptor $encryption)
-    {
+    /**
+     * @var AccountsDataProvider
+     */
+    private $accountsDataProvider;
+
+    public function __construct(
+        SessionInterface $session,
+        CredentialsEncryptor $encryption,
+        AccountsDataProvider $accountsDataProvider
+    ) {
         $this->encryption = $encryption;
         $this->request = Request::createFromGlobals();
         $this->session = $session;
+        $this->accountsDataProvider = $accountsDataProvider;
     }
 
     /**
@@ -57,7 +69,7 @@ class AddonsUser implements UserInterface
      */
     public function isAuthenticated(): bool
     {
-        return $this->hasAccountsTokenInSession() || $this->hasCookieAuthenticated() || $this->hasSessionAuthenticated();
+        return $this->hasAccountsTokenInSession() || $this->isConnectedOnPsAccounts() || $this->hasCookieAuthenticated() || $this->hasSessionAuthenticated();
     }
 
     /**
@@ -71,15 +83,21 @@ class AddonsUser implements UserInterface
             return ['accounts_token' => $accountsToken];
         }
 
+        // accounts
+        $accountsToken = $this->accountsDataProvider->getAccountsToken();
+        if (!empty($accountsToken)) {
+            return ['accounts_token' => $accountsToken];
+        }
+
         return $encrypted ?
             [
                 'username' => $this->get('username_addons_v2'),
                 'password' => $this->get('password_addons_v2'),
             ]
             : [
-            'username' => $this->getAndDecrypt('username_addons_v2'),
-            'password' => $this->getAndDecrypt('password_addons_v2'),
-        ];
+                'username' => $this->getAndDecrypt('username_addons_v2'),
+                'password' => $this->getAndDecrypt('password_addons_v2'),
+            ];
     }
 
     /**
@@ -90,6 +108,18 @@ class AddonsUser implements UserInterface
         return [
             'username' => $this->getAndDecrypt('username_addons_v2'),
         ];
+    }
+
+    public function hasAccountsTokenInSession(): bool
+    {
+        return null !== $this->getFromSession('accounts_token');
+    }
+
+    public function isConnectedOnPsAccounts(): bool
+    {
+        $accountsToken = $this->accountsDataProvider->getAccountsToken();
+
+        return !empty($accountsToken);
     }
 
     /**
@@ -162,10 +192,5 @@ class AddonsUser implements UserInterface
     {
         return $this->getFromSession('username_addons_v2')
             && $this->getFromSession('password_addons_v2');
-    }
-
-    private function hasAccountsTokenInSession(): bool
-    {
-        return null !== $this->getFromSession('accounts_token');
     }
 }
