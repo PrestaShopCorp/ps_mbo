@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,6 +18,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons\Provider;
@@ -24,7 +26,7 @@ namespace PrestaShop\Module\Mbo\Addons\Provider;
 use Exception;
 use GuzzleHttp\Exception\ClientException;
 use PrestaShop\Module\Mbo\Addons\ApiClient;
-use PrestaShop\Module\Mbo\Addons\User\UserInterface;
+use PrestaShop\Module\Mbo\Addons\User\AddonsUser;
 
 /**
  * This class will provide data from Addons API
@@ -84,18 +86,18 @@ class AddonsDataProvider implements DataProviderInterface
     protected $moduleChannel;
 
     /**
-     * @var UserInterface
+     * @var AddonsUser
      */
     protected $user;
 
     /**
      * @param ApiClient $apiClient
-     * @param UserInterface $user
+     * @param AddonsUser $user
      * @param string|null $moduleChannel
      */
     public function __construct(
         ApiClient $apiClient,
-        UserInterface $user,
+        AddonsUser $user,
         ?string $moduleChannel = null
     ) {
         $this->marketplaceClient = $apiClient;
@@ -140,11 +142,19 @@ class AddonsDataProvider implements DataProviderInterface
     }
 
     /**
-     * Tells if the user is authenticated to Addons
+     * Tells if the user is authenticated to Addons or Account
      */
     public function isUserAuthenticated(): bool
     {
         return $this->user->isAuthenticated();
+    }
+
+    /**
+     * Tells if the user is authenticated to Addons
+     */
+    public function isUserAuthenticatedOnAccounts(): bool
+    {
+        return $this->user->hasAccountsTokenInSession() || $this->user->isConnectedOnPsAccounts();
     }
 
     /**
@@ -166,8 +176,10 @@ class AddonsDataProvider implements DataProviderInterface
             throw new Exception('Previous call failed and disabled client.');
         }
 
-        if (!array_key_exists($action, self::ADDONS_API_MODULE_ACTIONS) ||
-            !method_exists($this->marketplaceClient, self::ADDONS_API_MODULE_ACTIONS[$action])) {
+        if (
+            !array_key_exists($action, self::ADDONS_API_MODULE_ACTIONS) ||
+            !method_exists($this->marketplaceClient, self::ADDONS_API_MODULE_ACTIONS[$action])
+        ) {
             throw new Exception("Action '{$action}' not found in actions list.");
         }
 
