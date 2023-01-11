@@ -35,6 +35,7 @@ function upgrade_module_2_0_3($module)
         'AdminPsMboModule' => 'Marketplace',
         'AdminModulesCatalog' => 'Marketplace',
         'AdminParentModulesCatalog' => 'Marketplace',
+        'AdminAddonsCatalog' => 'Spotlighted Modules',
     ];
     foreach ($tabsToRename as $className => $name) {
         $tabNameByLangId = [];

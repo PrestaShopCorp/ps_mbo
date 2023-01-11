@@ -79,7 +79,7 @@ class ModuleSelectionController extends FrameworkBundleAdminController
                 [
                     'pageContent' => $this->externalContentProvider->getContent($this->addonsSelectionLinkProvider->getLinkUrl()),
                     'layoutHeaderToolbarBtn' => [],
-                    'layoutTitle' => $this->trans('Module selection', 'Admin.Navigation.Menu'),
+                    'layoutTitle' => $this->trans('Spotlighted modules', 'Admin.Navigation.Menu'),
                     'requireAddonsSearch' => true,
                     'requireBulkActions' => false,
                     'showContentHeader' => true,

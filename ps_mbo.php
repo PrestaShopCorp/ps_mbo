@@ -103,6 +103,10 @@ class ps_mbo extends Module
             'old_name' => 'Modules catalog',
             'new_name' => 'Marketplace',
         ],
+        'AdminAddonsCatalog' => [
+            'old_name' => 'Module Selections',
+            'new_name' => 'Spotlighted Modules',
+        ],
     ];
 
     const ADMIN_CONTROLLERS = [
@@ -114,7 +118,7 @@ class ps_mbo extends Module
             'core_reference' => 'AdminModulesCatalog',
         ],
         'AdminPsMboAddons' => [
-            'name' => 'Module selection',
+            'name' => 'Spotlighted Modules',
             'visible' => true,
             'class_name' => 'AdminPsMboAddons',
             'parent_class_name' => 'AdminParentModulesCatalog',
@@ -157,7 +161,7 @@ class ps_mbo extends Module
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
             'min' => '1.7.5.0',
-            'max' => _PS_VERSION_,
+            'max' => '1.7.8.8',
         ];
 
         parent::__construct();
