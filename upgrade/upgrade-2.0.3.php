@@ -28,7 +28,32 @@ use PrestaShop\Module\Mbo\UpgradeTracker;
  */
 function upgrade_module_2_0_3($module)
 {
+    $return = true;
+
+    $tabsToRename = [
+        'AdminPsMboModule' => 'Marketplace',
+        'AdminModulesCatalog' => 'Marketplace',
+        'AdminParentModulesCatalog' => 'Marketplace',
+    ];
+    foreach ($tabsToRename as $className => $name) {
+        $tabNameByLangId = [];
+        foreach(Language::getIDs(false) as $langId) {
+            $language = new Language($langId);
+            $tabNameByLangId[$langId] = $name;
+        }
+
+        $tabId = Tab::getIdFromClassName($className);
+
+        if ($tabId !== false) {
+            $tab = new Tab($tabId);
+            $tab->name = $tabNameByLangId;
+            $tab->wording = $name;
+            $tab->wording_domain = 'Admin.Navigation.Menu';
+            $return &= $tab->save();
+        }
+    }
+
     (new UpgradeTracker())->postTracking($module, $module->version);
 
-    return true;
+    return $return;
 }
