@@ -115,4 +115,4 @@ jobs:
         run: ./scripts/extractCatalogue.sh && ./scripts/pushAndCreatePullRequest.sh
         shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
+          GITHUB_TOKEN: abcd
