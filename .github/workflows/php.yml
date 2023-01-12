@@ -96,8 +96,7 @@ jobs:
           ref: main
       - name: Create env file for module-translation-tool
         run: |
-          cp ./.env.dist ./.env
-          sed -i 's/^GITHUB_TOKEN.*/GITHUB_TOKEN="${{ secrets.MBO_TOKEN }}"/g' ./.env
+          echo "GITHUB_TOKEN=${{ secrets.MBO_TOKEN }}" > ./.env
       - name: Create config for module-translation-tool
         run: |
           cp ./module.cfg.example ./module.cfg
@@ -114,5 +113,3 @@ jobs:
       - run: composer install
       - name: Extract translations and push
         run: ./scripts/extractCatalogue.sh && ./scripts/pushAndCreatePullRequest.sh
-        env:
-          GITHUB_TOKEN: ${{ secrets.MBO_TOKEN }}
