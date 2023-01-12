@@ -114,3 +114,5 @@ jobs:
       - run: composer install
       - name: Extract translations and push
         run: ./scripts/extractCatalogue.sh && ./scripts/pushAndCreatePullRequest.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.MBO_TOKEN }}
