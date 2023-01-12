@@ -96,7 +96,7 @@ jobs:
           ref: main
 #      - name: Create env file for module-translation-tool
 #        run: |
-#          echo "GITHUB_TOKEN=${{ secrets.MBO_TOKEN }}" > ./.env
+#          echo "GITHUB_TOKEN=${{ secrets.G_CREDENTIAL_INTEGRATION }}" > ./.env
       - name: Create config for module-translation-tool
         run: |
           cp ./module.cfg.example ./module.cfg
@@ -109,10 +109,10 @@ jobs:
           git config --global user.name "Github Actions - Module translation tool"
           git config --global user.email "<>"
           git config --global credential.helper 'cache --timeout 3600'
-          git config --global url."https://oauth2:${{ secrets.MBO_TOKEN }}@github.com".insteadOf ssh://git@github.com
+          git config --global url."https://oauth2:${{ secrets.G_CREDENTIAL_INTEGRATION }}@github.com".insteadOf ssh://git@github.com
       - run: composer install
       - name: Extract translations and push
         run: ./scripts/extractCatalogue.sh && ./scripts/pushAndCreatePullRequest.sh
         shell: bash
         env:
-          GITHUB_TOKEN: ${{ secrets.MBO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.G_CREDENTIAL_INTEGRATION }}
