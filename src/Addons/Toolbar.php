@@ -74,14 +74,10 @@ class Toolbar
                 PageVoter::LEVEL_UPDATE,
             ]
         )) {
-            $a = array_merge(
+            return array_merge(
                 $this->getAddModuleToolbar(),
                 $this->getConnectionToolbar()
             );
-
-            dump($a);
-
-            return $a;
         }
 
         return [];
@@ -111,7 +107,6 @@ class Toolbar
      */
     public function getConnectionToolbar(): array
     {
-        dump('toto');
         if ($this->addonsDataProvider->isUserAuthenticated()) {
             if ($this->addonsDataProvider->isUserAuthenticatedOnAccounts()) {
                 $toolbarButtons['accounts_logout'] = $this->getAccountsStatusButton();
@@ -163,7 +158,7 @@ class Toolbar
             'href' => '#',
             'desc' => $this->translator->trans('Connected', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
             'icon' => 'check_circle',
-            'help' => $this->translator->trans('Synchronized with Addons marketplace!', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
+            'help' => $this->addonsDataProvider->getAuthenticatedUserEmail()
         ];
     }
 }

@@ -105,8 +105,20 @@ class AddonsUser implements UserInterface
      */
     public function getEmail(): array
     {
+        $email = null;
+        if ($this->isAuthenticated()) {
+            // Connected on ps_accounts
+            if ($this->isConnectedOnPsAccounts()) {
+                $email = $this->accountsDataProvider->getAccountsUserEmail();
+            } elseif ($this->hasAccountsTokenInSession()) { // Connected on ps_accounts with session
+                $email = $this->jwtDecode($this->getFromSession('accounts_token'))['email'];
+            } else { // Connected on addons
+                $email = $this->getAndDecrypt('username_addons_v2');
+            }
+        }
+
         return [
-            'username' => $this->getAndDecrypt('username_addons_v2'),
+            'username' => $email,
         ];
     }
 
@@ -192,5 +204,17 @@ class AddonsUser implements UserInterface
     {
         return $this->getFromSession('username_addons_v2')
             && $this->getFromSession('password_addons_v2');
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    private function jwtDecode(string $token): array
+    {
+        $payload = explode('.', $token)[1];
+        $jsonToken = base64_decode($payload);
+
+        return json_decode($jsonToken, true);
     }
 }
