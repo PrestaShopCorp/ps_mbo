@@ -112,6 +112,7 @@ jobs:
           git config --global user.name "Github Actions - Module translation tool"
           git config --global user.email "<>"
           git config --global credential.helper 'cache --timeout 3600'
+          git config --global url."https://oauth2:${{ secrets.GITHUB_TOKEN }}@github.com".insteadOf ssh://git@github.com
       - run: composer install
       - name: Extract translations and push
         run: ./scripts/extractCatalogue.sh && ./scripts/pushAndCreatePullRequest.sh
