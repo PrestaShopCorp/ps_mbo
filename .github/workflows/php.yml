@@ -115,4 +115,4 @@ jobs:
         run: ./scripts/extractCatalogue.sh && ./scripts/pushAndCreatePullRequest.sh
         shell: bash
         env:
-          APP_GITHUB_TOKEN: ${{ secrets.MBO_TOKEN }}
+          APP_GITHUB_TOKEN: "${{ secrets.MBO_TOKEN }}"
