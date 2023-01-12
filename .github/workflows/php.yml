@@ -106,7 +106,7 @@ jobs:
           sed -i 's/^BRANCH.*/BRANCH="${{ github.base_ref }}"/g' ./module.cfg
       - name: Setup git config
         run: |
-          echo ${{ secrets.MBO_TOKEN }}
+          echo "${{ secrets.MBO_TOKEN }}"
           git config --global user.name "Github Actions - Module translation tool"
           git config --global user.email "<>"
           git config --global credential.helper 'cache --timeout 3600'
