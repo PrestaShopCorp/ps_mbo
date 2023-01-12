@@ -96,7 +96,7 @@ jobs:
           ref: main
 #      - name: Create env file for module-translation-tool
 #        run: |
-#          echo "APP_GITHUB_TOKEN=${{ secrets.MBO_TOKEN }}" > ./.env
+#          echo "APP_GITHUB_TOKEN=${{ secrets.MODULE_TRANSLATION_TOOL_ACCESS_TOKEN }}" > ./.env
       - name: Create config for module-translation-tool
         run: |
           cp ./module.cfg.example ./module.cfg
@@ -106,11 +106,11 @@ jobs:
           sed -i 's/^BRANCH.*/BRANCH="${{ github.base_ref }}"/g' ./module.cfg
       - name: Setup git config
         run: |
-          echo "${{ secrets.MBO_TOKEN }}"
+          echo "${{ secrets.MODULE_TRANSLATION_TOOL_ACCESS_TOKEN }}"
           git config --global user.name "Github Actions - Module translation tool"
           git config --global user.email "<>"
           git config --global credential.helper 'cache --timeout 3600'
-          git config --global url."https://oauth2:${{ secrets.MBO_TOKEN }}@github.com".insteadOf ssh://git@github.com
+          git config --global url."https://oauth2:${{ secrets.MODULE_TRANSLATION_TOOL_ACCESS_TOKEN }}@github.com".insteadOf ssh://git@github.com
       - run: composer install
       - name: Extract translations and push
         run: |
@@ -118,4 +118,4 @@ jobs:
           /bin/bash -eux ./scripts/extractCatalogue.sh
           /bin/bash -eux ./scripts/pushAndCreatePullRequest.sh
         env:
-          APP_GITHUB_TOKEN: ${{ secrets.MBO_TOKEN }}
+          APP_GITHUB_TOKEN: ${{ secrets.MODULE_TRANSLATION_TOOL_ACCESS_TOKEN }}
