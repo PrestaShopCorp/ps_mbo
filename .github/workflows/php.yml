@@ -112,7 +112,6 @@ jobs:
           git config --global url."https://oauth2:${{ secrets.MBO_TOKEN }}@github.com".insteadOf ssh://git@github.com
       - run: composer install
       - name: Extract translations and push
-        run: ./scripts/extractCatalogue.sh && ./scripts/pushAndCreatePullRequest.sh
-        shell: bash
+        run: /bin/bash -eux ./scripts/extractCatalogue.sh && /bin/bash -eux ./scripts/pushAndCreatePullRequest.sh
         env:
-          APP_GITHUB_TOKEN: "${{ secrets.MBO_TOKEN }}"
+          APP_GITHUB_TOKEN: ${{ secrets.MBO_TOKEN }}
