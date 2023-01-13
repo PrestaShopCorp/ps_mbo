@@ -37,7 +37,7 @@ trait HaveTabs
         'AdminPsMboModuleParent' => [
             'name' => 'Marketplace',
             'visible' => true,
-            'position' => 1,
+            'position' => 0,
             'class_name' => 'AdminPsMboModuleParent',
             'parent_class_name' => 'AdminParentModulesSf',
         ],
@@ -68,14 +68,12 @@ trait HaveTabs
         'ApiPsMbo' => [
             'name' => 'MBO Api',
             'visible' => false,
-            'position' => 1,
             'class_name' => 'ApiPsMbo',
             'parent_class_name' => 'AdminParentModulesSf',
         ],
         'ApiSecurityPsMbo' => [
             'name' => 'MBO Api Security',
             'visible' => false,
-            'position' => 1,
             'class_name' => 'ApiSecurityPsMbo',
             'parent_class_name' => 'AdminParentModulesSf',
         ],
