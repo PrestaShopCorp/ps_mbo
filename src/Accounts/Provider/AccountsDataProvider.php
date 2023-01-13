@@ -84,6 +84,17 @@ class AccountsDataProvider
         return $userUuid ? $userUuid : null;
     }
 
+    public function getAccountsUserEmail(): ?string
+    {
+        try {
+            $email = $this->getAccountsService()->getEmail();
+        } catch (Exception $e) {
+            $email = null;
+        }
+
+        return $email;
+    }
+
     private function isAccountLinked(): bool
     {
         try {
