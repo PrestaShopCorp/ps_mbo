@@ -67,3 +67,10 @@ services:
       - '@request_stack'
       - '@mbo.externalcontent.provider'
       - '@mbo.addons_selection_link_provider'
+
+  mbo.event_subscriber.module_event_subsciber:
+      class: PrestaShop\Module\Mbo\EventSubscriber\ModuleEventSubscriber
+      arguments:
+          - '@logger'
+      tags:
+          - { name: kernel.event_subscriber }
