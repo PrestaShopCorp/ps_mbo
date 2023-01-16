@@ -41,5 +41,20 @@ function upgrade_module_4_2_1(Module $module): bool
         $tab->cleanPositions($tab->id_parent);
     }
 
+    // Rename "Module Selections" to "Spotlighted modules"
+    $tab = Tab::getInstanceFromClassName('AdminPsMboSelection');
+
+    if (Validate::isLoadedObject($tab)) {
+        $tabNameByLangId = array_fill_keys(
+            Language::getIDs(false),
+            "Modules à la une"
+        );
+        $tab->name = $tabNameByLangId;
+
+        if (false === $tab->save()) {
+            return false;
+        }
+    }
+
     return true;
 }

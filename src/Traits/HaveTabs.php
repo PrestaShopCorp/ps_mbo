@@ -42,7 +42,7 @@ trait HaveTabs
             'parent_class_name' => 'AdminParentModulesSf',
         ],
         'AdminPsMboSelection' => [
-            'name' => 'Sélection de modules',
+            'name' => 'Modules à la une',
             'visible' => true,
             'class_name' => 'AdminPsMboSelection',
             'parent_class_name' => 'AdminPsMboModuleParent',
