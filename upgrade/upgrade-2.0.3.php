@@ -32,16 +32,29 @@ function upgrade_module_2_0_3($module)
 
     // Rename tabs
     $tabsToRename = [
-        'AdminPsMboModule' => 'Marketplace',
-        'AdminModulesCatalog' => 'Marketplace',
-        'AdminParentModulesCatalog' => 'Marketplace',
-        'AdminAddonsCatalog' => 'Spotlighted Modules',
+        'AdminPsMboModule' => [
+            'new_name' => 'Marketplace',
+        ],
+        'AdminModulesCatalog' => [
+            'new_name' => 'Marketplace',
+        ],
+        'AdminParentModulesCatalog' => [
+            'new_name' => 'Marketplace',
+        ],
+        'AdminPsMboAddons' => [
+            'new_name' => 'Modules in the spotlight',
+            'trans_domain' => 'Modules.Mbo.Modulesselection',
+        ],
+        'AdminAddonsCatalog' => [
+            'new_name' => 'Modules in the spotlight',
+            'trans_domain' => 'Modules.Mbo.Modulesselection',
+        ],
     ];
-    foreach ($tabsToRename as $className => $name) {
+    foreach ($tabsToRename as $className => $names) {
         $tabNameByLangId = [];
         foreach (Language::getIDs(false) as $langId) {
             $language = new Language($langId);
-            $tabNameByLangId[$langId] = $name;
+            $tabNameByLangId[$langId] = (string) $module->getTranslator()->trans($names['new_name'], [], isset($names['trans_domain']) ? $names['trans_domain'] :'Modules.Mbo.Global', $language->getLocale());
         }
 
         $tabId = Tab::getIdFromClassName($className);
@@ -49,8 +62,8 @@ function upgrade_module_2_0_3($module)
         if ($tabId !== false) {
             $tab = new Tab($tabId);
             $tab->name = $tabNameByLangId;
-            $tab->wording = $name;
-            $tab->wording_domain = 'Admin.Navigation.Menu';
+            $tab->wording = $names['new_name'];
+            $tab->wording_domain = isset($names['trans_domain']) ? $names['trans_domain'] :'Modules.Mbo.Global';
             $return &= $tab->save();
         }
     }

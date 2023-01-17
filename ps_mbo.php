@@ -105,7 +105,8 @@ class ps_mbo extends Module
         ],
         'AdminAddonsCatalog' => [
             'old_name' => 'Module Selections',
-            'new_name' => 'Spotlighted Modules',
+            'new_name' => 'Modules in the spotlight',
+            'trans_domain' => 'Modules.Mbo.Modulesselection',
         ],
     ];
 
@@ -118,7 +119,7 @@ class ps_mbo extends Module
             'core_reference' => 'AdminModulesCatalog',
         ],
         'AdminPsMboAddons' => [
-            'name' => 'Spotlighted Modules',
+            'name' => 'Modules in the spotlight',
             'visible' => true,
             'class_name' => 'AdminPsMboAddons',
             'parent_class_name' => 'AdminParentModulesCatalog',
@@ -209,7 +210,7 @@ class ps_mbo extends Module
             foreach (Language::getIDs(false) as $langId) {
                 $langId = (int) $langId;
                 $language = new Language($langId);
-                $tabNameByLangId[$langId] = (string) $this->trans($name, [], 'Admin.Navigation.Menu');
+                $tabNameByLangId[$langId] = (string) $this->trans($name, [], isset($names['trans_domain']) ? $names['trans_domain'] :'Modules.Mbo.Global', $language->getLocale());
             }
 
             $tabId = Tab::getIdFromClassName($className);
@@ -485,5 +486,10 @@ class ps_mbo extends Module
         }
 
         return $this->container->get($serviceName);
+    }
+
+    public function isUsingNewTranslationSystem()
+    {
+        return true;
     }
 }
