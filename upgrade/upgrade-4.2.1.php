@@ -47,13 +47,17 @@ function upgrade_module_4_2_1(Module $module): bool
     if (Validate::isLoadedObject($tab)) {
         $tabNameByLangId = array_fill_keys(
             Language::getIDs(false),
-            "Modules à la une"
+            'Modules in the spotlight'
         );
         $tab->name = $tabNameByLangId;
+        $tab->wording = 'Modules in the spotlight';
+        $tab->wording_domain = 'Modules.Mbo.Modulesselection';
 
         if (false === $tab->save()) {
             return false;
         }
+
+        $module->postponeTabsTranslations();
     }
 
     return true;

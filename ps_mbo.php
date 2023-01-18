@@ -435,7 +435,7 @@ class ps_mbo extends Module
         $dotenv->loadEnv(__DIR__ . '/.env');
     }
 
-    private function postponeTabsTranslations(): void
+    public function postponeTabsTranslations(): void
     {
         /**it'
          * There is an issue for translating tabs during installation :
