@@ -29,6 +29,7 @@ namespace PrestaShop\Module\Mbo;
 use Configuration;
 use Db;
 use Module;
+use PrestaShopLogger;
 use Shop;
 use Symfony\Component\Dotenv\Dotenv;
 
@@ -62,7 +63,12 @@ class UpgradeTracker
                 );
             }
         } catch (\Exception $e) {
-            return false;
+            $message = 'Upgrade tracking on Distribution failed : ' . $e->getMessage();
+            $logger = $module->get('logger');
+            if (null !== $logger) {
+                $logger->warning($message);
+            }
+            PrestaShopLogger::addLog($message, PrestaShopLogger::LOG_SEVERITY_LEVEL_WARNING);
         }
 
         return true;
@@ -92,8 +98,10 @@ class UpgradeTracker
 
             $error = curl_error($curl);
             if ($error) {
+                $errno = curl_errno($curl);
                 curl_close($curl);
-                throw new \Exception($error, curl_errno($curl));
+
+                throw new \Exception(sprintf('Response code : %s. Error : %s', (string) $httpcode['http_code'], $error), $errno);
             }
 
             curl_close($curl);

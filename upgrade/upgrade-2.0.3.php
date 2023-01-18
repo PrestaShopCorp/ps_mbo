@@ -27,9 +27,7 @@ use PrestaShop\Module\Mbo\UpgradeTracker;
  */
 function upgrade_module_2_0_3($module)
 {
-    $return = true;
-
-    $return &= (new UpgradeTracker())->postTracking($module, $module->version);
+    (new UpgradeTracker())->postTracking($module, $module->version);
 
     return true;
 }
