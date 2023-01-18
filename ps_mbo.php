@@ -27,6 +27,7 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
+use LanguageCore as Language;
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
+use TabCore as Tab;
 
 class ps_mbo extends Module
 {
@@ -145,6 +147,7 @@ class ps_mbo extends Module
 
             $this->getAdminAuthenticationProvider()->clearCache();
             $this->getAdminAuthenticationProvider()->createApiUser();
+            $this->postponeTabsTranslations();
 
             return true;
         }
@@ -430,5 +433,55 @@ class ps_mbo extends Module
     {
         $dotenv = new Dotenv();
         $dotenv->loadEnv(__DIR__ . '/.env');
+    }
+
+    private function postponeTabsTranslations(): void
+    {
+        /**it'
+         * There is an issue for translating tabs during installation :
+         * Active modules translations files are loaded during the kernel boot. So the installing module translations are not known
+         * So, we postpone the tabs translations for the first time the module's code is executed.
+         */
+        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
+        if (!file_exists($lockFile)) {
+            if (!is_dir($this->moduleCacheDir)) {
+                mkdir($this->moduleCacheDir);
+            }
+            $f = fopen($lockFile, 'w+');
+            fclose($f);
+        }
+    }
+
+    private function translateTabsIfNeeded(): void
+    {
+        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
+        if (!file_exists($lockFile)) {
+            return;
+        }
+
+        $moduleTabs = Tab::getCollectionFromModule($this->name);
+        $languages = Language::getLanguages(false);
+
+        /**
+         * @var Tab $tab
+         */
+        foreach ($moduleTabs as $tab) {
+            if (!empty($tab->wording) && !empty($tab->wording_domain)) {
+                $tabNameByLangId = [];
+                foreach ($languages as $language) {
+                    $tabNameByLangId[$language['id_lang']] = $this->trans(
+                        $tab->wording,
+                        [],
+                        $tab->wording_domain,
+                        $language['locale']
+                    );
+                }
+
+                $tab->name = $tabNameByLangId;
+                $tab->save();
+            }
+        }
+
+        @unlink($lockFile);
     }
 }

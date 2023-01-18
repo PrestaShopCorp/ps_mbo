@@ -40,6 +40,8 @@ trait UseActionDispatcherBefore
     {
         $controllerName = Tools::getValue('controller');
 
+        $this->translateTabsIfNeeded();
+
         // Registration failed on install, retry it
         if (in_array($controllerName, [
             'AdminPsMboModuleParent',

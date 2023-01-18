@@ -42,10 +42,12 @@ trait HaveTabs
             'parent_class_name' => 'AdminParentModulesSf',
         ],
         'AdminPsMboSelection' => [
-            'name' => 'Modules à la une',
+            'name' => 'Modules in the spotlight',
             'visible' => true,
             'class_name' => 'AdminPsMboSelection',
             'parent_class_name' => 'AdminPsMboModuleParent',
+            'wording' => 'Modules in the spotlight',
+            'wording_domain' => 'Modules.Mbo.Modulesselection',
         ],
         'AdminPsMboModule' => [
             'name' => 'Marketplace',
@@ -136,6 +138,11 @@ trait HaveTabs
 
         if (false === $activate) { // This case will happen when upgrading the module. We disable all the tabs
             $tab->active = false;
+        }
+
+        if (!empty($tabData['wording']) && !empty($tabData['wording_domain'])) {
+            $tab->wording = $tabData['wording'];
+            $tab->wording_domain = $tabData['wording_domain'];
         }
 
         // This will reorder the tabs starting with 1
