@@ -30,6 +30,8 @@ function upgrade_module_2_0_3($module)
 {
     $return = true;
 
+    $module->updateHooks();
+
     // Rename tabs
     $tabsToRename = [
         'AdminPsMboModule' => [
@@ -71,6 +73,8 @@ function upgrade_module_2_0_3($module)
     // Change tabs positions
     $return &= $module->changeTabPosition('AdminParentModulesCatalog', 0);
     $return &= $module->changeTabPosition('AdminModulesSf', 1);
+
+    $module->postponeTabsTranslations();
 
     (new UpgradeTracker())->postTracking($module, $module->version);
 

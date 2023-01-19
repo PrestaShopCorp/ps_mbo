@@ -127,6 +127,8 @@ class ps_mbo extends Module
         ],
         'AdminPsMboRecommended' => [
             'name' => 'Module recommended',
+            'wording' => 'Recommended Modules and Services',
+            'wording_domain' => 'Modules.Mbo.Recommendedmodulesandservices',
             'visible' => true,
             'class_name' => 'AdminPsMboRecommended',
         ],
@@ -141,6 +143,7 @@ class ps_mbo extends Module
 
     const HOOKS = [
         'actionAdminControllerSetMedia',
+        'actionDispatcherBefore',
         'displayDashboardTop',
     ];
 
@@ -148,6 +151,11 @@ class ps_mbo extends Module
      * @var ContainerInterface
      */
     protected $container;
+
+    /**
+     * @var string
+     */
+    public $moduleCacheDir;
 
     /**
      * Constructor.
@@ -167,6 +175,7 @@ class ps_mbo extends Module
 
         parent::__construct();
 
+        $this->moduleCacheDir = sprintf('%s/var/modules/%s/', rtrim(_PS_ROOT_DIR_, '/'), $this->name);
         $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
         $this->description = $this->l('Browse the Addons marketplace directly from your back office to better meet your needs.');
     }
@@ -189,9 +198,13 @@ class ps_mbo extends Module
      */
     public function enable($force_all = false)
     {
-        return parent::enable($force_all)
+        $reult = parent::enable($force_all)
             && $this->organizeCoreTabs()
             && $this->installTabs();
+
+        $this->postponeTabsTranslations();
+
+        return (bool) $result;
     }
 
     /**
@@ -293,6 +306,10 @@ class ps_mbo extends Module
         $tab->position = (int) $position;
         $tab->id_parent = empty($tabData['parent_class_name']) ? -1 : Tab::getIdFromClassName($tabData['parent_class_name']);
         $tab->name = $tabNameByLangId;
+        if (!empty($tabData['wording']) && !empty($tabData['wording_domain'])) {
+            $tab->wording = $tabData['wording'];
+            $tab->wording_domain = $tabData['wording_domain'];
+        }
 
         if (false === (bool) $tab->add()) {
             return false;
@@ -435,6 +452,14 @@ class ps_mbo extends Module
     }
 
     /**
+     * Hook actionDispatcherBefore.
+     */
+    public function hookActionDispatcherBefore()
+    {
+        $this->translateTabsIfNeeded();
+    }
+
+    /**
      * Indicates if the recommended modules should be attached after content in this page
      *
      * @return bool
@@ -491,5 +516,103 @@ class ps_mbo extends Module
     public function isUsingNewTranslationSystem()
     {
         return true;
+    }
+
+    /**
+     * Update hooks in DB.
+     * Search current hooks registered in DB and compare them with the hooks declared in the module.
+     * If a hook is missing, it will be added. If a hook is not declared in the module, it will be removed.
+     *
+     * @return void
+     */
+    public function updateHooks()
+    {
+        $hookData = Db::getInstance()->executeS('
+            SELECT DISTINCT(phm.id_hook), name
+            FROM `' . _DB_PREFIX_ . 'hook_module` phm
+            JOIN `' . _DB_PREFIX_ . 'hook` ph ON ph.id_hook=phm.id_hook
+            WHERE `id_module` = ' . (int) $this->id
+        );
+
+        $oldHooks = [];
+        $newHooks = [];
+
+        // Iterate on DB hooks to get only the old ones
+        foreach ($hookData as $hook) {
+            if (!in_array(strtolower($hook['name']), array_map('strtolower', static::HOOKS))) {
+                $oldHooks[] = $hook;
+            }
+        }
+
+        // Iterate on module hooks to get only the new ones
+        foreach (static::HOOKS as $moduleHook) {
+            $isNew = true;
+            foreach ($hookData as $hookInDb) {
+                if (strtolower($moduleHook) === strtolower($hookInDb['name'])) {
+                    $isNew = false;
+                    break;
+                }
+            }
+            if ($isNew) {
+                $newHooks[] = $moduleHook;
+            }
+        }
+
+        foreach ($oldHooks as $oldHook) {
+            $this->unregisterHook($oldHook['id']);
+        }
+        if (!empty($newHooks)) {
+            $this->registerHook($newHooks);
+        }
+    }
+
+    public function postponeTabsTranslations()
+    {
+        /**it'
+         * There is an issue for translating tabs during installation :
+         * Active modules translations files are loaded during the kernel boot. So the installing module translations are not known
+         * So, we postpone the tabs translations for the first time the module's code is executed.
+         */
+        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
+        if (!file_exists($lockFile)) {
+            if (!is_dir($this->moduleCacheDir)) {
+                mkdir($this->moduleCacheDir);
+            }
+            $f = fopen($lockFile, 'w+');
+            fclose($f);
+        }
+    }
+
+    private function translateTabsIfNeeded()
+    {
+        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
+        if (!file_exists($lockFile)) {
+            return;
+        }
+
+        $moduleTabs = Tab::getCollectionFromModule($this->name);
+        $languages = Language::getLanguages(false);
+
+        /**
+         * @var Tab $tab
+         */
+        foreach ($moduleTabs as $tab) {
+            if (!empty($tab->wording) && !empty($tab->wording_domain)) {
+                $tabNameByLangId = [];
+                foreach ($languages as $language) {
+                    $tabNameByLangId[$language['id_lang']] = $this->trans(
+                        $tab->wording,
+                        [],
+                        $tab->wording_domain,
+                        $language['locale']
+                    );
+                }
+
+                $tab->name = $tabNameByLangId;
+                $tab->save();
+            }
+        }
+
+        @unlink($lockFile);
     }
 }
