@@ -119,7 +119,7 @@ class ps_mbo extends Module
             'core_reference' => 'AdminModulesCatalog',
         ],
         'AdminPsMboAddons' => [
-            'name' => 'Modules in the spotlight',
+            'name' => 'Module selection',
             'visible' => true,
             'class_name' => 'AdminPsMboAddons',
             'parent_class_name' => 'AdminParentModulesCatalog',
@@ -198,7 +198,7 @@ class ps_mbo extends Module
      */
     public function enable($force_all = false)
     {
-        $reult = parent::enable($force_all)
+        $result = parent::enable($force_all)
             && $this->organizeCoreTabs()
             && $this->installTabs();
 
@@ -215,15 +215,31 @@ class ps_mbo extends Module
     public function organizeCoreTabs($restore = false)
     {
         $return = true;
+        $coreTabsRenamed = static::CORE_TABS_RENAMED;
+
+        if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '<')) {
+            unset($coreTabsRenamed['AdminAddonsCatalog']);
+        }
 
         // Rename tabs
-        foreach (static::CORE_TABS_RENAMED as $className => $names) {
-            $name = $restore ? $names['old_name'] : $names['new_name'];
+        foreach ($coreTabsRenamed as $className => $names) {
             $tabNameByLangId = [];
+            if ($restore) {
+                $name = $names['old_name'];
+                $transDomain = 'Admin.Navigation.Menu';
+            } else {
+                $name = $names['new_name'];
+                $transDomain = isset($names['trans_domain']) ? $names['trans_domain'] :'Modules.Mbo.Global';
+            }
             foreach (Language::getIDs(false) as $langId) {
                 $langId = (int) $langId;
                 $language = new Language($langId);
-                $tabNameByLangId[$langId] = (string) $this->trans($name, [], isset($names['trans_domain']) ? $names['trans_domain'] :'Modules.Mbo.Global', $language->getLocale());
+                $tabNameByLangId[$langId] = (string) $this->trans(
+                    $name,
+                    [],
+                    $transDomain,
+                    !empty($language->locale) ? $language->locale : $language->language_code // can't use getLocale because not existing in 1.7.5
+                );
             }
 
             $tabId = Tab::getIdFromClassName($className);
@@ -306,7 +322,11 @@ class ps_mbo extends Module
         $tab->position = (int) $position;
         $tab->id_parent = empty($tabData['parent_class_name']) ? -1 : Tab::getIdFromClassName($tabData['parent_class_name']);
         $tab->name = $tabNameByLangId;
-        if (!empty($tabData['wording']) && !empty($tabData['wording_domain'])) {
+        if (
+            true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=') &&
+            !empty($tabData['wording']) &&
+            !empty($tabData['wording_domain'])
+        ) {
             $tab->wording = $tabData['wording'];
             $tab->wording_domain = $tabData['wording_domain'];
         }
@@ -561,8 +581,9 @@ class ps_mbo extends Module
         foreach ($oldHooks as $oldHook) {
             $this->unregisterHook($oldHook['id']);
         }
-        if (!empty($newHooks)) {
-            $this->registerHook($newHooks);
+        // we iterate because registerHook accepts array only since 1.7.7.0
+        foreach ($newHooks as $newHook) {
+            $this->registerHook($newHook);
         }
     }
 
@@ -590,6 +611,18 @@ class ps_mbo extends Module
             return;
         }
 
+        $languages = Language::getLanguages(false);
+
+        // Because the wording and wording_domain are introduced since PS v1.7.8.0 and we cannot use them
+        if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')) {
+            $this->translateTabs();
+        }
+
+        @unlink($lockFile);
+    }
+
+    private function translateTabs()
+    {
         $moduleTabs = Tab::getCollectionFromModule($this->name);
         $languages = Language::getLanguages(false);
 
@@ -612,7 +645,5 @@ class ps_mbo extends Module
                 $tab->save();
             }
         }
-
-        @unlink($lockFile);
     }
 }

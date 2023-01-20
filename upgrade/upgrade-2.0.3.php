@@ -43,15 +43,20 @@ function upgrade_module_2_0_3($module)
         'AdminParentModulesCatalog' => [
             'new_name' => 'Marketplace',
         ],
-        'AdminPsMboAddons' => [
-            'new_name' => 'Modules in the spotlight',
-            'trans_domain' => 'Modules.Mbo.Modulesselection',
-        ],
-        'AdminAddonsCatalog' => [
-            'new_name' => 'Modules in the spotlight',
-            'trans_domain' => 'Modules.Mbo.Modulesselection',
-        ],
     ];
+
+    if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')) {
+        $tabsToRename += [
+            'AdminPsMboAddons' => [
+                'new_name' => 'Modules in the spotlight',
+                'trans_domain' => 'Modules.Mbo.Modulesselection',
+            ],
+            'AdminAddonsCatalog' => [
+                'new_name' => 'Modules in the spotlight',
+                'trans_domain' => 'Modules.Mbo.Modulesselection',
+            ],
+        ];
+    }
     foreach ($tabsToRename as $className => $names) {
         $tabNameByLangId = [];
         foreach (Language::getIDs(false) as $langId) {
@@ -64,8 +69,10 @@ function upgrade_module_2_0_3($module)
         if ($tabId !== false) {
             $tab = new Tab($tabId);
             $tab->name = $tabNameByLangId;
-            $tab->wording = $names['new_name'];
-            $tab->wording_domain = isset($names['trans_domain']) ? $names['trans_domain'] :'Modules.Mbo.Global';
+            if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')) {
+                $tab->wording = $names['new_name'];
+                $tab->wording_domain = isset($names['trans_domain']) ? $names['trans_domain'] : 'Modules.Mbo.Global';
+            }
             $return &= $tab->save();
         }
     }
