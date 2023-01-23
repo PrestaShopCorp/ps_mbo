@@ -2,3 +2,6 @@
 config_*.xml
 /vendor/
 !/vendor/index.php
+.env
+.env.*
+!.env.dist
