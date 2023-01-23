@@ -229,7 +229,7 @@ class ps_mbo extends Module
                 $transDomain = 'Admin.Navigation.Menu';
             } else {
                 $name = $names['new_name'];
-                $transDomain = isset($names['trans_domain']) ? $names['trans_domain'] :'Modules.Mbo.Global';
+                $transDomain = isset($names['trans_domain']) ? $names['trans_domain'] : 'Modules.Mbo.Global';
             }
             foreach (Language::getIDs(false) as $langId) {
                 $langId = (int) $langId;
@@ -547,7 +547,7 @@ class ps_mbo extends Module
      */
     public function updateHooks()
     {
-        $hookData = Db::getInstance()->executeS('
+        $hookData = (array) Db::getInstance()->executeS('
             SELECT DISTINCT(phm.id_hook), name
             FROM `' . _DB_PREFIX_ . 'hook_module` phm
             JOIN `' . _DB_PREFIX_ . 'hook` ph ON ph.id_hook=phm.id_hook

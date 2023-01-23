@@ -61,7 +61,7 @@ function upgrade_module_2_0_3($module)
         $tabNameByLangId = [];
         foreach (Language::getIDs(false) as $langId) {
             $language = new Language($langId);
-            $tabNameByLangId[$langId] = (string) $module->getTranslator()->trans($names['new_name'], [], isset($names['trans_domain']) ? $names['trans_domain'] :'Modules.Mbo.Global', $language->getLocale());
+            $tabNameByLangId[$langId] = (string) $module->getTranslator()->trans($names['new_name'], [], isset($names['trans_domain']) ? $names['trans_domain'] : 'Modules.Mbo.Global', $language->getLocale());
         }
 
         $tabId = Tab::getIdFromClassName($className);
