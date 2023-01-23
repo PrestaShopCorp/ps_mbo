@@ -17,6 +17,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+include_once __DIR__ . '/../src/UpgradeTracker.php';
 
 use PrestaShop\Module\Mbo\UpgradeTracker;
 

@@ -30,6 +30,7 @@ use Configuration;
 use Db;
 use Module;
 use PrestaShopLogger;
+use Psr\Log\LoggerInterface;
 use Shop;
 use Symfony\Component\Dotenv\Dotenv;
 
@@ -65,10 +66,10 @@ class UpgradeTracker
         } catch (\Exception $e) {
             $message = 'Upgrade tracking on Distribution failed : ' . $e->getMessage();
             $logger = $module->get('logger');
-            if (null !== $logger) {
+            if ($logger instanceof LoggerInterface) {
                 $logger->warning($message);
             }
-            PrestaShopLogger::addLog($message, PrestaShopLogger::LOG_SEVERITY_LEVEL_WARNING);
+            PrestaShopLogger::addLog($message, 2);
         }
 
         return true;
