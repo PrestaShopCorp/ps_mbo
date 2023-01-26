@@ -234,7 +234,7 @@ class ps_mbo extends Module
                     $transDomain = 'Admin.Navigation.Menu';
                 } else {
                     $name = $names['new_name'];
-                    $transDomain = isset($names['trans_domain']) ? $names['trans_domain'] :'Modules.Mbo.Global';
+                    $transDomain = isset($names['trans_domain']) ? $names['trans_domain'] : 'Modules.Mbo.Global';
                 }
                 foreach (Language::getIDs(false) as $langId) {
                     $langId = (int) $langId;
@@ -612,22 +612,26 @@ class ps_mbo extends Module
 
     private function translateTabsIfNeeded()
     {
-        if (Tools::getValue('controller') === 'AdminCommon') {
-            return; // Avoid early translation by notifications controller
-        }
-        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
-        if (!file_exists($lockFile)) {
-            return;
-        }
+        try {
+            if (Tools::getValue('controller') === 'AdminCommon') {
+                return; // Avoid early translation by notifications controller
+            }
+            $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
+            if (!file_exists($lockFile)) {
+                return;
+            }
 
-        $languages = Language::getLanguages(false);
+            $languages = Language::getLanguages(false);
 
-        // Because the wording and wording_domain are introduced since PS v1.7.8.0 and we cannot use them
-        if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')) {
-            $this->translateTabs();
+            // Because the wording and wording_domain are introduced since PS v1.7.8.0 and we cannot use them
+            if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')) {
+                $this->translateTabs();
+            }
+
+            @unlink($lockFile);
+        } catch (\Exception $e) {
+            // Do nothing
         }
-
-        @unlink($lockFile);
     }
 
     private function translateTabs()
@@ -652,6 +656,10 @@ class ps_mbo extends Module
 
     private function translateTab($tab, $languages)
     {
+        if (!$tab instanceof Tab) {
+            throw new \Exception('First argument of translateTab mut be a Tab instance');
+        }
+
         if (!empty($tab->wording) && !empty($tab->wording_domain)) {
             $tabNameByLangId = [];
             foreach ($languages as $language) {
