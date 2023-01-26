@@ -104,7 +104,7 @@ class ps_mbo extends Module
             'new_name' => 'Marketplace',
         ],
         'AdminAddonsCatalog' => [
-            'old_name' => 'Module Selections',
+            'old_name' => 'Module selection',
             'new_name' => 'Modules in the spotlight',
             'trans_domain' => 'Modules.Mbo.Modulesselection',
         ],
@@ -120,6 +120,8 @@ class ps_mbo extends Module
         ],
         'AdminPsMboAddons' => [
             'name' => 'Module selection',
+            'wording' => 'Modules in the spotlight',
+            'wording_domain' => 'Modules.Mbo.Modulesselection',
             'visible' => true,
             'class_name' => 'AdminPsMboAddons',
             'parent_class_name' => 'AdminParentModulesCatalog',
@@ -223,30 +225,34 @@ class ps_mbo extends Module
 
         // Rename tabs
         foreach ($coreTabsRenamed as $className => $names) {
-            $tabNameByLangId = [];
-            if ($restore) {
-                $name = $names['old_name'];
-                $transDomain = 'Admin.Navigation.Menu';
-            } else {
-                $name = $names['new_name'];
-                $transDomain = isset($names['trans_domain']) ? $names['trans_domain'] : 'Modules.Mbo.Global';
-            }
-            foreach (Language::getIDs(false) as $langId) {
-                $langId = (int) $langId;
-                $language = new Language($langId);
-                $tabNameByLangId[$langId] = (string) $this->trans(
-                    $name,
-                    [],
-                    $transDomain,
-                    !empty($language->locale) ? $language->locale : $language->language_code // can't use getLocale because not existing in 1.7.5
-                );
-            }
-
             $tabId = Tab::getIdFromClassName($className);
 
             if ($tabId !== false) {
+                $tabNameByLangId = [];
+                if ($restore) {
+                    $name = $names['old_name'];
+                    $transDomain = 'Admin.Navigation.Menu';
+                } else {
+                    $name = $names['new_name'];
+                    $transDomain = isset($names['trans_domain']) ? $names['trans_domain'] :'Modules.Mbo.Global';
+                }
+                foreach (Language::getIDs(false) as $langId) {
+                    $langId = (int) $langId;
+                    $language = new Language($langId);
+                    $tabNameByLangId[$langId] = (string) $this->trans(
+                        $name,
+                        [],
+                        $transDomain,
+                        !empty($language->locale) ? $language->locale : $language->language_code // can't use getLocale because not existing in 1.7.5
+                    );
+                }
+
                 $tab = new Tab($tabId);
                 $tab->name = $tabNameByLangId;
+                if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')) {
+                    $tab->wording = $name;
+                    $tab->wording_domain = $transDomain;
+                }
                 $return &= $tab->save();
             }
         }
@@ -597,7 +603,7 @@ class ps_mbo extends Module
         $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
         if (!file_exists($lockFile)) {
             if (!is_dir($this->moduleCacheDir)) {
-                mkdir($this->moduleCacheDir);
+                mkdir($this->moduleCacheDir, 0777, true);
             }
             $f = fopen($lockFile, 'w+');
             fclose($f);
@@ -606,6 +612,9 @@ class ps_mbo extends Module
 
     private function translateTabsIfNeeded()
     {
+        if (Tools::getValue('controller') === 'AdminCommon') {
+            return; // Avoid early translation by notifications controller
+        }
         $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
         if (!file_exists($lockFile)) {
             return;
@@ -630,20 +639,32 @@ class ps_mbo extends Module
          * @var Tab $tab
          */
         foreach ($moduleTabs as $tab) {
-            if (!empty($tab->wording) && !empty($tab->wording_domain)) {
-                $tabNameByLangId = [];
-                foreach ($languages as $language) {
-                    $tabNameByLangId[$language['id_lang']] = $this->trans(
-                        $tab->wording,
-                        [],
-                        $tab->wording_domain,
-                        $language['locale']
-                    );
-                }
+            $this->translateTab($tab, $languages);
+        }
 
-                $tab->name = $tabNameByLangId;
-                $tab->save();
+        foreach (static::CORE_TABS_RENAMED as $coreTabClass => $coreTabRenamed) {
+            if (array_key_exists('trans_domain', $coreTabRenamed)) {
+                $tab = Tab::getInstanceFromClassName($coreTabClass);
+                $this->translateTab($tab, $languages);
             }
+        }
+    }
+
+    private function translateTab($tab, $languages)
+    {
+        if (!empty($tab->wording) && !empty($tab->wording_domain)) {
+            $tabNameByLangId = [];
+            foreach ($languages as $language) {
+                $tabNameByLangId[$language['id_lang']] = $this->trans(
+                    $tab->wording,
+                    [],
+                    $tab->wording_domain,
+                    $language['locale']
+                );
+            }
+
+            $tab->name = $tabNameByLangId;
+            $tab->save();
         }
     }
 }
