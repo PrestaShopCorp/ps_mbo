@@ -21,7 +21,7 @@
 (function() {
   window.$(document).ready(function() {
     $('#page-header-desc-configuration-accounts_logout').on('shown.bs.tooltip', function () {
-        $('body').find('.tooltip[role="tooltip"].show').addClass('large-tooltip');
+        $('body').find('.tooltip[role="tooltip"].show').addClass('mbo-large-tooltip');
       })
   })
 })();
