@@ -228,6 +228,7 @@ class ps_mbo extends Module
 
         // Install tab before registering shop, we need the tab to be active to create the good token
         $this->handleTabAction('install');
+        $this->postponeTabsTranslations();
 
         // Register online services
         $this->registerShop();
@@ -454,6 +455,10 @@ class ps_mbo extends Module
 
     private function translateTabsIfNeeded(): void
     {
+        if (Tools::getValue('controller') !== 'AdminPsMboModule') {
+            return; // Avoid early translation
+        }
+
         $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
         if (!file_exists($lockFile)) {
             return;
