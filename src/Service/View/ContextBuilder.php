@@ -124,6 +124,9 @@ class ContextBuilder
             'shop_id' => $this->accountsDataProvider->getAccountsShopId(),
             'iso_lang' => $this->getLanguage()->getIsoCode(),
             'iso_code' => $this->getCountry()->iso_code,
+            'mbo_version' => \ps_mbo::VERSION,
+            'shop_version' => _PS_VERSION_,
+            'shop_url' => Config::getShopUrl(),
         ];
     }
 
@@ -162,6 +165,7 @@ class ContextBuilder
             'shop_url' => Config::getShopUrl(),
             'shop_uuid' => Config::getShopMboUuid(),
             'mbo_token' => $this->adminAuthenticationProvider->getMboJWT(),
+            'mbo_version' => \ps_mbo::VERSION,
             'mbo_reset_url' => $this->router->generate('admin_module_manage_action', [
                 'action' => 'reset',
                 'module_name' => 'ps_mbo',
