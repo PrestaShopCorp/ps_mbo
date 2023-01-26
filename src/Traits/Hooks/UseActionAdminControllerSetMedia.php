@@ -88,6 +88,7 @@ trait UseActionAdminControllerSetMedia
         }
         if (in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CONNECTION_TOOLBAR)) {
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/connection-toolbar.css');
+            $this->context->controller->addJS($this->getPathUri() . 'views/js/connection-toolbar.js');
         }
         if ($this->isAdminLegacyContext()) {
             // Add it to have all script work on all pages...

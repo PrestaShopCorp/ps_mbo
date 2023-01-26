@@ -5,3 +5,14 @@
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+
+.large-tooltip .tooltip-inner {
+  max-width: unset!important;
+  white-space: pre-line;
+  word-wrap: normal;
+}
+@media screen and (max-width: 300px) {
+.large-tooltip .tooltip-inner {
+  max-width: 100%;
+}
+}

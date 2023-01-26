@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -18,7 +17,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons;
@@ -158,7 +156,7 @@ class Toolbar
             'href' => '#',
             'desc' => $this->translator->trans('Connected', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
             'icon' => 'check_circle',
-            'help' => $this->addonsDataProvider->getAuthenticatedUserEmail()
+            'help' => $this->translator->trans('Connected as', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail()
         ];
     }
 }
