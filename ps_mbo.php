@@ -335,15 +335,6 @@ class ps_mbo extends Module
     }
 
     /**
-     * @return void
-     */
-    private function loadEnv(): void
-    {
-        $dotenv = new Dotenv();
-        $dotenv->loadEnv(__DIR__ . '/.env');
-    }
-
-    /**
      * Get an existing or build an instance of AdminAuthenticationProvider
      *
      * @return \PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider
