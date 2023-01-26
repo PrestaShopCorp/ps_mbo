@@ -121,8 +121,6 @@ class ps_mbo extends Module
         if ($this->active) {
             $this->bootHooks();
         }
-
-        $this->loadEnv();
     }
 
     /**

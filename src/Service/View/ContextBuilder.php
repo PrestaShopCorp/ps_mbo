@@ -112,7 +112,7 @@ class ContextBuilder
     {
         $modules = [];
         // Filter : remove uninstalled modules
-        foreach ($this->getInstalledModules() as $installedModule) {
+        foreach ($this->listInstalledModulesAndStatuses() as $installedModule) {
             if ($installedModule['status'] !== ModuleStateMachine::STATUS_UNINSTALLED) {
                 $modules[] = $installedModule['name'];
             }
@@ -204,6 +204,35 @@ class ContextBuilder
         }
 
         return $currency->iso_code;
+    }
+
+    /**
+     * @return array<array>
+     */
+    private function listInstalledModulesAndStatuses(): array
+    {
+        $installedModulesCollection = $this->moduleRepository->getList();
+
+        $installedModules = [];
+
+        /** @var CoreModule $installedModule */
+        foreach ($installedModulesCollection as $installedModule) {
+            $moduleAttributes = $installedModule->getAttributes();
+            $moduleDiskAttributes = $installedModule->getDiskAttributes();
+            $moduleDatabaseAttributes = $installedModule->getDatabaseAttributes();
+
+            $module = new Module($moduleAttributes->all(), $moduleDiskAttributes->all(), $moduleDatabaseAttributes->all());
+
+            $moduleName = $module->get('name');
+            $moduleStatus = $module->getStatus();
+
+            $installedModules[] = [
+                'name' => $moduleName,
+                'status' => $moduleStatus,
+            ];
+        }
+
+        return $installedModules;
     }
 
     /**
