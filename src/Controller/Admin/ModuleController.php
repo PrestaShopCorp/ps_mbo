@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2020 PrestaShop and Contributors
  *
@@ -112,7 +113,7 @@ class ModuleController extends ModuleControllerCore
         $errorMessage = $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
 
         $formattedContent['content'] .= $this->render(
-            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog-refresh.html.twig',
+            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog_grid.html.twig',
             [
                 'categories' => $categories['categories'],
                 'requireAddonsSearch' => true,
@@ -157,8 +158,7 @@ class ModuleController extends ModuleControllerCore
         if (!in_array(
             $this->authorizationLevel(self::CONTROLLER_NAME),
             $pageVoter
-        )
-        ) {
+        )) {
             return new JsonResponse(
                 [
                     'status' => false,

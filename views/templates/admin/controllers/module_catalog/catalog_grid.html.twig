@@ -22,10 +22,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-<div id="modules-list-container-all" class="row modules-list" style="display: flex;" data-name="all">
+<div class="mbo-modules-catalog mbo-modules-catalog__grid" data-name="all">
   {% for category in categories.subMenu %}
     {% for module in category.modules %}
-      {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/Includes/card_grid.html.twig' with { 'module': module, 'origin': origin|default('none'), 'level' : level, 'category': category.refMenu } %}
+      {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/Includes/catalog_card.html.twig' with { 'module': module, 'origin': origin|default('none'), 'level' : level, 'category': category.refMenu } %}
     {% endfor %}
   {% endfor %}
 </div>

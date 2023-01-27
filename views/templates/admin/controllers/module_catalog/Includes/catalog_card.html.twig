@@ -25,7 +25,7 @@
 {% set isModuleActive = module.database.active %}
 
 <div
-  class="module-item module-item-grid col-md-12 col-lg-6 col-xl-3 {% if origin == 'manage' and isModuleActive == '0' %}module-item-grid-isNotActive{% endif %}"
+  class="mbo-modules-catalog__card"
   data-id="{{ module.attributes.id }}"
   data-name="{{ module.attributes.displayName }}"
   data-scoring="{{ module.attributes.avgRate }}"
@@ -40,7 +40,45 @@
   data-price="{{ module.attributes.price.raw }}"
   data-active="{{ isModuleActive }}"
 >
-  <div class="module-item-wrapper-grid">
+
+  <div class="mbo-modules-catalog__card-header">
+    <div class="mbo-modules-catalog__card-header-img-container">
+      <img class="mbo-modules-catalog__card-header--img" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}"/>
+    </div>
+    <div class="mbo-modules-catalog__card-header-title-container">
+      <h3
+        class="mbo-modules-catalog__card-header-title"
+        data-toggle="pstooltip"
+        data-placement="top"
+        title="{{ module.attributes.displayName|raw }}"
+      >        
+        {% if module.attributes.displayName %}
+          {{ module.attributes.displayName|raw }}
+        {% else %}
+          {{ module.attributes.name }}
+        {% endif %}
+        {% for pico in module.attributes.picos %}
+            <img src="{{pico.img}}" alt="{{pico.label}}" />
+        {% endfor %}
+      </h3>
+      <p class="mbo-modules-catalog__card-header-subtitle">
+        {{ 'by %author%'|trans({'%author%': module.attributes.author}) }}
+      </p>
+    </div>
+
+    
+  </div>
+
+  <div class="mbo-modules-catalog__card-tag">
+    AAA
+  </div>
+    AAA
+  <div class="mbo-modules-catalog__card-description">
+    AAA
+  </div>
+
+  <button class="mbo-modules-catalog__card-action">AAA</button>
+  {# <div class="module-item-wrapper-grid">
     <div class="module-item-heading-grid">
       <div class="module-logo-thumb-grid">
         <img src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}"/>
@@ -117,5 +155,5 @@
     </div>
     {% include '@PrestaShop/Admin/Module/Includes/modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default(''), 'level' : level } %}
     {% include '@PrestaShop/Admin/Module/Includes/modal_confirm.html.twig' with { 'module': module } %}
-  </div>
+  </div> #}
 </div>
