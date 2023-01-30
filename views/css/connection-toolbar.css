@@ -1,9 +1,9 @@
 #page-header-desc-configuration-accounts_logout {
-  color: #fff;
-  background-color: #9BCBA6;
-  border-color: #9BCBA6;
-  -webkit-box-shadow: none;
-  box-shadow: none;
+  color: #fff!important;
+  background-color: #9BCBA6!important;
+  border-color: #9BCBA6!important;
+  -webkit-box-shadow: none!important;
+  box-shadow: none!important;
 }
 
 .mbo-large-tooltip .tooltip-inner {
