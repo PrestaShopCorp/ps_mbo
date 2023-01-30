@@ -94,9 +94,25 @@ class ps_mbo extends Module
         'AdminCarriers',
     ];
 
+    const CORE_TABS_RENAMED = [
+        'AdminModulesCatalog' => [
+            'old_name' => 'Modules catalog',
+            'new_name' => 'Marketplace',
+        ],
+        'AdminParentModulesCatalog' => [
+            'old_name' => 'Modules catalog',
+            'new_name' => 'Marketplace',
+        ],
+        'AdminAddonsCatalog' => [
+            'old_name' => 'Module selection',
+            'new_name' => 'Modules in the spotlight',
+            'trans_domain' => 'Modules.Mbo.Modulesselection',
+        ],
+    ];
+
     const ADMIN_CONTROLLERS = [
         'AdminPsMboModule' => [
-            'name' => 'Module catalog',
+            'name' => 'Marketplace',
             'visible' => true,
             'class_name' => 'AdminPsMboModule',
             'parent_class_name' => 'AdminParentModulesCatalog',
@@ -104,6 +120,8 @@ class ps_mbo extends Module
         ],
         'AdminPsMboAddons' => [
             'name' => 'Module selection',
+            'wording' => 'Modules in the spotlight',
+            'wording_domain' => 'Modules.Mbo.Modulesselection',
             'visible' => true,
             'class_name' => 'AdminPsMboAddons',
             'parent_class_name' => 'AdminParentModulesCatalog',
@@ -111,6 +129,8 @@ class ps_mbo extends Module
         ],
         'AdminPsMboRecommended' => [
             'name' => 'Module recommended',
+            'wording' => 'Recommended Modules and Services',
+            'wording_domain' => 'Modules.Mbo.Recommendedmodulesandservices',
             'visible' => true,
             'class_name' => 'AdminPsMboRecommended',
         ],
@@ -125,6 +145,7 @@ class ps_mbo extends Module
 
     const HOOKS = [
         'actionAdminControllerSetMedia',
+        'actionDispatcherBefore',
         'displayDashboardTop',
     ];
 
@@ -132,6 +153,11 @@ class ps_mbo extends Module
      * @var ContainerInterface
      */
     protected $container;
+
+    /**
+     * @var string
+     */
+    public $moduleCacheDir;
 
     /**
      * Constructor.
@@ -146,11 +172,12 @@ class ps_mbo extends Module
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
             'min' => '1.7.5.0',
-            'max' => _PS_VERSION_,
+            'max' => '1.7.8.8',
         ];
 
         parent::__construct();
 
+        $this->moduleCacheDir = sprintf('%s/var/modules/%s/', rtrim(_PS_ROOT_DIR_, '/'), $this->name);
         $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
         $this->description = $this->l('Browse the Addons marketplace directly from your back office to better meet your needs.');
     }
@@ -173,8 +200,82 @@ class ps_mbo extends Module
      */
     public function enable($force_all = false)
     {
-        return parent::enable($force_all)
+        $result = parent::enable($force_all)
+            && $this->organizeCoreTabs()
             && $this->installTabs();
+
+        $this->postponeTabsTranslations();
+
+        return (bool) $result;
+    }
+
+    /**
+     * This method is here if we need to rename some Core tabs.
+     *
+     * @return bool
+     */
+    public function organizeCoreTabs($restore = false)
+    {
+        $return = true;
+        $coreTabsRenamed = static::CORE_TABS_RENAMED;
+
+        if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '<')) {
+            unset($coreTabsRenamed['AdminAddonsCatalog']);
+        }
+
+        // Rename tabs
+        foreach ($coreTabsRenamed as $className => $names) {
+            $tabId = Tab::getIdFromClassName($className);
+
+            if ($tabId !== false) {
+                $tabNameByLangId = [];
+                if ($restore) {
+                    $name = $names['old_name'];
+                    $transDomain = 'Admin.Navigation.Menu';
+                } else {
+                    $name = $names['new_name'];
+                    $transDomain = isset($names['trans_domain']) ? $names['trans_domain'] : 'Modules.Mbo.Global';
+                }
+                foreach (Language::getIDs(false) as $langId) {
+                    $langId = (int) $langId;
+                    $language = new Language($langId);
+                    $tabNameByLangId[$langId] = (string) $this->trans(
+                        $name,
+                        [],
+                        $transDomain,
+                        !empty($language->locale) ? $language->locale : $language->language_code // can't use getLocale because not existing in 1.7.5
+                    );
+                }
+
+                $tab = new Tab($tabId);
+                $tab->name = $tabNameByLangId;
+                if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')) {
+                    $tab->wording = $name;
+                    $tab->wording_domain = $transDomain;
+                }
+                $return &= $tab->save();
+            }
+        }
+
+        // Change tabs positions
+        $return &= $this->changeTabPosition('AdminParentModulesCatalog', $restore ? 1 : 0);
+        $return &= $this->changeTabPosition('AdminModulesSf', $restore ? 0 : 1);
+
+        return (bool) $return;
+    }
+
+    public function changeTabPosition($className, $newPosition)
+    {
+        $return = true;
+        $tabId = Tab::getIdFromClassName($className);
+
+        if ($tabId !== false) {
+            $tab = new Tab($tabId);
+            $tab->position = $newPosition;
+            $return &= $tab->save();
+        }
+
+        return $return;
     }
 
     /**
@@ -227,6 +328,14 @@ class ps_mbo extends Module
         $tab->position = (int) $position;
         $tab->id_parent = empty($tabData['parent_class_name']) ? -1 : Tab::getIdFromClassName($tabData['parent_class_name']);
         $tab->name = $tabNameByLangId;
+        if (
+            true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=') &&
+            !empty($tabData['wording']) &&
+            !empty($tabData['wording_domain'])
+        ) {
+            $tab->wording = $tabData['wording'];
+            $tab->wording_domain = $tabData['wording_domain'];
+        }
 
         if (false === (bool) $tab->add()) {
             return false;
@@ -249,6 +358,7 @@ class ps_mbo extends Module
     public function disable($force_all = false)
     {
         return parent::disable($force_all)
+            && $this->organizeCoreTabs(true)
             && $this->uninstallTabs();
     }
 
@@ -368,6 +478,14 @@ class ps_mbo extends Module
     }
 
     /**
+     * Hook actionDispatcherBefore.
+     */
+    public function hookActionDispatcherBefore()
+    {
+        $this->translateTabsIfNeeded();
+    }
+
+    /**
      * Indicates if the recommended modules should be attached after content in this page
      *
      * @return bool
@@ -419,5 +537,142 @@ class ps_mbo extends Module
         }
 
         return $this->container->get($serviceName);
+    }
+
+    public function isUsingNewTranslationSystem()
+    {
+        return true;
+    }
+
+    /**
+     * Update hooks in DB.
+     * Search current hooks registered in DB and compare them with the hooks declared in the module.
+     * If a hook is missing, it will be added. If a hook is not declared in the module, it will be removed.
+     *
+     * @return void
+     */
+    public function updateHooks()
+    {
+        $hookData = (array) Db::getInstance()->executeS('
+            SELECT DISTINCT(phm.id_hook), name
+            FROM `' . _DB_PREFIX_ . 'hook_module` phm
+            JOIN `' . _DB_PREFIX_ . 'hook` ph ON ph.id_hook=phm.id_hook
+            WHERE `id_module` = ' . (int) $this->id
+        );
+
+        $oldHooks = [];
+        $newHooks = [];
+
+        // Iterate on DB hooks to get only the old ones
+        foreach ($hookData as $hook) {
+            if (!in_array(strtolower($hook['name']), array_map('strtolower', static::HOOKS))) {
+                $oldHooks[] = $hook;
+            }
+        }
+
+        // Iterate on module hooks to get only the new ones
+        foreach (static::HOOKS as $moduleHook) {
+            $isNew = true;
+            foreach ($hookData as $hookInDb) {
+                if (strtolower($moduleHook) === strtolower($hookInDb['name'])) {
+                    $isNew = false;
+                    break;
+                }
+            }
+            if ($isNew) {
+                $newHooks[] = $moduleHook;
+            }
+        }
+
+        foreach ($oldHooks as $oldHook) {
+            $this->unregisterHook($oldHook['id']);
+        }
+        // we iterate because registerHook accepts array only since 1.7.7.0
+        foreach ($newHooks as $newHook) {
+            $this->registerHook($newHook);
+        }
+    }
+
+    public function postponeTabsTranslations()
+    {
+        /**it'
+         * There is an issue for translating tabs during installation :
+         * Active modules translations files are loaded during the kernel boot. So the installing module translations are not known
+         * So, we postpone the tabs translations for the first time the module's code is executed.
+         */
+        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
+        if (!file_exists($lockFile)) {
+            if (!is_dir($this->moduleCacheDir)) {
+                mkdir($this->moduleCacheDir, 0777, true);
+            }
+            $f = fopen($lockFile, 'w+');
+            fclose($f);
+        }
+    }
+
+    private function translateTabsIfNeeded()
+    {
+        try {
+            if (Tools::getValue('controller') === 'AdminCommon') {
+                return; // Avoid early translation by notifications controller
+            }
+            $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
+            if (!file_exists($lockFile)) {
+                return;
+            }
+
+            $languages = Language::getLanguages(false);
+
+            // Because the wording and wording_domain are introduced since PS v1.7.8.0 and we cannot use them
+            if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')) {
+                $this->translateTabs();
+            }
+
+            @unlink($lockFile);
+        } catch (\Exception $e) {
+            // Do nothing
+        }
+    }
+
+    private function translateTabs()
+    {
+        $moduleTabs = Tab::getCollectionFromModule($this->name);
+        $languages = Language::getLanguages(false);
+
+        /**
+         * @var Tab $tab
+         */
+        foreach ($moduleTabs as $tab) {
+            $this->translateTab($tab, $languages);
+        }
+
+        foreach (static::CORE_TABS_RENAMED as $coreTabClass => $coreTabRenamed) {
+            if (array_key_exists('trans_domain', $coreTabRenamed)) {
+                $tab = Tab::getInstanceFromClassName($coreTabClass);
+                $this->translateTab($tab, $languages);
+            }
+        }
+    }
+
+    private function translateTab($tab, $languages)
+    {
+        if (!$tab instanceof Tab) {
+            throw new \Exception('First argument of translateTab mut be a Tab instance');
+        }
+
+        if (!empty($tab->wording) && !empty($tab->wording_domain)) {
+            $tabNameByLangId = [];
+            foreach ($languages as $language) {
+                $tabNameByLangId[$language['id_lang']] = $this->trans(
+                    $tab->wording,
+                    [],
+                    $tab->wording_domain,
+                    $language['locale']
+                );
+            }
+
+            $tab->name = $tabNameByLangId;
+            $tab->save();
+        }
     }
 }
