@@ -12,7 +12,7 @@
   word-wrap: normal;
 }
 @media screen and (max-width: 300px) {
-.mbo-large-tooltip .tooltip-inner {
-  max-width: 100%;
-}
+  .mbo-large-tooltip .tooltip-inner {
+    max-width: 100%;
+  }
 }
