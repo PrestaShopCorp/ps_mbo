@@ -87,7 +87,7 @@ class ps_mbo extends Module
         'AdminSearchEngines',
         'AdminReferrers',
     ];
-   
+
     const TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT = [
         'AdminMarketing',
         'AdminPayment',
@@ -504,15 +504,15 @@ class ps_mbo extends Module
 
         return in_array(Tools::getValue('controller'), static::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT, true);
     }
- 
+
     /**
      * Customize title button recommended modules 
-     * 
+     *
      * @return string
      */
     private function getRecommandedModulesButtonTitle()
     {
-        switch(Tools::getValue('controller')) {
+        switch (Tools::getValue('controller')) {
             case 'AdminOrders':
                 $title = $this->trans('Boost sales', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
@@ -532,6 +532,7 @@ class ps_mbo extends Module
 
         return $title;
     }
+
     /**
      * Indicates if the recommended modules button should be attached in this page
      *
