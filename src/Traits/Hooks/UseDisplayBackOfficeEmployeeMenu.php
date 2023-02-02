@@ -54,7 +54,7 @@ trait UseDisplayBackOfficeEmployeeMenu
             foreach ($config->userMenu as $link) {
                 $versionFrom = Version::convertFromApi($link->ps_version_from);
                 $versionTo = Version::convertFromApi($link->ps_version_to);
-                if (version_compare($versionFrom, _PS_VERSION_, '<') || version_compare(_PS_VERSION_, $versionTo, '>')) {
+                if (version_compare(_PS_VERSION_, $versionFrom, '<') || version_compare(_PS_VERSION_, $versionTo, '>')) {
                     continue;
                 }
                 $params['links']->add(
