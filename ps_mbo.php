@@ -513,15 +513,24 @@ class ps_mbo extends Module
     private function getRecommandedModulesButtonTitle()
     {
         switch (Tools::getValue('controller')) {
+
+            case 'AdminInvoices':
+            case 'AdminDeliverySlip':
+            case 'AdminSlip':
             case 'AdminOrders':
                 $title = $this->trans('Boost sales', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
+            case 'AdminSpecificPriceRule':
+            case 'AdminManufacturers':
+            case 'AdminAttributesGroups':
+            case 'AdminCartRules':
             case 'AdminProducts':
                 $title = $this->trans('Optimize product catalog', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             case 'AdminStats':
                 $title = $this->trans('Improve data strategy', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
+            case 'AdminCustomerThreads':
             case 'AdminCustomers':
                 $title = $this->trans('Improve customer experience', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
