@@ -35,6 +35,7 @@ use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Dotenv\Dotenv;
 
 class ps_mbo extends Module
 {
@@ -120,6 +121,8 @@ class ps_mbo extends Module
         if ($this->active) {
             $this->bootHooks();
         }
+
+        $this->loadEnv();
     }
 
     /**
@@ -409,5 +412,14 @@ class ps_mbo extends Module
     public function getAccountsDataProvider(): AccountsDataProvider
     {
         return $this->getService('mbo.accounts.data_provider');
+    }
+
+    /**
+     * @return void
+     */
+    private function loadEnv(): void
+    {
+        $dotenv = new Dotenv();
+        $dotenv->loadEnv(__DIR__ . '/.env');
     }
 }
