@@ -121,8 +121,6 @@ class ps_mbo extends Module
         if ($this->active) {
             $this->bootHooks();
         }
-
-        $this->loadEnv();
     }
 
     /**
@@ -334,15 +332,6 @@ class ps_mbo extends Module
         } else {
             return false;
         }
-    }
-
-    /**
-     * @return void
-     */
-    private function loadEnv(): void
-    {
-        $dotenv = new Dotenv();
-        $dotenv->loadEnv(__DIR__ . '/.env');
     }
 
     /**
