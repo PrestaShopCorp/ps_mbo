@@ -513,7 +513,6 @@ class ps_mbo extends Module
     private function getRecommandedModulesButtonTitle()
     {
         switch (Tools::getValue('controller')) {
-
             case 'AdminInvoices':
             case 'AdminDeliverySlip':
             case 'AdminSlip':
