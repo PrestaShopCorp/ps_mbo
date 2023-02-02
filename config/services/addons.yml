@@ -12,6 +12,7 @@ services:
     arguments:
       - '@session'
       - '@mbo.addons.user.credentials_encryptor'
+      - '@mbo.accounts.data_provider'
 
   mbo.addons.user.provider:
     class: PrestaShop\Module\Mbo\Addons\User\AddonsUserProvider

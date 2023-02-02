@@ -56,11 +56,20 @@ class ConnectedClient extends BaseClient
         $credentials = [];
         if ($this->user->isAuthenticated()) {
             $credentials = $this->user->getCredentials(true);
-            $userCacheKey = md5($credentials['username'] . $credentials['password']);
-            $this->setQueryParams([
-               'addons_username' => $credentials['username'],
-               'addons_pwd' => $credentials['password'],
-            ]);
+
+            if (array_key_exists('accounts_token', $credentials)) {
+                $userCacheKey = md5($credentials['accounts_token']);
+
+                $this->setQueryParams([
+                    'accounts_token' => $credentials['accounts_token'],
+                ]);
+            } else {
+                $userCacheKey = md5($credentials['username'] . $credentials['password']);
+                $this->setQueryParams([
+                    'addons_username' => $credentials['username'],
+                    'addons_pwd' => $credentials['password'],
+                ]);
+            }
         }
 
         $cacheKey = __METHOD__ . $languageIsoCode . $countryIsoCode . $userCacheKey . _PS_VERSION_;

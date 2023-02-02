@@ -106,7 +106,11 @@ class Toolbar
     public function getConnectionToolbar(): array
     {
         if ($this->addonsDataProvider->isUserAuthenticated()) {
-            $toolbarButtons['addons_logout'] = $this->getAddonsLogoutButton();
+            if ($this->addonsDataProvider->isUserAuthenticatedOnAccounts()) {
+                $toolbarButtons['accounts_logout'] = $this->getAccountsStatusButton();
+            } else {
+                $toolbarButtons['addons_logout'] = $this->getAddonsLogoutButton();
+            }
         } else {
             $toolbarButtons['addons_connect'] = $this->getAddonsConnectButton();
         }
@@ -139,6 +143,20 @@ class Toolbar
             'desc' => $this->addonsDataProvider->getAuthenticatedUserEmail(),
             'icon' => 'exit_to_app',
             'help' => $this->translator->trans('Synchronized with Addons marketplace!', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
+        ];
+    }
+
+    public function getAccountsStatusButton(): ?array
+    {
+        if (!$this->addonsDataProvider->isUserAuthenticatedOnAccounts()) {
+            return null;
+        }
+
+        return [
+            'href' => '#',
+            'desc' => $this->translator->trans('Connected', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
+            'icon' => 'check_circle',
+            'help' => $this->translator->trans('Connected as', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail()
         ];
     }
 }

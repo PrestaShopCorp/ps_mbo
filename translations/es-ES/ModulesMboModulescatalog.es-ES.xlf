@@ -5,7 +5,17 @@
       <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df">
         <source>Synchronized with Addons marketplace!</source>
         <target>¡Sincronizado con Addons marketplace!</target>
-        <note>Line: 141</note>
+        <note>Line: 147</note>
+      </trans-unit>
+      <trans-unit id="2ec0d16e4ca169baedb9b2d50ec5c6d7">
+        <source>Connected</source>
+        <target>Conectado</target>
+        <note>Line: 159</note>
+      </trans-unit>
+      <trans-unit id="8bf910bb9ffa608d4c7fd6504667d62f">
+        <source>Connected as</source>
+        <target>Conectado como</target>
+        <note>Line: 161</note>
       </trans-unit>
     </body>
   </file>
@@ -33,7 +43,7 @@
       <trans-unit id="675e31b94580e2642405e2f8586d112e">
         <source>Marketplace</source>
         <target>Marketplace</target>
-        <note>Line: 52</note>
+        <note>Line: 67</note>
       </trans-unit>
     </body>
   </file>
