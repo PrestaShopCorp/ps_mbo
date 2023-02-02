@@ -34,6 +34,7 @@
       <trans-unit id="f8c9c7b6af2a8d50bc948bcf966c1d4b">
         <source>Module %module% is already up to date</source>
         <target>Module %module% is al up to date</target>
+        <note>Line: 195</note>
       </trans-unit>
     </body>
   </file>
