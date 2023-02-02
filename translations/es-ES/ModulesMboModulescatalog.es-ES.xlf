@@ -24,41 +24,17 @@
       <trans-unit id="cff7b4047c79f112e869481322d2924e">
         <source>Module %module% successfully upgraded.</source>
         <target>Módulo %module% actualizado con éxito.</target>
-<<<<<<< HEAD
-<<<<<<< HEAD
         <note>Line: 172</note>
-=======
-        <note>Line: 176</note>
->>>>>>> 327bb7b (Add a phrase to Addons modal connect + translations)
-=======
-        <note>Line: 172</note>
->>>>>>> db9c773 (Addons connect modal : Translate Button label and Remember me)
       </trans-unit>
       <trans-unit id="22d6960d922158c548d123998be8dd91">
         <source>Upgrade of module %module% failed. %error%</source>
         <target>La actualización del módulo %module% ha fallado. %error%.</target>
-<<<<<<< HEAD
-<<<<<<< HEAD
         <note>Line: 208</note>
-=======
-        <note>Line: 212</note>
->>>>>>> 327bb7b (Add a phrase to Addons modal connect + translations)
-=======
-        <note>Line: 208</note>
->>>>>>> db9c773 (Addons connect modal : Translate Button label and Remember me)
       </trans-unit>
       <trans-unit id="f8c9c7b6af2a8d50bc948bcf966c1d4b">
         <source>Module %module% is already up to date</source>
         <target>El módulo %module% ya está actualizado</target>
-<<<<<<< HEAD
-<<<<<<< HEAD
         <note>Line: 195</note>
-=======
-        <note>Line: 199</note>
->>>>>>> 327bb7b (Add a phrase to Addons modal connect + translations)
-=======
-        <note>Line: 195</note>
->>>>>>> db9c773 (Addons connect modal : Translate Button label and Remember me)
       </trans-unit>
     </body>
   </file>
