@@ -125,7 +125,7 @@ class ContextBuilder
             'iso_lang' => $this->getLanguage()->getIsoCode(),
             'iso_code' => $this->getCountry()->iso_code,
             'mbo_version' => \ps_mbo::VERSION,
-            'shop_version' => _PS_VERSION_,
+            'ps_version' => _PS_VERSION_,
             'shop_url' => Config::getShopUrl(),
         ];
     }
