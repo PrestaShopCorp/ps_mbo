@@ -180,15 +180,16 @@ var mbo = {};
     if (config.shouldUseLegacyTheme) {
       $markup = $(
         '<li id="recommended-modules-button-container">\n' +
-        '  <a id="' + buttonId + '" class="toolbar_btn pointer" href="' + config.recommendedModulesUrl + '" title="' + label + '">\n' +
-        '    <i class="process-icon-modules-list"></i>\n' +
+        '  <a id="' + buttonId + '" class="toolbar_btn pointer mbo-modules-recommended-button " href="' + config.recommendedModulesUrl + '" title="' + label + '">\n' +
+        '    <i class="material-icons mi-extension">extension</i>\n' +
         '    <div>' + label + '</div>\n' +
         '  </a>\n' +
         '</li>'
       );
     } else {
       $markup = $(
-        '<a class="btn btn-outline-secondary" id="' + buttonId + '" href="' + config.recommendedModulesUrl + '" title="' + label + '">\n' +
+        '<a class="btn btn-secondary" id="' + buttonId + '" href="' + config.recommendedModulesUrl + '" title="' + label + '">' +
+        '<i class="material-icons">extension</i>\n' +
         label +
         '</a>'
       );
@@ -228,6 +229,7 @@ var mbo = {};
         '    ' + containerTitle + '\n' +
         '  </h3>\n' +
         '  <div class="modules_list_container_tab row">\n' +
+        
         '    ' + content +'\n' +
         '  </div>\n' +
         '</div>'

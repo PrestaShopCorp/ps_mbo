@@ -153,6 +153,27 @@
   margin-top: 15px;
 }
 
+.bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn.mbo-modules-recommended-button {
+  color: #fff;
+  background-color: #6c868e;
+  border-color: #6c868e;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+}
+.bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn.mbo-modules-recommended-button i {
+  display: inline-block;
+  color: #fff;
+  margin-right: 5px;
+}
+
+.bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn.mbo-modules-recommended-button:hover {
+  color: #fff;
+  background-color: #b7ced3;
+  border-color: #b7ced3;
+}
+
 @media (min-width: 768px) {
   #content.bootstrap #modules_list_container .modal-dialog {
     width: 680px;

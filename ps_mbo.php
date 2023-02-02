@@ -87,7 +87,7 @@ class ps_mbo extends Module
         'AdminSearchEngines',
         'AdminReferrers',
     ];
-
+   
     const TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT = [
         'AdminMarketing',
         'AdminPayment',
@@ -469,7 +469,7 @@ class ps_mbo extends Module
             'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModulesAfterContent(),
             'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModulesButton(),
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
-            'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services'),
+            'recommendedModulesTitleTranslated' => $this->getRecommandedModulesButtonTitle(),
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
             'recommendedModulesUrl' => $recommendedModulesUrl,
         ]);
@@ -504,7 +504,34 @@ class ps_mbo extends Module
 
         return in_array(Tools::getValue('controller'), static::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT, true);
     }
+ 
+    /**
+     * Customize title button recommended modules 
+     * 
+     * @return string
+     */
+    private function getRecommandedModulesButtonTitle()
+    {
+        switch(Tools::getValue('controller')) {
+            case 'AdminOrders':
+                $title = $this->trans('Boost sales', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminProducts':
+                $title = $this->trans('Optimize product catalog', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminStats':
+                $title = $this->trans('Improve data strategy', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminCustomers':
+                $title = $this->trans('Improve customer experience', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            default:
+                $title = $this->trans('Recommended modules', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+        }
 
+        return $title;
+    }
     /**
      * Indicates if the recommended modules button should be attached in this page
      *
