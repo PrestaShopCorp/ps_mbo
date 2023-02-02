@@ -229,7 +229,6 @@ var mbo = {};
         '    ' + containerTitle + '\n' +
         '  </h3>\n' +
         '  <div class="modules_list_container_tab row">\n' +
-        
         '    ' + content +'\n' +
         '  </div>\n' +
         '</div>'
