@@ -506,7 +506,7 @@ class ps_mbo extends Module
     }
 
     /**
-     * Customize title button recommended modules 
+     * Customize title button recommended modules
      *
      * @return string
      */
