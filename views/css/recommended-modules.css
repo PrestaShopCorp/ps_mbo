@@ -35,7 +35,12 @@
 
 #content.bootstrap .nav-tabs .nav-item.show .nav-link,
 #content.bootstrap .nav-tabs .nav-item.active .nav-link {
-  border-top: 3px solid #25b9d7;
+  border-bottom: 3px solid #25b9d7 ;
+}
+.nav-tabs .nav-link.active {
+  border-bottom: 3px solid #25b9d7 ;
+  border-top: none;
+  margin-bottom : 10px
 }
 
 #content.bootstrap .nav-tabs .nav-item.show .nav-link,
@@ -60,7 +65,7 @@
 }
 
 #content.bootstrap #modules_list_container_content .btn .caret {
-  border-top-color: #25b9d7!important;
+  border-top-color: #25b9d7;
 }
 
 #content.bootstrap #modules_list_container_content .btn-outline-primary {
@@ -172,6 +177,23 @@
   color: #fff;
   background-color: #b7ced3;
   border-color: #b7ced3;
+}
+.recommended-modal-description{
+  margin-bottom: 30px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 19px;
+  
+}
+.recommended-modal-content-description{
+  font-size: 14px;
+  line-height: 19px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.panel#recommended-modules-container .recommended-modal-content-description{
+margin-left: 0px;
 }
 
 @media (min-width: 768px) {

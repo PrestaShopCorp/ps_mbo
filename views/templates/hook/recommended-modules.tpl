@@ -22,6 +22,7 @@
     mbo.initialize({
       translations: {
         'Recommended Modules and Services': '{$recommendedModulesTitleTranslated|escape:'javascript'}',
+        'description': '{$recommendedModulesDescriptionTranslated|escape:'javascript'}',
         'Close': '{$recommendedModulesCloseTranslated|escape:'javascript'}',
       },
       recommendedModulesUrl: '{$recommendedModulesUrl|escape:'javascript'}',

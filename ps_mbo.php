@@ -469,7 +469,8 @@ class ps_mbo extends Module
             'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModulesAfterContent(),
             'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModulesButton(),
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
-            'recommendedModulesTitleTranslated' => $this->getRecommandedModulesButtonTitle(),
+            'recommendedModulesTitleTranslated' => $this->getRecommendedModulesButtonTitle(),
+            'recommendedModulesDescriptionTranslated' => $this->getRecommendedModulesDescription(),
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
             'recommendedModulesUrl' => $recommendedModulesUrl,
         ]);
@@ -510,7 +511,7 @@ class ps_mbo extends Module
      *
      * @return string
      */
-    private function getRecommandedModulesButtonTitle()
+    private function getRecommendedModulesButtonTitle()
     {
         switch (Tools::getValue('controller')) {
             case 'AdminInvoices':
@@ -535,6 +536,46 @@ class ps_mbo extends Module
                 break;
             default:
                 $title = $this->trans('Recommended modules', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+        }
+
+        return $title;
+    }
+
+    /**
+     * Customize description of modal button recommended modules
+     *
+     * @return string
+     */
+    private function getRecommendedModulesDescription()
+    {
+        switch (Tools::getValue('controller')) {
+            case 'AdminInvoices':
+            case 'AdminDeliverySlip':
+            case 'AdminSlip':
+            case 'AdminOrders':
+                $title = $this->trans('Get new customers and keep them coming back.
+                Here’s a selection of partner modules, compatible with your store, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminSpecificPriceRule':
+            case 'AdminManufacturers':
+            case 'AdminAttributesGroups':
+            case 'AdminCartRules':
+            case 'AdminProducts':
+                $title = $this->trans('Make your more products visible and create product pages that convert.
+                Here’s a selection of partner modules, compatible with your store, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminStats':
+                $title = $this->trans('Build a data-driven strategy and take more informed decisions.
+                Here’s a selection of partner modules, compatible with your store, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminCustomerThreads':
+            case 'AdminCustomers':
+                $title = $this->trans('Create memorable experiences and turn visitors into customers.
+                Here’s a selection of partner modules, compatible with your store, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            default:
+                $title = $this->trans('Here’s a selection of partner modules, compatible with your store, to help you achieve your goals', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
         }
 

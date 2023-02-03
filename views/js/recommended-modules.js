@@ -218,6 +218,7 @@ var mbo = {};
    */
   var RecommendedModulesContainer = function(config, content) {
     var containerTitle = config.translations['Recommended Modules and Services'];
+    var containerDescription = config.translations['description'];
     var containerId = 'recommended-modules-container';
     var $markup;
 
@@ -228,7 +229,9 @@ var mbo = {};
         '    <i class="icon-puzzle-piece"></i>\n' +
         '    ' + containerTitle + '\n' +
         '  </h3>\n' +
+        '  <div class="recommended-modal-content-description">' + containerDescription + '</div>\n' +
         '  <div class="modules_list_container_tab row">\n' +
+        
         '    ' + content +'\n' +
         '  </div>\n' +
         '</div>'
@@ -242,8 +245,9 @@ var mbo = {};
         '        <i class="material-icons">extension</i>\n' +
         '        ' + containerTitle + '\n' +
         '      </h3>\n' +
+        '        <div class="recommended-modal-content-description">'+ containerDescription +'</div>\n'+
         '      <div class="card-block">\n' +
-        '        ' + content +'\n' +
+        '       ' + content +'\n' +
         '      </div>\n' +
         '    </div>\n' +
         '  </div>\n' +
@@ -366,6 +370,7 @@ var mbo = {};
             }
           }
         });
+        $(pageMap.modulesListModal).find('h3.modal-title').text(config.translations['Recommended Modules and Services']);
       } else {
         if (!$(pageMap.modulesListModal).length) {
           var modal = new RecommendedModulesModal(pageMap, config);
@@ -384,7 +389,8 @@ var mbo = {};
       $(pageMap.modulesListModal).modal('show');
 
       recommendedModulesRequest.done(function (data) {
-        $(pageMap.modulesListModalContent).html(data.content).slideDown();
+        var descriptionHtml = '<div class="recommended-modal-description">' + config.translations['description'] + '</div>';
+        $(pageMap.modulesListModalContent).html(descriptionHtml + data.content).slideDown();
         $(pageMap.modulesListLoader).hide();
       });
 
