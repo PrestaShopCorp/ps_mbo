@@ -33,11 +33,14 @@
   width: 56px;
 }
 
-#content.bootstrap .nav-tabs .nav-item.show .nav-link,
-#content.bootstrap .nav-tabs .nav-item.active .nav-link {
+#content.bootstrap .panel .nav-tabs .nav-item.show .nav-link,
+#content.bootstrap .panel .nav-tabs .nav-item.active .nav-link ,
+#content.bootstrap #modules_list_container_tab_modal  .nav-tabs .nav-item.active .nav-link 
+{
   border-bottom: 3px solid #25b9d7 ;
+  
 }
-.nav-tabs .nav-link.active {
+#recommended-modules-container .nav-tabs .nav-link.active {
   border-bottom: 3px solid #25b9d7 ;
   border-top: none;
   margin-bottom : 10px
@@ -65,7 +68,7 @@
 }
 
 #content.bootstrap #modules_list_container_content .btn .caret {
-  border-top-color: #25b9d7;
+  border-top-color: #25b9d7 !important;
 }
 
 #content.bootstrap #modules_list_container_content .btn-outline-primary {

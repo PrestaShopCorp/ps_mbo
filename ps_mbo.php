@@ -554,7 +554,7 @@ class ps_mbo extends Module
             case 'AdminDeliverySlip':
             case 'AdminSlip':
             case 'AdminOrders':
-                $title = $this->trans('Get new customers and keep them coming back.
+                $description = $this->trans('Get new customers and keep them coming back.
                 Here’s a selection of partner modules, compatible with your store, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             case 'AdminSpecificPriceRule':
@@ -562,24 +562,24 @@ class ps_mbo extends Module
             case 'AdminAttributesGroups':
             case 'AdminCartRules':
             case 'AdminProducts':
-                $title = $this->trans('Make your more products visible and create product pages that convert.
+                $description = $this->trans('Make your more products visible and create product pages that convert.
                 Here’s a selection of partner modules, compatible with your store, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             case 'AdminStats':
-                $title = $this->trans('Build a data-driven strategy and take more informed decisions.
+                $description = $this->trans('Build a data-driven strategy and take more informed decisions.
                 Here’s a selection of partner modules, compatible with your store, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             case 'AdminCustomerThreads':
             case 'AdminCustomers':
-                $title = $this->trans('Create memorable experiences and turn visitors into customers.
+                $description = $this->trans('Create memorable experiences and turn visitors into customers.
                 Here’s a selection of partner modules, compatible with your store, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             default:
-                $title = $this->trans('Here’s a selection of partner modules, compatible with your store, to help you achieve your goals', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                $description = $this->trans('Here’s a selection of partner modules, compatible with your store, to help you achieve your goals', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
         }
 
-        return $title;
+        return $description;
     }
 
     /**
