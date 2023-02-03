@@ -2,7 +2,7 @@ admin_mbo_catalog_module:
   path: /addons/modules/catalog
   methods: [GET]
   defaults:
-    _controller: mbo.controller.modules.catalog:indexAction
+    _controller: mbo.controller.modules:catalogAction
     _legacy_controller: AdminPsMboModule
     _legacy_link: AdminPsMboModule
 
@@ -31,11 +31,11 @@ admin_mbo_catalog_theme:
     _legacy_link: AdminPsMboTheme
 
 admin_module_catalog_refresh:
-    path:     /catalog/refresh/{category}/{keyword}
-    methods:  [GET]
-    defaults:
-        category:
-        keyword:
-        _controller: mbo.controller.modules:refreshCatalogAction
-        _legacy_controller: AdminModulesCatalog
-        _legacy_link: AdminModulesCatalog:refresh
+  path: /catalog/refresh/{category}/{keyword}
+  methods: [GET]
+  defaults:
+    category:
+    keyword:
+    _controller: mbo.controller.modules:refreshCatalogAction
+    _legacy_controller: AdminModulesCatalog
+    _legacy_link: AdminModulesCatalog:refresh

@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShopBundle\Controller\Admin\Improve\ModuleController as ModuleControllerCore;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,6 +35,34 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ModuleController extends ModuleControllerCore
 {
+
+    /**
+     * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
+     *
+     * @return Response
+     */
+    public function catalogAction()
+    {
+        return $this->render(
+            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog.html.twig',
+            [
+                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
+                'layoutTitle' => $this->trans('Modules catalog', 'Admin.Navigation.Menu'),
+                'requireAddonsSearch' => true,
+                'requireBulkActions' => false,
+                'showContentHeader' => true,
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink('AdminModules'),
+                'requireFilterStatus' => false,
+                'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
+                'errorMessage' => $this->trans(
+                    'You do not have permission to add this.',
+                    'Admin.Notifications.Error'
+                ),
+            ]
+        );
+    }
+
     /**
      * Controller responsible for displaying "Catalog Module Grid" section of Module management pages with ajax.
      *
@@ -104,7 +133,7 @@ class ModuleController extends ModuleControllerCore
         $formattedContent = [];
         $formattedContent['selector'] = '.module-catalog-page';
         $formattedContent['content'] = $this->render(
-            '@PrestaShop/Admin/Module/Includes/sorting.html.twig',
+            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/Includes/sorting.html.twig',
             [
                 'totalModules' => count($modules),
             ]
