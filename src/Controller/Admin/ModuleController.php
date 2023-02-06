@@ -33,10 +33,10 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ModuleController extends ModuleControllerCore
 {
-
     /**
      * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
      *
@@ -86,7 +86,6 @@ class ModuleController extends ModuleControllerCore
         }
 
         /**
-         * 
          * @var AdminModuleDataProvider $modulesProvider
          */
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
