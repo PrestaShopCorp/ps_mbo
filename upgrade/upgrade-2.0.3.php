@@ -28,7 +28,62 @@ use PrestaShop\Module\Mbo\UpgradeTracker;
  */
 function upgrade_module_2_0_3($module)
 {
+    $return = true;
+
+    $module->updateHooks();
+
+    // Rename tabs
+    $tabsToRename = [
+        'AdminPsMboModule' => [
+            'new_name' => 'Marketplace',
+        ],
+        'AdminModulesCatalog' => [
+            'new_name' => 'Marketplace',
+        ],
+        'AdminParentModulesCatalog' => [
+            'new_name' => 'Marketplace',
+        ],
+    ];
+
+    if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')) {
+        $tabsToRename += [
+            'AdminPsMboAddons' => [
+                'new_name' => 'Modules in the spotlight',
+                'trans_domain' => 'Modules.Mbo.Modulesselection',
+            ],
+            'AdminAddonsCatalog' => [
+                'new_name' => 'Modules in the spotlight',
+                'trans_domain' => 'Modules.Mbo.Modulesselection',
+            ],
+        ];
+    }
+    foreach ($tabsToRename as $className => $names) {
+        $tabNameByLangId = [];
+        foreach (Language::getIDs(false) as $langId) {
+            $language = new Language($langId);
+            $tabNameByLangId[$langId] = (string) $module->getTranslator()->trans($names['new_name'], [], isset($names['trans_domain']) ? $names['trans_domain'] : 'Modules.Mbo.Global', $language->getLocale());
+        }
+
+        $tabId = Tab::getIdFromClassName($className);
+
+        if ($tabId !== false) {
+            $tab = new Tab($tabId);
+            $tab->name = $tabNameByLangId;
+            if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')) {
+                $tab->wording = $names['new_name'];
+                $tab->wording_domain = isset($names['trans_domain']) ? $names['trans_domain'] : 'Modules.Mbo.Global';
+            }
+            $return &= $tab->save();
+        }
+    }
+
+    // Change tabs positions
+    $return &= $module->changeTabPosition('AdminParentModulesCatalog', 0);
+    $return &= $module->changeTabPosition('AdminModulesSf', 1);
+
+    $module->postponeTabsTranslations();
+
     (new UpgradeTracker())->postTracking($module, $module->version);
 
-    return true;
+    return $return;
 }

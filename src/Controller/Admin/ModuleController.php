@@ -47,7 +47,7 @@ class ModuleController extends ModuleControllerCore
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog.html.twig',
             [
                 'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $this->trans('Modules catalog', 'Admin.Navigation.Menu'),
+                'layoutTitle' => $this->trans('Marketplace', 'Admin.Navigation.Menu'),
                 'requireAddonsSearch' => true,
                 'requireBulkActions' => false,
                 'showContentHeader' => true,
