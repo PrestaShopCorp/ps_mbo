@@ -104,6 +104,16 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
 
     private function authenticateAddonsUser(Session $session): void
     {
+        // If we receive an accounts_token, we use it to connect to addons
+        $accountsToken = Tools::getValue('accounts_token', null);
+
+        if (null !== $accountsToken) {
+            $session->set('accounts_token', $accountsToken);
+
+            return;
+        }
+
+        // If we don't have accounts_token, we try to connect with addons credentials
         $addonsUsername = Tools::getValue('addons_username', null);
         $addonsPwd = Tools::getValue('addons_pwd', null);
 

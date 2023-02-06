@@ -1,0 +1,18 @@
+#page-header-desc-configuration-accounts_logout {
+  color: #fff!important;
+  background-color: #9BCBA6!important;
+  border-color: #9BCBA6!important;
+  -webkit-box-shadow: none!important;
+  box-shadow: none!important;
+}
+
+.mbo-large-tooltip .tooltip-inner {
+  max-width: unset!important;
+  white-space: pre-line;
+  word-wrap: normal;
+}
+@media screen and (max-width: 300px) {
+.mbo-large-tooltip .tooltip-inner {
+  max-width: 100%;
+}
+}

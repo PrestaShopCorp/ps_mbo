@@ -27,6 +27,7 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
+use LanguageCore as Language;
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
@@ -36,6 +37,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
+use TabCore as Tab;
 
 class ps_mbo extends Module
 {
@@ -49,7 +51,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '4.2.0';
+    public const VERSION = '4.3.0';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminPsMboModule',
@@ -100,7 +102,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.2.0';
+        $this->version = '4.3.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -118,7 +120,7 @@ class ps_mbo extends Module
         $this->displayName = $this->trans('PrestaShop Marketplace in your Back Office', [], 'Modules.Mbo.Global');
         $this->description = $this->trans('Browse the Addons marketplace directly from your back office to better meet your needs.', [], 'Modules.Mbo.Global');
 
-        if ($this->active) {
+        if (self::checkModuleStatus()) {
             $this->bootHooks();
         }
 
@@ -145,6 +147,7 @@ class ps_mbo extends Module
 
             $this->getAdminAuthenticationProvider()->clearCache();
             $this->getAdminAuthenticationProvider()->createApiUser();
+            $this->postponeTabsTranslations();
 
             return true;
         }
@@ -225,6 +228,7 @@ class ps_mbo extends Module
 
         // Install tab before registering shop, we need the tab to be active to create the good token
         $this->handleTabAction('install');
+        $this->postponeTabsTranslations();
 
         // Register online services
         $this->registerShop();
@@ -325,6 +329,15 @@ class ps_mbo extends Module
      */
     public static function checkModuleStatus(): bool
     {
+        // First if the module have active=0 in the DB, the module is inactive
+        $result = Db::getInstance()->getRow('SELECT `active`
+        FROM `' . _DB_PREFIX_ . 'module`
+        WHERE `name` = "ps_mbo"');
+        if ($result && false === (bool) $result['active']) {
+            return false;
+        }
+
+        // If active = 1 in the module table, the module must be associated to at least one shop to be considered as active
         $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`
         FROM `' . _DB_PREFIX_ . 'module` m
         LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
@@ -334,15 +347,6 @@ class ps_mbo extends Module
         } else {
             return false;
         }
-    }
-
-    /**
-     * @return void
-     */
-    private function loadEnv(): void
-    {
-        $dotenv = new Dotenv();
-        $dotenv->loadEnv(__DIR__ . '/.env');
     }
 
     /**
@@ -421,5 +425,68 @@ class ps_mbo extends Module
     public function getAccountsDataProvider(): AccountsDataProvider
     {
         return $this->getService('mbo.accounts.data_provider');
+    }
+
+    /**
+     * @return void
+     */
+    private function loadEnv(): void
+    {
+        $dotenv = new Dotenv();
+        $dotenv->loadEnv(__DIR__ . '/.env');
+    }
+
+    public function postponeTabsTranslations(): void
+    {
+        /**it'
+         * There is an issue for translating tabs during installation :
+         * Active modules translations files are loaded during the kernel boot. So the installing module translations are not known
+         * So, we postpone the tabs translations for the first time the module's code is executed.
+         */
+        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
+        if (!file_exists($lockFile)) {
+            if (!is_dir($this->moduleCacheDir)) {
+                mkdir($this->moduleCacheDir);
+            }
+            $f = fopen($lockFile, 'w+');
+            fclose($f);
+        }
+    }
+
+    private function translateTabsIfNeeded(): void
+    {
+        if (Tools::getValue('controller') !== 'AdminPsMboModule') {
+            return; // Avoid early translation
+        }
+
+        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
+        if (!file_exists($lockFile)) {
+            return;
+        }
+
+        $moduleTabs = Tab::getCollectionFromModule($this->name);
+        $languages = Language::getLanguages(false);
+
+        /**
+         * @var Tab $tab
+         */
+        foreach ($moduleTabs as $tab) {
+            if (!empty($tab->wording) && !empty($tab->wording_domain)) {
+                $tabNameByLangId = [];
+                foreach ($languages as $language) {
+                    $tabNameByLangId[$language['id_lang']] = $this->trans(
+                        $tab->wording,
+                        [],
+                        $tab->wording_domain,
+                        $language['locale']
+                    );
+                }
+
+                $tab->name = $tabNameByLangId;
+                $tab->save();
+            }
+        }
+
+        @unlink($lockFile);
     }
 }

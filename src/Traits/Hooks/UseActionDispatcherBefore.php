@@ -40,6 +40,8 @@ trait UseActionDispatcherBefore
     {
         $controllerName = Tools::getValue('controller');
 
+        $this->translateTabsIfNeeded();
+
         // Registration failed on install, retry it
         if (in_array($controllerName, [
             'AdminPsMboModuleParent',
@@ -51,7 +53,9 @@ trait UseActionDispatcherBefore
             $this->ensureApiConfigIsApplied();
         }
 
-        $this->ensureApiUserExistAndIsLogged($controllerName, $params);
+        if (self::checkModuleStatus()) { // If the module is not active, config values are not set yet
+            $this->ensureApiUserExistAndIsLogged($controllerName, $params);
+        }
     }
 
     private function ensureShopIsRegistered(): void

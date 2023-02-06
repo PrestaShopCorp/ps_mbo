@@ -86,6 +86,10 @@ trait UseActionAdminControllerSetMedia
             $this->context->controller->addJs('/js/jquery/plugins/growl/jquery.growl.js?v=' . $this->version);
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css');
         }
+        if (in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CONNECTION_TOOLBAR)) {
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/connection-toolbar.css');
+            $this->context->controller->addJS($this->getPathUri() . 'views/js/connection-toolbar.js');
+        }
         if ($this->isAdminLegacyContext()) {
             // Add it to have all script work on all pages...
             $this->context->controller->addJs('/admin-dev/themes/default/js/bundle/default.js?v=' . _PS_VERSION_);
@@ -96,7 +100,8 @@ trait UseActionAdminControllerSetMedia
     private function loadCdcMedia(): void
     {
         $controllerName = Tools::getValue('controller');
-        if (!Tab::mayDisplayRecommendedModules($controllerName) &&
+        if (
+            !Tab::mayDisplayRecommendedModules($controllerName) &&
             !in_array($controllerName, self::CONTROLLERS_WITH_CDC_SCRIPT)
         ) {
             return;

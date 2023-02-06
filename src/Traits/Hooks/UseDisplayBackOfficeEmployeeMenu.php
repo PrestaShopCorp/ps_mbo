@@ -47,14 +47,14 @@ trait UseDisplayBackOfficeEmployeeMenu
         $apiClient = $this->get('mbo.cdc.client.distribution_api');
 
         try {
-            $config = $apiClient->getConf();
+            $config = $apiClient->getEmployeeMenu();
             if (empty($config) || empty($config->userMenu) || !is_array($config->userMenu)) {
                 return;
             }
             foreach ($config->userMenu as $link) {
                 $versionFrom = Version::convertFromApi($link->ps_version_from);
                 $versionTo = Version::convertFromApi($link->ps_version_to);
-                if (version_compare($versionFrom, _PS_VERSION_, '<') || version_compare(_PS_VERSION_, $versionTo, '>')) {
+                if (version_compare(_PS_VERSION_, $versionFrom, '<') || version_compare(_PS_VERSION_, $versionTo, '>')) {
                     continue;
                 }
                 $params['links']->add(
