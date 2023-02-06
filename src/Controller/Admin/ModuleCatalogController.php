@@ -21,8 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use PrestaShop\Module\Mbo\Addons\Toolbar;
-use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,25 +31,6 @@ use Symfony\Component\HttpFoundation\Response;
 class ModuleCatalogController extends ModuleAbstractController
 {
     public const CONTROLLER_NAME = 'ADMINMODULESSF';
-
-    /**
-     * @var Toolbar
-     */
-    private $toolbar;
-
-    /**
-     * @var ContextBuilder
-     */
-    private $cdcContextBuilder;
-
-    public function __construct(
-        Toolbar $toolbar,
-        ContextBuilder $cdcContextBuilder
-    ) {
-        parent::__construct();
-        $this->toolbar = $toolbar;
-        $this->cdcContextBuilder = $cdcContextBuilder;
-    }
 
     /**
      * Module Catalog page
@@ -66,10 +45,25 @@ class ModuleCatalogController extends ModuleAbstractController
      */
     public function indexAction(): Response
     {
+        $moduleUri = __PS_BASE_URI__ . 'modules/ps_mbo/';
+
+        $extraParams = [
+            'cdc_error_templating_url' => $moduleUri . 'views/js/cdc-error-templating.js',
+            'cdc_error_templating_css' => $moduleUri . 'views/css/cdc-error-templating.css',
+        ];
+
+        $cdcJsFile = getenv('MBO_CDC_URL');
+        if (false === $cdcJsFile || !is_string($cdcJsFile) || empty($cdcJsFile)) {
+            $extraParams['cdc_script_not_found'] = true;
+            $extraParams['cdc_error_url'] = $moduleUri . 'views/js/cdc-error.js';
+        } else {
+            $extraParams['cdc_url'] = $cdcJsFile;
+        }
+
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog.html.twig',
             [
-                'layoutHeaderToolbarBtn' => $this->toolbar->getToolbarButtons(),
+                'layoutHeaderToolbarBtn' => $this->get('mbo.addons.toolbar')->getToolbarButtons(),
                 'layoutTitle' => $this->trans('Marketplace', 'Modules.Mbo.Modulescatalog'),
                 'requireAddonsSearch' => true,
                 'requireBulkActions' => false,
@@ -78,12 +72,12 @@ class ModuleCatalogController extends ModuleAbstractController
                 'help_link' => $this->generateSidebarLink('AdminModules'),
                 'requireFilterStatus' => false,
                 'level' => $this->authorizationLevel(static::CONTROLLER_NAME),
-                'shop_context' => $this->cdcContextBuilder->getViewContext(),
+                'shop_context' => $this->get('mbo.cdc.context_builder')->getViewContext(),
                 'errorMessage' => $this->trans(
                     'You do not have permission to add this.',
                     'Admin.Notifications.Error'
                 ),
-            ]
+            ] + $extraParams
         );
     }
 

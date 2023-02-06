@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,6 +18,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Service\View;
@@ -110,7 +112,7 @@ class ContextBuilder
     {
         $modules = [];
         // Filter : remove uninstalled modules
-        foreach ($this->getInstalledModules() as $installedModule) {
+        foreach ($this->listInstalledModulesAndStatuses() as $installedModule) {
             if ($installedModule['status'] !== ModuleStateMachine::STATUS_UNINSTALLED) {
                 $modules[] = $installedModule['name'];
             }
@@ -122,6 +124,9 @@ class ContextBuilder
             'shop_id' => $this->accountsDataProvider->getAccountsShopId(),
             'iso_lang' => $this->getLanguage()->getIsoCode(),
             'iso_code' => $this->getCountry()->iso_code,
+            'mbo_version' => \ps_mbo::VERSION,
+            'ps_version' => _PS_VERSION_,
+            'shop_url' => Config::getShopUrl(),
         ];
     }
 
@@ -160,10 +165,18 @@ class ContextBuilder
             'shop_url' => Config::getShopUrl(),
             'shop_uuid' => Config::getShopMboUuid(),
             'mbo_token' => $this->adminAuthenticationProvider->getMboJWT(),
+            'mbo_version' => \ps_mbo::VERSION,
+            'mbo_reset_url' => $this->router->generate('admin_module_manage_action', [
+                'action' => 'reset',
+                'module_name' => 'ps_mbo',
+            ]),
             'user_id' => $context->cookie->id_employee,
             'admin_token' => $token,
             'refresh_url' => $refreshUrl,
             'installed_modules' => $this->getInstalledModules(),
+            'accounts_user_id' => $this->accountsDataProvider->getAccountsUserId(),
+            'accounts_shop_id' => $this->accountsDataProvider->getAccountsShopId(),
+            'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
         ];
     }
 
@@ -191,6 +204,35 @@ class ContextBuilder
         }
 
         return $currency->iso_code;
+    }
+
+    /**
+     * @return array<array>
+     */
+    private function listInstalledModulesAndStatuses(): array
+    {
+        $installedModulesCollection = $this->moduleRepository->getList();
+
+        $installedModules = [];
+
+        /** @var CoreModule $installedModule */
+        foreach ($installedModulesCollection as $installedModule) {
+            $moduleAttributes = $installedModule->getAttributes();
+            $moduleDiskAttributes = $installedModule->getDiskAttributes();
+            $moduleDatabaseAttributes = $installedModule->getDatabaseAttributes();
+
+            $module = new Module($moduleAttributes->all(), $moduleDiskAttributes->all(), $moduleDatabaseAttributes->all());
+
+            $moduleName = $module->get('name');
+            $moduleStatus = $module->getStatus();
+
+            $installedModules[] = [
+                'name' => $moduleName,
+                'status' => $moduleStatus,
+            ];
+        }
+
+        return $installedModules;
     }
 
     /**

@@ -7,6 +7,7 @@ use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
 use PrestaShop\Module\Mbo\Module\CommandHandler\ModuleStatusTransitionCommandHandler;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Tools;
 
 class ModuleTransitionExecutor implements ServiceExecutorInterface
@@ -49,6 +50,10 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
         if (empty($transition) || empty($moduleName)) {
             throw new QueryParamsException('You need transition and module parameters');
         }
+
+        // Authenticate user to addons if credentials are provided
+        $this->authenticateAddonsUser($psMbo->get('session'));
+
         $command = new ModuleStatusTransitionCommand($transition, $moduleName, $source);
 
         /** @var \PrestaShop\Module\Mbo\Module\Module $module */
@@ -95,5 +100,29 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
         }
 
         return $url;
+    }
+
+    private function authenticateAddonsUser(Session $session): void
+    {
+        // If we receive an accounts_token, we use it to connect to addons
+        $accountsToken = Tools::getValue('accounts_token', null);
+
+        if (null !== $accountsToken) {
+            $session->set('accounts_token', $accountsToken);
+
+            return;
+        }
+
+        // If we don't have accounts_token, we try to connect with addons credentials
+        $addonsUsername = Tools::getValue('addons_username', null);
+        $addonsPwd = Tools::getValue('addons_pwd', null);
+
+        if (!isset($addonsUsername) || !isset($addonsPwd)) {
+            return;
+        }
+
+        $session->set('username_addons_v2', $addonsUsername);
+        $session->set('password_addons_v2', $addonsPwd);
+        $session->set('is_contributor', '0');
     }
 }

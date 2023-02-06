@@ -17,9 +17,9 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *}
 
-<script defer>
+<script>
   if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
-    if (typeof renderCdcError !== undefined) {
+    if (typeof renderCdcError === 'function') {
       window.$(document).ready(function() {
         renderCdcError($('#cdc-more-module-container'));
       });

@@ -30,7 +30,6 @@ class Filters implements FiltersInterface
      * @var array<string, int>
      */
     protected $flags = [
-        Filters\Origin::FLAG => Filters\Origin::ALL,
         Filters\Status::FLAG => Filters\Status::ALL,
         Filters\Type::FLAG => Filters\Type::ALL,
     ];
@@ -43,18 +42,6 @@ class Filters implements FiltersInterface
     protected function isFlagSet(string $type, int $flag): bool
     {
         return ($this->flags[$type] & $flag) === $flag;
-    }
-
-    /**
-     * @param int $origin
-     *
-     * @return FiltersInterface
-     */
-    public function setOrigin(int $origin): FiltersInterface
-    {
-        $this->flags[Filters\Origin::FLAG] = $origin;
-
-        return $this;
     }
 
     /**
@@ -79,16 +66,6 @@ class Filters implements FiltersInterface
         $this->flags[Filters\Type::FLAG] = $type;
 
         return $this;
-    }
-
-    /**
-     * @param int $origin
-     *
-     * @return bool
-     */
-    public function hasOrigin(int $origin): bool
-    {
-        return $this->isFlagSet(Filters\Origin::FLAG, $origin);
     }
 
     /**

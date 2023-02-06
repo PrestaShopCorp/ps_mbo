@@ -42,6 +42,10 @@
                       {{ "Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?"|trans({}, 'Modules.Mbo.Modulescatalog') }}
                       <a href="{{ signUpLink }}" target="_blank">{{ 'Sign up now'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
                   </p>
+                  <p>
+                      {{ "If you created your account using Google, please follow the forgotten password procedure of Addons Marketplace to create your password : "|trans({}, 'Modules.Mbo.Modulescatalog') }}
+                      <a href="{{ passwordForgottenLink }}" target="_blank">{{ 'Reset your password'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
+                  </p>
                   <form id="addons-connect-form"
                         action="{{ path('admin_mbo_addons_login') }}"
                         method="POST"
@@ -59,11 +63,11 @@
                     <label>
                       <input type="checkbox" name="addons_remember_me">
                       <i class="md-checkbox-control"></i>
-                      {{ 'Remember me'|trans({}, 'Admin.Global') }}
+                        {{ 'Remember me'|trans({}, 'Modules.Mbo.Addons') }}
                     </label>
                   </div>
                   <div class="text-center">
-                    <button type="submit" class="btn btn-primary">{{ "Let's go!"|trans({}, 'Admin.Actions') }}</button>
+                      <button type="submit" class="btn btn-primary">{{ "Let's go!"|trans({}, 'Modules.Mbo.Addons') }}</button>
                     <div id="addons_login_btn" class="spinner" style="display:none;"></div>
                   </div>
                 </form>
@@ -99,6 +103,6 @@
           <a class="btn btn-primary uppercase" href="{{ path('admin_mbo_addons_logout') }}" id="module-modal-addons-logout-ack">{{ 'Yes, log out'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
       </div>
 
+        </div>
     </div>
-  </div>
 </div>

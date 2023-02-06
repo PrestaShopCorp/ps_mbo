@@ -49,7 +49,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '4.1.3';
+    public const VERSION = '4.3.0';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminPsMboModule',
@@ -58,7 +58,6 @@ class ps_mbo extends Module
     ];
 
     public const CONTROLLERS_WITH_CDC_SCRIPT = [
-        'AdminPsMboModule',
         'AdminModulesNotifications',
         'AdminModulesUpdates',
         'AdminModulesManage',
@@ -101,7 +100,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.1.3';
+        $this->version = '4.3.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -347,15 +346,6 @@ class ps_mbo extends Module
     }
 
     /**
-     * @return void
-     */
-    private function loadEnv(): void
-    {
-        $dotenv = new Dotenv();
-        $dotenv->loadEnv(__DIR__ . '/.env');
-    }
-
-    /**
      * Get an existing or build an instance of AdminAuthenticationProvider
      *
      * @return \PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider
@@ -431,5 +421,14 @@ class ps_mbo extends Module
     public function getAccountsDataProvider(): AccountsDataProvider
     {
         return $this->getService('mbo.accounts.data_provider');
+    }
+
+    /**
+     * @return void
+     */
+    private function loadEnv(): void
+    {
+        $dotenv = new Dotenv();
+        $dotenv->loadEnv(__DIR__ . '/.env');
     }
 }

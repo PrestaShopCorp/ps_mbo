@@ -20,7 +20,7 @@
 
 (function() {
   window.$(document).ready(function() {
-    if (typeof renderCdcError !== undefined) {
+    if (typeof renderCdcError === 'function') {
       window.$(document).ready(function() {
         renderCdcError($('.cdc-container'));
       });

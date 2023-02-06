@@ -29,9 +29,11 @@ interface UserInterface
     public function isAuthenticated(): bool;
 
     /**
+     * @pararm bool $encrypted
+     *
      * @return array{username: string, password: string}
      */
-    public function getCredentials(): array;
+    public function getCredentials(bool $encrypted = false): array;
 
     /**
      * @return array{username: string}

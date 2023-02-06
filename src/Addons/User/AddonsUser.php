@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Addons\User;
 
 use Exception;
-use PhpEncryptionCore as PhpEncryption;
+use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -32,9 +32,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class AddonsUser implements UserInterface
 {
     /**
-     * @var PhpEncryption
+     * @var CredentialsEncryptor
      */
-    private $encryption;
+    protected $encryption;
 
     /**
      * @var Request
@@ -46,11 +46,20 @@ class AddonsUser implements UserInterface
      */
     private $session;
 
-    public function __construct(SessionInterface $session)
-    {
-        $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
+    /**
+     * @var AccountsDataProvider
+     */
+    private $accountsDataProvider;
+
+    public function __construct(
+        SessionInterface $session,
+        CredentialsEncryptor $encryption,
+        AccountsDataProvider $accountsDataProvider
+    ) {
+        $this->encryption = $encryption;
         $this->request = Request::createFromGlobals();
         $this->session = $session;
+        $this->accountsDataProvider = $accountsDataProvider;
     }
 
     /**
@@ -58,18 +67,35 @@ class AddonsUser implements UserInterface
      */
     public function isAuthenticated(): bool
     {
-        return $this->hasCookieAuthenticated() || $this->hasSessionAuthenticated();
+        return $this->hasAccountsTokenInSession() || $this->isConnectedOnPsAccounts() || $this->hasCookieAuthenticated() || $this->hasSessionAuthenticated();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getCredentials(): array
+    public function getCredentials(bool $encrypted = false): array
     {
-        return [
-            'username' => $this->getAndDecrypt('username_addons'),
-            'password' => $this->getAndDecrypt('password_addons'),
-        ];
+        $accountsToken = $this->getFromSession('accounts_token');
+
+        if (null !== $accountsToken) {
+            return ['accounts_token' => $accountsToken];
+        }
+
+        // accounts
+        $accountsToken = $this->accountsDataProvider->getAccountsToken();
+        if (!empty($accountsToken)) {
+            return ['accounts_token' => $accountsToken];
+        }
+
+        return $encrypted ?
+            [
+                'username' => $this->get('username_addons_v2'),
+                'password' => $this->get('password_addons_v2'),
+            ]
+            : [
+                'username' => $this->getAndDecrypt('username_addons_v2'),
+                'password' => $this->getAndDecrypt('password_addons_v2'),
+            ];
     }
 
     /**
@@ -77,9 +103,33 @@ class AddonsUser implements UserInterface
      */
     public function getEmail(): array
     {
+        $email = null;
+        if ($this->isAuthenticated()) {
+            // Connected on ps_accounts
+            if ($this->isConnectedOnPsAccounts()) {
+                $email = $this->accountsDataProvider->getAccountsUserEmail();
+            } elseif ($this->hasAccountsTokenInSession()) { // Connected on ps_accounts with session
+                $email = $this->jwtDecode($this->getFromSession('accounts_token'))['email'];
+            } else { // Connected on addons
+                $email = $this->getAndDecrypt('username_addons_v2');
+            }
+        }
+
         return [
-            'username' => $this->getAndDecrypt('username_addons'),
+            'username' => $email,
         ];
+    }
+
+    public function hasAccountsTokenInSession(): bool
+    {
+        return null !== $this->getFromSession('accounts_token');
+    }
+
+    public function isConnectedOnPsAccounts(): bool
+    {
+        $accountsToken = $this->accountsDataProvider->getAccountsToken();
+
+        return !empty($accountsToken);
     }
 
     /**
@@ -105,23 +155,35 @@ class AddonsUser implements UserInterface
     /**
      * @param string $key
      *
-     * @return string|bool|null
+     * @return string|null
      *
      * @throws Exception
      */
-    private function getAndDecrypt(string $key)
+    private function getAndDecrypt(string $key): ?string
     {
-        $sessionValue = $this->getFromSession($key);
-        if (null !== $sessionValue) {
-            return $this->encryption->decrypt($sessionValue);
-        }
-
-        $cookieValue = $this->getFromCookie($key);
-        if (null !== $cookieValue) {
-            return $this->encryption->decrypt($cookieValue);
+        $value = $this->get($key);
+        if (null !== $value) {
+            return $this->encryption->decrypt($value);
         }
 
         return null;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return string|null
+     *
+     * @throws Exception
+     */
+    private function get(string $key): ?string
+    {
+        $sessionValue = $this->getFromSession($key);
+        if (null !== $sessionValue) {
+            return $sessionValue;
+        }
+
+        return $this->getFromCookie($key);
     }
 
     /**
@@ -129,8 +191,8 @@ class AddonsUser implements UserInterface
      */
     private function hasCookieAuthenticated(): bool
     {
-        return $this->getFromCookie('username_addons')
-            && $this->getFromCookie('password_addons');
+        return $this->getFromCookie('username_addons_v2')
+            && $this->getFromCookie('password_addons_v2');
     }
 
     /**
@@ -138,7 +200,19 @@ class AddonsUser implements UserInterface
      */
     private function hasSessionAuthenticated(): bool
     {
-        return $this->getFromSession('username_addons')
-            && $this->getFromSession('password_addons');
+        return $this->getFromSession('username_addons_v2')
+            && $this->getFromSession('password_addons_v2');
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    private function jwtDecode(string $token): array
+    {
+        $payload = explode('.', $token)[1];
+        $jsonToken = base64_decode($payload);
+
+        return json_decode($jsonToken, true);
     }
 }
