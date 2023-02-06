@@ -23,7 +23,7 @@
  *
  * @return bool
  */
-function upgrade_module_4_2_1(Module $module): bool
+function upgrade_module_4_3_0(Module $module): bool
 {
     $module->updateHooks();
     $module->updateTabs();
