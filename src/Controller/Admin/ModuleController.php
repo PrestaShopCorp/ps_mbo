@@ -21,6 +21,7 @@
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
