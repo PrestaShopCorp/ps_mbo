@@ -64,7 +64,7 @@ class ModuleSelectionController extends FrameworkBundleAdminController
                         $this->get('mbo.addons.links_provider')->getSelectionLink()
                     ),
                     'layoutHeaderToolbarBtn' => [],
-                    'layoutTitle' => $this->trans('Module selection', 'Modules.Mbo.Modulesselection'),
+                    'layoutTitle' => $this->trans('Modules in the spotlight', 'Modules.Mbo.Modulesselection'),
                     'requireAddonsSearch' => true,
                     'requireBulkActions' => false,
                     'showContentHeader' => true,
