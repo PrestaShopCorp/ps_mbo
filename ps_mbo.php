@@ -314,7 +314,7 @@ class ps_mbo extends Module
         // has to be loaded in header to prevent flash of content
         $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
 
-        $this->context->controller->addCSS($this->getPathUri() . 'views/css/catalog-card.css');
+        $this->context->controller->addCSS($this->getPathUri() . 'views/css/catalog.css');
 
         if (
             $this->shouldAttachRecommendedModulesButton()

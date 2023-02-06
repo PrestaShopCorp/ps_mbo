@@ -1,3 +1,27 @@
+.module-catalog-page hr.top-menu-separator {
+  margin: 24px 0;
+}
+
+.module-top-menu {
+  margin-top: 8px;
+}
+
+.module-sorting-search-wording {
+  display: flex;
+}
+
+.module-sorting-menu {
+  margin-bottom: 24px;
+}
+
+.module-search-result-title.module-search-result-wording {
+  margin-bottom: 0;
+}
+
+.module-sorting-search-wording__tooltip-container {
+  margin-top: 3px;
+}
+
 .mbo-modules-catalog {
   --theme-secondary: #6c868e;
   --theme-secondary-pressed: #566b72;
@@ -22,7 +46,7 @@
 }
 
 .mbo-module-grid__item {
-  padding: 8px 12px;
+  padding: 0px 12px 16px 12px;
   display: flex;
 }
 
