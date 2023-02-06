@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Traits;
 
 use Db;
 use LanguageCore as Language;
+use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use Symfony\Component\String\UnicodeString;
 use TabCore as Tab;
 use ValidateCore as Validate;
@@ -81,8 +82,11 @@ trait HaveTabs
     ];
 
     /**
+     * This method is called when module is enabled/disabled.
+     *
      * Apply given method on all Tabs
      * Values can be 'install' or 'uninstall'
+     * If action is install, the tabs are activated if relevant.
      *
      * @param string $action
      *
@@ -108,13 +112,13 @@ trait HaveTabs
 
     /**
      * Install Tab.
-     * Used in upgrade script.
+     * Used when module is enabled and in upgrade script.
      *
      * @param array $tabData
      *
      * @return bool
      */
-    public function installTab(array $tabData): bool
+    public function installTab(array $tabData, bool $activate = true): bool
     {
         $position = $tabData['position'] ?? 0;
         $tabNameByLangId = array_fill_keys(
@@ -130,7 +134,11 @@ trait HaveTabs
         $tab->position = $position;
         $tab->id_parent = $idParent;
         $tab->name = $tabNameByLangId;
-        $tab->active = $tabData['visible'];
+        $tab->active = $tabData['visible'] ? $tabData['visible'] : false;
+
+        if (false === $activate) { // This case will happen when upgrading the module. We disable all the tabs
+            $tab->active = false;
+        }
 
         // This will reorder the tabs starting with 1
         $tab->cleanPositions($idParent);
@@ -175,6 +183,10 @@ trait HaveTabs
     }
 
     /**
+     * This method is called on module upgrade.
+     * Tabs will be updated if the module is active.
+     * But they will be all unactivated.
+     *
      * Update tabs in DB.
      * Search current tabs registered in DB and compare them with the tabs declared in the module.
      * If a tab is missing, it will be added. If a tab is not declared in the module, it will be removed.
@@ -183,6 +195,12 @@ trait HaveTabs
      */
     public function updateTabs(): void
     {
+        if (false === self::checkModuleStatus()) {
+            // If the MBO module is not active.
+            // We don't update the tabs, it will be done when the module is enabled.
+            return;
+        }
+
         $tabData = Db::getInstance()->executeS('
             SELECT class_name
             FROM `' . _DB_PREFIX_ . 'tab`
@@ -210,11 +228,13 @@ trait HaveTabs
             }
         }
 
+        // Delete the tabs that are not relevant anymore
         foreach ($oldTabs as $oldTab) {
             $this->uninstallTab(['class_name' => $oldTab]);
         }
+        // Install the new tabs
         foreach ($newTabs as $newTab) {
-            $this->installTab(static::$ADMIN_CONTROLLERS[$newTab]);
+            $this->installTab(static::$ADMIN_CONTROLLERS[$newTab], false);
         }
     }
 }

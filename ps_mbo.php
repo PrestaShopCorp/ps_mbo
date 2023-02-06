@@ -118,7 +118,7 @@ class ps_mbo extends Module
         $this->displayName = $this->trans('PrestaShop Marketplace in your Back Office', [], 'Modules.Mbo.Global');
         $this->description = $this->trans('Browse the Addons marketplace directly from your back office to better meet your needs.', [], 'Modules.Mbo.Global');
 
-        if ($this->active) {
+        if (self::checkModuleStatus()) {
             $this->bootHooks();
         }
 
@@ -325,6 +325,15 @@ class ps_mbo extends Module
      */
     public static function checkModuleStatus(): bool
     {
+        // First if the module have active=0 in the DB, the module is inactive
+        $result = Db::getInstance()->getRow('SELECT `active`
+        FROM `' . _DB_PREFIX_ . 'module`
+        WHERE `name` = "ps_mbo"');
+        if ($result && false === (bool) $result['active']) {
+            return false;
+        }
+
+        // If active = 1 in the module table, the module must be associated to at least one shop to be considered as active
         $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`
         FROM `' . _DB_PREFIX_ . 'module` m
         LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
