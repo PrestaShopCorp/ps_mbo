@@ -85,6 +85,10 @@ class ModuleController extends ModuleControllerCore
             return $deniedAccess;
         }
 
+        /**
+         * 
+         * @var AdminModuleDataProvider $modulesProvider
+         */
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
         $responseArray = [];
