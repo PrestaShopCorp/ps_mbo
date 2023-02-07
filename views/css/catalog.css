@@ -23,6 +23,7 @@
 }
 
 .mbo-modules-catalog {
+  --theme-primary: #25b9d7;
   --theme-secondary: #6c868e;
   --theme-secondary-pressed: #566b72;
   --theme-secondary-hover: #b7ced3;
@@ -202,7 +203,7 @@
 }
 
 .mbo-module-card a.mbo-module-card__read-more {
-  color: var(--theme-secondary-pressed);
+  color: var(--theme-primary);
   font-weight: 600;
   font-size: 14px;
   line-height: 19px;
