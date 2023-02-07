@@ -33,6 +33,7 @@ final class AddonsCredentialsEncryptionListener
      * @var SessionInterface
      */
     private $session;
+
     /**
      * @var CredentialsEncryptor
      */

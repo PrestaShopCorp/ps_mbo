@@ -21,11 +21,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Addons\Listener\AddonsCredentialsEncryptionListener;
 use PrestaShop\Module\Mbo\Addons\User\CredentialsEncryptor;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 trait UseActionBeforeUninstallModule
 {
@@ -45,6 +49,26 @@ trait UseActionBeforeUninstallModule
 
         if ('ps_mbo' === $moduleName) {
             $this->storeAddonsCredentials($params, 'uninstall');
+
+            // Remove AddonsCredentialsEncryptionListener if the files will be deleted after uninstall
+            // because The class won't be available anymore
+            $requestParams = $params['request']->request->get('actionParams');
+            if (isset($requestParams['deletion']) && true === (bool)$requestParams['deletion']) {
+                $this->unloadAddonsCredentialsEncryptionListener();
+            }
+        }
+    }
+
+    private function unloadAddonsCredentialsEncryptionListener(): void
+    {
+        /** @var EventDispatcherInterface $dispatcher */
+        $dispatcher = $this->get('event_dispatcher');
+        foreach ($dispatcher->getListeners(KernelEvents::RESPONSE) as $listener) {
+            if ($listener[0] instanceof AddonsCredentialsEncryptionListener) {
+                $dispatcher->removeListener(KernelEvents::RESPONSE, $listener[0]);
+
+                return;
+            }
         }
     }
 }
