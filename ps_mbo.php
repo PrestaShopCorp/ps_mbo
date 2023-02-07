@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2020 PrestaShop and Contributors
  *
@@ -557,7 +556,8 @@ class ps_mbo extends Module
      */
     public function updateHooks()
     {
-        $hookData = (array) Db::getInstance()->executeS('
+        $hookData = (array) Db::getInstance()->executeS(
+            '
             SELECT DISTINCT(phm.id_hook), name
             FROM `' . _DB_PREFIX_ . 'hook_module` phm
             JOIN `' . _DB_PREFIX_ . 'hook` ph ON ph.id_hook=phm.id_hook
