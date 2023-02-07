@@ -28,9 +28,9 @@ use PrestaShop\Module\Mbo\Api\Exception\IncompleteSignatureParamsException;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
 use PrestaShop\Module\Mbo\Api\Exception\RetrieveNewKeyException;
 use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
-use PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandler;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker;
+use PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler;
 use PrestaShop\Module\Mbo\Helpers\Config as ConfigHelper;
 use ps_mbo;
 use Psr\Log\LoggerInterface;
@@ -86,13 +86,10 @@ abstract class AbstractAdminApiController extends ModuleAdminController
             $this->logger->info('API Call received = ' . $_SERVER['REQUEST_URI']);
             $this->authorize();
         } catch (IncompleteSignatureParamsException $exception) {
-            $this->errorHandler->handle($exception);
             $this->exitWithExceptionMessage($exception);
         } catch (UnauthorizedException $exception) {
-            $this->errorHandler->handle($exception);
             $this->exitWithExceptionMessage($exception);
         } catch (RetrieveNewKeyException $exception) {
-            $this->errorHandler->handle($exception);
             $this->exitWithExceptionMessage($exception);
         }
 
@@ -123,6 +120,8 @@ abstract class AbstractAdminApiController extends ModuleAdminController
         } elseif ($exception instanceof RetrieveNewKeyException) {
             $code = Config::RETRIEVE_NEW_KEY_ERROR_CODE;
         }
+
+        $this->errorHandler->handle($exception, $code, false);
 
         $response = [
             'object_type' => $this->type,

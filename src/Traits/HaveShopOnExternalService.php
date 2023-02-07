@@ -26,6 +26,7 @@ use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
+use PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler;
 use Ramsey\Uuid\Uuid;
 use Shop;
 
@@ -73,9 +74,12 @@ trait HaveShopOnExternalService
             $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
             $distributionApi->setBearer($this->getAdminAuthenticationProvider()->getMboJWT());
             $distributionApi->unregisterShop();
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             // Do nothing here, the exception is caught to avoid displaying an error to the client
             // Furthermore, the operation can't be tried again later as the module is now disabled or uninstalled
+            /* @var ErrorHandler $errorHandler */
+            $errorHandler = $this->getService(ErrorHandler::class);
+            $errorHandler->handle($exception, null, false);
         }
     }
 
@@ -108,6 +112,13 @@ trait HaveShopOnExternalService
                 unlink($lockFile);
             }
         } catch (Exception $exception) {
+            /* @var ErrorHandler $errorHandler */
+            $errorHandler = $this->getService(ErrorHandler::class);
+            $errorHandler->handle($exception, null, false, [
+                'method' => $method,
+                'params' => $params,
+            ]);
+
             // Create the lock file
             if (!file_exists($lockFile)) {
                 if (!is_dir($this->moduleCacheDir)) {
