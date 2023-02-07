@@ -219,18 +219,58 @@
   color: var(--brand-dark-blue);
 }
 
-.mbo-module-card .btn-group.module-actions .btn.btn-outline-primary {
-  border-color: var(--theme-secondary);
-  color: var(--theme-secondary);
+.mbo-module-card .btn-group.module-actions {
+  display: flex;
+  gap: 16px;
 }
 
-.mbo-module-card .btn-group.module-actions .btn.btn-outline-primary:hover {
-  border-color: var(--theme-secondary-hover);
+.mbo-module-card .btn-group.module-actions .btn.btn-outline-primary {
+  border-color: var(--theme-secondary);
+  border-radius: 4px;
+}
+
+.mbo-module-card
+  .btn-group.module-actions
+  .btn.btn-outline-primary:first-child {
+  background-color: var(--theme-secondary);
   color: white;
+  flex: 1;
+}
+
+.mbo-module-card
+  .btn-group.module-actions
+  .btn.btn-outline-primary:not(:first-child) {
+  color: var(--theme-secondary);
+  flex: 0;
+}
+
+.mbo-module-card
+  .btn-group.module-actions
+  .btn.btn-outline-primary:first-child:hover {
+  color: white;
+  border-color: var(--theme-secondary-hover);
   background-color: var(--theme-secondary-hover);
 }
 
-.mbo-module-card .btn-group.module-actions .btn.btn-outline-primary:active,
+.mbo-module-card
+  .btn-group.module-actions
+  .btn.btn-outline-primary:not(:first-child):hover {
+  color: white;
+  border-color: var(--theme-secondary-hover);
+  background-color: var(--theme-secondary-hover);
+}
+
+.mbo-module-card
+  .btn-group.module-actions
+  .btn.btn-outline-primary:first-child:active {
+  color: white;
+  border-color: var(--theme-secondary-active);
+  background-color: var(--theme-secondary-active);
+}
+
+.mbo-module-card
+  .btn-group.module-actions
+  .btn.btn-outline-primary:not(:first-child):active,
 .mbo-module-card
   .btn-group.module-actions.show
   > .btn-outline-primary.dropdown-toggle {
