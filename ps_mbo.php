@@ -522,7 +522,7 @@ class ps_mbo extends Module
                 break;
             case 'AdminSpecificPriceRule':
             case 'AdminManufacturers':
-            case 'AdminAttributesGroups':
+            case 'AdminFeatures':
             case 'AdminCartRules':
             case 'AdminProducts':
                 $title = $this->trans('Optimize product catalog', [], 'Modules.Mbo.Recommendedmodulesandservices');

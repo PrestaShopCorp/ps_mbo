@@ -32,18 +32,22 @@
   max-width: 56px;
   width: 56px;
 }
-
-#content.bootstrap .panel .nav-tabs .nav-item.show .nav-link,
-#content.bootstrap .panel .nav-tabs .nav-item.active .nav-link ,
-#content.bootstrap #modules_list_container_tab_modal  .nav-tabs .nav-item.active .nav-link 
-{
-  border-bottom: 3px solid #25b9d7 ;
-  
+#main-div
+  #modules_list_container
+  #modules_list_container_tab_modal
+  .nav-tabs
+  .nav-item.active
+  .nav-link.active,
+#content.bootstrap .panel .nav-tabs .nav-item.active .nav-link,
+#content.bootstrap #modules_list_container_tab_modal .nav-item.active {
+  border-bottom: 3px solid #25b9d7 !important;
+  border-top: none;
+  margin-bottom: 10px;
 }
 #recommended-modules-container .nav-tabs .nav-link.active {
-  border-bottom: 3px solid #25b9d7 ;
+  border-bottom: 3px solid #25b9d7;
   border-top: none;
-  margin-bottom : 10px
+  margin-bottom: 10px;
 }
 
 #content.bootstrap .nav-tabs .nav-item.show .nav-link,
@@ -114,28 +118,32 @@
 }
 
 #content.bootstrap #modules_list_container_content button.spinner {
-  color:#fff;
-  background-color:#fff;
-  width:40px;
-  width:2.5rem;
-  height:40px;
-  height:2.5rem;
-  border-radius:2.5rem;
-  border-right-color:#25b9d7;
-  border-bottom-color:#25b9d7;
-  border-width:3px;
-  border-width:.1875rem;
-  border-style:solid;
-  font-size:0;
-  outline:none;
-  display:inline-block;
-  border-left-color:#bbcdd2;
-  border-top-color:#bbcdd2;
-  animation:rotating 2s linear infinite;
+  color: #fff;
+  background-color: #fff;
+  width: 40px;
+  width: 2.5rem;
+  height: 40px;
+  height: 2.5rem;
+  border-radius: 2.5rem;
+  border-right-color: #25b9d7;
+  border-bottom-color: #25b9d7;
+  border-width: 3px;
+  border-width: 0.1875rem;
+  border-style: solid;
+  font-size: 0;
+  outline: none;
+  display: inline-block;
+  border-left-color: #bbcdd2;
+  border-top-color: #bbcdd2;
+  animation: rotating 2s linear infinite;
 }
 
 #content.bootstrap #tab_modules_list_installed > tbody > tr > td:nth-child(2),
-#content.bootstrap #tab_modules_list_not_installed > tbody > tr > td:nth-child(2) {
+#content.bootstrap
+  #tab_modules_list_not_installed
+  > tbody
+  > tr
+  > td:nth-child(2) {
   width: 90%;
 }
 
@@ -145,7 +153,7 @@
   background-color: #fff;
   border: 1px solid #dbe6e9;
   border-radius: 5px;
-  box-shadow: 0 0 4px 0 rgba(0,0,0,.06);
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
 }
 
 #content.bootstrap .card-body {
@@ -161,7 +169,11 @@
   margin-top: 15px;
 }
 
-.bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn.mbo-modules-recommended-button {
+.bootstrap
+  .page-head
+  .toolbarBox
+  .btn-toolbar
+  .toolbar_btn.mbo-modules-recommended-button {
   color: #fff;
   background-color: #6c868e;
   border-color: #6c868e;
@@ -170,33 +182,45 @@
   display: flex;
   align-items: center;
 }
-.bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn.mbo-modules-recommended-button i {
+.bootstrap
+  .page-head
+  .toolbarBox
+  .btn-toolbar
+  .toolbar_btn.mbo-modules-recommended-button
+  i {
   display: inline-block;
   color: #fff;
   margin-right: 5px;
 }
 
-.bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn.mbo-modules-recommended-button:hover {
+.bootstrap
+  .page-head
+  .toolbarBox
+  .btn-toolbar
+  .toolbar_btn.mbo-modules-recommended-button:hover {
   color: #fff;
   background-color: #b7ced3;
   border-color: #b7ced3;
 }
-.recommended-modal-description{
+.recommended-modal-description {
   margin-bottom: 30px;
   margin-bottom: 10px;
   font-size: 14px;
   line-height: 19px;
-  
 }
-.recommended-modal-content-description{
+.recommended-modal-content-description {
   font-size: 14px;
   line-height: 19px;
   margin-left: 10px;
   margin-top: 10px;
 }
 
-.panel#recommended-modules-container .recommended-modal-content-description{
-margin-left: 0px;
+.panel#recommended-modules-container .recommended-modal-content-description {
+  margin-left: 0px;
+}
+
+.iconButtonRecommanded{
+  margin-right: 20px;
 }
 
 @media (min-width: 768px) {
