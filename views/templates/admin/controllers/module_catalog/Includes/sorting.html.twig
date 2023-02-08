@@ -27,8 +27,17 @@
     <div class="col-lg-6">
       <div class="module-sorting-search-wording">
         <span id="selected_modules" class="module-search-result-title module-search-result-wording">{{ '%nbModules% partner modules compatible with your store'|trans({'%nbModules%' : totalModules}, 'Modules.Mbo.Modulescatalog') }}</span>
+        
         <div class="module-sorting-search-wording__tooltip-container">
-          {% include '@Common/HelpBox/helpbox.html.twig' with { 'content' : "In the back office, we only show you the modules developed by PrestaShop or our partners that are compatible with your store. "|trans({}, 'Modules.Mbo.Modulescatalog') } %}
+          {% if constant('_PS_VERSION_') > '1.7.7.8' %}
+              {% include '@Common/HelpBox/helpbox.html.twig' with { 'content' : "In the back office, we only show you the modules developed by PrestaShop or our partners that are compatible with your store. "|trans({}, 'Modules.Mbo.Modulescatalog') } %}
+          {% else %}
+            <span 
+              class="help-box" data-toggle="popover"
+              data-content="{{ "In the back office, we only show you the modules developed by PrestaShop or our partners that are compatible with your store. "|trans({}, 'Modules.Mbo.Modulescatalog') }}"
+            >
+            </span>
+          {% endif %}
         </div>
       </div>
     </div>
