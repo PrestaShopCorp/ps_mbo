@@ -37,6 +37,7 @@
 <div class="mbo-module-card__actions btn-group module-actions">
 	{% if url_active == 'buy' %}
 		<a class="btn btn-secondary btn-block btn-outline-secondary" href="{{ url }}" target="_blank">
+			<i class="material-icons" style="font-size: 18px;">launch</i>
 			{{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}
 		</a>
 	{% elseif urls|length %}

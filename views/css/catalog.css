@@ -236,6 +236,10 @@
   border-radius: 4px;
 }
 
+.mbo-module-card .btn-group.module-actions :first-child {
+  flex: 1;
+}
+
 .mbo-module-card
   .btn-group.module-actions
   .btn.btn-outline-primary:first-child {
