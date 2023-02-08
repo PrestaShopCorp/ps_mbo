@@ -1,3 +1,14 @@
+.module-catalog-page {
+  margin: 6px;
+  max-width: 1680px;
+}
+
+@media (min-width: 544px) {
+  .module-catalog-page {
+    margin: 0 33px;
+  }
+}
+
 .module-catalog-page hr.top-menu-separator {
   margin: 24px 0;
 }
@@ -40,10 +51,6 @@
   --card-tag-border-color: #b7ced3;
 
   --warning-500: #ffa000;
-}
-
-.module-catalog-page {
-  max-width: 1680px;
 }
 
 .mbo-module-grid__item {
@@ -227,6 +234,10 @@
 .mbo-module-card .btn-group.module-actions .btn.btn-outline-primary {
   border-color: var(--theme-secondary);
   border-radius: 4px;
+}
+
+.mbo-module-card .btn-group.module-actions :first-child {
+  flex: 1;
 }
 
 .mbo-module-card
