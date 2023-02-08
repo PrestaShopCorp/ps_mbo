@@ -423,20 +423,23 @@ class ps_mbo extends Module
         // has to be loaded in header to prevent flash of content
         $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
 
-        if ($this->shouldAttachRecommendedModulesButton()
+        $this->context->controller->addCSS($this->getPathUri() . 'views/css/catalog.css');
+
+        if (
+            $this->shouldAttachRecommendedModulesButton()
             || $this->shouldAttachRecommendedModulesAfterContent()
         ) {
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css');
             if (Tools::getValue('controller') !== 'AdminProducts') {
                 $this->context->controller->addJs(
                     rtrim(__PS_BASE_URI__, '/')
-                    . str_ireplace(
-                        _PS_CORE_DIR_,
-                        '',
-                        _PS_BO_ALL_THEMES_DIR_
-                    )
-                    . 'default/js/bundle/module/module_card.js?v='
-                    . _PS_VERSION_
+                        . str_ireplace(
+                            _PS_CORE_DIR_,
+                            '',
+                            _PS_BO_ALL_THEMES_DIR_
+                        )
+                        . 'default/js/bundle/module/module_card.js?v='
+                        . _PS_VERSION_
                 );
             }
         }
@@ -630,7 +633,8 @@ class ps_mbo extends Module
      */
     public function updateHooks()
     {
-        $hookData = (array) Db::getInstance()->executeS('
+        $hookData = (array) Db::getInstance()->executeS(
+            '
             SELECT DISTINCT(phm.id_hook), name
             FROM `' . _DB_PREFIX_ . 'hook_module` phm
             JOIN `' . _DB_PREFIX_ . 'hook` ph ON ph.id_hook=phm.id_hook

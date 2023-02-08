@@ -44,6 +44,9 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@request_stack'
 
+  mbo.controller.modules:
+      class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleController'
+
   mbo.controller.modules.catalog:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController'
 
