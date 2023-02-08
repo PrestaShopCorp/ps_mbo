@@ -559,7 +559,7 @@ class ps_mbo extends Module
                 break;
             case 'AdminSpecificPriceRule':
             case 'AdminManufacturers':
-            case 'AdminAttributesGroups':
+            case 'AdminFeatures':
             case 'AdminCartRules':
             case 'AdminProducts':
                 $description = $this->trans('Make your more products visible and create product pages that convert.<br>
