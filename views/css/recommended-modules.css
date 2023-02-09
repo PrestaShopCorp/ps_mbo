@@ -16,16 +16,34 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+#main #content #recommended-modules-container .modules_list_container_tab .alert-addons,
+#main #content #modules_list_container #modules_list_container_tab_modal .alert-addons,
 #main-div #recommended-modules-container .alert-addons,
 #main-div #modules_list_container_tab_modal .alert-addons {
-  border-color: #25b9d7;
+  border: none;
+  background-color:#F4FCFD ;
+  font-size: 14px;
+  line-height: 19px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration-line: underline;
 }
 
-#main-div #recommended-modules-container .alert-addons:before,
-#main-div #modules_list_container_tab_modal .alert-addons:before {
+#main #content #recommended-modules-container .modules_list_container_tab .alert-addons::before,
+#main #content #modules_list_container #modules_list_container_tab_modal .alert-addons::before{
+  display:none
+  }
+
+#main #content #recommended-modules-container .modules_list_container_tab .alert-addons .alert-text .material-icons, 
+#main #content .panel #modules_list_container #modules_list_container_tab .alert-addons .alert-text .material-icons,
+#main #content #modules_list_container #modules_list_container_tab_modal .alert-addons .material-icons,
+#main-div #recommended-modules-container .alert-addons .material-icons,
+#main-div #modules_list_container_tab_modal .alert-addons .material-icons {
   color: #25b9d7;
-  background-color: #dff5f9;
-  content: "\E88F";
+  margin-left: 5px;
+  font-size: medium;
+  
 }
 
 #main-div #modules_list_container_content .img-thumbnail {
@@ -222,6 +240,8 @@
 .iconButtonRecommanded{
   margin-right: 20px;
 }
+
+#main-div #modules_list_container_tab_modal{}
 
 @media (min-width: 768px) {
   #content.bootstrap #modules_list_container .modal-dialog {
