@@ -81,7 +81,7 @@
 		</p>
 
 		<a class="module-read-more-grid-btn mbo-module-card__read-more" href="{{ path('admin_module_cart', {"moduleId": module.attributes.id }) }}" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">
-			{{ 'Show details'|trans({}, 'Admin.Modules.Feature') }}
+			{{ 'Show details'|trans({}, 'Modules.Mbo.Modulescatalog') }}
 		</a>
 
 		<div class="mbo-module-card__bottom">
@@ -90,7 +90,7 @@
 				{% if module.attributes.url_active == 'buy' and module.attributes.price.raw != '0.00' %}
 					{{ module.attributes.price.displayPrice }}
 				{% elseif module.attributes.url_active != 'buy' %}
-					{{ 'Free'|trans({}, 'Admin.Modules.Feature') }}
+					{{ 'Free'|trans({}, 'Modules.Mbo.Modulescatalog') }}
 				{% endif %}
 			</p>
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev" source-language="fr-FR" target-language="es-ES" datatype="plaintext">
+    <body>
+      <trans-unit id="b0b4956415733cc54e3129b2b69865cc">
+        <source><![CDATA[Here's a selection of partner modules,<strong> compatible with your store </strong>, to help you achieve your goals]]></source>
+        <target><![CDATA[Aquí tienes una selección de módulos asociados,<strong> compatibles con tu tienda</strong>, para ayudarte a conseguir tus objetivos.]]></target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="214a01b96d926b099f2a8bc75aa46679">
+        <source><![CDATA[Create memorable experiences and turn visitors into customers.<br>
+                Here's a selection of partner modules,<strong> compatible with your store </strong>, to help you achieve your goals.]]></source>
+        <target><![CDATA[Cree experiencias memorables y convierta a los visitantes en clientes.<br>
+                Aquí tienes una selección de módulos asociados,<strong> compatibles con tu tienda</strong>, para ayudarte a conseguir tus objetivos.]]></target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="7b2df17a49fbe4366b21825a3d2f153d">
+        <source><![CDATA[<p>Build a data-driven strategy and take more informed decisions.<br>
+                Here's a selection of partner modules,<strong> compatible with your store </strong>, to help you achieve your goals.</p>]]></source>
+        <target><![CDATA[<p>Construya una estrategia basada en datos y tome decisiones más informadas.<br>
+                Aquí tienes una selección de módulos asociados,<strong> compatibles con tu tienda</strong>, para ayudarte a conseguir tus objetivos.</p>]]></target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="4002238923e78e8f65e8726cd220be96">
+        <source><![CDATA[Make your more products visible and create product pages that convert.<br>
+                Here's a selection of partner modules, <strong>compatible with your store</strong>, to help you achieve your goals.]]></source>
+        <target><![CDATA[Haga que sus productos más visibles y crear páginas de productos que convierten.<br>
+                Aquí tienes una selección de módulos asociados,<strong> compatibles con tu tienda</strong>, para ayudarte a conseguir tus objetivos.]]></target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="18723c972da459ca4986c050fda85b25">
+        <source><![CDATA[Get new customers and keep them coming back.<br>
+                Here's a selection of partner modules,<strong> compatible with your store </strong>, to help you achieve your goals.]]></source>
+        <target><![CDATA[Consiga nuevos clientes y haga que vuelvan.<br>
+                Aquí tienes una selección de módulos asociados,<strong> compatibles con tu tienda</strong>, para ayudarte a conseguir tus objetivos.]]></target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e39767bb8e247250896230e1d6ee036f">
+        <source>Recommended modules</source>
+        <target>Módulos recomendados</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="3015e7fd48efb2220c184c49eaeae2c1">
+        <source>Improve customer experience</source>
+        <target>Mejorar la experiencia del cliente</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="0b63003090cd7fae050a51da250bb0dc">
+        <source>Improve data strategy</source>
+        <target>Mejorar la estrategia de datos</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="1d929590b318c7d4746d15f1fdc19c81">
+        <source>Optimize product catalog</source>
+        <target>Optimizar el catálogo de productos</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="8c883385a642028c9366bb087618b216">
+        <source>Boost sales</source>
+        <target>Aumentar ventas</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
