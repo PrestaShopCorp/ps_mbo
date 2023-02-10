@@ -47,46 +47,59 @@ trait UseActionModuleRegisterHookAfter
 
             // The MBO hook 'dashboardZoneTwo' must be at the max position
             if ('ps_mbo' !== $module->name && 'dashboardZoneTwo' === $hookName) {
-                //Get Module MBO ID
-                $sql = 'SELECT m.`id_module`
-                    FROM `' . _DB_PREFIX_ . 'module` m
-                    WHERE m.`name` = \'ps_mbo\'';
-                $row = \Db::getInstance()->getRow($sql);
-                $psMboId = $row['id_module'];
-
-                foreach (\Shop::getShops(true, null, true) as $shopId) {
-                    // Check if already registered
-                    $sql = 'SELECT hm.`id_module`, hm.`id_hook`
-                    FROM `' . _DB_PREFIX_ . 'hook_module` hm, `' . _DB_PREFIX_ . 'hook` h
-                    WHERE hm.`id_module` = ' . (int)$module->id . ' AND h.`name` = \'' . $hookName . '\'
-                    AND h.`id_hook` = hm.`id_hook` AND `id_shop` = ' . (int)$shopId;
-                    $row = \Db::getInstance()->getRow($sql);
-                    if (!$row) {
-                        continue;
-                    }
-                    $idHook = $row['id_hook'];
-
-                    // Get module position in hook
-                    $sql = 'SELECT MAX(`position`) AS position
-                    FROM `' . _DB_PREFIX_ . 'hook_module`
-                    WHERE `id_hook` = ' . (int)$idHook . ' AND `id_shop` = ' . (int)$shopId;
-                    if (!$position = \Db::getInstance()->getValue($sql)) {
-                        $position = 0;
-                    }
-
-                    // Update psMbo position for the hook
-                    \Db::getInstance()->update(
-                        'hook_module',
-                        [
-                            'position' => (int)($position + 1),
-                        ],
-                        '`id_module` = ' . (int)$psMboId . ' AND `id_hook` = ' . (int)$idHook . ' AND `id_shop` = ' . (int)$shopId
-                    );
-                }
+                $this->putMboDashboardZoneTwoAtFirstPosition();
             }
         } catch (\Exception $e) {
             // Do nothing because it's not critical
-            dump($e->getMessage());
+        }
+    }
+
+    public function putMboDashboardZoneTwoAtFirstPosition(): void
+    {
+        // Check if the hook exists and get it's ID
+        $sql = 'SELECT h.`id_hook`
+                    FROM `' . _DB_PREFIX_ . 'hook` h
+                    WHERE h.`name` = \'dashboardZoneTwo\'';
+        $row = \Db::getInstance()->getRow($sql);
+        if (!$row) {
+            return;
+        }
+        $idHook = $row['id_hook'];
+
+        //Get Module MBO ID
+        $sql = 'SELECT m.`id_module`
+                    FROM `' . _DB_PREFIX_ . 'module` m
+                    WHERE m.`name` = \'ps_mbo\'';
+        $row = \Db::getInstance()->getRow($sql);
+        $psMboId = $row['id_module'];
+
+        foreach (\Shop::getShops(true, null, true) as $shopId) {
+            // Get module position in hook
+            $sql = 'SELECT MAX(`position`) AS position
+                    FROM `' . _DB_PREFIX_ . 'hook_module`
+                    WHERE `id_hook` = ' . (int)$idHook . ' AND `id_shop` = ' . (int)$shopId;
+            if (!$position = \Db::getInstance()->getValue($sql)) {
+                $position = 0;
+            }
+
+            // Check if MBO is not already at last position
+            $sql = 'SELECT `position`
+                    FROM `' . _DB_PREFIX_ . 'hook_module`
+                    WHERE `id_hook` = ' . (int)$idHook . ' AND `id_module` = ' . (int)$psMboId . ' AND `id_shop` = ' . (int)$shopId;
+            $mboPosition = \Db::getInstance()->getValue($sql);
+            if ($mboPosition === $position) {
+                // Nothing to do, MBO is already at last position
+                return;
+            }
+
+            // Update psMbo position for the hook
+            \Db::getInstance()->update(
+                'hook_module',
+                [
+                    'position' => (int)($position + 1),
+                ],
+                '`id_module` = ' . (int)$psMboId . ' AND `id_hook` = ' . (int)$idHook . ' AND `id_shop` = ' . (int)$shopId
+            );
         }
     }
 }
