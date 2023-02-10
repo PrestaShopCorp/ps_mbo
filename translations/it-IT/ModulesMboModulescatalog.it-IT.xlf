@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev" source-language="fr-FR" target-language="it-IT" datatype="plaintext">
+    <body>
+      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
+        <source>Free</source>
+        <target>Gratis</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="d53907d724bf05eff15a2e80205f2d1e">
+        <source>Show details</source>
+        <target>Mostra dettagli</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="abfc3a65538a6ec86502b2b498b6b4a6">
+        <source>Discover</source>
+        <target>Scopri</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="c15784789b60bab84ad3108dacfb3f18">
+        <source>Find modules to grow your business</source>
+        <target>Trovate i moduli per far crescere la vostra attività</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="47b2395a25658f70813eb6a7a07f55c6">
+        <source>Explore the Marketplace in your back office to find free and paid partner modules to grow your business. Increase traffic, improve conversions, or build customer loyalty... there’s a module for every need.</source>
+        <target>Esplorate il Marketplace nel vostro back office per trovare moduli partner gratuiti e a pagamento per far crescere la vostra attività. Aumentare il traffico, migliorare le conversioni o fidelizzare i clienti... c'è un modulo per ogni esigenza.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="57ef9bf513ef4b2e8c3bacd4b4ef00f1">
+        <source>And if you want to give your store a new look, {link}check the theme catalog{/link}.</source>
+        <target>E se volete dare un nuovo look al vostro negozio, {link}consultate il catalogo dei temi{/link}.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="be039e2a2280aba57d733643984b6036">
+        <source>%nbModules% partner modules compatible with your store</source>
+        <target>%nbModules% moduli partner compatibili con il vostro negozio</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e330c9c975994dd814fb0432aa594588">
+        <source>In the back office, we only show you the modules developed by PrestaShop or our partners that are compatible with your store. </source>
+        <target>Nel back office, vi mostriamo solo i moduli sviluppati da PrestaShop o dai nostri partner che sono compatibili con il vostro negozio.</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
