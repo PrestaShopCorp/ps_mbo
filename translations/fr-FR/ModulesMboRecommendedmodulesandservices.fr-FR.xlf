@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev" source-language="fr-FR" target-language="fr-FR" datatype="plaintext">
+  <file original="admin-dev" source-language="en-US" target-language="fr-FR" datatype="plaintext">
     <body>
       <trans-unit id="b0b4956415733cc54e3129b2b69865cc">
         <source><![CDATA[Here's a selection of partner modules,<strong> compatible with your store </strong>, to help you achieve your goals]]></source>
