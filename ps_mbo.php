@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2020 PrestaShop and Contributors
  *
@@ -429,11 +430,11 @@ class ps_mbo extends Module
             $this->shouldAttachRecommendedModulesButton()
             || $this->shouldAttachRecommendedModulesAfterContent()
         ) {
-            
+
             if (
                 true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')
             ) {
-                $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules-equal-or-greater-1.7.8.css');
+                $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules-since-1.7.8.css');
             }
 
             if (
@@ -645,7 +646,8 @@ class ps_mbo extends Module
      */
     public function updateHooks()
     {
-        $hookData = (array) Db::getInstance()->executeS('
+        $hookData = (array) Db::getInstance()->executeS(
+            '
             SELECT DISTINCT(phm.id_hook), name
             FROM `' . _DB_PREFIX_ . 'hook_module` phm
             JOIN `' . _DB_PREFIX_ . 'hook` ph ON ph.id_hook=phm.id_hook
