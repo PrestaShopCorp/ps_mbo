@@ -433,7 +433,7 @@ class ps_mbo extends Module
             if (
                 true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')
             ) {
-                $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules-greater-or-equal-1.7.8.css');
+                $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules-equal-or-greater-1.7.8.css');
             }
 
             if (
