@@ -429,7 +429,19 @@ class ps_mbo extends Module
             $this->shouldAttachRecommendedModulesButton()
             || $this->shouldAttachRecommendedModulesAfterContent()
         ) {
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css');
+            
+            if (
+                true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')
+            ) {
+                $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules-equal-or-greater-1.7.8.css');
+            }
+
+            if (
+                true === (bool) version_compare(_PS_VERSION_, '1.7.8', '<')
+            ) {
+                $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules-lower-1.7.8.css');
+            }
+
             if (Tools::getValue('controller') !== 'AdminProducts') {
                 $this->context->controller->addJs(
                     rtrim(__PS_BASE_URI__, '/')
