@@ -45,6 +45,7 @@ trait UseHooks
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayModuleConfigureExtraButtons;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionListModules;
+    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionModuleRegisterHookAfter;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionDispatcherBefore;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionObjectShopUrlUpdateAfter;
