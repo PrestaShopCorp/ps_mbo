@@ -218,7 +218,7 @@ var mbo = {};
    */
   var RecommendedModulesContainer = function(config, content) {
     var containerTitle = config.translations['Recommended Modules and Services'];
-    var containerDescription = config.translations['description'];
+    var containerDescription = $('<div/>').html(config.translations['description']).text();
     var containerId = 'recommended-modules-container';
     var $markup;
 
@@ -389,7 +389,7 @@ var mbo = {};
       $(pageMap.modulesListModal).modal('show');
 
       recommendedModulesRequest.done(function (data) {
-        var descriptionHtml = '<div class="recommended-modal-description">' + config.translations['description'] + '</div>';
+        var descriptionHtml =  $('<div/>').html('<div class="recommended-modal-description">' + config.translations['description'] + '</div>').text();
         $(pageMap.modulesListModalContent).html(descriptionHtml + data.content).slideDown();
         $(pageMap.modulesListLoader).hide();
       });

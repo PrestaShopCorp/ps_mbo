@@ -3,20 +3,20 @@
   <file original="admin-dev" source-language="en-US" target-language="it-IT" datatype="plaintext">
     <body>
       <trans-unit id="b0b4956415733cc54e3129b2b69865cc">
-        <source><![CDATA[Here's a selection of partner modules,<strong> compatible with your store </strong>, to help you achieve your goals]]></source>
+        <source><![CDATA[Here's a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals]]></source>
         <target><![CDATA[Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.]]></target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="214a01b96d926b099f2a8bc75aa46679">
         <source><![CDATA[Create memorable experiences and turn visitors into customers.<br>
-                Here's a selection of partner modules,<strong> compatible with your store </strong>, to help you achieve your goals.]]></source>
+                Here's a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.]]></source>
         <target><![CDATA[Create esperienze memorabili e trasformate i visitatori in clienti.<br>
                 Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.]]></target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="7b2df17a49fbe4366b21825a3d2f153d">
         <source><![CDATA[<p>Build a data-driven strategy and take more informed decisions.<br>
-                Here's a selection of partner modules,<strong> compatible with your store </strong>, to help you achieve your goals.</p>]]></source>
+                Here's a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.</p>]]></source>
         <target><![CDATA[<p>Costruite una strategia basata sui dati e prendete decisioni più informate.<br>
                 Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.</p>]]></target>
         <note>Line: </note>
@@ -30,7 +30,7 @@
       </trans-unit>
       <trans-unit id="18723c972da459ca4986c050fda85b25">
         <source><![CDATA[Get new customers and keep them coming back.<br>
-                Here's a selection of partner modules,<strong> compatible with your store </strong>, to help you achieve your goals.]]></source>
+                Here's a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.]]></source>
         <target><![CDATA[Ottenere nuovi clienti e farli tornare.<br>
                 Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.]]></target>
         <note>Line: </note>
@@ -58,6 +58,21 @@
       <trans-unit id="8c883385a642028c9366bb087618b216">
         <source>Boost sales</source>
         <target>Aumentare le vendite</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="3891fd60e8d944a2de2cb2fca3a3c8bf">
+        <source>More similar modules on Prestashop Marketplace</source>
+        <target>Altri moduli simili su PrestaShop Marketplace</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="98dd43dfae05b11befe1f140e0ec787a">
+        <source>Installed</source>
+        <target>Installato</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="ddd8eef6f86868a07f62b0e3810711f0">
+        <source>Not Installed</source>
+        <target>Non installato</target>
         <note>Line: </note>
       </trans-unit>
     </body>
