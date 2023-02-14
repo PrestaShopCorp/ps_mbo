@@ -201,7 +201,7 @@
  }
 
  #main #content .bootstrap .toolbarBox .btn-toolbar{
-  background-color: white;
+  background-color: transparent;
  }
  
  #main #content .bootstrap .toolbarBox #toolbar-nav #recommended-modules-button-container #recommended-modules-button i{
@@ -221,15 +221,7 @@
    margin-right: 5px;
  }
  
- .bootstrap
-   .page-head
-   .toolbarBox
-   .btn-toolbar
-   .toolbar_btn.mbo-modules-recommended-button:hover {
-   color: #fff;
-   background-color: #b7ced3;
-   border-color: #b7ced3;
- }
+
  .recommended-modal-description {
    margin-bottom: 30px;
    margin-bottom: 10px;
