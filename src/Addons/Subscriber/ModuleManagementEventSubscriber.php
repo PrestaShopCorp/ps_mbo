@@ -157,7 +157,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
 
     public function clearSfCache(ModuleManagementEvent $event): void
     {
-        if (!$this->cleared && $event->getSystemClearCache()) {
+        if (!$this->cleared) {
             $this->cacheClearer->clear();
             $this->cleared = true;
         }
