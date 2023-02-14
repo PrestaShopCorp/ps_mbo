@@ -51,16 +51,13 @@
    max-width: 56px;
    width: 56px;
  }
- #main-div
-   #modules_list_container
-   #modules_list_container_tab_modal
-   .nav-tabs
-   .nav-item.active
-   .nav-link.active,
+ #main-div .nav-tabs .nav-link.active,
+ #recommended-modules-container .nav-tabs .nav-link.active,
+ #main-div #modules_list_container #modules_list_container_tab_modal .nav-tabs .nav-link.active,
  #content.bootstrap .panel .nav-tabs .nav-item.active .nav-link,
  #content.bootstrap #modules_list_container_tab_modal .nav-item.active {
    border-bottom: 3px solid #25b9d7 !important;
-   border-top: none;
+   border-top: none !important;
    margin-bottom: 10px;
  }
  #recommended-modules-container .nav-tabs .nav-link.active {
