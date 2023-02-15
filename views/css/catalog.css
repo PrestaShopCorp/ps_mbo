@@ -146,10 +146,11 @@
 
 .mbo-module-card__tags-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: flex-start;
   flex-wrap: wrap;
   gap: 4px;
+  align-items: flex-start;
 }
 
 .mbo-module-card__tag {
