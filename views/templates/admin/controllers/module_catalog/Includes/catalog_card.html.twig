@@ -1,0 +1,103 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% set isModuleActive = module.database.active %}
+
+<div class="mbo-module-grid__item col-sm-12 col-md-6 col-lg-4 col-xl-3 module-item module-item-grid" data-id="{{ module.attributes.id }}" data-name="{{ module.attributes.displayName }}" data-scoring="{{ module.attributes.avgRate }}" data-logo="{{ module.attributes.img }}" data-author="{{ module.attributes.author }}" data-version="{{ module.attributes.version }}" data-description="{{ module.attributes.description }}" data-tech-name="{{ module.attributes.name }}" data-child-categories="{{ module.attributes.categoryName }}" data-categories="{{ category }}" data-type="{{ module.attributes.productType }}" data-price="{{ module.attributes.price.raw }}" data-active="{{ isModuleActive }}">
+
+	<div class="mbo-module-card">
+		<div class="mbo-module-card__top">
+			<div class="mbo-module-card__header">
+				<div class="mbo-module-card__img-container">
+					<img class="mbo-module-card__img" src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}"/>
+				</div>
+				<div class="mbo-module-card__title-container">
+					<h3 class="mbo-module-card__title" data-toggle="pstooltip" data-placement="top" title="{{ module.attributes.displayName|raw }}">
+						{% if module.attributes.displayName %}
+							{{ module.attributes.displayName|raw }}
+						{% else %}
+							{{ module.attributes.name }}
+						{% endif %}
+						{% for pico in module.attributes.picos %}
+							<img src="{{pico.img}}" alt="{{pico.label}}"/>
+						{% endfor %}
+					</h3>
+					<p class="mbo-module-card__subtitle">
+						{{ 'by %author%'|trans({'%author%': module.attributes.author}) }}
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="mbo-module-card__infos">
+			<div class="mbo-module-card__tags-container">
+				{% if module.attributes.categoryName %}
+					<div class="mbo-module-card__tag" title="{{ module.attributes.categoryName }}">
+						{{ module.attributes.categoryName }}
+					</div>
+				{% endif %}
+				{% set badges = module.attributes.badges %}
+				{% if badges %}
+					{% set badge = badges|first %}
+					<div class="mbo-module-card__tag" title="{{ module.attributes.categoryName }}">
+						{{badge.label}}
+					</div>
+				{% endif %}
+			</div>
+
+			{% if module.attributes.nbRates > 0 %}
+				<div class="mbo-module-card__rate-container">
+					<i class="material-icons">star</i>
+					<span class="mbo-module-card__rate">{{ module.attributes.avgRate }}</span>
+					<span class="mbo-module-card__nb-rate">({{ module.attributes.nbRates }})</span>
+				</div>
+			{% endif %}
+		</div>
+
+		<p class="mbo-module-card__description">
+			{{ module.attributes.description }}
+		</p>
+
+		<a class="module-read-more-grid-btn mbo-module-card__read-more" href="{{ path('admin_module_cart', {"moduleId": module.attributes.id }) }}" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">
+			{{ 'Show details'|trans({}, 'Admin.Modules.Feature') }}
+		</a>
+
+		<div class="mbo-module-card__bottom">
+
+			<p class="bo-module-card__price">
+				{% if module.attributes.url_active == 'buy' and module.attributes.price.raw != '0.00' %}
+					{{ module.attributes.price.displayPrice }}
+				{% elseif module.attributes.url_active != 'buy' %}
+					{{ 'Free'|trans({}, 'Admin.Modules.Feature') }}
+				{% endif %}
+			</p>
+
+			{% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/Includes/module_actions_buttons.html.twig' with { 'module': module, 'level' : level } %}
+		</div>
+	</div>
+
+	{% include '@PrestaShop/Admin/Module/Includes/modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default(''), 'level' : level } %}
+	{% include '@PrestaShop/Admin/Module/Includes/modal_confirm.html.twig' with { 'module': module } %}
+</div>
