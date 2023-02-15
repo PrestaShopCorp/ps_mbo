@@ -1,0 +1,259 @@
+/**
+ * 2007-2020 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/AFL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+ #main #content #recommended-modules-container .modules_list_container_tab .alert-addons,
+ #main #content #modules_list_container #modules_list_container_tab_modal .alert-addons,
+ #main-div #recommended-modules-container .alert-addons,
+ #main-div #modules_list_container_tab_modal .alert-addons {
+   border: none;
+   background-color:#F4FCFD ;
+   font-size: 14px;
+   line-height: 19px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   text-decoration-line: underline;
+ }
+ 
+ #main #content #recommended-modules-container .modules_list_container_tab .alert-addons::before,
+ #main #content #modules_list_container #modules_list_container_tab_modal .alert-addons::before{
+   display:none
+   }
+ 
+ #main #content #recommended-modules-container .modules_list_container_tab .alert-addons .alert-text .material-icons, 
+ #main #content .panel #modules_list_container #modules_list_container_tab .alert-addons .alert-text .material-icons,
+ #main #content #modules_list_container #modules_list_container_tab_modal .alert-addons .material-icons,
+ #main-div #recommended-modules-container .alert-addons .material-icons,
+ #main-div #modules_list_container_tab_modal .alert-addons .material-icons {
+   color: #25b9d7;
+   margin-left: 5px;
+   font-size: medium;
+   
+ }
+ 
+ #main-div #modules_list_container_content .img-thumbnail {
+   max-width: 56px;
+   width: 56px;
+ }
+ #main-div
+   #modules_list_container
+   #modules_list_container_tab_modal
+   .nav-tabs
+   .nav-item.active
+   .nav-link.active,
+ #content.bootstrap .panel .nav-tabs .nav-item.active .nav-link,
+ #content.bootstrap #modules_list_container_tab_modal .nav-item.active {
+   border-bottom: 3px solid #25b9d7 !important;
+   border-top: none;
+   margin-bottom: 10px;
+ }
+ #recommended-modules-container .nav-tabs .nav-link.active {
+   border-bottom: 3px solid #25b9d7;
+   border-top: none;
+   margin-bottom: 10px;
+ }
+ 
+ #content.bootstrap .nav-tabs .nav-item.show .nav-link,
+ #content.bootstrap .nav-tabs .nav-link.active {
+   color: #363a41;
+   background-color: #fff;
+   border-color: #25b9d7;
+ }
+ 
+ #content.bootstrap .nav-tabs,
+ #content.bootstrap .nav-tabs .nav-link {
+   border: none;
+ }
+ 
+ #content.bootstrap #modules_list_container_content .img-thumbnail {
+   max-width: 56px;
+   width: 56px;
+ }
+ 
+ #content.bootstrap #modules_list_container_content .btn {
+   border-radius: 0;
+ }
+ 
+ #content.bootstrap #modules_list_container_content .btn .caret {
+   border-top-color: #25b9d7 !important;
+ }
+ 
+ #content.bootstrap #modules_list_container_content .btn-outline-primary {
+   color: #25b9d7;
+   background-color: transparent;
+   background-image: none;
+   border-color: #25b9d7;
+ }
+ 
+ #content.bootstrap #modules_list_container_content .btn-outline-primary:hover {
+   color: #fff;
+   background-color: #3ed2f0;
+   border-color: #3ed2f0;
+ }
+ 
+ #content.bootstrap #modules_list_container_content .btn-block {
+   padding-left: 8px;
+   padding-right: 8px;
+ }
+ 
+ #content.bootstrap #modules_list_container_content .btn-group {
+   display: inline-flex;
+ }
+ 
+ #content.bootstrap #modules_list_container_content .dropdown-item {
+   display: block;
+   width: 100%;
+   padding: 5px;
+   clear: both;
+   font-weight: 400;
+   color: #6c868e;
+   text-align: inherit;
+   white-space: nowrap;
+   background-color: transparent;
+   border: 0;
+ }
+ 
+ #content.bootstrap #modules_list_container_content .dropdown-item:focus,
+ #content.bootstrap #modules_list_container_content .dropdown-item:hover {
+   color: #25b9d7;
+   text-decoration: none;
+   background-color: #fff;
+ }
+ 
+ #content.bootstrap #modules_list_container_content button.spinner {
+   color: #fff;
+   background-color: #fff;
+   width: 40px;
+   width: 2.5rem;
+   height: 40px;
+   height: 2.5rem;
+   border-radius: 2.5rem;
+   border-right-color: #25b9d7;
+   border-bottom-color: #25b9d7;
+   border-width: 3px;
+   border-width: 0.1875rem;
+   border-style: solid;
+   font-size: 0;
+   outline: none;
+   display: inline-block;
+   border-left-color: #bbcdd2;
+   border-top-color: #bbcdd2;
+   animation: rotating 2s linear infinite;
+ }
+ 
+ #content.bootstrap #tab_modules_list_installed > tbody > tr > td:nth-child(2),
+ #content.bootstrap
+   #tab_modules_list_not_installed
+   > tbody
+   > tr
+   > td:nth-child(2) {
+   width: 90%;
+ }
+ 
+ #content.bootstrap .card {
+   position: relative;
+   display: block;
+   background-color: #fff;
+   border: 1px solid #dbe6e9;
+   border-radius: 5px;
+   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
+ }
+ 
+ #content.bootstrap .card-body {
+   padding: 20px;
+ }
+ 
+ #content.bootstrap .card-body .img-responsive {
+   display: inline;
+   max-width: 100%;
+ }
+ 
+ #content.bootstrap .mt-3 {
+   margin-top: 15px;
+ }
+ 
+ .bootstrap
+   .page-head
+   .toolbarBox
+   .btn-toolbar {
+   color: #fff;
+   background-color: #6c868e;
+   border-color: #6c868e;
+   -webkit-box-shadow: none;
+   box-shadow: none;
+   display: flex;
+   align-items: center;
+ }
+
+ #main #content .bootstrap .toolbarBox .btn-toolbar{
+  background-color: transparent;
+ }
+ 
+ #main #content .bootstrap .toolbarBox #toolbar-nav #recommended-modules-button-container #recommended-modules-button i{
+  height: 30px;
+  width: 30px;
+  color: #2eacce;
+ }
+
+ .bootstrap
+   .page-head
+   .toolbarBox
+   .btn-toolbar
+   .toolbar_btn.mbo-modules-recommended-button
+   i {
+   display: inline-block;
+   color: #fff;
+   margin-right: 5px;
+ }
+ 
+
+ .recommended-modal-description {
+   margin-bottom: 30px;
+   margin-bottom: 10px;
+   font-size: 14px;
+   line-height: 19px;
+ }
+ .recommended-modal-content-description {
+   font-size: 14px;
+   line-height: 19px;
+   margin-left: 10px;
+   margin-top: 10px;
+ }
+ 
+ .panel#recommended-modules-container .recommended-modal-content-description {
+   margin-left: 0px;
+ }
+ 
+ .iconButtonRecommanded{
+   margin-right: 20px;
+ }
+
+ #main-div .content-div #recommended-modules-container .card-block .alert-addons .alert-text a , 
+ #main #content #recommended-modules-container .modules_list_container_tab .alert-addons .alert-text a,
+#main #content #modules_list_container #modules_list_container_tab_modal .alert-addons .alert-text a,
+#main-div #modules_list_container .modal-dialog #modules_list_container_tab_modal .alert-addons .alert-text a {
+  color: #363A41 !important;
+  font-weight: 600;
+}
+
+ @media (min-width: 768px) {
+   #content.bootstrap #modules_list_container .modal-dialog {
+     width: 680px;
+   }
+ }
+ 

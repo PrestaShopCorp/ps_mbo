@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2020 PrestaShop and Contributors
  *
@@ -422,14 +423,22 @@ class ps_mbo extends Module
     {
         // has to be loaded in header to prevent flash of content
         $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
-
         $this->context->controller->addCSS($this->getPathUri() . 'views/css/catalog.css');
 
         if (
             $this->shouldAttachRecommendedModulesButton()
             || $this->shouldAttachRecommendedModulesAfterContent()
         ) {
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css');
+            if (
+                true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')
+            ) {
+                $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules-since-1.7.8.css');
+            }
+            if (
+                true === (bool) version_compare(_PS_VERSION_, '1.7.8', '<')
+            ) {
+                $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules-lower-1.7.8.css');
+            }
             if (Tools::getValue('controller') !== 'AdminProducts') {
                 $this->context->controller->addJs(
                     rtrim(__PS_BASE_URI__, '/')
@@ -472,7 +481,8 @@ class ps_mbo extends Module
             'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModulesAfterContent(),
             'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModulesButton(),
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
-            'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services'),
+            'recommendedModulesTitleTranslated' => $this->getRecommendedModulesButtonTitle(),
+            'recommendedModulesDescriptionTranslated' => $this->getRecommendedModulesDescription(),
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
             'recommendedModulesUrl' => $recommendedModulesUrl,
         ]);
@@ -506,6 +516,82 @@ class ps_mbo extends Module
         }
 
         return in_array(Tools::getValue('controller'), static::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT, true);
+    }
+
+    /**
+     * Customize title button recommended modules
+     *
+     * @return string
+     */
+    private function getRecommendedModulesButtonTitle()
+    {
+        switch (Tools::getValue('controller')) {
+            case 'AdminInvoices':
+            case 'AdminDeliverySlip':
+            case 'AdminSlip':
+            case 'AdminOrders':
+                $title = $this->trans('Boost sales', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminSpecificPriceRule':
+            case 'AdminManufacturers':
+            case 'AdminFeatures':
+            case 'AdminCartRules':
+            case 'AdminProducts':
+                $title = $this->trans('Optimize product catalog', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminStats':
+                $title = $this->trans('Improve data strategy', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminCustomerThreads':
+            case 'AdminCustomers':
+                $title = $this->trans('Improve customer experience', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            default:
+                $title = $this->trans('Recommended modules', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+        }
+
+        return $title;
+    }
+
+    /**
+     * Customize description of modal button recommended modules
+     *
+     * @return string
+     */
+    private function getRecommendedModulesDescription()
+    {
+        switch (Tools::getValue('controller')) {
+            case 'AdminInvoices':
+            case 'AdminDeliverySlip':
+            case 'AdminSlip':
+            case 'AdminOrders':
+                $description = $this->trans('Get new customers and keep them coming back.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store </strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminSpecificPriceRule':
+            case 'AdminManufacturers':
+            case 'AdminFeatures':
+            case 'AdminCartRules':
+            case 'AdminProducts':
+                $description = $this->trans('Make your more products visible and create product pages that convert.<br>
+                Here\'s a selection of partner modules, <strong>compatible with your store </strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminStats':
+                $description = $this->trans('<p>Build a data-driven strategy and take more informed decisions.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store </strong>, to help you achieve your goals.</p>', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminCustomerThreads':
+            case 'AdminCustomers':
+                $description = $this->trans('Create memorable experiences and turn visitors into customers.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store </strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            default:
+                $description = $this->trans('Here\'s a selection of partner modules,<strong> compatible with your store </strong>, to help you achieve your goals', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+        }
+
+        return $description;
     }
 
     /**
