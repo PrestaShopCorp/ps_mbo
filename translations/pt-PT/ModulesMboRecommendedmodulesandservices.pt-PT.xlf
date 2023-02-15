@@ -62,17 +62,17 @@
       </trans-unit>
       <trans-unit id="3891fd60e8d944a2de2cb2fca3a3c8bf">
         <source>More similar modules on Prestashop Marketplace</source>
-        <target>More similar modules on Prestashop Marketplace</target>
+        <target>Mais módulos semelhantes no PrestaShop Marketplace</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="98dd43dfae05b11befe1f140e0ec787a">
         <source>Installed</source>
-        <target>Installed</target>
+        <target>Instalado</target>
         <note>Line: </note>
       </trans-unit>
       <trans-unit id="ddd8eef6f86868a07f62b0e3810711f0">
         <source>Not Installed</source>
-        <target>Not Installed</target>
+        <target>Não instalado</target>
         <note>Line: </note>
       </trans-unit>
     </body>
