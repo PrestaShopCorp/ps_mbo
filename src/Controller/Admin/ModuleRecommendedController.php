@@ -104,9 +104,11 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
      */
     private function getRecommendedModulesLinkToAddons()
     {
-        $request = $this->requestStack->getCurrentRequest();
+        // Get the 3 digits version number. For example, 1.7.6.7 will become 1.7.6
         $psVersion = explode('.', _PS_VERSION_);
         $version = sprintf('%d.%d.%d', (int) $psVersion[0], (int) $psVersion[1], (int) $psVersion[2]);
+
+        // Get the request context language. Fallback to english if not supported
         $locale = $this->getContext()->language->language_code;
         if (!in_array($locale, self::MBO_AVAILABLE_LANGUAGES)) {
             $locale = 'en';
@@ -118,82 +120,86 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
             'utm_content' => 'download',
             'compatibility' => $version,
         ];
+
+        $request = $this->requestStack->getCurrentRequest();
         if ($request->request->has('admin_list_from_source')) {
             $params['utm_term'] = $request->request->get('admin_list_from_source');
         }
+
+        $baseUrl = 'https://addons.prestashop.com/' . $locale;
+
         switch (Tools::getValue('tabClassName')) {
             case 'AdminEmails':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/437-emails-notifications';
+                $linkToAddons = $baseUrl . '/437-emails-notifications';
                 break;
             case 'AdminAdminPreferences':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/440-administration';
+                $linkToAddons = $baseUrl . '/440-administration';
                 break;
             case 'AdminSearchConf':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/510-recherches-filtres';
+                $linkToAddons = $baseUrl . '/510-recherches-filtres';
                 break;
             case 'AdminMeta':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/488-trafic-marketplaces';
+                $linkToAddons = $baseUrl . '/488-trafic-marketplaces';
                 break;
             case 'AdminContacts':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/475-clients';
+                $linkToAddons = $baseUrl . '/475-clients';
                 break;
             case 'AdminGroups':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/537-gestion-clients?';
+                $linkToAddons = $baseUrl . '/537-gestion-clients?';
                 break;
             case 'AdminStatuses':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/441-gestion-commandes?';
+                $linkToAddons = $baseUrl . '/441-gestion-commandes?';
                 break;
             case 'AdminPayment':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/481-paiement';
+                $linkToAddons = $baseUrl . '/481-paiement';
                 break;
             case 'AdminShipping':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/518-livraison-logistique';
+                $linkToAddons = $baseUrl . '/518-livraison-logistique';
                 break;
             case 'AdminCarriers':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/520-transporteurs';
+                $linkToAddons = $baseUrl . '/520-transporteurs';
                 break;
             case 'AdminImages':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/462-visuels-produits';
+                $linkToAddons = $baseUrl . '/462-visuels-produits';
                 break;
             case 'AdminCmsContent':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/516-personnalisation-de-page';
+                $linkToAddons = $baseUrl . '/516-personnalisation-de-page';
                 break;
             case 'AdminStats':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/209-tableaux-de-bord';
+                $linkToAddons = $baseUrl . '/209-tableaux-de-bord';
                 break;
             case 'AdminCustomerThreads':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/442-service-client';
+                $linkToAddons = $baseUrl . '/442-service-client';
                 break;
             case 'AdminSpecificPriceRule':
             case 'AdminCartRules':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/496-promotions-marketing';
+                $linkToAddons = $baseUrl . '/496-promotions-marketing';
                 break;
             case 'AdminManufacturers':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/512-marques-fabricants';
+                $linkToAddons = $baseUrl . '/512-marques-fabricants';
                 break;
             case 'AdminFeatures':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/467-declinaisons-personnalisation';
+                $linkToAddons = $baseUrl . '/467-declinaisons-personnalisation';
                 break;
             case 'AdminProducts':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/460-fiche-produit';
+                $linkToAddons = $baseUrl . '/460-fiche-produit';
                 break;
             case 'AdminDeliverySlip':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/519-preparation-expedition';
+                $linkToAddons = $baseUrl . '/519-preparation-expedition';
                 break;
             case 'AdminSlip':
             case 'AdminInvoices':
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/446-comptabilite-facturation';
+                $linkToAddons = $baseUrl . '/446-comptabilite-facturation';
                 break;
             case 'AdminOrders':
                 $params['benefit_categories[]'] = 3;
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale . '/2-modules-prestashop';
+                $linkToAddons = $baseUrl . '/2-modules-prestashop';
                 break;
             default:
-                $linkToAddons = 'https://addons.prestashop.com/' . $locale;
+                $linkToAddons = $baseUrl;
                 break;
         }
-        $linkToAddons = $linkToAddons . '?' . http_build_query($params, '', '&');
 
-        return $linkToAddons;
+        return $linkToAddons . '?' . http_build_query($params, '', '&');
     }
 }
