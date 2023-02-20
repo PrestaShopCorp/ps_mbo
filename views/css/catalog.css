@@ -280,5 +280,5 @@
 }
 
 .mbo-module-card .btn-group.module-actions .btn.btn-outline-primary:focus {
-box-shadow: none;
+  box-shadow: none;
 }
