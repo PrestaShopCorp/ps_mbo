@@ -47,6 +47,26 @@ var mbo = {};
     modulesListLoader: '#modules_list_loader',
   };
 
+  var decodeHTMLEntities = function(text) {
+    var entities = [
+        ['amp', '&'],
+        ['apos', '\''],
+        ['#x27', '\''],
+        ['#x2F', '/'],
+        ['#39', '\''],
+        ['#47', '/'],
+        ['lt', '<'],
+        ['gt', '>'],
+        ['nbsp', ' '],
+        ['quot', '"']
+    ];
+
+    for (var i = 0, max = entities.length; i < max; ++i) 
+        text = text.replace(new RegExp('&'+entities[i][0]+';', 'g'), entities[i][1]);
+
+    return text;
+  }
+
   /**
    * Handles page interactions
    *
@@ -218,7 +238,7 @@ var mbo = {};
    */
   var RecommendedModulesContainer = function(config, content) {
     var containerTitle = config.translations['Recommended Modules and Services'];
-    var containerDescription = config.translations['description'];
+    var containerDescription = decodeHTMLEntities(config.translations['description']);
     var containerId = 'recommended-modules-container';
     var $markup;
 
@@ -389,8 +409,8 @@ var mbo = {};
       $(pageMap.modulesListModal).modal('show');
 
       recommendedModulesRequest.done(function (data) {
-        var descriptionHtml = '<div class="recommended-modal-description">' + config.translations['description'] + '</div>';
-        $(pageMap.modulesListModalContent).html(descriptionHtml + data.content).slideDown();
+        var descriptionHtml = decodeHTMLEntities(config.translations['description']);
+        $(pageMap.modulesListModalContent).html('<div class="recommended-modal-description">' + descriptionHtml  + '</div>' + data.content).slideDown();
         $(pageMap.modulesListLoader).hide();
       });
 

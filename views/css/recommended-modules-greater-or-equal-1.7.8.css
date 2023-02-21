@@ -23,6 +23,7 @@
    border: none;
    background-color:#F4FCFD ;
    font-size: 14px;
+   font-weight: 600;
    line-height: 19px;
    display: flex;
    justify-content: center;
@@ -32,7 +33,7 @@
  
  #main #content #recommended-modules-container .modules_list_container_tab .alert-addons::before,
  #main #content #modules_list_container #modules_list_container_tab_modal .alert-addons::before{
-   display:none;
+   display:none
    }
  
  #main #content #recommended-modules-container .modules_list_container_tab .alert-addons .alert-text .material-icons, 
@@ -50,36 +51,62 @@
    max-width: 56px;
    width: 56px;
  }
-
-#content .nav-tabs .nav-item .nav-link.active,
-.nav-tabs .nav-item.active .nav-link.active  {
+ #main-div
+   #modules_list_container
+   #modules_list_container_tab_modal
+   .nav-tabs
+   .nav-item.active
+   .nav-link.active,
+ #content.bootstrap .panel .nav-tabs .nav-item.active .nav-link,
+ #content.bootstrap #modules_list_container_tab_modal .nav-item.active {
    border-bottom: 3px solid #25b9d7 !important;
-   border-top: none !important;
+   border-top: none;
    margin-bottom: 10px;
  }
-
- .nav-tabs .nav-link.active,
- .div-content .bootstrap .nav-tabs .nav-link ,
- #content.bootstrap .nav-tabs .nav-item.active .nav-link.active,
- #content.bootstrap .nav-tabs .nav-item.active .nav-link {
-  border-bottom: 3px solid #25b9d7 !important;;
-  border-left: none ;
-  border-right: none;
-  border-top: none!important;
+ #recommended-modules-container .nav-tabs .nav-link.active {
+   border-bottom: 3px solid #25b9d7;
+   border-top: none;
+   margin-bottom: 10px;
  }
-#content.bootstrap .nav-tabs .nav-item .nav-link.active {
-  border-bottom: none !important;
-}
-
+ 
+ #content.bootstrap .nav-tabs .nav-item.show .nav-link,
+ #content.bootstrap .nav-tabs .nav-link.active {
+   color: #363a41;
+   background-color: #fff;
+   border-color: #25b9d7;
+ }
+ 
+ #content.bootstrap .nav-tabs,
+ #content.bootstrap .nav-tabs .nav-link {
+   border: none;
+ }
+ 
  #content.bootstrap #modules_list_container_content .img-thumbnail {
    max-width: 56px;
    width: 56px;
  }
-
+ 
  #content.bootstrap #modules_list_container_content .btn {
    border-radius: 0;
  }
-
+ 
+ #content.bootstrap #modules_list_container_content .btn .caret {
+   border-top-color: #25b9d7 !important;
+ }
+ 
+ #content.bootstrap #modules_list_container_content .btn-outline-primary {
+   color: #25b9d7;
+   background-color: transparent;
+   background-image: none;
+   border-color: #25b9d7;
+ }
+ 
+ #content.bootstrap #modules_list_container_content .btn-outline-primary:hover {
+   color: #fff;
+   background-color: #3ed2f0;
+   border-color: #3ed2f0;
+ }
+ 
  #content.bootstrap #modules_list_container_content .btn-block {
    padding-left: 8px;
    padding-right: 8px;
@@ -164,7 +191,8 @@
  .bootstrap
    .page-head
    .toolbarBox
-   .btn-toolbar {
+   .btn-toolbar
+   .toolbar_btn.mbo-modules-recommended-button {
    color: #fff;
    background-color: #6c868e;
    border-color: #6c868e;
@@ -173,17 +201,6 @@
    display: flex;
    align-items: center;
  }
-
- #main #content .bootstrap .toolbarBox .btn-toolbar{
-  background-color: transparent;
- }
- 
- #main #content .bootstrap .toolbarBox #toolbar-nav #recommended-modules-button-container #recommended-modules-button i{
-  height: 30px;
-  width: 30px;
-  color: #2eacce;
- }
-
  .bootstrap
    .page-head
    .toolbarBox
@@ -195,7 +212,15 @@
    margin-right: 5px;
  }
  
-
+ .bootstrap
+   .page-head
+   .toolbarBox
+   .btn-toolbar
+   .toolbar_btn.mbo-modules-recommended-button:hover {
+   color: #fff;
+   background-color: #b7ced3;
+   border-color: #b7ced3;
+ }
  .recommended-modal-description {
    margin-bottom: 30px;
    margin-bottom: 10px;
@@ -216,86 +241,7 @@
  .iconButtonRecommanded{
    margin-right: 20px;
  }
-
-#main-div .content-div #recommended-modules-container .card-block .alert-addons .alert-text a ,
-#main #content #recommended-modules-container .modules_list_container_tab .alert-addons .alert-text a,
-#main #content #modules_list_container #modules_list_container_tab_modal .alert-addons .alert-text a,
-#main-div #modules_list_container .modal-dialog #modules_list_container_tab_modal .alert-addons .alert-text a {
-  color: #363A41 !important;
-  font-weight: 600;
-}
-
-/* hover button */
-.module-actions .btn-outlined-secondary:hover,
-.btn-outline-secondary:hover,
-.btn-secondary:hover {
-  color: #fff !important;
-  background-color: #b7ced3 !important ;
-  border-color: #b7ced3 !important;
-  border-radius: 5px !important;
-}
-.bootstrap .nav-tabs>li>a:hover:hover{
-  border: none !important;
-}
-
-#tab_modules_list_not_installed .btn-outline-primary,
-.module-actions .btn-secondary{
-  color: #fff;
-  background-color: #6c868e  ;
-  border-color: #6c868e ;
-  border-radius: 5px !important;
-}
-.module-actions .btn-outlined-secondary{
-  color: #6c868e;
-  background-color: transparent  ;
-  border-color: #6c868e ;
-  border-radius: 5px !important;
-}
-
-/* dropdown button */
-#main-div  #recommended-modules-container #modules_list_container_content .module-actions .dropdown-toggle,
-#main #content #recommended-modules-container #modules_list_container_content  .module-actions .dropdown-toggle,
-#modules_list_container #modules_list_container_content .module-actions .dropdown-toggle,
-#main-div #modules_list_container #modules_list_container_content .module-actions .dropdown-toggle{
-  color: #6c868e ;
-  background-color: transparent;
-  background-image: none;
-  border-color: #6c868e ;
-  margin-left: 15px;
-  border-radius: 5px;
-}
-#main #content   #modules_list_container_tab_modal #modules_list_container_content .module-actions .dropdown-toggle,
-#main #content #recommended-modules-container #modules_list_container_content  .module-actions .dropdown-toggle{
-  border-left:1px solid  ;
-}
-
-#main-div #modules_list_container #modules_list_container_content .module-actions .module_action_menu_go_to_addons  {
-  color: #6c868e ;
-  background-color: transparent;
-  background-image: none;
-  border-color: #6c868e;
-  border-radius: 5px ;
-}
-
-.module-actions .module_action_menu_go_to_addons {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-}
-
-#modules_list_container_content .module-actions .spacing-icone-p {
-  margin: 5px 0px 5px 5px  !important;
-  font-weight: 600;
-  font-size: 14px;
-  text-align: center;
-}
-
-
-#modules_list_container_content .module-quick-action-list {
-  width: 150px;
-  text-align: right;
-}
-
+ 
  @media (min-width: 768px) {
    #content.bootstrap #modules_list_container .modal-dialog {
      width: 680px;

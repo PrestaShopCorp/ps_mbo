@@ -38,7 +38,7 @@
 	{% if url_active == 'buy' %}
 		<a class="btn btn-secondary btn-block btn-outline-secondary" href="{{ url }}" target="_blank">
 			<i class="material-icons" style="font-size: 18px;">launch</i>
-			{{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}
+			{{ 'Discover'|trans({}, 'Modules.Mbo.Modulescatalog') }}
 		</a>
 	{% elseif urls|length %}
 		{% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/Includes/action_button.html.twig' with {

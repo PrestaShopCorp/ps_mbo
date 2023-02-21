@@ -25,14 +25,14 @@
     {% if recommendedModulesNotInstalled is not empty %}
       <li class="nav-item active">
         <a class="nav-link active" data-toggle="tab" href="#tab_modules_list_not_installed" role="tab">
-          {{ 'Not Installed'|trans({}) }}
+          {{ 'Not Installed'|trans({}, 'Modules.Mbo.Recommendedmodulesandservices') }}
         </a>
       </li>
     {% endif %}
     {% if recommendedModulesInstalled is not empty %}
       <li class="nav-item{% if recommendedModulesNotInstalled is empty %} active{% endif %}">
         <a class="nav-link{% if recommendedModulesNotInstalled is empty %} active{% endif %}" data-toggle="tab" href="#tab_modules_list_installed" role="tab">
-          {{ 'Installed'|trans({}) }}
+          {{ 'Installed'|trans({}, 'Modules.Mbo.Recommendedmodulesandservices') }}
         </a>
       </li>
     {% endif %}
