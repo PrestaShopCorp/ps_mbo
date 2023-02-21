@@ -17,11 +17,11 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1d929590b318c7d4746d15f
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b63003090cd7fae050a51da250bb0dc'] = 'Verbesserung der Datenstrategie';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3015e7fd48efb2220c184c49eaeae2c1'] = 'Kundenerlebnis verbessern';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_e39767bb8e247250896230e1d6ee036f'] = 'Empfohlene Module';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_fc1cb075bac98eae00dad1906331b544'] = 'Gewinnen Sie neue Kunden und lassen Sie sie wiederkommen.<br>
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_947d8544b50da92594fc6c5ed87af81b'] = 'Gewinnen Sie neue Kunden und lassen Sie sie wiederkommen.<br>
                 Hier finden Sie eine Auswahl von Partnermodulen,<strong> die mit Ihrem Shop kompatibel sind und Ihnen helfen</strong>, Ihre Ziele zu erreichen';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_88b4c622af5f96f61b3cee5fcb49791b'] = 'Machen Sie Ihre mehr Produkte sichtbar und erstellen Sie Produktseiten, die konvertieren.<br>
                 Hier finden Sie eine Auswahl von Partnermodulen,<strong> die mit Ihrem Shop kompatibel sind und Ihnen helfen</strong>, Ihre Ziele zu erreichen';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_9a04ed36e67bcf92743c0cd0aea795ee'] = '<p>Entwickeln Sie eine datengestützte Strategie und treffen Sie fundiertere Entscheidungen.<br>
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_8e64cb6132c6f4db1e056bac48344ef9'] = '<p>Entwickeln Sie eine datengestützte Strategie und treffen Sie fundiertere Entscheidungen.<br>
                 Hier finden Sie eine Auswahl von Partnermodulen,<strong> die mit Ihrem Shop kompatibel sind und Ihnen helfen</strong>, Ihre Ziele zu erreichen</p>';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_085d4012e6e56f6f4ad58e03398dea79'] = 'Schaffen Sie unvergessliche Erlebnisse und machen Sie Besucher zu Kunden.<br>
                 Hier finden Sie eine Auswahl von Partnermodulen,<strong> die mit Ihrem Shop kompatibel sind und Ihnen helfen</strong>, Ihre Ziele zu erreichen';
@@ -29,3 +29,6 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7b98a7415047fae30575884
 $_MODULE['<{mbo}prestashop>modulescatalog_3891fd60e8d944a2de2cb2fca3a3c8bf'] = 'Mehr ähnliche Module auf PrestaShop Marketplace';
 $_MODULE['<{mbo}prestashop>modulescatalog_98dd43dfae05b11befe1f140e0ec787a'] = 'Installiert';
 $_MODULE['<{mbo}prestashop>modulescatalog_ddd8eef6f86868a07f62b0e3810711f0'] = 'Nicht installiert';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3891fd60e8d944a2de2cb2fca3a3c8bf'] = 'Mehr ähnliche Module auf PrestaShop Marketplace';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_98dd43dfae05b11befe1f140e0ec787a'] = 'Installiert';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_ddd8eef6f86868a07f62b0e3810711f0'] = 'Nicht installiert';
