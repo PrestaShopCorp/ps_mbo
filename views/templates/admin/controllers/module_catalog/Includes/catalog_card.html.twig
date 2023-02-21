@@ -61,8 +61,8 @@
 				{% set badges = module.attributes.badges %}
 				{% if badges %}
 					{% set badge = badges|first %}
-					<div class="mbo-module-card__tag" title="{{ module.attributes.categoryName }}">
-						{{badge.label}}
+					<div class="mbo-module-card__tag" title="{{ badge.label }}">
+						{{ badge.label }}
 					</div>
 				{% endif %}
 			</div>
