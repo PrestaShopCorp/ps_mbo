@@ -83,25 +83,11 @@
    width: 56px;
  }
  
- #content.bootstrap #modules_list_container_content .btn {
-   border-radius: 0;
- }
- 
- #content.bootstrap #modules_list_container_content .btn .caret {
-   border-top-color: #25b9d7 !important;
- }
- 
- #content.bootstrap #modules_list_container_content .btn-outline-primary {
-   color: #25b9d7;
-   background-color: transparent;
-   background-image: none;
-   border-color: #25b9d7;
- }
- 
- #content.bootstrap #modules_list_container_content .btn-outline-primary:hover {
-   color: #fff;
-   background-color: #3ed2f0;
-   border-color: #3ed2f0;
+ #content.bootstrap #modules_list_container_content .btn .module_action_menu_install{
+  border-radius: 5px;
+  color: #fff ;
+  background-color: #6c868e ;
+  border-color: #6c868e 
  }
  
  #content.bootstrap #modules_list_container_content .btn-block {
@@ -197,6 +183,8 @@
    box-shadow: none;
    display: flex;
    align-items: center;
+   border-top-right-radius: 5px;
+   border-bottom-right-radius: 5px; 
  }
  .bootstrap
    .page-head
@@ -239,6 +227,73 @@
    margin-right: 20px;
  }
  
+ .bootstrap .btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle),
+ .btn-group>.btn:not(:first-child),
+ .btn-group>.btn:not(:last-child):not(.dropdown-toggle), .btn-group>.btn-group:not(:last-child)>.btn {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-left: 1px solid ;
+  border: 1px solid #6c868e ;
+  border-radius: 5px;
+}
+
+.btn-group .btn.dropdown-toggle-split[class*="outline"] {
+  margin-left:15px;
+}
+/* action button */
+.bootstrap .btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle),
+#modules_list_container_content .module-actions .module_action_menu_install{
+  color: #fff ;
+  background-color: #6c868e ;
+  border-color: #6c868e ;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border-radius: 5px;
+}
+
+/* hover button */
+.bootstrap .btn-group>.dropdown-toggle:not(:first-child):hover,
+#modules_list_container_content .module-actions .module_action_menu_install:hover,
+#modules_list_container_content .module-actions .module_action_menu_install:hover,
+#modules_list_container_content .module-actions .module_action_menu_upgrade:hover,
+#modules_list_container_content .module-actions .dropdown-toggle:hover,
+#modules_list_container_content .module-actions a:hover,
+#modules_list_container_content .module-actions .dropdown-toggle:hover,
+#modules_list_container_content .module-actions a:hover,
+#modules_list_container_tab_modal #modules_list_container_content .module-actions a:hover,
+.btn-group .module_action_menu_install:hover,
+#modules_list_container_content .module-actions .module_action_menu_install:hover,
+#modules_list_container_content .module-actions a:hover,
+#modules_list_container_content .module-actions a:hover,
+#modules_list_container_content .module-actions .dropdown-toggle:hover,
+#modules_list_container_content .module-actions .module_action_menu_go_to_addons:hover {
+ color: #fff;
+ background-color: #b7ced3 !important;
+ background-image: none ;
+ border-color: #b7ced3 ;
+ border-radius: 5px;
+}
+
+/* Focus dropdown */
+#modules_list_container_content .module-actions .dropdown-toggle:focus,
+#main #content #modules_list_container_tab_modal #modules_list_container_content .module-actions .dropdown-toggle:focus{
+  box-shadow: none;
+}
+
+/* dropdown */
+.bootstrap .btn-group>.dropdown-toggle:not(:first-child){
+  margin-left: 15px;
+  border-left: 1px solid ;
+  border: 1px solid #6c868e ;
+  border-radius: 5px;
+} 
+
+#modules_list_container_content .module-quick-action-list {
+  width: 140px;
+  text-align: right;
+}
  @media (min-width: 768px) {
    #content.bootstrap #modules_list_container .modal-dialog {
      width: 680px;
