@@ -232,6 +232,9 @@
   gap: 16px;
 }
 
+
+.mbo-module-card .btn-group.module-actions .btn.btn-secondary, 
+.mbo-module-card .btn-group.module-actions .btn.btn-outline-secondary, 
 .mbo-module-card .btn-group.module-actions .btn.btn-outline-primary {
   border-color: var(--theme-secondary);
   border-radius: 4px;
@@ -256,36 +259,18 @@
   flex: 0;
 }
 
-.mbo-module-card
-  .btn-group.module-actions
-  .btn.btn-outline-primary:first-child:hover {
+.mbo-module-card .btn-group.module-actions a:hover,
+.mbo-module-card .btn-group.module-actions button:hover,
+.mbo-module-card .btn-group.module-actions .btn.btn-outline-primary:hover,
+.mbo-module-card .btn-group.module-actions .btn.btn-outline-secondary:hover {
   color: white;
-  border-color: var(--theme-secondary-hover);
-  background-color: var(--theme-secondary-hover);
+  border-color: var(--theme-secondary-hover) !important;
+  background-color: var(--theme-secondary-hover) !important;
 }
 
-.mbo-module-card
-  .btn-group.module-actions
-  .btn.btn-outline-primary:not(:first-child):hover {
-  color: white;
-  border-color: var(--theme-secondary-hover);
-  background-color: var(--theme-secondary-hover);
-}
-
-.mbo-module-card
-  .btn-group.module-actions
-  .btn.btn-outline-primary:first-child:active {
-  color: white;
-  border-color: var(--theme-secondary-active);
-  background-color: var(--theme-secondary-active);
-}
-
-.mbo-module-card
-  .btn-group.module-actions
-  .btn.btn-outline-primary:not(:first-child):active,
-.mbo-module-card
-  .btn-group.module-actions.show
-  > .btn-outline-primary.dropdown-toggle {
+.mbo-module-card .btn-group.module-actions .btn.btn-outline-primary:first-child:active,
+.mbo-module-card .btn-group.module-actions .btn.btn-outline-primary:not(:first-child):active,
+.mbo-module-card .btn-group.module-actions.show> .btn-outline-primary.dropdown-toggle {
   border-color: var(--theme-secondary-active);
   color: white;
   background-color: var(--theme-secondary-active);
@@ -293,4 +278,8 @@
 
 .mbo-module-card .btn-primary-reverse.spinner {
   align-self: center;
+}
+
+.mbo-module-card .btn-group.module-actions .btn.btn-outline-primary:focus {
+  box-shadow: none;
 }

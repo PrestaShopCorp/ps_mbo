@@ -42,7 +42,7 @@
       <div class="tab-pane active" id="tab_modules_list_not_installed" role="tabpanel">
         <table class="table">
           {% for recommendedModuleNotInstalled in recommendedModulesNotInstalled %}
-            {{ include('@PrestaShop/Admin/Module/Includes/tab-module-line.html.twig',{'module': recommendedModuleNotInstalled}) }}
+            {{ include('@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/Includes/tab-module-line.html.twig',{'module': recommendedModuleNotInstalled}) }}
           {% endfor %}
         </table>
       </div>
@@ -51,7 +51,7 @@
       <div class="tab-pane {% if recommendedModulesNotInstalled is empty %}active{% endif %}" id="tab_modules_list_installed" role="tabpanel">
         <table class="table">
           {% for recommendedModuleInstalled in recommendedModulesInstalled %}
-            {{ include('@PrestaShop/Admin/Module/Includes/tab-module-line.html.twig',{'module': recommendedModuleInstalled}) }}
+            {{ include('@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/Includes/tab-module-line.html.twig',{'module': recommendedModuleInstalled}) }}
           {% endfor %}
         </table>
       </div>
@@ -61,7 +61,7 @@
 
   <div class="alert alert-addons row-margin-top" role="alert">
     <p class="alert-text">
-      <a href="https://addons.prestashop.com/?utm_source=back-office&amp;utm_medium=dispatch&amp;utm_campaign=back-office-{{ app.request.locale }}&amp;utm_content=download{% if adminListFromSource is defined %}&amp;utm_term={{ adminListFromSource }}{% endif %}" onclick="return !window.open(this.href);">
+      <a href="{{recommendedModulesLinkToAddons}}&amp;utm_source=back-office&amp;utm_medium=dispatch&amp;utm_campaign=back-office-{{ app.request.locale }}&amp;utm_content=download{% if adminListFromSource is defined %}&amp;utm_term={{ adminListFromSource }}{% endif %}" onclick="return !window.open(this.href);">
         {{ 'More similar modules on Prestashop Marketplace'|trans({}) }}
       </a>
        <i class="material-icons">open_in_new</i>
