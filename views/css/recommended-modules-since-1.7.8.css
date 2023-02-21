@@ -33,7 +33,7 @@
  
  #main #content #recommended-modules-container .modules_list_container_tab .alert-addons::before,
  #main #content #modules_list_container #modules_list_container_tab_modal .alert-addons::before{
-   display:none
+   display:none;
    }
  
  #main #content #recommended-modules-container .modules_list_container_tab .alert-addons .alert-text .material-icons, 
@@ -51,20 +51,23 @@
    max-width: 56px;
    width: 56px;
  }
- #main-div .nav-tabs .nav-link.active,
- #recommended-modules-container .nav-tabs .nav-link.active,
- #main-div #modules_list_container #modules_list_container_tab_modal .nav-tabs .nav-link.active,
- #content.bootstrap .panel .nav-tabs .nav-item.active .nav-link,
- #content.bootstrap #modules_list_container_tab_modal .nav-item.active {
-   border-bottom: 3px solid #25b9d7 !important;
+
+ .nav-tabs .nav-item.active{
    border-top: none !important;
    margin-bottom: 10px;
  }
- #recommended-modules-container .nav-tabs .nav-link.active {
-   border-bottom: 3px solid #25b9d7;
-   border-top: none;
-   margin-bottom: 10px;
+ .card-block .nav-tabs .nav-item .nav-link.active,
+ .card-block .nav-tabs .nav-item.active .nav-link.active,
+ #content .modules_list_container_tab .nav-tabs .nav-item.active .nav-link,
+ #content .modules_list_container_tab .nav-tabs .nav-item.active .nav-link.active,
+ .content-div #modules_list_container_tab_modal .nav-tabs .nav-item .nav-link.active,
+ #content #modules_list_container_tab_modal .nav-tabs .nav-item.active .nav-link,
+ #modules_list_container_tab_modal .nav-tabs .nav-item.active .nav-link.active{
+   border-top: none !important;
+   border-bottom: 3px solid #25b9d7 !important ;
  }
+
+
  
  #content.bootstrap .nav-tabs .nav-item.show .nav-link,
  #content.bootstrap .nav-tabs .nav-link.active {
@@ -226,7 +229,11 @@
  .iconButtonRecommanded{
    margin-right: 20px;
  }
- 
+
+ .modules_list_container_tab row .nav-tabs .nav-item .nav-link.active{
+  border-bottom: none !important;
+ }
+
  .bootstrap .btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle),
  .btn-group>.btn:not(:first-child),
  .btn-group>.btn:not(:last-child):not(.dropdown-toggle), .btn-group>.btn-group:not(:last-child)>.btn {
@@ -243,8 +250,9 @@
   margin-left:15px;
 }
 /* action button */
-.bootstrap .btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle),
-#modules_list_container_content .module-actions .module_action_menu_install{
+#content #recommended-modules-container .module-actions .btn-secondary,
+#modules_list_container_content .module-actions .btn-secondary,
+.module-actions .module_action_menu_install{
   color: #fff ;
   background-color: #6c868e ;
   border-color: #6c868e ;
@@ -253,6 +261,17 @@
   border-radius: 5px;
 }
 
+.module-actions .btn-outlined-secondary {
+  display :flex;
+  align-items: center;
+}
+.module-actions .btn-outlined-secondary i {
+  margin-right :3px;
+  margin-top: 2px;
+}
+.bootstrap .module-actions p.spacing-icone-p {
+  margin: 0px 0px 0px;
+}
 /* hover button */
 .bootstrap .btn-group>.dropdown-toggle:not(:first-child):hover,
 #modules_list_container_content .module-actions .module_action_menu_install:hover,
@@ -289,6 +308,8 @@
   border: 1px solid #6c868e ;
   border-radius: 5px;
 } 
+
+
 
 #modules_list_container_content .module-quick-action-list {
   width: 140px;

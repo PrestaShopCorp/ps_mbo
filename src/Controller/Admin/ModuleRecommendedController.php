@@ -129,6 +129,9 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
         $baseUrl = 'https://addons.prestashop.com/' . $locale;
 
         switch (Tools::getValue('tabClassName')) {
+            case 'AdminCustomers':
+                $linkToAddons = $baseUrl . '/475-clients';
+                break;
             case 'AdminEmails':
                 $linkToAddons = $baseUrl . '/437-emails-notifications';
                 break;
