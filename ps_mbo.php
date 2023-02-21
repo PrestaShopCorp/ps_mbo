@@ -630,7 +630,7 @@ class ps_mbo extends Module
 
     public function isUsingNewTranslationSystem()
     {
-        return true;
+        return false;
     }
 
     /**
