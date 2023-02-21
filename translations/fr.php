@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 
 $_MODULE['<{mbo}prestashop>modulescatalog_c15784789b60bab84ad3108dacfb3f18'] = 'Trouver des modules pour développer votre entreprise';
 $_MODULE['<{mbo}prestashop>modulescatalog_47b2395a25658f70813eb6a7a07f55c6'] = 'Explorez Marketplace dans votre back-office pour trouver des modules partenaires gratuits et payants pour développer votre activité. Augmentez le trafic, améliorez les conversions ou fidélisez vos clients... il y a un module pour chaque besoin.';
@@ -17,13 +17,13 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1d929590b318c7d4746d15f
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b63003090cd7fae050a51da250bb0dc'] = 'Améliorer la stratégie de données';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3015e7fd48efb2220c184c49eaeae2c1'] = 'Améliorer l\'expérience client';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_e39767bb8e247250896230e1d6ee036f'] = 'Modules recommandés';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_fc1cb075bac98eae00dad1906331b544'] = "Attirez de nouveaux clients et faites en sorte qu'ils reviennent.<br>Voici une sélection de modules partenaires, <strong>compatibles avec votre boutique</strong>, pour vous aider à atteindre vos objectifs.";
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_88b4c622af5f96f61b3cee5fcb49791b'] = "Rendez vos produits plus visibles et créez des pages de produits qui convertissent.<br>
-                Voici une sélection de modules partenaires, <strong>compatibles avec votre boutique</strong>, pour vous aider à atteindre vos objectifs.";
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_9a04ed36e67bcf92743c0cd0aea795ee'] = "<p>Élaborez une stratégie basée sur les données et prenez des décisions plus éclairées.<br>
-                Voici une sélection de modules partenaires, <strong>compatibles avec votre boutique</strong>, pour vous aider à atteindre vos objectifs.</p>";
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_085d4012e6e56f6f4ad58e03398dea79'] = "Créez des expériences mémorables et transformez les visiteurs en clients.<br>
-                Voici une sélection de modules partenaires, <strong>compatibles avec votre boutique</strong>, pour vous aider à atteindre vos objectifs.";
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_fc1cb075bac98eae00dad1906331b544'] = 'Attirez de nouveaux clients et faites en sorte qu\'ils reviennent.<br>Voici une sélection de modules partenaires, <strong>compatibles avec votre boutique</strong>, pour vous aider à atteindre vos objectifs.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_88b4c622af5f96f61b3cee5fcb49791b'] = 'Rendez vos produits plus visibles et créez des pages de produits qui convertissent.<br>
+                Voici une sélection de modules partenaires, <strong>compatibles avec votre boutique</strong>, pour vous aider à atteindre vos objectifs.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_9a04ed36e67bcf92743c0cd0aea795ee'] = '<p>Élaborez une stratégie basée sur les données et prenez des décisions plus éclairées.<br>
+                Voici une sélection de modules partenaires, <strong>compatibles avec votre boutique</strong>, pour vous aider à atteindre vos objectifs.</p>';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_085d4012e6e56f6f4ad58e03398dea79'] = 'Créez des expériences mémorables et transformez les visiteurs en clients.<br>
+                Voici une sélection de modules partenaires, <strong>compatibles avec votre boutique</strong>, pour vous aider à atteindre vos objectifs.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7b98a7415047fae30575884f3aef3081'] = 'Voici une sélection de modules partenaires,<strong> compatibles avec votre boutique </strong>, pour vous aider à atteindre vos objectifs.';
 $_MODULE['<{mbo}prestashop>modulescatalog_3891fd60e8d944a2de2cb2fca3a3c8bf'] = 'Plus de modules similaires sur PrestaShop Marketplace';
 $_MODULE['<{mbo}prestashop>modulescatalog_98dd43dfae05b11befe1f140e0ec787a'] = 'Installé';

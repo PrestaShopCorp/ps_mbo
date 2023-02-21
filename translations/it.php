@@ -1,7 +1,7 @@
 <?php
 
 global $_MODULE;
-$_MODULE = array();
+$_MODULE = [];
 
 $_MODULE['<{mbo}prestashop>ps_mbo_c15784789b60bab84ad3108dacfb3f18'] = 'Trovate i moduli per far crescere la vostra attività';
 $_MODULE['<{mbo}prestashop>ps_mbo_47b2395a25658f70813eb6a7a07f55c6'] = 'Esplorate il Marketplace nel vostro back office per trovare moduli partner gratuiti e a pagamento per far crescere la vostra attività. Aumentare il traffico, migliorare le conversioni o fidelizzare i clienti... c\'è un modulo per ogni esigenza.';
@@ -17,15 +17,15 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1d929590b318c7d4746d15f
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b63003090cd7fae050a51da250bb0dc'] = 'Migliorare la strategia dei dati';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3015e7fd48efb2220c184c49eaeae2c1'] = 'Migliorare l\'esperienza del cliente';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_e39767bb8e247250896230e1d6ee036f'] = 'Moduli raccomandati';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_4b89fd5e12aede952bf0b6e47d97733c'] = "Ottenere nuovi clienti e farli tornare.<br>
-                Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.";
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_8f09647a1a90a3272653803298accd6d'] = "Rendete visibili i vostri prodotti in più e create pagine di prodotto che convertono.<br>
-                Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.";
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_9a04ed36e67bcf92743c0cd0aea795ee'] = "<p>Costruite una strategia basata sui dati e prendete decisioni più informate.<br>
-                Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.</p>";
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1f6f51f10d9e69ef3d2f293612f82dd1'] = "Create esperienze memorabili e trasformate i visitatori in clienti.<br>
-                Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.";
-$_MODULE['<{mbo}prestashop>ps_mbo_dd1bd6bb90d44b5c7beeb4e4546181f6'] = "Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.";
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_4b89fd5e12aede952bf0b6e47d97733c'] = 'Ottenere nuovi clienti e farli tornare.<br>
+                Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_8f09647a1a90a3272653803298accd6d'] = 'Rendete visibili i vostri prodotti in più e create pagine di prodotto che convertono.<br>
+                Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_9a04ed36e67bcf92743c0cd0aea795ee'] = '<p>Costruite una strategia basata sui dati e prendete decisioni più informate.<br>
+                Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.</p>';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1f6f51f10d9e69ef3d2f293612f82dd1'] = 'Create esperienze memorabili e trasformate i visitatori in clienti.<br>
+                Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.';
+$_MODULE['<{mbo}prestashop>ps_mbo_dd1bd6bb90d44b5c7beeb4e4546181f6'] = 'Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.';
 $_MODULE['<{mbo}prestashop>ps_mbo_3891fd60e8d944a2de2cb2fca3a3c8bf'] = 'Altri moduli simili su PrestaShop Marketplace';
 $_MODULE['<{mbo}prestashop>ps_mbo_98dd43dfae05b11befe1f140e0ec787a'] = 'Installato';
 $_MODULE['<{mbo}prestashop>ps_mbo_ddd8eef6f86868a07f62b0e3810711f0'] = 'Non installato';
