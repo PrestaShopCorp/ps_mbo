@@ -244,6 +244,9 @@
   background-color: #6c868e  ;
   border-color: #6c868e ;
   border-radius: 5px !important;
+  height: 35px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
 }
 .module-actions .btn-outlined-secondary{
   color: #6c868e;
