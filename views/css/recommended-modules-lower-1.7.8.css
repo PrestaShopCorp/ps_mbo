@@ -290,6 +290,13 @@
   text-align: center;
 }
 
+.module-actions .btn-outlined-secondary {
+  height: 35px;
+}
+
+.module-actions .material-icons {
+  font-size: 20px;
+} 
 
 #modules_list_container_content .module-quick-action-list {
   width: 150px;
