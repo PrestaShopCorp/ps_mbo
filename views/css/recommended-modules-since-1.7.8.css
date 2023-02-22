@@ -234,9 +234,9 @@
   border-bottom: none !important;
  }
 
- .bootstrap .btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle),
- .btn-group>.btn:not(:first-child),
- .btn-group>.btn:not(:last-child):not(.dropdown-toggle), .btn-group>.btn-group:not(:last-child)>.btn {
+ .bootstrap .module-container .btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle),
+  .module-container .btn-group>.btn:not(:first-child),
+  .module-container .btn-group>.btn:not(:last-child):not(.dropdown-toggle), .btn-group>.btn-group:not(:last-child)>.btn {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   border-top-left-radius: 5px;
@@ -291,7 +291,7 @@
  color: #fff;
  background-color: #b7ced3 !important;
  background-image: none ;
- border-color: #b7ced3 ;
+ border-color: #b7ced3 !important;
  border-radius: 5px;
 }
 
@@ -302,7 +302,7 @@
 }
 
 /* dropdown */
-.bootstrap .btn-group>.dropdown-toggle:not(:first-child){
+.bootstrap .module-container .btn-group>.dropdown-toggle:not(:first-child){
   margin-left: 15px;
   border-left: 1px solid ;
   border: 1px solid #6c868e ;
