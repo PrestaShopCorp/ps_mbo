@@ -17,11 +17,11 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1d929590b318c7d4746d15f
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b63003090cd7fae050a51da250bb0dc'] = 'Poprawa strategii w zakresie danych';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3015e7fd48efb2220c184c49eaeae2c1'] = 'Poprawa doświadczenia klienta';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_e39767bb8e247250896230e1d6ee036f'] = 'Zalecane moduły';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_fc1cb075bac98eae00dad1906331b544'] = 'Zdobądź nowych klientów i spraw, by do nas wracali.<br>
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_947d8544b50da92594fc6c5ed87af81b'] = 'Zdobądź nowych klientów i spraw, by do nas wracali.<br>
                 Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_88b4c622af5f96f61b3cee5fcb49791b'] = 'Spraw, aby Twoje więcej produktów było widocznych i twórz strony produktowe, które konwertują.<br>
                 Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_9a04ed36e67bcf92743c0cd0aea795ee'] = '<p>Zbuduj strategię opartą na danych i podejmuj bardziej świadome decyzje.<br>
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_8e64cb6132c6f4db1e056bac48344ef9'] = '<p>Zbuduj strategię opartą na danych i podejmuj bardziej świadome decyzje.<br>
                 Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.</p>';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_085d4012e6e56f6f4ad58e03398dea79'] = 'Stwórz niezapomniane doświadczenia i zamień odwiedzających w klientów.<br>
                 Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
@@ -29,3 +29,6 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7b98a7415047fae30575884
 $_MODULE['<{mbo}prestashop>modulescatalog_3891fd60e8d944a2de2cb2fca3a3c8bf'] = 'Więcej podobnych modułów na PrestaShop Marketplace';
 $_MODULE['<{mbo}prestashop>modulescatalog_98dd43dfae05b11befe1f140e0ec787a'] = 'Zainstalowano';
 $_MODULE['<{mbo}prestashop>modulescatalog_ddd8eef6f86868a07f62b0e3810711f0'] = 'Nie zainstalowano';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3891fd60e8d944a2de2cb2fca3a3c8bf'] = 'Więcej podobnych modułów na PrestaShop Marketplace';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_98dd43dfae05b11befe1f140e0ec787a'] = 'Zainstalowano';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_ddd8eef6f86868a07f62b0e3810711f0'] = 'Nie zainstalowano';

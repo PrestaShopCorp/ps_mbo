@@ -17,11 +17,11 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1d929590b318c7d4746d15f
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b63003090cd7fae050a51da250bb0dc'] = 'Îmbunătățirea strategiei de date';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3015e7fd48efb2220c184c49eaeae2c1'] = 'Îmbunătățirea experienței clienților';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_e39767bb8e247250896230e1d6ee036f'] = 'Module recomandate';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_fc1cb075bac98eae00dad1906331b544'] = 'Obțineți noi clienți și păstrați-i în continuare.<br>
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_947d8544b50da92594fc6c5ed87af81b'] = 'Obțineți noi clienți și păstrați-i în continuare.<br>
                 Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_88b4c622af5f96f61b3cee5fcb49791b'] = 'Faceți mai multe produse vizibile și creați pagini de produse care să convertească.<br>
                 Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_9a04ed36e67bcf92743c0cd0aea795ee'] = '<p>Construiți o strategie bazată pe date și luați decizii mai informate.<br>
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_8e64cb6132c6f4db1e056bac48344ef9'] = '<p>Construiți o strategie bazată pe date și luați decizii mai informate.<br>
                 Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.</p>';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_085d4012e6e56f6f4ad58e03398dea79'] = 'Creați experiențe memorabile și transformați vizitatorii în clienți.<br>
                 Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
@@ -29,3 +29,6 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7b98a7415047fae30575884
 $_MODULE['<{mbo}prestashop>modulescatalog_3891fd60e8d944a2de2cb2fca3a3c8bf'] = 'Mai multe module similare pe PrestaShop Marketplace';
 $_MODULE['<{mbo}prestashop>modulescatalog_98dd43dfae05b11befe1f140e0ec787a'] = 'Instalat';
 $_MODULE['<{mbo}prestashop>modulescatalog_ddd8eef6f86868a07f62b0e3810711f0'] = 'Nu este instalat';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3891fd60e8d944a2de2cb2fca3a3c8bf'] = 'Mai multe module similare pe PrestaShop Marketplace';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_98dd43dfae05b11befe1f140e0ec787a'] = 'Instalat';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_ddd8eef6f86868a07f62b0e3810711f0'] = 'Nu este instalat';
