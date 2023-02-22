@@ -109,10 +109,11 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
         $version = sprintf('%d.%d.%d', (int) $psVersion[0], (int) $psVersion[1], (int) $psVersion[2]);
 
         // Get the request context language. Fallback to english if not supported
-        $locale = $this->getContext()->language->language_code;
+        $locale = $this->getContext()->language->iso_code;
         if (!in_array($locale, self::MBO_AVAILABLE_LANGUAGES)) {
             $locale = 'en';
         }
+
         $params = [
             'utm_source' => 'back-office',
             'utm_medium' => 'dispatch',
