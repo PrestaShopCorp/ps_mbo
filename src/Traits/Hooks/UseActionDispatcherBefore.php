@@ -38,9 +38,9 @@ trait UseActionDispatcherBefore
      */
     public function hookActionDispatcherBefore(array $params): void
     {
-        $controllerName = Tools::getValue('controller');
-
         $this->translateTabsIfNeeded();
+
+        $controllerName = Tools::getValue('controller');
 
         // Registration failed on install, retry it
         if (in_array($controllerName, [
