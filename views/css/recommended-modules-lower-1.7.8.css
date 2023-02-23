@@ -28,6 +28,7 @@
    justify-content: center;
    align-items: center;
    text-decoration-line: underline;
+   color : #6c868e 
  }
  
  #main #content #recommended-modules-container .modules_list_container_tab .alert-addons::before,
@@ -43,7 +44,6 @@
    color: #25b9d7;
    margin-left: 5px;
    font-size: medium;
-   
  }
  
  #main-div #modules_list_container_content .img-thumbnail {
