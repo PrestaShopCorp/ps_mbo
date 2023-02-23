@@ -147,7 +147,6 @@ class ps_mbo extends Module
 
             $this->getAdminAuthenticationProvider()->clearCache();
             $this->getAdminAuthenticationProvider()->createApiUser();
-            $this->postponeTabsTranslations();
 
             return true;
         }
@@ -455,7 +454,7 @@ class ps_mbo extends Module
 
     private function translateTabsIfNeeded(): void
     {
-        if (Tools::getValue('controller') !== 'AdminPsMboModule') {
+        if (Tools::getValue('controller') !== 'AdminPsMboModuleParent') {
             return; // Avoid early translation
         }
 
