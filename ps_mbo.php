@@ -220,10 +220,6 @@ class ps_mbo extends Module
         $return = true;
         $coreTabsRenamed = static::CORE_TABS_RENAMED;
 
-        if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '<')) {
-            unset($coreTabsRenamed['AdminAddonsCatalog']);
-        }
-
         // Rename tabs
         foreach ($coreTabsRenamed as $className => $names) {
             $tabId = Tab::getIdFromClassName($className);
