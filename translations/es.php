@@ -1,4 +1,4 @@
-en.php<?php
+<?php
 
 global $_MODULE;
 $_MODULE = [];
