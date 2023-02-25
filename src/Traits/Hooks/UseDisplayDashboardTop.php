@@ -212,7 +212,7 @@ trait UseDisplayDashboardTop
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
             'recommendedModulesUrl' => $recommendedModulesUrl,
-            'recommendedModulesTitleTranslated' => $this->getRecommendedModulesButtonTitle(),
+            'recommendedModulesTitleTranslated' => $this->getRecommendedModulesButtonTitle($controller),
         ]);
 
         return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
@@ -259,12 +259,10 @@ trait UseDisplayDashboardTop
 
     /**
      * Customize title button recommended modules
-     *
-     * @return string
      */
-    private function getRecommendedModulesButtonTitle()
+    private function getRecommendedModulesButtonTitle(string $controller): string
     {
-        switch (Tools::getValue('controller')) {
+        switch ($controller) {
             case 'AdminInvoices':
             case 'AdminDeliverySlip':
             case 'AdminSlip':
