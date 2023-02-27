@@ -1,147 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Addons/Toolbar.php" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Addons/Toolbar.php" source-language="en" target-language="ru" datatype="plaintext">
     <body>
       <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df">
         <source>Synchronized with Addons marketplace!</source>
-        <target>Синхронизировано с магазином Расширений!</target>
+        <target state="translated">Синхронизировано с магазином Расширений!</target>
         <note>Line: 141</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="en" target-language="ru" datatype="plaintext">
     <body>
       <trans-unit id="cff7b4047c79f112e869481322d2924e">
         <source>Module %module% successfully upgraded.</source>
-        <target>Модуль %module% успешно обновлен.</target>
+        <target state="translated">Модуль %module% успешно обновлен.</target>
         <note>Line: 193</note>
       </trans-unit>
       <trans-unit id="22d6960d922158c548d123998be8dd91">
         <source>Upgrade of module %module% failed. %error%</source>
-        <target>Обновление модуля %module% не удалось. %error%</target>
+        <target state="translated">Обновление модуля %module% не удалось. %error%</target>
         <note>Line: 229</note>
       </trans-unit>
       <trans-unit id="f8c9c7b6af2a8d50bc948bcf966c1d4b">
         <source>Module %module% is already up to date</source>
-        <target>Модуль %module% уже обновлен</target>
+        <target state="translated">Модуль %module% уже обновлен</target>
         <note>Line: 216</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/src/Controller/Admin/ModuleCatalogController.php" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Controller/Admin/ModuleCatalogController.php" source-language="en" target-language="ru" datatype="plaintext">
     <body>
       <trans-unit id="6ea7071301eeb50e00bf88f5a46ded8e">
         <source>Modules catalog</source>
-        <target>Каталог модулей</target>
+        <target state="translated">Каталог модулей</target>
         <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayModuleConfigureExtraButtons.php" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayModuleConfigureExtraButtons.php" source-language="en" target-language="ru" datatype="plaintext">
     <body>
       <trans-unit id="eb1b4bb3667dd670210c7822badc2f1d">
         <source>Check for updates</source>
-        <target>Проверить обновления</target>
+        <target state="translated">Проверить обновления</target>
         <note>Line: 38</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/action_menu.html.twig" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/action_menu.html.twig" source-language="en" target-language="ru" datatype="plaintext">
     <body>
       <trans-unit id="abfc3a65538a6ec86502b2b498b6b4a6">
         <source>Discover</source>
-        <target>Обзор</target>
+        <target state="needs-translation">Discover</target>
         <note>Line: 31</note>
       </trans-unit>
       <trans-unit id="90406afefae30826692e7f7480f7467c">
         <source>Toggle Dropdown</source>
-        <target>Вкл/Выкл выпадающий список</target>
+        <target state="needs-translation">Toggle Dropdown</target>
         <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig" source-language="en" target-language="ru" datatype="plaintext">
     <body>
       <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
         <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
-        <target>Свяжите ваш магазин с вашей учётной записью магазина расширений, чтобы автоматически получать важные обновления для приобретенных вами модулей. У вас ещё нет учетной записи?</target>
+        <target state="needs-translation">Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</target>
         <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
         <source>Sign up now</source>
-        <target>Зарегистрироваться</target>
+        <target state="translated">Зарегистрироваться</target>
         <note>Line: 43</note>
       </trans-unit>
       <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
         <source>Yes, log out</source>
-        <target>Да, выйти</target>
+        <target state="translated">Да, выйти</target>
         <note>Line: 99</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_import.html.twig" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_import.html.twig" source-language="en" target-language="ru" datatype="plaintext">
     <body>
       <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004">
         <source>Upload a module</source>
-        <target>Загрузить модуль</target>
+        <target state="translated">Загрузить модуль</target>
         <note>Line: 24</note>
       </trans-unit>
       <trans-unit id="7c8701c300f85e9799c74e83f4adea64">
         <source>Drop your module archive here or [1]select file[/1]</source>
-        <target>Бросьте архив с модулем здесь или [1]выберите файл[/1]</target>
+        <target state="needs-translation">Drop your module archive here or [1]select file[/1]</target>
         <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="2b11276d6a162d7c1b9894abe5febfdc">
         <source>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</source>
-        <target>Пожалуйста, загружайте один файл за раз, в формате .zip или .tar, .tar.gz, .tgz</target>
+        <target state="needs-translation">Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</target>
         <note>Line: 48</note>
       </trans-unit>
       <trans-unit id="e781acd6cefcfbbfce5aa2804d59a4c5">
         <source>Your module will be installed right after that.</source>
-        <target>Сразу после этого ваш модуль будет установлен.</target>
+        <target state="needs-translation">Your module will be installed right after that.</target>
         <note>Line: 49</note>
       </trans-unit>
       <trans-unit id="c3dbf8925ec4c77ef5317e1e27317b70">
         <source>Installing module...</source>
-        <target>Установка модуля...</target>
+        <target state="needs-translation">Installing module...</target>
         <note>Line: 55</note>
       </trans-unit>
       <trans-unit id="a26f56145fea2d3af35bf0d6ac83c28a">
         <source>It will close as soon as the module is installed. It won't be long!</source>
-        <target>Будет закрыто как только модуль установится. Это не потребует много времени!</target>
+        <target state="needs-translation">It will close as soon as the module is installed. It won't be long!</target>
         <note>Line: 57</note>
       </trans-unit>
       <trans-unit id="f48a5ae14fa2b0c85442d1199a08b3b4">
         <source>Module installed!</source>
-        <target>Модуль установлен!</target>
+        <target state="needs-translation">Module installed!</target>
         <note>Line: 62</note>
       </trans-unit>
       <trans-unit id="824e2fcb263ee94399a6a261ee1ec7c1">
         <source>Oops... Upload failed.</source>
-        <target>Ой... Загрузка прервалась.</target>
+        <target state="needs-translation">Oops... Upload failed.</target>
         <note>Line: 68</note>
       </trans-unit>
       <trans-unit id="fa692d85f08c92a585ed8b3fed7f1d52">
         <source>What happened?</source>
-        <target>Что случилось?</target>
+        <target state="needs-translation">What happened?</target>
         <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_additional_description.html.twig" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_additional_description.html.twig" source-language="en" target-language="ru" datatype="plaintext">
     <body>
       <trans-unit id="decbe415d8accca7c2c16d48a79ee934">
         <source>Read More</source>
-        <target>Подробнее</target>
+        <target state="needs-translation">Read More</target>
         <note>Line: 24</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="en" target-language="ru" datatype="plaintext">
     <body>
       <trans-unit id="10dc2676c1cfa668956517a07c6405bf">
         <source>Discover the best-selling modules of this category in the %link% page.</source>
-        <target>Откройте самые продаваемые модули этой категории на странице %link%.</target>
+        <target state="needs-translation">Discover the best-selling modules of this category in the %link% page.</target>
         <note>Line: 19</note>
       </trans-unit>
     </body>
