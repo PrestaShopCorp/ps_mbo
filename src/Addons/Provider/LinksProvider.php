@@ -104,7 +104,7 @@ class LinksProvider
      */
     public function getSelectionLink(): string
     {
-        $link = 'https://addons.prestashop.com/iframe/search-1.7.php?psVersion=' . $this->version->getVersion()
+        $link = 'https://addons.prestashop.com/iframe/search-1.7.php?psVersion=' . $this->version->getSemVersion()
             . '&isoLang=' . $this->context->getContext()->language->iso_code
             . '&isoCurrency=' . $this->context->getContext()->currency->iso_code
             . '&isoCountry=' . $this->context->getContext()->country->iso_code
