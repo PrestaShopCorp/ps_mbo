@@ -1,6 +1,6 @@
 preserve_hierarchy: 1
 files:
   - source: /translations/en-US/*.en-US.xlf
-    translation: /translations/%locale%/%original_file_name%
+    translation: /translations/%locale%/%file_name%.%file_extension%
     translation_replace:
-      .en-US: ''
+      en-US: %locale%
