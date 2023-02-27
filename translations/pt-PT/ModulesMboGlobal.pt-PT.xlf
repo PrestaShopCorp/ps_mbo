@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/ps_mbo.php" source-language="pt-PT" target-language="pt-PT" datatype="plaintext">
+  <file original="modules/ps_mbo/ps_mbo.php" source-language="en" target-language="pt-PT" datatype="plaintext">
     <body>
       <trans-unit id="42667b4f4303551b1d51722fe58bf14c">
         <source>PrestaShop Marketplace in your Back Office</source>
-        <target>PrestaShop Marketplace no seu Back Office</target>
+        <target state="translated">PrestaShop Marketplace no seu Back Office</target>
         <note>Line: 116</note>
       </trans-unit>
       <trans-unit id="46fd5bca2028b627f40f2afc6db5c4a1">
         <source>Browse the Addons marketplace directly from your back office to better meet your needs.</source>
-        <target>Consulta o mercado PrestaShop directamente do seu back-office para melhor se adequar às suas necessidades.</target>
+        <target state="translated">Consulta o mercado PrestaShop directamente do seu back-office para melhor se adequar às suas necessidades.</target>
         <note>Line: 117</note>
       </trans-unit>
     </body>
