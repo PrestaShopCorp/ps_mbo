@@ -50,12 +50,12 @@
     <body>
       <trans-unit id="abfc3a65538a6ec86502b2b498b6b4a6">
         <source>Discover</source>
-        <target state="needs-translation">Discover</target>
+        <target state="translated">Descobrir</target>
         <note>Line: 31</note>
       </trans-unit>
       <trans-unit id="90406afefae30826692e7f7480f7467c">
         <source>Toggle Dropdown</source>
-        <target state="needs-translation">Toggle Dropdown</target>
+        <target state="translated">Alternar o menu pendente</target>
         <note>Line: 47</note>
       </trans-unit>
     </body>
@@ -64,7 +64,7 @@
     <body>
       <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
         <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
-        <target state="needs-translation">Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</target>
+        <target state="translated">Ligue a sua loja à sua conta Addons para receber automaticamente actualizações importantes para os módulos que adquiriu. Ainda não tem uma conta?</target>
         <note>Line: 42</note>
       </trans-unit>
       <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
@@ -88,42 +88,42 @@
       </trans-unit>
       <trans-unit id="7c8701c300f85e9799c74e83f4adea64">
         <source>Drop your module archive here or [1]select file[/1]</source>
-        <target state="needs-translation">Drop your module archive here or [1]select file[/1]</target>
+        <target state="translated">Arraste o arquivo do seu módulo para aqui ou [1]selecione um ficheiro[/1]</target>
         <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="2b11276d6a162d7c1b9894abe5febfdc">
         <source>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</source>
-        <target state="needs-translation">Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</target>
+        <target state="translated">Carregue um ficheiro de cada vez, formato .zip ou tarball (.tar, .tar.gz ou .tgz).</target>
         <note>Line: 48</note>
       </trans-unit>
       <trans-unit id="e781acd6cefcfbbfce5aa2804d59a4c5">
         <source>Your module will be installed right after that.</source>
-        <target state="needs-translation">Your module will be installed right after that.</target>
+        <target state="translated">O seu módulo será instalado logo depois.</target>
         <note>Line: 49</note>
       </trans-unit>
       <trans-unit id="c3dbf8925ec4c77ef5317e1e27317b70">
         <source>Installing module...</source>
-        <target state="needs-translation">Installing module...</target>
+        <target state="translated">A instalar módulo...</target>
         <note>Line: 55</note>
       </trans-unit>
       <trans-unit id="a26f56145fea2d3af35bf0d6ac83c28a">
         <source>It will close as soon as the module is installed. It won't be long!</source>
-        <target state="needs-translation">It will close as soon as the module is installed. It won't be long!</target>
+        <target state="translated">Fechar-se-á assim que o módulo seja instalado. Falta pouco!</target>
         <note>Line: 57</note>
       </trans-unit>
       <trans-unit id="f48a5ae14fa2b0c85442d1199a08b3b4">
         <source>Module installed!</source>
-        <target state="needs-translation">Module installed!</target>
+        <target state="translated">Módulo instalado!</target>
         <note>Line: 62</note>
       </trans-unit>
       <trans-unit id="824e2fcb263ee94399a6a261ee1ec7c1">
         <source>Oops... Upload failed.</source>
-        <target state="needs-translation">Oops... Upload failed.</target>
+        <target state="translated">Oops... a atualização falhou.</target>
         <note>Line: 68</note>
       </trans-unit>
       <trans-unit id="fa692d85f08c92a585ed8b3fed7f1d52">
         <source>What happened?</source>
-        <target state="needs-translation">What happened?</target>
+        <target state="translated">O que aconteceu?</target>
         <note>Line: 69</note>
       </trans-unit>
     </body>
@@ -132,7 +132,7 @@
     <body>
       <trans-unit id="decbe415d8accca7c2c16d48a79ee934">
         <source>Read More</source>
-        <target state="needs-translation">Read More</target>
+        <target state="translated">Obter mais informações</target>
         <note>Line: 24</note>
       </trans-unit>
     </body>
@@ -141,7 +141,7 @@
     <body>
       <trans-unit id="10dc2676c1cfa668956517a07c6405bf">
         <source>Discover the best-selling modules of this category in the %link% page.</source>
-        <target state="needs-translation">Discover the best-selling modules of this category in the %link% page.</target>
+        <target state="translated">Descubra os módulos mais vendidos desta categoria na página %link%.</target>
         <note>Line: 19</note>
       </trans-unit>
     </body>
