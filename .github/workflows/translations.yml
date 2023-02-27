@@ -11,9 +11,6 @@ jobs:
         with:
           repository: PrestaShopCorp/module-translation-tool
           ref: main
-      #      - name: Create env file for module-translation-tool
-      #        run: |
-      #          echo "APP_GITHUB_TOKEN=${{ secrets.MODULE_TRANSLATION_TOOL_ACCESS_TOKEN }}" > ./.env
       - name: Create config for module-translation-tool
         run: |
           ls
@@ -21,7 +18,7 @@ jobs:
           sed -i 's/^MODULE_NAME.*/MODULE_NAME="ps_mbo"/g' ./module.cfg
           sed -i 's/^GIT_REPO_USERNAME.*/GIT_REPO_USERNAME="PrestaShopCorp"/g' ./module.cfg
           sed -i 's/^GIT_REPO_NAME.*/GIT_REPO_NAME="ps_mbo"/g' ./module.cfg
-          sed -i 's/^BRANCH.*/BRANCH="${{ github.base_ref }}"/g' ./module.cfg
+          sed -i 's/^BRANCH.*/BRANCH="${{ github.head_ref }}"/g' ./module.cfg
       - name: Setup git config
         run: |
           echo "${{ secrets.MODULE_TRANSLATION_TOOL_ACCESS_TOKEN }}"
