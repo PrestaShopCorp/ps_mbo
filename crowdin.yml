@@ -1,5 +1,9 @@
-files:
-  - source: /translations/en-US/*.en-US.xlf
-    translation: /translations/%locale%/%file_name%.%locale%.%file_extension%
-    translation_replace:
-      - ".en-US": ""
+"files": [
+  {
+    "source": "/translations/en-US/*.en-US.xlf",
+    "translation": "/translations/%locale%/%file_name%.%locale%.%file_extension%",
+    "translation_replace": {
+      ".en-US": ""
+    }
+  }
+]
