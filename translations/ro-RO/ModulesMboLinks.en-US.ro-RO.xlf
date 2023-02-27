@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_mbo/src/Addons/Provider/LinksProvider.php" source-language="en" target-language="ro" datatype="plaintext">
+    <body>
+      <trans-unit id="ab9f0d838086d8699f9bc0f6b6bf0d59">
+        <source>https://accounts.distribution.prestashop.net/en/sign-up</source>
+        <target state="needs-translation">https://accounts.distribution.prestashop.net/en/sign-up</target>
+        <note>Line: 139</note>
+      </trans-unit>
+      <trans-unit id="b14fa168a9724da44a82a09d80a98a7c">
+        <source>https://auth.prestashop.com/en/password/request</source>
+        <target state="needs-translation">https://auth.prestashop.com/en/password/request</target>
+        <note>Line: 146</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
