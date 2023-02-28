@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Addons/Provider/LinksProvider.php" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Addons/Provider/LinksProvider.php" source-language="en" target-language="it" datatype="plaintext">
     <body>
       <trans-unit id="ab9f0d838086d8699f9bc0f6b6bf0d59">
         <source>https://accounts.distribution.prestashop.net/en/sign-up</source>
-        <target>https://accounts.distribution.prestashop.net/it/sign-up</target>
+        <target state="translated">https://accounts.distribution.prestashop.net/it/sign-up</target>
         <note>Line: 123</note>
       </trans-unit>
       <trans-unit id="b14fa168a9724da44a82a09d80a98a7c">
         <source>https://auth.prestashop.com/en/password/request</source>
-        <target>https://auth.prestashop.com/it/password/richiesta</target>
+        <target state="translated">https://auth.prestashop.com/it/password/richiesta</target>
         <note>Line: 130</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="it" datatype="plaintext">
     <body>
       <trans-unit id="9d86b7d3c7427a887c6e182f75deb3e0">
         <source><![CDATA[https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security]]></source>
-        <target><![CDATA[https://addons.prestashop.com/it/429-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-IT&utm_content=security]]></target>
+        <target state="translated"><![CDATA[https://addons.prestashop.com/it/429-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-IT&utm_content=security]]></target>
         <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="198214f6abf95fc35f5f0fb3b70946a3">
         <source><![CDATA[https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></source>
-        <target><![CDATA[https://addons.prestashop.com/it/517-blocchi-schede-banner?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-IT]]></target>
+        <target state="translated"><![CDATA[https://addons.prestashop.com/it/517-blocchi-schede-banner?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-IT]]></target>
         <note>Line: 132</note>
       </trans-unit>
       <trans-unit id="f9baae88cd2cd24d7c8b13fd1906aab6">
         <source><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></source>
-        <target><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-IT]]></target>
+        <target state="translated"><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-IT]]></target>
         <note>Line: 139</note>
       </trans-unit>
     </body>
