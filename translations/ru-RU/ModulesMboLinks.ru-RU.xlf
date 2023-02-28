@@ -9,7 +9,7 @@
       </trans-unit>
       <trans-unit id="b14fa168a9724da44a82a09d80a98a7c">
         <source>https://auth.prestashop.com/en/password/request</source>
-        <target state="translated">https://auth.prestashop.com/ru/пароль/запрос1</target>
+        <target state="translated">https://auth.prestashop.com/ru/пароль/запрос</target>
         <note>Line: 130</note>
       </trans-unit>
     </body>
