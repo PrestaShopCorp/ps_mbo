@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Addons/Toolbar.php" source-language="pt-PT" target-language="pt-PT" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Addons/Toolbar.php" source-language="en" target-language="pt-PT" datatype="plaintext">
     <body>
       <trans-unit id="1c0b7f4d79e06a46c12312615fc4ab14">
         <source>Connect to Addons marketplace</source>
-        <target>Ligar com o Addons Marketplace</target>
+        <target state="translated">Ligar com o Addons Marketplace</target>
         <note>Line: 127</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="pt-PT" target-language="pt-PT" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="en" target-language="pt-PT" datatype="plaintext">
     <body>
       <trans-unit id="b09249132bbed9baecd987cf73200b44">
         <source>Confirm logout</source>
-        <target>Confirmar encerramento de sessão</target>
+        <target state="translated">Confirmar encerramento de sessão</target>
         <note>Line: 85</note>
       </trans-unit>
       <trans-unit id="df776a9024ce6c10ec1d1d763cee0301">
         <source>You are about to log out your Addons account. You might miss important updates of Addons you've bought.</source>
-        <target>Está prestes a encerrar sessão na sua conta Addons. Pode perder atualizações importantes de Addons que comprou.</target>
+        <target state="translated">Está prestes a encerrar sessão na sua conta Addons. Pode perder atualizações importantes de Addons que comprou.</target>
         <note>Line: 92</note>
       </trans-unit>
     </body>
