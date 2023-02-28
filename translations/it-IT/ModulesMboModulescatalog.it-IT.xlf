@@ -1,66 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Addons/Toolbar.php" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Addons/Toolbar.php" source-language="en" target-language="it" datatype="plaintext">
     <body>
       <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004">
         <source>Upload a module</source>
-        <target>Carica il modulo</target>
+        <target state="translated">Carica il modulo</target>
         <note>Line: 96</note>
       </trans-unit>
       <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df">
         <source>Synchronized with Addons marketplace!</source>
-        <target>Sincronizzato con il marketplace degli addons!</target>
+        <target state="translated">Sincronizzato con il marketplace degli addons!</target>
         <note>Line: 141</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="en" target-language="it" datatype="plaintext">
     <body>
       <trans-unit id="cff7b4047c79f112e869481322d2924e">
         <source>Module %module% successfully upgraded.</source>
-        <target>Il modulo %module% è stato aggiornato con successo.</target>
+        <target state="translated">Il modulo %module% è stato aggiornato con successo.</target>
         <note>Line: 193</note>
       </trans-unit>
       <trans-unit id="22d6960d922158c548d123998be8dd91">
         <source>Upgrade of module %module% failed. %error%</source>
-        <target>Aggiornamento del modulo %module% fallito. %error%</target>
+        <target state="translated">Aggiornamento del modulo %module% fallito. %error%</target>
         <note>Line: 229</note>
       </trans-unit>
       <trans-unit id="f8c9c7b6af2a8d50bc948bcf966c1d4b">
         <source>Module %module% is already up to date</source>
-        <target>Il modulo %module% è già aggiornato</target>
+        <target state="translated">Il modulo %module% è già aggiornato</target>
         <note>Line: 216</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/src/Controller/Admin/ModuleCatalogController.php" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Controller/Admin/ModuleCatalogController.php" source-language="en" target-language="it" datatype="plaintext">
     <body>
       <trans-unit id="6ea7071301eeb50e00bf88f5a46ded8e">
         <source>Modules catalog</source>
-        <target>Catalogo moduli</target>
+        <target state="translated">Catalogo moduli</target>
         <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayModuleConfigureExtraButtons.php" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayModuleConfigureExtraButtons.php" source-language="en" target-language="it" datatype="plaintext">
     <body>
       <trans-unit id="eb1b4bb3667dd670210c7822badc2f1d">
         <source>Check for updates</source>
-        <target>Cerca aggiornamenti</target>
+        <target state="translated">Cerca aggiornamenti</target>
         <note>Line: 38</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="en" target-language="it" datatype="plaintext">
     <body>
       <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
         <source>Sign up now</source>
-        <target>Registrati ora</target>
+        <target state="translated">Iscriviti ora</target>
         <note>Line: 43</note>
       </trans-unit>
       <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
         <source>Yes, log out</source>
-        <target>Si, esci</target>
+        <target state="translated">Si, esci</target>
         <note>Line: 99</note>
       </trans-unit>
     </body>
