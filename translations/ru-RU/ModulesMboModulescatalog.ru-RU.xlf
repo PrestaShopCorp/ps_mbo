@@ -17,7 +17,6 @@
         <target>Вы вошли как</target>
         <note>Line: 161</note>
       </trans-unit>
-      </trans-unit>
     </body>
   </file>
   <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
