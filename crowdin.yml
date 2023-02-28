@@ -1,5 +1,5 @@
 files:
   - source: /translations/en-US/*.en-US.xlf
-    translation: /translations/%locale%/%original_file_name%
+    translation: /translations/%locale%/%file_name%.%locale%.%file_extension%
     translation_replace:
-      en-US: '%locale%'
+      .en-US: ''
