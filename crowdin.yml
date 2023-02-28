@@ -2,4 +2,4 @@ files:
   - source: /translations/en-US/*.en-US.xlf
     translation: /translations/%locale%/%original_file_name%
     translation_replace:
-      .en-US: %locale%
+      .en-US: '%locale%'
