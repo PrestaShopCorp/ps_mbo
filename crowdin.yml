@@ -1,3 +1,4 @@
+preserve_hierarchy: 0
 files:
   - source: /translations/en-US/*.en-US.xlf
     translation: /translations/%locale%/%file_name%.%locale%.%file_extension%
