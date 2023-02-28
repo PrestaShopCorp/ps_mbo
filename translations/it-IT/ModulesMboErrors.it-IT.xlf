@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="en" target-language="it" datatype="plaintext">
     <body>
       <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
         <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
-        <target>PrestaShop non ha potuto accedere ad Addons. Si prega di controllare le tue credenziali e la tua connessione Internet.</target>
+        <target state="translated">PrestaShop non ha potuto accedere ad Addons. Si prega di controllare le tue credenziali e la tua connessione Internet.</target>
         <note>Line: 105</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/error.html.twig" source-language="it-IT" target-language="it-IT" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/error.html.twig" source-language="en" target-language="it" datatype="plaintext">
     <body>
       <trans-unit id="8a5560b05facacdbc10e870b1152e41b">
         <source>It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.</source>
-        <target>Sembra che abbiamo dei problemi con la connessione ai componenti aggiuntivi. Si prega di aggiornare la pagina o di controllare la configurazione del firewall.</target>
+        <target state="translated">Sembra che abbiamo dei problemi con la connessione ai componenti aggiuntivi. Si prega di aggiornare la pagina o di controllare la configurazione del firewall.</target>
         <note>Line: 32</note>
       </trans-unit>
     </body>
