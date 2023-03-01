@@ -4,12 +4,12 @@
     <body>
       <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004">
         <source>Upload a module</source>
-        <target state="needs-translation">Upload a module</target>
+        <target state="translated">Загрузить модуль</target>
         <note>Line: 96</note>
       </trans-unit>
       <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df">
         <source>Synchronized with Addons marketplace!</source>
-        <target state="needs-translation">Synchronized with Addons marketplace!</target>
+        <target state="translated">Синхронизировано с магазином Расширений!</target>
         <note>Line: 141</note>
       </trans-unit>
     </body>
@@ -18,17 +18,17 @@
     <body>
       <trans-unit id="cff7b4047c79f112e869481322d2924e">
         <source>Module %module% successfully upgraded.</source>
-        <target state="needs-translation">Module %module% successfully upgraded.</target>
+        <target state="translated">Модуль %module% успешно обновлен.</target>
         <note>Line: 193</note>
       </trans-unit>
       <trans-unit id="22d6960d922158c548d123998be8dd91">
         <source>Upgrade of module %module% failed. %error%</source>
-        <target state="needs-translation">Upgrade of module %module% failed. %error%</target>
+        <target state="translated">Обновление модуля %module% не удалось. %error%</target>
         <note>Line: 229</note>
       </trans-unit>
       <trans-unit id="f8c9c7b6af2a8d50bc948bcf966c1d4b">
         <source>Module %module% is already up to date</source>
-        <target state="needs-translation">Module %module% is already up to date</target>
+        <target state="translated">Модуль %module% уже обновлен</target>
         <note>Line: 216</note>
       </trans-unit>
     </body>
@@ -46,7 +46,7 @@
     <body>
       <trans-unit id="eb1b4bb3667dd670210c7822badc2f1d">
         <source>Check for updates</source>
-        <target state="needs-translation">Check for updates</target>
+        <target state="translated">Проверить обновления</target>
         <note>Line: 38</note>
       </trans-unit>
     </body>
@@ -55,12 +55,12 @@
     <body>
       <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
         <source>Sign up now</source>
-        <target state="needs-translation">Sign up now</target>
+        <target state="translated">Зарегистрируйтесь сейчас</target>
         <note>Line: 43</note>
       </trans-unit>
       <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
         <source>Yes, log out</source>
-        <target state="needs-translation">Yes, log out</target>
+        <target state="translated">Да, выйти</target>
         <note>Line: 99</note>
       </trans-unit>
     </body>
