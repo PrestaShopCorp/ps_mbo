@@ -51,7 +51,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '4.3.2';
+    public const VERSION = '4.4.0';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminPsMboModule',
@@ -102,7 +102,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.3.2';
+        $this->version = '4.4.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
