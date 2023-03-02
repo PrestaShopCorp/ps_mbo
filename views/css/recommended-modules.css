@@ -251,3 +251,29 @@ body.ps_back-office div#main #modules_list_container .modal-header {
 body.ps_back-office div#main #modules_list_container .modal-body {
   margin: 0 auto;
 }
+
+.bootstrap .page-head .toolbarBox .btn-toolbar .btn-secondary{
+  color: #fff;
+  background-color: #6c868e;
+  border-color: #6c868e;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.bootstrap .page-head .toolbarBox .btn-toolbar .btn-secondary:hover{
+  color: #fff;
+  background-color: #b7ced3;
+  border-color: #b7ced3;
+}
+
+.bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn .material-icons{
+  display: inline;
+  color: #fff;
+  margin-right: 5px;
+}
+.bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn .material-icons:hover{
+  color: #fff;
+}
+.bootstrap .page-head .toolbarBox .btn-toolbar #recommended-modules-button{
+  display: flex;
+
+}

@@ -210,10 +210,9 @@ trait UseDisplayDashboardTop
             'shouldAttachRecommendedModulesAfterContent' => $shouldAttachRecommendedModulesAfterContent,
             'shouldAttachRecommendedModulesButton' => $shouldAttachRecommendedModulesButton,
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
-            'recommendedModulesTitleTranslated' => $this->trans('Recommended Modules and Services', [],
-                'Modules.Mbo.Recommendedmodulesandservices'),
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
             'recommendedModulesUrl' => $recommendedModulesUrl,
+            'recommendedModulesTitleTranslated' => $this->getRecommendedModulesButtonTitle($controller),
         ]);
 
         return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
@@ -256,5 +255,39 @@ trait UseDisplayDashboardTop
         ) {
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css');
         }
+    }
+
+    /**
+     * Customize title button recommended modules
+     */
+    private function getRecommendedModulesButtonTitle(string $controller): string
+    {
+        switch ($controller) {
+            case 'AdminInvoices':
+            case 'AdminDeliverySlip':
+            case 'AdminSlip':
+            case 'AdminOrders':
+                $title = $this->trans('Boost sales', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminSpecificPriceRule':
+            case 'AdminManufacturers':
+            case 'AdminFeatures':
+            case 'AdminCartRules':
+            case 'AdminProducts':
+                $title = $this->trans('Optimize product catalog', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminStats':
+                $title = $this->trans('Improve data strategy', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminCustomerThreads':
+            case 'AdminCustomers':
+                $title = $this->trans('Improve customer experience', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            default:
+                $title = $this->trans('Recommended modules', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+        }
+
+        return $title;
     }
 }
