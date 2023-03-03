@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="nl" datatype="plaintext">
+  <file original="src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="nl" datatype="plaintext">
     <body>
       <trans-unit id="8c883385a642028c9366bb087618b216">
         <source>Boost sales</source>
         <target state="needs-translation">Boost sales</target>
-        <note>Line: 272</note>
+        <note>Line: 270</note>
       </trans-unit>
       <trans-unit id="1d929590b318c7d4746d15f1fdc19c81">
         <source>Optimize product catalog</source>
         <target state="needs-translation">Optimize product catalog</target>
-        <note>Line: 279</note>
+        <note>Line: 277</note>
       </trans-unit>
       <trans-unit id="0b63003090cd7fae050a51da250bb0dc">
         <source>Improve data strategy</source>
         <target state="needs-translation">Improve data strategy</target>
-        <note>Line: 282</note>
+        <note>Line: 280</note>
       </trans-unit>
       <trans-unit id="3015e7fd48efb2220c184c49eaeae2c1">
         <source>Improve customer experience</source>
         <target state="needs-translation">Improve customer experience</target>
-        <note>Line: 286</note>
+        <note>Line: 284</note>
       </trans-unit>
       <trans-unit id="e39767bb8e247250896230e1d6ee036f">
         <source>Recommended modules</source>
         <target state="needs-translation">Recommended modules</target>
-        <note>Line: 289</note>
+        <note>Line: 287</note>
       </trans-unit>
     </body>
   </file>
