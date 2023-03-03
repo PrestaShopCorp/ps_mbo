@@ -37,6 +37,10 @@ This module is compatible with the multistore :heavy_check_mark:
 
 Once installed it's available whatever the shop context
 
+## Translations
+
+See [translations-docs][translations-docs]
+
 ## Contributing
 
 MBO is a closed-source software own by the [PrestaShop company][prestashop].
@@ -74,3 +78,4 @@ This module is released under the [Academic Free License 3.0][AFL-3.0]
 [mbo-api-and-vue]: https://github.com/PrestaShopCorp/mbo.prestashop.com
 [coding-standards]: https://devdocs.prestashop.com/1.7/development/coding-standards/
 [AFL-3.0]: https://opensource.org/licenses/AFL-3.0
+[translations-docs]: docs/translations.md
