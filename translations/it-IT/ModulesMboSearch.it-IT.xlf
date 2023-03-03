@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Traits/Hooks/UseActionGetAlternativeSearchPanels.php" source-language="en" target-language="it" datatype="plaintext">
+  <file original="src/Traits/Hooks/UseActionGetAlternativeSearchPanels.php" source-language="en" target-language="it" datatype="plaintext">
     <body>
       <trans-unit id="9d6f008f9c1e0446e23b253ecc7b311a">
         <source>Search addons.prestashop.com</source>
