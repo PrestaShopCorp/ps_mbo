@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Addons/Provider/LinksProvider.php" source-language="en" target-language="pt-PT" datatype="plaintext">
+  <file original="src/Addons/Provider/LinksProvider.php" source-language="en" target-language="pt-PT" datatype="plaintext">
     <body>
       <trans-unit id="ab9f0d838086d8699f9bc0f6b6bf0d59">
         <source>https://accounts.distribution.prestashop.net/en/sign-up</source>
@@ -14,7 +14,7 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="pt-PT" datatype="plaintext">
+  <file original="src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="pt-PT" datatype="plaintext">
     <body>
       <trans-unit id="9d86b7d3c7427a887c6e182f75deb3e0">
         <source><![CDATA[https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security]]></source>
