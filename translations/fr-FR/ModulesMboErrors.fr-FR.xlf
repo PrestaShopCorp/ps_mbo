@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="f71dbe52628a3f83a77ab494817525c6">
         <source>toto</source>
-        <target state="needs-translation">toto</target>
+        <target state="translated">tata</target>
         <note>Line: 33</note>
       </trans-unit>
     </body>
