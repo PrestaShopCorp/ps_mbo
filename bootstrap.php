@@ -24,7 +24,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-$rootDir = getenv('_PS_ROOT_DIR_');
+$rootDir = _PS_ROOT_DIR_;
 if (!$rootDir) {
     $rootDir = __DIR__ . '/../../';
 }
