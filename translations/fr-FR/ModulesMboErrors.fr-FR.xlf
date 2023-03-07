@@ -13,7 +13,7 @@
     <body>
       <trans-unit id="5232b6dd2aec0fdf0de037535778dce0">
         <source>toto php</source>
-        <target state="needs-translation">toto php</target>
+        <target state="translated">tata php</target>
         <note>Line: 49</note>
       </trans-unit>
     </body>
@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="1b0c2ac5a4974c74a328998dda7655a2">
         <source>toto twig.</source>
-        <target state="needs-translation">toto twig.</target>
+        <target state="translated">tata twig.</target>
         <note>Line: 33</note>
       </trans-unit>
     </body>
@@ -36,7 +36,7 @@
     <body>
       <trans-unit id="f888cfbfc0411dfdd66c39dab6675fce">
         <source>toto smarty</source>
-        <target state="needs-translation">toto smarty</target>
+        <target state="translated">tata smarty</target>
         <note>Line: 21</note>
       </trans-unit>
     </body>
