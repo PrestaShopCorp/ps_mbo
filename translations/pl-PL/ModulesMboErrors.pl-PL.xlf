@@ -1,20 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="pl-PL" target-language="pl-PL" datatype="plaintext">
+  <file original="src/Controller/Admin/AddonsController.php" source-language="en" target-language="pl" datatype="plaintext">
     <body>
       <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
         <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
-        <target>PrestaShop nie mógł zalogować się do Dodatków, sprawdź swoje uprawnienia i połączenie internetowe.</target>
+        <target state="needs-translation">PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</target>
         <note>Line: 105</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/error.html.twig" source-language="pl-PL" target-language="pl-PL" datatype="plaintext">
+  <file original="src/Controller/Admin/ModuleCatalogController.php" source-language="en" target-language="pl" datatype="plaintext">
+    <body>
+      <trans-unit id="5232b6dd2aec0fdf0de037535778dce0">
+        <source>toto php</source>
+        <target state="needs-translation">toto php</target>
+        <note>Line: 49</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="views/templates/admin/error.html.twig" source-language="en" target-language="pl" datatype="plaintext">
     <body>
       <trans-unit id="8a5560b05facacdbc10e870b1152e41b">
         <source>It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.</source>
-        <target>Wygląda na to, że mamy problem z połączeniem się z dodatkami. Odśwież stronę lub sprawdź konfigurację zapory.</target>
+        <target state="needs-translation">It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.</target>
         <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="1b0c2ac5a4974c74a328998dda7655a2">
+        <source>toto twig.</source>
+        <target state="needs-translation">toto twig.</target>
+        <note>Line: 33</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="views/templates/hook/push-configuration.tpl" source-language="en" target-language="pl" datatype="plaintext">
+    <body>
+      <trans-unit id="f888cfbfc0411dfdd66c39dab6675fce">
+        <source>toto smarty</source>
+        <target state="needs-translation">toto smarty</target>
+        <note>Line: 21</note>
       </trans-unit>
     </body>
   </file>
