@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Controller/Admin/ModuleSelectionController.php" source-language="pt-PT" target-language="pt-PT" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Controller/Admin/ModuleSelectionController.php" source-language="en" target-language="pt-PT" datatype="plaintext">
     <body>
       <trans-unit id="8e750875217fe72ff73cda7e57e4d61f">
         <source>Module selection</source>
-        <target>Seleção de módulo</target>
+        <target state="translated">Seleção de módulo</target>
         <note>Line: 83</note>
       </trans-unit>
     </body>
