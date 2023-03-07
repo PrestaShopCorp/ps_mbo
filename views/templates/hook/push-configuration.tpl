@@ -18,4 +18,5 @@
  *}
 <div class="alert alert-info">
     {$catchPhrase} <a href="{$linkTarget}" target="_blank">{$linkText}</a>
+    {l s='toto smarty' d='Modules.Mbo.Errors'}
 </div>

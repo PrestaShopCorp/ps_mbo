@@ -45,6 +45,10 @@ class ModuleCatalogController extends ModuleAbstractController
      */
     public function indexAction(): Response
     {
+        $this->trans(
+            'toto php',
+            'Modules.Mbo.Errors'
+        );
         $moduleUri = __PS_BASE_URI__ . 'modules/ps_mbo/';
 
         $extraParams = [
