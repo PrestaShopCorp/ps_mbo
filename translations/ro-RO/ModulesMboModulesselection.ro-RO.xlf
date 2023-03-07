@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/Controller/Admin/ModuleSelectionController.php" source-language="en" target-language="ro" datatype="plaintext">
+    <body>
+      <trans-unit id="70fd3879bc512e7d2048692d397fc3a0">
+        <source>Modules in the spotlight</source>
+        <target state="needs-translation">Modules in the spotlight</target>
+        <note>Line: 67</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
