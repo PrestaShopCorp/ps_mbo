@@ -118,10 +118,11 @@ trait HaveConfigurationPage
                 'name' => "Prestabulle $i",
             ];
         }
-        $options = array_merge($options, [[
-            'value' => 'preprod',
-            'name' => 'Preprod',
-        ],
+        $options = array_merge($options, [
+            [
+                'value' => 'preprod',
+                'name' => 'Preprod',
+            ],
             [
                 'value' => 'prod',
                 'name' => 'Prod',

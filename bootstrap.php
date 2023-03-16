@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,6 +29,6 @@ if (!$rootDir) {
     $rootDir = __DIR__ . '/../../';
 }
 
-require_once $rootDir.'/vendor/autoload.php';
+require_once $rootDir . '/vendor/autoload.php';
 
 (new \Symfony\Component\Dotenv\Dotenv(true))->loadEnv(__DIR__ . '/.env');
