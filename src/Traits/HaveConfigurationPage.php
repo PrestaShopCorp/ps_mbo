@@ -94,7 +94,7 @@ trait HaveConfigurationPage
         file_put_contents($envFilePath, $envData);
 
         // Force reload of the .env file
-        $dotenv = new Dotenv();
+        $dotenv = new Dotenv(true);
         $dotenv->overload($envFilePath);
 
         return 'Configuration updated to <b>' . ucfirst($newValue) . "</b>.Don't forget to reset the module.";
