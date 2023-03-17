@@ -18,7 +18,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-$rootDir = _PS_ROOT_DIR_;
+$rootDir = defined('_PS_ROOT_DIR_') ? _PS_ROOT_DIR_ : false;
 if (!$rootDir) {
     $rootDir = __DIR__ . '/../../';
 }
