@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,6 +18,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
 declare(strict_types=1);
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -363,14 +365,14 @@ class ps_mbo extends Module
         }
 
         return $this->container->has('mbo.security.admin_authentication.provider') ?
-                $this->get('mbo.security.admin_authentication.provider') :
-                new AdminAuthenticationProvider(
-                    $this->get('doctrine.dbal.default_connection'),
-                    $this->context,
-                    $this->get('prestashop.core.crypto.hashing'),
-                    $this->get('doctrine.cache.provider'),
-                    $this->container->getParameter('database_prefix')
-                );
+            $this->get('mbo.security.admin_authentication.provider') :
+            new AdminAuthenticationProvider(
+                $this->get('doctrine.dbal.default_connection'),
+                $this->context,
+                $this->get('prestashop.core.crypto.hashing'),
+                $this->get('doctrine.cache.provider'),
+                $this->container->getParameter('database_prefix')
+            );
     }
 
     private function getModuleEnvVar(): string
@@ -432,7 +434,7 @@ class ps_mbo extends Module
      */
     private function loadEnv(): void
     {
-        $dotenv = new Dotenv();
+        $dotenv = new Dotenv(true);
         $dotenv->loadEnv(__DIR__ . '/.env');
     }
 
