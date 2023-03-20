@@ -18,15 +18,6 @@ services:
   PrestaShop\Module\Mbo\Api\Config\Env:
     class: PrestaShop\Module\Mbo\Api\Config\Env
 
-  PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandlerInterface: '@PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandler'
-
-  PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandler:
-    class: PrestaShop\Module\Mbo\Api\Handler\ErrorHandler\ErrorHandler
-    arguments:
-      - '@ps_mbo'
-      - '@PrestaShop\Module\Mbo\Api\Config\Env'
-      - '@logger'
-
   mbo.api.service.executors.module_transition:
     class: PrestaShop\Module\Mbo\Api\Service\ModuleTransitionExecutor
     arguments:

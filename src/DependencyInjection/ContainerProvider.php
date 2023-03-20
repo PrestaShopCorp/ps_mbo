@@ -48,21 +48,14 @@ class ContainerProvider
      */
     private $cacheDirectory;
 
-    /**
-     * @var string
-     */
-    private $moduleEnv;
-
     public function __construct(
         string $moduleName,
         string $moduleLocalPath,
-        string $moduleEnv,
         CacheDirectoryProvider $cacheDirectory
     ) {
         $this->moduleName = $moduleName;
         $this->moduleLocalPath = $moduleLocalPath;
         $this->cacheDirectory = $cacheDirectory;
-        $this->moduleEnv = $moduleEnv;
     }
 
     public function get(string $containerName): ContainerInterface
@@ -98,6 +91,7 @@ class ContainerProvider
         $loader->load('http_clients.yml');
         $loader->load('distribution.yml');
         $loader->load('accounts.yml');
+        $loader->load('handler.yml');
         $loader->load('api/distribution.yml');
 
         $containerBuilder->compile(true);

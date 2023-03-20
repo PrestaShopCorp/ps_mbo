@@ -39,19 +39,13 @@ class ServiceContainer
      * @var ContainerInterface
      */
     private $container;
-    /**
-     * @var string
-     */
-    private $moduleEnv;
 
     public function __construct(
         string $moduleName,
-        string $moduleLocalPath,
-        string $moduleEnv
+        string $moduleLocalPath
     ) {
         $this->moduleName = $moduleName;
         $this->moduleLocalPath = $moduleLocalPath;
-        $this->moduleEnv = $moduleEnv;
     }
 
     public function getService(string $serviceName): ?object
@@ -73,7 +67,7 @@ class ServiceContainer
             _PS_ROOT_DIR_,
             _PS_MODE_DEV_
         );
-        $containerProvider = new ContainerProvider($this->moduleName, $this->moduleLocalPath, $this->moduleEnv, $cacheDirectory);
+        $containerProvider = new ContainerProvider($this->moduleName, $this->moduleLocalPath, $cacheDirectory);
 
         $this->container = $containerProvider->get(defined('_PS_ADMIN_DIR_') || defined('PS_INSTALLATION_IN_PROGRESS') || PHP_SAPI === 'cli' ? 'admin' : 'front');
     }
