@@ -526,25 +526,69 @@ class ps_mbo extends Module
     private function getRecommendedModulesButtonTitle()
     {
         switch (Tools::getValue('controller')) {
-            case 'AdminInvoices':
+       
             case 'AdminDeliverySlip':
             case 'AdminSlip':
+            case 'AdminInvoices':
+                $title = $this->trans('Simplify accounting', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
             case 'AdminOrders':
                 $title = $this->trans('Boost sales', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
-            case 'AdminSpecificPriceRule':
-            case 'AdminManufacturers':
             case 'AdminFeatures':
+                $title = $this->trans('Optimize product creation', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminSpecificPriceRule':
             case 'AdminCartRules':
+                $title = $this->trans('Create a discount strategy', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminManufacturers':
+                $title = $this->trans('Promote brands', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
             case 'AdminProducts':
                 $title = $this->trans('Optimize product catalog', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             case 'AdminStats':
                 $title = $this->trans('Improve data strategy', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
+            case 'AdminContacts':
             case 'AdminCustomerThreads':
             case 'AdminCustomers':
                 $title = $this->trans('Improve customer experience', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminCmsContent':
+                $title = $this->trans('Customize pages', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminImages':
+                $title = $this->trans('Improve visuals', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminCarriers':
+                $title = $this->trans('Make your deliveries easier', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminShipping':
+                $title = $this->trans('Improve shipping', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminPayment':
+                $title = $this->trans('Improve the checkout experience', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminStatuses':
+                $title = $this->trans('Optimize order management', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminGroups':
+                $title = $this->trans('Improve customer targeting', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminContacts':
+                $title = $this->trans('Improve customer experience', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminSearchConf':
+            case 'AdminMeta':
+                $title = $this->trans('Improve SEO', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminAdminPreferences':
+                $title = $this->trans('Simplify store management', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminEmails':
+                $title = $this->trans('Automate emails', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             default:
                 $title = $this->trans('Recommended modules', [], 'Modules.Mbo.Recommendedmodulesandservices');
@@ -562,24 +606,88 @@ class ps_mbo extends Module
     private function getRecommendedModulesDescription()
     {
         switch (Tools::getValue('controller')) {
-            case 'AdminInvoices':
+            case 'AdminEmails':
+                $description = $this->trans('Send automatic emails and notifications to your customers with ease.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminAdminPreferences':
+                $description = $this->trans('Simplify the daily management of your store and save time.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminSearchConf':
+            case 'AdminMeta':
+                $description = $this->trans('Rank higher in search results so more people can find you.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminContacts':
+                $description = $this->trans('Create memorable experiences and turn visitors into customers.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminGroups':
+                $description = $this->trans('Manage groups and better target your customers in your marketing.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminStatuses':
+                $description = $this->trans('Save time: delete, edit, and manage your orders in bulk.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminPayment':
+                $description = $this->trans('Offer the payment methods your customers expect and improve your checkout process so you never miss a sale.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminShipping':
+                $description = $this->trans('Optimize your logistics and meet your customers’ delivery expectations.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminCarriers':
+                $description = $this->trans('Make your deliveries easier by choosing the right carriers.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminImages':
+                $description = $this->trans('Use quality and eye-catching visuals while preserving your store’s performance.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminCmsContent':
+                $description = $this->trans('Customize your store pages and highlight special offers.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminCustomers':
+                $description = $this->trans('Create memorable experiences and turn visitors into customers.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminSpecificPriceRule':
+            case 'AdminCartRules':
+                $description = $this->trans('Drive more sales and increase customer retention with a well-planned discount strategy.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminManufacturers':
+                $description = $this->trans('Promote the brands you distribute and allow your visitors to browse the products of their favorite brands.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminFeatures':
+                $description = $this->trans('Save time on product creation and easily manage combinations.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
             case 'AdminDeliverySlip':
+                $description = $this->trans('Save time in preparing and shipping your orders.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
             case 'AdminSlip':
+            case 'AdminInvoices':
+                $description = $this->trans('Keep your records organized and stay on top of your accounting.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
             case 'AdminOrders':
                 $description = $this->trans('Get new customers and keep them coming back.<br>
                 Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
-            case 'AdminSpecificPriceRule':
-            case 'AdminManufacturers':
-            case 'AdminFeatures':
-            case 'AdminCartRules':
             case 'AdminProducts':
                 $description = $this->trans('Make your more products visible and create product pages that convert.<br>
                 Here\'s a selection of partner modules, <strong>compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             case 'AdminStats':
-                $description = $this->trans('<p>Build a data-driven strategy and take more informed decisions.<br>
-                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.</p>', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                $description = $this->trans('Build a data-driven strategy and take more informed decisions.<br>
+                Here\'s a selection of partner modules,<strong> compatible with your store</strong>, to help you achieve your goals.', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             case 'AdminCustomerThreads':
             case 'AdminCustomers':
