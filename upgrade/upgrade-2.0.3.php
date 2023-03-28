@@ -81,8 +81,6 @@ function upgrade_module_2_0_3($module)
     $return &= $module->changeTabPosition('AdminParentModulesCatalog', 0);
     $return &= $module->changeTabPosition('AdminModulesSf', 1);
 
-    $module->postponeTabsTranslations();
-
     (new UpgradeTracker())->postTracking($module, $module->version);
 
     return $return;

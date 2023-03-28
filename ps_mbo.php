@@ -104,11 +104,6 @@ class ps_mbo extends Module
             'old_name' => 'Modules catalog',
             'new_name' => 'Marketplace',
         ],
-        'AdminAddonsCatalog' => [
-            'old_name' => 'Module selection',
-            'new_name' => 'Modules in the spotlight',
-            'trans_domain' => 'Modules.Mbo.Modulesselection',
-        ],
     ];
 
     const ADMIN_CONTROLLERS = [
@@ -121,8 +116,6 @@ class ps_mbo extends Module
         ],
         'AdminPsMboAddons' => [
             'name' => 'Module selection',
-            'wording' => 'Modules in the spotlight',
-            'wording_domain' => 'Modules.Mbo.Modulesselection',
             'visible' => true,
             'class_name' => 'AdminPsMboAddons',
             'parent_class_name' => 'AdminParentModulesCatalog',
@@ -146,7 +139,6 @@ class ps_mbo extends Module
 
     const HOOKS = [
         'actionAdminControllerSetMedia',
-        'actionDispatcherBefore',
         'displayDashboardTop',
     ];
 
@@ -166,7 +158,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '2.1.0';
+        $this->version = '2.1.1';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -204,8 +196,6 @@ class ps_mbo extends Module
         $result = parent::enable($force_all)
             && $this->organizeCoreTabs()
             && $this->installTabs();
-
-        $this->postponeTabsTranslations();
 
         return (bool) $result;
     }
@@ -491,14 +481,6 @@ class ps_mbo extends Module
     }
 
     /**
-     * Hook actionDispatcherBefore.
-     */
-    public function hookActionDispatcherBefore()
-    {
-        $this->translateTabsIfNeeded();
-    }
-
-    /**
      * Indicates if the recommended modules should be attached after content in this page
      *
      * @return bool
@@ -628,11 +610,6 @@ class ps_mbo extends Module
         return $this->container->get($serviceName);
     }
 
-    public function isUsingNewTranslationSystem()
-    {
-        return false;
-    }
-
     /**
      * Update hooks in DB.
      * Search current hooks registered in DB and compare them with the hooks declared in the module.
@@ -644,7 +621,7 @@ class ps_mbo extends Module
     {
         $hookData = (array) Db::getInstance()->executeS(
             '
-            SELECT DISTINCT(phm.id_hook), name
+            SELECT DISTINCT(phm.id_hook) as id, name
             FROM `' . _DB_PREFIX_ . 'hook_module` phm
             JOIN `' . _DB_PREFIX_ . 'hook` ph ON ph.id_hook=phm.id_hook
             WHERE `id_module` = ' . (int) $this->id
@@ -680,89 +657,6 @@ class ps_mbo extends Module
         // we iterate because registerHook accepts array only since 1.7.7.0
         foreach ($newHooks as $newHook) {
             $this->registerHook($newHook);
-        }
-    }
-
-    public function postponeTabsTranslations()
-    {
-        /**it'
-         * There is an issue for translating tabs during installation :
-         * Active modules translations files are loaded during the kernel boot. So the installing module translations are not known
-         * So, we postpone the tabs translations for the first time the module's code is executed.
-         */
-        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
-        if (!file_exists($lockFile)) {
-            if (!is_dir($this->moduleCacheDir)) {
-                mkdir($this->moduleCacheDir, 0777, true);
-            }
-            $f = fopen($lockFile, 'w+');
-            fclose($f);
-        }
-    }
-
-    private function translateTabsIfNeeded()
-    {
-        try {
-            if (Tools::getValue('controller') === 'AdminCommon') {
-                return; // Avoid early translation by notifications controller
-            }
-            $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
-            if (!file_exists($lockFile)) {
-                return;
-            }
-
-            $languages = Language::getLanguages(false);
-
-            // Because the wording and wording_domain are introduced since PS v1.7.8.0 and we cannot use them
-            if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')) {
-                $this->translateTabs();
-            }
-
-            @unlink($lockFile);
-        } catch (\Exception $e) {
-            // Do nothing
-        }
-    }
-
-    private function translateTabs()
-    {
-        $moduleTabs = Tab::getCollectionFromModule($this->name);
-        $languages = Language::getLanguages(false);
-
-        /**
-         * @var Tab $tab
-         */
-        foreach ($moduleTabs as $tab) {
-            $this->translateTab($tab, $languages);
-        }
-
-        foreach (static::CORE_TABS_RENAMED as $coreTabClass => $coreTabRenamed) {
-            if (array_key_exists('trans_domain', $coreTabRenamed)) {
-                $tab = Tab::getInstanceFromClassName($coreTabClass);
-                $this->translateTab($tab, $languages);
-            }
-        }
-    }
-
-    private function translateTab($tab, $languages)
-    {
-        if (!$tab instanceof Tab) {
-            throw new \Exception('First argument of translateTab mut be a Tab instance');
-        }
-
-        if (!empty($tab->wording) && !empty($tab->wording_domain)) {
-            $tabNameByLangId = [];
-            foreach ($languages as $language) {
-                $tabNameByLangId[$language['id_lang']] = $this->trans(
-                    $tab->wording,
-                    [],
-                    $tab->wording_domain,
-                    $language['locale']
-                );
-            }
-
-            $tab->name = $tabNameByLangId;
-            $tab->save();
         }
     }
 }

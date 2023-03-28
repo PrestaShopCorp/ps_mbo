@@ -74,18 +74,12 @@ class ModuleSelectionController extends FrameworkBundleAdminController
         $response = new Response();
 
         try {
-            if (true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=')) {
-                $pageTitle = $this->trans('Modules in the spotlight', 'Modules.Mbo.Modulesselection');
-            } else {
-                $pageTitle = $this->trans('Module selection', 'Admin.Navigation.Menu');
-            }
-
             $response->setContent($this->renderView(
                 '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/addons_store.html.twig',
                 [
                     'pageContent' => $this->externalContentProvider->getContent($this->addonsSelectionLinkProvider->getLinkUrl()),
                     'layoutHeaderToolbarBtn' => [],
-                    'layoutTitle' => $pageTitle,
+                    'layoutTitle' => $this->trans('Module selection', 'Admin.Navigation.Menu'),
                     'requireAddonsSearch' => true,
                     'requireBulkActions' => false,
                     'showContentHeader' => true,

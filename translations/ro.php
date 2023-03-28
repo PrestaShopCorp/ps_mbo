@@ -11,7 +11,6 @@ $_MODULE['<{mbo}prestashop>modulescatalog_e330c9c975994dd814fb0432aa594588'] = '
 $_MODULE['<{mbo}prestashop>modulescatalog_abfc3a65538a6ec86502b2b498b6b4a6'] = 'Descoperă';
 $_MODULE['<{mbo}prestashop>modulescatalog_d53907d724bf05eff15a2e80205f2d1e'] = 'Arată detalii';
 $_MODULE['<{mbo}prestashop>modulescatalog_b24ce0cd392a5b0b8dedc66c25213594'] = 'Gratuit';
-$_MODULE['<{mbo}prestashop>modulescatalog_70fd3879bc512e7d2048692d397fc3a0'] = 'Modules in the spotlight';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_8c883385a642028c9366bb087618b216'] = 'Stimulează vânzările';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1d929590b318c7d4746d15f1fdc19c81'] = 'Optimizarea catalogului de produse';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b63003090cd7fae050a51da250bb0dc'] = 'Îmbunătățirea strategiei de date';
