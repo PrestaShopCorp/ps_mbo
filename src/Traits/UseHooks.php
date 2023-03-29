@@ -164,8 +164,15 @@ trait UseHooks
         foreach ($oldHooks as $oldHook) {
             $this->unregisterHook($oldHook['id']);
         }
+
         if (!empty($newHooks)) {
             $this->registerHook($newHooks);
+            foreach ($newHooks as $newHook) {
+                $methodName = "use" . ucfirst($newHook) . "ExtraOperations";
+                if (method_exists($this, $methodName)) {
+                    $this->$methodName();
+                }
+            }
         }
     }
 
