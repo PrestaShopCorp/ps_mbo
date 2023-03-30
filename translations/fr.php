@@ -22,7 +22,7 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_f4f2cea02b1a48a90ad72f8
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_92efe9f2090c8ef8b4525d9c87efb992'] = 'Promouvoir les marques';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_71de09fcc1e3ca0c0a1e8cb40eb417ab'] = 'Personnaliser les pages';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_2fad6e7317d3a912a3c8a60134397d86'] = 'Améliorer les visuels';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_2079b04a8fa4362967a9342028381090'] = 'Facilitez vos livraisons ';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_2079b04a8fa4362967a9342028381090'] = 'Facilitez vos livraisons';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_27cfd6d0daa021773ca71830ce5590e4'] = 'Améliorer l\'expédition';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_269da544fe0eefcc12bb627f24fe2e81'] = 'Améliorer le ciblage des clients';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_61bb24f36546df402ea09b43dc5c9d28'] = 'Optimiser la gestion des commandes';
@@ -30,6 +30,7 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_a9a13fd9a88fbdd52a7c1e2
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_95facf46cc97015c64679a153ff5c5a7'] = 'Améliorer le référencement';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_c70ae1b7165361802d85093a3e046107'] = 'Simplifier la gestion de la boutique';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_45833617d93e650787cd71292606e67e'] = 'Automatiser les emails';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_190bd26b051d54c12b31ccfb3008c8a5'] = 'Facilitez l\'expédition';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_947d8544b50da92594fc6c5ed87af81b'] = 'Attirez de nouveaux clients et faites en sorte qu\'ils reviennent.<br>Voici une sélection de modules partenaires, <strong>compatibles avec votre boutique</strong>, pour vous aider à atteindre vos objectifs.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_88b4c622af5f96f61b3cee5fcb49791b'] = 'Rendez vos produits plus visibles et créez des pages de produits qui convertissent.<br>
                 Voici une sélection de modules partenaires, <strong>compatibles avec votre boutique</strong>, pour vous aider à atteindre vos objectifs.';

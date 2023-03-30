@@ -30,6 +30,7 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_a9a13fd9a88fbdd52a7c1e2
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_95facf46cc97015c64679a153ff5c5a7'] = 'Migliorare la SEO';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_c70ae1b7165361802d85093a3e046107'] = 'Semplificare la gestione del negozio';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_45833617d93e650787cd71292606e67e'] = 'Automatizzare le e-mail';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_190bd26b051d54c12b31ccfb3008c8a5'] = 'Facilitare la spedizione';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_e39767bb8e247250896230e1d6ee036f'] = 'Moduli raccomandati';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_947d8544b50da92594fc6c5ed87af81b'] = 'Ottenere nuovi clienti e farli tornare.<br>
                 Ecco una selezione di moduli partner,<strong> compatibili con il vostro negozio </strong>, per aiutarvi a raggiungere i vostri obiettivi.';

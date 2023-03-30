@@ -13,11 +13,11 @@ $_MODULE['<{mbo}prestashop>modulescatalog_d53907d724bf05eff15a2e80205f2d1e'] = '
 $_MODULE['<{mbo}prestashop>modulescatalog_b24ce0cd392a5b0b8dedc66c25213594'] = 'Grátis';
 $_MODULE['<{mbo}prestashop>modulescatalog_70fd3879bc512e7d2048692d397fc3a0'] = 'Módulos em destaque';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_8c883385a642028c9366bb087618b216'] = 'Aumentar as vendas';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1d929590b318c7d4746d15f1fdc19c81'] = 'Optimizar o catálogo de produtos';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1d929590b318c7d4746d15f1fdc19c81'] = 'Otimizar o catálogo de produtos';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b63003090cd7fae050a51da250bb0dc'] = 'Melhorar a estratégia de dados';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3015e7fd48efb2220c184c49eaeae2c1'] = 'Melhorar a experiência do cliente';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_a4098c8673dde7faab7999c2676c3522'] = 'Simplificar a contabilidade';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_f28626bfbef9b3fffea9377233f2b6dd'] = 'Optimizar a criação de produtos';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_f28626bfbef9b3fffea9377233f2b6dd'] = 'Otimizar a criação de produtos';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_f4f2cea02b1a48a90ad72f87f33ed501'] = 'Criar uma estratégia de desconto';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_92efe9f2090c8ef8b4525d9c87efb992'] = 'Promover as marcas';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_71de09fcc1e3ca0c0a1e8cb40eb417ab'] = 'Personalizar páginas';
@@ -25,11 +25,12 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_2fad6e7317d3a912a3c8a60
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_2079b04a8fa4362967a9342028381090'] = 'Facilite as suas entregas';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_27cfd6d0daa021773ca71830ce5590e4'] = 'Melhorar a expedição';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_269da544fe0eefcc12bb627f24fe2e81'] = 'Melhorar a segmentação dos clientes';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_61bb24f36546df402ea09b43dc5c9d28'] = 'Optimizar a gestão de encomendas';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_61bb24f36546df402ea09b43dc5c9d28'] = 'Otimizar a gestão de encomendas';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_a9a13fd9a88fbdd52a7c1e25f3d0d946'] = 'Melhorar a experiência de checkout';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_95facf46cc97015c64679a153ff5c5a7'] = 'Melhorar o SEO';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_c70ae1b7165361802d85093a3e046107'] = 'Simplificar a gestão da loja';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_45833617d93e650787cd71292606e67e'] = 'Automatizar e-mails';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_190bd26b051d54c12b31ccfb3008c8a5'] = 'Facilitar a expedição';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_e39767bb8e247250896230e1d6ee036f'] = 'Módulos recomendados';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_947d8544b50da92594fc6c5ed87af81b'] = 'Conseguir novos clientes e mantê-los de volta.<br>
                 Aqui está uma selecção de módulos de parceiros,<strong> compatíveis com a sua loja</strong>, para o ajudar a atingir os seus objectivos.';

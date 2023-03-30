@@ -527,10 +527,12 @@ class ps_mbo extends Module
     {
         switch (Tools::getValue('controller')) {
        
-            case 'AdminDeliverySlip':
             case 'AdminSlip':
             case 'AdminInvoices':
                 $title = $this->trans('Simplify accounting', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminDeliverySlip':
+                $title = $this->trans('Make shipping easier', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             case 'AdminOrders':
                 $title = $this->trans('Boost sales', [], 'Modules.Mbo.Recommendedmodulesandservices');

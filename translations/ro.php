@@ -18,18 +18,19 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b63003090cd7fae050a51d
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3015e7fd48efb2220c184c49eaeae2c1'] = 'Îmbunătățirea experienței clienților';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_a4098c8673dde7faab7999c2676c3522'] = 'Simplificarea contabilității';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_f28626bfbef9b3fffea9377233f2b6dd'] = 'Optimizarea creării de produse';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_f4f2cea02b1a48a90ad72f87f33ed501'] = 'Creați o strategie de reducere';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_f4f2cea02b1a48a90ad72f87f33ed501'] = 'Creează o strategie de reducere';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_92efe9f2090c8ef8b4525d9c87efb992'] = 'Promovarea mărcilor';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_71de09fcc1e3ca0c0a1e8cb40eb417ab'] = 'Personalizați paginile';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_2fad6e7317d3a912a3c8a60134397d86'] = 'Îmbunătățiți imaginile';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_71de09fcc1e3ca0c0a1e8cb40eb417ab'] = 'Personalizează paginile';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_2fad6e7317d3a912a3c8a60134397d86'] = 'Îmbunătățește imaginile';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_2079b04a8fa4362967a9342028381090'] = 'Facilitează-ți livrările';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_27cfd6d0daa021773ca71830ce5590e4'] = 'Îmbunătățirea expedierii';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_269da544fe0eefcc12bb627f24fe2e81'] = 'Îmbunătățirea direcționării clienților';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_61bb24f36546df402ea09b43dc5c9d28'] = 'Optimizarea gestionării comenzilor';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_a9a13fd9a88fbdd52a7c1e25f3d0d946'] = 'Îmbunătățiți experiența de checkout';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_a9a13fd9a88fbdd52a7c1e25f3d0d946'] = 'Îmbunătățește experiența de checkout';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_95facf46cc97015c64679a153ff5c5a7'] = 'Îmbunătățirea SEO';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_c70ae1b7165361802d85093a3e046107'] = 'Simplificați gestionarea magazinului';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_45833617d93e650787cd71292606e67e'] = 'Automatizați e-mailurile';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_c70ae1b7165361802d85093a3e046107'] = 'Simplifică gestionarea magazinului';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_45833617d93e650787cd71292606e67e'] = 'Automatizează e-mailurile';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_190bd26b051d54c12b31ccfb3008c8a5'] = 'Facilitarea expedierii';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_e39767bb8e247250896230e1d6ee036f'] = 'Module recomandate';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_947d8544b50da92594fc6c5ed87af81b'] = 'Obțineți noi clienți și păstrați-i în continuare.<br>
                 Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
