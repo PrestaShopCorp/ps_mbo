@@ -4,12 +4,12 @@
     <body>
       <trans-unit id="42667b4f4303551b1d51722fe58bf14c">
         <source>PrestaShop Marketplace in your Back Office</source>
-        <target state="needs-translation">PrestaShop Marketplace in your Back Office</target>
+        <target state="translated">Il mercato PrestaShop nel tuo back office</target>
         <note>Line: 119</note>
       </trans-unit>
       <trans-unit id="46fd5bca2028b627f40f2afc6db5c4a1">
         <source>Browse the Addons marketplace directly from your back office to better meet your needs.</source>
-        <target state="needs-translation">Browse the Addons marketplace directly from your back office to better meet your needs.</target>
+        <target state="translated">Consulta il marketplace PrestaShop direttamente dal tuo back-office per soddisfare al meglio le tue esigenze.</target>
         <note>Line: 120</note>
       </trans-unit>
     </body>
