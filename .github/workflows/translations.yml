@@ -18,10 +18,10 @@ jobs:
         run: |
           ls
           cp ./module.cfg.example ./module.cfg
-          sed -i 's/^MODULE_NAME.*/MODULE_NAME="ps_mbo"/g' ./module.cfg
-          sed -i 's/^GIT_REPO_USERNAME.*/GIT_REPO_USERNAME="PrestaShopCorp"/g' ./module.cfg
-          sed -i 's/^GIT_REPO_NAME.*/GIT_REPO_NAME="ps_mbo"/g' ./module.cfg
-          sed -i 's/^BRANCH.*/BRANCH="${{ github.head_ref }}"/g' ./module.cfg
+          sed -i 's#^MODULE_NAME.*#MODULE_NAME="ps_mbo"#g' ./module.cfg
+          sed -i 's#^GIT_REPO_USERNAME.*#GIT_REPO_USERNAME="PrestaShopCorp"#g' ./module.cfg
+          sed -i 's#^GIT_REPO_NAME.*#GIT_REPO_NAME="ps_mbo"#g' ./module.cfg
+          sed -i 's#^BRANCH.*#BRANCH="${{ github.head_ref }}"#g' ./module.cfg
       - name: Setup git config
         run: |
           echo "${{ secrets.MODULE_TRANSLATION_TOOL_ACCESS_TOKEN }}"
