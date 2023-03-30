@@ -24,7 +24,9 @@ namespace PrestaShop\Module\Mbo\Controller\Admin;
 use Configuration;
 use Exception;
 use PrestaShop\Module\Mbo\Addons\Exception\LoginErrorException;
+use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeNotNeededException;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -215,6 +217,42 @@ class AddonsController extends FrameworkBundleAdminController
         }
 
         return new JsonResponse($upgradeResponse);
+    }
+
+    public function afterModuleUpgradeAction(): JsonResponse
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $moduleName = $request->request->get('moduleName');
+
+        if (null === $moduleName) {
+            return new JsonResponse(null, Response::HTTP_BAD_REQUEST);
+        }
+
+        if ('ps_mbo' !== $moduleName) {
+            return new JsonResponse();
+        }
+
+        $module = $this->moduleRepository->getModule($moduleName);
+
+        // Update shop config to transmit correct versions to Distribution API
+        /** @var \ps_mbo $psMbo */
+        $psMbo = $module->getInstance();
+        $psMbo->updateShop();
+
+        // Apply config due to PS and MBO version changes
+        $this->applyConfigOnVersionChange($module);
+
+        return new JsonResponse('After upgrade actions executed successfully');
+    }
+
+    private function applyConfigOnVersionChange(ModuleInterface $module): void
+    {
+        $command = new VersionChangeApplyConfigCommand(
+            _PS_VERSION_,
+            $module->disk->get('version')
+        );
+
+        $configCollection = $this->get('mbo.distribution.api_version_change_config_apply_handler')->handle($command);
     }
 
     private function createCookieUser(JsonResponse $response, \stdClass $json, array $params, int $expiresAt = -1): JsonResponse

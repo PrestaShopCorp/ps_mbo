@@ -68,6 +68,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
     private $adminAuthenticationProvider;
 
     /**
+     * @deprecated Not needed anymore since 4.4.1. Will be deleted in next patch version, to avoid service definition change
      * @var VersionChangeApplyConfigCommandHandler
      */
     private $versionChangeApplyConfigCommandHandler;
@@ -137,7 +138,6 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
             ],
             ModuleManagementEvent::UPGRADE => [
                 ['clearCatalogCache'],
-                ['onUpgrade'],
             ],
             ModuleManagementEvent::RESET => [
                 ['onReset'],
@@ -195,22 +195,6 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         $this->logEvent(ModuleManagementEvent::DISABLE_MOBILE, $event);
     }
 
-    public function onUpgrade(ModuleManagementEvent $event): void
-    {
-        $this->logEvent(ModuleManagementEvent::UPGRADE, $event);
-
-        $module = $event->getModule();
-        if ('ps_mbo' === $module->get('name')) {
-            // Update shop config to transmit correct versions to Distribution API
-            /** @var \ps_mbo $psMbo */
-            $psMbo = $module->getInstance();
-            $psMbo->updateShop();
-
-            // Apply config dur to PS and MBO version changes
-            $this->applyConfigOnVersionChange($module);
-        }
-    }
-
     public function onReset(ModuleManagementEvent $event): void
     {
         $this->logEvent(ModuleManagementEvent::RESET, $event);
@@ -224,16 +208,5 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
 
         $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
         $this->distributionClient->trackEvent($data);
-    }
-
-    private function applyConfigOnVersionChange(ModuleInterface $module)
-    {
-        /** @var Module $module */
-        $command = new VersionChangeApplyConfigCommand(
-            _PS_VERSION_,
-            (string) $module->disk->get('version')
-        );
-
-        $this->versionChangeApplyConfigCommandHandler->handle($command);
     }
 }

@@ -67,6 +67,14 @@ class ps_mbo extends Module
         'AdminModulesManage',
     ];
 
+    public const CONTROLLERS_WITH_UPGRADE_ACTIONS = [
+        'AdminModulesNotifications',
+        'AdminModulesUpdates',
+        'AdminPsMboModule',
+        'AdminModulesManage',
+        'AdminModulesSf',
+    ];
+
     public $configurationList = [
         'PS_MBO_SHOP_ADMIN_UUID' => '', // 'ADMIN' because there will be only one for all shops in a multishop context
         'PS_MBO_SHOP_ADMIN_MAIL' => '',

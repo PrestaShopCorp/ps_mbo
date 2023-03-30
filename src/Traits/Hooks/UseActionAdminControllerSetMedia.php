@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
+use Media;
 use PrestaShop\Module\Mbo\Tab\Tab;
 use Tools;
 
@@ -47,7 +48,7 @@ trait UseActionAdminControllerSetMedia
         if (Tools::getValue('controller') === "AdminPsMboModule") {
             $this->context->controller->addJs($this->getPathUri() . 'views/js/upload_module_with_cdc.js?v=' . $this->version);
         }
-        
+
         if (empty($this->adminControllerMediaMethods)) {
             return;
         }
@@ -86,6 +87,11 @@ trait UseActionAdminControllerSetMedia
      */
     protected function loadMediaForAdminControllerSetMedia(): void
     {
+        if (in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_UPGRADE_ACTIONS)) {
+            // Add JS script to execute actions after module upgrade
+            Media::addJsDef(['mboAfterModuleUpgradeRoute' => $this->get('router')->generate('admin_mbo_module_upgrade_after')]);
+            $this->context->controller->addJS($this->getPathUri() . 'views/js/module-post-actions.js');
+        }
         if (in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CDC_SCRIPT)) {
             $this->context->controller->addJs('/js/jquery/plugins/growl/jquery.growl.js?v=' . $this->version);
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css');

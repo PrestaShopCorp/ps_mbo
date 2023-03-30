@@ -16,3 +16,9 @@ admin_mbo_addons_module_upgrade:
   methods: [ POST ]
   defaults:
     _controller: mbo.controller.addons:upgradeModuleAction
+
+admin_mbo_module_upgrade_after:
+  path: /modules/after-upgrade
+  methods: [ POST ]
+  defaults:
+    _controller: mbo.controller.addons:afterModuleUpgradeAction
