@@ -526,7 +526,6 @@ class ps_mbo extends Module
     private function getRecommendedModulesButtonTitle()
     {
         switch (Tools::getValue('controller')) {
-       
             case 'AdminSlip':
             case 'AdminInvoices':
                 $title = $this->trans('Simplify accounting', [], 'Modules.Mbo.Recommendedmodulesandservices');

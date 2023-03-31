@@ -75,5 +75,3 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_f26b592390a8f614581a53f
                 Voici une sélection de modules partenaires, <strong>compatibles avec votre boutique</strong>, pour vous aider à atteindre vos objectifs.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_9464e3eba0b9794d82fe11fd8626d88f'] = 'Envoyez des e-mails et des notifications automatiques à vos clients en toute simplicité.<br>
                 Voici une sélection de modules partenaires, <strong>compatibles avec votre boutique</strong>, pour vous aider à atteindre vos objectifs.';
-
-
