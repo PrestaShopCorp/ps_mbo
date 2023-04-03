@@ -276,6 +276,8 @@ body.ps_back-office div#main #modules_list_container .modal-body {
   display: inline;
   color: #fff;
   margin-right: 5px;
+  font-size: 16px;
+  line-height: 16px;
 }
 .bootstrap
   .page-head
@@ -287,4 +289,5 @@ body.ps_back-office div#main #modules_list_container .modal-body {
 }
 .bootstrap .page-head .toolbarBox .btn-toolbar #recommended-modules-button {
   display: flex;
+  align-items: center;
 }
