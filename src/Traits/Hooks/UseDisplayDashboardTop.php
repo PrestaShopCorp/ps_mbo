@@ -273,6 +273,7 @@ trait UseDisplayDashboardTop
                 $title = $this->trans('Boost sales', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             case 'AdminCartRules':
+            case 'AdminSpecificPriceRule':
                 $title = $this->trans('Create a discount strategy', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             case 'AdminCmsContent':
