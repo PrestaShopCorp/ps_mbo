@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig" source-language="en" target-language="it" datatype="plaintext">
+  <file original="views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig" source-language="en" target-language="it" datatype="plaintext">
     <body>
       <trans-unit id="1c0b7f4d79e06a46c12312615fc4ab14">
         <source>Connect to Addons marketplace</source>
