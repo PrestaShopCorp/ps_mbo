@@ -4,7 +4,7 @@
     <body>
       <trans-unit id="3b89e163ae0b446bd02e13de8dcf70d3">
         <source><![CDATA[For even more security on your website forms, consult our Security & Access modules category on the]]></source>
-        <target state="translated">Weitere Module zur Datensicherheit finden Sie bei PrestaShop Addons im Bereich "Sicherheit und Berechtigungen":</target>
+        <target state="translated"><![CDATA[Weitere Module zur Datensicherheit finden Sie bei PrestaShop Addons im Bereich "Sicherheit und Berechtigungen":]]></target>
         <note>Line: 131</note>
       </trans-unit>
       <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6">
