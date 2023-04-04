@@ -100,6 +100,9 @@ trait UseActionAdminControllerSetMedia
     private function loadCdcMedia(): void
     {
         $controllerName = Tools::getValue('controller');
+        if(!is_string($controllerName)) {
+            return;
+        }
         if (
             !Tab::mayDisplayRecommendedModules($controllerName) &&
             !in_array($controllerName, self::CONTROLLERS_WITH_CDC_SCRIPT)
