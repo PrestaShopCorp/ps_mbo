@@ -9,12 +9,12 @@
       </trans-unit>
       <trans-unit id="878530871f0db73f004f5bd6591eeb76">
         <source>Remember me</source>
-        <target state="needs-translation">Remember me</target>
+        <target state="translated">Angemeldet bleiben</target>
         <note>Line: 66</note>
       </trans-unit>
       <trans-unit id="634efc0701950e9b2b97384327c8d5d2">
         <source>Let's go!</source>
-        <target state="needs-translation">Let's go!</target>
+        <target state="translated">Los geht's!</target>
         <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="b09249132bbed9baecd987cf73200b44" approved="yes">
