@@ -4,12 +4,12 @@
     <body>
       <trans-unit id="ab9f0d838086d8699f9bc0f6b6bf0d59">
         <source>https://accounts.distribution.prestashop.net/en/sign-up</source>
-        <target state="needs-translation">https://accounts.distribution.prestashop.net/en/sign-up</target>
+        <target state="translated">https://accounts.distribution.prestashop.net/nl/sign-up</target>
         <note>Line: 123</note>
       </trans-unit>
       <trans-unit id="b14fa168a9724da44a82a09d80a98a7c">
         <source>https://auth.prestashop.com/en/password/request</source>
-        <target state="needs-translation">https://auth.prestashop.com/en/password/request</target>
+        <target state="translated">https://auth.prestashop.com/nl/wachtwoord/verzoek</target>
         <note>Line: 130</note>
       </trans-unit>
     </body>
@@ -18,17 +18,17 @@
     <body>
       <trans-unit id="9d86b7d3c7427a887c6e182f75deb3e0">
         <source><![CDATA[https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security]]></source>
-        <target state="needs-translation"><![CDATA[https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security]]></target>
+        <target state="translated"><![CDATA[https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security]]></target>
         <note>Line: 132</note>
       </trans-unit>
       <trans-unit id="198214f6abf95fc35f5f0fb3b70946a3">
         <source><![CDATA[https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></source>
-        <target state="needs-translation"><![CDATA[https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></target>
+        <target state="translated"><![CDATA[https://addons.prestashop.com/nl/517-blokken-tabbladen-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-NL]]></target>
         <note>Line: 139</note>
       </trans-unit>
       <trans-unit id="f9baae88cd2cd24d7c8b13fd1906aab6">
         <source><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></source>
-        <target state="needs-translation"><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></target>
+        <target state="translated"><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-NL]]></target>
         <note>Line: 146</note>
       </trans-unit>
     </body>

@@ -4,17 +4,17 @@
     <body>
       <trans-unit id="3b89e163ae0b446bd02e13de8dcf70d3">
         <source><![CDATA[For even more security on your website forms, consult our Security & Access modules category on the]]></source>
-        <target>Per una sicurezza ancora maggiore sui moduli del tuo sito Web, consulta la nostra categoria Sicurezza e Accesso ai moduli su</target>
+        <target state="translated">Per una sicurezza ancora maggiore sui moduli del tuo sito Web, consulta la nostra categoria Sicurezza e Accesso ai moduli su</target>
         <note>Line: 131</note>
       </trans-unit>
       <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6">
         <source>PrestaShop Addons Marketplace</source>
-        <target>Marketplace di PrestaShop Addons</target>
+        <target state="translated">Marketplace di PrestaShop Addons</target>
         <note>Line: 147</note>
       </trans-unit>
       <trans-unit id="71f716ae5452ef886e40d36f14afed87">
         <source>Discover more modules to improve your shop on</source>
-        <target>Scopri altri moduli per migliorare il tuo negozio su</target>
+        <target state="translated">Scopri altri moduli per migliorare il tuo negozio su</target>
         <note>Line: 145</note>
       </trans-unit>
     </body>
@@ -23,17 +23,17 @@
     <body>
       <trans-unit id="a477136f1721bd17d18fc591f094f155">
         <source>Oh no.. something went wrong</source>
-        <target>Oh no... qualcosa è andato storto</target>
+        <target state="translated">Oh no... qualcosa è andato storto</target>
         <note>Line: 5</note>
       </trans-unit>
       <trans-unit id="77df45c90eb889b2731e6900d63ed7f7">
         <source>There has been a problem on our side. Refresh your page and if the problem persists, try again later.</source>
-        <target>C'è stato un problema da parte nostra. Aggiorna la tua pagina e se il problema persiste, riprova più tardi.</target>
+        <target state="translated">C'è stato un problema da parte nostra. Aggiorna la tua pagina e se il problema persiste, riprova più tardi.</target>
         <note>Line: 8</note>
       </trans-unit>
       <trans-unit id="a593c6d1e05af324063dac348353cece">
         <source>Refresh page</source>
-        <target>Aggiorna la pagina</target>
+        <target state="translated">Aggiorna la pagina</target>
         <note>Line: 13</note>
       </trans-unit>
     </body>

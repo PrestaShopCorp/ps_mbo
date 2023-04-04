@@ -4,7 +4,7 @@
     <body>
       <trans-unit id="e407e3879ca4125520f85ab0c57c3a5c">
         <source>Themes Catalog</source>
-        <target>Themes Catalog</target>
+        <target state="translated">Themes Catalog</target>
         <note>Line: 67</note>
       </trans-unit>
     </body>
