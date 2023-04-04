@@ -1,31 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en-US" target-language="en-US" datatype="plaintext">
+  <file original="src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="es-ES" datatype="plaintext">
     <body>
+      <trans-unit id="45833617d93e650787cd71292606e67e">
+        <source>Automate emails</source>
+        <target state="needs-translation">Automate emails</target>
+        <note>Line: 270</note>
+      </trans-unit>
       <trans-unit id="8c883385a642028c9366bb087618b216">
         <source>Boost sales</source>
-        <target>Aumentar ventas</target>
-        <note>Line: 272</note>
+        <target state="translated">Aumentar ventas</target>
+        <note>Line: 273</note>
       </trans-unit>
-      <trans-unit id="1d929590b318c7d4746d15f1fdc19c81">
-        <source>Optimize product catalog</source>
-        <target>Optimizar el catálogo de productos</target>
+      <trans-unit id="f4f2cea02b1a48a90ad72f87f33ed501">
+        <source>Create a discount strategy</source>
+        <target state="needs-translation">Create a discount strategy</target>
+        <note>Line: 276</note>
+      </trans-unit>
+      <trans-unit id="71de09fcc1e3ca0c0a1e8cb40eb417ab">
+        <source>Customize pages</source>
+        <target state="needs-translation">Customize pages</target>
         <note>Line: 279</note>
-      </trans-unit>
-      <trans-unit id="0b63003090cd7fae050a51da250bb0dc">
-        <source>Improve data strategy</source>
-        <target>Mejorar la estrategia de datos</target>
-        <note>Line: 282</note>
       </trans-unit>
       <trans-unit id="3015e7fd48efb2220c184c49eaeae2c1">
         <source>Improve customer experience</source>
-        <target>Mejorar la experiencia del cliente</target>
-        <note>Line: 286</note>
+        <target state="translated">Mejorar la experiencia del cliente</target>
+        <note>Line: 284</note>
+      </trans-unit>
+      <trans-unit id="269da544fe0eefcc12bb627f24fe2e81">
+        <source>Improve customer targeting</source>
+        <target state="needs-translation">Improve customer targeting</target>
+        <note>Line: 287</note>
+      </trans-unit>
+      <trans-unit id="0b63003090cd7fae050a51da250bb0dc">
+        <source>Improve data strategy</source>
+        <target state="translated">Mejorar la estrategia de datos</target>
+        <note>Line: 290</note>
+      </trans-unit>
+      <trans-unit id="95facf46cc97015c64679a153ff5c5a7">
+        <source>Improve SEO</source>
+        <target state="needs-translation">Improve SEO</target>
+        <note>Line: 294</note>
+      </trans-unit>
+      <trans-unit id="27cfd6d0daa021773ca71830ce5590e4">
+        <source>Improve shipping</source>
+        <target state="needs-translation">Improve shipping</target>
+        <note>Line: 297</note>
+      </trans-unit>
+      <trans-unit id="a9a13fd9a88fbdd52a7c1e25f3d0d946">
+        <source>Improve the checkout experience</source>
+        <target state="needs-translation">Improve the checkout experience</target>
+        <note>Line: 300</note>
+      </trans-unit>
+      <trans-unit id="2fad6e7317d3a912a3c8a60134397d86">
+        <source>Improve visuals</source>
+        <target state="needs-translation">Improve visuals</target>
+        <note>Line: 303</note>
+      </trans-unit>
+      <trans-unit id="190bd26b051d54c12b31ccfb3008c8a5">
+        <source>Make shipping easier</source>
+        <target state="needs-translation">Make shipping easier</target>
+        <note>Line: 306</note>
+      </trans-unit>
+      <trans-unit id="2079b04a8fa4362967a9342028381090">
+        <source>Make your deliveries easier</source>
+        <target state="needs-translation">Make your deliveries easier</target>
+        <note>Line: 309</note>
+      </trans-unit>
+      <trans-unit id="61bb24f36546df402ea09b43dc5c9d28">
+        <source>Optimize order management</source>
+        <target state="needs-translation">Optimize order management</target>
+        <note>Line: 312</note>
+      </trans-unit>
+      <trans-unit id="1d929590b318c7d4746d15f1fdc19c81">
+        <source>Optimize product catalog</source>
+        <target state="translated">Optimizar el catálogo de productos</target>
+        <note>Line: 315</note>
+      </trans-unit>
+      <trans-unit id="f28626bfbef9b3fffea9377233f2b6dd">
+        <source>Optimize product creation</source>
+        <target state="needs-translation">Optimize product creation</target>
+        <note>Line: 318</note>
+      </trans-unit>
+      <trans-unit id="92efe9f2090c8ef8b4525d9c87efb992">
+        <source>Promote brands</source>
+        <target state="needs-translation">Promote brands</target>
+        <note>Line: 321</note>
+      </trans-unit>
+      <trans-unit id="a4098c8673dde7faab7999c2676c3522">
+        <source>Simplify accounting</source>
+        <target state="needs-translation">Simplify accounting</target>
+        <note>Line: 325</note>
+      </trans-unit>
+      <trans-unit id="c70ae1b7165361802d85093a3e046107">
+        <source>Simplify store management</source>
+        <target state="needs-translation">Simplify store management</target>
+        <note>Line: 328</note>
       </trans-unit>
       <trans-unit id="e39767bb8e247250896230e1d6ee036f">
         <source>Recommended modules</source>
-        <target>Módulos recomendados</target>
-        <note>Line: 289</note>
+        <target state="translated">Módulos recomendados</target>
+        <note>Line: 331</note>
       </trans-unit>
     </body>
   </file>

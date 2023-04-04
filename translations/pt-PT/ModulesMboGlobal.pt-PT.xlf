@@ -1,53 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/ps_mbo.php" source-language="pt-PT" target-language="pt-PT" datatype="plaintext">
-    <body>
-      <trans-unit id="42667b4f4303551b1d51722fe58bf14c">
-        <source>PrestaShop Marketplace in your Back Office</source>
-        <target>PrestaShop Marketplace no seu Back Office</target>
-        <note>Line: 119</note>
-      </trans-unit>
-      <trans-unit id="46fd5bca2028b627f40f2afc6db5c4a1">
-        <source>Browse the Addons marketplace directly from your back office to better meet your needs.</source>
-        <target>Consulta o mercado PrestaShop directamente do seu back-office para melhor se adequar às suas necessidades.</target>
-        <note>Line: 120</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="pt-PT" target-language="pt-PT" datatype="plaintext">
+  <file original="src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="pt-PT" datatype="plaintext">
     <body>
       <trans-unit id="3b89e163ae0b446bd02e13de8dcf70d3">
         <source><![CDATA[For even more security on your website forms, consult our Security & Access modules category on the]]></source>
-        <target><![CDATA[Para ainda maior segurança nos formulários do seu sítio, consulte a nossa categoria de módulos de Segurança & Acesso no]]></target>
-        <note>Line: 129</note>
+        <target state="translated"><![CDATA[Para ainda maior segurança nos formulários do seu sítio, consulte a nossa categoria de módulos de Segurança & Acesso no]]></target>
+        <note>Line: 131</note>
       </trans-unit>
       <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6">
         <source>PrestaShop Addons Marketplace</source>
-        <target>Mercado de extensões do Prestashop</target>
-        <note>Line: 145</note>
+        <target state="translated">Mercado de extensões do Prestashop</target>
+        <note>Line: 147</note>
       </trans-unit>
       <trans-unit id="71f716ae5452ef886e40d36f14afed87">
         <source>Discover more modules to improve your shop on</source>
-        <target>Descubra mais módulos para melhorar a sua loja em</target>
-        <note>Line: 143</note>
+        <target state="translated">Descubra mais módulos para melhorar a sua loja em</target>
+        <note>Line: 145</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/cdc-error.html.twig" source-language="pt-PT" target-language="pt-PT" datatype="plaintext">
+  <file original="views/templates/admin/controllers/module_catalog/cdc-error.html.twig" source-language="en" target-language="pt-PT" datatype="plaintext">
     <body>
       <trans-unit id="a477136f1721bd17d18fc591f094f155">
         <source>Oh no.. something went wrong</source>
-        <target>Oh não... algo correu mal</target>
+        <target state="translated">Oh não... algo correu mal</target>
         <note>Line: 5</note>
       </trans-unit>
       <trans-unit id="77df45c90eb889b2731e6900d63ed7f7">
         <source>There has been a problem on our side. Refresh your page and if the problem persists, try again later.</source>
-        <target>Houve um problema em nosso lado. Atualize sua página e, se o problema persistir, tente novamente mais tarde.</target>
+        <target state="translated">Houve um problema em nosso lado. Atualize sua página e, se o problema persistir, tente novamente mais tarde.</target>
         <note>Line: 8</note>
       </trans-unit>
       <trans-unit id="a593c6d1e05af324063dac348353cece">
         <source>Refresh page</source>
-        <target>Atualizar página</target>
+        <target state="translated">Atualizar página</target>
         <note>Line: 13</note>
       </trans-unit>
     </body>
