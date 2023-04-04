@@ -9,7 +9,7 @@
       </trans-unit>
       <trans-unit id="8c883385a642028c9366bb087618b216">
         <source>Boost sales</source>
-        <target state="translated">Повысить продажи</target>
+        <target state="needs-translation">Boost sales</target>
         <note>Line: 273</note>
       </trans-unit>
       <trans-unit id="f4f2cea02b1a48a90ad72f87f33ed501">
@@ -24,7 +24,7 @@
       </trans-unit>
       <trans-unit id="3015e7fd48efb2220c184c49eaeae2c1">
         <source>Improve customer experience</source>
-        <target state="translated">Улучшить клиентский опыт</target>
+        <target state="needs-translation">Improve customer experience</target>
         <note>Line: 284</note>
       </trans-unit>
       <trans-unit id="269da544fe0eefcc12bb627f24fe2e81">
@@ -34,7 +34,7 @@
       </trans-unit>
       <trans-unit id="0b63003090cd7fae050a51da250bb0dc">
         <source>Improve data strategy</source>
-        <target state="translated">Улучшение стратегии работы с данными</target>
+        <target state="needs-translation">Improve data strategy</target>
         <note>Line: 290</note>
       </trans-unit>
       <trans-unit id="95facf46cc97015c64679a153ff5c5a7">
@@ -74,7 +74,7 @@
       </trans-unit>
       <trans-unit id="1d929590b318c7d4746d15f1fdc19c81">
         <source>Optimize product catalog</source>
-        <target state="translated">Оптимизация каталога товаров</target>
+        <target state="needs-translation">Optimize product catalog</target>
         <note>Line: 315</note>
       </trans-unit>
       <trans-unit id="f28626bfbef9b3fffea9377233f2b6dd">
@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="e39767bb8e247250896230e1d6ee036f">
         <source>Recommended modules</source>
-        <target state="translated">Рекомендованные Модули</target>
+        <target state="needs-translation">Recommended modules</target>
         <note>Line: 331</note>
       </trans-unit>
     </body>
