@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Module\Collection;
 use PrestaShop\Module\Mbo\Module\Filters;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
@@ -48,11 +49,16 @@ trait UseActionListModules
             $filters
         );
 
+        $shopUrl = Config::getShopUrl();
         $modules = [];
         /**
          * @var ModuleInterface $module
          */
         foreach ($modulesCollection as $name => $module) {
+            $downloadUrl = $module->get('download_url');
+            if(is_string($downloadUrl) && strpos($downloadUrl, 'shop_url') === false) {
+                $downloadUrl .= '&shop_url=' . $shopUrl;
+            }
             $modules[] = [
                 'name' => $name,
                 'displayName' => $module->get('displayName'),
@@ -62,7 +68,7 @@ trait UseActionListModules
                 'version_available' => $module->get('version_available'),
                 'author' => $module->get('author'),
                 'url' => $module->get('url'),
-                'download_url' => $module->get('download_url'),
+                'download_url' => $downloadUrl,
                 'img' => $module->get('img'),
                 'tab' => $module->get('tab'),
             ];
