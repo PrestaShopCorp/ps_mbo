@@ -61,7 +61,8 @@ trait UseActionListModules
                 'version' => $module->get('version'),
                 'version_available' => $module->get('version_available'),
                 'author' => $module->get('author'),
-                'download_url' => $module->get('url'),
+                'url' => $module->get('url'),
+                'download_url' => $module->get('download_url'),
                 'img' => $module->get('img'),
                 'tab' => $module->get('tab'),
             ];
