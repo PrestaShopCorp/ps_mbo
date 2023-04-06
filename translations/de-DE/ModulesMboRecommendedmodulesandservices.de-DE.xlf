@@ -2,29 +2,29 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="de" datatype="plaintext">
     <body>
-      <trans-unit id="8c883385a642028c9366bb087618b216">
+      <trans-unit id="8c883385a642028c9366bb087618b216" approved="yes">
         <source>Boost sales</source>
-        <target state="translated">Verkäufe ankurbeln</target>
+        <target state="final">Verkäufe ankurbeln</target>
         <note>Line: 272</note>
       </trans-unit>
-      <trans-unit id="1d929590b318c7d4746d15f1fdc19c81">
+      <trans-unit id="1d929590b318c7d4746d15f1fdc19c81" approved="yes">
         <source>Optimize product catalog</source>
-        <target state="translated">Optimieren Sie den Produktkatalog</target>
+        <target state="final">Optimieren Sie den Produktkatalog</target>
         <note>Line: 279</note>
       </trans-unit>
-      <trans-unit id="0b63003090cd7fae050a51da250bb0dc">
+      <trans-unit id="0b63003090cd7fae050a51da250bb0dc" approved="yes">
         <source>Improve data strategy</source>
-        <target state="translated">Verbesserung der Datenstrategie</target>
+        <target state="final">Verbesserung der Datenstrategie</target>
         <note>Line: 282</note>
       </trans-unit>
-      <trans-unit id="3015e7fd48efb2220c184c49eaeae2c1">
+      <trans-unit id="3015e7fd48efb2220c184c49eaeae2c1" approved="yes">
         <source>Improve customer experience</source>
-        <target state="translated">Kundenerlebnis verbessern</target>
+        <target state="final">Kundenerlebnis verbessern</target>
         <note>Line: 286</note>
       </trans-unit>
-      <trans-unit id="e39767bb8e247250896230e1d6ee036f">
+      <trans-unit id="e39767bb8e247250896230e1d6ee036f" approved="yes">
         <source>Recommended modules</source>
-        <target state="translated">Empfohlene Module</target>
+        <target state="final">Empfohlene Module</target>
         <note>Line: 289</note>
       </trans-unit>
     </body>
