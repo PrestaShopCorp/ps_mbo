@@ -2,9 +2,9 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="modules/ps_mbo/src/Controller/Admin/ModuleSelectionController.php" source-language="en" target-language="de" datatype="plaintext">
     <body>
-      <trans-unit id="70fd3879bc512e7d2048692d397fc3a0">
+      <trans-unit id="70fd3879bc512e7d2048692d397fc3a0" approved="yes">
         <source>Modules in the spotlight</source>
-        <target state="translated">Module im Rampenlicht</target>
+        <target state="final">Module im Rampenlicht</target>
         <note>Line: 67</note>
       </trans-unit>
     </body>
