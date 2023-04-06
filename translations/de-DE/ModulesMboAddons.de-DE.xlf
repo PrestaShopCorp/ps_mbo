@@ -2,29 +2,29 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig" source-language="en" target-language="de" datatype="plaintext">
     <body>
-      <trans-unit id="1c0b7f4d79e06a46c12312615fc4ab14">
+      <trans-unit id="1c0b7f4d79e06a46c12312615fc4ab14" approved="yes">
         <source>Connect to Addons marketplace</source>
-        <target state="translated">Mit dem Addons Marktplatz verbinden</target>
+        <target state="final">Mit dem Addons Marktplatz verbinden</target>
         <note>Line: 24</note>
       </trans-unit>
-      <trans-unit id="878530871f0db73f004f5bd6591eeb76">
+      <trans-unit id="878530871f0db73f004f5bd6591eeb76" approved="yes">
         <source>Remember me</source>
-        <target state="translated">Angemeldet bleiben</target>
+        <target state="final">Angemeldet bleiben</target>
         <note>Line: 66</note>
       </trans-unit>
-      <trans-unit id="634efc0701950e9b2b97384327c8d5d2">
+      <trans-unit id="634efc0701950e9b2b97384327c8d5d2" approved="yes">
         <source>Let's go!</source>
-        <target state="translated">Los geht's!</target>
+        <target state="final">Los geht's!</target>
         <note>Line: 70</note>
       </trans-unit>
-      <trans-unit id="b09249132bbed9baecd987cf73200b44">
+      <trans-unit id="b09249132bbed9baecd987cf73200b44" approved="yes">
         <source>Confirm logout</source>
-        <target state="translated">Abmeldung bestätigen</target>
+        <target state="final">Abmeldung bestätigen</target>
         <note>Line: 89</note>
       </trans-unit>
-      <trans-unit id="df776a9024ce6c10ec1d1d763cee0301">
+      <trans-unit id="df776a9024ce6c10ec1d1d763cee0301" approved="yes">
         <source>You are about to log out your Addons account. You might miss important updates of Addons you've bought.</source>
-        <target state="translated">Wenn Sie sich von Ihrem Addons-Kundenbereich abmelden, werden sie nicht über wichtige Updates der von Ihnen gekauften Addons informiert.</target>
+        <target state="final">Wenn Sie sich von Ihrem Addons-Kundenbereich abmelden, werden sie nicht über wichtige Updates der von Ihnen gekauften Addons informiert.</target>
         <note>Line: 96</note>
       </trans-unit>
     </body>
