@@ -7,14 +7,14 @@
         <target state="final">Se connecter à la marketplace Addons</target>
         <note>Line: 24</note>
       </trans-unit>
-      <trans-unit id="878530871f0db73f004f5bd6591eeb76">
+      <trans-unit id="878530871f0db73f004f5bd6591eeb76" approved="yes">
         <source>Remember me</source>
-        <target state="translated">Se souvenir de moi</target>
+        <target state="final">Se souvenir de moi</target>
         <note>Line: 66</note>
       </trans-unit>
-      <trans-unit id="634efc0701950e9b2b97384327c8d5d2">
+      <trans-unit id="634efc0701950e9b2b97384327c8d5d2" approved="yes">
         <source>Let's go!</source>
-        <target state="translated">C'est parti !</target>
+        <target state="final">C'est parti !</target>
         <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="b09249132bbed9baecd987cf73200b44" approved="yes">
