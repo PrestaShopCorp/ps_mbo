@@ -2,29 +2,29 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="pt-PT" datatype="plaintext">
     <body>
-      <trans-unit id="8c883385a642028c9366bb087618b216">
+      <trans-unit id="8c883385a642028c9366bb087618b216" approved="yes">
         <source>Boost sales</source>
-        <target state="translated">Aumentar as vendas</target>
+        <target state="final">Aumentar as vendas</target>
         <note>Line: 272</note>
       </trans-unit>
-      <trans-unit id="1d929590b318c7d4746d15f1fdc19c81">
+      <trans-unit id="1d929590b318c7d4746d15f1fdc19c81" approved="yes">
         <source>Optimize product catalog</source>
-        <target state="translated">Optimizar o catálogo de produtos</target>
+        <target state="final">Optimizar o catálogo de produtos</target>
         <note>Line: 279</note>
       </trans-unit>
-      <trans-unit id="0b63003090cd7fae050a51da250bb0dc">
+      <trans-unit id="0b63003090cd7fae050a51da250bb0dc" approved="yes">
         <source>Improve data strategy</source>
-        <target state="translated">Melhorar a estratégia de dados</target>
+        <target state="final">Melhorar a estratégia de dados</target>
         <note>Line: 282</note>
       </trans-unit>
-      <trans-unit id="3015e7fd48efb2220c184c49eaeae2c1">
+      <trans-unit id="3015e7fd48efb2220c184c49eaeae2c1" approved="yes">
         <source>Improve customer experience</source>
-        <target state="translated">Melhorar a experiência do cliente</target>
+        <target state="final">Melhorar a experiência do cliente</target>
         <note>Line: 286</note>
       </trans-unit>
-      <trans-unit id="e39767bb8e247250896230e1d6ee036f">
+      <trans-unit id="e39767bb8e247250896230e1d6ee036f" approved="yes">
         <source>Recommended modules</source>
-        <target state="translated">Módulos recomendados</target>
+        <target state="final">Módulos recomendados</target>
         <note>Line: 289</note>
       </trans-unit>
     </body>
