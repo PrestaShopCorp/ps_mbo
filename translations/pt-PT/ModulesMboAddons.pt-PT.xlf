@@ -7,18 +7,17 @@
         <target state="final">Ligar com o Addons Marketplace</target>
         <note>Line: 24</note>
       </trans-unit>
-      <trans-unit id="b09249132bbed9baecd987cf73200b44" approved="yes">
-      <trans-unit id="878530871f0db73f004f5bd6591eeb76">
+      <trans-unit id="878530871f0db73f004f5bd6591eeb76" approved="yes">
         <source>Remember me</source>
-        <target state="needs-translation">Remember me</target>
+        <target state="final">Lembrar-me</target>
         <note>Line: 66</note>
       </trans-unit>
-      <trans-unit id="634efc0701950e9b2b97384327c8d5d2">
+      <trans-unit id="634efc0701950e9b2b97384327c8d5d2" approved="yes">
         <source>Let's go!</source>
-        <target state="needs-translation">Let's go!</target>
+        <target state="final">Continuar!</target>
         <note>Line: 70</note>
       </trans-unit>
-      <trans-unit id="b09249132bbed9baecd987cf73200b44">
+      <trans-unit id="b09249132bbed9baecd987cf73200b44" approved="yes">
         <source>Confirm logout</source>
         <target state="final">Confirmar encerramento de sessão</target>
         <note>Line: 89</note>
