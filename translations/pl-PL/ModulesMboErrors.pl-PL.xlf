@@ -2,18 +2,18 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="src/Controller/Admin/AddonsController.php" source-language="en" target-language="pl" datatype="plaintext">
     <body>
-      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
+      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea" approved="yes">
         <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
-        <target state="translated">PrestaShop nie mógł zalogować się do Dodatków, sprawdź swoje uprawnienia i połączenie internetowe.</target>
+        <target state="final">PrestaShop nie mógł zalogować się do Dodatków, sprawdź swoje uprawnienia i połączenie internetowe.</target>
         <note>Line: 105</note>
       </trans-unit>
     </body>
   </file>
   <file original="views/templates/admin/error.html.twig" source-language="en" target-language="pl" datatype="plaintext">
     <body>
-      <trans-unit id="8a5560b05facacdbc10e870b1152e41b">
+      <trans-unit id="8a5560b05facacdbc10e870b1152e41b" approved="yes">
         <source>It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.</source>
-        <target state="translated">Wygląda na to, że mamy problem z połączeniem się z dodatkami. Odśwież stronę lub sprawdź konfigurację zapory.</target>
+        <target state="final">Wygląda na to, że mamy problem z połączeniem się z dodatkami. Odśwież stronę lub sprawdź konfigurację zapory.</target>
         <note>Line: 32</note>
       </trans-unit>
     </body>
