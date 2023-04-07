@@ -7,9 +7,9 @@
         <target state="final">Verhoog de verkoop</target>
         <note>Line: 272</note>
       </trans-unit>
-      <trans-unit id="1d929590b318c7d4746d15f1fdc19c81" approved="yes">
+      <trans-unit id="1d929590b318c7d4746d15f1fdc19c81">
         <source>Optimize product catalog</source>
-        <target state="final">Optimaliseren van de productcatalogus</target>
+        <target state="translated">Productcatalogus optimaliseren</target>
         <note>Line: 279</note>
       </trans-unit>
       <trans-unit id="0b63003090cd7fae050a51da250bb0dc" approved="yes">
