@@ -72,9 +72,9 @@
         <target state="final">Orderbeheer optimaliseren</target>
         <note>Line: 312</note>
       </trans-unit>
-      <trans-unit id="1d929590b318c7d4746d15f1fdc19c81" approved="yes">
+      <trans-unit id="1d929590b318c7d4746d15f1fdc19c81">
         <source>Optimize product catalog</source>
-        <target state="final">Optimaliseren van de productcatalogus</target>
+        <target state="translated">Productcatalogus optimaliseren</target>
         <note>Line: 315</note>
       </trans-unit>
       <trans-unit id="f28626bfbef9b3fffea9377233f2b6dd" approved="yes">
