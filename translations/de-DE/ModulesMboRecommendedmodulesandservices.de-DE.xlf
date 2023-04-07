@@ -34,7 +34,7 @@
       </trans-unit>
       <trans-unit id="0b63003090cd7fae050a51da250bb0dc" approved="yes">
         <source>Improve data strategy</source>
-        <target state="final">Verbesserung der Datenstrategie</target>
+        <target state="final">Datenstrategie verbessern</target>
         <note>Line: 290</note>
       </trans-unit>
       <trans-unit id="95facf46cc97015c64679a153ff5c5a7" approved="yes">
@@ -72,9 +72,9 @@
         <target state="final">Auftragsverwaltung verbessern</target>
         <note>Line: 312</note>
       </trans-unit>
-      <trans-unit id="1d929590b318c7d4746d15f1fdc19c81" approved="yes">
+      <trans-unit id="1d929590b318c7d4746d15f1fdc19c81">
         <source>Optimize product catalog</source>
-        <target state="final">Optimieren Sie den Produktkatalog</target>
+        <target state="translated">Den Produktkatalog optimieren</target>
         <note>Line: 315</note>
       </trans-unit>
       <trans-unit id="f28626bfbef9b3fffea9377233f2b6dd" approved="yes">
