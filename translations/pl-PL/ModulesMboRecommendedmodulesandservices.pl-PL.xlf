@@ -4,22 +4,22 @@
     <body>
       <trans-unit id="8c883385a642028c9366bb087618b216" approved="yes">
         <source>Boost sales</source>
-        <target state="final">Stimulează vânzările</target>
+        <target state="final">Zwiększ sprzedaż</target>
         <note>Line: 272</note>
       </trans-unit>
       <trans-unit id="1d929590b318c7d4746d15f1fdc19c81" approved="yes">
         <source>Optimize product catalog</source>
-        <target state="final">Optymalizacja katalogu produktów</target>
+        <target state="final">Optymalizuj katalog produktów</target>
         <note>Line: 279</note>
       </trans-unit>
       <trans-unit id="0b63003090cd7fae050a51da250bb0dc" approved="yes">
         <source>Improve data strategy</source>
-        <target state="final">Poprawa strategii w zakresie danych</target>
+        <target state="final">Popraw strategię w zakresie danych</target>
         <note>Line: 282</note>
       </trans-unit>
       <trans-unit id="3015e7fd48efb2220c184c49eaeae2c1" approved="yes">
         <source>Improve customer experience</source>
-        <target state="final">Poprawa doświadczenia klienta</target>
+        <target state="final">Popraw doświadczenie klienta</target>
         <note>Line: 286</note>
       </trans-unit>
       <trans-unit id="e39767bb8e247250896230e1d6ee036f" approved="yes">
