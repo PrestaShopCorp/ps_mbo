@@ -391,6 +391,19 @@ class ps_mbo extends Module
             ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=UTF8;';
         }
 
+        if (null === $table || 'mbo_action_queue' === $table) {
+            $sqlQueries[] = ' CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'mbo_action_queue` (
+                `id_mbo_action_queue` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `action_uuid` varchar(255) NOT NULL,
+                `action` varchar(255) NOT NULL,
+                `module` varchar(255) NOT NULL,
+                `parameters` LONGTEXT NULL,
+                `status` varchar(255) NOT NULL DEFAULT \'PENDING\',
+                `date_add` datetime NOT NULL,
+                PRIMARY KEY (`id_mbo_action_queue`)
+            ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=UTF8;';
+        }
+
         foreach ($sqlQueries as $query) {
             if (!Db::getInstance()->execute($query)) {
                 return false;

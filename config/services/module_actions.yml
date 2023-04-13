@@ -1,0 +1,19 @@
+---
+services:
+  _defaults:
+    public: true
+
+  mbo.modules.actions.builder:
+    class: PrestaShop\Module\Mbo\Module\Action\ActionBuilder
+    arguments:
+      - "@prestashop.module.manager"
+
+  mbo.modules.actions.retriever:
+    class: PrestaShop\Module\Mbo\Module\Action\ActionRetriever
+    arguments:
+      - "@mbo.modules.actions.builder"
+
+  mbo.modules.actions.scheduler:
+    class: PrestaShop\Module\Mbo\Module\Action\Scheduler
+    arguments:
+      - "@mbo.modules.actions.retriever"
