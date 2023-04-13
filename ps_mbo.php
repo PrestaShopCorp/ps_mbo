@@ -173,7 +173,7 @@ class ps_mbo extends Module
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
             'min' => '1.7.5.0',
-            'max' => '1.7.8.8',
+            'max' => '1.7.8.9',
         ];
 
         parent::__construct();
