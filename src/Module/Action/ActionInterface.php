@@ -10,6 +10,8 @@ interface ActionInterface
 
     public function execute(): bool;
 
+    public function getActionUuid(): string;
+
     public function getActionName(): string;
 
     public function getModuleName(): string;

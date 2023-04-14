@@ -14,6 +14,11 @@ class UpgradeAction extends AbstractAction
     /**
      * @var string
      */
+    private $actionUuid;
+
+    /**
+     * @var string
+     */
     private $moduleName;
 
     /**
@@ -23,11 +28,13 @@ class UpgradeAction extends AbstractAction
 
     public function __construct(
         ModuleManager $moduleManager,
+        string        $actionUuid,
         string        $moduleName,
         ?string       $source = null,
         ?string       $status = ActionInterface::PENDING
     ) {
         $this->moduleManager = $moduleManager;
+        $this->actionUuid = $actionUuid;
         $this->moduleName = $moduleName;
         $this->source = $source;
 
@@ -39,25 +46,21 @@ class UpgradeAction extends AbstractAction
         return $this->moduleManager->upgrade($this->moduleName, $this->source);
     }
 
-    /**
-     * @return ModuleManager
-     */
     public function getModuleManager(): ModuleManager
     {
         return $this->moduleManager;
     }
 
-    /**
-     * @return string
-     */
+    public function getActionUuid(): string
+    {
+        return $this->actionUuid;
+    }
+
     public function getModuleName(): string
     {
         return $this->moduleName;
     }
 
-    /**
-     * @return string|null
-     */
     public function getSource(): ?string
     {
         return $this->source;

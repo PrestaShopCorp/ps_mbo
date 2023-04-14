@@ -3,6 +3,7 @@
 namespace PrestaShop\Module\Mbo\Module\Action;
 
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use Ramsey\Uuid\Uuid;
 
 class ActionBuilder
 {
@@ -37,58 +38,74 @@ class ActionBuilder
 
                 return new InstallAction(
                     $this->moduleManager,
+                    $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
                     $actionData['module_name'],
-                    $actionData['source'] ?? null
+                    $actionData['source'] ?? null,
+                    $actionData['status'] ?? ActionInterface::PENDING
                 );
             case self::ACTION_NAME_UNINSTALL:
                 UninstallAction::validateActionData($actionData);
 
                 return new UninstallAction(
                     $this->moduleManager,
-                    $actionData['module_name']
+                    $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
+                    $actionData['module_name'],
+                    $actionData['status'] ?? ActionInterface::PENDING
                 );
             case self::ACTION_NAME_UPGRADE:
                 UpgradeAction::validateActionData($actionData);
 
                 return new UpgradeAction(
                     $this->moduleManager,
+                    $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
                     $actionData['module_name'],
-                    $actionData['source'] ?? null
+                    $actionData['source'] ?? null,
+                    $actionData['status'] ?? ActionInterface::PENDING
                 );
             case self::ACTION_NAME_ENABLE:
                 EnableAction::validateActionData($actionData);
 
                 return new EnableAction(
                     $this->moduleManager,
-                    $actionData['module_name']
+                    $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
+                    $actionData['module_name'],
+                    $actionData['status'] ?? ActionInterface::PENDING
                 );
             case self::ACTION_NAME_DISABLE:
                 DisableAction::validateActionData($actionData);
 
                 return new DisableAction(
                     $this->moduleManager,
-                    $actionData['module_name']
+                    $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
+                    $actionData['module_name'],
+                    $actionData['status'] ?? ActionInterface::PENDING
                 );
             case self::ACTION_NAME_ENABLE_MOBILE:
                 EnableMobileAction::validateActionData($actionData);
 
                 return new EnableMobileAction(
                     $this->moduleManager,
-                    $actionData['module_name']
+                    $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
+                    $actionData['module_name'],
+                    $actionData['status'] ?? ActionInterface::PENDING
                 );
             case self::ACTION_NAME_DISABLE_MOBILE:
                 DisableMobileAction::validateActionData($actionData);
 
                 return new DisableMobileAction(
                     $this->moduleManager,
-                    $actionData['module_name']
+                    $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
+                    $actionData['module_name'],
+                    $actionData['status'] ?? ActionInterface::PENDING
                 );
             case self::ACTION_NAME_RESET:
                 ResetAction::validateActionData($actionData);
 
                 return new ResetAction(
                     $this->moduleManager,
-                    $actionData['module_name']
+                    $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
+                    $actionData['module_name'],
+                    $actionData['status'] ?? ActionInterface::PENDING
                 );
             default:
                 throw new \InvalidArgumentException('Unrecognized module action name');

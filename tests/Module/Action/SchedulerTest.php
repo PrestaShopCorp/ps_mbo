@@ -55,12 +55,12 @@ class SchedulerTest extends TestCase
         $moduleManager = $this->createMock(ModuleManager::class);
         $actionRetriever = $this->createMock(ActionRetriever::class);
 
-        $action1 = new InstallAction($moduleManager, 'module_one', null, ActionInterface::PROCESSED);
-        $action2 = new InstallAction($moduleManager, 'module_two', null, ActionInterface::PENDING);
-        $action3 = new InstallAction($moduleManager, 'module_three', null, ActionInterface::PROCESSED);
-        $action4 = new InstallAction($moduleManager, 'module_four', null, ActionInterface::PROCESSING);
-        $action5 = new InstallAction($moduleManager, 'module_five', null, ActionInterface::PROCESSED);
-        $action6 = new InstallAction($moduleManager, 'module_six', null, ActionInterface::PENDING);
+        $action1 = new InstallAction($moduleManager, '1234', 'module_one', null, ActionInterface::PROCESSED);
+        $action2 = new InstallAction($moduleManager, '1235', 'module_two', null, ActionInterface::PENDING);
+        $action3 = new InstallAction($moduleManager, '1236', 'module_three', null, ActionInterface::PROCESSED);
+        $action4 = new InstallAction($moduleManager, '1237', 'module_four', null, ActionInterface::PROCESSING);
+        $action5 = new InstallAction($moduleManager, '1238', 'module_five', null, ActionInterface::PROCESSED);
+        $action6 = new InstallAction($moduleManager, '1239', 'module_six', null, ActionInterface::PENDING);
 
         $actionRetriever
             ->expects($this->once())
@@ -85,12 +85,12 @@ class SchedulerTest extends TestCase
         $moduleManager = $this->createMock(ModuleManager::class);
         $actionRetriever = $this->createMock(ActionRetriever::class);
 
-        $action1 = new InstallAction($moduleManager, 'module_one', null, ActionInterface::PROCESSED);
-        $action2 = new InstallAction($moduleManager, 'module_two', null, ActionInterface::PENDING);
-        $action3 = new InstallAction($moduleManager, 'module_three', null, ActionInterface::PROCESSED);
-        $action4 = new InstallAction($moduleManager, 'module_four', null, ActionInterface::PENDING);
-        $action5 = new InstallAction($moduleManager, 'module_five', null, ActionInterface::PROCESSED);
-        $action6 = new InstallAction($moduleManager, 'module_six', null, ActionInterface::PENDING);
+        $action1 = new InstallAction($moduleManager, '1234', 'module_one', null, ActionInterface::PROCESSED);
+        $action2 = new InstallAction($moduleManager, '1235', 'module_two', null, ActionInterface::PENDING);
+        $action3 = new InstallAction($moduleManager, '1236', 'module_three', null, ActionInterface::PROCESSED);
+        $action4 = new InstallAction($moduleManager, '1237', 'module_four', null, ActionInterface::PENDING);
+        $action5 = new InstallAction($moduleManager, '1238', 'module_five', null, ActionInterface::PROCESSED);
+        $action6 = new InstallAction($moduleManager, '1239', 'module_six', null, ActionInterface::PENDING);
 
         $actionRetriever
             ->expects($this->once())
@@ -130,12 +130,12 @@ class SchedulerTest extends TestCase
         $moduleManager = $this->createMock(ModuleManager::class);
         $actionRetriever = $this->createMock(ActionRetriever::class);
 
-        $action1 = new InstallAction($moduleManager, 'module_one', null, ActionInterface::PROCESSED);
-        $action2 = new InstallAction($moduleManager, 'module_two', null, ActionInterface::PENDING);
-        $action3 = new InstallAction($moduleManager, 'module_three', null, ActionInterface::PROCESSED);
-        $action4 = new InstallAction($moduleManager, 'module_four', null, ActionInterface::PROCESSING);
-        $action5 = new InstallAction($moduleManager, 'module_five', null, ActionInterface::PROCESSED);
-        $action6 = new InstallAction($moduleManager, 'module_six', null, ActionInterface::PENDING);
+        $action1 = new InstallAction($moduleManager, '1234', 'module_one', null, ActionInterface::PROCESSED);
+        $action2 = new InstallAction($moduleManager, '1235', 'module_two', null, ActionInterface::PENDING);
+        $action3 = new InstallAction($moduleManager, '1236', 'module_three', null, ActionInterface::PROCESSED);
+        $action4 = new InstallAction($moduleManager, '1237', 'module_four', null, ActionInterface::PROCESSING);
+        $action5 = new InstallAction($moduleManager, '1238', 'module_five', null, ActionInterface::PROCESSED);
+        $action6 = new InstallAction($moduleManager, '1239', 'module_six', null, ActionInterface::PENDING);
 
         $actionRetriever
             ->expects($this->once())
@@ -160,12 +160,12 @@ class SchedulerTest extends TestCase
         $moduleManager = $this->createMock(ModuleManager::class);
         $actionRetriever = $this->createMock(ActionRetriever::class);
 
-        $action1 = new InstallAction($moduleManager, 'module_one', null, ActionInterface::PROCESSED);
-        $action2 = new InstallAction($moduleManager, 'module_two', null, ActionInterface::PENDING);
-        $action3 = new InstallAction($moduleManager, 'module_three', null, ActionInterface::PROCESSED);
-        $action4 = new InstallAction($moduleManager, 'module_four', null, ActionInterface::PENDING);
-        $action5 = new InstallAction($moduleManager, 'module_five', null, ActionInterface::PROCESSED);
-        $action6 = new InstallAction($moduleManager, 'module_six', null, ActionInterface::PENDING);
+        $action1 = new InstallAction($moduleManager, '1234', 'module_one', null, ActionInterface::PROCESSED);
+        $action2 = new InstallAction($moduleManager, '1235', 'module_two', null, ActionInterface::PENDING);
+        $action3 = new InstallAction($moduleManager, '1236', 'module_three', null, ActionInterface::PROCESSED);
+        $action4 = new InstallAction($moduleManager, '1237', 'module_four', null, ActionInterface::PENDING);
+        $action5 = new InstallAction($moduleManager, '1238', 'module_five', null, ActionInterface::PROCESSED);
+        $action6 = new InstallAction($moduleManager, '1239', 'module_six', null, ActionInterface::PENDING);
 
         $actionRetriever
             ->expects($this->once())
@@ -182,6 +182,8 @@ class SchedulerTest extends TestCase
 
         $scheduler = new Scheduler($actionRetriever);
 
-        $this->assertSame(Scheduler::ACTION_STARTED, $scheduler->processNextAction());
+        $processResult = $scheduler->processNextAction();
+        $this->assertInstanceOf(ActionInterface::class, $processResult);
+        $this->assertSame(ActionInterface::PENDING, $processResult->getStatus());
     }
 }

@@ -400,6 +400,8 @@ class ps_mbo extends Module
                 `parameters` LONGTEXT NULL,
                 `status` varchar(255) NOT NULL DEFAULT \'PENDING\',
                 `date_add` datetime NOT NULL,
+                `date_started` datetime NULL DEFAULT NULL,
+                `date_ended` datetime NULL DEFAULT NULL,
                 PRIMARY KEY (`id_mbo_action_queue`)
             ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=UTF8;';
         }
@@ -416,6 +418,7 @@ class ps_mbo extends Module
     private function uninstallTables(): bool
     {
         $sqlQueries[] = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'mbo_api_config`';
+        $sqlQueries[] = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'mbo_action_queue`';
 
         foreach ($sqlQueries as $query) {
             if (!Db::getInstance()->execute($query)) {

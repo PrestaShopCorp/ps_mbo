@@ -14,14 +14,21 @@ class UninstallAction extends AbstractAction
     /**
      * @var string
      */
+    private $actionUuid;
+
+    /**
+     * @var string
+     */
     private $moduleName;
 
     public function __construct(
         ModuleManager $moduleManager,
+        string        $actionUuid,
         string        $moduleName,
         ?string       $status = ActionInterface::PENDING
     ) {
         $this->moduleManager = $moduleManager;
+        $this->actionUuid = $actionUuid;
         $this->moduleName = $moduleName;
 
         parent::__construct($status);
@@ -32,17 +39,16 @@ class UninstallAction extends AbstractAction
         return $this->moduleManager->uninstall($this->moduleName);
     }
 
-    /**
-     * @return ModuleManager
-     */
     public function getModuleManager(): ModuleManager
     {
         return $this->moduleManager;
     }
 
-    /**
-     * @return string
-     */
+    public function getActionUuid(): string
+    {
+        return $this->actionUuid;
+    }
+
     public function getModuleName(): string
     {
         return $this->moduleName;

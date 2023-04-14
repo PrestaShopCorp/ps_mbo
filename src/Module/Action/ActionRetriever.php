@@ -26,7 +26,7 @@ class ActionRetriever
         $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'mbo_action_queue`(`action_uuid`,`action`,`module`,`parameters`,`status`,`date_add`) VALUES ';
         $sql .= sprintf(
             "('%s', '%s', '%s', %s, '%s', '%s');",
-            Uuid::uuid4()->toString(),
+            $action->getActionUuid(),
             $action->getActionName(),
             $action->getModuleName(),
             !empty($action->getParameters()) ? "'" . json_encode($action->getParameters()) . "'" : 'NULL',
@@ -34,7 +34,11 @@ class ActionRetriever
             $dateAdd
         );
 
-        return $this->db->execute($sql);
+        if (false === $this->db->execute($sql)) {
+            throw new \Exception('Unable to create action');
+        }
+
+        return $action->getActionUuid();
     }
     /**
      * @return ActionInterface[]
@@ -50,7 +54,8 @@ class ActionRetriever
                `status`,
                `date_add`
             FROM " . _DB_PREFIX_ . "mbo_action_queue
-            WHERE `status` <> 'PROCESSED'";
+            WHERE `status` <> '" . ActionInterface::PROCESSED . "'
+            ORDER BY `date_add` ASC";
 
             /** @var array $results */
             $results = $this->db->executeS($query);
@@ -72,8 +77,10 @@ class ActionRetriever
 
                 $actions[] = $this->actionBuilder->build([
                     'action' => $action['action'],
+                    'action_uuid' => $action['action_uuid'],
                     'module_name' => $action['module'],
                     'source' => $source,
+                    'status' => $action['status'],
                 ]);
             }
 
@@ -81,6 +88,44 @@ class ActionRetriever
         }
 
         return [];
+    }
+
+    public function markActionAsProcessing(ActionInterface $action): ActionInterface
+    {
+        $sql = sprintf(
+            "UPDATE `%smbo_action_queue` SET `status` = '%s', `date_started` = '%s' WHERE `action_uuid` = '%s';",
+            _DB_PREFIX_,
+            ActionInterface::PROCESSING,
+            (new \DateTime())->format('Y-m-d H:i:s'),
+            $action->getActionUuid()
+        );
+
+        if (false === $this->db->execute($sql)) {
+            throw new \Exception('Unable to update action');
+        }
+
+        $action->setStatus(ActionInterface::PROCESSING);
+
+        return $action;
+    }
+
+    public function markActionAsProcessed(ActionInterface $action): ActionInterface
+    {
+        $sql = sprintf(
+            "UPDATE `%smbo_action_queue` SET `status` = '%s', `date_ended` = '%s' WHERE `action_uuid` = '%s';",
+            _DB_PREFIX_,
+            ActionInterface::PROCESSED,
+            (new \DateTime())->format('Y-m-d H:i:s'),
+            $action->getActionUuid()
+        );
+
+        if (false === $this->db->execute($sql)) {
+            throw new \Exception('Unable to update action');
+        }
+
+        $action->setStatus(ActionInterface::PROCESSED);
+
+        return $action;
     }
 
 }
