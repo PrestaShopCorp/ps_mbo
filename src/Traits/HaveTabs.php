@@ -61,11 +61,13 @@ trait HaveTabs
             'class_name' => 'AdminPsMboRecommended',
         ],
         'AdminPsMboTheme' => [
-            'name' => 'Catalogue de thèmes',
+            'name' => 'Themes Catalog',
             'visible' => true,
-            'position' => 1,
+            'position' => 2,
             'class_name' => 'AdminPsMboTheme',
             'parent_class_name' => 'AdminParentThemes',
+            'wording' => 'Themes Catalog',
+            'wording_domain' => 'Modules.Mbo.Themescatalog',
         ],
         'ApiPsMbo' => [
             'name' => 'MBO Api',
@@ -120,18 +122,23 @@ trait HaveTabs
      */
     public function installTab(array $tabData, bool $activate = true): bool
     {
-        $position = $tabData['position'] ?? 0;
         $tabNameByLangId = array_fill_keys(
             Language::getIDs(false),
             $tabData['name']
         );
 
-        $idParent = empty($tabData['parent_class_name']) ? -1 : $tabId = Tab::getIdFromClassName($tabData['parent_class_name']);
+        $idParent = empty($tabData['parent_class_name']) ? -1 : Tab::getIdFromClassName($tabData['parent_class_name']);
 
         $tab = new Tab();
+
+        // This will reorder the tabs starting with 1
+        $tab->cleanPositions($idParent);
+
         $tab->module = $this->name;
         $tab->class_name = $tabData['class_name'];
-        $tab->position = $position;
+        // For the position, we put the tab at the end of the parent children
+        // and after that, place it in the right position
+        $tab->position = Tab::getNewLastPosition($idParent);
         $tab->id_parent = $idParent;
         $tab->name = $tabNameByLangId;
         $tab->active = $tabData['visible'] ? $tabData['visible'] : false;
@@ -145,17 +152,13 @@ trait HaveTabs
             $tab->wording_domain = $tabData['wording_domain'];
         }
 
-        // This will reorder the tabs starting with 1
-        $tab->cleanPositions($idParent);
-
         if (false === $tab->add()) {
             return false;
         }
 
         if (Validate::isLoadedObject($tab)) {
-            // Updating the id_parent will override the position, that's why we save 2 times
-            $tab->position = $position;
-            $tab->save();
+            $position = $tabData['position'] ?? 0;
+            $this->putTabInPosition($tab, $position);
         }
 
         return true;
@@ -241,5 +244,89 @@ trait HaveTabs
         foreach ($newTabs as $newTab) {
             $this->installTab(static::$ADMIN_CONTROLLERS[$newTab], false);
         }
+
+        foreach ($currentModuleTabs as $currentModuleTab) {
+            if (!in_array($currentModuleTab, $oldTabs) && !in_array($currentModuleTab, $newTabs)) {
+                $this->updateTab(static::$ADMIN_CONTROLLERS[$currentModuleTab]);
+            }
+        }
+    }
+
+    /**
+     * Updates an already existing tab.
+     *
+     * @param array $tabData
+     *
+     * @return bool
+     */
+    private function updateTab(array $tabData): bool
+    {
+        $tabId = Tab::getIdFromClassName($tabData['class_name']);
+        $tab = new Tab($tabId);
+
+        if (false === Validate::isLoadedObject($tab)) {
+            return false;
+        }
+
+        $tabNameByLangId = array_fill_keys(
+            Language::getIDs(false),
+            $tabData['name']
+        );
+
+        $idParent = empty($tabData['parent_class_name']) ? -1 : Tab::getIdFromClassName($tabData['parent_class_name']);
+
+        $tab->id_parent = $idParent;
+        $tab->name = $tabNameByLangId;
+        if (!empty($tabData['wording']) && !empty($tabData['wording_domain'])) {
+            $tab->wording = $tabData['wording'];
+            $tab->wording_domain = $tabData['wording_domain'];
+        }
+
+        if (false === $tab->save()) {
+            return false;
+        }
+
+        $tab = new Tab($tabId);
+        if (
+            Validate::isLoadedObject($tab)
+            && !empty($tabData['position'])
+            && $tab->position !== (int) $tabData['position']
+        ) {
+            // This will reorder the tabs starting with 1
+            $tab->cleanPositions($idParent);
+
+            $this->putTabInPosition($tab, $tabData['position']);
+        }
+
+        return true;
+    }
+
+    private function putTabInPosition(Tab $tab, int $position)
+    {
+        // Check tab position in DB
+        $dbTabPosition = Db::getInstance()->getValue('
+			SELECT `position`
+			FROM `' . _DB_PREFIX_ . 'tab`
+			WHERE `id_tab` = ' . (int) $tab->id
+        );
+
+        if ((int) $dbTabPosition === $position) {
+            // Nothing to do, tab is already in the right position
+            return;
+        }
+
+        Db::getInstance()->execute(
+            '
+            UPDATE `' . _DB_PREFIX_ . 'tab`
+            SET `position` = `position`+1
+            WHERE `id_parent` = ' . (int) $tab->id_parent . ' AND `position` >= ' . $position . ' AND `id_tab` <> ' . (int) $tab->id
+        );
+
+        Db::getInstance()->execute(
+            '
+                UPDATE `' . _DB_PREFIX_ . 'tab`
+                SET `position` = ' . $position . '
+                WHERE `id_tab` = ' . (int) $tab->id
+        );
     }
 }
