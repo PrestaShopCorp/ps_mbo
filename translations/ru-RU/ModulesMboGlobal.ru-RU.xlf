@@ -1,53 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/ps_mbo.php" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
+  <file original="src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="ru" datatype="plaintext">
     <body>
-      <trans-unit id="42667b4f4303551b1d51722fe58bf14c">
-        <source>PrestaShop Marketplace in your Back Office</source>
-        <target>Торговая площадка PrestaShop в вашем бэк-офисе</target>
-        <note>Line: 119</note>
-      </trans-unit>
-      <trans-unit id="46fd5bca2028b627f40f2afc6db5c4a1">
-        <source>Browse the Addons marketplace directly from your back office to better meet your needs.</source>
-        <target>Просматривайте торговую площадку PrestaShop прямо из своего бэк-офиса, чтобы наилучшим образом удовлетворить свои потребности.</target>
-        <note>Line: 120</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
-    <body>
-      <trans-unit id="3b89e163ae0b446bd02e13de8dcf70d3">
+      <trans-unit id="3b89e163ae0b446bd02e13de8dcf70d3" approved="yes">
         <source><![CDATA[For even more security on your website forms, consult our Security & Access modules category on the]]></source>
-        <target><![CDATA[Для еще большей безопасности форм вашего сайта, обратитесь к нашей категории модулей Security & Access:]]></target>
-        <note>Line: 129</note>
+        <target state="final"><![CDATA[Для еще большей безопасности форм вашего сайта, обратитесь к нашей категории модулей Security & Access]]></target>
+        <note>Line: 131</note>
       </trans-unit>
-      <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6">
+      <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6" approved="yes">
         <source>PrestaShop Addons Marketplace</source>
-        <target>Магазин расширений PrestaShop Addons</target>
+        <target state="final">Магазин расширений PrestaShop Addons</target>
+        <note>Line: 147</note>
+      </trans-unit>
+      <trans-unit id="71f716ae5452ef886e40d36f14afed87" approved="yes">
+        <source>Discover more modules to improve your shop on</source>
+        <target state="final">Узнайте больше модулей для улучшения работы вашего магазина на</target>
         <note>Line: 145</note>
       </trans-unit>
-      <trans-unit id="71f716ae5452ef886e40d36f14afed87">
-        <source>Discover more modules to improve your shop on</source>
-        <target>Узнайте больше модулей для улучшения работы вашего магазина на</target>
-        <note>Line: 143</note>
-      </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/cdc-error.html.twig" source-language="ru-RU" target-language="ru-RU" datatype="plaintext">
+  <file original="views/templates/admin/controllers/module_catalog/cdc-error.html.twig" source-language="en" target-language="ru" datatype="plaintext">
     <body>
-      <trans-unit id="a477136f1721bd17d18fc591f094f155">
+      <trans-unit id="a477136f1721bd17d18fc591f094f155" approved="yes">
         <source>Oh no.. something went wrong</source>
-        <target>О нет! Что-то пошло не так</target>
+        <target state="final">О нет! Что-то пошло не так</target>
         <note>Line: 5</note>
       </trans-unit>
-      <trans-unit id="77df45c90eb889b2731e6900d63ed7f7">
+      <trans-unit id="77df45c90eb889b2731e6900d63ed7f7" approved="yes">
         <source>There has been a problem on our side. Refresh your page and if the problem persists, try again later.</source>
-        <target>Возникла проблема с нашей стороной. Обновите страницу, и если проблема не устранена, попробуйте позже.</target>
+        <target state="final">Возникла проблема с нашей стороной. Обновите страницу, и если проблема не устранена, попробуйте позже.</target>
         <note>Line: 8</note>
       </trans-unit>
-      <trans-unit id="a593c6d1e05af324063dac348353cece">
+      <trans-unit id="a593c6d1e05af324063dac348353cece" approved="yes">
         <source>Refresh page</source>
-        <target>Обновить страницу</target>
+        <target state="final">Обновить страницу</target>
         <note>Line: 13</note>
       </trans-unit>
     </body>

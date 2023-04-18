@@ -60,7 +60,7 @@
 }
 
 #content.bootstrap #modules_list_container_content .btn .caret {
-  border-top-color: #25b9d7!important;
+  border-top-color: #25b9d7 !important;
 }
 
 #content.bootstrap #modules_list_container_content .btn-outline-primary {
@@ -113,7 +113,7 @@
   color: #fff;
   background-color: #fff;
   border-style: solid;
-  border-width: .1875rem;
+  border-width: 0.1875rem;
   border-color: #bbcdd2 #25b9d7 #25b9d7 #bbcdd2;
   border-radius: 2.5rem;
   outline: 0;
@@ -133,7 +133,11 @@
 }
 
 #content.bootstrap #tab_modules_list_installed > tbody > tr > td:nth-child(2),
-#content.bootstrap #tab_modules_list_not_installed > tbody > tr > td:nth-child(2) {
+#content.bootstrap
+  #tab_modules_list_not_installed
+  > tbody
+  > tr
+  > td:nth-child(2) {
   width: 90%;
 }
 
@@ -143,7 +147,7 @@
   background-color: #fff;
   border: 1px solid #dbe6e9;
   border-radius: 5px;
-  box-shadow: 0 0 4px 0 rgba(0,0,0,.06);
+  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
 }
 
 #content.bootstrap .card-body {
@@ -162,6 +166,10 @@
 @media (min-width: 768px) {
   #content.bootstrap #modules_list_container .modal-dialog {
     width: 680px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 
@@ -188,7 +196,7 @@
   vertical-align: top;
   margin-bottom: 0;
   line-height: 1.5;
-  font-family: "Open Sans",helvetica,arial,sans-serif;
+  font-family: "Open Sans", helvetica, arial, sans-serif;
   font-weight: 700;
   color: #363a41;
 }
@@ -205,7 +213,7 @@
   float: right;
   line-height: 1;
   color: #000;
-  opacity: .5;
+  opacity: 0.5;
   -webkit-appearance: button;
   text-transform: none;
   overflow: visible;
@@ -242,7 +250,6 @@
   border: 1px solid #53d572;
 }
 
-
 /** Legacy controllers */
 body.ps_back-office div#main #modules_list_container .modal-header {
   border-bottom: none;
@@ -252,28 +259,35 @@ body.ps_back-office div#main #modules_list_container .modal-body {
   margin: 0 auto;
 }
 
-.bootstrap .page-head .toolbarBox .btn-toolbar .btn-secondary{
+.bootstrap .page-head .toolbarBox .btn-toolbar .btn-secondary {
   color: #fff;
   background-color: #6c868e;
   border-color: #6c868e;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.bootstrap .page-head .toolbarBox .btn-toolbar .btn-secondary:hover{
+.bootstrap .page-head .toolbarBox .btn-toolbar .btn-secondary:hover {
   color: #fff;
   background-color: #b7ced3;
   border-color: #b7ced3;
 }
 
-.bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn .material-icons{
+.bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn .material-icons {
   display: inline;
   color: #fff;
   margin-right: 5px;
+  font-size: 16px;
+  line-height: 16px;
 }
-.bootstrap .page-head .toolbarBox .btn-toolbar .toolbar_btn .material-icons:hover{
+.bootstrap
+  .page-head
+  .toolbarBox
+  .btn-toolbar
+  .toolbar_btn
+  .material-icons:hover {
   color: #fff;
 }
-.bootstrap .page-head .toolbarBox .btn-toolbar #recommended-modules-button{
+.bootstrap .page-head .toolbarBox .btn-toolbar #recommended-modules-button {
   display: flex;
-
+  align-items: center;
 }

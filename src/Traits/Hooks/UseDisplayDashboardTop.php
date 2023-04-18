@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,6 +18,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
@@ -250,7 +252,8 @@ trait UseDisplayDashboardTop
         // has to be loaded in header to prevent flash of content
         $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
 
-        if ($this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_BUTTON_TYPE)
+        if (
+            $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_BUTTON_TYPE)
             || $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE)
         ) {
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css');
@@ -263,25 +266,67 @@ trait UseDisplayDashboardTop
     private function getRecommendedModulesButtonTitle(string $controller): string
     {
         switch ($controller) {
-            case 'AdminInvoices':
-            case 'AdminDeliverySlip':
-            case 'AdminSlip':
+            case 'AdminEmails':
+                $title = $this->trans('Automate emails', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
             case 'AdminOrders':
                 $title = $this->trans('Boost sales', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
-            case 'AdminSpecificPriceRule':
-            case 'AdminManufacturers':
-            case 'AdminFeatures':
             case 'AdminCartRules':
-            case 'AdminProducts':
-                $title = $this->trans('Optimize product catalog', [], 'Modules.Mbo.Recommendedmodulesandservices');
+            case 'AdminSpecificPriceRule':
+                $title = $this->trans('Create a discount strategy', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminCmsContent':
+                $title = $this->trans('Customize pages', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminContacts':
+            case 'AdminCustomers':
+            case 'AdminCustomerThreads':
+                $title = $this->trans('Improve customer experience', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminGroups':
+                $title = $this->trans('Improve customer targeting', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             case 'AdminStats':
                 $title = $this->trans('Improve data strategy', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
-            case 'AdminCustomerThreads':
-            case 'AdminCustomers':
-                $title = $this->trans('Improve customer experience', [], 'Modules.Mbo.Recommendedmodulesandservices');
+            case 'AdminMeta':
+            case 'AdminSearchConf':
+                $title = $this->trans('Improve SEO', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminShipping':
+                $title = $this->trans('Improve shipping', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminPayment':
+                $title = $this->trans('Improve the checkout experience', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminImages':
+                $title = $this->trans('Improve visuals', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminDeliverySlip':
+                $title = $this->trans('Make shipping easier', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminCarriers':
+                $title = $this->trans('Make your deliveries easier', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminStatuses':
+                $title = $this->trans('Optimize order management', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminProducts':
+                $title = $this->trans('Optimize product catalog', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminFeatures':
+                $title = $this->trans('Optimize product creation', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminManufacturers':
+                $title = $this->trans('Promote brands', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminInvoices':
+            case 'AdminSlip':
+                $title = $this->trans('Simplify accounting', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                break;
+            case 'AdminAdminPreferences':
+                $title = $this->trans('Simplify store management', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             default:
                 $title = $this->trans('Recommended modules', [], 'Modules.Mbo.Recommendedmodulesandservices');

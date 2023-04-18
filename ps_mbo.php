@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,6 +18,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
 declare(strict_types=1);
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -51,7 +53,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '4.4.0';
+    public const VERSION = '4.4.1';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminPsMboModule',
@@ -102,7 +104,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.4.0';
+        $this->version = '4.4.1';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -362,14 +364,14 @@ class ps_mbo extends Module
         }
 
         return $this->container->has('mbo.security.admin_authentication.provider') ?
-                $this->get('mbo.security.admin_authentication.provider') :
-                new AdminAuthenticationProvider(
-                    $this->get('doctrine.dbal.default_connection'),
-                    $this->context,
-                    $this->get('prestashop.core.crypto.hashing'),
-                    $this->get('doctrine.cache.provider'),
-                    $this->container->getParameter('database_prefix')
-                );
+            $this->get('mbo.security.admin_authentication.provider') :
+            new AdminAuthenticationProvider(
+                $this->get('doctrine.dbal.default_connection'),
+                $this->context,
+                $this->get('prestashop.core.crypto.hashing'),
+                $this->get('doctrine.cache.provider'),
+                $this->container->getParameter('database_prefix')
+            );
     }
 
     public function installTables(?string $table = null): bool
@@ -421,7 +423,7 @@ class ps_mbo extends Module
      */
     private function loadEnv(): void
     {
-        $dotenv = new Dotenv();
+        $dotenv = new Dotenv(true);
         $dotenv->loadEnv(__DIR__ . '/.env');
     }
 
@@ -444,10 +446,6 @@ class ps_mbo extends Module
 
     private function translateTabsIfNeeded(): void
     {
-        if (Tools::getValue('controller') !== 'AdminPsMboModule') {
-            return; // Avoid early translation
-        }
-
         $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
         if (!file_exists($lockFile)) {
             return;

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig" source-language="en" target-language="ro" datatype="plaintext">
+    <body>
+      <trans-unit id="1c0b7f4d79e06a46c12312615fc4ab14">
+        <source>Connect to Addons marketplace</source>
+        <target state="needs-translation">Connect to Addons marketplace</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="878530871f0db73f004f5bd6591eeb76">
+        <source>Remember me</source>
+        <target state="needs-translation">Remember me</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="634efc0701950e9b2b97384327c8d5d2">
+        <source>Let's go!</source>
+        <target state="needs-translation">Let's go!</target>
+        <note>Line: 70</note>
+      </trans-unit>
+      <trans-unit id="b09249132bbed9baecd987cf73200b44">
+        <source>Confirm logout</source>
+        <target state="needs-translation">Confirm logout</target>
+        <note>Line: 89</note>
+      </trans-unit>
+      <trans-unit id="df776a9024ce6c10ec1d1d763cee0301">
+        <source>You are about to log out your Addons account. You might miss important updates of Addons you've bought.</source>
+        <target state="needs-translation">You are about to log out your Addons account. You might miss important updates of Addons you've bought.</target>
+        <note>Line: 96</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

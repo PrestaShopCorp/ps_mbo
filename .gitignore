@@ -5,6 +5,7 @@ config_*.xml
 tests/.phpunit.result.cache
 .env
 .DS_Store
+.vscode/
 
 ## Directory-based project format:
 
