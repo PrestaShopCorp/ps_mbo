@@ -308,8 +308,7 @@ class ps_mbo extends Module
         if ($this->serviceContainer === null) {
             $this->serviceContainer = new \PrestaShop\Module\Mbo\DependencyInjection\ServiceContainer(
                 $this->name . str_replace('.', '', $this->version),
-                $this->getLocalPath(),
-                $this->getModuleEnv()
+                $this->getLocalPath()
             );
         }
 
@@ -373,16 +372,6 @@ class ps_mbo extends Module
                 $this->get('doctrine.cache.provider'),
                 $this->container->getParameter('database_prefix')
             );
-    }
-
-    private function getModuleEnvVar(): string
-    {
-        return strtoupper($this->name) . '_ENV';
-    }
-
-    private function getModuleEnv(?string $default = null): string
-    {
-        return getenv($this->getModuleEnvVar()) ?: $default ?: self::DEFAULT_ENV;
     }
 
     public function installTables(?string $table = null): bool

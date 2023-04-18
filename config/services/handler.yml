@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandlerInterface: '@PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler'
+
+  PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler:
+    class: PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler
+
