@@ -32,48 +32,48 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_c70ae1b7165361802d85093
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_45833617d93e650787cd71292606e67e'] = 'Automatyzuj wiadomości e-mail';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_190bd26b051d54c12b31ccfb3008c8a5'] = 'Uprość wysyłkę';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_e39767bb8e247250896230e1d6ee036f'] = 'Zalecane moduły';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_947d8544b50da92594fc6c5ed87af81b'] = 'Zdobądź nowych klientów i spraw, by do nas wracali.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_88b4c622af5f96f61b3cee5fcb49791b'] = 'Spraw, aby Twoje więcej produktów było widocznych i twórz strony produktowe, które konwertują.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0134969fa1eec65d159a10db18427bf8'] = 'Zbuduj strategię opartą na danych i podejmuj bardziej świadome decyzje.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_085d4012e6e56f6f4ad58e03398dea79'] = 'Stwórz niezapomniane doświadczenia i zamień odwiedzających w klientów.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7b98a7415047fae30575884f3aef3081'] = 'Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_a694b8ad3786f01e1081ce7750581340'] = 'Przyciągnij nowych klientów i spraw, by do Ciebie wracali.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_4e08264eda8916cabab186051e5b1c2a'] = 'Spraw, aby Twoje więcej produktów było widocznych i twórz strony produktowe, które konwertują.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_46b9da409e680cffcc1123fbb7d76c21'] = 'Opracuj strategię opartą na danych i podejmuj bardziej świadome decyzje.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_11fa792e7ad3269c9d747874aa5eca4a'] = 'Stwórz niezapomniane doświadczenia i konwertuj odwiedzających w klientów.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_82d05f4e85491eb1b0ae5a50fc4634ba'] = 'Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
 $_MODULE['<{mbo}prestashop>modulescatalog_3891fd60e8d944a2de2cb2fca3a3c8bf'] = 'Więcej podobnych modułów na PrestaShop Marketplace';
 $_MODULE['<{mbo}prestashop>modulescatalog_98dd43dfae05b11befe1f140e0ec787a'] = 'Zainstalowano';
 $_MODULE['<{mbo}prestashop>modulescatalog_ddd8eef6f86868a07f62b0e3810711f0'] = 'Nie zainstalowano';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3891fd60e8d944a2de2cb2fca3a3c8bf'] = 'Więcej podobnych modułów na PrestaShop Marketplace';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_98dd43dfae05b11befe1f140e0ec787a'] = 'Zainstalowano';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_ddd8eef6f86868a07f62b0e3810711f0'] = 'Nie zainstalowano';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1e2ee521ae0a00b6bceba3e2e408c358'] = 'Oszczędzaj czas na przygotowanie i wysyłkę zamówień.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3f12eea298c3cd94f2e25dd7e1a931a4'] = 'Oszczędzaj czas na tworzeniu produktów i łatwo zarządzaj kombinacjami.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_eded296927bbc5377eefd64f438d7e00'] = 'Promuj marki, które dystrybuujesz i pozwól odwiedzającym przeglądać produkty swoich ulubionych marek.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_413927027cafb416866d278af5fddaa6'] = 'Zaoferuj metody płatności, których oczekują Twoi klienci i usprawnij proces kasowy, abyś nigdy nie przegapił sprzedaży.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_8870d5ff8ff9679c1f7e78a72f691568'] = 'Uporządkuj swoją dokumentację i miej pod kontrolą swoje rachunki.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_a0ff399bac2c16cba6099c72726077a7'] = 'Napędzaj większą sprzedaż i zwiększaj retencję klientów dzięki dobrze zaplanowanej strategii rabatowej.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0db3bc15918fe9bf3d118ec62c8b87cf'] = 'Dostosuj strony swojego sklepu i wyróżnij oferty specjalne.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b2946b3418e2e5e770e8fb417837127'] = 'Korzystaj z jakościowych i przyciągających wzrok wizualizacji przy zachowaniu wydajności Twojego sklepu.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_df830b8f296ad6149abd08857f8acd7f'] = 'Ułatw sobie dostawy, wybierając odpowiednich przewoźników.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_73efaaf64d4f52f73b8966f2b9aaf341'] = 'Zoptymalizuj swoją logistykę i spełnij oczekiwania swoich klientów w zakresie dostaw.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_c775322b597ec7b7b0f2966831bb3cda'] = 'Oszczędzaj czas: usuwaj, edytuj i zarządzaj zamówieniami hurtowo.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_b4159047938dfaad372ed2dfce2345ae'] = 'Zarządzaj grupami i lepiej docieraj do klientów w swoim marketingu.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_d9d3903b966128c8e8a41a14eeeb8677'] = 'Uplasuj się wyżej w wynikach wyszukiwania, aby więcej osób mogło Cię znaleźć.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_f26b592390a8f614581a53feac58971a'] = 'Uprość codzienne zarządzanie swoim sklepem i zaoszczędź czas.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_9464e3eba0b9794d82fe11fd8626d88f'] = 'Z łatwością wysyłaj automatyczne e-maile i powiadomienia do swoich klientów.<br>
-                Oto wybór modułów partnerskich, <strong>kompatybilnych z Twoim sklepem</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3f3b5f89131d02f5cde6c1add6628c96'] = 'Oszczędzaj czas na przygotowywaniu i wysyłce zamówień.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_eb5be98fed23340191c8553cc371e5d3'] = 'Oszczędzaj czas na tworzeniu produktów i łatwo zarządzaj ich wariantami.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_745f04e4c2387839ddb1571d54ddbdda'] = 'Promuj marki, które dystrybuujesz i pozwól odwiedzającym je przeglądać.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_c06c101992ae28fced13cf22e5a1f149'] = 'Oferuj metody płatności, których oczekują Twoi klienci i usprawnij proces kasowy, aby nigdy nie przegapić okazji do sprzedaży.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_e0c372c30e91faa57dcdf8b1a83cb4af'] = 'Uporządkuj dokumentację i bądź na bieżąco z księgowością.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_dc3c98446f6c339e33e0d5b43a41c484'] = 'Zwiększ sprzedaż i buduj lojalność klientów dzięki dobrze zaplanowanej strategii promocji.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_9e7cd4cd42d4f335423577cab335d7a7'] = 'Personalizuj strony Twojego sklepu i zaprezentuj oferty specjalne.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1067d4f58f3652766b3a73096810fd8d'] = 'Korzystaj z jakościowych, przyciągających wzrok obrazów, jednocześnie zachowując wydajność Twojego sklepu.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_6fbdbf4accda34546c080cbac216e4a6'] = 'Ułatwiaj dostawy, wybierając odpowiednich przewoźników. <br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_4e93e2b49568ef87e2b2153bd0f6c91f'] = 'Zoptymalizuj logistykę i spełnij oczekiwania klientów w zakresie dostaw.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3f65a72520a77b1a6be4c45dfc35052a'] = 'Oszczędzaj czas: usuwaj, edytuj i zarządzaj zamówieniami hurtowo.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7a53a98ac35df2ae74b9a17794bb3235'] = 'Zarządzaj grupami docelowymi i lepiej targetuj klientów w Twojej strategii marketingowej.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_4c0cabf60f05b3766572d28b35075679'] = 'Uzyskaj wyższe pozycje w wynikach wyszukiwania, aby więcej osób mogło Cię znaleźć.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_880975acc66fde83d195fef6c92a5a33'] = 'Uprość codzienne zarządzanie sklepem i oszczędzaj czas.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7e54c75444e1a4f51ff694dec1d65387'] = 'Z łatwością wysyłaj e-maile i automatyczne powiadomienia do klientów.<br>
+                Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';

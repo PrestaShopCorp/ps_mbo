@@ -32,48 +32,48 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_c70ae1b7165361802d85093
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_45833617d93e650787cd71292606e67e'] = 'Automatizează e-mailurile';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_190bd26b051d54c12b31ccfb3008c8a5'] = 'Facilitarea expedierii';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_e39767bb8e247250896230e1d6ee036f'] = 'Module recomandate';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_947d8544b50da92594fc6c5ed87af81b'] = 'Obțineți noi clienți și păstrați-i în continuare.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_88b4c622af5f96f61b3cee5fcb49791b'] = 'Faceți mai multe produse vizibile și creați pagini de produse care să convertească.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0134969fa1eec65d159a10db18427bf8'] = 'Construiți o strategie bazată pe date și luați decizii mai informate.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_085d4012e6e56f6f4ad58e03398dea79'] = 'Creați experiențe memorabile și transformați vizitatorii în clienți.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7b98a7415047fae30575884f3aef3081'] = 'Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_a694b8ad3786f01e1081ce7750581340'] = 'Obțineți noi clienți și păstrați-i în continuare.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_4e08264eda8916cabab186051e5b1c2a'] = 'Economisiți timp în pregătirea și expedierea comenzilor dumneavoastră.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_46b9da409e680cffcc1123fbb7d76c21'] = 'Construiți o strategie bazată pe date și luați decizii mai informate.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_11fa792e7ad3269c9d747874aa5eca4a'] = 'Creați experiențe memorabile și transformați vizitatorii în clienți.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_82d05f4e85491eb1b0ae5a50fc4634ba'] = 'Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
 $_MODULE['<{mbo}prestashop>modulescatalog_3891fd60e8d944a2de2cb2fca3a3c8bf'] = 'Mai multe module similare pe PrestaShop Marketplace';
 $_MODULE['<{mbo}prestashop>modulescatalog_98dd43dfae05b11befe1f140e0ec787a'] = 'Instalat';
 $_MODULE['<{mbo}prestashop>modulescatalog_ddd8eef6f86868a07f62b0e3810711f0'] = 'Nu este instalat';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3891fd60e8d944a2de2cb2fca3a3c8bf'] = 'Mai multe module similare pe PrestaShop Marketplace';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_98dd43dfae05b11befe1f140e0ec787a'] = 'Instalat';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_ddd8eef6f86868a07f62b0e3810711f0'] = 'Nu este instalat';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1e2ee521ae0a00b6bceba3e2e408c358'] = 'Bespaar tijd bij de voorbereiding en verzending van uw bestellingen.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3f12eea298c3cd94f2e25dd7e1a931a4'] = 'Economisiți timp la crearea produselor și gestionați cu ușurință combinațiile.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_eded296927bbc5377eefd64f438d7e00'] = 'Promovați mărcile pe care le distribuiți și permiteți vizitatorilor dvs. să navigheze printre produsele mărcilor lor preferate.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_413927027cafb416866d278af5fddaa6'] = 'Oferiți metodele de plată pe care le așteaptă clienții dvs. și îmbunătățiți procesul de plată pentru a nu rata nicio vânzare.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_8870d5ff8ff9679c1f7e78a72f691568'] = 'Organizați-vă registrele și țineți-vă conturile sub control.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_a0ff399bac2c16cba6099c72726077a7'] = 'Stimulați mai multe vânzări și creșteți gradul de fidelizare a clienților cu o strategie de reduceri bine planificată. <br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0db3bc15918fe9bf3d118ec62c8b87cf'] = 'Personalizați-vă paginile magazinului și evidențiați ofertele speciale.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b2946b3418e2e5e770e8fb417837127'] = 'Folosiți elemente vizuale de calitate și atrăgătoare, păstrând în același timp performanța magazinului dumneavoastră.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_df830b8f296ad6149abd08857f8acd7f'] = 'Facilitați-vă livrările alegând transportatorii potriviți.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_73efaaf64d4f52f73b8966f2b9aaf341'] = 'Optimizați-vă logistica și satisfaceți așteptările de livrare ale clienților dumneavoastră.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_c775322b597ec7b7b0f2966831bb3cda'] = 'Economisiți timp: ștergeți, editați și gestionați comenzile în masă.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_b4159047938dfaad372ed2dfce2345ae'] = 'Gestionați grupurile și direcționați-vă mai bine clienții în marketingul dumneavoastră.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_d9d3903b966128c8e8a41a14eeeb8677'] = 'Poziționați-vă mai sus în rezultatele căutărilor, astfel încât mai mulți oameni să vă găsească.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_f26b592390a8f614581a53feac58971a'] = 'Simplificați gestionarea zilnică a magazinului dvs. și economisiți timp.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_9464e3eba0b9794d82fe11fd8626d88f'] = 'Trimiteți cu ușurință e-mailuri și notificări automate clienților dumneavoastră.<br>
-                Iată o selecție de module partenere, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3f3b5f89131d02f5cde6c1add6628c96'] = 'Bespaar tijd bij de voorbereiding en verzending van uw bestellingen.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_eb5be98fed23340191c8553cc371e5d3'] = 'Economisiți timp la crearea produselor și gestionați cu ușurință combinațiile.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_745f04e4c2387839ddb1571d54ddbdda'] = 'Promovați mărcile pe care le distribuiți și permiteți vizitatorilor dvs. să navigheze printre produsele mărcilor lor preferate.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_c06c101992ae28fced13cf22e5a1f149'] = 'Oferiți metodele de plată pe care le așteaptă clienții dvs. și îmbunătățiți procesul de plată pentru a nu rata nicio vânzare.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_e0c372c30e91faa57dcdf8b1a83cb4af'] = 'Organizați-vă registrele și țineți-vă conturile sub control.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_dc3c98446f6c339e33e0d5b43a41c484'] = 'Stimulați mai multe vânzări și creșteți gradul de fidelizare a clienților cu o strategie de reduceri bine planificată.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_9e7cd4cd42d4f335423577cab335d7a7'] = 'Personalizați-vă paginile magazinului și evidențiați ofertele speciale.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1067d4f58f3652766b3a73096810fd8d'] = 'Folosiți elemente vizuale de calitate și atrăgătoare, păstrând în același timp performanța magazinului dumneavoastră.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_6fbdbf4accda34546c080cbac216e4a6'] = 'Facilitați-vă livrările alegând transportatorii potriviți.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_4e93e2b49568ef87e2b2153bd0f6c91f'] = 'Optimizați-vă logistica și satisfaceți așteptările de livrare ale clienților dumneavoastră.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3f65a72520a77b1a6be4c45dfc35052a'] = 'Economisiți timp: ștergeți, editați și gestionați comenzile în masă.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7a53a98ac35df2ae74b9a17794bb3235'] = 'Gestionați grupurile și direcționați-vă mai bine clienții în marketingul dumneavoastră.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_4c0cabf60f05b3766572d28b35075679'] = 'Poziționați-vă mai sus în rezultatele căutărilor, astfel încât mai mulți oameni să vă găsească.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_880975acc66fde83d195fef6c92a5a33'] = 'Simplificați gestionarea zilnică a magazinului dvs. și economisiți timp.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7e54c75444e1a4f51ff694dec1d65387'] = 'Trimiteți cu ușurință e-mailuri și notificări automate clienților dumneavoastră.<br>
+                Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
