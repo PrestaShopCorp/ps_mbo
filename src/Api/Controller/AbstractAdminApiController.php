@@ -30,7 +30,6 @@ use PrestaShop\Module\Mbo\Api\Exception\RetrieveNewKeyException;
 use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker;
-use PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler;
 use PrestaShop\Module\Mbo\Helpers\Config as ConfigHelper;
 use ps_mbo;
 use Psr\Log\LoggerInterface;
@@ -56,11 +55,6 @@ abstract class AbstractAdminApiController extends ModuleAdminController
     public $module;
 
     /**
-     * @var ErrorHandler
-     */
-    public $errorHandler;
-
-    /**
      * @var AuthorizationChecker
      */
     private $authorizationChecker;
@@ -74,7 +68,6 @@ abstract class AbstractAdminApiController extends ModuleAdminController
     {
         parent::__construct();
 
-        $this->errorHandler = $this->module->get(ErrorHandler::class);
         $this->adminAuthenticationProvider = $this->module->get('mbo.security.admin_authentication.provider');
         $this->authorizationChecker = $this->module->get(AuthorizationChecker::class);
         $this->logger = $this->module->get('logger');
@@ -120,8 +113,6 @@ abstract class AbstractAdminApiController extends ModuleAdminController
         } elseif ($exception instanceof RetrieveNewKeyException) {
             $code = Config::RETRIEVE_NEW_KEY_ERROR_CODE;
         }
-
-        $this->errorHandler->handle($exception, $code, false);
 
         $response = [
             'object_type' => $this->type,
