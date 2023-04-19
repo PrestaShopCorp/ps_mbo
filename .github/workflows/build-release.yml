@@ -123,3 +123,5 @@ jobs:
 
       - name: Publish the production zip
         run: gh release upload ${{ github.event.release.tag_name }} ../${{ github.event.repository.name }}.zip --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
