@@ -58,7 +58,7 @@ endif
 			echo \"Testing module v\`cat config.xml | grep '<version>' | sed 's/^.*\[CDATA\[\(.*\)\]\].*/\1/'\`\n\" && \
 			chown -R www-data:www-data ../../var/logs && \
 			chown -R www-data:www-data ../../var/cache && \
-			./vendor/bin/phpunit \
+			./vendor/bin/phpunit -c ./tests/phpunit.xml \
 		      "
 	@echo phpunit passed
 
