@@ -122,6 +122,6 @@ jobs:
           zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
 
       - name: Publish the production zip
-        run: gh release upload ${{ github.event.release.tag_name }} ../${{ github.event.repository.name }}.zip --clobber
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ github.event.repository.name }}.zip
