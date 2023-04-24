@@ -34,7 +34,7 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_190bd26b051d54c12b31ccf
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_e39767bb8e247250896230e1d6ee036f'] = 'Рекомендуемые модули';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_a694b8ad3786f01e1081ce7750581340'] = 'Привлекайте новых и повышайте лояльность существующих клиентов.<br>
                 Ниже представлен набор модулей, <strong>совместимых с вашим магазином</strong>, Они помогут вам достичь поставленных целей.';
-$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_4e08264eda8916cabab186051e5b1c2a'] = 'Сделайте свои товары более заметными и создайте страницы товаров, которые конвертируют.<br>
+$_MODULE['<{mbo}prestashop>recommendedmodulesandservices_4e08264eda8916cabab186051e5b1c2a'] = 'Расскажите другим о своих товарах и создайте страницы с высоким показателем конверсии.<br>
                 Ниже представлен набор модулей, <strong>совместимых с вашим магазином</strong>, Они помогут вам достичь поставленных целей.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_46b9da409e680cffcc1123fbb7d76c21'] = 'Создавайте стратегии на основе данных и принимайте более обоснованные решения.<br>
                 Ниже представлен набор модулей, <strong>совместимых с вашим магазином</strong>, Они помогут вам достичь поставленных целей.';
