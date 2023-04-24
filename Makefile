@@ -54,7 +54,6 @@ endif
 			service mariadb start && \
 			service apache2 start && \
 			docker-php-ext-enable xdebug && \
-			if [ ! -f ./config/config.yml ]; then cp ./config/config.yml.dist ./config/config.yml; fi && \
 			../../bin/console prestashop:module install ps_mbo && \
 			echo \"Testing module v\`cat config.xml | grep '<version>' | sed 's/^.*\[CDATA\[\(.*\)\]\].*/\1/'\`\n\" && \
 			chown -R www-data:www-data ../../var/logs && \
