@@ -25,6 +25,7 @@ use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler;
+use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
@@ -71,10 +72,6 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
      */
     private $versionChangeApplyConfigCommandHandler;
 
-    /**
-     * @var ModuleRepository
-     */
-    private $coreModuleRepository;
     /**
      * @var SymfonyCacheClearer
      */
@@ -231,11 +228,12 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
 
     private function applyConfigOnVersionChange(ModuleInterface $module)
     {
+        /** @var Module $module */
         $command = new VersionChangeApplyConfigCommand(
             _PS_VERSION_,
             $module->disk->get('version')
         );
 
-        $configCollection = $this->versionChangeApplyConfigCommandHandler->handle($command);
+        $this->versionChangeApplyConfigCommandHandler->handle($command);
     }
 }
