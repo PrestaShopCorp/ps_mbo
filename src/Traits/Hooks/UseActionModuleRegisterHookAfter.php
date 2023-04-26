@@ -21,17 +21,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Module\Collection;
-use PrestaShop\Module\Mbo\Module\Filters;
-use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
-
 trait UseActionModuleRegisterHookAfter
 {
     /**
      * Hook actionModuleRegisterHookAfter.
-     * Trigered after a hook registration, by any module.
-     *
-     * @return array<array<string, string>>
+     * Triggered after a hook registration, by any module.
      */
     public function hookActionModuleRegisterHookAfter(array $params): void
     {
@@ -77,7 +71,7 @@ trait UseActionModuleRegisterHookAfter
             // Get module position in hook
             $sql = 'SELECT MAX(`position`) AS position
                     FROM `' . _DB_PREFIX_ . 'hook_module`
-                    WHERE `id_hook` = ' . (int)$idHook . ' AND `id_shop` = ' . (int)$shopId;
+                    WHERE `id_hook` = ' . (int) $idHook . ' AND `id_shop` = ' . (int) $shopId;
             if (!$position = \Db::getInstance()->getValue($sql)) {
                 $position = 0;
             }
@@ -85,7 +79,7 @@ trait UseActionModuleRegisterHookAfter
             // Check if MBO is not already at last position
             $sql = 'SELECT `position`
                     FROM `' . _DB_PREFIX_ . 'hook_module`
-                    WHERE `id_hook` = ' . (int)$idHook . ' AND `id_module` = ' . (int)$psMboId . ' AND `id_shop` = ' . (int)$shopId;
+                    WHERE `id_hook` = ' . (int) $idHook . ' AND `id_module` = ' . (int) $psMboId . ' AND `id_shop` = ' . (int) $shopId;
             $mboPosition = \Db::getInstance()->getValue($sql);
             if ($mboPosition === $position) {
                 // Nothing to do, MBO is already at last position
@@ -96,9 +90,9 @@ trait UseActionModuleRegisterHookAfter
             \Db::getInstance()->update(
                 'hook_module',
                 [
-                    'position' => (int)($position + 1),
+                    'position' => (int) ($position + 1),
                 ],
-                '`id_module` = ' . (int)$psMboId . ' AND `id_hook` = ' . (int)$idHook . ' AND `id_shop` = ' . (int)$shopId
+                '`id_module` = ' . (int) $psMboId . ' AND `id_hook` = ' . (int) $idHook . ' AND `id_shop` = ' . (int) $shopId
             );
         }
     }

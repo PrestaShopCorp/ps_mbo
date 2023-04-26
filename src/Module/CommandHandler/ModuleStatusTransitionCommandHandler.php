@@ -103,10 +103,6 @@ final class ModuleStatusTransitionCommandHandler
             );
         }
 
-        if (null === $module) {
-            throw new ModuleNotFoundException(sprintf('Module %s not found', $moduleName));
-        }
-
         // Check if transition asked can be mapped to an existing target status
         $transitionCommand = $command->getCommand()->getValue();
 
