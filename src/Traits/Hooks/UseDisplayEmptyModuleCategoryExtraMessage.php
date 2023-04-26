@@ -35,14 +35,20 @@ trait UseDisplayEmptyModuleCategoryExtraMessage
     {
         $categoryName = $params['category_name'];
 
-        /** @var LinksProvider $linksProvider */
-        $linksProvider = $this->get('mbo.addons.links_provider');
+        try {
+            /** @var \Twig\Environment $twig */
+            $twig = $this->get('twig');
+            /** @var LinksProvider $linksProvider */
+            $linksProvider = $this->get('mbo.addons.links_provider');
 
-        return $this->get('twig')->render(
-            '@Modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig', [
-                'categoryName' => $categoryName,
-                'categoryLink' => $linksProvider->getCategoryLink($categoryName),
-            ]
-        );
+            return $twig->render(
+                '@Modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig', [
+                    'categoryName' => $categoryName,
+                    'categoryLink' => $linksProvider->getCategoryLink($categoryName),
+                ]
+            );
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 }
