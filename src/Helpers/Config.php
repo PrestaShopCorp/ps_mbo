@@ -27,15 +27,15 @@ use Shop;
 class Config
 {
     /**
-     * @var string
+     * @var string|null
      */
     private static $SHOP_MBO_UUID;
     /**
-     * @var string
+     * @var string|null
      */
     private static $SHOP_MBO_ADMIN_MAIL;
     /**
-     * @var string
+     * @var string|null
      */
     private static $SHOP_URL;
 
