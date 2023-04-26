@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons\Provider;
 
-use Language;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Foundation\Version;
@@ -157,16 +156,5 @@ class LinksProvider
         }
 
         return null;
-    }
-
-    private function getIsoCode(): string
-    {
-        $idLang = $this->context->getLanguage()->id;
-        $isoCode = Language::getIsoById($idLang);
-        if (false === $isoCode) {
-            $isoCode = self::DEFAULT_LANGUAGE;
-        }
-
-        return $isoCode;
     }
 }

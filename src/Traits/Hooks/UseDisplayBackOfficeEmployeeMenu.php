@@ -43,8 +43,12 @@ trait UseDisplayBackOfficeEmployeeMenu
             return;
         }
 
-        /** @var \PrestaShop\Module\Mbo\Distribution\Client $apiClient */
-        $apiClient = $this->get('mbo.cdc.client.distribution_api');
+        try {
+            /** @var \PrestaShop\Module\Mbo\Distribution\Client $apiClient */
+            $apiClient = $this->get('mbo.cdc.client.distribution_api');
+        } catch (\Exception $e) {
+            return;
+        }
 
         try {
             $config = $apiClient->getEmployeeMenu();
