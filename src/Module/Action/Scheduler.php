@@ -8,6 +8,8 @@ class Scheduler
     const ACTION_ALREADY_PROCESSING = 'ACTION_ALREADY_PROCESSING';
     const ACTION_STARTED = 'ACTION_STARTED';
     const ACTION_PROCESSED = 'ACTION_PROCESSED';
+    const ACTION_SAVED = 'ACTION_SAVED';
+
     /**
      * @var ActionRetriever
      */
@@ -76,14 +78,8 @@ class Scheduler
         try {
             $action->execute();
         } catch(\Exception $e) {
-            $f = fopen('/home/isow/workspace/PrestaShop/8.1/toto.log', "a+");
-            fwrite($f, $e->getMessage() . "\n");
-            fclose($f);
+            return false;
         }
-
-        $f = fopen('/home/isow/workspace/PrestaShop/8.1/toto.log', "a+");
-        fwrite($f, (new \DateTime())->format('d/m/Y H:i:s') . "\n");
-        fclose($f);
 
         $this->actionRetriever->markActionAsProcessed($action);
 

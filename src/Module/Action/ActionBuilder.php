@@ -2,6 +2,8 @@
 
 namespace PrestaShop\Module\Mbo\Module\Action;
 
+use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
+use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use Ramsey\Uuid\Uuid;
 
@@ -19,10 +21,24 @@ class ActionBuilder
      * @var ModuleManager
      */
     private $moduleManager;
+    /**
+     * @var Client
+     */
+    private $distributionApi;
+    /**
+     * @var AdminAuthenticationProvider
+     */
+    private $adminAuthenticationProvider;
 
-    public function __construct(ModuleManager $moduleManager)
+    public function __construct(
+        ModuleManager $moduleManager,
+        Client $distributionApi,
+        AdminAuthenticationProvider $adminAuthenticationProvider
+    )
     {
         $this->moduleManager = $moduleManager;
+        $this->distributionApi = $distributionApi;
+        $this->distributionApi->setBearer($adminAuthenticationProvider->getMboJWT());
     }
 
     public function build(array $actionData): ActionInterface
@@ -38,6 +54,7 @@ class ActionBuilder
 
                 return new InstallAction(
                     $this->moduleManager,
+                    $this->distributionApi,
                     $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
                     $actionData['module_name'],
                     $actionData['source'] ?? null,

@@ -7,6 +7,8 @@ services:
     class: PrestaShop\Module\Mbo\Module\Action\ActionBuilder
     arguments:
       - "@prestashop.module.manager"
+      - "@mbo.cdc.client.distribution_api_v2"
+      - "@mbo.security.admin_authentication.provider"
 
   mbo.modules.actions.retriever:
     class: PrestaShop\Module\Mbo\Module\Action\ActionRetriever

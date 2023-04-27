@@ -21,11 +21,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Api\Service\ModuleActionExecutor;
+use PrestaShop\Module\Mbo\Distribution\Client;
+use PrestaShop\Module\Mbo\Module\Action\ActionRetriever;
 use PrestaShop\Module\Mbo\Module\ActionsManager;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
+use Tools;
 
 trait UseActionBeforeInstallModule
 {
@@ -68,6 +72,40 @@ trait UseActionBeforeInstallModule
         } catch (\Exception $e) {
             return;
         }
+
+        try {
+            /** @var ActionRetriever $actionRetriever */
+            $actionRetriever = $this->get('mbo.modules.actions.retriever');
+        } catch (\Exception $e) {
+            return;
+        }
+
+        try {
+            /** @var Client $client */
+            $client = $this->get('mbo.cdc.client.distribution_api_v2');
+        } catch (\Exception $e) {
+            return;
+        }
+
+        $needToNotifyDistributionApi = $this->needToNotifyDistributionApi();
+        $action = null;
+        if ($needToNotifyDistributionApi) {
+            $action = $actionRetriever->getProcessingAction();
+            if (null !== $action) {
+                $client->notifyStartDownload($action);
+            }
+        }
+
         $actionsManager->install((int) $module->get('id'));
+
+        if ($needToNotifyDistributionApi && null !== $action) {
+            $client->notifyEndDownload($action);
+        }
+    }
+
+    private function needToNotifyDistributionApi(): bool
+    {
+        return Tools::getValue('controller') === 'apiPsMbo' &&
+            Tools::getValue('service') === ModuleActionExecutor::SERVICE;
     }
 }

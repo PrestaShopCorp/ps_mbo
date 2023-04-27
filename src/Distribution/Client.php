@@ -24,6 +24,7 @@ namespace PrestaShop\Module\Mbo\Distribution;
 use Context;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Module\Action\ActionInterface;
 use stdClass;
 
 class Client extends BaseClient
@@ -153,6 +154,86 @@ class Client extends BaseClient
             );
         } catch (\Throwable $e) {
             // Do nothing if the tracking fails
+        }
+    }
+
+    public function notifyStartInstall(ActionInterface $action)
+    {
+        try {
+            $this->processRequestAndDecode(
+                'install-product/start-install',
+                self::HTTP_METHOD_POST,
+                [
+                    'form_params' => [
+                        'productInstallTriggeredEventId' => $action->getActionUuid(),
+                        'name' => $action->getModuleName(),
+                        'shopUuid' => Config::getShopMboUuid(),
+                        'status' => 'ok',
+                    ],
+                ]
+            );
+        } catch (\Throwable $e) {
+            // Do nothing if the notification fails
+        }
+    }
+
+    public function notifyEndInstall(ActionInterface $action)
+    {
+        try {
+            $this->processRequestAndDecode(
+                'install-product/end-install',
+                self::HTTP_METHOD_POST,
+                [
+                    'form_params' => [
+                        'productInstallTriggeredEventId' => $action->getActionUuid(),
+                        'name' => $action->getModuleName(),
+                        'shopUuid' => Config::getShopMboUuid(),
+                        'status' => 'ok',
+                    ],
+                ]
+            );
+        } catch (\Throwable $e) {
+            // Do nothing if the notification fails
+        }
+    }
+
+    public function notifyStartDownload(ActionInterface $action)
+    {
+        try {
+            $this->processRequestAndDecode(
+                'install-product/start-download',
+                self::HTTP_METHOD_POST,
+                [
+                    'form_params' => [
+                        'productInstallTriggeredEventId' => $action->getActionUuid(),
+                        'name' => $action->getModuleName(),
+                        'shopUuid' => Config::getShopMboUuid(),
+                        'status' => 'ok',
+                    ],
+                ]
+            );
+        } catch (\Throwable $e) {
+            // Do nothing if the notification fails
+        }
+    }
+
+    public function notifyEndDownload(ActionInterface $action)
+    {
+        try {
+            $this->processRequestAndDecode(
+                'install-product/end-download',
+                self::HTTP_METHOD_POST,
+                [
+                    'form_params' => [
+                        'productInstallTriggeredEventId' => $action->getActionUuid(),
+                        'name' => $action->getModuleName(),
+                        'shopUuid' => Config::getShopMboUuid(),
+                        'status' => 'ok',
+                    ],
+                ]
+            );
+        } catch (\Throwable $e) {
+            // Do nothing if the notification fails
         }
     }
 }

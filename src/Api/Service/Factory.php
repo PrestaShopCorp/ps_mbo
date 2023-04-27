@@ -26,6 +26,7 @@ use PrestaShop\Module\Mbo\Api\Exception\UnknownServiceException;
 final class Factory
 {
     private const ALLOWED_SERVICES = [
+        ModuleActionExecutor::SERVICE,
         ModuleTransitionExecutor::SERVICE,
         ConfigApplyExecutor::SERVICE,
     ];

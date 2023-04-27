@@ -21,3 +21,14 @@ services:
           Accept: "application/json"
         CURLOPT_FORBID_REUSE: true
         CURLOPT_FRESH_CONNECT: true
+
+  mbo.distribution_api.client.http_v2:
+    class: GuzzleHttp\Client
+    arguments:
+      $config:
+        base_uri: "%env(DISTRIBUTION_API_URL_V2)%"
+        timeout: "7200"
+        headers:
+          Accept: "application/json"
+        CURLOPT_FORBID_REUSE: true
+        CURLOPT_FRESH_CONNECT: true

@@ -36,7 +36,7 @@ interface ServiceExecutorInterface
      *
      * @param ...$parameters
      *
-     * @return array
+     * @return array|null
      */
-    public function execute(...$parameters): array;
+    public function execute(...$parameters): ?array;
 }

@@ -18,7 +18,14 @@ class ActionRetriever
         $this->actionBuilder = $actionBuilder;
     }
 
-    public function saveAction(array $actionData)
+    /**
+     * @param array $actionData
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
+    public function saveAction(array $actionData): string
     {
         $action = $this->actionBuilder->build($actionData);
 
@@ -45,7 +52,7 @@ class ActionRetriever
      */
     public function getActionsInDb(): array
     {
-        if (count(Db::getInstance()->executeS('SHOW TABLES LIKE \'' . _DB_PREFIX_ . 'mbo_action_queue\' '))) { //check if table exist
+        if (count($this->db->executeS('SHOW TABLES LIKE \'' . _DB_PREFIX_ . 'mbo_action_queue\' '))) { //check if table exist
             $query = "SELECT
                `action_uuid`,
                `action`,
@@ -68,7 +75,7 @@ class ActionRetriever
             foreach($results as $action) {
                 $source = null;
                 if (null !== $action['parameters']) {
-                    $aprameters = json_decode($action['parameters'], true);
+                    $parameters = json_decode($action['parameters'], true);
 
                     if (!empty($parameters['source'])) {
                         $source = $parameters['source'];
@@ -128,4 +135,45 @@ class ActionRetriever
         return $action;
     }
 
+    public function getProcessingAction(): ?ActionInterface
+    {
+        if (count($this->db->executeS('SHOW TABLES LIKE \'' . _DB_PREFIX_ . 'mbo_action_queue\' '))) { //check if table exist
+            $query = "SELECT
+               `action_uuid`,
+               `action`,
+               `module`,
+               `parameters`,
+               `status`,
+               `date_add`
+            FROM " . _DB_PREFIX_ . "mbo_action_queue
+            WHERE `status` = '" . ActionInterface::PROCESSING . "'
+            ORDER BY `date_add` ASC";
+
+            /** @var array $action */
+            $action = $this->db->getRow($query, false);
+
+            if (!is_array($action)) {
+                return null;
+            }
+
+            $source = null;
+            if (null !== $action['parameters']) {
+                $parameters = json_decode($action['parameters'], true);
+
+                if (!empty($parameters['source'])) {
+                    $source = $parameters['source'];
+                }
+            }
+
+            return $this->actionBuilder->build([
+                'action' => $action['action'],
+                'action_uuid' => $action['action_uuid'],
+                'module_name' => $action['module'],
+                'source' => $source,
+                'status' => $action['status'],
+            ]);
+        }
+
+        return null;
+    }
 }

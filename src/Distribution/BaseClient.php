@@ -46,6 +46,10 @@ class BaseClient
      */
     protected $queryParameters = [];
     /**
+     * @var string
+     */
+    protected $prefix = '/';
+    /**
      * @var array<int, string>
      */
     protected $possibleQueryParameters = [
@@ -71,10 +75,11 @@ class BaseClient
      * @param HttpClient $httpClient
      * @param \Doctrine\Common\Cache\CacheProvider $cacheProvider
      */
-    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider)
+    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider, string $prefix = '/')
     {
         $this->httpClient = $httpClient;
         $this->cacheProvider = $cacheProvider;
+        $this->prefix = $prefix;
     }
 
     /**
@@ -182,7 +187,7 @@ class BaseClient
         ]);
 
         return (string) $this->httpClient
-            ->request($method, '/api/' . ltrim($uri, '/'), $options)
+            ->request($method, $this->prefix . ltrim($uri, '/'), $options)
             ->getBody();
     }
 }
