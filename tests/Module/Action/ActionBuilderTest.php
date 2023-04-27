@@ -21,6 +21,8 @@
 namespace PrestaShop\Module\Mbo\Tests\Module\Action;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
+use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Module\Action\ActionBuilder;
 use PrestaShop\Module\Mbo\Module\Action\ActionInterface;
 use PrestaShop\Module\Mbo\Module\Action\ActionRetriever;
@@ -39,14 +41,20 @@ class ActionBuilderTest extends TestCase
 {
     private $moduleManager;
 
+    private $distributionApi;
+
+    private $adminAuthenticationProvider;
+
     protected function setUp(): void
     {
         $this->moduleManager = $this->createMock(ModuleManager::class);
+        $this->distributionApi = $this->createMock(Client::class);
+        $this->adminAuthenticationProvider = $this->createMock(AdminAuthenticationProvider::class);
     }
 
     public function testBuildThrowsExceptionWhenActionIsUndefined()
     {
-        $actionBuilder = new ActionBuilder($this->moduleManager);
+        $actionBuilder = new ActionBuilder($this->moduleManager, $this->distributionApi, $this->adminAuthenticationProvider);
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Action definition requirements are not met : action name parameter cannot be empty');
         $actionBuilder->build([
@@ -56,7 +64,7 @@ class ActionBuilderTest extends TestCase
 
     public function testBuildThrowsExceptionWhenActionIsUnknown()
     {
-        $actionBuilder = new ActionBuilder($this->moduleManager);
+        $actionBuilder = new ActionBuilder($this->moduleManager, $this->distributionApi, $this->adminAuthenticationProvider);
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Unrecognized module action name');
         $actionBuilder->build([
@@ -67,7 +75,7 @@ class ActionBuilderTest extends TestCase
 
     public function testBuildThrowsExceptionWhenModuleNameIsUndefined()
     {
-        $actionBuilder = new ActionBuilder($this->moduleManager);
+        $actionBuilder = new ActionBuilder($this->moduleManager, $this->distributionApi, $this->adminAuthenticationProvider);
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Action definition requirements are not met : module_name cannot be empty');
         $actionBuilder->build([
@@ -80,7 +88,7 @@ class ActionBuilderTest extends TestCase
      */
     public function testBuild(array $actionData, string $expectedClass)
     {
-        $actionBuilder = new ActionBuilder($this->moduleManager);
+        $actionBuilder = new ActionBuilder($this->moduleManager, $this->distributionApi, $this->adminAuthenticationProvider);
         $this->assertInstanceOf($expectedClass, $actionBuilder->build($actionData));
     }
 
