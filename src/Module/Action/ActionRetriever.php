@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module\Action;
 
 use Db;
-use Ramsey\Uuid\Uuid;
 
 class ActionRetriever
 {
@@ -48,16 +47,14 @@ class ActionRetriever
     {
         $action = $this->actionBuilder->build($actionData);
 
-        $dateAdd = (new \DateTime())->format('Y-m-d H:i:s');
         $sql = 'INSERT INTO `' . _DB_PREFIX_ . 'mbo_action_queue`(`action_uuid`,`action`,`module`,`parameters`,`status`,`date_add`) VALUES ';
         $sql .= sprintf(
-            "('%s', '%s', '%s', %s, '%s', '%s');",
+            "('%s', '%s', '%s', %s, '%s', NOW());",
             $action->getActionUuid(),
             $action->getActionName(),
             $action->getModuleName(),
             !empty($action->getParameters()) ? "'" . json_encode($action->getParameters()) . "'" : 'NULL',
-            $action->getStatus(),
-            $dateAdd
+            $action->getStatus()
         );
 
         if (false === $this->db->execute($sql)) {
@@ -119,10 +116,9 @@ class ActionRetriever
     public function markActionAsProcessing(ActionInterface $action): ActionInterface
     {
         $sql = sprintf(
-            "UPDATE `%smbo_action_queue` SET `status` = '%s', `date_started` = '%s' WHERE `action_uuid` = '%s';",
+            "UPDATE `%smbo_action_queue` SET `status` = '%s', `date_started` = NOW() WHERE `action_uuid` = '%s';",
             _DB_PREFIX_,
             ActionInterface::PROCESSING,
-            (new \DateTime())->format('Y-m-d H:i:s'),
             $action->getActionUuid()
         );
 
@@ -138,10 +134,9 @@ class ActionRetriever
     public function markActionAsProcessed(ActionInterface $action): ActionInterface
     {
         $sql = sprintf(
-            "UPDATE `%smbo_action_queue` SET `status` = '%s', `date_ended` = '%s' WHERE `action_uuid` = '%s';",
+            "UPDATE `%smbo_action_queue` SET `status` = '%s', `date_ended` = NOW() WHERE `action_uuid` = '%s';",
             _DB_PREFIX_,
             ActionInterface::PROCESSED,
-            (new \DateTime())->format('Y-m-d H:i:s'),
             $action->getActionUuid()
         );
 

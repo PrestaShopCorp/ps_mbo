@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\Action;
 
+use PrestaShop\Module\Mbo\Module\Module;
+
 interface ActionInterface
 {
     const PENDING = 'PENDING';
@@ -46,4 +48,8 @@ interface ActionInterface
     public function isPending(): bool;
 
     public function isProcessed(): bool;
+
+    public function getModule(): Module;
+
+    public function refreshModule(): void;
 }

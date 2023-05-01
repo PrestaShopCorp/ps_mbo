@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Module\Action;
 
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Distribution\Client;
+use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use Ramsey\Uuid\Uuid;
 
@@ -48,14 +49,20 @@ class ActionBuilder
      * @var AdminAuthenticationProvider
      */
     private $adminAuthenticationProvider;
+    /**
+     * @var Repository
+     */
+    private $repository;
 
     public function __construct(
         ModuleManager $moduleManager,
+        Repository $repository,
         Client $distributionApi,
         AdminAuthenticationProvider $adminAuthenticationProvider
     )
     {
         $this->moduleManager = $moduleManager;
+        $this->repository = $repository;
         $this->distributionApi = $distributionApi;
         $this->distributionApi->setBearer($adminAuthenticationProvider->getMboJWT());
     }
@@ -73,6 +80,7 @@ class ActionBuilder
 
                 return new InstallAction(
                     $this->moduleManager,
+                    $this->repository,
                     $this->distributionApi,
                     $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
                     $actionData['module_name'],
@@ -84,6 +92,8 @@ class ActionBuilder
 
                 return new UninstallAction(
                     $this->moduleManager,
+                    $this->repository,
+                    $this->distributionApi,
                     $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
                     $actionData['module_name'],
                     $actionData['status'] ?? ActionInterface::PENDING
@@ -93,6 +103,8 @@ class ActionBuilder
 
                 return new UpgradeAction(
                     $this->moduleManager,
+                    $this->repository,
+                    $this->distributionApi,
                     $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
                     $actionData['module_name'],
                     $actionData['source'] ?? null,
@@ -103,6 +115,8 @@ class ActionBuilder
 
                 return new EnableAction(
                     $this->moduleManager,
+                    $this->repository,
+                    $this->distributionApi,
                     $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
                     $actionData['module_name'],
                     $actionData['status'] ?? ActionInterface::PENDING
@@ -112,6 +126,8 @@ class ActionBuilder
 
                 return new DisableAction(
                     $this->moduleManager,
+                    $this->repository,
+                    $this->distributionApi,
                     $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
                     $actionData['module_name'],
                     $actionData['status'] ?? ActionInterface::PENDING
@@ -121,6 +137,8 @@ class ActionBuilder
 
                 return new EnableMobileAction(
                     $this->moduleManager,
+                    $this->repository,
+                    $this->distributionApi,
                     $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
                     $actionData['module_name'],
                     $actionData['status'] ?? ActionInterface::PENDING
@@ -130,6 +148,8 @@ class ActionBuilder
 
                 return new DisableMobileAction(
                     $this->moduleManager,
+                    $this->repository,
+                    $this->distributionApi,
                     $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
                     $actionData['module_name'],
                     $actionData['status'] ?? ActionInterface::PENDING
@@ -139,6 +159,8 @@ class ActionBuilder
 
                 return new ResetAction(
                     $this->moduleManager,
+                    $this->repository,
+                    $this->distributionApi,
                     $actionData['action_uuid'] ?? Uuid::uuid4()->toString(),
                     $actionData['module_name'],
                     $actionData['status'] ?? ActionInterface::PENDING

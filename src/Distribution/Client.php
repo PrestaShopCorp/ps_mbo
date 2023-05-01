@@ -24,6 +24,7 @@ namespace PrestaShop\Module\Mbo\Distribution;
 use Context;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Helpers\ModuleRouting;
 use PrestaShop\Module\Mbo\Module\Action\ActionInterface;
 use stdClass;
 
@@ -160,6 +161,8 @@ class Client extends BaseClient
     public function notifyStartInstall(ActionInterface $action)
     {
         try {
+            $module = $action->getModule();
+
             $this->processRequestAndDecode(
                 'install-product/start-install',
                 self::HTTP_METHOD_POST,
@@ -168,7 +171,9 @@ class Client extends BaseClient
                         'productInstallTriggeredEventId' => $action->getActionUuid(),
                         'name' => $action->getModuleName(),
                         'shopUuid' => Config::getShopMboUuid(),
-                        'status' => 'ok',
+                        'status' => $module->getStatus(),
+                        'configUrl' => ModuleRouting::getConfigUrl($module),
+                        'version' => $module->get('version'),
                     ],
                 ]
             );
@@ -180,6 +185,9 @@ class Client extends BaseClient
     public function notifyEndInstall(ActionInterface $action)
     {
         try {
+            $action->refreshModule();
+            $module = $action->getModule();
+
             $this->processRequestAndDecode(
                 'install-product/end-install',
                 self::HTTP_METHOD_POST,
@@ -188,7 +196,9 @@ class Client extends BaseClient
                         'productInstallTriggeredEventId' => $action->getActionUuid(),
                         'name' => $action->getModuleName(),
                         'shopUuid' => Config::getShopMboUuid(),
-                        'status' => 'ok',
+                        'status' => $module->getStatus(),
+                        'configUrl' => ModuleRouting::getConfigUrl($module),
+                        'version' => $module->get('version'),
                     ],
                 ]
             );
@@ -200,6 +210,8 @@ class Client extends BaseClient
     public function notifyStartDownload(ActionInterface $action)
     {
         try {
+            $module = $action->getModule();
+
             $this->processRequestAndDecode(
                 'install-product/start-download',
                 self::HTTP_METHOD_POST,
@@ -208,7 +220,9 @@ class Client extends BaseClient
                         'productInstallTriggeredEventId' => $action->getActionUuid(),
                         'name' => $action->getModuleName(),
                         'shopUuid' => Config::getShopMboUuid(),
-                        'status' => 'ok',
+                        'status' => $module->getStatus(),
+                        'configUrl' => ModuleRouting::getConfigUrl($module),
+                        'version' => $module->get('version'),
                     ],
                 ]
             );
@@ -220,6 +234,9 @@ class Client extends BaseClient
     public function notifyEndDownload(ActionInterface $action)
     {
         try {
+            $action->refreshModule();
+            $module = $action->getModule();
+
             $this->processRequestAndDecode(
                 'install-product/end-download',
                 self::HTTP_METHOD_POST,
@@ -228,7 +245,9 @@ class Client extends BaseClient
                         'productInstallTriggeredEventId' => $action->getActionUuid(),
                         'name' => $action->getModuleName(),
                         'shopUuid' => Config::getShopMboUuid(),
-                        'status' => 'ok',
+                        'status' => $module->getStatus(),
+                        'configUrl' => ModuleRouting::getConfigUrl($module),
+                        'version' => $module->get('version'),
                     ],
                 ]
             );

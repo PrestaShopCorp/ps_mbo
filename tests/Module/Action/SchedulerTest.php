@@ -27,6 +27,7 @@ use PrestaShop\Module\Mbo\Module\Action\ActionInterface;
 use PrestaShop\Module\Mbo\Module\Action\ActionRetriever;
 use PrestaShop\Module\Mbo\Module\Action\InstallAction;
 use PrestaShop\Module\Mbo\Module\Action\Scheduler;
+use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 
 class SchedulerTest extends TestCase
@@ -54,15 +55,16 @@ class SchedulerTest extends TestCase
     public function testGetNextActionInQueueWhenAnInProgressActionExists()
     {
         $moduleManager = $this->createMock(ModuleManager::class);
+        $repository = $this->createMock(Repository::class);
         $distributionApi = $this->createMock(Client::class);
         $actionRetriever = $this->createMock(ActionRetriever::class);
 
-        $action1 = new InstallAction($moduleManager, $distributionApi, '1234', 'module_one', null, ActionInterface::PROCESSED);
-        $action2 = new InstallAction($moduleManager, $distributionApi, '1235', 'module_two', null, ActionInterface::PENDING);
-        $action3 = new InstallAction($moduleManager, $distributionApi, '1236', 'module_three', null, ActionInterface::PROCESSED);
-        $action4 = new InstallAction($moduleManager, $distributionApi, '1237', 'module_four', null, ActionInterface::PROCESSING);
-        $action5 = new InstallAction($moduleManager, $distributionApi, '1238', 'module_five', null, ActionInterface::PROCESSED);
-        $action6 = new InstallAction($moduleManager, $distributionApi, '1239', 'module_six', null, ActionInterface::PENDING);
+        $action1 = new InstallAction($moduleManager, $repository, $distributionApi, '1234', 'module_one', null, ActionInterface::PROCESSED);
+        $action2 = new InstallAction($moduleManager, $repository, $distributionApi, '1235', 'module_two', null, ActionInterface::PENDING);
+        $action3 = new InstallAction($moduleManager, $repository, $distributionApi, '1236', 'module_three', null, ActionInterface::PROCESSED);
+        $action4 = new InstallAction($moduleManager, $repository, $distributionApi, '1237', 'module_four', null, ActionInterface::PROCESSING);
+        $action5 = new InstallAction($moduleManager, $repository, $distributionApi, '1238', 'module_five', null, ActionInterface::PROCESSED);
+        $action6 = new InstallAction($moduleManager, $repository, $distributionApi, '1239', 'module_six', null, ActionInterface::PENDING);
 
         $actionRetriever
             ->expects($this->once())
@@ -85,15 +87,16 @@ class SchedulerTest extends TestCase
     public function testGetNextActionInQueueWhenNoInProgressActionExists()
     {
         $moduleManager = $this->createMock(ModuleManager::class);
+        $repository = $this->createMock(Repository::class);
         $distributionApi = $this->createMock(Client::class);
         $actionRetriever = $this->createMock(ActionRetriever::class);
 
-        $action1 = new InstallAction($moduleManager, $distributionApi, '1234', 'module_one', null, ActionInterface::PROCESSED);
-        $action2 = new InstallAction($moduleManager, $distributionApi, '1235', 'module_two', null, ActionInterface::PENDING);
-        $action3 = new InstallAction($moduleManager, $distributionApi, '1236', 'module_three', null, ActionInterface::PROCESSED);
-        $action4 = new InstallAction($moduleManager, $distributionApi, '1237', 'module_four', null, ActionInterface::PENDING);
-        $action5 = new InstallAction($moduleManager, $distributionApi, '1238', 'module_five', null, ActionInterface::PROCESSED);
-        $action6 = new InstallAction($moduleManager, $distributionApi, '1239', 'module_six', null, ActionInterface::PENDING);
+        $action1 = new InstallAction($moduleManager, $repository, $distributionApi, '1234', 'module_one', null, ActionInterface::PROCESSED);
+        $action2 = new InstallAction($moduleManager, $repository, $distributionApi, '1235', 'module_two', null, ActionInterface::PENDING);
+        $action3 = new InstallAction($moduleManager, $repository, $distributionApi, '1236', 'module_three', null, ActionInterface::PROCESSED);
+        $action4 = new InstallAction($moduleManager, $repository, $distributionApi, '1237', 'module_four', null, ActionInterface::PENDING);
+        $action5 = new InstallAction($moduleManager, $repository, $distributionApi, '1238', 'module_five', null, ActionInterface::PROCESSED);
+        $action6 = new InstallAction($moduleManager, $repository, $distributionApi, '1239', 'module_six', null, ActionInterface::PENDING);
 
         $actionRetriever
             ->expects($this->once())
@@ -128,15 +131,16 @@ class SchedulerTest extends TestCase
     public function testProcessNextActionInQueueWhenAnInProgressActionExists()
     {
         $moduleManager = $this->createMock(ModuleManager::class);
+        $repository = $this->createMock(Repository::class);
         $distributionApi = $this->createMock(Client::class);
         $actionRetriever = $this->createMock(ActionRetriever::class);
 
-        $action1 = new InstallAction($moduleManager, $distributionApi, '1234', 'module_one', null, ActionInterface::PROCESSED);
-        $action2 = new InstallAction($moduleManager, $distributionApi, '1235', 'module_two', null, ActionInterface::PENDING);
-        $action3 = new InstallAction($moduleManager, $distributionApi, '1236', 'module_three', null, ActionInterface::PROCESSED);
-        $action4 = new InstallAction($moduleManager, $distributionApi, '1237', 'module_four', null, ActionInterface::PROCESSING);
-        $action5 = new InstallAction($moduleManager, $distributionApi, '1238', 'module_five', null, ActionInterface::PROCESSED);
-        $action6 = new InstallAction($moduleManager, $distributionApi, '1239', 'module_six', null, ActionInterface::PENDING);
+        $action1 = new InstallAction($moduleManager, $repository, $distributionApi, '1234', 'module_one', null, ActionInterface::PROCESSED);
+        $action2 = new InstallAction($moduleManager, $repository, $distributionApi, '1235', 'module_two', null, ActionInterface::PENDING);
+        $action3 = new InstallAction($moduleManager, $repository, $distributionApi, '1236', 'module_three', null, ActionInterface::PROCESSED);
+        $action4 = new InstallAction($moduleManager, $repository, $distributionApi, '1237', 'module_four', null, ActionInterface::PROCESSING);
+        $action5 = new InstallAction($moduleManager, $repository, $distributionApi, '1238', 'module_five', null, ActionInterface::PROCESSED);
+        $action6 = new InstallAction($moduleManager, $repository, $distributionApi, '1239', 'module_six', null, ActionInterface::PENDING);
 
         $actionRetriever
             ->expects($this->once())
@@ -159,15 +163,16 @@ class SchedulerTest extends TestCase
     public function testProcessNextActionInQueueWhenNoInProgressActionExists()
     {
         $moduleManager = $this->createMock(ModuleManager::class);
+        $repository = $this->createMock(Repository::class);
         $distributionApi = $this->createMock(Client::class);
         $actionRetriever = $this->createPartialMock(ActionRetriever::class, array('getActionsInDb', 'markActionAsProcessing'));
 
-        $action1 = new InstallAction($moduleManager, $distributionApi, '1234', 'module_one', null, ActionInterface::PROCESSED);
-        $action2 = new InstallAction($moduleManager, $distributionApi, '1235', 'module_two', null, ActionInterface::PENDING);
-        $action3 = new InstallAction($moduleManager, $distributionApi, '1236', 'module_three', null, ActionInterface::PROCESSED);
-        $action4 = new InstallAction($moduleManager, $distributionApi, '1237', 'module_four', null, ActionInterface::PENDING);
-        $action5 = new InstallAction($moduleManager, $distributionApi, '1238', 'module_five', null, ActionInterface::PROCESSED);
-        $action6 = new InstallAction($moduleManager, $distributionApi, '1239', 'module_six', null, ActionInterface::PENDING);
+        $action1 = new InstallAction($moduleManager, $repository, $distributionApi, '1234', 'module_one', null, ActionInterface::PROCESSED);
+        $action2 = new InstallAction($moduleManager, $repository, $distributionApi, '1235', 'module_two', null, ActionInterface::PENDING);
+        $action3 = new InstallAction($moduleManager, $repository, $distributionApi, '1236', 'module_three', null, ActionInterface::PROCESSED);
+        $action4 = new InstallAction($moduleManager, $repository, $distributionApi, '1237', 'module_four', null, ActionInterface::PENDING);
+        $action5 = new InstallAction($moduleManager, $repository, $distributionApi, '1238', 'module_five', null, ActionInterface::PROCESSED);
+        $action6 = new InstallAction($moduleManager, $repository, $distributionApi, '1239', 'module_six', null, ActionInterface::PENDING);
 
         $actionRetriever
             ->expects($this->once())

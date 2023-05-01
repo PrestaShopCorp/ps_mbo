@@ -22,54 +22,33 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module\Action;
 
 use PrestaShop\Module\Mbo\Distribution\Client;
+use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 
 class InstallAction extends AbstractAction
 {
     /**
-     * @var ModuleManager
-     */
-    private $moduleManager;
-
-    /**
-     * @var string
-     */
-    private $actionUuid;
-
-    /**
-     * @var string
-     */
-    private $moduleName;
-
-    /**
      * @var string|null
      */
     private $source;
-    /**
-     * @var Client
-     */
-    private $distributionApi;
 
     public function __construct(
         ModuleManager $moduleManager,
+        Repository    $repository,
         Client        $distributionApi,
         string        $actionUuid,
         string        $moduleName,
         ?string       $source = null,
         ?string       $status = ActionInterface::PENDING
     ) {
-        $this->moduleManager = $moduleManager;
-        $this->distributionApi = $distributionApi;
-        $this->actionUuid = $actionUuid;
-        $this->moduleName = $moduleName;
         $this->source = $source;
 
-        parent::__construct($status);
+        parent::__construct($moduleManager, $repository, $distributionApi, $actionUuid, $moduleName, $status);
     }
 
     public function execute(): bool
     {
-        // Notify Distribution API that install action is being process
+        // Notify Distribution API that install action is in progress
         $this->distributionApi->notifyStartInstall($this);
 
         if ($this->moduleManager->install($this->moduleName, $this->source)) {
@@ -80,21 +59,6 @@ class InstallAction extends AbstractAction
         }
 
         return false;
-    }
-
-    public function getModuleManager(): ModuleManager
-    {
-        return $this->moduleManager;
-    }
-
-    public function getActionUuid(): string
-    {
-        return $this->actionUuid;
-    }
-
-    public function getModuleName(): string
-    {
-        return $this->moduleName;
     }
 
     public function getSource(): ?string

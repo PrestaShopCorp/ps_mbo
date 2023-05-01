@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Api\Service;
 
 use http\Exception\InvalidArgumentException;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
+use PrestaShop\Module\Mbo\Helpers\ModuleRouting;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
 use PrestaShop\Module\Mbo\Module\CommandHandler\ModuleStatusTransitionCommandHandler;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
@@ -78,9 +79,6 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
         /** @var \PrestaShop\Module\Mbo\Module\Module $module */
         $module = $this->moduleStatusTransitionCommandHandler->handle($command);
 
-        $moduleUrls = $module->get('urls');
-        $configUrl = (bool) $module->get('is_configurable') && isset($moduleUrls['configure']) ? $this->generateTokenizedModuleActionUrl($moduleUrls['configure']) : null;
-
         if (ModuleTransitionCommand::MODULE_COMMAND_DOWNLOAD === $transition) {
             // Clear the cache after download to force reload module services
             try {
@@ -98,35 +96,8 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
             'message' => 'Transition successfully executed',
             'module_status' => $module->getStatus(),
             'version' => $module->get('version'),
-            'config_url' => $configUrl,
+            'config_url' => ModuleRouting::getConfigUrl($module),
         ];
-    }
-
-    private function generateTokenizedModuleActionUrl($url): string
-    {
-        $components = parse_url($url);
-        $baseUrl = ($components['path'] ?? '');
-        $queryParams = [];
-        if (isset($components['query'])) {
-            $query = $components['query'];
-
-            parse_str($query, $queryParams);
-        }
-
-        if (!isset($queryParams['_token'])) {
-            return $url;
-        }
-
-        $adminToken = Tools::getValue('admin_token');
-        $queryParams['_token'] = $adminToken;
-
-        $url = $baseUrl . '?' . http_build_query($queryParams, '', '&');
-        if (isset($components['fragment']) && $components['fragment'] !== '') {
-            /* This copy-paste from Symfony's UrlGenerator */
-            $url .= '#' . strtr(rawurlencode($components['fragment']), ['%2F' => '/', '%3F' => '?']);
-        }
-
-        return $url;
     }
 
     private function authenticateAddonsUser(Session $session): void
