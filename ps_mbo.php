@@ -601,16 +601,6 @@ class ps_mbo extends Module
      */
     private function shouldAttachRecommendedModulesButton()
     {
-        // AdminLogin should not call TabCollectionProvider
-        if (Validate::isLoadedObject($this->context->employee)) {
-            /** @var TabCollectionProvider $tabCollectionProvider */
-            $tabCollectionProvider = $this->get('mbo.tab.collection.provider');
-            if ($tabCollectionProvider->isTabCollectionCached()) {
-                return $tabCollectionProvider->getTabCollection()->getTab(Tools::getValue('controller'))->shouldDisplayButton()
-                    && 'AdminCarriers' !== Tools::getValue('controller');
-            }
-        }
-
         return in_array(Tools::getValue('controller'), static::TABS_WITH_RECOMMENDED_MODULES_BUTTON, true);
     }
 
