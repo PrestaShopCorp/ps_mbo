@@ -70,7 +70,13 @@ class AccountsDataProvider
             return null;
         }
 
-        return $this->getAccountsService()->getShopUuid() ?? null;
+        try {
+            $shopUuid = $this->getAccountsService()->getShopUuid();
+        } catch (Exception $e) {
+            $shopUuid = null;
+        }
+
+        return $shopUuid ?: null;
     }
 
     public function getAccountsUserId(): ?string
@@ -81,7 +87,7 @@ class AccountsDataProvider
             $userUuid = null;
         }
 
-        return $userUuid ? $userUuid : null;
+        return $userUuid ?: null;
     }
 
     public function getAccountsUserEmail(): ?string

@@ -21,18 +21,28 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Module\Module;
+use PrestaShop\Module\Mbo\Module\ActionsManager;
+use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
 trait UseActionBeforeInstallModule
 {
     /**
      * Hook actionBeforeInstallModule.
+     *
+     * @throws SourceHandlerNotFoundException
+     * @throws FileNotFoundException
      */
     public function hookActionBeforeInstallModule(array $params): void
     {
-        /** @var ModuleDataProvider $moduleDataProvider */
-        $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
+        try {
+            /** @var ModuleDataProvider $moduleDataProvider */
+            $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
+        } catch (\Exception $e) {
+            return;
+        }
 
         if (empty($params['moduleName']) || $moduleDataProvider->isOnDisk($params['moduleName'])) {
             return;
@@ -40,13 +50,24 @@ trait UseActionBeforeInstallModule
 
         $moduleName = (string) $params['moduleName'];
 
-        /** @var Module $module */
-        $module = $this->get('mbo.modules.repository')->getModule($moduleName);
+        try {
+            /** @var Repository $moduleRepository */
+            $moduleRepository = $this->get('mbo.modules.repository');
+        } catch (\Exception $e) {
+            return;
+        }
+        $module = $moduleRepository->getModule($moduleName);
 
         if (null === $module) {
             return;
         }
 
-        $this->get('mbo.modules.actions_manager')->install((int) $module->get('id'));
+        try {
+            /** @var ActionsManager $actionsManager */
+            $actionsManager = $this->get('mbo.modules.actions_manager');
+        } catch (\Exception $e) {
+            return;
+        }
+        $actionsManager->install((int) $module->get('id'));
     }
 }

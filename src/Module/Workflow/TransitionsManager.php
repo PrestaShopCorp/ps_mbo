@@ -23,8 +23,6 @@ namespace PrestaShop\Module\Mbo\Module\Workflow;
 
 use Exception;
 use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
-use PrestaShop\Module\Mbo\Module\Repository;
-use PrestaShop\Module\Mbo\Module\SourceRetriever\SourceRetrieverInterface;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 
@@ -35,22 +33,10 @@ class TransitionsManager
      */
     private $moduleManager;
 
-    /**
-     * @var Repository
-     */
-    private $moduleRepository;
-
-    /** @var SourceRetrieverInterface */
-    private $sourceRetriever;
-
     public function __construct(
-        ModuleManager $moduleManager,
-        SourceRetrieverInterface $sourceRetriever,
-        Repository $moduleRepository
+        ModuleManager $moduleManager
     ) {
-        $this->sourceRetriever = $sourceRetriever;
         $this->moduleManager = $moduleManager;
-        $this->moduleRepository = $moduleRepository;
     }
 
     public function uninstalledToEnabledAndMobileEnabled(TransitionModule $transitionModule, string $marking, array $context): bool
@@ -362,10 +348,5 @@ class TransitionsManager
         }
 
         return false;
-    }
-
-    private function getModuleInstance(string $moduleName)
-    {
-        return $this->moduleRepository->getModule($moduleName);
     }
 }

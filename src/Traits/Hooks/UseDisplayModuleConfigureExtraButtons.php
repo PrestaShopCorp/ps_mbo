@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+
 trait UseDisplayModuleConfigureExtraButtons
 {
     /**
@@ -31,12 +33,18 @@ trait UseDisplayModuleConfigureExtraButtons
      */
     public function hookDisplayModuleConfigureExtraButtons(array $params): string
     {
+        try {
+            /** @var Router $router */
+            $router = $this->get('router');
+        } catch (\Exception $e) {
+            return '';
+        }
         $this->smarty->assign([
             'configure_toolbar_extra_buttons' => [
                 [
                     'class' => 'btn-primary',
                     'title' => $this->trans('Check for updates', [], 'Modules.Mbo.Modulescatalog'),
-                    'url' => $this->get('router')->generate('admin_module_updates'),
+                    'url' => $router->generate('admin_module_updates'),
                 ],
             ],
         ]);

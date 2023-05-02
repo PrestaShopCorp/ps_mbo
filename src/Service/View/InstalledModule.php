@@ -64,6 +64,7 @@ class InstalledModule
     public function toArray(): array
     {
         return [
+            'id' => $this->id,
             'name' => $this->name,
             'status' => $this->status,
             'version' => $this->version,
