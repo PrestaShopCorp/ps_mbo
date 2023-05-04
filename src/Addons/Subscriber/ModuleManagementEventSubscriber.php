@@ -231,7 +231,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         /** @var Module $module */
         $command = new VersionChangeApplyConfigCommand(
             _PS_VERSION_,
-            $module->disk->get('version')
+            (string) $module->disk->get('version')
         );
 
         $this->versionChangeApplyConfigCommandHandler->handle($command);
