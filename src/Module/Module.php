@@ -246,7 +246,7 @@ class Module implements ModuleInterface
 
         $this->database->set('installed', true);
         $this->database->set('active', true);
-        $this->database->set('version', $this->attributes->get('version'));
+        $this->database->set('version', (string) $this->attributes->get('version'));
 
         return true;
     }
@@ -447,7 +447,7 @@ class Module implements ModuleInterface
         $diskVersion = $this->disk->get('version');
 
         if (null !== $diskVersion) {
-            return $diskVersion;
+            return (string) $diskVersion;
         }
 
         return $this->database->get('version') ?? '';
