@@ -173,7 +173,7 @@ class Client extends BaseClient
                         'shopUuid' => Config::getShopMboUuid(),
                         'status' => $module->getStatus(),
                         'configUrl' => ModuleRouting::getConfigUrl($module),
-                        'version' => $module->get('version'),
+                        'moduleVersion' => $module->get('version'),
                     ],
                 ]
             );
@@ -198,7 +198,7 @@ class Client extends BaseClient
                         'shopUuid' => Config::getShopMboUuid(),
                         'status' => $module->getStatus(),
                         'configUrl' => ModuleRouting::getConfigUrl($module),
-                        'version' => $module->get('version'),
+                        'moduleVersion' => $module->get('version'),
                     ],
                 ]
             );
@@ -222,7 +222,7 @@ class Client extends BaseClient
                         'shopUuid' => Config::getShopMboUuid(),
                         'status' => $module->getStatus(),
                         'configUrl' => ModuleRouting::getConfigUrl($module),
-                        'version' => $module->get('version'),
+                        'moduleVersion' => $module->get('version'),
                     ],
                 ]
             );
@@ -247,7 +247,7 @@ class Client extends BaseClient
                         'shopUuid' => Config::getShopMboUuid(),
                         'status' => $module->getStatus(),
                         'configUrl' => ModuleRouting::getConfigUrl($module),
-                        'version' => $module->get('version'),
+                        'moduleVersion' => $module->get('version'),
                     ],
                 ]
             );
