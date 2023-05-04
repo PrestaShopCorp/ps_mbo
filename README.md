@@ -20,12 +20,14 @@ MBO is integrated by default on PrestaShop Edition versions.
 
 You can install it manually by downloading the latest release on https://github.com/PrestaShopCorp/ps_mbo/releases and uploading it through the Module manager page of your Backoffice.
 
+**Note :** An admin user (Prestashop   Marketplace) is created when installing the module. This user is mandatory to allow the module to be callable by the external API.  
+
 ## Requirements
 
 To be fully functional, MBO requires
 
 - [ps_accounts][ps_accounts]
-- Your server must be callable by external referrers. This is needed to perform actions on modules in your backoffice (install, upgrade, auto-upgrade, ...)
+- **Your server must be callable by external referrers.** This is needed to perform actions on modules in your backoffice (install, upgrade, auto-upgrade, ...)
 
 ## Reporting issues
 
@@ -55,8 +57,11 @@ To contribute, you'll need to run the project locally :
 
 - Fork this repository
 - Create a branch from the version of MBO you want to patch
-- Install [MBO API and Vue server][mbo-api-and-vue] and follow instructions in the readme
-- On MBO root folder, copy .env.dist to .env and replace the values to the ones matching your environment
+  - You are a PrestaShop employee : 
+    - Install [MBO API and Vue server][mbo-api-and-vue] and follow instructions in the readme 
+    - On MBO root folder, copy .env.dist to .env and replace the values to the ones matching your environment
+  - You are an external contributor :
+    - Get the .env file from the last released module.
 - Package and install your module to your PrestaShop local shop
 - Make your changes and push to the branch on your fork
 - Create a pull request on the module's project (target the patched branch)
