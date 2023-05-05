@@ -35,58 +35,27 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ps_mbo extends Module
 {
     const TABS_WITH_RECOMMENDED_MODULES_BUTTON = [
-        'AdminProducts',
-        'AdminCategories',
-        'AdminTracking',
-        'AdminAttributesGroups',
-        'AdminFeatures',
-        'AdminManufacturers',
-        'AdminSuppliers',
-        'AdminTags',
-        'AdminOrders',
-        'AdminInvoices',
-        'AdminReturn',
-        'AdminDeliverySlip',
-        'AdminSlip',
-        'AdminStatuses',
-        'AdminOrderMessage',
-        'AdminCustomers',
-        'AdminAddresses',
-        'AdminGroups',
-        'AdminCarts',
-        'AdminCustomerThreads',
-        'AdminContacts',
-        'AdminCartRules',
-        'AdminSpecificPriceRule',
-        'AdminShipping',
-        'AdminLocalization',
-        'AdminZones',
-        'AdminCountries',
-        'AdminCurrencies',
-        'AdminTaxes',
-        'AdminTaxRulesGroup',
-        'AdminTranslations',
-        'AdminPreferences',
-        'AdminOrderPreferences',
-        'AdminPPreferences',
-        'AdminCustomerPreferences',
-        'AdminThemes',
-        'AdminMeta',
-        'AdminCmsContent',
-        'AdminImages',
-        'AdminSearchConf',
-        'AdminGeolocation',
-        'AdminInformation',
-        'AdminPerformance',
-        'AdminEmails',
-        'AdminImport',
-        'AdminBackup',
-        'AdminRequestSql',
-        'AdminLogs',
-        'AdminAdminPreferences',
-        'AdminStats',
-        'AdminSearchEngines',
-        'AdminReferrers',
+        'AdminOrders', // Orders> Orders
+        'AdminInvoices', // Orders > Invoices
+        'AdminSlip', // Orders > Credit Slips
+        'AdminDeliverySlip', // Orders > Delivery Slips
+        'AdminProducts', // Catalog > Products
+        'AdminFeatures', // Catalog > Attributes & Features > Features
+        'AdminManufacturers', // Catalog > Brands & Suppliers > Brands
+        'AdminCartRules', // Catalog > Discounts > Cart Rules
+        'AdminCustomers', // Customers > Customers
+        'AdminCustomerThreads', // Customer Service> Customers Service
+        'AdminStats', // Stats> Stats
+        'AdminCmsContent', // Pages
+        'AdminImages', // Image
+        'AdminShipping', // Shipping > Preferences
+        'AdminStatuses', // Shop Parameters > Order Settings > Statuses
+        'AdminGroups', // Shop Parameters > Customer Settings > Groups
+        'AdminContacts', // Shop Parameters > Contact > Contact
+        'AdminMeta', // Shop Parameters > Traffic & SEO > SEO & URLs
+        'AdminSearchConf', // Shop Parameters > Search > Search
+        'AdminAdminPreferences', // Advanced Parameters > Administration
+        'AdminEmails', // Advanced Parameters > E-mail
     ];
 
     const TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT = [
@@ -601,16 +570,6 @@ class ps_mbo extends Module
      */
     private function shouldAttachRecommendedModulesButton()
     {
-        // AdminLogin should not call TabCollectionProvider
-        if (Validate::isLoadedObject($this->context->employee)) {
-            /** @var TabCollectionProvider $tabCollectionProvider */
-            $tabCollectionProvider = $this->get('mbo.tab.collection.provider');
-            if ($tabCollectionProvider->isTabCollectionCached()) {
-                return $tabCollectionProvider->getTabCollection()->getTab(Tools::getValue('controller'))->shouldDisplayButton()
-                    && 'AdminCarriers' !== Tools::getValue('controller');
-            }
-        }
-
         return in_array(Tools::getValue('controller'), static::TABS_WITH_RECOMMENDED_MODULES_BUTTON, true);
     }
 
