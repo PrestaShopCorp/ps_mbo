@@ -78,7 +78,7 @@ trait UseActionListModules
                 'displayName' => $module->get('displayName'),
                 'description' => $module->get('description'),
                 'additional_description' => $this->getAdditionalDescription((int) $module->get('id'), $name),
-                'version' => $module->get('version'),
+                'version' => (string) $module->get('version'),
                 'version_available' => $module->get('version_available'),
                 'author' => $module->get('author'),
                 'url' => $module->get('url'),
