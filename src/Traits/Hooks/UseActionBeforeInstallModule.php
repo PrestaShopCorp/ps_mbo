@@ -101,6 +101,12 @@ trait UseActionBeforeInstallModule
         if ($needToNotifyDistributionApi && null !== $action) {
             $client->notifyEndDownload($action);
         }
+
+        //Now we let the ModuleManager proceed the install process
+        if ($needToNotifyDistributionApi) {
+            // Notify Distribution API that install action is in progress
+            $client->notifyStartInstall($action);
+        }
     }
 
     private function needToNotifyDistributionApi(): bool
