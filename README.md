@@ -20,7 +20,7 @@ MBO is integrated by default on PrestaShop Edition versions.
 
 You can install it manually by downloading the latest release on https://github.com/PrestaShopCorp/ps_mbo/releases and uploading it through the Module manager page of your Backoffice.
 
-**Note :** An admin user (Prestashop   Marketplace) is created when installing the module. This user is mandatory to allow the module to be callable by the external API.  
+**Note :** An admin user (Prestashop Marketplace) is created when installing the module. This user is mandatory to allow the module to be callable by the external API.  
 
 ## Requirements
 
