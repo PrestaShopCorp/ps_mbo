@@ -443,37 +443,4 @@ class ps_mbo extends Module
             fclose($f);
         }
     }
-
-    private function translateTabsIfNeeded(): void
-    {
-        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
-        if (!file_exists($lockFile)) {
-            return;
-        }
-
-        $moduleTabs = Tab::getCollectionFromModule($this->name);
-        $languages = Language::getLanguages(false);
-
-        /**
-         * @var Tab $tab
-         */
-        foreach ($moduleTabs as $tab) {
-            if (!empty($tab->wording) && !empty($tab->wording_domain)) {
-                $tabNameByLangId = [];
-                foreach ($languages as $language) {
-                    $tabNameByLangId[$language['id_lang']] = $this->trans(
-                        $tab->wording,
-                        [],
-                        $tab->wording_domain,
-                        $language['locale']
-                    );
-                }
-
-                $tab->name = $tabNameByLangId;
-                $tab->save();
-            }
-        }
-
-        @unlink($lockFile);
-    }
 }
