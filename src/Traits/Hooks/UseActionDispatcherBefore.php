@@ -24,11 +24,13 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 use Cache;
 use Configuration;
 use Context;
+use Language;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Tab;
 use Tools;
 
 trait UseActionDispatcherBefore
