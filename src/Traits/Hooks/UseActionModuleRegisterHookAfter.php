@@ -40,20 +40,20 @@ trait UseActionModuleRegisterHookAfter
             $hookName = $params['hook_name'];
 
             // The MBO hook 'dashboardZoneTwo' must be at the max position
-            if ('ps_mbo' !== $module->name && 'dashboardZoneTwo' === $hookName) {
-                $this->putMboDashboardZoneTwoAtFirstPosition();
+            if ('DashboardZoneTwo' === mb_ucfirst($hookName)) {
+                $this->putMboDashboardZoneTwoAtLastPosition();
             }
         } catch (\Exception $e) {
             // Do nothing because it's not critical
         }
     }
 
-    public function putMboDashboardZoneTwoAtFirstPosition(): void
+    public function putMboDashboardZoneTwoAtLastPosition(): void
     {
         // Check if the hook exists and get it's ID
         $sql = 'SELECT h.`id_hook`
                     FROM `' . _DB_PREFIX_ . 'hook` h
-                    WHERE h.`name` = \'dashboardZoneTwo\'';
+                    WHERE UPPER(h.`name`) = UPPER(\'dashboardZoneTwo\')';
         $row = \Db::getInstance()->getRow($sql);
         if (!$row) {
             return;
