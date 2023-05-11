@@ -90,7 +90,7 @@ jobs:
         ref: master
         path: workflows/actions
         repository: PrestaShopCorp/github-action-install-module-mydemoshop
-        token: ${{ github.token }}
+        token: ${{ github.INSTALL_MODULE_MYDEMOSHOP }}
 
     - name: Install Prestashop module on MyDemoShop
       uses: ./workflows/actions/PrestaShopCorp/github-action-install-module-mydemoshop
