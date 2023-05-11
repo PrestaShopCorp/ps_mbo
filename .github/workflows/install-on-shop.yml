@@ -1,6 +1,6 @@
 name: Install Module on Shop
 
-on: [ push, pull_request ]
+on: [ push ]
 
 env:
   LABELS: ${{toJSON(github.event.pull_request.labels)}}
@@ -30,7 +30,6 @@ jobs:
   upload_asset_preproduction:
     runs-on: ubuntu-latest
     needs: [ deploy ]
-    if: contains(github.event.pull_request.labels.*.name, 'install-')
     steps:
 
       - name: Retrieve from cache module folder
@@ -71,7 +70,7 @@ jobs:
           path: ../${{ github.event.repository.name }}.zip
 
   install_on_shop:
-    name: Upload the production zip asset to the release
+    name: Install module on given shop
     runs-on: ubuntu-latest
     needs: [ upload_asset_preproduction ]
     steps:
