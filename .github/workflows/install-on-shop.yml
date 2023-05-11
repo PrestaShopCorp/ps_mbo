@@ -78,6 +78,7 @@ jobs:
     - name: Get the download url of the latest artifacts uploaded
       id: get_latest_artifact
       run: |
+        curl --header "Accept: application/vnd.github+json" --header "Authorization: Bearer ${{ github.token }}" --header "X-GitHub-Api-Version: 2022-11-28" --location "https://api.github.com/repos/PrestaShopCorp/ps_mbo/actions/artifacts" 
         url=$( \
         curl --header "Accept: application/vnd.github+json" \
             --header "Authorization: Bearer ${{ github.token }}" \
