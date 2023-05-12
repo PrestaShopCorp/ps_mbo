@@ -14,7 +14,8 @@ jobs:
       - name: Get the download url of the latest artifacts uploaded
         id: get_latest_artifact
         run: |
-          url=$(gh api /repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts --jq '.artifacts[0].archive_download_url'
+          url=$(gh api /repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts --jq '.artifacts[0].archive_download_url)'
+          echo $url
           echo """url=$(echo $url)""" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ github.token }}
