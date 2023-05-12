@@ -60,12 +60,12 @@ jobs:
 
       - name: Prepare the zip
         run: |
-          cd ..
-          zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
-          mv ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
+            ls -ali
+      #     cd ..
+      #     zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
 
       - name: Create & upload artifact for preprod
-        uses: 'actions/upload-artifact@v3'
+        uses: 'actions/upload-artifact@v1'
         with:
           name: ${{ github.event.repository.name }}.preprod
-          path: ${{ github.event.repository.name }}.zip
+          path: '../'
