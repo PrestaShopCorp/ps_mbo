@@ -8,7 +8,7 @@ on:
 
 jobs:
   install_module:
-    name: Install pxsdesign module
+    name: Install ps_mbo module
     runs-on: ubuntu-latest
     steps:
       - name: Get the download url of the latest artifacts uploaded
