@@ -213,6 +213,9 @@ class ps_mbo extends Module
      */
     public function enable($force_all = false): bool
     {
+        if(self::checkModuleStatus()) {
+            return true;
+        }
         // Store previous context
         $previousContextType = Shop::getContext();
         $previousContextShopId = Shop::getContextShopID();
