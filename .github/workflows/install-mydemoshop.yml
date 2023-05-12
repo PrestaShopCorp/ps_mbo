@@ -10,12 +10,24 @@ jobs:
   install_module:
     name: Install ps_mbo module
     runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'install')
     steps:
+      - name: Get label infos
+        id: get_label_infos
+        run: |
+          label=$(echo '${{ tojson(github.event.pull_request.labels) }}' | jq -r '.[].name | select(. | contains("install"))')
+          echo $label
+          demo=$(echo $label | awk -F/ '{print $2}')
+          name=$(echo $label | awk -F/ '{print $3}')
+          echo $demo
+          echo $name
+          echo """demo=$(echo $demo)""" >> $GITHUB_OUTPUT
+          echo """name=$(echo $name)""" >> $GITHUB_OUTPUT
+
       - name: Get the download url of the latest artifacts uploaded
         id: get_latest_artifact
         run: |
           url=$(gh api /repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts --jq '.artifacts[0].archive_download_url')
-          echo $url
           echo """url=$(echo $url)""" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ github.token }}
@@ -23,8 +35,8 @@ jobs:
       - name: Install Prestashop module on MyDemoShop
         uses: PrestaShopCorp/github-action-install-module-mydemoshop@main
         with:
-          environment: demo-cratik
-          shop_name: vgarcia-80
+          environment: "demo-${{ steps.get_label_infos.outputs.demo }}"
+          shop_name: ${{ steps.get_label_infos.outputs.name }}
           module_name: ps_mbo
           module_zip_url: ${{ steps.get_latest_artifact.outputs.url }}
         env:
