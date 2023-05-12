@@ -32,4 +32,3 @@ jobs:
           GOOGLE_APIS_CLIENT_SECRET: ${{ secrets.GOOGLE_APIS_CLIENT_SECRET }}
           GOOGLE_APIS_REFRESH_TOKEN: ${{ secrets.GOOGLE_APIS_REFRESH_TOKEN }}
           INSTALL_MODULE_MYDEMOSHOP_URL: ${{ secrets.INSTALL_MODULE_MYDEMOSHOP_URL }}
-          GH_TOKEN: ${{ github.token }}
