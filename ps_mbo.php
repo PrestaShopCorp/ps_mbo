@@ -213,7 +213,7 @@ class ps_mbo extends Module
      */
     public function enable($force_all = false): bool
     {
-        if(self::checkModuleStatus()) {
+        if (self::checkModuleStatus()) {
             return true;
         }
         // Store previous context
