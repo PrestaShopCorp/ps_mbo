@@ -1,9 +1,8 @@
 name: Install Module on Shop
 
-on: [ push ]
-
-env:
-  LABELS: ${{toJSON(github.event.pull_request.labels)}}
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize, labeled]
 
 jobs:
   deploy:
@@ -58,14 +57,9 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
 
-      - name: Prepare the zip
-        run: |
-            ls -ali
-      #     cd ..
-      #     zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
-
       - name: Create & upload artifact for preprod
         uses: 'actions/upload-artifact@v1'
         with:
           name: ${{ github.event.repository.name }}.preprod
           path: '../'
+
