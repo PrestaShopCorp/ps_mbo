@@ -1,0 +1,46 @@
+version: "3"
+services:
+  mariadb:
+    image: mariadb:10.6.4
+    container_name: mbo_mariadb
+    environment:
+      - MARIADB_DATABASE=prestashop
+      - MARIADB_ROOT_PASSWORD=superadmin
+    ports:
+      - "3320:3306"
+    volumes:
+      - "mariadb_data:/var/lib/mysql"
+  prestashop:
+    image: prestashop/prestashop:${PS_VERSION}
+    # image: smb-edition:latest
+    container_name: mbo_prestashop
+    ports:
+      - "8686:80"
+    environment:
+      - DB_SERVER=mariadb
+      - DB_USER=root
+      - DB_PASSWD=superadmin
+      - DB_NAME=prestashop
+      - PS_INSTALL_AUTO=1
+      - PS_FOLDER_ADMIN=admin-dev
+      - PS_FOLDER_INSTALL=install-dev
+      - PS_DEV_MODE=true
+      - PS_DOMAIN=localhost:8686
+      - PS_LANGUAGE=fr
+      - PS_COUNTRY=FR
+    volumes:
+      - "prestashop_data:/var/www/html/"
+      - "..:/var/www/html/modules/ps_mbo"
+    depends_on:
+      - mariadb
+  php:
+    build: '../'
+    volumes:
+        - ../:/var/www/html
+    working_dir: /var/www/html
+    environment:
+        _PS_ROOT_DIR_: /var/www/html
+
+volumes:
+  mariadb_data:
+  prestashop_data:
