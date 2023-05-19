@@ -156,4 +156,71 @@
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_import.html.twig" source-language="en-US" target-language="en-US" datatype="plaintext">
+    <body>
+      <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004">
+        <source>Upload a module</source>
+        <target>Upload a module</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="7c8701c300f85e9799c74e83f4adea64">
+        <source>Drop your module archive here or [1]select file[/1]</source>
+        <target>Drop your module archive here or [1]select file[/1]</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="2b11276d6a162d7c1b9894abe5febfdc">
+        <source>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</source>
+        <target>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</target>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="e781acd6cefcfbbfce5aa2804d59a4c5">
+        <source>Your module will be installed right after that.</source>
+        <target>Your module will be installed right after that.</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="c3dbf8925ec4c77ef5317e1e27317b70">
+        <source>Installing module...</source>
+        <target>Installing module...</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="a26f56145fea2d3af35bf0d6ac83c28a">
+        <source>It will close as soon as the module is installed. It won't be long!</source>
+        <target>It will close as soon as the module is installed. It won't be long!</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="f48a5ae14fa2b0c85442d1199a08b3b4">
+        <source>Module installed!</source>
+        <target>Module installed!</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="824e2fcb263ee94399a6a261ee1ec7c1">
+        <source>Oops... Upload failed.</source>
+        <target>Oops... Upload failed.</target>
+        <note>Line: 68</note>
+      </trans-unit>
+      <trans-unit id="fa692d85f08c92a585ed8b3fed7f1d52">
+        <source>What happened?</source>
+        <target>What happened?</target>
+        <note>Line: 69</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_additional_description.html.twig" source-language="en-US" target-language="en-US" datatype="plaintext">
+    <body>
+      <trans-unit id="decbe415d8accca7c2c16d48a79ee934">
+        <source>Read More</source>
+        <target>Read More</target>
+        <note>Line: 24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="en-US" target-language="en-US" datatype="plaintext">
+    <body>
+      <trans-unit id="10dc2676c1cfa668956517a07c6405bf">
+        <source>Discover the best-selling modules of this category in the %link% page.</source>
+        <target>Discover the best-selling modules of this category in the %link% page.</target>
+        <note>Line: 19</note>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>
