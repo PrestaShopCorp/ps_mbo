@@ -19,17 +19,17 @@
       <trans-unit id="9d86b7d3c7427a887c6e182f75deb3e0">
         <source><![CDATA[https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security]]></source>
         <target state="translated"><![CDATA[https://addons.prestashop.com/ru/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-RU&utm_content=security]]></target>
-        <note>Line: 125</note>
+        <note>Line: 130</note>
       </trans-unit>
       <trans-unit id="198214f6abf95fc35f5f0fb3b70946a3">
         <source><![CDATA[https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></source>
         <target state="translated"><![CDATA[https://addons.prestashop.com/ru/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-RU]]></target>
-        <note>Line: 132</note>
+        <note>Line: 137</note>
       </trans-unit>
       <trans-unit id="f9baae88cd2cd24d7c8b13fd1906aab6">
         <source><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></source>
         <target state="translated"><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-RU]]></target>
-        <note>Line: 139</note>
+        <note>Line: 144</note>
       </trans-unit>
     </body>
   </file>

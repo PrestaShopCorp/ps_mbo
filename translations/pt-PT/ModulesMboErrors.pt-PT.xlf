@@ -4,8 +4,8 @@
     <body>
       <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
         <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
-        <target state="translated">PrestaShop não conseguiu autenticar-se nos Addons. Por favor verifique as suas credenciais e se está ligado à internet.</target>
-        <note>Line: 126</note>
+        <target state="translated">O PrestaShop não conseguiu autenticar-se nos Addons. Por favor verifique as suas credenciais e se está ligado à internet.</target>
+        <note>Line: 105</note>
       </trans-unit>
     </body>
   </file>

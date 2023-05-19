@@ -5,7 +5,7 @@
       <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
         <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
         <target state="needs-translation">PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</target>
-        <note>Line: 126</note>
+        <note>Line: 105</note>
       </trans-unit>
     </body>
   </file>

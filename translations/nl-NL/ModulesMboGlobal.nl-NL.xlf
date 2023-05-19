@@ -19,17 +19,17 @@
       <trans-unit id="3b89e163ae0b446bd02e13de8dcf70d3">
         <source><![CDATA[For even more security on your website forms, consult our Security & Access modules category on the]]></source>
         <target state="translated"><![CDATA[Voor een nog betere beveiliging op uw contact formulieren, bekijken onze beveiliging en toegangs modules categorie via de]]></target>
-        <note>Line: 124</note>
+        <note>Line: 129</note>
       </trans-unit>
       <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6">
         <source>PrestaShop Addons Marketplace</source>
         <target state="needs-translation">PrestaShop Addons Marketplace</target>
-        <note>Line: 140</note>
+        <note>Line: 145</note>
       </trans-unit>
       <trans-unit id="71f716ae5452ef886e40d36f14afed87">
         <source>Discover more modules to improve your shop on</source>
         <target state="translated">Ontdek meer modules om uw winkel te verbeteren op</target>
-        <note>Line: 138</note>
+        <note>Line: 143</note>
       </trans-unit>
     </body>
   </file>
