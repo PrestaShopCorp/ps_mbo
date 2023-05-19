@@ -9,7 +9,7 @@
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/error.html.twig" source-language="en" target-language="fr" datatype="plaintext">
     <body>
       <trans-unit id="8a5560b05facacdbc10e870b1152e41b">
         <source>It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.</source>

@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Addons/Toolbar.php" source-language="en" target-language="pl" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig" source-language="en" target-language="pl" datatype="plaintext">
     <body>
       <trans-unit id="1c0b7f4d79e06a46c12312615fc4ab14">
         <source>Connect to Addons marketplace</source>
         <target state="translated">Połącz z Addons marketplace</target>
-        <note>Line: 127</note>
+        <note>Line: 24</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="en" target-language="pl" datatype="plaintext">
-    <body>
       <trans-unit id="b09249132bbed9baecd987cf73200b44">
         <source>Confirm logout</source>
         <target state="translated">Potwierdź wylogowanie</target>
