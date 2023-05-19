@@ -9,7 +9,7 @@
       </trans-unit>
       <trans-unit id="a68b46728e83ba2fd535a25e8216bdb7">
         <source>Go to Addons</source>
-        <target state="needs-translation">Go to Addons</target>
+        <target state="translated">Перейти к дополнениям</target>
         <note>Line: 59</note>
       </trans-unit>
     </body>
