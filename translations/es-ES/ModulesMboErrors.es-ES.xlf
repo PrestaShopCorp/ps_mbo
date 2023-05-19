@@ -2,18 +2,18 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="en" target-language="es-ES" datatype="plaintext">
     <body>
-      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
+      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea" approved="yes">
         <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
-        <target state="translated">PrestaShop no pudo iniciar sesión en Addons. Por favor verifica tus datos de acceso y tu conexión de Internet.</target>
+        <target state="final">PrestaShop no pudo iniciar sesión en Addons. Por favor verifica tus datos de acceso y tu conexión de Internet.</target>
         <note>Line: 126</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/ps_mbo/views/templates/admin/error.html.twig" source-language="en" target-language="es-ES" datatype="plaintext">
     <body>
-      <trans-unit id="8a5560b05facacdbc10e870b1152e41b">
+      <trans-unit id="8a5560b05facacdbc10e870b1152e41b" approved="yes">
         <source>It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.</source>
-        <target state="translated">Parece que tenemos problemas para conectar con Addons. Actualiza la página o revisa la configuración de tu firewall.</target>
+        <target state="final">Parece que tenemos problemas para conectar con Addons. Actualiza la página o revisa la configuración de tu firewall.</target>
         <note>Line: 32</note>
       </trans-unit>
     </body>
