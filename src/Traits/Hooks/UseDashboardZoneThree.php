@@ -21,10 +21,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use ToolsCore as Tools;
+use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
 
 trait UseDashboardZoneThree
 {
+    use HaveCdcComponent;
+
     /**
      * @return void
      *
@@ -46,14 +48,7 @@ trait UseDashboardZoneThree
      */
     public function hookDashboardZoneThree(array $params)
     {
-        $this->context->smarty->assign(
-            [
-                'shop_context' => json_encode($this->get('mbo.cdc.context_builder')->getViewContext()),
-                'cdcErrorUrl' => $this->get('router')->generate('admin_mbo_module_cdc_error'),
-            ]
-        );
-
-        return $this->display($this->name, 'dashboard-zone-three.tpl');
+        return $this->smartyDisplayTpl('dashboard-zone-three.tpl');
     }
 
     /**
@@ -65,18 +60,6 @@ trait UseDashboardZoneThree
      */
     protected function loadMediaForDashboardColumnThree(): void
     {
-        if (Tools::getValue('controller') === 'AdminDashboard') {
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error-templating.js');
-            $this->context->controller->addCss($this->getPathUri() . 'views/css/cdc-error-templating.css');
-
-            $cdcJsFile = getenv('MBO_CDC_URL');
-            if (false === $cdcJsFile || !is_string($cdcJsFile) || empty($cdcJsFile)) {
-                $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error.js');
-
-                return;
-            }
-
-            $this->context->controller->addJs($cdcJsFile);
-        }
+        $this->loadCdcMediaFilesForControllers(['AdminDashboard']);
     }
 }

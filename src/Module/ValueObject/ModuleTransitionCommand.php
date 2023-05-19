@@ -63,7 +63,7 @@ class ModuleTransitionCommand
     ];
 
     /**
-     * @var int
+     * @var string
      */
     private $command;
 
@@ -84,7 +84,7 @@ class ModuleTransitionCommand
     /**
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->command;
     }

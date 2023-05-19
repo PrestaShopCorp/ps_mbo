@@ -22,8 +22,10 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
+use PrestaShop\Module\Mbo\Addons\Toolbar;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use Tools;
 
 trait UseActionGetAdminToolbarButtons
@@ -48,7 +50,13 @@ trait UseActionGetAdminToolbarButtons
             return $extraToolbarButtons;
         }
 
-        $toolbarButtons = $this->get('mbo.addons.toolbar')->getConnectionToolbar();
+        try {
+            /** @var Toolbar $addonsToolbar */
+            $addonsToolbar = $this->get('mbo.addons.toolbar');
+            $toolbarButtons = $addonsToolbar->getConnectionToolbar();
+        } catch (Exception $e) {
+            $toolbarButtons = [];
+        }
 
         foreach ($toolbarButtons as $toolbarButtonLabel => $toolbarButtonDescription) {
             $actionBarButton = new ActionsBarButton(
@@ -56,7 +64,11 @@ trait UseActionGetAdminToolbarButtons
                 $toolbarButtonDescription,
                 $toolbarButtonDescription['desc']
             );
-            $extraToolbarButtons->add($actionBarButton);
+            try {
+                $extraToolbarButtons->add($actionBarButton);
+            } catch (TypeException $e) {
+                // Do nothing, just not adding this element
+            }
         }
 
         return $extraToolbarButtons;

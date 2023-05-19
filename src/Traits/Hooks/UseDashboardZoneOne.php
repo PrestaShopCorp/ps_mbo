@@ -23,9 +23,12 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Db;
 use Exception;
+use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
 
 trait UseDashboardZoneOne
 {
+    use HaveCdcComponent;
+
     /**
      * Display "Advices and updates" block on the left column of the dashboard
      *
@@ -35,14 +38,7 @@ trait UseDashboardZoneOne
      */
     public function hookDashboardZoneOne(array $params)
     {
-        $this->context->smarty->assign(
-            [
-                'shop_context' => json_encode($this->get('mbo.cdc.context_builder')->getViewContext()),
-                'cdcErrorUrl' => $this->get('router')->generate('admin_mbo_module_cdc_error'),
-            ]
-        );
-
-        return $this->display($this->name, 'dashboard-zone-one.tpl');
+        return $this->smartyDisplayTpl('dashboard-zone-one.tpl');
     }
 
     /**
@@ -66,21 +62,13 @@ trait UseDashboardZoneOne
      */
     protected function loadMediaDashboardZoneOne(): void
     {
-        if (\Tools::getValue('controller') === 'AdminDashboard') {
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error-templating.js');
-            $this->context->controller->addCss($this->getPathUri() . 'views/css/cdc-error-templating.css');
-
-            $cdcJsFile = getenv('MBO_CDC_URL');
-            if (false === $cdcJsFile || !is_string($cdcJsFile) || empty($cdcJsFile)) {
-                $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error.js');
-
-                return;
-            }
-
-            $this->context->controller->addJs($cdcJsFile);
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/addons-connector.js?v=' . $this->version);
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/addons-connect.css');
-        }
+        $additionalJs = [
+            $this->getPathUri() . 'views/js/addons-connector.js?v=' . $this->version,
+        ];
+        $additionalCss = [
+            $this->getPathUri() . 'views/css/addons-connect.css',
+        ];
+        $this->loadCdcMediaFilesForControllers(['AdminDashboard'], $additionalJs, $additionalCss);
     }
 
     public function useDashboardZoneOneExtraOperations()

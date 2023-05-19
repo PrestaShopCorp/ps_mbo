@@ -127,7 +127,6 @@ class Toolbar
         return [
             'href' => '#',
             'desc' => $this->translator->trans('Connect to Addons marketplace', [], 'Modules.Mbo.Addons', $this->translator->getLocale()),
-            'icon' => 'vpn_key',
             'help' => $this->translator->trans('Connect to Addons marketplace', [], 'Modules.Mbo.Addons', $this->translator->getLocale()),
         ];
     }
@@ -141,7 +140,6 @@ class Toolbar
         return [
             'href' => '#',
             'desc' => $this->addonsDataProvider->getAuthenticatedUserEmail(),
-            'icon' => 'exit_to_app',
             'help' => $this->translator->trans('Synchronized with Addons marketplace!', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
         ];
     }
@@ -155,7 +153,6 @@ class Toolbar
         return [
             'href' => '#',
             'desc' => $this->translator->trans('Connected', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
-            'icon' => 'check_circle',
             'help' => $this->translator->trans('Connected as', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail()
         ];
     }
