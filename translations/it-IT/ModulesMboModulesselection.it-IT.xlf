@@ -4,7 +4,7 @@
     <body>
       <trans-unit id="8e750875217fe72ff73cda7e57e4d61f">
         <source>Module selection</source>
-        <target state="translated">Selezione modulo</target>
+        <target state="final">Selezione modulo</target>
         <note>Line: 83</note>
       </trans-unit>
     </body>

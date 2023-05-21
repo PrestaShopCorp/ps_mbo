@@ -4,7 +4,7 @@
     <body>
       <trans-unit id="4b33fbf5ea2c4ced9800228574cfcc50">
         <source>Recommended Modules and Services</source>
-        <target state="translated">Modules et services recommandés</target>
+        <target state="final">Modules et services recommandés</target>
         <note>Line: 194</note>
       </trans-unit>
     </body>
