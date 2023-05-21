@@ -4,7 +4,7 @@
     <body>
       <trans-unit id="ab9f0d838086d8699f9bc0f6b6bf0d59">
         <source>https://accounts.distribution.prestashop.net/en/sign-up</source>
-        <target state="needs-translation">https://accounts.distribution.prestashop.net/en/sign-up</target>
+        <target state="final">https://accounts.distribution.prestashop.net/en/sign-up</target>
         <note>Line: 139</note>
       </trans-unit>
       <trans-unit id="b14fa168a9724da44a82a09d80a98a7c">
