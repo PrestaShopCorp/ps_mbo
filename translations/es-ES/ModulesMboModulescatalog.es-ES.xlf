@@ -2,156 +2,223 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="modules/ps_mbo/src/Addons/Toolbar.php" source-language="en" target-language="es-ES" datatype="plaintext">
     <body>
-      <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df">
+      <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df" approved="yes">
         <source>Synchronized with Addons marketplace!</source>
-        <target state="translated">¡Sincronizado con Addons marketplace!</target>
+        <target state="final">¡Sincronizado con Addons marketplace!</target>
         <note>Line: 141</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="en" target-language="es-ES" datatype="plaintext">
     <body>
-      <trans-unit id="cff7b4047c79f112e869481322d2924e">
+      <trans-unit id="cff7b4047c79f112e869481322d2924e" approved="yes">
         <source>Module %module% successfully upgraded.</source>
-        <target state="translated">Módulo %module% actualizado con éxito.</target>
+        <target state="final">Módulo %module% actualizado con éxito.</target>
         <note>Line: 172</note>
       </trans-unit>
-      <trans-unit id="22d6960d922158c548d123998be8dd91">
+      <trans-unit id="22d6960d922158c548d123998be8dd91" approved="yes">
         <source>Upgrade of module %module% failed. %error%</source>
-        <target state="translated">La actualización del módulo %module% ha fallado. %error%.</target>
+        <target state="final">La actualización del módulo %module% ha fallado. %error%</target>
         <note>Line: 208</note>
       </trans-unit>
-      <trans-unit id="f8c9c7b6af2a8d50bc948bcf966c1d4b">
+      <trans-unit id="f8c9c7b6af2a8d50bc948bcf966c1d4b" approved="yes">
         <source>Module %module% is already up to date</source>
-        <target state="translated">El módulo %module% ya está actualizado</target>
+        <target state="final">El módulo %module% ya está actualizado</target>
         <note>Line: 195</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/ps_mbo/src/Controller/Admin/ModuleCatalogController.php" source-language="en" target-language="es-ES" datatype="plaintext">
     <body>
-      <trans-unit id="675e31b94580e2642405e2f8586d112e">
+      <trans-unit id="675e31b94580e2642405e2f8586d112e" approved="yes">
         <source>Marketplace</source>
-        <target state="needs-translation">Marketplace</target>
+        <target state="final">Marketplace</target>
         <note>Line: 52</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/ps_mbo/src/Traits/Hooks/UseDisplayModuleConfigureExtraButtons.php" source-language="en" target-language="es-ES" datatype="plaintext">
     <body>
-      <trans-unit id="eb1b4bb3667dd670210c7822badc2f1d">
+      <trans-unit id="eb1b4bb3667dd670210c7822badc2f1d" approved="yes">
         <source>Check for updates</source>
-        <target state="translated">Buscar actualizaciones</target>
+        <target state="final">Buscar actualizaciones</target>
         <note>Line: 38</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/action_menu.html.twig" source-language="en" target-language="es-ES" datatype="plaintext">
     <body>
-      <trans-unit id="abfc3a65538a6ec86502b2b498b6b4a6">
+      <trans-unit id="abfc3a65538a6ec86502b2b498b6b4a6" approved="yes">
         <source>Discover</source>
-        <target state="translated">Descubrir</target>
+        <target state="final">Descubrir</target>
         <note>Line: 31</note>
       </trans-unit>
-      <trans-unit id="90406afefae30826692e7f7480f7467c">
+      <trans-unit id="90406afefae30826692e7f7480f7467c" approved="yes">
         <source>Toggle Dropdown</source>
-        <target state="translated">Interruptor desplegable</target>
+        <target state="final">Interruptor desplegable</target>
         <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig" source-language="en" target-language="es-ES" datatype="plaintext">
     <body>
-      <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
+      <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548" approved="yes">
         <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
-        <target state="translated">Vincula tu tienda a tu cuenta de Addons para recibir automáticamente actualizaciones importantes de los módulos que hayas adquirido. ¿Aún no tiene una cuenta?</target>
+        <target state="final">Vincula tu tienda a tu cuenta de Addons para recibir automáticamente actualizaciones importantes de los módulos que hayas adquirido. ¿Aún no tiene una cuenta?</target>
         <note>Line: 42</note>
       </trans-unit>
-      <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
+      <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923" approved="yes">
         <source>Sign up now</source>
-        <target state="translated">Regístrate ahora</target>
+        <target state="final">Regístrate ahora</target>
         <note>Line: 43</note>
       </trans-unit>
-      <trans-unit id="43a3d8f3d278fff326a75c8137b62352">
+      <trans-unit id="43a3d8f3d278fff326a75c8137b62352" approved="yes">
         <source>If you created your account using Google, please follow the forgotten password procedure of Addons Marketplace to create your password : </source>
-        <target state="translated">Si has creado tu cuenta utilizando Google, sigue el procedimiento de contraseña olvidada de Addons Marketplace para crear tu contraseña : </target>
+        <target state="final">Si has creado tu cuenta utilizando Google, sigue el procedimiento de contraseña olvidada de Addons Marketplace para crear tu contraseña : </target>
         <note>Line: 46</note>
       </trans-unit>
-      <trans-unit id="32fe59513f5bbdd353b4527cc6af55ce">
+      <trans-unit id="32fe59513f5bbdd353b4527cc6af55ce" approved="yes">
         <source>Reset your password</source>
-        <target state="translated">Restablecer contraseña</target>
+        <target state="final">Restablecer contraseña</target>
         <note>Line: 47</note>
       </trans-unit>
-      <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
+      <trans-unit id="6be2c07aa891bbaafc828e43e336abb4" approved="yes">
         <source>Yes, log out</source>
-        <target state="translated">Sí, quiero salir</target>
+        <target state="final">Sí, quiero salir</target>
         <note>Line: 103</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_import.html.twig" source-language="en" target-language="es-ES" datatype="plaintext">
     <body>
-      <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004">
+      <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004" approved="yes">
         <source>Upload a module</source>
-        <target state="translated">Subir un módulo</target>
+        <target state="final">Subir un módulo</target>
         <note>Line: 24</note>
       </trans-unit>
-      <trans-unit id="7c8701c300f85e9799c74e83f4adea64">
+      <trans-unit id="7c8701c300f85e9799c74e83f4adea64" approved="yes">
         <source>Drop your module archive here or [1]select file[/1]</source>
-        <target state="translated">Arrastra el archivo del módulo aquí o [1]selecciona el archivo[/1]</target>
+        <target state="final">Arrastra el archivo del módulo aquí o [1]selecciona el archivo[/1]</target>
         <note>Line: 45</note>
       </trans-unit>
-      <trans-unit id="2b11276d6a162d7c1b9894abe5febfdc">
+      <trans-unit id="2b11276d6a162d7c1b9894abe5febfdc" approved="yes">
         <source>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</source>
-        <target state="translated">Por favor, sube solamente un archivo al mismo tiempo, en formato .zip o tarball (.tar, .tar.gz or .tgz).</target>
+        <target state="final">Por favor, sube solamente un archivo al mismo tiempo, en formato .zip o tarball (.tar, .tar.gz or .tgz).</target>
         <note>Line: 48</note>
       </trans-unit>
-      <trans-unit id="e781acd6cefcfbbfce5aa2804d59a4c5">
+      <trans-unit id="e781acd6cefcfbbfce5aa2804d59a4c5" approved="yes">
         <source>Your module will be installed right after that.</source>
-        <target state="translated">El módulo será instalado a continuación.</target>
+        <target state="final">El módulo será instalado a continuación.</target>
         <note>Line: 49</note>
       </trans-unit>
-      <trans-unit id="c3dbf8925ec4c77ef5317e1e27317b70">
+      <trans-unit id="c3dbf8925ec4c77ef5317e1e27317b70" approved="yes">
         <source>Installing module...</source>
-        <target state="translated">Instalando módulo...</target>
+        <target state="final">Instalando módulo...</target>
         <note>Line: 55</note>
       </trans-unit>
-      <trans-unit id="a26f56145fea2d3af35bf0d6ac83c28a">
+      <trans-unit id="a26f56145fea2d3af35bf0d6ac83c28a" approved="yes">
         <source>It will close as soon as the module is installed. It won't be long!</source>
-        <target state="translated">Se cerrará en cuanto se instale el módulo. ¡No falta mucho!</target>
+        <target state="final">Se cerrará en cuanto se instale el módulo. ¡No falta mucho!</target>
         <note>Line: 57</note>
       </trans-unit>
-      <trans-unit id="f48a5ae14fa2b0c85442d1199a08b3b4">
+      <trans-unit id="f48a5ae14fa2b0c85442d1199a08b3b4" approved="yes">
         <source>Module installed!</source>
-        <target state="translated">¡Módulo instalado!</target>
+        <target state="final">¡Módulo instalado!</target>
         <note>Line: 62</note>
       </trans-unit>
-      <trans-unit id="824e2fcb263ee94399a6a261ee1ec7c1">
+      <trans-unit id="824e2fcb263ee94399a6a261ee1ec7c1" approved="yes">
         <source>Oops... Upload failed.</source>
-        <target state="translated">Uy... La subida ha fallado.</target>
+        <target state="final">Uy... La subida ha fallado.</target>
         <note>Line: 68</note>
       </trans-unit>
-      <trans-unit id="fa692d85f08c92a585ed8b3fed7f1d52">
+      <trans-unit id="fa692d85f08c92a585ed8b3fed7f1d52" approved="yes">
         <source>What happened?</source>
-        <target state="translated">¿Que ocurrió?</target>
+        <target state="final">¿Que ocurrió?</target>
         <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_additional_description.html.twig" source-language="en" target-language="es-ES" datatype="plaintext">
     <body>
-      <trans-unit id="decbe415d8accca7c2c16d48a79ee934">
+      <trans-unit id="decbe415d8accca7c2c16d48a79ee934" approved="yes">
         <source>Read More</source>
-        <target state="translated">Leer más</target>
+        <target state="final">Leer más</target>
         <note>Line: 24</note>
       </trans-unit>
     </body>
   </file>
   <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="en" target-language="es-ES" datatype="plaintext">
     <body>
-      <trans-unit id="10dc2676c1cfa668956517a07c6405bf">
+      <trans-unit id="10dc2676c1cfa668956517a07c6405bf" approved="yes">
         <source>Discover the best-selling modules of this category in the %link% page.</source>
-        <target state="translated">Descubre los módulos más vendidos de esta categoría en la página %link%.</target>
+        <target state="final">Descubre los módulos más vendidos de esta categoría en la página %link%.</target>
+        <note>Line: 19</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_import.html.twig" source-language="en" target-language="es-ES" datatype="plaintext">
+    <body>
+      <trans-unit id="76ab1ee2aacc1b9bbc0a70bf6cca7004" approved="yes">
+        <source>Upload a module</source>
+        <target state="final">Subir un módulo</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="7c8701c300f85e9799c74e83f4adea64" approved="yes">
+        <source>Drop your module archive here or [1]select file[/1]</source>
+        <target state="final">Arrastra el archivo del módulo aquí o [1]selecciona el archivo[/1]</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="2b11276d6a162d7c1b9894abe5febfdc" approved="yes">
+        <source>Please upload one file at a time, .zip or tarball format (.tar, .tar.gz or .tgz).</source>
+        <target state="final">Por favor, sube solamente un archivo al mismo tiempo, en formato .zip o tarball (.tar, .tar.gz or .tgz).</target>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="e781acd6cefcfbbfce5aa2804d59a4c5" approved="yes">
+        <source>Your module will be installed right after that.</source>
+        <target state="final">El módulo será instalado a continuación.</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="c3dbf8925ec4c77ef5317e1e27317b70" approved="yes">
+        <source>Installing module...</source>
+        <target state="final">Instalando módulo...</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="a26f56145fea2d3af35bf0d6ac83c28a" approved="yes">
+        <source>It will close as soon as the module is installed. It won't be long!</source>
+        <target state="final">Se cerrará en cuanto se instale el módulo. ¡No falta mucho!</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="f48a5ae14fa2b0c85442d1199a08b3b4" approved="yes">
+        <source>Module installed!</source>
+        <target state="final">¡Módulo instalado!</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="824e2fcb263ee94399a6a261ee1ec7c1" approved="yes">
+        <source>Oops... Upload failed.</source>
+        <target state="final">Uy... La subida ha fallado.</target>
+        <note>Line: 68</note>
+      </trans-unit>
+      <trans-unit id="fa692d85f08c92a585ed8b3fed7f1d52" approved="yes">
+        <source>What happened?</source>
+        <target state="final">¿Que ocurrió?</target>
+        <note>Line: 69</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_additional_description.html.twig" source-language="en" target-language="es-ES" datatype="plaintext">
+    <body>
+      <trans-unit id="decbe415d8accca7c2c16d48a79ee934" approved="yes">
+        <source>Read More</source>
+        <target state="final">Leer más</target>
+        <note>Line: 24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig" source-language="en" target-language="es-ES" datatype="plaintext">
+    <body>
+      <trans-unit id="10dc2676c1cfa668956517a07c6405bf" approved="yes">
+        <source>Discover the best-selling modules of this category in the %link% page.</source>
+        <target state="final">Descubre los módulos más vendidos de esta categoría en la página %link%.</target>
         <note>Line: 19</note>
       </trans-unit>
     </body>
