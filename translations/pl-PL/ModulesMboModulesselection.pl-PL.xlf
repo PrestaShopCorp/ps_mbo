@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Controller/Admin/ModuleSelectionController.php" source-language="pl-PL" target-language="pl-PL" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Controller/Admin/ModuleSelectionController.php" source-language="en" target-language="pl" datatype="plaintext">
     <body>
-      <trans-unit id="70fd3879bc512e7d2048692d397fc3a0">
+      <trans-unit id="70fd3879bc512e7d2048692d397fc3a0" approved="yes">
         <source>Modules in the spotlight</source>
-        <target>Moduły w centrum uwagi</target>
+        <target state="final">Moduły w centrum uwagi</target>
         <note>Line: 67</note>
       </trans-unit>
     </body>
