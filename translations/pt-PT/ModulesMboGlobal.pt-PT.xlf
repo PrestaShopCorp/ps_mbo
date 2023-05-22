@@ -19,17 +19,17 @@
       <trans-unit id="3b89e163ae0b446bd02e13de8dcf70d3" approved="yes">
         <source><![CDATA[For even more security on your website forms, consult our Security & Access modules category on the]]></source>
         <target state="final"><![CDATA[Para ainda maior segurança nos formulários do seu sítio, consulte a nossa categoria de módulos de Segurança & Acesso no]]></target>
-        <note>Line: 129</note>
+        <note>Line: 124</note>
       </trans-unit>
       <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6" approved="yes">
         <source>PrestaShop Addons Marketplace</source>
         <target state="final">Mercado de extensões do Prestashop</target>
-        <note>Line: 145</note>
+        <note>Line: 140</note>
       </trans-unit>
       <trans-unit id="71f716ae5452ef886e40d36f14afed87" approved="yes">
         <source>Discover more modules to improve your shop on</source>
         <target state="final">Descubra mais módulos para melhorar a sua loja em</target>
-        <note>Line: 143</note>
+        <note>Line: 138</note>
       </trans-unit>
     </body>
   </file>
