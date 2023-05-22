@@ -4,7 +4,7 @@
     <body>
       <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea" approved="yes">
         <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
-        <target state="translated">PrestaShop não conseguiu autenticar-se nos Addons. Por favor verifique as suas credenciais e se está ligado à internet.</target>
+        <target state="final">PrestaShop não conseguiu autenticar-se nos Addons. Por favor verifique as suas credenciais e se está ligado à internet.</target>
         <note>Line: 126</note>
       </trans-unit>
     </body>
@@ -13,7 +13,7 @@
     <body>
       <trans-unit id="8a5560b05facacdbc10e870b1152e41b" approved="yes">
         <source>It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.</source>
-        <target state="translated"><![CDATA[Parece que nós temos problemas em ligar aos «Extars». Por favor, atualzie a página ou verifique a configuração da sua <i>firewall</i>.]]>
+        <target state="final"><![CDATA[Parece que nós temos problemas em ligar aos «Extars». Por favor, atualzie a página ou verifique a configuração da sua <i>firewall</i>.]]>
         <note>Line: 32</note>
       </trans-unit>
     </body>
