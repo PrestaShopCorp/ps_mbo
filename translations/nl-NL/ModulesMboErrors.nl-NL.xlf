@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="en" target-language="nl" datatype="plaintext">
     <body>
-      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
+      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea" approved="yes">
         <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
-        <target>Prestashop is er niet in geslaagd om u aan te melden bij Addons, check uw gegevens en uw internet connectie.</target>
+        <target state="final">Prestashop is er niet in geslaagd om u aan te melden bij Addons, check uw gegevens en uw internet connectie.</target>
         <note>Line: 105</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/error.html.twig" source-language="nl-NL" target-language="nl-NL" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/error.html.twig" source-language="en" target-language="nl" datatype="plaintext">
     <body>
-      <trans-unit id="8a5560b05facacdbc10e870b1152e41b">
+      <trans-unit id="8a5560b05facacdbc10e870b1152e41b" approved="yes">
         <source>It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.</source>
-        <target>Het lijkt erop dat we problemen hebben om verbinding te maken met de Addons store. Vernieuw de pagina of controleer uw firewall instellingen van uw hosting pakket.</target>
+        <target state="final">Het lijkt erop dat we problemen hebben om verbinding te maken met de Addons store. Vernieuw de pagina of controleer uw firewall instellingen van uw hosting pakket.</target>
         <note>Line: 32</note>
       </trans-unit>
     </body>

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="de-DE" target-language="de-DE" datatype="plaintext">
+  <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="en" target-language="de" datatype="plaintext">
     <body>
-      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
+      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea" approved="yes">
         <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
-        <target>PrestaShop konnte sich nicht bei Addons anmelden. Überprüfen Sie bitte Ihre Zugangsdaten und Ihre Internetverbindung.</target>
+        <target state="final">PrestaShop konnte sich nicht bei Addons anmelden. Überprüfen Sie bitte Ihre Zugangsdaten und Ihre Internetverbindung.</target>
         <note>Line: 105</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_mbo/views/templates/admin/error.html.twig" source-language="de-DE" target-language="de-DE" datatype="plaintext">
+  <file original="modules/ps_mbo/views/templates/admin/error.html.twig" source-language="en" target-language="de" datatype="plaintext">
     <body>
-      <trans-unit id="8a5560b05facacdbc10e870b1152e41b">
+      <trans-unit id="8a5560b05facacdbc10e870b1152e41b" approved="yes">
         <source>It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.</source>
-        <target>Es sieht so aus, als hätten wir Probleme eine Verbindung zu den Addons herzustellen. Bitte aktualisieren Sie die Seite oder überprüfen Sie Ihre Firewall-Konfiguration.</target>
+        <target state="final">Es sieht so aus, als hätten wir Probleme eine Verbindung zu den Addons herzustellen. Bitte aktualisieren Sie die Seite oder überprüfen Sie Ihre Firewall-Konfiguration.</target>
         <note>Line: 32</note>
       </trans-unit>
     </body>
