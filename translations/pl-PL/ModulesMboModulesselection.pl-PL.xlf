@@ -2,9 +2,9 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="modules/ps_mbo/src/Controller/Admin/ModuleSelectionController.php" source-language="en" target-language="pl" datatype="plaintext">
     <body>
-      <trans-unit id="8e750875217fe72ff73cda7e57e4d61f">
+      <trans-unit id="8e750875217fe72ff73cda7e57e4d61f" approved="yes">
         <source>Module selection</source>
-        <target state="translated">Wybór modułu</target>
+        <target state="final">Wybór modułu</target>
         <note>Line: 83</note>
       </trans-unit>
     </body>
