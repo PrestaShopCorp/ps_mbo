@@ -2,7 +2,7 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="modules/ps_mbo/src/Controller/Admin/AddonsController.php" source-language="en" target-language="pt-PT" datatype="plaintext">
     <body>
-      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
+      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea" approved="yes">
         <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
         <target state="translated">O PrestaShop não conseguiu autenticar-se nos Addons. Por favor verifique as suas credenciais e se está ligado à internet.</target>
         <note>Line: 105</note>
@@ -11,9 +11,9 @@
   </file>
   <file original="modules/ps_mbo/views/templates/admin/error.html.twig" source-language="en" target-language="pt-PT" datatype="plaintext">
     <body>
-      <trans-unit id="8a5560b05facacdbc10e870b1152e41b">
+      <trans-unit id="8a5560b05facacdbc10e870b1152e41b" approved="yes">
         <source>It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.</source>
-        <target state="translated">Parece que nós temos problemas em ligar aos «Extars». Por favor, atualzie a página ou verifique a configuração da sua &lt;i&gt;firewall&lt;/i&gt;.</target>
+        <target state="translated"><![CDATA[Parece que nós temos problemas em ligar aos «Extars». Por favor, atualzie a página ou verifique a configuração da sua <i>firewall</i>.]]>
         <note>Line: 32</note>
       </trans-unit>
     </body>
