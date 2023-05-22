@@ -4,12 +4,12 @@
     <body>
       <trans-unit id="ab9f0d838086d8699f9bc0f6b6bf0d59" approved="yes">
         <source>https://accounts.distribution.prestashop.net/en/sign-up</source>
-        <target state="translated">https://accounts.distribution.prestashop.net/en/sign-up</target>
+        <target state="final">https://accounts.distribution.prestashop.net/en/sign-up</target>
         <note>Line: 123</note>
       </trans-unit>
       <trans-unit id="b14fa168a9724da44a82a09d80a98a7c" approved="yes">
         <source>https://auth.prestashop.com/en/password/request</source>
-        <target state="translated">https://auth.prestashop.com/ru/пароль/запрос</target>
+        <target state="final">https://auth.prestashop.com/ru/пароль/запрос</target>
         <note>Line: 130</note>
       </trans-unit>
     </body>
