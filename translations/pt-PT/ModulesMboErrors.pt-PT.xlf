@@ -13,7 +13,7 @@
     <body>
       <trans-unit id="8a5560b05facacdbc10e870b1152e41b" approved="yes">
         <source>It looks like we have trouble connecting to Addons. Please refresh the page or check your firewall configuration.</source>
-        <target state="final">Parece que nós temos problemas em ligar aos «Extars». Por favor, atualzie a página ou verifique a configuração da sua &lt;i&gt;firewall&lt;/i&gt;.</target>
+        <target state="translated"><![CDATA[Parece que nós temos problemas em ligar aos «Extars». Por favor, atualzie a página ou verifique a configuração da sua <i>firewall</i>.]]>
         <note>Line: 32</note>
       </trans-unit>
     </body>
