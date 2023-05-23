@@ -24,9 +24,13 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 use Cache;
 use Configuration;
 use Context;
+use Language;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
+use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Tab;
 use Tools;
 
 trait UseActionDispatcherBefore
@@ -35,6 +39,7 @@ trait UseActionDispatcherBefore
      * Hook actionDispatcherBefore.
      *
      * @throws EmployeeException
+     * @throws CoreException
      */
     public function hookActionDispatcherBefore(array $params): void
     {
@@ -76,10 +81,15 @@ trait UseActionDispatcherBefore
 
     private function ensureApiConfigIsApplied(): void
     {
-        $cacheProvider = $this->get('doctrine.cache.provider');
+        try {
+            /** @var \Symfony\Component\Cache\DoctrineProvider $cacheProvider */
+            $cacheProvider = $this->get('doctrine.cache.provider');
+        } catch (\Exception $e) {
+            $cacheProvider = false;
+        }
         $cacheKey = 'mbo_last_ps_version_api_config_check';
 
-        if ($cacheProvider->contains($cacheKey)) {
+        if ($cacheProvider && $cacheProvider->contains($cacheKey)) {
             $lastCheck = $cacheProvider->fetch($cacheKey);
 
             $timeSinceLastCheck = (strtotime('now') - strtotime($lastCheck)) / (60 * 60);
@@ -95,12 +105,20 @@ trait UseActionDispatcherBefore
 
         // Apply the config for the new PS version
         $command = new VersionChangeApplyConfigCommand(_PS_VERSION_, $this->version);
-        $configCollection = $this->get('mbo.distribution.api_version_change_config_apply_handler')->handle($command);
+        try {
+            /** @var VersionChangeApplyConfigCommandHandler $configApplyHandler */
+            $configApplyHandler = $this->get('mbo.distribution.api_version_change_config_apply_handler');
+        } catch (\Exception $e) {
+            return;
+        }
+        $configApplyHandler->handle($command);
 
         // Update the PS_MBO_LAST_PS_VERSION_API_CONFIG
         Configuration::updateValue('PS_MBO_LAST_PS_VERSION_API_CONFIG', _PS_VERSION_);
 
-        $cacheProvider->save($cacheKey, (new \DateTime())->format('Y-m-d H:i:s'), 0);
+        if ($cacheProvider) {
+            $cacheProvider->save($cacheKey, (new \DateTime())->format('Y-m-d H:i:s'), 0);
+        }
     }
 
     /**
@@ -111,6 +129,7 @@ trait UseActionDispatcherBefore
      *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException
      * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
+     * @throws \Exception
      */
     private function ensureApiUserExistAndIsLogged($controllerName, array $params): void
     {
@@ -133,5 +152,38 @@ trait UseActionDispatcherBefore
             $this->context->cookie = $cookie;
             Context::getContext()->cookie = $cookie;
         }
+    }
+
+    private function translateTabsIfNeeded(): void
+    {
+        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
+        if (!file_exists($lockFile)) {
+            return;
+        }
+
+        $moduleTabs = Tab::getCollectionFromModule($this->name);
+        $languages = Language::getLanguages(false);
+
+        /**
+         * @var Tab $tab
+         */
+        foreach ($moduleTabs as $tab) {
+            if (!empty($tab->wording) && !empty($tab->wording_domain)) {
+                $tabNameByLangId = [];
+                foreach ($languages as $language) {
+                    $tabNameByLangId[$language['id_lang']] = $this->trans(
+                        $tab->wording,
+                        [],
+                        $tab->wording_domain,
+                        $language['locale']
+                    );
+                }
+
+                $tab->name = $tabNameByLangId;
+                $tab->save();
+            }
+        }
+
+        @unlink($lockFile);
     }
 }

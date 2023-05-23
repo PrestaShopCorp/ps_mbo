@@ -33,7 +33,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AddonsController extends FrameworkBundleAdminController
 {
@@ -218,7 +217,7 @@ class AddonsController extends FrameworkBundleAdminController
         return new JsonResponse($upgradeResponse);
     }
 
-    private function createCookieUser(Response $response, \stdClass $json, array $params, int $expiresAt = -1): Response
+    private function createCookieUser(JsonResponse $response, \stdClass $json, array $params, int $expiresAt = -1): JsonResponse
     {
         $encryptor = $this->get('mbo.addons.user.credentials_encryptor');
 
@@ -231,17 +230,6 @@ class AddonsController extends FrameworkBundleAdminController
         $response->headers->setCookie(
             new Cookie('is_contributor_v2', (string) $json->is_contributor, $expiresAt, null, null, null, false)
         );
-
-        return $response;
-    }
-
-    private function createSessionUser(Response $response, SessionInterface $session, \stdClass $json, array $params): Response
-    {
-        $encryptor = $this->get('mbo.addons.user.credentials_encryptor');
-
-        $session->set('username_addons_v2', $encryptor->encrypt($params['username']));
-        $session->set('password_addons_v2', $encryptor->encrypt($params['password']));
-        $session->set('is_contributor_v2', (string) $json->is_contributor);
 
         return $response;
     }

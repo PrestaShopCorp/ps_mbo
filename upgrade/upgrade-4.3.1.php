@@ -29,7 +29,7 @@ function upgrade_module_4_3_1(Module $module): bool
     $module->updateTabs();
 
     // The MBO hook 'dashboardZoneTwo' must be at the max position
-    $module->putMboDashboardZoneTwoAtFirstPosition();
+    $module->putMboDashboardZoneTwoAtLastPosition();
 
     return true;
 }

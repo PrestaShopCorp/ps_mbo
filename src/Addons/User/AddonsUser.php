@@ -78,13 +78,13 @@ class AddonsUser implements UserInterface
         $accountsToken = $this->getFromSession('accounts_token');
 
         if (null !== $accountsToken) {
-            return ['accounts_token' => $accountsToken];
+            return ['accounts_token' => (string) $accountsToken];
         }
 
         // accounts
         $accountsToken = $this->accountsDataProvider->getAccountsToken();
         if (!empty($accountsToken)) {
-            return ['accounts_token' => $accountsToken];
+            return ['accounts_token' => (string) $accountsToken];
         }
 
         return $encrypted ?
@@ -203,7 +203,6 @@ class AddonsUser implements UserInterface
         return $this->getFromSession('username_addons_v2')
             && $this->getFromSession('password_addons_v2');
     }
-
 
     /**
      * {@inheritdoc}

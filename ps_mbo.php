@@ -53,7 +53,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '4.4.1';
+    public const VERSION = '4.4.2';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminPsMboModule',
@@ -104,7 +104,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.4.1';
+        $this->version = '4.4.2';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -213,6 +213,9 @@ class ps_mbo extends Module
      */
     public function enable($force_all = false): bool
     {
+        if (self::checkModuleStatus()) {
+            return true;
+        }
         // Store previous context
         $previousContextType = Shop::getContext();
         $previousContextShopId = Shop::getContextShopID();
@@ -442,38 +445,5 @@ class ps_mbo extends Module
             $f = fopen($lockFile, 'w+');
             fclose($f);
         }
-    }
-
-    private function translateTabsIfNeeded(): void
-    {
-        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
-        if (!file_exists($lockFile)) {
-            return;
-        }
-
-        $moduleTabs = Tab::getCollectionFromModule($this->name);
-        $languages = Language::getLanguages(false);
-
-        /**
-         * @var Tab $tab
-         */
-        foreach ($moduleTabs as $tab) {
-            if (!empty($tab->wording) && !empty($tab->wording_domain)) {
-                $tabNameByLangId = [];
-                foreach ($languages as $language) {
-                    $tabNameByLangId[$language['id_lang']] = $this->trans(
-                        $tab->wording,
-                        [],
-                        $tab->wording_domain,
-                        $language['locale']
-                    );
-                }
-
-                $tab->name = $tabNameByLangId;
-                $tab->save();
-            }
-        }
-
-        @unlink($lockFile);
     }
 }
