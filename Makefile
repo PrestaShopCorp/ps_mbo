@@ -6,18 +6,18 @@ help:
 
 # install                   - install PHP container et install composer dependencies with dev dependencies
 install:
-	docker compose -f $(DOCKERFILE) run --rm php sh -c "composer install"
-
-# create-shop							 - create a new shop
-docker-up:
-	cd docker && docker-compose up -d
-
-docker-down:
-	cd docker && docker-compose down -v
+	docker-compose -f $(DOCKERFILE) run --rm php sh -c "composer install"
 
 # install-prod              - install PHP container et install composer dependencies without dev dependencies
 install-prod:
 	docker compose -f $(DOCKERFILE) run --rm php sh -c "composer install --no-dev -a"
+
+# create-shop							 - create a new shop
+docker-up:
+	docker-compose -f $(DOCKERFILE) up -d
+
+docker-down:
+	docker-compose -f $(DOCKERFILE) down -v
 
 # build-zip                 - Build the zip of the module (will not work on windows)
 build-zip:

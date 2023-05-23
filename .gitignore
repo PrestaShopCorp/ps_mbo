@@ -26,3 +26,6 @@ nb-configuration.xml
 .project
 .settings/
 .externalToolBuilders/
+
+### Generated zip files ###
+ps_mbo.zip

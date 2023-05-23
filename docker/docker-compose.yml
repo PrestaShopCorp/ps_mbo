@@ -25,7 +25,7 @@ services:
       - PS_FOLDER_ADMIN=admin-dev
       - PS_FOLDER_INSTALL=install-dev
       - PS_DEV_MODE=true
-      - PS_DOMAIN=localhost:8686
+      - PS_DOMAIN
       - PS_LANGUAGE=fr
       - PS_COUNTRY=FR
     volumes:
