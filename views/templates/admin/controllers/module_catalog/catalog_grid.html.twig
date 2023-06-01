@@ -28,10 +28,13 @@
   $('body').on(
     'moduleCatalogLoaded',
     function() {
-      var target = document.querySelector('.modules-list')
+      var refCategory = null;
 
-      // Create an observer instance.
-      var observer = new MutationObserver(function(mutations) {
+      $('body').on('click', '.module-category-menu', function (event) {
+        refCategory = $(this).attr('data-category-ref');
+      });
+
+      function applyChangeToUpdateLink() {
           var searchtext = $('.pstaggerAddTagInput').val();
           var nbModules = $('.modules-list').find('.module-item').length;
           var locale = "{{ locale }}";
@@ -43,6 +46,8 @@
           
           var urlParams = 'utm_source=back-office&utm_medium=search-no-result-mbo&utm_campaign=back-office-{{ locale }}&utm_content=download17&compatibility={{ psVersion }}&search_query=' + searchtext;
 
+          if(refCategory) urlParams += "&id_category=" + refCategory
+
           if(locale == "en")
             $('#link-addons-no-result').attr('href', 'https://addons.prestashop.com/en/search?' + urlParams);
           else if(locale == "fr")
@@ -51,13 +56,30 @@
             $('#link-addons-no-result').attr('href', 'https://addons.prestashop.com/es/buscar?' + urlParams);
           else
             $('#link-addons-no-result').attr('href', 'https://addons.prestashop.com/'+ locale +'/search.php?' + urlParams);
-      });
+      };
 
-      // Pass in the target node, as well as the observer options.
-      observer.observe(target, {
-          attributes:    false,
-          childList:     true,
-          characterData: true
+      function observe(selector, callback) {
+        // Call it once to get all the elements already on the page
+        var elements = document.querySelectorAll(selector);
+
+        elements.forEach(element => {
+          console.log(element);
+          var observer = new MutationObserver(() => {
+            callback(element);
+          });
+
+          observer.observe(element, {
+            childList: true,
+            attributes: true,
+            characterData: true,
+            subtree: true,
+          });
+        });
+        
+      }
+
+      observe('.pstaggerWrapper, .module-menu-item', element => {
+          applyChangeToUpdateLink()
       });
     }
   );
