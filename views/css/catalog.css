@@ -53,6 +53,16 @@
   --warning-500: #ffa000;
 }
 
+.mbo-modules-catalog-no-result {
+  display: none;
+  margin: auto;
+  text-align: center;
+}
+
+.mbo-modules-catalog-no-result img {
+  filter: drop-shadow(0px 12px 24px rgba(0, 0, 0, 0.1));
+  padding-left: 75px;
+}
 .mbo-module-grid__item {
   padding: 0px 12px 16px 12px;
   display: flex;
