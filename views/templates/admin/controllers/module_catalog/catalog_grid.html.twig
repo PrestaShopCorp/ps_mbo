@@ -35,7 +35,7 @@
       });
 
       function applyChangeToUpdateLink() {
-          var searchtext = $('.pstaggerAddTagInput').val();
+          var searchtext = encodeURIComponent($('.pstaggerAddTagInput').val());
           var nbModules = $('.modules-list').find('.module-item').length;
           var locale = "{{ locale }}";
 
