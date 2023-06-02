@@ -2,15 +2,15 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="src/Addons/Provider/LinksProvider.php" source-language="en" target-language="fr" datatype="plaintext">
     <body>
-      <trans-unit id="ab9f0d838086d8699f9bc0f6b6bf0d59" approved="yes">
-        <source>https://accounts.distribution.prestashop.net/en/sign-up</source>
-        <target state="final">https://accounts.distribution.prestashop.net/fr/sign-up</target>
-        <note>Line: 123</note>
+      <trans-unit id="85cc355c70aa470ad3f43e155b7e5e4c">
+        <source>https://authv2.prestashop.com/register</source>
+        <target state="needs-translation">https://authv2.prestashop.com/register</target>
+        <note>Line: 122</note>
       </trans-unit>
-      <trans-unit id="b14fa168a9724da44a82a09d80a98a7c" approved="yes">
-        <source>https://auth.prestashop.com/en/password/request</source>
-        <target state="final">https://auth.prestashop.com/fr/mot-de-passe/demande-de-reinitialisation</target>
-        <note>Line: 130</note>
+      <trans-unit id="6ab773a0870bec71712f3fae2641db30">
+        <source>https://authv2.prestashop.com/password/request </source>
+        <target state="needs-translation">https://authv2.prestashop.com/password/request </target>
+        <note>Line: 129</note>
       </trans-unit>
     </body>
   </file>
