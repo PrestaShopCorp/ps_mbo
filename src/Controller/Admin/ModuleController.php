@@ -135,7 +135,7 @@ class ModuleController extends ModuleControllerCore
         array $modules
     ) {
         $formattedContent = [];
-        $formattedContent['selector'] = '.module-catalog-page';
+        $formattedContent['selector'] = '.module-catalog-page-result';
         $formattedContent['content'] = $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/Includes/sorting.html.twig',
             [

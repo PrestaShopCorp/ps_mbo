@@ -52,12 +52,14 @@
       {% include '@PrestaShop/Admin/Module/Includes/modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
       {# Contains menu with Selection/Categories/Popular and Tag Search #}
       {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/Includes/menu_top.html.twig' %}
-      {# Temporary loader until ajax has finished and display the full catalog #}
-      {% include '@PrestaShop/Admin/Module/Includes/grid_loader.html.twig' %}
-      {# Module Categories Grid #}
-      {% if topMenuData.categories is defined %}
-        {% include '@PrestaShop/Admin/Module/Includes/categories_grid.html.twig' with { 'categories' : topMenuData.categories }  %}
-      {% endif %}
+      <div class="module-catalog-page-result">
+        {# Temporary loader until ajax has finished and display the full catalog #}
+        {% include '@PrestaShop/Admin/Module/Includes/grid_loader.html.twig' %}
+        {# Module Categories Grid #}
+        {% if topMenuData.categories is defined %}
+          {% include '@PrestaShop/Admin/Module/Includes/categories_grid.html.twig' with { 'categories' : topMenuData.categories }  %}
+        {% endif %}
+      </div>
     </div>
   </div>
 {% endblock %}
