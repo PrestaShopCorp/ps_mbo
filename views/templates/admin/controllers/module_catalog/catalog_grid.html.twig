@@ -39,10 +39,14 @@
           var nbModules = $('.modules-list').find('.module-item').length;
           var locale = "{{ locale }}";
 
-          if(nbModules > 0)
+          if(nbModules > 0) {
+            $('.module-sorting-menu').show();
             $('.mbo-modules-catalog-no-result').hide();
-          else
+          }
+          else {
+            $('.module-sorting-menu').hide();
             $('.mbo-modules-catalog-no-result').show();
+          }
           
           var urlParams = 'utm_source=back-office&utm_medium=search-no-result-mbo&utm_campaign=back-office-{{ locale }}&utm_content=download17&compatibility={{ psVersion }}&search_query=' + searchtext;
 
@@ -99,7 +103,6 @@
    {% endfor %}
 
   <div class="mbo-modules-catalog-no-result">
-    <img src="{{ asset('../modules/ps_mbo/views/img/no_result.svg') }}">
     <h1>
       {{ 'No partner module matches your search'|trans({}, 'Modules.Mbo.Modulescatalog') }}
     </h1>
@@ -107,5 +110,6 @@
       {{ 'Try different keywords and filters, or'|trans({}, 'Modules.Mbo.Modulescatalog') }}
       <a id="link-addons-no-result" target="_blank">{{ 'search the PrestaShop Marketplace.'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
     </p>
+    <img src="{{ asset('../modules/ps_mbo/views/img/no_result.svg') }}">
   </div>
 </div>
