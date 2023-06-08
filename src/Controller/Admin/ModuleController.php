@@ -135,7 +135,7 @@ class ModuleController extends ModuleControllerCore
         array $modules
     ) {
         $formattedContent = [];
-        $formattedContent['selector'] = '.module-catalog-page';
+        $formattedContent['selector'] = '.module-catalog-page-result';
         $formattedContent['content'] = $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/Includes/sorting.html.twig',
             [
@@ -145,6 +145,10 @@ class ModuleController extends ModuleControllerCore
 
         $errorMessage = $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
 
+        $psVersion = explode('.', _PS_VERSION_);
+        $version = sprintf('%d.%d.%d', (int) $psVersion[0], (int) $psVersion[1], (int) $psVersion[2]);
+        $locale = $this->getContext()->language->iso_code;
+
         $formattedContent['content'] .= $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog_grid.html.twig',
             [
@@ -152,6 +156,8 @@ class ModuleController extends ModuleControllerCore
                 'requireAddonsSearch' => true,
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
                 'errorMessage' => $errorMessage,
+                'psVersion' => $version,
+                'locale' => $locale,
             ]
         )->getContent();
 

@@ -22,10 +22,94 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
+
+ {% block javascripts %}
+  <script>
+  $('body').on(
+    'moduleCatalogLoaded',
+    function() {
+      var refCategory = null;
+
+      $('body').on('click', '.module-category-menu', function (event) {
+        refCategory = $(this).attr('data-category-ref');
+      });
+
+      function applyChangeToUpdateLink() {
+          var searchtext = encodeURIComponent($('.pstaggerAddTagInput').val());
+          var nbModules = $('.modules-list').find('.module-item').length;
+          var locale = "{{ locale }}";
+
+          if(nbModules > 0) {
+            $('.module-sorting-menu').show();
+            $('.mbo-modules-catalog-no-result').hide();
+          }
+          else {
+            $('.module-sorting-menu').hide();
+            $('.mbo-modules-catalog-no-result').show();
+          }
+          
+          var urlParams = 'utm_source=back-office&utm_medium=search-no-result-mbo&utm_campaign=back-office-{{ locale }}&utm_content=download17&compatibility={{ psVersion }}&search_query=' + searchtext;
+
+          if(refCategory) urlParams += "&id_category=" + refCategory
+
+          if(locale == "en")
+            $('#link-addons-no-result').attr('href', 'https://addons.prestashop.com/en/search?' + urlParams);
+          else if(locale == "fr")
+            $('#link-addons-no-result').attr('href', 'https://addons.prestashop.com/fr/recherche?' + urlParams);
+          else if(locale == "es")
+            $('#link-addons-no-result').attr('href', 'https://addons.prestashop.com/es/buscar?' + urlParams);
+          else
+            $('#link-addons-no-result').attr('href', 'https://addons.prestashop.com/'+ locale +'/search.php?' + urlParams);
+      };
+
+      function observe(selector, callback) {
+        // Call it once to get all the elements already on the page
+        var elements = document.querySelectorAll(selector);
+
+        elements.forEach(element => {
+          console.log(element);
+          var observer = new MutationObserver(() => {
+            callback(element);
+          });
+
+          observer.observe(element, {
+            childList: true,
+            attributes: true,
+            characterData: true,
+            subtree: true,
+          });
+        });
+        
+      }
+
+      observe('.pstaggerWrapper, .module-menu-item', element => {
+        applyChangeToUpdateLink()
+      });
+
+      $(".pstaggerAddTagInput").change(function() { 
+        applyChangeToUpdateLink()
+      }); 
+
+      applyChangeToUpdateLink();
+    }
+  );
+  </script>
+{% endblock %}
 <div class="mbo-modules-catalog row mbo-modules-catalog__grid modules-list" data-name="all">
   {% for category in categories.subMenu %}
     {% for module in category.modules %}
       {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/Includes/catalog_card.html.twig' with { 'module': module, 'origin': origin|default('none'), 'level' : level, 'category': category.refMenu } %}
     {% endfor %}
    {% endfor %}
+
+  <div class="mbo-modules-catalog-no-result">
+    <h1>
+      {{ 'No partner module matches your search'|trans({}, 'Modules.Mbo.Modulescatalog') }}
+    </h1>
+    <p>
+      {{ 'Try different keywords and filters, or'|trans({}, 'Modules.Mbo.Modulescatalog') }}
+      <a id="link-addons-no-result" target="_blank">{{ 'search the PrestaShop Marketplace.'|trans({}, 'Modules.Mbo.Modulescatalog') }}</a>
+    </p>
+    <img src="{{ asset('../modules/ps_mbo/views/img/no_result.svg') }}">
+  </div>
 </div>
