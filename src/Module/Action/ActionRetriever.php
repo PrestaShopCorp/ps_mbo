@@ -68,7 +68,7 @@ class ActionRetriever
      */
     public function getActionsInDb(): array
     {
-        if (count($this->db->executeS('SHOW TABLES LIKE \'' . _DB_PREFIX_ . 'mbo_action_queue\' '))) { //check if table exist
+        if ($this->isActionQueueTableExists()) { //check if table exist
             $query = "SELECT
                `action_uuid`,
                `action`,
@@ -149,9 +149,27 @@ class ActionRetriever
         return $action;
     }
 
+    public function markActionAsInError(ActionInterface $action): ActionInterface
+    {
+        $sql = sprintf(
+            "UPDATE `%smbo_action_queue` SET `status` = '%s', `date_ended` = NOW() WHERE `action_uuid` = '%s';",
+            _DB_PREFIX_,
+            ActionInterface::ERROR,
+            $action->getActionUuid()
+        );
+
+        if (false === $this->db->execute($sql)) {
+            throw new \Exception('Unable to update action');
+        }
+
+        $action->setStatus(ActionInterface::ERROR);
+
+        return $action;
+    }
+
     public function getProcessingAction(): ?ActionInterface
     {
-        if (count($this->db->executeS('SHOW TABLES LIKE \'' . _DB_PREFIX_ . 'mbo_action_queue\' '))) { //check if table exist
+        if ($this->isActionQueueTableExists()) { //check if table exist
             $query = "SELECT
                `action_uuid`,
                `action`,
@@ -189,5 +207,49 @@ class ActionRetriever
         }
 
         return null;
+    }
+
+    public function getActionByUuid(string $actionUuid): ActionInterface
+    {
+        $query = "SELECT
+               `action_uuid`,
+               `action`,
+               `module`,
+               `parameters`,
+               `status`,
+               `date_add`
+            FROM " . _DB_PREFIX_ . "mbo_action_queue
+            WHERE `action_uuid` = '" . $actionUuid . "'";
+
+        /** @var array $results */
+        $results = $this->db->executeS($query);
+
+        if (!is_array($results)) {
+            throw new PrestaShopDatabaseException(sprintf('Retrieving actions queue from DB returns a non array : %s. Query was : %s', gettype($results), $query));
+        }
+
+        $action = $results[0];
+
+        $source = null;
+        if (null !== $action['parameters']) {
+            $parameters = json_decode($action['parameters'], true);
+
+            if (!empty($parameters['source'])) {
+                $source = $parameters['source'];
+            }
+        }
+
+        return $this->actionBuilder->build([
+            'action' => $action['action'],
+            'action_uuid' => $action['action_uuid'],
+            'module_name' => $action['module'],
+            'source' => $source,
+            'status' => $action['status'],
+        ]);
+    }
+
+    private function isActionQueueTableExists(): bool
+    {
+        return 0 !== count($this->db->executeS('SHOW TABLES LIKE \'' . _DB_PREFIX_ . 'mbo_action_queue\' '));
     }
 }

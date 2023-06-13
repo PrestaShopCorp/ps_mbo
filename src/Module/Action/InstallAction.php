@@ -48,6 +48,8 @@ class InstallAction extends AbstractAction
 
     public function execute(): bool
     {
+        $this->distributionApi->setProcessNotificationMode(true);
+
         if ($this->moduleManager->install($this->moduleName, $this->source)) {
             // Notify Distribution API that install action have been processed
             $this->distributionApi->notifyEndInstall($this);

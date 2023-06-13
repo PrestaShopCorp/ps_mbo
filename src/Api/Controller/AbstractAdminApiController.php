@@ -31,11 +31,14 @@ use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker;
 use PrestaShop\Module\Mbo\Helpers\Config as ConfigHelper;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use ps_mbo;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Tools;
 
-abstract class AbstractAdminApiController extends ModuleAdminController
+abstract class AbstractAdminApiController extends FrameworkBundleAdminController
 {
     /**
      * Endpoint name
@@ -68,16 +71,21 @@ abstract class AbstractAdminApiController extends ModuleAdminController
     {
         parent::__construct();
 
-        $this->adminAuthenticationProvider = $this->module->get('mbo.security.admin_authentication.provider');
-        $this->authorizationChecker = $this->module->get(AuthorizationChecker::class);
-        $this->logger = $this->module->get('logger');
+//        $this->adminAuthenticationProvider = $this->get('mbo.security.admin_authentication.provider');
+//        $this->authorizationChecker = $this->get(AuthorizationChecker::class);
+//        $this->logger = $this->get('logger');
+//        $this->ajax = true;
+//        $this->json = true;
+//        $this->content_only = true;
+//        $this->display_header = false;
+//        $this->display_header_javascript = false;
     }
 
     public function init(): void
     {
         try {
-            $this->logger->info('API Call received = ' . $_SERVER['REQUEST_URI']);
-            $this->authorize();
+            $this->get('logger')->info('API Call received = ' . $_SERVER['REQUEST_URI']);
+//            $this->authorize();
         } catch (IncompleteSignatureParamsException $exception) {
             $this->exitWithExceptionMessage($exception);
         } catch (UnauthorizedException $exception) {
@@ -89,7 +97,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
         parent::init();
     }
 
-    protected function exitWithResponse(array $response): void
+    protected function exitWithResponse(array $response): JsonResponse
     {
         $httpCode = isset($response['httpCode']) ? (int) $response['httpCode'] : 200;
 
@@ -97,10 +105,10 @@ abstract class AbstractAdminApiController extends ModuleAdminController
 
         $response['shop_uuid'] = $shopUuid;
 
-        $this->dieWithResponse($response, $httpCode);
+        return $this->dieWithResponse($response, $httpCode);
     }
 
-    protected function exitWithExceptionMessage(Exception $exception): void
+    protected function exitWithExceptionMessage(Exception $exception): JsonResponse
     {
         $code = $exception->getCode() == 0 ? 500 : $exception->getCode();
 
@@ -121,10 +129,10 @@ abstract class AbstractAdminApiController extends ModuleAdminController
             'message' => $exception->getMessage(),
         ];
 
-        $this->dieWithResponse($response, (int) $code);
+        return $this->dieWithResponse($response, (int) $code);
     }
 
-    private function dieWithResponse(array $response, int $code): void
+    private function dieWithResponse(array $response, int $code): JsonResponse
     {
         $httpStatusText = "HTTP/1.1 $code";
 
@@ -134,15 +142,19 @@ abstract class AbstractAdminApiController extends ModuleAdminController
             $httpStatusText .= ' ' . $response['body']['statusText'];
         }
 
-        $response['httpCode'] = $code;
+//        $response['httpCode'] = $code;
 
-        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
-        header('Content-Type: application/json;charset=utf-8');
-        header($httpStatusText);
+//        header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+//        header('Content-Type: application/json;charset=utf-8');
+//        header($httpStatusText);
 
-        echo json_encode($response, JSON_UNESCAPED_SLASHES);
-
-        exit;
+        return new JsonResponse($response, $code, [
+            $httpStatusText,
+            'Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
+            'Content-Type: application/json;charset=utf-8',
+        ]);
+//
+//        exit;
     }
 
     /**
@@ -150,8 +162,12 @@ abstract class AbstractAdminApiController extends ModuleAdminController
      * @throws RetrieveNewKeyException
      * @throws UnauthorizedException
      */
-    protected function authorize()
+    protected function isGranted($attributes, $subject = null): bool
     {
+//        $controller = new \AdminController('apiPsMbo');
+//        if (!$controller->checkAccess()) {
+//            $a = 1;
+//        }
         $keyVersion = Tools::getValue('version');
         $signature = isset($_SERVER['HTTP_MBO_SIGNATURE']) ? $_SERVER['HTTP_MBO_SIGNATURE'] : false;
 
@@ -161,7 +177,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
 
         $message = $this->buildSignatureMessage();
 
-        $this->authorizationChecker->verify($keyVersion, $signature, $message);
+        $this->get(AuthorizationChecker::class)->verify($keyVersion, $signature, $message);
     }
 
     /**
@@ -193,5 +209,13 @@ abstract class AbstractAdminApiController extends ModuleAdminController
             'action_uuid' => $actionUuid,
             'version' => $keyVersion,
         ]);
+    }
+
+    public function displayAjax()
+    {
+        (new JsonResponse())->send();
+//        header('Content-Type: application/json');
+//        $this->ajaxRender($this->content);
+        // do nothing
     }
 }

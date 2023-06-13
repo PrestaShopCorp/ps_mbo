@@ -67,7 +67,6 @@ class ConfigApplyExecutor implements ServiceExecutorInterface
         }
 
         if ($config === null && json_last_error() !== JSON_ERROR_NONE) {
-            var_dump(Tools::getValue('conf'), gettype(Tools::getValue('conf')), $config, json_last_error_msg());
             throw new InvalidConfigException('Config given is invalid. Please check the structure.');
         }
 

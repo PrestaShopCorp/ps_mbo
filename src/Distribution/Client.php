@@ -30,6 +30,8 @@ use stdClass;
 
 class Client extends BaseClient
 {
+    private $processNotificationMode = false;
+
     /**
      * Get a new key from Distribution API.
      *
@@ -254,5 +256,43 @@ class Client extends BaseClient
         } catch (\Throwable $e) {
             // Do nothing if the notification fails
         }
+    }
+
+    public function notifyInstallError(ActionInterface $action, string $errorMessage)
+    {
+        try {
+            $action->refreshModule();
+            $module = $action->getModule();
+
+            $this->processRequestAndDecode(
+                'install-product/error',
+                self::HTTP_METHOD_POST,
+                [
+                    'form_params' => [
+                        'productInstallTriggeredEventId' => $action->getActionUuid(),
+                        'name' => $action->getModuleName(),
+                        'shopUuid' => Config::getShopMboUuid(),
+                        'status' => $module->getStatus(),
+                        'configUrl' => ModuleRouting::getConfigUrl($module),
+                        'moduleVersion' => $module->get('version'),
+                        'errorMessage' => $errorMessage,
+                    ],
+                ]
+            );
+        } catch (\Throwable $e) {
+            // Do nothing if the notification fails
+        }
+    }
+
+    public function isProcessNotificationMode(): bool
+    {
+        return $this->processNotificationMode;
+    }
+
+    public function setProcessNotificationMode(bool $processNotificationMode): self
+    {
+        $this->processNotificationMode = $processNotificationMode;
+
+        return $this;
     }
 }

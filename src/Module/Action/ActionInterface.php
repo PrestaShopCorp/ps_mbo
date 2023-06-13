@@ -28,6 +28,7 @@ interface ActionInterface
     const PENDING = 'PENDING';
     const PROCESSING = 'PROCESSING';
     const PROCESSED = 'PROCESSED';
+    const ERROR = 'ERROR';
 
     public function execute(): bool;
 

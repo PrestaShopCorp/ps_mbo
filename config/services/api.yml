@@ -40,3 +40,21 @@ services:
           '@mbo.api.service.executors.module_transition',
           '@mbo.api.service.executors.config_apply'
       ]
+
+  mbo.api.event_listener.module_action.response:
+    class: PrestaShop\Module\Mbo\Api\Listener\ApiModuleActionResponseListener
+    arguments:
+      - '@logger'
+      - '@mbo.modules.actions.scheduler'
+      - '@kernel'
+      - '@mbo.cdc.client.distribution_api_v2'
+    tags:
+      - { name: kernel.event_listener, event: kernel.terminate, method: onKernelTerminate }
+
+  mbo.controller.api.module_action:
+    class: PrestaShop\Module\Mbo\PublicApi\apiModuleActionController
+    calls:
+      - method: setContainer
+        arguments:
+          - '@service_container'
+

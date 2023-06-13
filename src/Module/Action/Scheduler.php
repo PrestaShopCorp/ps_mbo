@@ -94,11 +94,7 @@ class Scheduler
 
     public function processAction(ActionInterface $action): bool
     {
-        try {
-            $action->execute();
-        } catch(\Exception $e) {
-            return false;
-        }
+        $action->execute();
 
         $this->actionRetriever->markActionAsProcessed($action);
 

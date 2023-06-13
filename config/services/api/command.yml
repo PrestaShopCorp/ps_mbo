@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    public: true
+
+  mbo.commands.module_action:
+    class: PrestaShop\Module\Mbo\Command\ModuleActionCommand
+    arguments:
+      - '@mbo.modules.actions.retriever'
+      - '@mbo.api.service.factory'
+      - '@ps_mbo'
+      - '@translator'
+    tags:
+      - 'console.command'

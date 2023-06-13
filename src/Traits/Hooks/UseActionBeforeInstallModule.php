@@ -87,7 +87,7 @@ trait UseActionBeforeInstallModule
             return;
         }
 
-        $needToNotifyDistributionApi = $this->needToNotifyDistributionApi();
+        $needToNotifyDistributionApi = $client->isProcessNotificationMode();
         $action = null;
         if ($needToNotifyDistributionApi) {
             $action = $actionRetriever->getProcessingAction();
@@ -107,11 +107,5 @@ trait UseActionBeforeInstallModule
             // Notify Distribution API that install action is in progress
             $client->notifyStartInstall($action);
         }
-    }
-
-    private function needToNotifyDistributionApi(): bool
-    {
-        return Tools::getValue('controller') === 'apiPsMbo' &&
-            Tools::getValue('service') === ModuleActionExecutor::SERVICE;
     }
 }
