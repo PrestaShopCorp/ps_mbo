@@ -133,9 +133,12 @@ class LinksProvider
     {
         $category = $this->getCategoryByName($categoryName);
 
-        return $this->router->generate('admin_mbo_catalog_module', [
-            'filterCategoryRef' => $category ? $category->refMenu : '',
-        ]);
+        $routeParams = [];
+        if ($category && 'other' !== mb_strtolower($categoryName)) {
+            $routeParams['filterCategoryRef'] = $category->refMenu;
+        }
+
+        return $this->router->generate('admin_mbo_catalog_module', $routeParams);
     }
 
     /**
