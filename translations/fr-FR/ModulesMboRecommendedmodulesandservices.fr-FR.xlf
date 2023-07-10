@@ -15,92 +15,92 @@
       <trans-unit id="f4f2cea02b1a48a90ad72f87f33ed501" approved="yes">
         <source>Create a discount strategy</source>
         <target state="final">Créer une stratégie de remise</target>
-        <note>Line: 276</note>
+        <note>Line: 277</note>
       </trans-unit>
       <trans-unit id="71de09fcc1e3ca0c0a1e8cb40eb417ab" approved="yes">
         <source>Customize pages</source>
         <target state="final">Personnaliser les pages</target>
-        <note>Line: 279</note>
+        <note>Line: 280</note>
       </trans-unit>
       <trans-unit id="3015e7fd48efb2220c184c49eaeae2c1" approved="yes">
         <source>Improve customer experience</source>
         <target state="final">Améliorer l'expérience client</target>
-        <note>Line: 284</note>
+        <note>Line: 285</note>
       </trans-unit>
       <trans-unit id="269da544fe0eefcc12bb627f24fe2e81" approved="yes">
         <source>Improve customer targeting</source>
         <target state="final">Améliorer le ciblage des clients</target>
-        <note>Line: 287</note>
+        <note>Line: 288</note>
       </trans-unit>
       <trans-unit id="0b63003090cd7fae050a51da250bb0dc" approved="yes">
         <source>Improve data strategy</source>
         <target state="final">Améliorer la stratégie de données</target>
-        <note>Line: 290</note>
+        <note>Line: 291</note>
       </trans-unit>
       <trans-unit id="95facf46cc97015c64679a153ff5c5a7" approved="yes">
         <source>Improve SEO</source>
         <target state="final">Améliorer le référencement</target>
-        <note>Line: 294</note>
+        <note>Line: 295</note>
       </trans-unit>
       <trans-unit id="27cfd6d0daa021773ca71830ce5590e4" approved="yes">
         <source>Improve shipping</source>
         <target state="final">Améliorer l'expédition</target>
-        <note>Line: 297</note>
+        <note>Line: 298</note>
       </trans-unit>
       <trans-unit id="a9a13fd9a88fbdd52a7c1e25f3d0d946" approved="yes">
         <source>Improve the checkout experience</source>
         <target state="final">Améliorer l'expérience de paiement</target>
-        <note>Line: 300</note>
+        <note>Line: 301</note>
       </trans-unit>
       <trans-unit id="2fad6e7317d3a912a3c8a60134397d86" approved="yes">
         <source>Improve visuals</source>
         <target state="final">Améliorer les visuels</target>
-        <note>Line: 303</note>
+        <note>Line: 304</note>
       </trans-unit>
       <trans-unit id="190bd26b051d54c12b31ccfb3008c8a5" approved="yes">
         <source>Make shipping easier</source>
         <target state="final">Facilitez l'expédition</target>
-        <note>Line: 306</note>
+        <note>Line: 307</note>
       </trans-unit>
       <trans-unit id="2079b04a8fa4362967a9342028381090" approved="yes">
         <source>Make your deliveries easier</source>
         <target state="final">Facilitez vos livraisons</target>
-        <note>Line: 309</note>
+        <note>Line: 310</note>
       </trans-unit>
       <trans-unit id="61bb24f36546df402ea09b43dc5c9d28" approved="yes">
         <source>Optimize order management</source>
         <target state="final">Optimiser la gestion des commandes</target>
-        <note>Line: 312</note>
+        <note>Line: 313</note>
       </trans-unit>
       <trans-unit id="1d929590b318c7d4746d15f1fdc19c81" approved="yes">
         <source>Optimize product catalog</source>
         <target state="final">Optimiser le catalogue de produits</target>
-        <note>Line: 315</note>
+        <note>Line: 316</note>
       </trans-unit>
       <trans-unit id="f28626bfbef9b3fffea9377233f2b6dd" approved="yes">
         <source>Optimize product creation</source>
         <target state="final">Optimiser la création de produits</target>
-        <note>Line: 318</note>
+        <note>Line: 319</note>
       </trans-unit>
       <trans-unit id="92efe9f2090c8ef8b4525d9c87efb992" approved="yes">
         <source>Promote brands</source>
         <target state="final">Promouvoir les marques</target>
-        <note>Line: 321</note>
+        <note>Line: 322</note>
       </trans-unit>
       <trans-unit id="a4098c8673dde7faab7999c2676c3522" approved="yes">
         <source>Simplify accounting</source>
         <target state="final">Simplifier la comptabilité</target>
-        <note>Line: 325</note>
+        <note>Line: 326</note>
       </trans-unit>
       <trans-unit id="c70ae1b7165361802d85093a3e046107" approved="yes">
         <source>Simplify store management</source>
         <target state="final">Simplifier la gestion de la boutique</target>
-        <note>Line: 328</note>
+        <note>Line: 329</note>
       </trans-unit>
       <trans-unit id="e39767bb8e247250896230e1d6ee036f" approved="yes">
         <source>Recommended modules</source>
         <target state="final">Modules recommandés</target>
-        <note>Line: 331</note>
+        <note>Line: 332</note>
       </trans-unit>
     </body>
   </file>
