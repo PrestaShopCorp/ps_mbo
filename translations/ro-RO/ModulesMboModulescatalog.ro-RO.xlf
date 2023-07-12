@@ -5,17 +5,17 @@
       <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df">
         <source>Synchronized with Addons marketplace!</source>
         <target state="needs-translation">Synchronized with Addons marketplace!</target>
-        <note>Line: 145</note>
+        <note>Line: 143</note>
       </trans-unit>
       <trans-unit id="2ec0d16e4ca169baedb9b2d50ec5c6d7">
         <source>Connected</source>
         <target state="needs-translation">Connected</target>
-        <note>Line: 157</note>
+        <note>Line: 155</note>
       </trans-unit>
       <trans-unit id="8bf910bb9ffa608d4c7fd6504667d62f">
         <source>Connected as</source>
         <target state="needs-translation">Connected as</target>
-        <note>Line: 159</note>
+        <note>Line: 156</note>
       </trans-unit>
     </body>
   </file>
@@ -24,17 +24,17 @@
       <trans-unit id="cff7b4047c79f112e869481322d2924e">
         <source>Module %module% successfully upgraded.</source>
         <target state="needs-translation">Module %module% successfully upgraded.</target>
-        <note>Line: 172</note>
+        <note>Line: 171</note>
       </trans-unit>
       <trans-unit id="22d6960d922158c548d123998be8dd91">
         <source>Upgrade of module %module% failed. %error%</source>
         <target state="needs-translation">Upgrade of module %module% failed. %error%</target>
-        <note>Line: 208</note>
+        <note>Line: 207</note>
       </trans-unit>
       <trans-unit id="f8c9c7b6af2a8d50bc948bcf966c1d4b">
         <source>Module %module% is already up to date</source>
         <target state="needs-translation">Module %module% is already up to date</target>
-        <note>Line: 195</note>
+        <note>Line: 194</note>
       </trans-unit>
     </body>
   </file>
@@ -52,7 +52,7 @@
       <trans-unit id="eb1b4bb3667dd670210c7822badc2f1d">
         <source>Check for updates</source>
         <target state="needs-translation">Check for updates</target>
-        <note>Line: 38</note>
+        <note>Line: 46</note>
       </trans-unit>
     </body>
   </file>

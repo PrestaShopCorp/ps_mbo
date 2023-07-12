@@ -23,7 +23,9 @@ namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 /**
@@ -47,14 +49,23 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return JsonResponse
+     * @return JsonResponse|RedirectResponse
      */
-    public function indexAction(): JsonResponse
+    public function indexAction(): Response
     {
         $response = new JsonResponse();
         try {
-            $tabCollection = $this->get('mbo.tab.collection.provider')->getTabCollection();
             $tabClassName = $this->requestStack->getCurrentRequest()->get('tabClassName');
+            if (null === $tabClassName) { // In case the recommended modules page is requested without giving tab context, we redirect to Modules catalog page
+                $routeParams = [];
+                $query = \Tools::getValue('bo_query');
+                if (false !== $query && !empty(trim($query))) {
+                    $routeParams['keyword'] = trim($query);
+                }
+
+                return $this->redirectToRoute('admin_mbo_catalog_module', $routeParams);
+            }
+            $tabCollection = $this->get('mbo.tab.collection.provider')->getTabCollection();
             $tab = $tabCollection->getTab($tabClassName);
             $context = $this->get('mbo.cdc.context_builder')->getRecommendedModulesContext($tab);
             $context['recommendation_format'] = $this->requestStack->getCurrentRequest()->get('recommendation_format');
