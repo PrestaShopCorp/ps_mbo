@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Helpers\Config;
+
 trait UseActionObjectEmployeeUpdateBefore
 {
     /**
@@ -31,7 +33,7 @@ trait UseActionObjectEmployeeUpdateBefore
         if (empty($params) || empty($params['object']) || !$params['object'] instanceof \Employee) {
             return;
         }
-        $currentApiUser = $this->getAdminAuthenticationProvider()->getApiUser();
+        $currentApiUser = $this->getApiUser();
         if (!$currentApiUser) {
             return;
         }
@@ -43,5 +45,18 @@ trait UseActionObjectEmployeeUpdateBefore
             $params['object']->id_profile = $currentApiUser->id_profile;
             $params['object']->active = true;
         }
+    }
+
+    private function getApiUser()
+    {
+        $apiUserId = \Db::getInstance()->getValue(
+            'SELECT `id_employee` FROM `' . _DB_PREFIX_ . 'employee` WHERE `email` = "' . pSQL(Config::getShopMboAdminMail()) . '" AND active = 1'
+        );
+
+        if (!$apiUserId) {
+            return null;
+        }
+
+        return new \Employee((int) $apiUserId);
     }
 }
