@@ -366,7 +366,7 @@ class ps_mbo extends Module
             $this->container = SymfonyContainer::getInstance();
         }
 
-        return $this->container->has('mbo.security.admin_authentication.provider') ?
+        return null !== $this->container && $this->container->has('mbo.security.admin_authentication.provider') ?
             $this->get('mbo.security.admin_authentication.provider') :
             new AdminAuthenticationProvider(
                 $this->get('doctrine.dbal.default_connection'),
