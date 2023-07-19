@@ -11,6 +11,7 @@ parameters:
 		- '#Parameter \#1 \$idProfile of static method ProfileCore::getProfileAccess\(\) expects int, string given.#'
 		- '#Property TabCore::\$name \(string\) does not accept array\<int, string\>.#'
 		- '#Access to an undefined property Tab::\$wording.#'
+		- '#Access to an undefined property Cookie::\$id_employee.#'
 		-
 		    message: '#Property TabCore::\$name \(string\) does not accept array\<int\|string, mixed\>.#'
 		    path: ps_mbo.php

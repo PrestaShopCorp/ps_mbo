@@ -44,6 +44,24 @@ class ModuleController extends ModuleControllerCore
      */
     public function catalogAction()
     {
+        $moduleUri = __PS_BASE_URI__ . 'modules/ps_mbo/';
+
+        $extraParams = [
+            'me_url' => $this->generateUrl('admin_mbo_security'),
+            'cdc_error_templating_url' => $moduleUri . 'views/js/cdc-error-templating.js',
+            'cdc_error_templating_css' => $moduleUri . 'views/css/cdc-error-templating.css',
+        ];
+
+        $cdcJsFile = getenv('MBO_CDC_URL');
+        if (false === $cdcJsFile || !is_string($cdcJsFile) || empty($cdcJsFile)) {
+            $extraParams['cdc_script_not_found'] = true;
+            $extraParams['cdc_error_url'] = $moduleUri . 'views/js/cdc-error.js';
+        } else {
+            $extraParams['cdc_url'] = $cdcJsFile;
+        }
+
+        $context = $this->get('mbo.cdc.context_builder')->getViewContext();
+
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog.html.twig',
             [
@@ -56,11 +74,12 @@ class ModuleController extends ModuleControllerCore
                 'help_link' => $this->generateSidebarLink('AdminModules'),
                 'requireFilterStatus' => false,
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
+                'shop_context' => $context,
                 'errorMessage' => $this->trans(
                     'You do not have permission to add this.',
                     'Admin.Notifications.Error'
                 ),
-            ]
+            ] + $extraParams
         );
     }
 
@@ -120,6 +139,18 @@ class ModuleController extends ModuleControllerCore
         }
 
         return new JsonResponse($responseArray);
+    }
+
+    /**
+     * Responsible for displaying error block when CDC cannot be loaded.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cdcErrorAction()
+    {
+        return $this->render(
+            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/cdc-error.html.twig'
+        );
     }
 
     /**

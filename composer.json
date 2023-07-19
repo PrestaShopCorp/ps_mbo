@@ -21,7 +21,9 @@
   "require": {
     "php": ">=5.6.0",
     "ext-simplexml": "*",
-    "prestashop/circuit-breaker": "^3.0.0"
+    "prestashop/circuit-breaker": "^3.0.0",
+    "firebase/php-jwt": "^6.0",
+    "ramsey/uuid": "^3.9"
   },
   "require-dev": {
     "prestashop/php-dev-tools": "^2.2"
