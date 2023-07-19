@@ -188,7 +188,7 @@ class ps_mbo extends Module
     }
 
     /**
-     * @inerhitDoc
+     * {@inheritDoc}
      */
     public function uninstall()
     {
