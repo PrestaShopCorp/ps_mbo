@@ -129,6 +129,8 @@ class ps_mbo extends Module
     const HOOKS = [
         'actionAdminControllerSetMedia',
         'actionDispatcherBefore',
+        'actionGeneralPageSave',
+        'actionObjectShopUrlUpdateAfter',
         'displayDashboardTop',
     ];
 
@@ -565,7 +567,49 @@ class ps_mbo extends Module
      */
     public function hookActionDispatcherBefore()
     {
+        $controllerName = Tools::getValue('controller');
+
         $this->translateTabsIfNeeded();
+
+        // Registration failed on install, retry it
+        if (in_array($controllerName, static::CONTROLLERS_WITH_CDC_SCRIPT)) {
+            $this->ensureShopIsRegistered();
+            $this->ensureShopIsUpdated();
+        }
+    }
+
+    /**
+     * Hook actionGeneralPageSave.
+     */
+    public function hookActionGeneralPageSave(array $params)
+    {
+        if (isset($params['route']) && $params['route'] === 'admin_preferences_save') {
+            // User may have updated the SSL configuration
+            $this->updateShop();
+        }
+    }
+
+    /**
+     * Hook actionGeneralPageSave.
+     */
+    public function hookActionObjectShopUrlUpdateAfter(array $params)
+    {
+        if ($params['object']->main) {
+            // Clear cache to be sure to load correctly the shop with good data whe building the service later
+            \Cache::clean('Shop::setUrl_' . (int) $params['object']->id_shop);
+
+            if (Config::isUsingSecureProtocol()) {
+                $url = 'https://' . preg_replace('#https?://#', '', $params['object']->domain_ssl);
+            } else {
+                $url = 'http://' . preg_replace('#https?://#', '', $params['object']->domain);
+            }
+
+            $this->updateShop([
+                'shop_url' => $url,
+            ]);
+        }
+
+        return true;
     }
 
     /**
@@ -942,6 +986,11 @@ class ps_mbo extends Module
         $this->callServiceWithLockFile('registerShop');
     }
 
+    public function updateShop(array $params = [])
+    {
+        $this->callServiceWithLockFile('updateShop', $params);
+    }
+
     /**
      * Unregister a shop of online services delivered by API.
      * When the module is disabled or uninstalled, remove it from online services
@@ -1025,5 +1074,21 @@ class ps_mbo extends Module
                 fclose($f);
             }
         }
+    }
+
+    private function ensureShopIsRegistered()
+    {
+        if (!file_exists($this->moduleCacheDir . 'registerShop.lock')) {
+            return;
+        }
+        $this->registerShop();
+    }
+
+    private function ensureShopIsUpdated()
+    {
+        if (!file_exists($this->moduleCacheDir . 'updateShop.lock')) {
+            return;
+        }
+        $this->updateShop();
     }
 }
