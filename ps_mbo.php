@@ -156,7 +156,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '2.2.2';
+        $this->version = '2.3.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -903,7 +903,7 @@ class ps_mbo extends Module
         (new Dotenv())->load(__DIR__ . '/.env');
     }
 
-    private function registerShop()
+    public function registerShop()
     {
         $this->installConfiguration();
         $this->callServiceWithLockFile('registerShop');
