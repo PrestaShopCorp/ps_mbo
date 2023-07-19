@@ -51,4 +51,3 @@ admin_mbo_security:
     methods: [POST]
     defaults:
         _controller: mbo.controller.security:meAction
-#    condition: 'request.isXmlHttpRequest()'

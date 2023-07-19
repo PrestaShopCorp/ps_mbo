@@ -155,9 +155,6 @@ class ContextBuilder
             'admin_token' => $token,
             'refresh_url' => $refreshUrl,
             'installed_modules' => $this->getInstalledModules(),
-            'accounts_user_id' => '1234',
-            'accounts_shop_id' => '5678',
-            'accounts_token' => '',
         ];
     }
 

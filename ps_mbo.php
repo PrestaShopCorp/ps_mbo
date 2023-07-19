@@ -1059,6 +1059,11 @@ class ps_mbo extends Module
                 return;
             }
 
+            /**
+             * @var AuthenticationProvider $authenticationProvider
+             */
+            $authenticationProvider = $this->get('mbo.cdc.distribution_authentication_provider');
+            $distributionApi->setBearer($authenticationProvider->getMboJWT());
             $distributionApi->{$method}($params);
 
             if (file_exists($lockFile)) {

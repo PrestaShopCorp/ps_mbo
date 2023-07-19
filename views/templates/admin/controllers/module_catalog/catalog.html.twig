@@ -24,15 +24,9 @@
 
   {% if cdc_script_not_found is defined and cdc_script_not_found is same as(true) %}
     <script type="application/javascript" src="{{ cdc_error_url }}"></script>
-{#  {% else %}#}
-{#    <script type="application/javascript" src="{{ cdc_url }}"></script>#}
   {% endif %}
 
   <script>
-    {#$.get("{{ me_url }}"+'aaaaaa', (data) => {#}
-    {#  console.log(data);#}
-    {#});#}
-
     if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
       if (typeof renderCdcError === 'function') {
         window.$(document).ready(function() {

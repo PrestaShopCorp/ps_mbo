@@ -70,7 +70,7 @@ class Client extends BaseClient
         return $this->processRequestAndDecode(
             'shops/' . Config::getShopMboUuid(),
             self::HTTP_METHOD_PUT,
-            ['form_params' => $this->mergeShopDataWithParams($params)]
+            ['body' => $this->mergeShopDataWithParams($params)]
         );
     }
 }
