@@ -55,6 +55,11 @@ class AuthenticationProvider
         return $this->cacheProvider->fetch($cacheKey);
     }
 
+    public function clearCache()
+    {
+        $this->cacheProvider->delete($this->getJwtTokenCacheKey());
+    }
+
     private function getJwtTokenCacheKey()
     {
         return sprintf('mbo_jwt_token_%s', Config::getShopMboUuid());

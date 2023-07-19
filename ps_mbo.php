@@ -30,6 +30,7 @@ if (file_exists($autoloadPath)) {
 use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\Module\Mbo\Distribution\AuthenticationProvider;
 use PrestaShop\Module\Mbo\Distribution\Client;
+use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Ramsey\Uuid\Uuid;
@@ -184,6 +185,38 @@ class ps_mbo extends Module
     {
         return parent::install()
             && $this->registerHook(static::HOOKS);
+    }
+
+    /**
+     * @inerhitDoc
+     */
+    public function uninstall()
+    {
+        if (!parent::uninstall()) {
+            return false;
+        }
+
+        /**
+         * @var AuthenticationProvider $authenticationProvider
+         */
+        $authenticationProvider = $this->get('mbo.cdc.distribution_authentication_provider');
+        $authenticationProvider->clearCache();
+
+        $lockFiles = ['registerShop', 'updateShop'];
+        foreach ($lockFiles as $lockFile) {
+            if (file_exists($this->moduleCacheDir . $lockFile . '.lock')) {
+                unlink($this->moduleCacheDir . $lockFile . '.lock');
+            }
+        }
+
+        foreach (array_keys($this->configurationList) as $name) {
+            Configuration::deleteByName($name);
+        }
+
+        // This will reset cached configuration values (uuid, mail, ...) to avoid reusing them
+        Config::resetConfigValues();
+
+        return true;
     }
 
     /**
