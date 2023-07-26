@@ -74,7 +74,7 @@ services:
   mbo.controller.security:
       class: 'PrestaShop\Module\Mbo\Controller\Admin\SecurityController'
 
-  mbo.event_subscriber.module_event_subsciber:
+  mbo.event_subscriber.module_event_subscriber:
       class: PrestaShop\Module\Mbo\EventSubscriber\ModuleEventSubscriber
       arguments:
           - '@logger'
