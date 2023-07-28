@@ -34,6 +34,7 @@ use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Tools;
 
 class ModuleController extends ModuleControllerCore
 {
@@ -151,6 +152,26 @@ class ModuleController extends ModuleControllerCore
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/cdc-error.html.twig'
         );
+    }
+
+    public function getBoughtModulesAction(Request $request)
+    {
+        $addonsUser = $this->get('mbo.addons.user');
+
+        if (!$addonsUser->isAuthenticated()) {
+            return new JsonResponse();
+        }
+
+        // Sometimes the connected Addons credentials are not in the Context's cookies
+        // Here we override them because they are used in the Addons request furthermore
+        $context = \Context::getContext();
+        $context->cookie->username_addons = $addonsUser->getCredentials()['username'];
+        $context->cookie->password_addons = $addonsUser->getCredentials()['password'];
+        $context->cookie->write();
+
+        $modules = Tools::addonsRequest('customer', ['format' => 'json']);
+
+        return new JsonResponse($modules);
     }
 
     /**

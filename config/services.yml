@@ -123,3 +123,11 @@ services:
       class: PrestaShop\Module\Mbo\Distribution\AuthenticationProvider
       arguments:
           - '@mbo.doctrine.cache.provider'
+
+  mbo.addons.user.credentials_encryptor:
+      class: PrestaShop\Module\Mbo\Addons\User\CredentialsEncryptor
+
+  mbo.addons.user:
+      class: PrestaShop\Module\Mbo\Addons\User\AddonsUser
+      arguments:
+          - '@mbo.addons.user.credentials_encryptor'
