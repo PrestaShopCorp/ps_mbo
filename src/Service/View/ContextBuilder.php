@@ -248,7 +248,7 @@ class ContextBuilder
                 ]);
             }
 
-            $installedModules[] = (new InstalledModule($moduleId, $moduleName, $moduleStatus, (string) $moduleVersion, $this->getModuleActionUrls($module), $moduleConfigUrl))->toArray();
+            $installedModules[] = (new InstalledModule($moduleId, $moduleName, $moduleStatus, (string) $moduleVersion, $moduleConfigUrl))->toArray();
         }
 
         $this->cacheProvider->save($cacheKey, $installedModules, 86400); // Lifetime for 24h, will be purged at every action on modules
@@ -292,45 +292,5 @@ class ContextBuilder
         }
 
         return self::STATUS_DISABLED__MOBILE_DISABLED;
-    }
-
-    private function getModuleActionUrls(CoreModule $module)
-    {
-        $moduleName = $module->get('name');
-
-        return [
-            'install' => $this->router->generate('admin_module_manage_action', [
-                'action' => 'install',
-                'module_name' => $moduleName,
-            ]),
-            'uninstall' => $this->router->generate('admin_module_manage_action', [
-                'action' => 'uninstall',
-                'module_name' => $moduleName,
-            ]),
-            'enable' => $this->router->generate('admin_module_manage_action', [
-                'action' => 'enable',
-                'module_name' => $moduleName,
-            ]),
-            'disable' => $this->router->generate('admin_module_manage_action', [
-                'action' => 'disable',
-                'module_name' => $moduleName,
-            ]),
-            'enable_mobile' => $this->router->generate('admin_module_manage_action', [
-                'action' => 'enable_mobile',
-                'module_name' => $moduleName,
-            ]),
-            'disable_mobile' => $this->router->generate('admin_module_manage_action', [
-                'action' => 'disable_mobile',
-                'module_name' => $moduleName,
-            ]),
-            'reset' => $this->router->generate('admin_module_manage_action', [
-                'action' => 'reset',
-                'module_name' => $moduleName,
-            ]),
-            'upgrade' => $this->router->generate('admin_module_manage_action', [
-                'action' => 'upgrade',
-                'module_name' => $moduleName,
-            ]),
-        ];
     }
 }

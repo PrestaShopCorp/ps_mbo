@@ -46,24 +46,18 @@ class InstalledModule
      * @var string|null
      */
     private $configUrl;
-    /**
-     * @var array
-     */
-    private $actionUrls;
 
     public function __construct(
         int $id,
         string $name,
         string $status,
         string $version,
-        array $actionUrls,
         string $configUrl = null
     ) {
         $this->id = $id;
         $this->name = $name;
         $this->status = $status;
         $this->version = $version;
-        $this->actionUrls = $actionUrls;
         $this->configUrl = $configUrl;
     }
 
@@ -75,7 +69,6 @@ class InstalledModule
             'status' => $this->status,
             'version' => $this->version,
             'config_url' => $this->configUrl,
-            'module_actions_urls' => $this->actionUrls,
         ];
     }
 }
