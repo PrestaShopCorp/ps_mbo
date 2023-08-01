@@ -27,9 +27,15 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
+use Doctrine\Common\Cache\CacheProvider;
+use PrestaShop\Module\Mbo\Distribution\AuthenticationProvider;
+use PrestaShop\Module\Mbo\Distribution\Client;
+use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ps_mbo extends Module
@@ -113,10 +119,23 @@ class ps_mbo extends Module
         ],
     ];
 
+    const CONTROLLERS_WITH_CDC_SCRIPT = [
+        'AdminModulesNotifications',
+        'AdminModulesUpdates',
+        'AdminModulesManage',
+        'AdminPsMboModule',
+    ];
+
     const HOOKS = [
         'actionAdminControllerSetMedia',
         'actionDispatcherBefore',
+        'actionGeneralPageSave',
+        'actionObjectShopUrlUpdateAfter',
         'displayDashboardTop',
+    ];
+
+    public $configurationList = [
+        'PS_MBO_SHOP_ADMIN_UUID' => '', // 'ADMIN' because there will be only one for all shops in a multishop context
     ];
 
     /**
@@ -130,12 +149,17 @@ class ps_mbo extends Module
     public $moduleCacheDir;
 
     /**
+     * @var CacheProvider
+     */
+    public $cacheProvider;
+
+    /**
      * Constructor.
      */
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '2.2.2';
+        $this->version = '2.3.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -150,6 +174,8 @@ class ps_mbo extends Module
         $this->moduleCacheDir = sprintf('%s/var/modules/%s/', rtrim(_PS_ROOT_DIR_, '/'), $this->name);
         $this->displayName = $this->l('PrestaShop Marketplace in your Back Office');
         $this->description = $this->l('Browse the Addons marketplace directly from your back office to better meet your needs.');
+
+        $this->loadEnv();
     }
 
     /**
@@ -164,6 +190,38 @@ class ps_mbo extends Module
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function uninstall()
+    {
+        if (!parent::uninstall()) {
+            return false;
+        }
+
+        /**
+         * @var AuthenticationProvider $authenticationProvider
+         */
+        $authenticationProvider = $this->get('mbo.cdc.distribution_authentication_provider');
+        $authenticationProvider->clearCache();
+
+        $lockFiles = ['registerShop', 'updateShop'];
+        foreach ($lockFiles as $lockFile) {
+            if (file_exists($this->moduleCacheDir . $lockFile . '.lock')) {
+                unlink($this->moduleCacheDir . $lockFile . '.lock');
+            }
+        }
+
+        foreach (array_keys($this->configurationList) as $name) {
+            Configuration::deleteByName($name);
+        }
+
+        // This will reset cached configuration values (uuid, mail, ...) to avoid reusing them
+        Config::resetConfigValues();
+
+        return true;
+    }
+
+    /**
      * Enable Module.
      *
      * @return bool
@@ -173,6 +231,8 @@ class ps_mbo extends Module
         $result = parent::enable($force_all)
             && $this->organizeCoreTabs()
             && $this->installTabs();
+
+        $this->registerShop();
 
         $this->postponeTabsTranslations();
 
@@ -327,9 +387,14 @@ class ps_mbo extends Module
      */
     public function disable($force_all = false)
     {
-        return parent::disable($force_all)
+        $result = parent::disable($force_all)
             && $this->organizeCoreTabs(true)
             && $this->uninstallTabs();
+
+        // Unregister from online services
+        $this->unregisterShop();
+
+        return $result;
     }
 
     /**
@@ -421,6 +486,44 @@ class ps_mbo extends Module
                 );
             }
         }
+
+        $this->loadMediaForAdminControllerSetMedia();
+    }
+
+    /**
+     * Add JS and CSS file
+     *
+     * @return void
+     */
+    protected function loadMediaForAdminControllerSetMedia()
+    {
+        if (in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CDC_SCRIPT)) {
+            $this->context->controller->addJs('/js/jquery/plugins/growl/jquery.growl.js?v=' . $this->version);
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css');
+        }
+        $this->loadCdcMedia();
+    }
+
+    private function loadCdcMedia()
+    {
+        $controllerName = Tools::getValue('controller');
+        if (!is_string($controllerName)) {
+            return;
+        }
+        if (
+            !in_array($controllerName, self::CONTROLLERS_WITH_CDC_SCRIPT)
+        ) {
+            return;
+        }
+
+        $cdcJsFile = getenv('MBO_CDC_URL');
+        if (false === $cdcJsFile || !is_string($cdcJsFile) || empty($cdcJsFile)) {
+            $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error.js');
+
+            return;
+        }
+
+        $this->context->controller->addJs($cdcJsFile);
     }
 
     /**
@@ -464,7 +567,49 @@ class ps_mbo extends Module
      */
     public function hookActionDispatcherBefore()
     {
+        $controllerName = Tools::getValue('controller');
+
         $this->translateTabsIfNeeded();
+
+        // Registration failed on install, retry it
+        if (in_array($controllerName, static::CONTROLLERS_WITH_CDC_SCRIPT)) {
+            $this->ensureShopIsRegistered();
+            $this->ensureShopIsUpdated();
+        }
+    }
+
+    /**
+     * Hook actionGeneralPageSave.
+     */
+    public function hookActionGeneralPageSave(array $params)
+    {
+        if (isset($params['route']) && $params['route'] === 'admin_preferences_save') {
+            // User may have updated the SSL configuration
+            $this->updateShop();
+        }
+    }
+
+    /**
+     * Hook actionGeneralPageSave.
+     */
+    public function hookActionObjectShopUrlUpdateAfter(array $params)
+    {
+        if ($params['object']->main) {
+            // Clear cache to be sure to load correctly the shop with good data whe building the service later
+            \Cache::clean('Shop::setUrl_' . (int) $params['object']->id_shop);
+
+            if (Config::isUsingSecureProtocol()) {
+                $url = 'https://' . preg_replace('#https?://#', '', $params['object']->domain_ssl);
+            } else {
+                $url = 'http://' . preg_replace('#https?://#', '', $params['object']->domain);
+            }
+
+            $this->updateShop([
+                'shop_url' => $url,
+            ]);
+        }
+
+        return true;
     }
 
     /**
@@ -825,5 +970,130 @@ class ps_mbo extends Module
             $tab->name = $tabNameByLangId;
             $tab->save();
         }
+    }
+
+    /**
+     * @return void
+     */
+    private function loadEnv()
+    {
+        (new Dotenv())->load(__DIR__ . '/.env');
+    }
+
+    public function registerShop()
+    {
+        $this->installConfiguration();
+        $this->callServiceWithLockFile('registerShop');
+    }
+
+    public function updateShop(array $params = [])
+    {
+        $this->callServiceWithLockFile('updateShop', $params);
+    }
+
+    /**
+     * Unregister a shop of online services delivered by API.
+     * When the module is disabled or uninstalled, remove it from online services
+     *
+     * @return void
+     */
+    private function unregisterShop()
+    {
+        try {
+            $authenticationProvider = $this->get('mbo.cdc.distribution_authentication_provider');
+            $distributionApi = $this->get('mbo.cdc.client.distribution_api');
+
+            if (
+                $authenticationProvider instanceof AuthenticationProvider
+                 && $distributionApi instanceof Client
+            ) {
+                $distributionApi->setBearer($authenticationProvider->getMboJWT());
+                $distributionApi->unregisterShop();
+            }
+        } catch (Exception $exception) {
+            // Do nothing here, the exception is caught to avoid displaying an error to the client
+            // Furthermore, the operation can't be tried again later as the module is now disabled or uninstalled
+        }
+    }
+
+    /**
+     * Install configuration for each shop
+     *
+     * @return bool
+     */
+    private function installConfiguration()
+    {
+        $result = true;
+
+        $this->configurationList['PS_MBO_SHOP_ADMIN_UUID'] = Uuid::uuid4()->toString();
+
+        foreach (Shop::getShops(false, null, true) as $shopId) {
+            foreach ($this->configurationList as $name => $value) {
+                if (false === Configuration::hasKey($name, null, null, (int) $shopId)) {
+                    $result = $result && (bool) Configuration::updateValue(
+                            $name,
+                            $value,
+                            false,
+                            null,
+                            (int) $shopId
+                        );
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    private function callServiceWithLockFile(string $method, array $params = [])
+    {
+        $lockFile = $this->moduleCacheDir . $method . '.lock';
+        try {
+            // If the module is installed via command line or somehow the ADMIN_DIR is not defined,
+            // we ignore the shop registration, so it will be done at any action on the backoffice
+            if (php_sapi_name() === 'cli' || !defined('_PS_ADMIN_DIR_')) {
+                throw new Exception();
+            }
+            /** @var Client $distributionApi */
+            $distributionApi = $this->get('mbo.cdc.client.distribution_api');
+            if (!method_exists($distributionApi, $method)) {
+                return;
+            }
+
+            /**
+             * @var AuthenticationProvider $authenticationProvider
+             */
+            $authenticationProvider = $this->get('mbo.cdc.distribution_authentication_provider');
+            $distributionApi->setBearer($authenticationProvider->getMboJWT());
+            $distributionApi->{$method}($params);
+
+            if (file_exists($lockFile)) {
+                unlink($lockFile);
+            }
+        } catch (Exception $exception) {
+            // Create the lock file
+            if (!file_exists($lockFile)) {
+                if (!is_dir($this->moduleCacheDir)) {
+                    mkdir($this->moduleCacheDir);
+                }
+                $f = fopen($lockFile, 'w+');
+                fclose($f);
+            }
+        }
+    }
+
+    private function ensureShopIsRegistered()
+    {
+        if (!file_exists($this->moduleCacheDir . 'registerShop.lock')) {
+            return;
+        }
+        $this->registerShop();
+    }
+
+    private function ensureShopIsUpdated()
+    {
+        if (!file_exists($this->moduleCacheDir . 'updateShop.lock')) {
+            return;
+        }
+        $this->updateShop();
     }
 }

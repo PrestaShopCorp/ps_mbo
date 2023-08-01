@@ -5,5 +5,9 @@ parameters:
 		- ps_mbo.php
 	dynamicConstantNames:
 		- _PS_VERSION_
+	ignoreErrors:
+		- '#Access to an undefined property Cookie::\$id_employee.#'
+		- '#Access to an undefined property Cookie::\$username_addons.#'
+		- '#Access to an undefined property Cookie::\$password_addons.#'
 
 	level: 5

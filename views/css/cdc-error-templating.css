@@ -1,0 +1,105 @@
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/AFL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
+ */
+.cdc-error-container {
+  padding-bottom: 1rem;
+  margin-bottom: 15px;
+  background: #FFFFFF;
+  border-radius: 0.5rem;
+  border-width: 1px;
+  flex-direction: column;
+  display: flex;
+  --tw-border-opacity: 1;
+  border-color: rgb(200 215 228 / var(--tw-border-opacity));
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  --tw-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  --tw-shadow-colored: 0px 4px 8px var(--tw-shadow-color);
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.cdc-error-content {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 20%;
+  padding-bottom: 20%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.cdc-error-content-wrapper {
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  max-width: 42rem;
+  display: flex;
+  margin-bottom: 2rem;
+}
+
+.cdc-error-title {
+  font-family: Inter, Helvetica, Verdana, sans-serif;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.cdc-error-message {
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-family: Roboto, Helvetica, Verdana, sans-serif;
+  text-align: center;
+}
+
+.cdc-error-button-container {
+  gap: 1rem;
+  justify-content: center;
+  display: flex;
+}
+
+.cdc-error-button {
+  border-style: none;
+  --tw-bg-opacity: 1;
+  background-color: rgb(68 44 199 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-size: 0.875rem;
+  line-height: 1rem;
+  display: inline-flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: Inter, Helvetica, Verdana, sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border-radius: 0.25rem;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  height: 2.5rem;
+}

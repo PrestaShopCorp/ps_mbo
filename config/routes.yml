@@ -39,3 +39,21 @@ admin_module_catalog_refresh:
     _controller: mbo.controller.modules:refreshCatalogAction
     _legacy_controller: AdminModulesCatalog
     _legacy_link: AdminModulesCatalog:refresh
+
+admin_mbo_module_cdc_error:
+    path: /cdc_error
+    methods: [ GET ]
+    defaults:
+        _controller: mbo.controller.modules:cdcErrorAction
+
+admin_mbo_security:
+    path: /mbo/me
+    methods: [POST]
+    defaults:
+        _controller: mbo.controller.security:meAction
+
+admin_mbo_customer_bought_modules:
+    path: /addons/customer/modules
+    methods: [ GET ]
+    defaults:
+        _controller: mbo.controller.modules:getBoughtModulesAction

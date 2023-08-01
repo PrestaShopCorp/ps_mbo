@@ -57,6 +57,7 @@ $constantsToDefine = [
     '_DB_USER_',
     '_DB_PASSWD_',
     '_MYSQL_ENGINE_',
+    '_NEW_COOKIE_KEY_',
     '_COOKIE_KEY_',
     '_COOKIE_IV_',
     '_PS_VERSION_',

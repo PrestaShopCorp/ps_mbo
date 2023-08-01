@@ -71,9 +71,63 @@ services:
       - '@mbo.externalcontent.provider'
       - '@mbo.addons_selection_link_provider'
 
-  mbo.event_subscriber.module_event_subsciber:
+  mbo.controller.security:
+      class: 'PrestaShop\Module\Mbo\Controller\Admin\SecurityController'
+
+  mbo.event_subscriber.module_event_subscriber:
       class: PrestaShop\Module\Mbo\EventSubscriber\ModuleEventSubscriber
       arguments:
           - '@logger'
       tags:
           - { name: kernel.event_subscriber }
+
+  mbo.cdc.context_builder:
+      class: PrestaShop\Module\Mbo\Service\View\ContextBuilder
+      arguments:
+          - '@prestashop.adapter.legacy.context'
+          - '@prestashop.core.admin.module.repository'
+          - '@router'
+          - '@mbo.cdc.distribution_authentication_provider'
+          - '@doctrine.cache.provider'
+
+  mbo.distribution_api.client.http:
+      class: GuzzleHttp\Client
+      arguments:
+          $config:
+              base_url: "%env(DISTRIBUTION_API_URL)%"
+              timeout: "7200"
+              headers:
+                  Accept: "application/json"
+              CURLOPT_FORBID_REUSE: true
+              CURLOPT_FRESH_CONNECT: true
+
+  mbo.doctrine.cache.adapter:
+      class: Symfony\Component\Cache\Adapter\FilesystemAdapter
+      arguments:
+          - ''
+          - 0
+          - "%ps_cache_dir%%/ps_mbo"
+
+  mbo.doctrine.cache.provider:
+      class: Symfony\Component\Cache\DoctrineProvider
+      arguments:
+          - "@mbo.doctrine.cache.adapter"
+
+  mbo.cdc.client.distribution_api:
+      class: PrestaShop\Module\Mbo\Distribution\Client
+      arguments:
+          - "@mbo.distribution_api.client.http"
+          - '@mbo.doctrine.cache.provider'
+
+  mbo.cdc.distribution_authentication_provider:
+      class: PrestaShop\Module\Mbo\Distribution\AuthenticationProvider
+      arguments:
+          - '@mbo.doctrine.cache.provider'
+
+  mbo.addons.user.credentials_encryptor:
+      class: PrestaShop\Module\Mbo\Addons\User\CredentialsEncryptor
+
+  mbo.addons.user:
+      class: PrestaShop\Module\Mbo\Addons\User\AddonsUser
+      arguments:
+          - '@mbo.addons.user.credentials_encryptor'
