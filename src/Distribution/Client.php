@@ -25,6 +25,7 @@ use Context;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use stdClass;
+use Symfony\Component\Routing\Router;
 
 class Client extends BaseClient
 {
@@ -110,6 +111,7 @@ class Client extends BaseClient
         $this->setQueryParams([
             'isoLang' => $languageIsoCode,
             'shopVersion' => _PS_VERSION_,
+            'catalogUrl' => $this->router->generate('admin_mbo_catalog_module', [], Router::ABSOLUTE_PATH),
         ]);
         try {
             $conf = $this->processRequestAndDecode('shops/employee-menu');
