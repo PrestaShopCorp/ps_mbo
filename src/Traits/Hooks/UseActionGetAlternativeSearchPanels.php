@@ -52,6 +52,7 @@ trait UseActionGetAlternativeSearchPanels
         if (!empty(trim($searchedExpression))) {
             $catalogUrlParams['keyword'] = trim($searchedExpression);
         }
+        $catalogUrlParams['utm_mbo_source'] = 'search-back-office';
 
         $searchPanels = [];
         $searchPanels[] = new SearchPanel(
