@@ -108,10 +108,14 @@ class Client extends BaseClient
             return $this->cacheProvider->fetch($cacheKey);
         }
 
+        $catalogUrlParams = [
+            'utm_mbo_source' => 'menu-user-back-office',
+        ];
+
         $this->setQueryParams([
             'isoLang' => $languageIsoCode,
             'shopVersion' => _PS_VERSION_,
-            'catalogUrl' => $this->router->generate('admin_mbo_catalog_module', [], Router::ABSOLUTE_PATH),
+            'catalogUrl' => $this->router->generate('admin_mbo_catalog_module', $catalogUrlParams, Router::ABSOLUTE_PATH),
         ]);
         try {
             $conf = $this->processRequestAndDecode('shops/employee-menu');
