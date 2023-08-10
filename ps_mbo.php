@@ -159,7 +159,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '2.3.1';
+        $this->version = '2.3.2';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -829,6 +829,10 @@ class ps_mbo extends Module
     {
         if (null === $this->container) {
             $this->container = SymfonyContainer::getInstance();
+        }
+
+        if (null === $this->container) {
+            throw new Exception('Cannot get a valid Sf Container');
         }
 
         return $this->container->get($serviceName);
