@@ -831,6 +831,10 @@ class ps_mbo extends Module
             $this->container = SymfonyContainer::getInstance();
         }
 
+        if (null === $this->container) {
+            throw new Exception('Cannot get a valid Sf Container');
+        }
+
         return $this->container->get($serviceName);
     }
 
