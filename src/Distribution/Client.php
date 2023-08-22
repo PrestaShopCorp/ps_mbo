@@ -30,6 +30,18 @@ use Symfony\Component\Routing\Router;
 class Client extends BaseClient
 {
     /**
+     * @var Router
+     */
+    private $router;
+
+    public function setRouter(Router $router): self
+    {
+        $this->router = $router;
+
+        return $this;
+    }
+
+    /**
      * Get a new key from Distribution API.
      *
      * @return stdClass
@@ -115,7 +127,7 @@ class Client extends BaseClient
         $this->setQueryParams([
             'isoLang' => $languageIsoCode,
             'shopVersion' => _PS_VERSION_,
-            'catalogUrl' => $this->router->generate('admin_mbo_catalog_module', $catalogUrlParams, Router::ABSOLUTE_PATH),
+            'catalogUrl' => $this->router ? $this->router->generate('admin_mbo_catalog_module', $catalogUrlParams, Router::ABSOLUTE_PATH) : '#',
         ]);
         try {
             $conf = $this->processRequestAndDecode('shops/employee-menu');

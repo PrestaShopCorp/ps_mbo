@@ -51,7 +51,14 @@ trait UseDisplayBackOfficeEmployeeMenu
         }
 
         try {
-            $config = $apiClient->getEmployeeMenu();
+            /** @var \Symfony\Component\Routing\Router $router */
+            $router = $this->get('router');
+        } catch (\Exception $e) {
+            return;
+        }
+
+        try {
+            $config = $apiClient->setRouter($router)->getEmployeeMenu();
             if (empty($config) || empty($config->userMenu) || !is_array($config->userMenu)) {
                 return;
             }

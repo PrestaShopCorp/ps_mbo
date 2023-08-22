@@ -23,7 +23,6 @@ services:
     arguments:
       - "@mbo.distribution_api.client.http"
       - '@mbo.doctrine.cache.provider'
-      - '@router'
 
   # Distribution API Client with addons user
   mbo.cdc.client.connected_distribution_api:
@@ -32,4 +31,3 @@ services:
       - "@mbo.distribution_api.client.http"
       - '@mbo.doctrine.cache.provider'
       - '@=service("mbo.addons.user.provider").getUser()'
-      - '@router'

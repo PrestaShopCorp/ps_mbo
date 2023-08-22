@@ -68,20 +68,15 @@ class BaseClient
      * @var array<string, string>
      */
     protected $headers = [];
-    /**
-     * @var Router
-     */
-    protected $router;
 
     /**
      * @param HttpClient $httpClient
      * @param \Doctrine\Common\Cache\CacheProvider $cacheProvider
      */
-    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider, Router $router)
+    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider)
     {
         $this->httpClient = $httpClient;
         $this->cacheProvider = $cacheProvider;
-        $this->router = $router;
     }
 
     /**
