@@ -111,7 +111,7 @@ trait HaveShopOnExternalService
             // Create the lock file
             if (!file_exists($lockFile)) {
                 if (!is_dir($this->moduleCacheDir)) {
-                    mkdir($this->moduleCacheDir);
+                    mkdir($this->moduleCacheDir, 0777, true);
                 }
                 $f = fopen($lockFile, 'w+');
                 fclose($f);
