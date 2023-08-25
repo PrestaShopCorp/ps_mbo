@@ -53,6 +53,7 @@ trait UseActionGetAlternativeSearchPanels
             $catalogUrlParams['keyword'] = trim($searchedExpression);
         }
         $catalogUrlParams['utm_mbo_source'] = 'search-back-office';
+        $catalogUrlParams['mbo_cdc_path'] = '/#/modules';
 
         $searchPanels = [];
         $searchPanels[] = new SearchPanel(
