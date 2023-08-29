@@ -25,9 +25,22 @@ use Context;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use stdClass;
+use Symfony\Component\Routing\Router;
 
 class Client extends BaseClient
 {
+    /**
+     * @var Router
+     */
+    private $router;
+
+    public function setRouter(Router $router): self
+    {
+        $this->router = $router;
+
+        return $this;
+    }
+
     /**
      * Get a new key from Distribution API.
      *
@@ -107,9 +120,14 @@ class Client extends BaseClient
             return $this->cacheProvider->fetch($cacheKey);
         }
 
+        $catalogUrlParams = [
+            'utm_mbo_source' => 'menu-user-back-office',
+        ];
+
         $this->setQueryParams([
             'isoLang' => $languageIsoCode,
             'shopVersion' => _PS_VERSION_,
+            'catalogUrl' => $this->router ? $this->router->generate('admin_mbo_catalog_module', $catalogUrlParams, Router::ABSOLUTE_PATH) : '#',
         ]);
         try {
             $conf = $this->processRequestAndDecode('shops/employee-menu');

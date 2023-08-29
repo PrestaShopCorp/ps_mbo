@@ -26,6 +26,7 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use ps_mbo;
+use Symfony\Component\Routing\Router;
 
 class BaseClient
 {
@@ -61,6 +62,7 @@ class BaseClient
         'iso_code',
         'addons_username',
         'addons_pwd',
+        'catalogUrl',
     ];
     /**
      * @var array<string, string>
