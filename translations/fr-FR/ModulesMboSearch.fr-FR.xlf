@@ -4,12 +4,12 @@
     <body>
       <trans-unit id="c15784789b60bab84ad3108dacfb3f18">
         <source>Find modules to grow your business</source>
-        <target state="needs-translation">Find modules to grow your business</target>
+        <target state="translated">Trouvez des modules pour développer votre entreprise</target>
         <note>Line: 60</note>
       </trans-unit>
       <trans-unit id="66f434c53b61009046c615cea9273d61">
         <source>Explore PrestaShop Marketplace</source>
-        <target state="needs-translation">Explore PrestaShop Marketplace</target>
+        <target state="translated">Explorer la PrestaShop Marketplace</target>
         <note>Line: 61</note>
       </trans-unit>
     </body>
