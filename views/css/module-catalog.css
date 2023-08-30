@@ -38,10 +38,8 @@
   max-width: 100%;
 }
 
-/* override the padding around the catalog */
 .mbo-catalog-wrapper {
-  margin: -16px -15px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 
 #growls.default {
