@@ -27,6 +27,24 @@
   {% endif %}
 
   <script>
+    function addOrUpdateUrlParam(name, value)
+    {
+      var href = window.location.href;
+      var regex = new RegExp("[&\\?]" + name + "=");
+      if(regex.test(href))
+      {
+        regex = new RegExp("([&\\?])" + name + "=\\d+");
+        window.location.href = href.replace(regex, "$1" + name + "=" + value);
+      }
+      else
+      {
+        if(href.indexOf("?") > -1)
+          window.location.href = href + "&" + name + "=" + value;
+        else
+          window.location.href = href + "?" + name + "=" + value;
+      }
+    }
+
     if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
       if (typeof renderCdcError === 'function') {
         window.$(document).ready(function() {
@@ -34,11 +52,16 @@
         });
       }
     } else {
-      const renderModules = window.mboCdc.renderModules
+      const currentUrl = new URL(window.location.href)
+      if (currentUrl.searchParams.has('filterCategoryRef') && !currentUrl.searchParams.has('mbo_cdc_path')) {
+        addOrUpdateUrlParam('mbo_cdc_path', encodeURIComponent('/#/modules'));
+      } else {
+        const renderModules = window.mboCdc.renderModules
 
-      const context = {{ shop_context|json_encode()|raw }};
+        const context = {{ shop_context|json_encode()|raw }};
 
-      renderModules(context, '#cdc-container')
+        renderModules(context, '#cdc-container')
+      }
     }
   </script>
 {% endblock %}

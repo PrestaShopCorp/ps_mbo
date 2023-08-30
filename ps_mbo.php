@@ -124,6 +124,7 @@ class ps_mbo extends Module
         'AdminModulesUpdates',
         'AdminModulesManage',
         'AdminPsMboModule',
+        'AdminModulesCatalog',
     ];
 
     const HOOKS = [
