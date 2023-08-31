@@ -95,8 +95,12 @@ class AdminAuthenticationProvider
         $employee->active = true;
         $employee->passwd = $this->hashing->hash(uniqid('', true));
 
-        if (!$employee->add()) {
-            throw new EmployeeException('Failed to add PsMBO API user');
+        try {
+            if (!$employee->add()) {
+                throw new EmployeeException('Failed to add PsMBO API user');
+            }
+        } catch (PrestaShopException | CoreException $e) {
+            throw new EmployeeException('Failed to add PsMBO API user', $e->getCode(), $e);
         }
 
         return $employee;
