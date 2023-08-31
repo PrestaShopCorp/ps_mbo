@@ -136,6 +136,7 @@ class LinksProvider
         $routeParams = [];
         if ($category && 'other' !== mb_strtolower($categoryName)) {
             $routeParams['filterCategoryRef'] = $category->refMenu;
+            $routeParams['mbo_cdc_path'] = '/#/modules';
         }
 
         return $this->router->generate('admin_mbo_catalog_module', $routeParams);

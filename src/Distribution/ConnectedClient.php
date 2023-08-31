@@ -26,6 +26,7 @@ use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client as HttpClient;
 use PrestaShop\Module\Mbo\Addons\User\UserInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use Symfony\Component\Routing\Router;
 
 class ConnectedClient extends BaseClient
 {
@@ -36,7 +37,8 @@ class ConnectedClient extends BaseClient
 
     /**
      * @param HttpClient $httpClient
-     * @param \Doctrine\Common\Cache\CacheProvider $cacheProvider
+     * @param CacheProvider $cacheProvider
+     * @param UserInterface $user
      */
     public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider, UserInterface $user)
     {
