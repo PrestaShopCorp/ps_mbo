@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\PrestaShop\Core\Search\SearchPanel;
+use Symfony\Component\Routing\Router;
 
 trait UseActionGetAlternativeSearchPanels
 {
@@ -36,29 +37,30 @@ trait UseActionGetAlternativeSearchPanels
      */
     public function hookActionGetAlternativeSearchPanels(array $params): array
     {
-        $searchedExpression = $params['bo_query'];
-
-        $version = defined('_PS_VERSION_') ? _PS_VERSION_ : '';
-        if ($lastDotIndex = strrpos($version, '.')) {
-            $trailingVersion = str_replace('.', '_', substr($version, 0, $lastDotIndex));
-        } else {
-            $trailingVersion = '';
+        try {
+            /** @var \Symfony\Bundle\FrameworkBundle\Routing\Router $router */
+            $router = $this->get('router');
+        } catch (\Exception $e) {
+            return '';
         }
 
-        $queryParams = [
-            'search_query' => $searchedExpression,
-            'utm_source' => 'back-office',
-            'utm_medium' => 'search',
-            'utm_campaign' => 'back-office-' . $this->context->language->iso_code,
-            'utm_content' => 'download' . $trailingVersion,
-        ];
+        $catalogUrl = $router->generate('admin_mbo_catalog_module', [], Router::ABSOLUTE_PATH);
+        $catalogUrlPath = parse_url($catalogUrl, PHP_URL_PATH);
+        parse_str(parse_url($catalogUrl, PHP_URL_QUERY), $catalogUrlParams);
+
+        $searchedExpression = $params['bo_query'];
+        if (!empty(trim($searchedExpression))) {
+            $catalogUrlParams['keyword'] = trim($searchedExpression);
+        }
+        $catalogUrlParams['utm_mbo_source'] = 'search-back-office';
+        $catalogUrlParams['mbo_cdc_path'] = '/#/modules';
 
         $searchPanels = [];
         $searchPanels[] = new SearchPanel(
-            $this->trans('Search addons.prestashop.com', [], 'Modules.Mbo.Search'),
-            $this->trans('Go to Addons', [], 'Modules.Mbo.Search'),
-            'https://addons.prestashop.com/search.php',
-            $queryParams
+            $this->trans('Find modules to grow your business', [], 'Modules.Mbo.Search'),
+            $this->trans('Explore PrestaShop Marketplace', [], 'Modules.Mbo.Search'),
+            $catalogUrlPath,
+            $catalogUrlParams
         );
 
         return $searchPanels;

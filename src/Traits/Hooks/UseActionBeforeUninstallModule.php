@@ -26,6 +26,7 @@ use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 trait UseActionBeforeUninstallModule
 {
@@ -45,6 +46,13 @@ trait UseActionBeforeUninstallModule
 
         if ('ps_mbo' === $moduleName) {
             $this->storeAddonsCredentials($params, 'uninstall');
+
+            // If MBO is uninstalled with sources deletion, we disable the AddonsCredentialsEncryptionListener
+            $deleteFiles = (bool) (\Tools::getValue('actionParams', [])['deletion'] ?? false);
+            if ($deleteFiles) {
+                $addonsEncryptionListener = $this->get('service_container')->get('mbo.addons.event_listener.addons_credentials_encryption_listener');
+                $this->get('event_dispatcher')->removeListener(KernelEvents::RESPONSE, [$addonsEncryptionListener, 'onKernelResponse']);
+            }
         }
     }
 }

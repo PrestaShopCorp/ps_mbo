@@ -53,7 +53,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '4.5.0';
+    public const VERSION = '4.5.2';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminPsMboModule',
@@ -104,7 +104,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.5.0';
+        $this->version = '4.5.2';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -366,7 +366,7 @@ class ps_mbo extends Module
             $this->container = SymfonyContainer::getInstance();
         }
 
-        return $this->container->has('mbo.security.admin_authentication.provider') ?
+        return null !== $this->container && $this->container->has('mbo.security.admin_authentication.provider') ?
             $this->get('mbo.security.admin_authentication.provider') :
             new AdminAuthenticationProvider(
                 $this->get('doctrine.dbal.default_connection'),
@@ -440,7 +440,7 @@ class ps_mbo extends Module
         $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
         if (!file_exists($lockFile)) {
             if (!is_dir($this->moduleCacheDir)) {
-                mkdir($this->moduleCacheDir);
+                mkdir($this->moduleCacheDir, 0777, true);
             }
             $f = fopen($lockFile, 'w+');
             fclose($f);
