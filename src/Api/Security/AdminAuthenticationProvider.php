@@ -268,7 +268,7 @@ class AdminAuthenticationProvider
         return sprintf('mbo_jwt_token_%s', Config::getShopMboUuid());
     }
 
-    private function getDefaultUserToken()
+    private function getDefaultUserToken(): string
     {
         $idTab = Tab::getIdFromClassName('apiPsMbo');
 
