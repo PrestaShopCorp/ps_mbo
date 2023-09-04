@@ -165,7 +165,7 @@ trait UseDisplayDashboardTop
     private function displayFailedApiUser()
     {
         $this->smarty->assign([
-            'explanation' => $this->trans('The creation of the MBO Admin user failed. Your marketplace will work in degraded mode. Some actions on modules won\'t be available. Please try to reset the module or contract an admin for help', [], 'Modules.Mbo.Global'),
+            'explanation' => $this->trans('The creation of the MBO Admin user failed. Your marketplace will work in degraded mode. Some actions on modules won\'t be available. Please try to reset the module or contact an admin for help', [], 'Modules.Mbo.Global'),
         ]);
 
         return $this->fetch('module:ps_mbo/views/templates/hook/failed-api-user.tpl');
