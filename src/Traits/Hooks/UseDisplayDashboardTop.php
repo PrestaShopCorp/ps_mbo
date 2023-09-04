@@ -82,13 +82,24 @@ trait UseDisplayDashboardTop
      */
     public function hookDisplayDashboardTop(): string
     {
-        // Check if this page has already been processed by the hook to avoid duplciate content
+        // Check if this page has already been processed by the hook to avoid duplicate content
         if ($this->alreadyProcessedPage) {
             return '';
         }
         $this->alreadyProcessedPage = true;
 
         $values = Tools::getAllValues();
+        $moduleCacheDir = sprintf('%s/var/modules/ps_mbo/', rtrim(_PS_ROOT_DIR_, '/'));
+        $createApiUserLockFile = $moduleCacheDir . 'createApiUser.lock';
+
+        if (
+            isset($values['controller']) &&
+            ($values['controller'] === 'AdminPsMboModule') &&
+            file_exists($createApiUserLockFile)
+        ) {
+            return $this->displayFailedApiUser();
+        }
+
         //Check if we are on configuration page & if the module needs to have a push on this page
         if (
             isset($values['controller']) &&
@@ -149,6 +160,15 @@ trait UseDisplayDashboardTop
         }
 
         return $this->fetch('module:ps_mbo/views/templates/hook/push-configuration.tpl');
+    }
+
+    private function displayFailedApiUser()
+    {
+        $this->smarty->assign([
+            'explanation' => $this->trans('The creation of the MBO Admin user failed. Your marketplace will work in degraded mode. Some actions on modules won\'t be available. Please try to reset the module or contract an admin for help', [], 'Modules.Mbo.Global'),
+        ]);
+
+        return $this->fetch('module:ps_mbo/views/templates/hook/failed-api-user.tpl');
     }
 
     /**
