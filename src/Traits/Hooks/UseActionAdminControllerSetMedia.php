@@ -46,8 +46,9 @@ trait UseActionAdminControllerSetMedia
     {
         if (Tools::getValue('controller') === "AdminPsMboModule") {
             $this->context->controller->addJs($this->getPathUri() . 'views/js/upload_module_with_cdc.js?v=' . $this->version);
+            $this->context->controller->addJs($this->getPathUri() . 'views/js/failed-api-user.js?v=' . $this->version);
         }
-        
+
         if (empty($this->adminControllerMediaMethods)) {
             return;
         }

@@ -26,6 +26,7 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 use Exception;
 use Hook;
 use PrestaShop\Module\Mbo\Tab\TabInterface;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use ToolsCore as Tools;
 
@@ -164,11 +165,29 @@ trait UseDisplayDashboardTop
 
     private function displayFailedApiUser()
     {
-        $this->smarty->assign([
-            'explanation' => $this->trans('The creation of the MBO Admin user failed. Your marketplace will work in degraded mode. Some actions on modules won\'t be available. Please try to reset the module or contact an admin for help', [], 'Modules.Mbo.Global'),
-        ]);
+        try {
+            /** @var \Twig\Environment $twig */
+            $twig = $this->get('twig');
 
-        return $this->fetch('module:ps_mbo/views/templates/hook/failed-api-user.tpl');
+            /**
+             * @var Router $router
+             */
+            $router = $this->get('router');
+
+            return $twig->render(
+                '@Modules/ps_mbo/views/templates/hook/twig/failed-api-user.html.twig', [
+                    'reset_url' => $router->generate(
+                        'admin_module_manage_action',
+                        [
+                            'action' => 'reset',
+                            'module_name' => 'ps_mbo',
+                        ]
+                    ),
+                ]
+            );
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 
     /**
