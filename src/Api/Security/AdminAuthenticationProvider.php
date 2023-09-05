@@ -29,6 +29,7 @@ use Employee;
 use EmployeeSession;
 use Exception;
 use Firebase\JWT\JWT;
+use PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandlerInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
@@ -65,18 +66,25 @@ class AdminAuthenticationProvider
      */
     private $cacheProvider;
 
+    /**
+     * @var ErrorHandlerInterface
+     */
+    private $errorHandler;
+
     public function __construct(
         Connection $connection,
         Context $context,
         Hashing $hashing,
         CacheProvider $cacheProvider,
-        string $dbPrefix
+        string $dbPrefix,
+        ErrorHandlerInterface $errorHandler
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->context = $context;
         $this->hashing = $hashing;
         $this->cacheProvider = $cacheProvider;
+        $this->errorHandler = $errorHandler;
     }
 
     public function createApiUser(): ?Employee
@@ -118,6 +126,8 @@ class AdminAuthenticationProvider
                 $f = fopen($lockFile, 'w+');
                 fclose($f);
             }
+
+            $this->logFailedEmployeeException($e);
 
             return null;
         }
@@ -273,5 +283,16 @@ class AdminAuthenticationProvider
         $idTab = Tab::getIdFromClassName('apiPsMbo');
 
         return Tools::getAdminToken('apiPsMbo' . (int) $idTab . self::DEFAULT_EMPLOYEE_ID);
+    }
+
+    private function logFailedEmployeeException(Exception $e): void
+    {
+        $this->errorHandler->handle($e, null, false, [
+            'shop_mbo_uuid' => Config::getShopMboUuid(),
+            'shop_mbo_admin_mail' => Config::getShopMboAdminMail(),
+            'shop_url' => Config::getShopUrl(),
+            'multishop' => \Shop::isFeatureActive(),
+            'number_of_shops' => \Shop::getTotalShops(false, null),
+        ]);
     }
 }
