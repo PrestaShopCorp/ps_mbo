@@ -17,5 +17,5 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *#}
 <div class="alert alert-warning">
-  {{ 'The creation of the MBO Admin user failed. Your marketplace will work in degraded mode. Some actions on modules won\'t be available. Please try to %link% the module or contact an admin for help' | trans({'%link%': '<a href="#" data-module-name="ps_mbo" data-url="'~reset_url~'" class="failed-api-user-ps_mbo-reset">Reset</a>'}, 'Modules.Mbo.Global') | raw }}
+  {{ 'The creation of the MBO Admin user failed. Your marketplace will work in degraded mode. Some actions on modules won\'t be available. Please try to %link% the module or contact an admin for help' | trans({'%link%': '<a href="'~reset_url~'" class="failed-api-user-ps_mbo-reset">reset</a>'}, 'Modules.Mbo.Global') | raw }}
 </div>
