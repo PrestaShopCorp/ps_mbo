@@ -95,6 +95,10 @@ class AdminAuthenticationProvider
         $employee = $this->getApiUser();
 
         if (null !== $employee) {
+            if (file_exists($lockFile)) {
+                unlink($lockFile);
+            }
+
             return $employee;
         }
 
