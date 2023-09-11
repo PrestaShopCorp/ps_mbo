@@ -16,6 +16,15 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *#}
-<div class="alert alert-warning">
-  {{ 'The creation of the MBO Admin user failed. Your marketplace will work in degraded mode. Some actions on modules won\'t be available. Please try to %link% the module or contact an admin for help' | trans({'%link%': '<a href="'~reset_url~'" class="failed-api-user-ps_mbo-reset">reset</a>'}, 'Modules.Mbo.Global') | raw }}
+<div class="alert alert-warning failed-api-user-alert">
+  <h4>Your module needs to be reset</h4>
+  <div class="explanation">
+    <p>
+      {{ "Following an update to your store, the PrestaShop Marketplace in you Backoffice is no longer working properly.<br>Please try resetting the module in your Module Manager and contact us if the problem persists." | trans({}, 'Modules.Mbo.Global') | raw }}
+    </p>
+    <div class="links">
+      <a href="mailto:support-mbo@prestashop.com" class="btn btn-outline-warning unbordered">Contact us</a>
+      <a href="{{ module_manager_link }}" class="btn btn-outline-warning">Go to the Module Manager</a>
+    </div>
+  </div>
 </div>

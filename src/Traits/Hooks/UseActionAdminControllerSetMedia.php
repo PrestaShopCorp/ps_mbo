@@ -86,6 +86,9 @@ trait UseActionAdminControllerSetMedia
      */
     protected function loadMediaForAdminControllerSetMedia(): void
     {
+        if (Tools::getValue('controller') === 'AdminPsMboModule') {
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/failed-api-user.css');
+        }
         if (in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CDC_SCRIPT)) {
             $this->context->controller->addJs('/js/jquery/plugins/growl/jquery.growl.js?v=' . $this->version);
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css');

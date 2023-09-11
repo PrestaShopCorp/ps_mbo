@@ -176,7 +176,7 @@ trait UseDisplayDashboardTop
 
             return $twig->render(
                 '@Modules/ps_mbo/views/templates/hook/twig/failed-api-user.html.twig', [
-                    'reset_url' => $router->generate('admin_module_manage'),
+                    'module_manager_link' => $router->generate('admin_module_manage'),
                 ]
             );
         } catch (\Exception $e) {
