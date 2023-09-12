@@ -459,7 +459,7 @@ class ps_mbo extends Module
         $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
         $this->context->controller->addCSS($this->getPathUri() . 'views/css/catalog.css?v=' . $this->version, 'all', null, false);
 
-        if (Tools::getValue('controller') === "AdminPsMboModule") {
+        if (Tools::getValue('controller') === 'AdminPsMboModule') {
             $this->context->controller->addJs($this->getPathUri() . 'views/js/upload_module_with_cdc.js?v=' . $this->version);
         }
 
