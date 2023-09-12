@@ -29,6 +29,7 @@ use Employee;
 use EmployeeSession;
 use Exception;
 use Firebase\JWT\JWT;
+use PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler;
 use PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandlerInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
@@ -76,15 +77,13 @@ class AdminAuthenticationProvider
         Context $context,
         Hashing $hashing,
         CacheProvider $cacheProvider,
-        string $dbPrefix,
-        ErrorHandlerInterface $errorHandler
+        string $dbPrefix
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->context = $context;
         $this->hashing = $hashing;
         $this->cacheProvider = $cacheProvider;
-        $this->errorHandler = $errorHandler;
     }
 
     public function createApiUser(): ?Employee
@@ -291,12 +290,21 @@ class AdminAuthenticationProvider
 
     private function logFailedEmployeeException(Exception $e): void
     {
-        $this->errorHandler->handle($e, null, false, [
+        $this->getErrorHandler()->handle($e, null, false, [
             'shop_mbo_uuid' => Config::getShopMboUuid(),
             'shop_mbo_admin_mail' => Config::getShopMboAdminMail(),
             'shop_url' => Config::getShopUrl(),
             'multishop' => \Shop::isFeatureActive(),
             'number_of_shops' => \Shop::getTotalShops(false, null),
         ]);
+    }
+
+    private function getErrorHandler(): ErrorHandler
+    {
+        if (null === $this->errorHandler) {
+            $this->errorHandler = new ErrorHandler();
+        }
+
+        return $this->errorHandler;
     }
 }

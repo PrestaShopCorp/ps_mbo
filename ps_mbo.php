@@ -33,7 +33,6 @@ use LanguageCore as Language;
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
-use PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
@@ -374,8 +373,7 @@ class ps_mbo extends Module
                 $this->context,
                 $this->get('prestashop.core.crypto.hashing'),
                 $this->get('doctrine.cache.provider'),
-                $this->container->getParameter('database_prefix'),
-                (new ErrorHandler())
+                $this->container->getParameter('database_prefix')
             );
     }
 

@@ -10,7 +10,6 @@ services:
       - '@prestashop.core.crypto.hashing'
       - '@doctrine.cache.provider'
       - '%database_prefix%'
-      - '@PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler'
 
   PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker:
     class: PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker

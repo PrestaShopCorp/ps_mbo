@@ -16,15 +16,13 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *#}
-<div class="alert alert-warning failed-api-user-alert">
-  <h4>Your module needs to be reset</h4>
+<div class="alert alert-warning failed-api-user-alert alert-dismissible">
   <div class="explanation">
     <p>
-      {{ "Following an update to your store, the PrestaShop Marketplace in you Backoffice is no longer working properly.<br>Please try resetting the module in your Module Manager and contact us if the problem persists." | trans({}, 'Modules.Mbo.Global') | raw }}
+      {{ "Your module needs to be reset. The PrestaShop Marketplace in your back office is no longer working properly. Please try resetting the module in your %link%. If the problem persists, feel free to contact the support." | trans({'%link%': '<a href="'~module_manager_link~'" class="failed-api-user-ps_mbo-reset">Module Manager</a>'}, 'Modules.Mbo.Global') | raw }}
     </p>
-    <div class="links">
-      <a href="mailto:support-mbo@prestashop.com" class="btn btn-outline-warning unbordered">Contact us</a>
-      <a href="{{ module_manager_link }}" class="btn btn-outline-warning">Go to the Module Manager</a>
-    </div>
   </div>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
