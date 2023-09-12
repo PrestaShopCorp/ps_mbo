@@ -5,17 +5,17 @@
       <trans-unit id="3b89e163ae0b446bd02e13de8dcf70d3" approved="yes">
         <source><![CDATA[For even more security on your website forms, consult our Security & Access modules category on the]]></source>
         <target state="final"><![CDATA[Aby jeszcze bardziej zabezpieczyć formularze w witrynie, skorzystaj z naszej kategorii modułów Bezpieczeństwo & Dostęp na stronie]]></target>
-        <note>Line: 131</note>
+        <note>Line: 143</note>
       </trans-unit>
       <trans-unit id="3aaeb3f0458cf2580c5f75fefdb86ab6" approved="yes">
         <source>PrestaShop Addons Marketplace</source>
         <target state="final">PrestaShop Addons Marketplace</target>
-        <note>Line: 147</note>
+        <note>Line: 159</note>
       </trans-unit>
       <trans-unit id="71f716ae5452ef886e40d36f14afed87" approved="yes">
         <source>Discover more modules to improve your shop on</source>
         <target state="final">Odkryj więcej modułów usprawniających Twój sklep na</target>
-        <note>Line: 145</note>
+        <note>Line: 157</note>
       </trans-unit>
     </body>
   </file>
@@ -35,6 +35,15 @@
         <source>Refresh page</source>
         <target state="final">Odśwież stronę</target>
         <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="views/templates/hook/twig/failed-api-user.html.twig" source-language="en" target-language="pl" datatype="plaintext">
+    <body>
+      <trans-unit id="a4eb3ae1fceef46fa21eb216a5316651">
+        <source>Your module needs to be reset. The PrestaShop Marketplace in your back office is no longer working properly. Please try resetting the module in your %link%. If the problem persists, feel free to contact the support.</source>
+        <target state="needs-translation">Your module needs to be reset. The PrestaShop Marketplace in your back office is no longer working properly. Please try resetting the module in your %link%. If the problem persists, feel free to contact the support.</target>
+        <note>Line: 22</note>
       </trans-unit>
     </body>
   </file>
