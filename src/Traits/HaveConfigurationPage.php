@@ -42,7 +42,7 @@ trait HaveConfigurationPage
         'preprod' => [
             'cdc' => 'https://preproduction-assets.prestashop3.com/dst/mbo/v1/mbo-cdc.umd.js',
             'api' => 'https://mbo-api-preprod.prestashop.com',
-            'addons' => 'https://preprod-api-addons.prestashop.com',
+            'addons' => 'https://api-addons.prestashop.com',
         ],
         'prod' => [
             'cdc' => 'https://assets.prestashop3.com/dst/mbo/v1/mbo-cdc.umd.js',
