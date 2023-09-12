@@ -42,7 +42,7 @@
     <body>
       <trans-unit id="a4eb3ae1fceef46fa21eb216a5316651">
         <source>Your module needs to be reset. The PrestaShop Marketplace in your back office is no longer working properly. Please try resetting the module in your %link%. If the problem persists, feel free to contact the support.</source>
-        <target state="needs-translation">Your module needs to be reset. The PrestaShop Marketplace in your back office is no longer working properly. Please try resetting the module in your %link%. If the problem persists, feel free to contact the support.</target>
+        <target state="translated">Your module needs to be reset. The PrestaShop Marketplace in your back office is no longer working properly. Please try resetting the module in your %link%. If the problem persists, feel free to contact the support.</target>
         <note>Line: 22</note>
       </trans-unit>
     </body>
