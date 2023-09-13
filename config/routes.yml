@@ -6,6 +6,14 @@ admin_mbo_catalog_module:
     _legacy_controller: AdminPsMboModule
     _legacy_link: AdminPsMboModule
 
+admin_module_catalog:
+    path: /improve/modules/catalog
+    methods: [GET]
+    defaults:
+        _controller: mbo.controller.modules:catalogAction
+        _legacy_controller: AdminModulesCatalog
+        _legacy_link: AdminModulesCatalog
+
 admin_mbo_catalog_module_selection:
   path: /addons/modules/catalog/selection
   methods: [GET]
