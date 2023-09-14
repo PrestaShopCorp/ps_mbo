@@ -74,7 +74,7 @@ trait UseDisplayBackOfficeEmployeeMenu
                         [
                             'link' => $link->link,
                             'icon' => $link->icon,
-                            'samePage' => $link->same_page ?? false,
+                            'isExternalLink' => $link->is_external_link ?? false,
                         ],
                         $link->name
                     )
