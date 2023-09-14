@@ -24,10 +24,14 @@ namespace PrestaShop\Module\Mbo\Distribution;
 use Context;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Helpers\ModuleRouting;
+use PrestaShop\Module\Mbo\Module\Action\ActionInterface;
 use stdClass;
 
 class Client extends BaseClient
 {
+    private $processNotificationMode = false;
+
     /**
      * Get a new key from Distribution API.
      *
@@ -154,5 +158,141 @@ class Client extends BaseClient
         } catch (\Throwable $e) {
             // Do nothing if the tracking fails
         }
+    }
+
+    public function notifyStartInstall(ActionInterface $action)
+    {
+        try {
+            $module = $action->getModule();
+
+            $this->processRequestAndDecode(
+                'install-product/start-install',
+                self::HTTP_METHOD_POST,
+                [
+                    'form_params' => [
+                        'productInstallTriggeredEventId' => $action->getActionUuid(),
+                        'name' => $action->getModuleName(),
+                        'shopUuid' => Config::getShopMboUuid(),
+                        'status' => $module->getStatus(),
+                        'configUrl' => ModuleRouting::getConfigUrl($module),
+                        'moduleVersion' => $module->get('version'),
+                    ],
+                ]
+            );
+        } catch (\Throwable $e) {
+            // Do nothing if the notification fails
+        }
+    }
+
+    public function notifyEndInstall(ActionInterface $action)
+    {
+        try {
+            $action->refreshModule();
+            $module = $action->getModule();
+
+            $this->processRequestAndDecode(
+                'install-product/end-install',
+                self::HTTP_METHOD_POST,
+                [
+                    'form_params' => [
+                        'productInstallTriggeredEventId' => $action->getActionUuid(),
+                        'name' => $action->getModuleName(),
+                        'shopUuid' => Config::getShopMboUuid(),
+                        'status' => $module->getStatus(),
+                        'configUrl' => ModuleRouting::getConfigUrl($module),
+                        'moduleVersion' => $module->get('version'),
+                    ],
+                ]
+            );
+        } catch (\Throwable $e) {
+            // Do nothing if the notification fails
+        }
+    }
+
+    public function notifyStartDownload(ActionInterface $action)
+    {
+        try {
+            $module = $action->getModule();
+
+            $this->processRequestAndDecode(
+                'install-product/start-download',
+                self::HTTP_METHOD_POST,
+                [
+                    'form_params' => [
+                        'productInstallTriggeredEventId' => $action->getActionUuid(),
+                        'name' => $action->getModuleName(),
+                        'shopUuid' => Config::getShopMboUuid(),
+                        'status' => $module->getStatus(),
+                        'configUrl' => ModuleRouting::getConfigUrl($module),
+                        'moduleVersion' => $module->get('version'),
+                    ],
+                ]
+            );
+        } catch (\Throwable $e) {
+            // Do nothing if the notification fails
+        }
+    }
+
+    public function notifyEndDownload(ActionInterface $action)
+    {
+        try {
+            $action->refreshModule();
+            $module = $action->getModule();
+
+            $this->processRequestAndDecode(
+                'install-product/end-download',
+                self::HTTP_METHOD_POST,
+                [
+                    'form_params' => [
+                        'productInstallTriggeredEventId' => $action->getActionUuid(),
+                        'name' => $action->getModuleName(),
+                        'shopUuid' => Config::getShopMboUuid(),
+                        'status' => $module->getStatus(),
+                        'configUrl' => ModuleRouting::getConfigUrl($module),
+                        'moduleVersion' => $module->get('version'),
+                    ],
+                ]
+            );
+        } catch (\Throwable $e) {
+            // Do nothing if the notification fails
+        }
+    }
+
+    public function notifyInstallError(ActionInterface $action, string $errorMessage)
+    {
+        try {
+            $action->refreshModule();
+            $module = $action->getModule();
+
+            $this->processRequestAndDecode(
+                'install-product/error',
+                self::HTTP_METHOD_POST,
+                [
+                    'form_params' => [
+                        'productInstallTriggeredEventId' => $action->getActionUuid(),
+                        'name' => $action->getModuleName(),
+                        'shopUuid' => Config::getShopMboUuid(),
+                        'status' => $module->getStatus(),
+                        'configUrl' => ModuleRouting::getConfigUrl($module),
+                        'moduleVersion' => $module->get('version'),
+                        'errorMessage' => $errorMessage,
+                    ],
+                ]
+            );
+        } catch (\Throwable $e) {
+            // Do nothing if the notification fails
+        }
+    }
+
+    public function isProcessNotificationMode(): bool
+    {
+        return $this->processNotificationMode;
+    }
+
+    public function setProcessNotificationMode(bool $processNotificationMode): self
+    {
+        $this->processNotificationMode = $processNotificationMode;
+
+        return $this;
     }
 }

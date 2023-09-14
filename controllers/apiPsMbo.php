@@ -22,6 +22,15 @@ use PrestaShop\Module\Mbo\Api\Controller\AbstractAdminApiController;
 use PrestaShop\Module\Mbo\Api\Exception\IncompleteSignatureParamsException;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
 use PrestaShop\Module\Mbo\Api\Service\Factory as ExcutorsFactory;
+use PrestaShop\Module\Mbo\Api\Service\ModuleActionExecutor;
+use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Module\Action\ActionInterface;
+use PrestaShop\Module\Mbo\Module\Action\Scheduler;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Process\Process;
 
 /**
  * This controller is responsible to execute actions on modules installed on the current shop.
@@ -34,21 +43,42 @@ class apiPsMboController extends AbstractAdminApiController
      */
     public function postProcess()
     {
+        $logger = $this->module->get('logger');
         $response = null;
+
+        // We call ModuleRepository fetchAll to avoid using session after response send
+//        $this->module->get('mbo.modules.repository')->fetchAll();
+
+//        /**
+//         * @var \Symfony\Component\HttpFoundation\Session\Session $session
+//         */
+//        $session = $this->module->get('session');
+//        $session->save();
+//        $request = $requestStack->getCurrentRequest();
+//        $session = $request->getSession();
+//        $session->start();
+
         try {
             $service = Tools::getValue('service');
             if (empty($service)) {
                 throw new QueryParamsException('[service] parameter is required');
             }
-            /** @var ExcutorsFactory $executorsFactory */
-            $executorsFactory = $this->module->get('mbo.api.service.factory');
 
-            $response = $executorsFactory->build($service)->execute($this->module);
+            $actionToExecute = null;
+
+
+            if (!$actionToExecute instanceof ActionInterface) {
+                /** @var ExcutorsFactory $executorsFactory */
+                $executorsFactory = $this->module->get('mbo.api.service.factory');
+                $response = $executorsFactory->build($service)->execute($this->module, $actionToExecute);
+            }
         } catch (\Exception $exception) {
-            $this->exitWithExceptionMessage($exception);
+            return $this->exitWithExceptionMessage($exception);
         }
 
-        $this->exitWithResponse($response);
+        if (null !== $response) {
+            return $this->exitWithResponse($response);
+        }
     }
 
     /**

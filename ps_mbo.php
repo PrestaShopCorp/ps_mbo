@@ -53,7 +53,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '4.4.2';
+    public const VERSION = '5.0.0';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminPsMboModule',
@@ -104,7 +104,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.4.2';
+        $this->version = '5.0.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -391,6 +391,21 @@ class ps_mbo extends Module
             ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=UTF8;';
         }
 
+        if (null === $table || 'mbo_action_queue' === $table) {
+            $sqlQueries[] = ' CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'mbo_action_queue` (
+                `id_mbo_action_queue` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `action_uuid` varchar(255) NOT NULL,
+                `action` varchar(255) NOT NULL,
+                `module` varchar(255) NOT NULL,
+                `parameters` LONGTEXT NULL,
+                `status` varchar(255) NOT NULL DEFAULT \'PENDING\',
+                `date_add` datetime NOT NULL,
+                `date_started` datetime NULL DEFAULT NULL,
+                `date_ended` datetime NULL DEFAULT NULL,
+                PRIMARY KEY (`id_mbo_action_queue`)
+            ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=UTF8;';
+        }
+
         foreach ($sqlQueries as $query) {
             if (!Db::getInstance()->execute($query)) {
                 return false;
@@ -403,6 +418,7 @@ class ps_mbo extends Module
     private function uninstallTables(): bool
     {
         $sqlQueries[] = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'mbo_api_config`';
+        $sqlQueries[] = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'mbo_action_queue`';
 
         foreach ($sqlQueries as $query) {
             if (!Db::getInstance()->execute($query)) {

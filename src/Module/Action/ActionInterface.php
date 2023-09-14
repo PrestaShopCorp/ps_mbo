@@ -17,12 +17,40 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+declare(strict_types=1);
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+namespace PrestaShop\Module\Mbo\Module\Action;
 
-header('Location: ../');
-exit;
+use PrestaShop\Module\Mbo\Module\Module;
+
+interface ActionInterface
+{
+    const PENDING = 'PENDING';
+    const PROCESSING = 'PROCESSING';
+    const PROCESSED = 'PROCESSED';
+    const ERROR = 'ERROR';
+
+    public function execute(): bool;
+
+    public function getActionUuid(): string;
+
+    public function getActionName(): string;
+
+    public function getModuleName(): string;
+
+    public function getStatus(): string;
+
+    public function setStatus(string $status): ActionInterface;
+
+    public function getParameters(): ?array;
+
+    public function isInProgress(): bool;
+
+    public function isPending(): bool;
+
+    public function isProcessed(): bool;
+
+    public function getModule(): Module;
+
+    public function refreshModule(): void;
+}

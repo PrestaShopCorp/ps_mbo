@@ -69,7 +69,11 @@ trait UseActionBeforeUpgradeModule
         if (!empty($params['route']) && $params['route'] === 'admin_module_manage_action') {
             return true;
         }
-        if (!empty($params['request']) && $params['request']->get('_controller') === 'PrestaShopBundle\Controller\Admin\Improve\ModuleController::moduleAction' && $params['request']->get('action') === 'upgrade') {
+        if (
+            !empty($params['request']) &&
+            $params['request']->get('_controller') === 'PrestaShopBundle\Controller\Admin\Improve\ModuleController::moduleAction' &&
+            $params['request']->get('action') === 'upgrade'
+        ) {
             return true;
         }
 

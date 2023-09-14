@@ -17,12 +17,21 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+declare(strict_types=1);
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+namespace PrestaShop\Module\Mbo\Module\Action;
 
-header('Location: ../');
-exit;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+
+class EnableAction extends AbstractAction
+{
+    public function execute(): bool
+    {
+        return $this->moduleManager->enable($this->moduleName);
+    }
+
+    public function getActionName(): string
+    {
+        return ActionBuilder::ACTION_NAME_ENABLE;
+    }
+}

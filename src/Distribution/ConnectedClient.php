@@ -38,9 +38,9 @@ class ConnectedClient extends BaseClient
      * @param HttpClient $httpClient
      * @param \Doctrine\Common\Cache\CacheProvider $cacheProvider
      */
-    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider, UserInterface $user)
+    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider, UserInterface $user, string $prefix = '/')
     {
-        parent::__construct($httpClient, $cacheProvider);
+        parent::__construct($httpClient, $cacheProvider, $prefix);
         $this->user = $user;
     }
 

@@ -17,7 +17,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
 namespace PrestaShop\Module\Mbo\Api\Service;
 
 interface ServiceExecutorInterface
@@ -36,7 +35,7 @@ interface ServiceExecutorInterface
      *
      * @param ...$parameters
      *
-     * @return array
+     * @return array|null
      */
-    public function execute(...$parameters): array;
+    public function execute(...$parameters): ?array;
 }

@@ -17,6 +17,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Api\Service;
 
@@ -66,7 +67,6 @@ class ConfigApplyExecutor implements ServiceExecutorInterface
         }
 
         if ($config === null && json_last_error() !== JSON_ERROR_NONE) {
-            var_dump(Tools::getValue('conf'), gettype(Tools::getValue('conf')), $config, json_last_error_msg());
             throw new InvalidConfigException('Config given is invalid. Please check the structure.');
         }
 

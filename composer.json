@@ -43,7 +43,9 @@
     ],
     "psr-4": {
       "PrestaShop\\Module\\Mbo\\": "src/",
-      "PrestaShop\\Module\\Mbo\\Tests\\": "tests"
+      "PrestaShop\\Module\\Mbo\\PublicApi\\": "controllers/admin/",
+      "PrestaShop\\Module\\Mbo\\Tests\\": "tests",
+      "Symfony\\Component\\Process\\Process\\": ""
     },
     "classmap": [
       "ps_mbo.php",

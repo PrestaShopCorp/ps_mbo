@@ -149,7 +149,7 @@ class AddonsUser implements UserInterface
      */
     private function getFromSession(string $key)
     {
-        return $this->session->get($key);
+        return $this->session->isStarted() ? $this->session->get($key) : null;
     }
 
     /**
