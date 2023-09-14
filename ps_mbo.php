@@ -172,7 +172,7 @@ class ps_mbo extends Module
         $this->getAdminAuthenticationProvider()->deletePossibleApiUser();
         $this->getAdminAuthenticationProvider()->clearCache();
 
-        $lockFiles = ['registerShop', 'updateShop'];
+        $lockFiles = ['registerShop', 'updateShop', 'createApiUser'];
         foreach ($lockFiles as $lockFile) {
             if (file_exists($this->moduleCacheDir . $lockFile . '.lock')) {
                 unlink($this->moduleCacheDir . $lockFile . '.lock');
