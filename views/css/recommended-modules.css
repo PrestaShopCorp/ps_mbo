@@ -164,16 +164,29 @@
 }
 
 @media (min-width: 768px) {
-  #content.bootstrap #modules_list_container .modal-dialog {
-    width: 680px;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+  #modules_list_container .modal-dialog {
+    position: relative;
+    height: 80%;
+    max-width: 862px;
+    overflow: auto;
+    max-width: 862px;
+    width: 100%;
   }
 }
 
 /* Override all styling because of some legacy pages */
+#modules_list_container .modal-wrapper {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 #modules_list_container .modal-body {
   min-height: 60px;
   padding: 1.25rem 1.25rem 0;
