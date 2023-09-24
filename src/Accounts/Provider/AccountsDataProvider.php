@@ -23,20 +23,31 @@ namespace PrestaShop\Module\Mbo\Accounts\Provider;
 
 use Exception;
 use PrestaShop\Module\PsAccounts\Repository\UserTokenRepository;
-use PrestaShop\Module\PsAccounts\Service\PsAccountsService;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PsAccountsInstaller\Installer\Exception\ModuleNotInstalledException;
+use PrestaShop\PsAccountsInstaller\Installer\Exception\ModuleVersionException;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
+use PrestaShop\PsAccountsInstaller\Installer\Installer;
 
 class AccountsDataProvider
 {
     /**
-     * @var PsAccounts
+     * @var ModuleDataProvider
      */
-    private $psAccountsFacade;
+    private $moduleDataProvider;
+    /**
+     * @var string
+     */
+    private $psAccountsVersion;
 
-    public function __construct(PsAccounts $psAccountsFacade)
+    public function __construct(
+        ModuleDataProvider $moduleDataProvider,
+        string $psAccountsVersion
+    )
     {
-        $this->psAccountsFacade = $psAccountsFacade;
+        $this->moduleDataProvider = $moduleDataProvider;
+        $this->psAccountsVersion = $psAccountsVersion;
     }
 
     public function getAccountsToken(): string
@@ -110,8 +121,63 @@ class AccountsDataProvider
         }
     }
 
-    private function getAccountsService(): PsAccountsService
+
+    /**
+     * @param string $serviceName
+     *
+     * @return mixed
+     *
+     * @throws ModuleNotInstalledException
+     * @throws ModuleVersionException
+     */
+    public function getAccountsService()
     {
-        return $this->psAccountsFacade->getPsAccountsService();
+        if ($this->isPsAccountsInstalled()) {
+            if ($this->checkPsAccountsVersion()) {
+                return \Module::getInstanceByName(Installer::PS_ACCOUNTS_MODULE_NAME)
+                    ->getService(PsAccounts::PS_ACCOUNTS_SERVICE);
+            }
+            throw new ModuleVersionException('Module version expected : ' . $this->psAccountsVersion);
+        }
+        throw new ModuleNotInstalledException('Module not installed : ' . Installer::PS_ACCOUNTS_MODULE_NAME);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isPsAccountsInstalled()
+    {
+        $moduleName = Installer::PS_ACCOUNTS_MODULE_NAME;
+
+        if (false === $this->isShopVersion17()) {
+            return \Module::isInstalled($moduleName);
+        }
+
+        return $this->moduleDataProvider->isInstalled($moduleName);
+    }
+
+    private function checkPsAccountsVersion()
+    {
+        $moduleName = Installer::PS_ACCOUNTS_MODULE_NAME;
+
+        $module = \Module::getInstanceByName($moduleName);
+
+        if ($module instanceof \Ps_accounts) {
+            return version_compare(
+                $module->version,
+                $this->psAccountsVersion,
+                '>='
+            );
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isShopVersion17()
+    {
+        return version_compare(_PS_VERSION_, '1.7.0.0', '>=');
     }
 }

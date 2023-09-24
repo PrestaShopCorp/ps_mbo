@@ -36,6 +36,8 @@ trait UseActionBeforeUpgradeModule
      */
     public function hookActionBeforeUpgradeModule(array $params): void
     {
+        // @TODO : Remove this Hook... and don't forget to add migration to unregister it
+        return;
         if (!$this->needToDownloadModuleZip($params)) {
             return;
         }

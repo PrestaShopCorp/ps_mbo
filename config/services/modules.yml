@@ -39,3 +39,11 @@ services:
       - '@mbo.modules.files_manager'
       - '@mbo.modules.repository'
       - '@mbo.modules.state_machine.source_retriever.url'
+
+  mbo.modules.source_handler.addons_url:
+    class: PrestaShop\Module\Mbo\Module\SourceHandler\AddonsUrlSourceHandler
+    arguments:
+      $addonsDataProvider: '@mbo.addons.data_provider'
+      $zipSourceHandler: '@PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler'
+      $modulePath: '%modules_dir%'
+    tags: [ core.module.source_handler ]
