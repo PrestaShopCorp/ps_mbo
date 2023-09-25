@@ -137,7 +137,7 @@ class ps_mbo extends Module
     public function install(): bool
     {
         try {
-            $this->getService('mbo.ps_accounts.installer')->install();
+//            $this->getService('mbo.ps_accounts.installer')->install();
         } catch (Exception $e) {
             // For now, do nothing
         }
