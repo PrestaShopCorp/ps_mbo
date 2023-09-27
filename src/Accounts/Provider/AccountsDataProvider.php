@@ -42,11 +42,11 @@ class AccountsDataProvider
     private $psAccountsVersion;
 
     public function __construct(
-        ModuleDataProvider $moduleDataProvider,
+//        ModuleDataProvider $moduleDataProvider,
         string $psAccountsVersion
     )
     {
-        $this->moduleDataProvider = $moduleDataProvider;
+//        $this->moduleDataProvider = $moduleDataProvider;
         $this->psAccountsVersion = $psAccountsVersion;
     }
 
@@ -153,6 +153,7 @@ class AccountsDataProvider
             return \Module::isInstalled($moduleName);
         }
 
+        return true;
         return $this->moduleDataProvider->isInstalled($moduleName);
     }
 

@@ -185,7 +185,7 @@ class AddonsUrlSourceHandler implements SourceHandlerInterface
 
     private function computeAuthentication(string $source)
     {
-        $source = str_replace('https://primary-major-molly.ngrok-free.app', 'https://fionaversion8test.demo-cratik.prestashop.net', $source);
+        $source = str_replace('https://testmbo50.demo-hawks.prestashop.net', 'https://fionaversion8test.demo-cratik.prestashop.net', $source);
         $url_parts = parse_url($source);
         if (isset($url_parts['query'])) {
             parse_str($url_parts['query'], $params);
