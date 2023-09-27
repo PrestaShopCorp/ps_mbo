@@ -45,5 +45,6 @@ services:
     arguments:
       $addonsDataProvider: '@mbo.addons.data_provider'
       $zipSourceHandler: '@PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler'
+      $translator: '@translator'
       $modulePath: '%modules_dir%'
     tags: [ core.module.source_handler ]

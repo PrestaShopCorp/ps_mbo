@@ -25,11 +25,13 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Utils;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
+use PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeFailedException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\Exception\SourceNotHandledException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AddonsUrlSourceHandler implements SourceHandlerInterface
 {
@@ -67,14 +69,20 @@ class AddonsUrlSourceHandler implements SourceHandlerInterface
      * @var ZipSourceHandler
      */
     private $zipSourceHandler;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     public function __construct(
         AddonsDataProvider $addonsDataProvider,
         ZipSourceHandler $zipSourceHandler,
+        TranslatorInterface $translator,
         string $modulePath
     ) {
         $this->addonsDataProvider = $addonsDataProvider;
         $this->zipSourceHandler = $zipSourceHandler;
+        $this->translator = $translator;
         $this->modulePath = rtrim($modulePath, '/') . '/';
 
         $this->httpClient = $client = new Client([
@@ -97,6 +105,14 @@ class AddonsUrlSourceHandler implements SourceHandlerInterface
             $response = $this->httpClient->request('HEAD', $source, $authenticatedQueryParameters['options']);
         } catch (TransportExceptionInterface $e) {
             return false;
+        } catch (\Exception $e) {
+            throw new ModuleUpgradeFailedException(
+                $this->translator->trans(
+                    'Cannot download module upgrade file. Please check that you\'re allowed and if applicable, that your Business Care subscription is active',
+                    [],
+                    'Modules.Mbo.Errors'
+                )
+            );
         }
 
         $this->moduleName = null;
