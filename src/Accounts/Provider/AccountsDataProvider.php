@@ -21,9 +21,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Accounts\Provider;
 
+use Db;
 use Exception;
 use PrestaShop\Module\PsAccounts\Repository\UserTokenRepository;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PsAccountsInstaller\Installer\Exception\ModuleNotInstalledException;
 use PrestaShop\PsAccountsInstaller\Installer\Exception\ModuleVersionException;
@@ -33,20 +33,14 @@ use PrestaShop\PsAccountsInstaller\Installer\Installer;
 class AccountsDataProvider
 {
     /**
-     * @var ModuleDataProvider
-     */
-    private $moduleDataProvider;
-    /**
      * @var string
      */
     private $psAccountsVersion;
 
     public function __construct(
-//        ModuleDataProvider $moduleDataProvider,
         string $psAccountsVersion
     )
     {
-//        $this->moduleDataProvider = $moduleDataProvider;
         $this->psAccountsVersion = $psAccountsVersion;
     }
 
@@ -153,8 +147,9 @@ class AccountsDataProvider
             return \Module::isInstalled($moduleName);
         }
 
-        return true;
-        return $this->moduleDataProvider->isInstalled($moduleName);
+        $sqlQuery = 'SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($moduleName) . '" AND `active` = 1';
+
+        return (int) Db::getInstance()->getValue($sqlQuery) > 0;
     }
 
     private function checkPsAccountsVersion()
