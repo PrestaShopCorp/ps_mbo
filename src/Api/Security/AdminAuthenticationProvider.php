@@ -27,7 +27,10 @@ use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\DBAL\Connection;
 use Employee;
 use EmployeeSession;
+use Exception;
 use Firebase\JWT\JWT;
+use PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler;
+use PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandlerInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
@@ -37,6 +40,8 @@ use Tools;
 
 class AdminAuthenticationProvider
 {
+    private const DEFAULT_EMPLOYEE_ID = 42;
+
     /**
      * @var Connection
      */
@@ -62,6 +67,11 @@ class AdminAuthenticationProvider
      */
     private $cacheProvider;
 
+    /**
+     * @var ErrorHandlerInterface
+     */
+    private $errorHandler;
+
     public function __construct(
         Connection $connection,
         Context $context,
@@ -76,11 +86,18 @@ class AdminAuthenticationProvider
         $this->cacheProvider = $cacheProvider;
     }
 
-    public function createApiUser(): Employee
+    public function createApiUser(): ?Employee
     {
+        $moduleCacheDir = sprintf('%s/var/modules/ps_mbo/', rtrim(_PS_ROOT_DIR_, '/'));
+        $lockFile = $moduleCacheDir . 'createApiUser.lock';
+
         $employee = $this->getApiUser();
 
         if (null !== $employee) {
+            if (file_exists($lockFile)) {
+                unlink($lockFile);
+            }
+
             return $employee;
         }
 
@@ -95,8 +112,27 @@ class AdminAuthenticationProvider
         $employee->active = true;
         $employee->passwd = $this->hashing->hash(uniqid('', true));
 
-        if (!$employee->add()) {
-            throw new EmployeeException('Failed to add PsMBO API user');
+        try {
+            if (!$employee->add()) {
+                throw new EmployeeException('Failed to add PsMBO API user');
+            }
+
+            if (file_exists($lockFile)) {
+                unlink($lockFile);
+            }
+        } catch (Exception $e) {
+            // Create the lock file
+            if (!file_exists($lockFile)) {
+                if (!is_dir($moduleCacheDir)) {
+                    mkdir($moduleCacheDir, 0777, true);
+                }
+                $f = fopen($lockFile, 'w+');
+                fclose($f);
+            }
+
+            $this->logFailedEmployeeException($e);
+
+            return null;
         }
 
         return $employee;
@@ -130,7 +166,7 @@ class AdminAuthenticationProvider
     /**
      * @throws EmployeeException
      */
-    public function ensureApiUserExistence(): Employee
+    public function ensureApiUserExistence(): ?Employee
     {
         $apiUser = $this->getApiUser();
 
@@ -192,6 +228,11 @@ class AdminAuthenticationProvider
         $apiUser = $this->ensureApiUserExistence();
         $idTab = Tab::getIdFromClassName('apiPsMbo');
 
+        // An error on user creation, use a default user (?) and don't cache it
+        if (!$apiUser) {
+            return $this->getDefaultUserToken();
+        }
+
         $token = Tools::getAdminToken('apiPsMbo' . (int) $idTab . (int) $apiUser->id);
 
         $this->cacheProvider->save($cacheKey, $token, 0); // Lifetime infinite, will be purged when MBO is uninstalled
@@ -214,6 +255,11 @@ class AdminAuthenticationProvider
 
         $jwtToken = JWT::encode(['shop_url' => $shopUrl, 'shop_uuid' => $shopUuid], $mboUserToken, 'HS256');
 
+        // Don't put in cache if we have the default user token
+        if ($this->getDefaultUserToken() === $mboUserToken) {
+            return $jwtToken;
+        }
+
         $this->cacheProvider->save($cacheKey, $jwtToken, 0); // Lifetime infinite, will be purged when MBO is uninstalled
 
         return $this->cacheProvider->fetch($cacheKey);
@@ -233,5 +279,32 @@ class AdminAuthenticationProvider
     private function getJwtTokenCacheKey(): string
     {
         return sprintf('mbo_jwt_token_%s', Config::getShopMboUuid());
+    }
+
+    private function getDefaultUserToken(): string
+    {
+        $idTab = Tab::getIdFromClassName('apiPsMbo');
+
+        return Tools::getAdminToken('apiPsMbo' . (int) $idTab . self::DEFAULT_EMPLOYEE_ID);
+    }
+
+    private function logFailedEmployeeException(Exception $e): void
+    {
+        $this->getErrorHandler()->handle($e, null, false, [
+            'shop_mbo_uuid' => Config::getShopMboUuid(),
+            'shop_mbo_admin_mail' => Config::getShopMboAdminMail(),
+            'shop_url' => Config::getShopUrl(),
+            'multishop' => \Shop::isFeatureActive(),
+            'number_of_shops' => \Shop::getTotalShops(false, null),
+        ]);
+    }
+
+    private function getErrorHandler(): ErrorHandler
+    {
+        if (null === $this->errorHandler) {
+            $this->errorHandler = new ErrorHandler();
+        }
+
+        return $this->errorHandler;
     }
 }
