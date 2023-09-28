@@ -9,9 +9,11 @@ services:
       - '@translator'
 
   mbo.modules.state_machine.source_retriever.url:
-    class: 'PrestaShop\Module\Mbo\Module\SourceRetriever\UrlSourceRetriever'
+    class: 'PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever'
     arguments:
-      - '@translator'
+      $addonsDataProvider: '@mbo.addons.data_provider'
+      $translator: '@translator'
+      $modulePath: '%modules_dir%'
     properties:
       cacheDir: "%kernel.cache_dir%"
 

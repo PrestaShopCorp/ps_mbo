@@ -43,8 +43,6 @@ services:
   mbo.modules.source_handler.addons_url:
     class: PrestaShop\Module\Mbo\Module\SourceHandler\AddonsUrlSourceHandler
     arguments:
-      $addonsDataProvider: '@mbo.addons.data_provider'
+      $addonsUrlSourceRetriever: '@mbo.modules.state_machine.source_retriever.url'
       $zipSourceHandler: '@PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler'
-      $translator: '@translator'
-      $modulePath: '%modules_dir%'
     tags: [ core.module.source_handler ]
