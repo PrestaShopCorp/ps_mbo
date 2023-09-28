@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -31,7 +32,7 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 /**
  * Responsible of render json data for ajax display of Recommended Modules.
  */
-class ModuleRecommendedController extends FrameworkBundleAdminController
+class ModuleRecommendedController extends PrestaShopAdminController
 {
     /**
      * @var RequestStack
@@ -44,7 +45,7 @@ class ModuleRecommendedController extends FrameworkBundleAdminController
     public function __construct(
         RequestStack $requestStack
     ) {
-        parent::__construct();
+//        parent::__construct();
         $this->requestStack = $requestStack;
     }
 

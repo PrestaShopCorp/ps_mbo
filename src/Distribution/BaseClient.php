@@ -130,7 +130,7 @@ class BaseClient
             'shop_url' => Config::getShopUrl(),
             'admin_path' => sprintf('/%s/', trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/')),
             'mbo_version' => ps_mbo::VERSION,
-            'ps_version' => _PS_VERSION_,
+            'ps_version' => '8.0.4',
         ], $params);
     }
 
