@@ -19,14 +19,97 @@ jobs:
         run: composer install --no-dev -o
       - name: Clean-up project
         uses: PrestaShopCorp/github-action-clean-before-deploy@v1.0
+      - name: Cache module folder
+        uses: 'actions/cache@v3'
+        with:
+          path: ./
+          key: ${{ github.run_id }}
+
+  upload_asset_preproduction:
+    runs-on: ubuntu-latest
+    needs: [ deploy ]
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    steps:
+
+      - name: Retrieve from cache module folder
+        id: retrieve-cache
+        uses: 'actions/cache@v3'
+        with:
+          path: ./
+          key: ${{ github.run_id }}
+
+      - name: Check if retrieved from cache was successful
+        if: steps.retrieve-cache.outputs.cache-hit != 'true'
+        run: exit 1
+
+      - name: Manually perform GCP CLI authentication
+        run: |
+          echo $GOOGLE_JSON_CRED > token.json
+          gcloud auth activate-service-account --key-file=token.json
+          rm token.json
+        env:
+          GOOGLE_JSON_CRED: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
+
+      - name: Copy env files
+        run: |
+          gcloud secrets versions access latest --project distribution-preprod --secret=mbo-module-env-2x > .env
+          rm -f .env.dist
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
+
+      - name: Prepare the zip
+        run: |
+          cd ..
+          zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
+
+      - name: Create & upload artifact for preprod
+        uses: 'actions/upload-artifact@v1'
+        with:
+          name: ${{ github.event.repository.name }}.preprod
+          path: ../${{ github.event.repository.name }}.zip
+
+  upload_release_asset_production:
+    name: Upload the production zip asset to the release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    needs: deploy
+    steps:
+
+      - name: Retrieve from cache module folder
+        id: retrieve-cache
+        uses: 'actions/cache@v3'
+        with:
+          path: ./
+          key: ${{ github.run_id }}
+
+      - name: Check if retrieved from cache was successful
+        if: steps.retrieve-cache.outputs.cache-hit != 'true'
+        run: exit 1
+
+      - name: Manually perform GCP CLI authentication
+        run: |
+          echo $GOOGLE_JSON_CRED > token.json
+          gcloud auth activate-service-account --key-file=token.json
+          rm token.json
+        env:
+          GOOGLE_JSON_CRED: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
+
+      - name: Copy env files
+        run: |
+          rm -f .env.dist
+          gcloud secrets versions access latest --project distribution-production-308520 --secret=mbo-module-env-2x > .env
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
+
       - name: Create & upload artifact
         uses: actions/upload-artifact@v1
         with:
           name: ${{ github.event.repository.name }}
           path: ../
+
   update_release_draft:
     runs-on: ubuntu-latest
-    needs: [deploy]
+    needs: [upload_release_asset_production]
     if: github.event_name == 'push'
     steps:
       - name: Download artifact
