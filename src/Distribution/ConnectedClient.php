@@ -83,7 +83,7 @@ class ConnectedClient extends BaseClient
         $this->setQueryParams([
             'iso_lang' => $languageIsoCode,
             'iso_code' => $countryIsoCode,
-            'ps_version' => '8.0.4',
+            'ps_version' => _PS_VERSION_,
             'shop_url' => Config::getShopUrl(),
         ]);
 
