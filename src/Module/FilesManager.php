@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module;
 
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
+use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
@@ -54,14 +55,14 @@ class FilesManager
      * @throws SourceHandlerNotFoundException
      * @throws FileNotFoundException
      */
-    public function installFromZip(string $moduleZip): void
+    public function installFromSource(string $source): void
     {
-        if (!file_exists($moduleZip)) {
-            throw new FileNotFoundException('Unable to find module zip file given');
+        try {
+            $handler = $this->sourceHandlerFactory->getHandler($source);
+            $handler->handle($source);
+        } catch (\Exception $e) {
+            throw new UnexpectedModuleSourceContentException('The module download failed', 0, $e);
         }
-
-        $handler = $this->sourceHandlerFactory->getHandler($moduleZip);
-        $handler->handle($moduleZip);
     }
 
     /**

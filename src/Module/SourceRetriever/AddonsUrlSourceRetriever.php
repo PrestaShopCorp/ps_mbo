@@ -106,7 +106,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 
     public function assertCanBeDownloaded($source)
     {
-        if (!$this->assertIsAddonsUrl($source)) {
+        if (!self::assertIsAddonsUrl($source)) {
             return false;
         }
 
@@ -182,7 +182,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         return $temporaryZipFilename;
     }
 
-    private function assertIsAddonsUrl($source)
+    public static function assertIsAddonsUrl($source)
     {
         return is_string($source) && 1 === preg_match(self::URL_VALIDATION_REGEX, $source);
     }

@@ -41,19 +41,12 @@ class ActionsManager
      */
     private $moduleRepository;
 
-    /**
-     * @var SourceRetrieverInterface
-     */
-    private $sourceRetriever;
-
     public function __construct(
         FilesManager $filesManager,
-        Repository $moduleRepository,
-        SourceRetrieverInterface $sourceRetriever
+        Repository $moduleRepository
     ) {
         $this->filesManager = $filesManager;
         $this->moduleRepository = $moduleRepository;
-        $this->sourceRetriever = $sourceRetriever;
     }
 
     /**
@@ -66,7 +59,7 @@ class ActionsManager
     {
         $moduleZip = $this->filesManager->downloadModule($moduleId);
 
-        $this->filesManager->installFromZip($moduleZip);
+        $this->filesManager->installFromSource($moduleZip);
     }
 
     /**
@@ -75,15 +68,13 @@ class ActionsManager
      */
     public function downloadAndReplaceModuleFiles(\stdClass $module, string $source): void
     {
-        if (is_string($source) && strpos($source, 'shop_url') === false) {
+        if (is_string($source) && AddonsUrlSourceRetriever::assertIsAddonsUrl($source) && strpos($source, 'shop_url') === false) {
             $source .= '&shop_url=' . Config::getShopUrl();
         }
 
-        $moduleZip = $this->downloadModuleFromUrl($module, $source);
-
         $this->filesManager->deleteModuleDirectory($module);
 
-        $this->filesManager->installFromZip($moduleZip);
+        $this->filesManager->installFromSource($source);
     }
 
     /**
@@ -119,19 +110,5 @@ class ActionsManager
         }
 
         return null;
-    }
-
-    private function downloadModuleFromUrl(\stdClass $module, string $source): string
-    {
-        try {
-            if (! $this->sourceRetriever->assertCanBeDownloaded($source)) {
-                throw new \Exception('Source cannot be downloaded ' . $source);
-            }
-            $zipFilename = $this->sourceRetriever->get($source, $module->name);
-        } catch (ModuleErrorException | \Exception $e) {
-            throw new UnexpectedModuleSourceContentException(sprintf('The source given doesn\'t contains the expected module : %s', $module->name), 0, $e);
-        }
-
-        return $zipFilename;
     }
 }
