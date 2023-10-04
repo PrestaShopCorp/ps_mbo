@@ -76,7 +76,23 @@ class FilesManager
             return;
         }
 
-        array_map('unlink', glob($moduleDir . DIRECTORY_SEPARATOR . '*.*'));
-        @rmdir($moduleDir);
+        $this->deleteDirectoryRecursively($moduleDir);
+    }
+
+    private function deleteDirectoryRecursively(string $directory): void
+    {
+        if (is_dir($directory)) {
+            $objects = scandir($directory);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (is_dir($directory. DIRECTORY_SEPARATOR .$object) && !is_link($directory."/".$object)) {
+                        $this->deleteDirectoryRecursively($directory . DIRECTORY_SEPARATOR . $object);
+                    } else {
+                        @unlink($directory . DIRECTORY_SEPARATOR . $object);
+                    }
+                }
+            }
+            @rmdir($directory);
+        }
     }
 }
