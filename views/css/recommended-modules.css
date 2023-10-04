@@ -168,7 +168,8 @@
     position: relative;
     height: 80%;
     max-width: 862px;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     max-width: 862px;
     width: 100%;
   }
