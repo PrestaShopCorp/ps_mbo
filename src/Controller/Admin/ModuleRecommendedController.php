@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -45,7 +44,6 @@ class ModuleRecommendedController extends PrestaShopAdminController
     public function __construct(
         RequestStack $requestStack
     ) {
-//        parent::__construct();
         $this->requestStack = $requestStack;
     }
 
