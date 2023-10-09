@@ -40,21 +40,7 @@ trait UseDisplayAdminAfterHeader
      */
     public function hookDisplayAdminAfterHeader(array $params): string
     {
-        if (Tools::getValue('controller') !== "AdminEmployees") {
-            return '';
-        }
-
-        $requestStack = $this->get('request_stack');
-        if (null === $requestStack) {
-            return '';
-        }
-
-        /**
-         * @var Request $request
-         */
-        $request = $this->get('request_stack')->getCurrentRequest();
-        // because admin_employee_index and admin_employee_edit are in the same controller AdminEmployees
-        if (null === $request || 'admin_employees_index' !== $request->get('_route')) {
+        if (!$this->shouldDisplayMboUserExplanation()) {
             return '';
         }
 
@@ -82,5 +68,55 @@ trait UseDisplayAdminAfterHeader
         } catch (\Exception $e) {
             return '';
         }
+    }
+
+    /**
+     * @return void
+     *
+     * @throws Exception
+     */
+    public function bootUseDisplayAdminAfterHeader(): void
+    {
+        if (method_exists($this, 'addAdminControllerMedia')) {
+            $this->addAdminControllerMedia('loadMediaDisplayAdminAfterHeader');
+        }
+    }
+
+    /**
+     * Add JS and CSS file
+     *
+     * @return void
+     *
+     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
+     */
+    protected function loadMediaDisplayAdminAfterHeader(): void
+    {
+        if ($this->shouldDisplayMboUserExplanation()) {
+            $this->context->controller->addJs($this->getPathUri() . 'views/js/mbo-user-explanation.js?v=' . $this->version);
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/mbo-user-explanation.css?v=' . $this->version);
+        }
+    }
+
+    private function shouldDisplayMboUserExplanation(): bool
+    {
+        if (Tools::getValue('controller') !== "AdminEmployees") {
+            return false;
+        }
+
+        $requestStack = $this->get('request_stack');
+        if (null === $requestStack) {
+            return false;
+        }
+
+        /**
+         * @var Request $request
+         */
+        $request = $this->get('request_stack')->getCurrentRequest();
+        // because admin_employee_index and admin_employee_edit are in the same controller AdminEmployees
+        if (null === $request || 'admin_employees_index' !== $request->get('_route')) {
+            return false;
+        }
+
+        return true;
     }
 }

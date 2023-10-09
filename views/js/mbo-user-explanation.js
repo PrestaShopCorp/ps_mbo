@@ -1,4 +1,5 @@
-{#**
+'use strict';
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -15,18 +16,13 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
- *#}
-<div class="alert alert-info alert-dismissible mbo-user-explanation">
-  <h4>{{ title }}</h4>
-  <button type="button" class="btn mbo-user-explanation-accordeon-btn">
-    <span aria-hidden="true" class="material-icons">contact_support</span>
-  </button>
-  <div class="mbo-user-explanation-msg" style="display: none;">
-    <p>
-      {{ message | nl2br | raw }}
-    </p>
-  </div>
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
+ */
+
+(function() {
+  window.$(document).ready(function () {
+    $(document).on('click', '.mbo-user-explanation-accordeon-btn', function(event) {
+      event.preventDefault();
+      $('.mbo-user-explanation-msg').toggle(500);
+    });
+  });
+})();
