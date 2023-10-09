@@ -48,6 +48,7 @@ trait UseHooks
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionBeforeUninstallModule;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionGetAdminToolbarButtons;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionGetAlternativeSearchPanels;
+    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayAdminAfterHeader;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayModuleConfigureExtraButtons;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionListModules;
