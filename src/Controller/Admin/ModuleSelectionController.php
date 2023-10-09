@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +30,7 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 /**
  * Responsible of "Improve > Modules > Modules Catalog > Modules Selection" page display.
  */
-class ModuleSelectionController extends PrestaShopAdminController
+class ModuleSelectionController extends FrameworkBundleAdminController
 {
     /**
      * @var RequestStack
