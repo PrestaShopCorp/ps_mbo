@@ -416,9 +416,13 @@ class ps_mbo extends Module
         return true;
     }
 
-    public function getAccountsDataProvider(): AccountsDataProvider
+    public function getAccountsDataProvider(): ?AccountsDataProvider
     {
-        return $this->getService('mbo.accounts.data_provider');
+        try {
+            return $this->getService('mbo.accounts.data_provider');
+        } catch(\Exception $e) {
+            return null;
+        }
     }
 
     /**

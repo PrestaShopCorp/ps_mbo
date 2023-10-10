@@ -95,11 +95,13 @@ trait HaveShopOnExternalService
                 return;
             }
 
+            $accountsDataProvider = $this->getAccountsDataProvider();
+
             // Add the default params
             $params = array_merge($params, [
                 'mbo_api_user_token' => $this->getAdminAuthenticationProvider()->getAdminToken(),
-                'accounts_token' => $this->getAccountsDataProvider()->getAccountsToken(),
-                'accounts_shop_id' => $this->getAccountsDataProvider()->getAccountsShopId(),
+                'accounts_token' => $accountsDataProvider ? $accountsDataProvider->getAccountsToken() : null,
+                'accounts_shop_id' => $accountsDataProvider ? $accountsDataProvider->getAccountsShopId() : null,
             ]);
             $distributionApi->setBearer($this->getAdminAuthenticationProvider()->getMboJWT());
             $distributionApi->{$method}($params);
