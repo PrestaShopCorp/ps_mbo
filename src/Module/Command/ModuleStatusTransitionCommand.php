@@ -49,11 +49,7 @@ class ModuleStatusTransitionCommand
         $this->command = new ModuleTransitionCommand($command);
         $this->moduleName = $moduleName;
 
-        // Read the source only if module is MBO. This feature is for testing purpose
-        if (
-            'ps_mbo' === $moduleName &&
-            in_array($command, [ModuleTransitionCommand::MODULE_COMMAND_DOWNLOAD])
-        ) {
+        if (in_array($command, [ModuleTransitionCommand::MODULE_COMMAND_DOWNLOAD])) {
             $this->source = $source;
         }
     }
