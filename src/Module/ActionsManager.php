@@ -21,10 +21,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module;
 
+use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException;
 use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
+use PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever;
 use PrestaShop\Module\Mbo\Module\SourceRetriever\SourceRetrieverInterface;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
+use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
 class ActionsManager
@@ -39,19 +42,12 @@ class ActionsManager
      */
     private $moduleRepository;
 
-    /**
-     * @var SourceRetrieverInterface
-     */
-    private $sourceRetriever;
-
     public function __construct(
         FilesManager $filesManager,
-        Repository $moduleRepository,
-        SourceRetrieverInterface $sourceRetriever
+        Repository $moduleRepository
     ) {
         $this->filesManager = $filesManager;
         $this->moduleRepository = $moduleRepository;
-        $this->sourceRetriever = $sourceRetriever;
     }
 
     /**
@@ -64,22 +60,22 @@ class ActionsManager
     {
         $moduleZip = $this->filesManager->downloadModule($moduleId);
 
-        $this->filesManager->installFromZip($moduleZip);
+        $this->filesManager->installFromSource($moduleZip);
     }
 
     /**
      * @throws UnexpectedModuleSourceContentException
      * @throws ModuleNewVersionNotFoundException
      */
-    public function downloadAndReplaceModuleFiles(\stdClass $module, ?string $source = null): void
+    public function downloadAndReplaceModuleFiles(\stdClass $module, string $source): void
     {
-        $moduleZip = (null !== $source) ?
-            $this->downloadModuleFromUrl($module, $source) :
-            $this->downloadModuleFromModulesProvider($module);
+        if (is_string($source) && AddonsUrlSourceRetriever::assertIsAddonsUrl($source) && strpos($source, 'shop_url') === false) {
+            $source .= '&shop_url=' . Config::getShopUrl();
+        }
 
         $this->filesManager->deleteModuleDirectory($module);
 
-        $this->filesManager->installFromZip($moduleZip);
+        $this->filesManager->installFromSource($source);
     }
 
     /**
@@ -115,27 +111,5 @@ class ActionsManager
         }
 
         return null;
-    }
-
-    private function downloadModuleFromModulesProvider(\stdClass $module): string
-    {
-        $moduleName = (string) $module->name;
-
-        $module = $this->findVersionForUpdate($moduleName);
-        if (null === $module) {
-            throw new ModuleNewVersionNotFoundException(sprintf('A downloadable new version was not found for the module %s', $moduleName));
-        }
-
-        return $this->filesManager->downloadModule((int) $module->id);
-    }
-
-    private function downloadModuleFromUrl(\stdClass $module, string $source): string
-    {
-        $zipFilename = $this->sourceRetriever->get($source);
-        if (!$this->sourceRetriever->validate($zipFilename, $module->name)) {
-            throw new UnexpectedModuleSourceContentException(sprintf('The source given doesn\'t contains the expected module : %s', $module->name));
-        }
-
-        return $zipFilename;
     }
 }

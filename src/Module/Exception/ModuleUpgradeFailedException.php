@@ -18,16 +18,8 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\Module\SourceRetriever;
+namespace PrestaShop\Module\Mbo\Module\Exception;
 
-interface SourceRetrieverInterface
+class ModuleUpgradeFailedException extends \Exception
 {
-    /**
-     * This method will retrieve the module's ZIP from the source given.
-     *
-     * @param $source
-     *
-     * @return string
-     */
-    public function get($source, ?string $expectedModuleName = null, ?array $options = []): string;
 }

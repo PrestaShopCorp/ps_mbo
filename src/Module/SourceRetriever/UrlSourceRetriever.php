@@ -79,7 +79,7 @@ class UrlSourceRetriever implements SourceRetrieverInterface
         throw new ModuleErrorException($this->translator->trans('This file does not seem to be a valid module zip', [], 'Admin.Modules.Notification'));
     }
 
-    public function get($source): string
+    public function get($source, ?array $options = []): string
     {
         $client = new Client([
             'timeout' => '7200',
@@ -98,7 +98,7 @@ class UrlSourceRetriever implements SourceRetrieverInterface
 
         $resource = fopen($temporaryZipFilename, 'w');
         $stream = Utils::streamFor($resource);
-        $client->request('GET', $source, ['sink' => $stream]);
+        $client->request('GET', $source, array_merge(['sink' => $stream], $options));
 
         return $temporaryZipFilename;
     }
