@@ -7,7 +7,7 @@
         <target state="needs-translation">Why is there a "PrestaShop Marketplace" employee?</target>
         <note>Line: 57</note>
       </trans-unit>
-      <trans-unit id="070d9968c38f2c9d9c02512e4fd985b3">
+      <trans-unit id="070d9968c38f2c9d9c02512e4fd985b3" approved="yes">
         <source>MBO employee explanation</source>
         <target state="final">We've added a "PrestaShop Marketplace" employee for the PrestaShop Marketplace module to work correctly in your back office.
         Your employees will be able to perform actions on the module (update, activation, setup, etc.) according to their rights</target>
