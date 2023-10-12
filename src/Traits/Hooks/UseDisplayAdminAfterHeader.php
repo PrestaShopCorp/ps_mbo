@@ -55,7 +55,7 @@ trait UseDisplayAdminAfterHeader
             return $twig->render(
                 '@Modules/ps_mbo/views/templates/hook/twig/explanation_mbo_employee.html.twig', [
                     'title' => $this->trans('Why is there a "PrestaShop Marketplace" employee?', [], 'Modules.Mbo.Global'),
-                    'message' => $this->trans('MBO employee exaplanation', [], 'Modules.Mbo.Global'),
+                    'message' => $this->trans('MBO employee explanation', [], 'Modules.Mbo.Global'),
                 ]
             );
         } catch (\Exception $e) {
