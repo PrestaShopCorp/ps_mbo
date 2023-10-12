@@ -56,8 +56,7 @@ trait UseDisplayAdminAfterHeader
                 '@Modules/ps_mbo/views/templates/hook/twig/explanation_mbo_employee.html.twig', [
                     'title' => $this->trans('Why is there a "PrestaShop Marketplace" employee?', [], 'Modules.Mbo.Global'),
                     'message' => $this->trans(
-                        "We've added a \"PrestaShop Marketplace\" employee for the PrestaShop Marketplace module to work correctly in your back office.
-                        We will be able to perform actions on modules (update, activation, setup, etc.) on the behalf of the employees according to their rights",
+                        "We've added a \"PrestaShop Marketplace\" employee for the PrestaShop Marketplace module to work correctly in your back office.\nWe will be able to perform actions on modules (update, activation, setup, etc.) on the behalf of the employees according to their rights",
                         [],
                         'Modules.Mbo.Global'
                     ),
