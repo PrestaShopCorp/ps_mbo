@@ -54,12 +54,10 @@ trait UseDisplayAdminAfterHeader
         try {
             return $twig->render(
                 '@Modules/ps_mbo/views/templates/hook/twig/explanation_mbo_employee.html.twig', [
-                    'title' => $this->trans('Why do I have an PrestaShop Marketplace employee ?', [], 'Modules.Mbo.Global'),
+                    'title' => $this->trans('Why is there a "PrestaShop Marketplace" employee?', [], 'Modules.Mbo.Global'),
                     'message' => $this->trans(
-                        "The PrestaShop Marketplace employee will allow us to perform actions on modules on the behalf of the connected user.
-                        We, of course, check if this connected employee do have the rights for these actions.
-                        This built-in employee allows us to display the Marketplace, perform actions on modules like Install, Enable, Upgrade, ...
-                        and push configurations related to the MBO Module",
+                        "We've added a \"PrestaShop Marketplace\" employee for the PrestaShop Marketplace module to work correctly in your back office.
+                        Your employees will be able to perform actions on the module (update, activation, setup, etc.) according to their rights",
                         [],
                         'Modules.Mbo.Global'
                     ),
