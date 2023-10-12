@@ -53,7 +53,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '4.5.3';
+    public const VERSION = '4.6.0';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminPsMboModule',
@@ -104,7 +104,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.5.3';
+        $this->version = '4.6.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -416,9 +416,13 @@ class ps_mbo extends Module
         return true;
     }
 
-    public function getAccountsDataProvider(): AccountsDataProvider
+    public function getAccountsDataProvider(): ?AccountsDataProvider
     {
-        return $this->getService('mbo.accounts.data_provider');
+        try {
+            return $this->getService('mbo.accounts.data_provider');
+        } catch(\Exception $e) {
+            return null;
+        }
     }
 
     /**
