@@ -8,10 +8,8 @@
         <note>Line: 57</note>
       </trans-unit>
       <trans-unit id="8f5389207d99571a7033a9dde723f12e">
-        <source>We've added a "PrestaShop Marketplace" employee for the PrestaShop Marketplace module to work correctly in your back office.
-                        Your employees will be able to perform actions on the module (update, activation, setup, etc.) according to their rights</source>
-        <target state="needs-translation">We've added a "PrestaShop Marketplace" employee for the PrestaShop Marketplace module to work correctly in your back office.
-                        Your employees will be able to perform actions on the module (update, activation, setup, etc.) according to their rights</target>
+        <source>We've added a "PrestaShop Marketplace" employee for the PrestaShop Marketplace module to work correctly in your back office.\nYour employees will be able to perform actions on the module (update, activation, setup, etc.) according to their rights</source>
+        <target state="needs-translation">We've added a "PrestaShop Marketplace" employee for the PrestaShop Marketplace module to work correctly in your back office.\nYour employees will be able to perform actions on the module (update, activation, setup, etc.) according to their rights</target>
         <note>Line: 59</note>
       </trans-unit>
     </body>
