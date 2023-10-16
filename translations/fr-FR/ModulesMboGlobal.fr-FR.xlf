@@ -10,7 +10,7 @@
       <trans-unit id="070d9968c38f2c9d9c02512e4fd985b3" approved="yes">
         <source>MBO employee explanation</source>
         <target state="final">Nous avons ajouté un employé "PrestaShop Marketplace" afin de permettre le bon fonctionnement du module "Place de marché dans le Backoffice" (MBO)
-Nous pouvons ainsi exécuter des actions sur les modules (mises à jour, activation, etc.) au nom de vos employés classiques ,en accord avec leurs droits respectifs.</target>
+                              Nous pouvons ainsi exécuter des actions sur les modules (mises à jour, activation, etc.) au nom de vos collaborateurs, en accord avec leurs droits respectifs.</target>
         <note>Line: 58</note>
       </trans-unit>
     </body>
