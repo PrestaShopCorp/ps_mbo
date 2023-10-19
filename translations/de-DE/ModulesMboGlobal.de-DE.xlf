@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/Traits/Hooks/UseDisplayAdminAfterHeader.php" source-language="en" target-language="de" datatype="plaintext">
+    <body>
+      <trans-unit id="325a728a120635e3e370c5eed5ce3c40">
+        <source>Why is there a "PrestaShop Marketplace" employee?</source>
+        <target state="needs-translation">Why is there a "PrestaShop Marketplace" employee?</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="070d9968c38f2c9d9c02512e4fd985b3" approved="yes">
+        <source>MBO employee explanation</source>
+        <target state="final">We've added a "PrestaShop Marketplace" employee for the PrestaShop Marketplace module to work correctly in your back office.
+                We will be able to perform actions on modules (update, activation, setup, etc.) on the behalf of the employees according to their rights</target>
+        <note>Line: 58</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="de" datatype="plaintext">
     <body>
       <trans-unit id="3b89e163ae0b446bd02e13de8dcf70d3" approved="yes">

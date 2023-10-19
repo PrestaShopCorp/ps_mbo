@@ -1,4 +1,4 @@
-<?php
+'use strict';
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -18,16 +18,11 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\Module\SourceRetriever;
-
-interface SourceRetrieverInterface
-{
-    /**
-     * This method will retrieve the module's ZIP from the source given.
-     *
-     * @param $source
-     *
-     * @return string
-     */
-    public function get($source, ?string $expectedModuleName = null, ?array $options = []): string;
-}
+(function() {
+  window.$(document).ready(function () {
+    $(document).on('click', '.mbo-user-explanation-accordeon-btn', function(event) {
+      event.preventDefault();
+      $('.mbo-user-explanation-msg').toggle(500);
+    });
+  });
+})();

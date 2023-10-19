@@ -1,0 +1,9 @@
+.mbo-user-explanation h4 {
+  display: inline;
+}
+.mbo-user-explanation .mbo-user-explanation-accordeon-btn {
+  font-size: 1.25em;
+}
+.mbo-user-explanation .mbo-user-explanation-msg {
+  margin-top: 15px;
+}

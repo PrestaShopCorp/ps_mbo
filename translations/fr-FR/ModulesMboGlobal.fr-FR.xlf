@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/Traits/Hooks/UseDisplayAdminAfterHeader.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="325a728a120635e3e370c5eed5ce3c40" approved="yes">
+        <source>Why is there a "PrestaShop Marketplace" employee?</source>
+        <target state="final">Pourquoi ai-je un employé "PrestaShop Marketplace" ?</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="070d9968c38f2c9d9c02512e4fd985b3" approved="yes">
+        <source>MBO employee explanation</source>
+        <target state="final">Nous avons ajouté un employé "PrestaShop Marketplace" afin de permettre le bon fonctionnement du module "Place de marché dans le Backoffice" (MBO)
+                              Nous pouvons ainsi exécuter des actions sur les modules (mises à jour, activation, etc.) au nom de vos collaborateurs, en accord avec leurs droits respectifs.</target>
+        <note>Line: 58</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en" target-language="fr" datatype="plaintext">
     <body>
       <trans-unit id="3b89e163ae0b446bd02e13de8dcf70d3" approved="yes">
