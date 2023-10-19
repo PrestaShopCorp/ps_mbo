@@ -37,8 +37,6 @@ services:
 
   mbo.controller.themes.catalog:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController'
-    arguments:
-      - '@request_stack'
 
   mbo.controller.addons:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\AddonsController'
