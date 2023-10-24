@@ -208,7 +208,7 @@ trait UseActionDispatcherBefore
             $isValid = \Validate::isEmail($addonsUsernameCookie)
                 && mb_strlen($usernameParts[array_key_last($usernameParts)]) < 5;
             // the 5 limit for the domain extension is totally arbitrary
-            // We made this check because Validate::isEmail doesn't check the length of the doain extension
+            // We made this check because Validate::isEmail doesn't check the length of the domain extension
 
             if (!$isValid) {
                 $params['request'] = $this->clearAddonsCookiesFromRequest($request);
