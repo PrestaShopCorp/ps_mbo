@@ -51,6 +51,8 @@ final class AddonsCredentialsEncryptionListener
         $response = $event->getResponse();
         $request = $event->getRequest();
 
+        $this->ensureAddonsCookieIsValid($event);
+
         // There must be an action on MBO module to perform something on this listener
         if (
             $request->get('_controller') !== 'PrestaShopBundle\Controller\Admin\Improve\ModuleController::moduleAction'
@@ -81,27 +83,30 @@ final class AddonsCredentialsEncryptionListener
             $this->session->remove('password_addons_v2_decrypted');
 
             $event->setResponse($response);
-        } else {
-            // We don't do this in case of cookies change because we are sure the ones in the request are wrong
-            // If we are uninstalling, we have to do ut neither because the salt values have been erased from the DB
+        }
+    }
 
-            // Remove cookies if username is not a valid email
-            $cookies = $request->cookies->all();
+    private function ensureAddonsCookieIsValid(ResponseEvent $event): void
+    {
+        $response = $event->getResponse();
+        $request = $event->getRequest();
 
-            $addonsUsernameCookie = $cookies['username_addons_v2'] ?? null;
+        // Remove cookies if username is not a valid email
+        $cookies = $request->cookies->all();
 
-            if (!empty($addonsUsernameCookie)) {
-                $addonsUsernameCookie = $this->encryptor->decrypt($addonsUsernameCookie);
-                $usernameParts = explode('.', $addonsUsernameCookie);
-                $isValid = \Validate::isEmail($addonsUsernameCookie)
-                    && mb_strlen($usernameParts[array_key_last($usernameParts)]) < 5;
-                // the 5 limit for the domain extension is totally arbitrary
-                // We made this check because Validate::isEmail doesn't check the length of the doain extension
+        $addonsUsernameCookie = $cookies['username_addons_v2'] ?? null;
 
-                if (!$isValid) {
-                    $this->clearAddonsCookiesFromResponse($response);
-                    $event->setResponse($response);
-                }
+        if (!empty($addonsUsernameCookie)) {
+            $addonsUsernameCookie = $this->encryptor->decrypt($addonsUsernameCookie);
+            $usernameParts = explode('.', $addonsUsernameCookie);
+            $isValid = \Validate::isEmail($addonsUsernameCookie)
+                && mb_strlen($usernameParts[array_key_last($usernameParts)]) < 5;
+            // the 5 limit for the domain extension is totally arbitrary
+            // We made this check because Validate::isEmail doesn't check the length of the doain extension
+
+            if (!$isValid) {
+                $this->clearAddonsCookiesFromResponse($response);
+                $event->setResponse($response);
             }
         }
     }
@@ -117,6 +122,11 @@ final class AddonsCredentialsEncryptionListener
         $response->headers->clearCookie('username_addons_v2');
         $response->headers->clearCookie('password_addons_v2');
         $response->headers->clearCookie('is_contributor_v2');
+
+        $this->session->remove('username_addons_v2');
+        $this->session->remove('username_addons_v2_decrypted');
+        $this->session->remove('password_addons_v2');
+        $this->session->remove('password_addons_v2_decrypted');
 
         return $response;
     }

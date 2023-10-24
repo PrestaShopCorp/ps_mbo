@@ -191,8 +191,10 @@ class AddonsUser implements UserInterface
      */
     private function hasCookieAuthenticated(): bool
     {
-        return $this->getFromCookie('username_addons_v2')
-            && $this->getFromCookie('password_addons_v2');
+        $username = $this->getFromCookie('username_addons_v2');
+        $password = $this->getFromCookie('password_addons_v2');
+
+        return $username && $password && $this->credentialsAreValid($username, $password);
     }
 
     /**
@@ -200,8 +202,10 @@ class AddonsUser implements UserInterface
      */
     private function hasSessionAuthenticated(): bool
     {
-        return $this->getFromSession('username_addons_v2')
-            && $this->getFromSession('password_addons_v2');
+        $username = $this->getFromSession('username_addons_v2');
+        $password = $this->getFromSession('password_addons_v2');
+
+        return $username && $password && $this->credentialsAreValid($username, $password);
     }
 
     /**
@@ -213,5 +217,19 @@ class AddonsUser implements UserInterface
         $jsonToken = base64_decode($payload);
 
         return json_decode($jsonToken, true);
+    }
+
+    private function credentialsAreValid(string $username, string $password): bool
+    {
+        if (empty($username) || empty($password)) {
+            return false;
+        }
+
+        $addonsUsername = $this->encryption->decrypt($username);
+        $usernameParts = explode('.', $addonsUsername);
+        // the 5 limit for the domain extension is totally arbitrary
+        // We made this check because Validate::isEmail doesn't check the length of the doain extension
+
+        return \Validate::isEmail($addonsUsername) && mb_strlen($usernameParts[array_key_last($usernameParts)]) < 5;
     }
 }
