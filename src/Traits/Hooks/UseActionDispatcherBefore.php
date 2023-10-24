@@ -30,6 +30,7 @@ use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyC
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Symfony\Component\HttpFoundation\Request;
 use Tab;
 use Tools;
 
@@ -56,6 +57,7 @@ trait UseActionDispatcherBefore
             $this->ensureShopIsRegistered();
             $this->ensureShopIsUpdated();
             $this->ensureApiConfigIsApplied();
+            $this->ensureAddonsCookieIsValid($params);
         }
 
         if (self::checkModuleStatus()) { // If the module is not active, config values are not set yet
@@ -185,5 +187,42 @@ trait UseActionDispatcherBefore
         }
 
         @unlink($lockFile);
+    }
+
+    private function ensureAddonsCookieIsValid(array &$params): void
+    {
+        $request = $params['request'] ?? null;
+
+        if (!$request || !$request instanceof Request) {
+            return;
+        }
+
+        // Remove cookies if username is not a valid email
+        $cookies = $request->cookies->all();
+
+        $addonsUsernameCookie = $cookies['username_addons_v2'] ?? null;
+
+        if (!empty($addonsUsernameCookie)) {
+            $addonsUsernameCookie = $this->encryptor->decrypt($addonsUsernameCookie);
+            $usernameParts = explode('.', $addonsUsernameCookie);
+            $isValid = \Validate::isEmail($addonsUsernameCookie)
+                && mb_strlen($usernameParts[array_key_last($usernameParts)]) < 5;
+            // the 5 limit for the domain extension is totally arbitrary
+            // We made this check because Validate::isEmail doesn't check the length of the doain extension
+
+            if (!$isValid) {
+                $params['request'] = $this->clearAddonsCookiesFromRequest($request);
+            }
+        }
+    }
+
+    private function clearAddonsCookiesFromResponse(Request $request): Request
+    {
+        // Removes from cookies in the response
+        $request->cookies->remove('username_addons_v2');
+        $request->cookies->remove('password_addons_v2');
+        $request->cookies->remove('is_contributor_v2');
+
+        return $request;
     }
 }
