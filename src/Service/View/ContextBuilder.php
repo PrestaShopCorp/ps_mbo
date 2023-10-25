@@ -180,6 +180,7 @@ class ContextBuilder
             'module_catalog_url' => $this->router->generate('admin_mbo_catalog_module'),
             'theme_catalog_url' => $this->router->generate('admin_mbo_catalog_theme'),
             'php_version' => phpversion(),
+            'activity' => Configuration::get('PS_SHOP_ACTIVITY'),
         ];
     }
 
