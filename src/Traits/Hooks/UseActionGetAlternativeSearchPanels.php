@@ -41,12 +41,23 @@ trait UseActionGetAlternativeSearchPanels
             /** @var \Symfony\Bundle\FrameworkBundle\Routing\Router $router */
             $router = $this->get('router');
         } catch (\Exception $e) {
-            return '';
+            return [];
         }
 
-        $catalogUrl = $router->generate('admin_mbo_catalog_module', [], Router::ABSOLUTE_PATH);
+        try {
+            $catalogUrl = $router->generate('admin_mbo_catalog_module', [], Router::ABSOLUTE_PATH);
+        } catch (\Exception $e) {
+            return [];
+        }
+
         $catalogUrlPath = parse_url($catalogUrl, PHP_URL_PATH);
-        parse_str(parse_url($catalogUrl, PHP_URL_QUERY), $catalogUrlParams);
+        $parsedUrl = parse_url($catalogUrl, PHP_URL_QUERY);
+
+        if (!is_string($parsedUrl)) {
+            return [];
+        }
+
+        parse_str($parsedUrl, $catalogUrlParams);
 
         $searchedExpression = $params['bo_query'];
         if (!empty(trim($searchedExpression))) {
@@ -55,14 +66,13 @@ trait UseActionGetAlternativeSearchPanels
         $catalogUrlParams['utm_mbo_source'] = 'search-back-office';
         $catalogUrlParams['mbo_cdc_path'] = '/#/modules';
 
-        $searchPanels = [];
-        $searchPanels[] = new SearchPanel(
-            $this->trans('Find modules to grow your business', [], 'Modules.Mbo.Search'),
-            $this->trans('Explore PrestaShop Marketplace', [], 'Modules.Mbo.Search'),
-            $catalogUrlPath,
-            $catalogUrlParams
-        );
-
-        return $searchPanels;
+        return [
+            new SearchPanel(
+                $this->trans('Find modules to grow your business', [], 'Modules.Mbo.Search'),
+                $this->trans('Explore PrestaShop Marketplace', [], 'Modules.Mbo.Search'),
+                $catalogUrlPath,
+                $catalogUrlParams
+            )
+        ];
     }
 }
