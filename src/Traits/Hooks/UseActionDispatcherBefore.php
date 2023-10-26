@@ -203,7 +203,7 @@ trait UseActionDispatcherBefore
         $addonsUsernameCookie = $cookies['username_addons_v2'] ?? null;
 
         if (!empty($addonsUsernameCookie)) {
-            $addonsUsernameCookie = $this->encryptor->decrypt($addonsUsernameCookie);
+            $addonsUsernameCookie = $this->get('mbo.addons.user.credentials_encryptor')->decrypt($addonsUsernameCookie);
             $usernameParts = explode('.', $addonsUsernameCookie);
             $isValid = \Validate::isEmail($addonsUsernameCookie)
                 && mb_strlen($usernameParts[array_key_last($usernameParts)]) < 5;
@@ -216,9 +216,9 @@ trait UseActionDispatcherBefore
         }
     }
 
-    private function clearAddonsCookiesFromResponse(Request $request): Request
+    private function clearAddonsCookiesFromRequest(Request $request): Request
     {
-        // Removes from cookies in the response
+        // Removes from cookies in the request
         $request->cookies->remove('username_addons_v2');
         $request->cookies->remove('password_addons_v2');
         $request->cookies->remove('is_contributor_v2');
