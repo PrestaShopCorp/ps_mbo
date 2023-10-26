@@ -43,5 +43,5 @@ services:
     class: PrestaShop\Module\Mbo\Module\SourceHandler\AddonsUrlSourceHandler
     arguments:
       $addonsUrlSourceRetriever: '@mbo.modules.state_machine.source_retriever.url'
-      $zipSourceHandler: '@PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler'
+      $zipSourceHandler: '@prestashop.module.sourcehandler.zip'
     tags: [ core.module.source_handler ]
