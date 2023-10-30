@@ -44,5 +44,5 @@ services:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\AddonsController'
     arguments:
       - '@request_stack'
-      - '@PrestaShop\PrestaShop\Core\Module\ModuleManager'
-      - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
+      - '@prestashop.module.manager'
+      - '@prestashop.core.admin.module.repository'
