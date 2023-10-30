@@ -1,0 +1,38 @@
+imports:
+  - { resource: api/repository.yml }
+
+services:
+  _defaults:
+    public: true
+
+  ps_mbo.db:
+    class: Db
+    factory: [ 'Db', 'getInstance' ]
+
+  ps_mbo:
+    class: 'ps_mbo'
+    factory: [ 'Module', 'getInstanceByName' ]
+    arguments:
+      - 'ps_mbo'
+
+  PrestaShop\Module\Mbo\Api\Config\Env:
+    class: PrestaShop\Module\Mbo\Api\Config\Env
+
+  mbo.api.service.executors.module_transition:
+    class: PrestaShop\Module\Mbo\Api\Service\ModuleTransitionExecutor
+    arguments:
+      - '@mbo.modules.state_machine.module_status_transition_handler'
+
+  mbo.api.service.executors.config_apply:
+    class: PrestaShop\Module\Mbo\Api\Service\ConfigApplyExecutor
+    arguments:
+      - '@mbo.distribution.api_config_change_handler'
+      - '@ps_mbo'
+
+  mbo.api.service.factory:
+    class: PrestaShop\Module\Mbo\Api\Service\Factory
+    arguments:
+      - [
+          '@mbo.api.service.executors.module_transition',
+          '@mbo.api.service.executors.config_apply'
+      ]

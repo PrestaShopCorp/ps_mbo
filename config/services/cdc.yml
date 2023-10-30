@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    public: true
+
+  mbo.cdc.context_builder:
+    class: PrestaShop\Module\Mbo\Service\View\ContextBuilder
+    arguments:
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.core.admin.module.repository'
+      - '@router'
+      - '@doctrine.cache.provider'
+      - '@mbo.security.admin_authentication.provider'
+      - '@mbo.accounts.data_provider'

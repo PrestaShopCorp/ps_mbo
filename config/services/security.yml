@@ -1,0 +1,24 @@
+services:
+  _defaults:
+    public: true
+
+  mbo.security.admin_authentication.provider:
+    class: PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - "@=service('prestashop.adapter.legacy.context').getContext()"
+      - '@prestashop.core.crypto.hashing'
+      - '@doctrine.cache.provider'
+      - '%database_prefix%'
+
+  PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker:
+    class: PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker
+    arguments:
+      - '@doctrine.cache.provider'
+      - '@mbo.cdc.client.distribution_api'
+      - '@mbo.security.admin_authentication.provider'
+
+  mbo.security.permission_checker:
+    class: PrestaShop\Module\Mbo\Security\PermissionChecker
+    arguments:
+      - '@prestashop.adapter.legacy.context'

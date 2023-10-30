@@ -1,0 +1,23 @@
+services:
+  mbo.addons.client.http:
+    class: GuzzleHttp\Client
+    arguments:
+      $config:
+        base_uri: "%env(ADDONS_API_URL)%"
+        timeout: "7200"
+        headers:
+            Accept: "application/json"
+        CURLOPT_FORBID_REUSE: true
+        CURLOPT_FRESH_CONNECT: true
+
+
+  mbo.distribution_api.client.http:
+    class: GuzzleHttp\Client
+    arguments:
+      $config:
+        base_uri: "%env(DISTRIBUTION_API_URL)%"
+        timeout: "7200"
+        headers:
+          Accept: "application/json"
+        CURLOPT_FORBID_REUSE: true
+        CURLOPT_FRESH_CONNECT: true

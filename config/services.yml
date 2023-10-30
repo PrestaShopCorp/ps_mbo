@@ -92,6 +92,7 @@ services:
           - '@router'
           - '@mbo.cdc.distribution_authentication_provider'
           - '@doctrine.cache.provider'
+          - '@mbo.accounts.data_provider'
 
   mbo.distribution_api.client.http:
       class: GuzzleHttp\Client

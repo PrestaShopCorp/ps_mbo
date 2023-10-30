@@ -1,0 +1,38 @@
+services:
+  _defaults:
+    public: true
+
+  mbo.distribution.config_factory:
+    class: 'PrestaShop\Module\Mbo\Distribution\Config\Factory'
+
+  mbo.distribution.config_applier:
+    class: 'PrestaShop\Module\Mbo\Distribution\Config\Applier'
+    arguments:
+      - '@mbo.distribution.config_appliers_factory'
+
+  mbo.distribution.theme_catalog_menu_config_applier:
+    class: PrestaShop\Module\Mbo\Distribution\Config\Appliers\ThemeCatalogMenuConfigApplier
+
+  mbo.distribution.module_selection_menu_config_applier:
+    class: PrestaShop\Module\Mbo\Distribution\Config\Appliers\ModuleSelectionMenuConfigApplier
+
+  mbo.distribution.config_appliers_factory:
+    class: 'PrestaShop\Module\Mbo\Distribution\Config\Appliers\Factory'
+    arguments:
+      - [
+          '@mbo.distribution.theme_catalog_menu_config_applier',
+          '@mbo.distribution.module_selection_menu_config_applier'
+      ]
+
+  mbo.distribution.api_config_change_handler:
+    class: 'PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\ConfigChangeCommandHandler'
+    arguments:
+      - '@mbo.distribution.config_factory'
+      - '@mbo.distribution.config_applier'
+
+
+  mbo.distribution.api_version_change_config_apply_handler:
+    class: 'PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler'
+    arguments:
+      - '@mbo.distribution.config_factory'
+      - '@mbo.distribution.config_applier'

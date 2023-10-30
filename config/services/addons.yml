@@ -1,0 +1,57 @@
+services:
+  _defaults:
+    public: true
+
+  mbo.addons.user.credentials_encryptor:
+    class: PrestaShop\Module\Mbo\Addons\User\CredentialsEncryptor
+    arguments:
+      - '@mbo.security.admin_authentication.provider'
+
+  mbo.addons.user:
+    class: PrestaShop\Module\Mbo\Addons\User\AddonsUser
+    arguments:
+      - '@session'
+      - '@mbo.addons.user.credentials_encryptor'
+      - '@mbo.accounts.data_provider'
+
+  mbo.addons.user.provider:
+    class: PrestaShop\Module\Mbo\Addons\User\AddonsUserProvider
+    arguments:
+      - "@mbo.addons.user"
+
+  mbo.addons.data_provider:
+    class: PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider
+    arguments:
+      - '@mbo.addons.client.api'
+      - '@=service("mbo.addons.user.provider").getUser()'
+      - '@=service("prestashop.adapter.legacy.configuration").get("ADDONS_API_MODULE_CHANNEL", "stable")'
+    properties:
+      cacheDir: "%kernel.cache_dir%"
+
+  # Addons API Client
+  mbo.addons.client.api:
+    class: PrestaShop\Module\Mbo\Addons\ApiClient
+    arguments:
+      - "@mbo.addons.client.http"
+    calls:
+      - method: setDefaultParams
+        arguments:
+          - "@=service('translator').getLocale()"
+          - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
+          - "@=service('prestashop.adapter.legacy.configuration').get('_PS_BASE_URL_')"
+          - "@=service('prestashop.core.foundation.version').getSemVersion()"
+
+  mbo.addons.toolbar:
+    class: PrestaShop\Module\Mbo\Addons\Toolbar
+    arguments:
+      - '@mbo.security.permission_checker'
+      - '@mbo.addons.data_provider'
+      - '@translator'
+
+  mbo.addons.event_listener.addons_credentials_encryption_listener:
+    class: PrestaShop\Module\Mbo\Addons\Listener\AddonsCredentialsEncryptionListener
+    arguments:
+      - '@session'
+      - '@mbo.addons.user.credentials_encryptor'
+    tags:
+      - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
