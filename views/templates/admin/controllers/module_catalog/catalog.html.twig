@@ -64,6 +64,14 @@
       }
     }
   </script>
+
+  {% if urlAccountsCdn is defined and urlAccountsCdn is not empty %}
+    {# PrestaShop Account #}
+    <script src="{{ urlAccountsCdn }}" rel=preload></script>
+    <script>
+      window?.psaccountsVue?.init();
+    </script>
+  {% endif %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -72,6 +80,8 @@
 {% endblock %}
 
 {% block content %}
+  <prestashop-accounts style="display: none;"></prestashop-accounts>
+
   <div class="mbo-catalog-wrapper cdc-container" id="cdc-container" data-error-path="{{ path('admin_mbo_module_cdc_error') }}"></div>
 
   {# Addons connect modal #}
