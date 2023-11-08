@@ -70,6 +70,7 @@ class ModuleCatalogController extends ModuleAbstractController
         try {
             $accountsFacade = $this->get('mbo.ps_accounts.facade');
             $accountsService = $accountsFacade->getPsAccountsService();
+            $this->ensurePsAccountIsEnabled();
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
             $accountsInstaller = $this->get('mbo.ps_accounts.installer');
             $accountsInstaller->install();
@@ -145,5 +146,15 @@ class ModuleCatalogController extends ModuleAbstractController
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/cdc-error.html.twig'
         );
+    }
+
+    private function ensurePsAccountIsEnabled(): void
+    {
+        $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+
+        if (null !== $accountsInstaller && !$accountsInstaller->isModuleEnabled()) {
+            $moduleManager = $this->get('prestashop.module.manager');
+            $moduleManager->enable($accountsInstaller->getModuleName());
+        }
     }
 }
