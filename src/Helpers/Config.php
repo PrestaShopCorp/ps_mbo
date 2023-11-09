@@ -171,7 +171,7 @@ class Config
         );
     }
 
-    private static function getSingleShop(): Shop
+    public static function getSingleShop(): Shop
     {
         $shops = Shop::getShops(false, null, true);
 
