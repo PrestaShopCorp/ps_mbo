@@ -28,6 +28,17 @@
       <script type="application/javascript" src="{{ cdc_url }}"></script>
     {% endif %}
 
+    {% if urlAccountsCdn is defined and urlAccountsCdn is not empty %}
+      {# PrestaShop Account #}
+      <script src="{{ urlAccountsCdn }}" rel=preload></script>
+      <script>
+        if (window?.psaccountsVue) {
+          window?.psaccountsVue?.init();
+          {% set shop_context = shop_context|merge({'accounts_component_loaded': true}) %}
+        }
+      </script>
+    {% endif %}
+
     <script>
       if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
         if (typeof renderCdcError === 'function') {
@@ -43,14 +54,6 @@
         renderModules(context, '#cdc-container')
       }
     </script>
-
-    {% if urlAccountsCdn is defined and urlAccountsCdn is not empty %}
-        {# PrestaShop Account #}
-        <script src="{{ urlAccountsCdn }}" rel=preload></script>
-        <script>
-          window?.psaccountsVue?.init();
-        </script>
-    {% endif %}
 {% endblock %}
 
 {% block stylesheets %}
