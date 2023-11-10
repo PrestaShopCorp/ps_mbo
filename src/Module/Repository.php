@@ -165,6 +165,9 @@ class Repository implements RepositoryInterface
         return $this->cache;
     }
 
+    /**
+     * @TODO : Optimize using new Addons routes
+     */
     public function getApiModule(string $name): ?stdClass
     {
         $modules = $this->fetchAll(true);
