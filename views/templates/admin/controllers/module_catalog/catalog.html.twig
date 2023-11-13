@@ -26,6 +26,17 @@
     <script type="application/javascript" src="{{ cdc_error_url }}"></script>
   {% endif %}
 
+  {% if urlAccountsCdn is defined and urlAccountsCdn is not empty %}
+    {# PrestaShop Account #}
+    <script src="{{ urlAccountsCdn }}" rel=preload></script>
+    <script>
+      if (window?.psaccountsVue) {
+        window?.psaccountsVue?.init();
+        {% set shop_context = shop_context|merge({'accounts_component_loaded': true}) %}
+      }
+    </script>
+  {% endif %}
+
   <script>
     function addOrUpdateUrlParam(name, value)
     {
@@ -64,14 +75,6 @@
       }
     }
   </script>
-
-  {% if urlAccountsCdn is defined and urlAccountsCdn is not empty %}
-    {# PrestaShop Account #}
-    <script src="{{ urlAccountsCdn }}" rel=preload></script>
-    <script>
-      window?.psaccountsVue?.init();
-    </script>
-  {% endif %}
 {% endblock %}
 
 {% block stylesheets %}
