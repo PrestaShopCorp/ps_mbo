@@ -66,8 +66,6 @@ class ModuleController extends ModuleControllerCore
         /*********************
          * PrestaShop Account *
          * *******************/
-        $accountsFacade = null;
-        $accountsService = null;
         $urlAccountsCdn = '';
 
         try {
@@ -85,7 +83,7 @@ class ModuleController extends ModuleControllerCore
             try {
                 \Media::addJsDef([
                     'contextPsAccounts' => $accountsFacade->getPsAccountsPresenter()
-                        ->present(),
+                        ->present('ps_mbo'),
                 ]);
 
                 // Retrieve the PrestaShop Account CDN
