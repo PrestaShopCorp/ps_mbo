@@ -119,6 +119,12 @@ class ps_mbo extends Module
         ],
     ];
 
+    const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
+        'AdminPsMboModule',
+        'AdminModulesManage',
+        'AdminModulesSf',
+    ];
+
     const CONTROLLERS_WITH_CDC_SCRIPT = [
         'AdminModulesNotifications',
         'AdminModulesUpdates',
@@ -505,6 +511,9 @@ class ps_mbo extends Module
         if (in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CDC_SCRIPT)) {
             $this->context->controller->addJs('/js/jquery/plugins/growl/jquery.growl.js?v=' . $this->version);
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css');
+        }
+        if (in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CONNECTION_TOOLBAR)) {
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/connection-toolbar.css');
         }
         $this->loadCdcMedia();
     }
