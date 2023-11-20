@@ -38,10 +38,21 @@ class ErrorHandler implements ErrorHandlerInterface
      */
     protected $user;
 
+    /**
+     * @var array|false|string
+     */
+    protected $dsn;
+
     public function __construct()
     {
+        $this->dsn = getenv('SENTRY_CREDENTIALS');
+
+        if (empty($this->dsn)) {
+            return;
+        }
+
         \Sentry\init([
-            'dsn' => getenv('SENTRY_CREDENTIALS'),
+            'dsn' => $this->dsn,
             'release' => \ps_mbo::VERSION,
         ]);
 
@@ -60,6 +71,10 @@ class ErrorHandler implements ErrorHandlerInterface
      */
     public function handle(Exception $error, $code = null, ?bool $throw = true, ?array $data = []): void
     {
+        if (empty($this->dsn)) {
+            return;
+        }
+
         if (!empty($data)) {
             \Sentry\configureScope(function (Scope $scope) use ($data): void {
                 $scope->setContext('additional data', $data);
