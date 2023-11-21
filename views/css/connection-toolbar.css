@@ -34,3 +34,7 @@
     max-width: 100%;
   }
 }
+
+.header-toolbar .container-fluid, .header-toolbar .page-head-tabs {
+  display: none;
+}
