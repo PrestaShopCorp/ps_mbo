@@ -125,7 +125,7 @@ class ContextBuilder
             'iso_lang' => $this->getLanguage()->getIsoCode(),
             'iso_code' => $this->getCountry()->iso_code,
             'mbo_version' => \ps_mbo::VERSION,
-            'ps_version' => _PS_VERSION_,
+            'ps_version' => '8.0.4',
             'shop_url' => Config::getShopUrl(),
         ];
     }
@@ -161,7 +161,7 @@ class ContextBuilder
             'currency' => $this->getCurrencyCode(),
             'iso_lang' => $language->getIsoCode(),
             'iso_code' => mb_strtolower($country->iso_code),
-            'shop_version' => _PS_VERSION_,
+            'shop_version' => '8.0.4',
             'shop_url' => Config::getShopUrl(),
             'shop_uuid' => Config::getShopMboUuid(),
             'mbo_token' => $this->adminAuthenticationProvider->getMboJWT(),

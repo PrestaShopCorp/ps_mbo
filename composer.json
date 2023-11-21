@@ -25,7 +25,7 @@
     "guzzlehttp/guzzle": "^7.4",
     "ramsey/uuid": "^4.2",
     "sentry/sdk": "^3.3",
-    "symfony/workflow": "^4.4.20",
+    "symfony/workflow": "^5.1",
     "prestashop/prestashop-accounts-installer": "^1.0",
     "firebase/php-jwt": "^6.3"
   },

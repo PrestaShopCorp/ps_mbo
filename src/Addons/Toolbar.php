@@ -25,7 +25,7 @@ use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This service returns descriptions for the buttons to add into the Module configure toolbar

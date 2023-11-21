@@ -159,6 +159,7 @@ class Repository implements RepositoryInterface
         if ($rawModules) {
             return $apiModules;
         }
+
         $this->cache = $listAddonsModules;
 
         return $this->cache;
