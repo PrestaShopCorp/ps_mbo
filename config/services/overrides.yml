@@ -6,8 +6,9 @@ services:
         class: PrestaShop\Module\Mbo\Addons\AddonsDataProvider
         decorates: prestashop.core.admin.data_provider.addons_interface
         arguments:
-            - '@prestashop.addons.client_api'
+            - '@mbo.addons.client.api'
             - '@prestashop.module.zip.manager'
+            - '@mbo.addons.user'
             - '@=service("prestashop.adapter.legacy.configuration").get("ADDONS_API_MODULE_CHANNEL", "stable")'
         properties:
             cacheDir: "%kernel.cache_dir%"

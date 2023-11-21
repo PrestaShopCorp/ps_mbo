@@ -12,8 +12,6 @@ parameters:
 		- '#Property TabCore::\$name \(string\) does not accept array\<int, string\>.#'
 		- '#Access to an undefined property Tab::\$wording.#'
 		- '#Access to an undefined property Cookie::\$id_employee.#'
-		- '#Access to an undefined property Cookie::\$username_addons.#'
-		- '#Access to an undefined property Cookie::\$password_addons.#'
 		-
 		    message: '#Property TabCore::\$name \(string\) does not accept array\<int\|string, mixed\>.#'
 		    path: ps_mbo.php

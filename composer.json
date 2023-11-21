@@ -24,7 +24,8 @@
     "prestashop/circuit-breaker": "^3.0.0",
     "firebase/php-jwt": "^6.0",
     "ramsey/uuid": "^3.9",
-    "prestashop/prestashop-accounts-installer": "^1.0"
+    "prestashop/prestashop-accounts-installer": "^1.0",
+    "symfony/dotenv": "^3.4.37"
   },
   "require-dev": {
     "prestashop/php-dev-tools": "^2.2"
@@ -33,6 +34,9 @@
     "psr-4": {
       "PrestaShop\\Module\\Mbo\\": "src/"
     },
-    "classmap": ["ps_mbo.php"]
+    "classmap": ["ps_mbo.php"],
+    "files": [
+      "autoload.php"
+    ]
   }
 }

@@ -27,10 +27,11 @@
 namespace PrestaShop\Module\Mbo\Addons;
 
 use Exception;
+use GuzzleHttp\Exception\ClientException;
 use PhpEncryption;
+use PrestaShop\Module\Mbo\Addons\User\AddonsUser;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
-use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -41,25 +42,28 @@ use Symfony\Component\HttpFoundation\Request;
 class AddonsDataProvider implements AddonsInterface
 {
     /** @var string */
-    public const ADDONS_API_MODULE_CHANNEL_STABLE = 'stable';
+    const ADDONS_API_MODULE_CHANNEL_STABLE = 'stable';
 
-    /** @var string */
-    public const ADDONS_API_MODULE_CHANNEL_BETA = 'beta';
-
-    /** @var string */
-    public const ADDONS_API_MODULE_CHANNEL_ALPHA = 'alpha';
-
-    /** @var array<string> */
-    public const ADDONS_API_MODULE_CHANNELS = [
-        self::ADDONS_API_MODULE_CHANNEL_STABLE,
-        self::ADDONS_API_MODULE_CHANNEL_BETA,
-        self::ADDONS_API_MODULE_CHANNEL_ALPHA,
+    /** @var array<string, string> */
+    const ADDONS_API_MODULE_ACTIONS = [
+        'native' => 'getNativesModules',
+        'service' => 'getServices',
+        'native_all' => 'getNativesModules',
+        'must-have' => 'getMustHaveModules',
+        'customer' => 'getCustomerModules',
+        'customer_themes' => 'getCustomerThemes',
+        'check_customer' => 'getCheckCustomer',
+        'check_module' => 'getCheckModule',
+        'module_download' => 'getModuleZip',
+        'module' => 'getModule',
+        'install-modules' => 'getPreInstalledModules',
+        'categories' => 'getCategories',
     ];
 
     /**
      * @var bool
      */
-    protected static $is_addons_up = true;
+    protected static $isAddonsUp = true;
 
     /**
      * @var ApiClient
@@ -85,21 +89,31 @@ class AddonsDataProvider implements AddonsInterface
      * @var string
      */
     private $moduleChannel;
+    /**
+     * @var AddonsUser
+     */
+    private $user;
 
     /**
      * @param ApiClient $apiClient
      * @param ModuleZipManager $zipManager
+     * @param AddonsUser $user
      * @param string|null $moduleChannel
      */
     public function __construct(
         ApiClient $apiClient,
         ModuleZipManager $zipManager,
-        ?string $moduleChannel = null
+        AddonsUser $user,
+        string $moduleChannel = null
     ) {
         $this->marketplaceClient = $apiClient;
         $this->zipManager = $zipManager;
         $this->encryption = new PhpEncryption(_NEW_COOKIE_KEY_);
-        $this->moduleChannel = $moduleChannel ?? self::ADDONS_API_MODULE_CHANNEL_STABLE;
+        if (null === $moduleChannel) {
+            $moduleChannel = self::ADDONS_API_MODULE_CHANNEL_STABLE;
+        }
+        $this->moduleChannel = $moduleChannel;
+        $this->user = $user;
     }
 
     /**
@@ -111,7 +125,6 @@ class AddonsDataProvider implements AddonsInterface
      */
     public function downloadModule(int $module_id): bool
     {
-        throw new \Exception('Using the MBO AddonsDataProvider');
         $params = [
             'id_module' => $module_id,
             'format' => 'json',
@@ -121,11 +134,21 @@ class AddonsDataProvider implements AddonsInterface
         try {
             $module_data = $this->request('module_download', $params);
         } catch (Exception $e) {
-            if (!$this->isAddonsAuthenticated()) {
-                throw new Exception('Error sent by Addons. You may need to be logged.', 0, $e);
+            $message = 'Error sent by Addons.';
+
+            if ($e instanceof ClientException) {
+                $rawContent = $e->getResponse()->getBody()->getContents();
+                $jsonContent = json_decode($rawContent, true);
+                if (is_array($jsonContent) && isset($jsonContent['errors']['label'])) {
+                    $message .= ' ' . $jsonContent['errors']['label'];
+                }
             } else {
-                throw new Exception('Error sent by Addons. You may be not allowed to download this module.', 0, $e);
+                $message .= $this->isUserAuthenticated() ?
+                    ' You may be not allowed to download this module.'
+                    : ' You may need to be logged.';
             }
+
+            throw new Exception($message, 0, $e);
         }
 
         $temp_filename = tempnam($this->cacheDir, 'mod');
@@ -152,7 +175,44 @@ class AddonsDataProvider implements AddonsInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Tells if the user is authenticated to Addons or Account
+     *
+     * @return bool
+     */
+    public function isUserAuthenticated()
+    {
+        return $this->user->isAuthenticated();
+    }
+
+    /**
+     * Tells if the user is authenticated to Addons
+     *
+     * @return bool
+     */
+    public function isUserAuthenticatedOnAccounts()
+    {
+        return $this->user->hasAccountsTokenInSession() || $this->user->isConnectedOnPsAccounts();
+    }
+
+    /**
+     * Returns the user's login if he is authenticated to Addons
+     *
+     * @return string|null
+     *
+     * @throws Exception
+     */
+    public function getAuthenticatedUserEmail()
+    {
+        return $this->isUserAuthenticated() ? (string) $this->user->getEmail()['username'] : null;
+    }
+
+    /**
+     * @param string $action
+     * @param array $params
+     *
+     * @return mixed
+     *
+     * @throws Exception
      */
     public function request($action, $params = [])
     {
@@ -160,62 +220,35 @@ class AddonsDataProvider implements AddonsInterface
             throw new Exception('Previous call failed and disabled client.');
         }
 
-        // We merge the addons credentials
-        if ($this->isAddonsAuthenticated()) {
-            $params = array_merge($this->getAddonsCredentials(), $params);
+        if (
+            !array_key_exists($action, self::ADDONS_API_MODULE_ACTIONS) ||
+            !method_exists($this->marketplaceClient, self::ADDONS_API_MODULE_ACTIONS[$action])
+        ) {
+            throw new Exception("Action '{$action}' not found in actions list.");
         }
 
         $this->marketplaceClient->reset();
 
+        $authParams = $this->getAuthenticationParams();
+        if (isset($authParams['bearer']) && is_string($authParams['bearer'])) {
+            $this->marketplaceClient->setHeaders([
+                'Authorization' => 'Bearer ' . $authParams['bearer'],
+            ]);
+        }
+        if (is_array($authParams['credentials']) && !empty($authParams['credentials'])) {
+            $params = array_merge($authParams['credentials'], $params);
+        }
+
+        if ($action === 'module_download') {
+            $params['channel'] = $this->moduleChannel;
+        } elseif ($action === 'native_all') {
+            $params['iso_code'] = 'all';
+        }
+
         try {
-            switch ($action) {
-                case 'native':
-                    return $this->marketplaceClient->getNativesModules();
-                case 'service':
-                    return $this->marketplaceClient->getServices();
-                case 'native_all':
-                    return $this->marketplaceClient->setIsoCode('all')
-                        ->getNativesModules();
-                case 'must-have':
-                    return $this->marketplaceClient->getMustHaveModules();
-                case 'customer':
-                    return $this->marketplaceClient->getCustomerModules($params['username_addons'], $params['password_addons']);
-                case 'customer_themes':
-                    return $this->marketplaceClient
-                        ->setUserMail($params['username_addons'])
-                        ->setPassword($params['password_addons'])
-                        ->getCustomerThemes();
-                case 'check_customer':
-                    return $this->marketplaceClient
-                        ->setUserMail($params['username_addons'])
-                        ->setPassword($params['password_addons'])
-                        ->getCheckCustomer();
-                case 'check_module':
-                    return $this->marketplaceClient
-                        ->setUserMail($params['username_addons'])
-                        ->setPassword($params['password_addons'])
-                        ->setModuleName($params['module_name'])
-                        ->setModuleKey($params['module_key'])
-                        ->getCheckModule();
-                case 'module_download':
-                    if ($this->isAddonsAuthenticated()) {
-                        return $this->marketplaceClient
-                            ->setUserMail($params['username_addons'])
-                            ->setPassword($params['password_addons'])
-                            ->getModuleZip($params['id_module'], $this->moduleChannel);
-                    }
-
-                    return $this->marketplaceClient->getModuleZip($params['id_module'], $this->moduleChannel);
-                case 'module':
-                    return $this->marketplaceClient->getModule($params['id_module']);
-                case 'install-modules':
-                    return $this->marketplaceClient->getPreInstalledModules();
-                case 'categories':
-                    return $this->marketplaceClient->getCategories();
-            }
+            return $this->marketplaceClient->{self::ADDONS_API_MODULE_ACTIONS[$action]}($params);
         } catch (Exception $e) {
-            self::$is_addons_up = false;
-
+            self::$isAddonsUp = false;
             throw $e;
         }
     }
@@ -249,12 +282,41 @@ class AddonsDataProvider implements AddonsInterface
     }
 
     /**
+     * @return array
+     */
+    public function getAuthenticationParams()
+    {
+        $authParams = [
+            'bearer' => null,
+            'credentials' => null,
+        ];
+
+        // We merge the addons credentials
+        if ($this->isUserAuthenticated()) {
+            $credentials = $this->user->getCredentials();
+            if (array_key_exists('accounts_token', $credentials)) {
+                $authParams['bearer'] = $credentials['accounts_token'];
+                // This is a bug for now, we need to give a couple of username/password even if a token is given
+                // It has to be cleaned once the bug fixed
+                $authParams['credentials'] = [
+                    'username' => 'name@domain.com',
+                    'password' => 'fakepwd',
+                ];
+            } else {
+                $authParams['credentials'] = $credentials;
+            }
+        }
+
+        return $authParams;
+    }
+
+    /**
      * Check if a request has already failed.
      *
      * @return bool
      */
     public function isAddonsUp(): bool
     {
-        return self::$is_addons_up;
+        return self::$isAddonsUp;
     }
 }
