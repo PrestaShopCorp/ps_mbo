@@ -74,8 +74,5 @@
 {% block content %}
   <div class="mbo-catalog-wrapper cdc-container" id="cdc-container" data-error-path="{{ path('admin_mbo_module_cdc_error') }}"></div>
 
-  {# Addons connect modal #}
-  {% include '@PrestaShop/Admin/Module/Includes/modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
-
   {% include '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/Includes/modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
 {% endblock %}
