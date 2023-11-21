@@ -57,7 +57,6 @@ class ps_mbo extends Module
 
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
-        'AdminPsMboModule',
         'AdminModulesManage',
         'AdminModulesSf',
     ];
