@@ -23,7 +23,7 @@
  *
  * @return bool
  */
-function upgrade_module_4_6_2(Module $module): bool
+function upgrade_module_4_7_0(Module $module): bool
 {
     $singleShop = \PrestaShop\Module\Mbo\Helpers\Config::getSingleShop();
     $domains = \Tools::getDomains();
