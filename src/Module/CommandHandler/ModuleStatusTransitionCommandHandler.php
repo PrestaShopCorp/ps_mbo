@@ -73,6 +73,8 @@ final class ModuleStatusTransitionCommandHandler
     {
         $apiModule = null;
         $moduleName = $command->getModuleName();
+        $moduleId = $command->getModuleId();
+        $moduleVersion = $command->getModuleVersion();
         $source = $command->getSource();
 
         // First get the module from DB
@@ -88,15 +90,9 @@ final class ModuleStatusTransitionCommandHandler
                 $dbModule['active']
             );
         } else {
-            $apiModule = $this->moduleRepository->getApiModule($moduleName);
-
-            if (null === $apiModule) {
-                throw new ModuleNotFoundException(sprintf('Module %s not found', $moduleName));
-            }
-
             $module = new TransitionModule(
                 $moduleName,
-                $apiModule->version,
+                $moduleVersion,
                 false,
                 false,
                 false
@@ -108,12 +104,11 @@ final class ModuleStatusTransitionCommandHandler
 
         // Download a module before upgrade is not an actual module transition, so it cannot be handled by the StateMachine
         if (ModuleTransitionCommand::MODULE_COMMAND_DOWNLOAD === $transitionCommand) {
-            $module = $apiModule ?? $this->moduleRepository->getApiModule($moduleName);
-            if (null === $module) {
-                throw new ModuleNotFoundException(sprintf('Module %s not found', $moduleName));
+            if (null === $source) {
+                $source = $this->actionsManager->downloadModule($moduleId);
             }
 
-            $this->actionsManager->downloadAndReplaceModuleFiles($module, $source);
+            $this->actionsManager->downloadAndReplaceModuleFiles($moduleName, $source);
         } else {
             if (!array_key_exists($transitionCommand, ModuleTransitionCommand::MAPPING_TRANSITION_COMMAND_TARGET_STATUS)) {
                 throw new TransitionCommandToModuleStatusException(sprintf('Unable to map module transition command given %s', $transitionCommand));

@@ -63,17 +63,22 @@ class ActionsManager
         $this->filesManager->installFromSource($moduleZip);
     }
 
+    public function downloadModule(int $moduleId): string
+    {
+        return $this->filesManager->downloadModule($moduleId);
+    }
+
     /**
      * @throws UnexpectedModuleSourceContentException
      * @throws ModuleNewVersionNotFoundException
      */
-    public function downloadAndReplaceModuleFiles(\stdClass $module, string $source): void
+    public function downloadAndReplaceModuleFiles(string $moduleName, string $source): void
     {
         if (is_string($source) && AddonsUrlSourceRetriever::assertIsAddonsUrl($source) && strpos($source, 'shop_url') === false) {
             $source .= '&shop_url=' . Config::getShopUrl();
         }
 
-        $this->filesManager->deleteModuleDirectory($module);
+        $this->filesManager->deleteModuleDirectory($moduleName);
 
         $this->filesManager->installFromSource($source);
     }
