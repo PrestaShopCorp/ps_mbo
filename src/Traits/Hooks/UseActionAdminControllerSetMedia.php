@@ -94,6 +94,9 @@ trait UseActionAdminControllerSetMedia
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/connection-toolbar.css');
             $this->context->controller->addJS($this->getPathUri() . 'views/js/connection-toolbar.js');
         }
+        if ('AdminPsMboModule' === Tools::getValue('controller')) {
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/hide-toolbar.css');
+        }
         if ($this->isAdminLegacyContext()) {
             // Add it to have all script work on all pages...
             $this->context->controller->addJs('/admin-dev/themes/default/js/bundle/default.js?v=' . _PS_VERSION_);
