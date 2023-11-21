@@ -75,7 +75,3 @@
   background-color: #cbf2d4;
   border: 1px solid #53d572;
 }
-
-.header-toolbar .container-fluid, .header-toolbar .page-head-tabs {
-  display: none;
-}
