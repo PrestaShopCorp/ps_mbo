@@ -55,7 +55,7 @@ trait UseActionBeforeUpgradeModule
 
         $module = $moduleActionsManager->findVersionForUpdate($moduleName);
         if (null !== $module) {
-            $moduleActionsManager->downloadAndReplaceModuleFiles($module);
+            $moduleActionsManager->downloadAndReplaceModuleFiles($moduleName);
         }
     }
 

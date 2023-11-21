@@ -63,6 +63,8 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
 
         $transition = Tools::getValue('action');
         $moduleName = Tools::getValue('module');
+        $moduleId = (int) Tools::getValue('module_id');
+        $moduleVersion = Tools::getValue('module_version');
         $source = Tools::getValue('source', null);
 
         if (empty($transition) || empty($moduleName)) {
@@ -72,7 +74,7 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
         // Authenticate user to addons if credentials are provided
         $this->authenticateAddonsUser($psMbo->get('session'));
 
-        $command = new ModuleStatusTransitionCommand($transition, $moduleName, $source);
+        $command = new ModuleStatusTransitionCommand($transition, $moduleName, $moduleId, $moduleVersion, $source);
 
         /** @var \PrestaShop\Module\Mbo\Module\Module $module */
         $module = $this->moduleStatusTransitionCommandHandler->handle($command);
