@@ -55,6 +55,7 @@ class ps_mbo extends Module
      */
     public const VERSION = '4.6.2';
 
+
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminPsMboModule',
         'AdminModulesManage',
