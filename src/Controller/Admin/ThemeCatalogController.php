@@ -21,65 +21,76 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 /**
  * Responsible of "Improve > Design > Themes Catalog" page display.
  */
-class ThemeCatalogController extends FrameworkBundleAdminController
+class ThemeCatalogController extends ModuleAbstractController
 {
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
+    public const CONTROLLER_NAME = 'ADMINTHEMESSF';
 
     /**
-     * @param RequestStack $requestStack
-     */
-    public function __construct(
-        RequestStack $requestStack
-    ) {
-        parent::__construct();
-        $this->requestStack = $requestStack;
-    }
-
-    /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * Themes Catalog page
+     *
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this.",
+     *     redirectRoute="admin_administration"
+     * )
      *
      * @return Response
      */
     public function indexAction(): Response
     {
-        $response = new Response();
+        $moduleUri = __PS_BASE_URI__ . 'modules/ps_mbo/';
 
-        try {
-            $response->setContent($this->renderView(
-                '@Modules/ps_mbo/views/templates/admin/controllers/theme_catalog/addons_store.html.twig',
-                [
-                    'pageContent' => $this->get('mbo.externalcontent.provider')->getContent(
-                        $this->get('mbo.addons.links_provider')->getSelectionLink()
-                    ),
-                    'layoutHeaderToolbarBtn' => [],
-                    'layoutTitle' => $this->trans('Themes Catalog', 'Modules.Mbo.Themescatalog'),
-                    'requireAddonsSearch' => true,
-                    'requireBulkActions' => false,
-                    'showContentHeader' => true,
-                    'enableSidebar' => true,
-                    'help_link' => $this->generateSidebarLink($this->requestStack->getCurrentRequest()->get('_legacy_controller')),
-                    'requireFilterStatus' => false,
-                    'level' => $this->authorizationLevel($this->requestStack->getCurrentRequest()->get('_legacy_controller')),
-                ]
-            ));
-        } catch (ServiceUnavailableHttpException $exception) {
-            $response->setContent($this->renderView('@Modules/ps_mbo/views/templates/admin/error.html.twig'));
-            $response->setStatusCode($exception->getStatusCode());
-            $response->headers->add($exception->getHeaders());
+        $extraParams = [
+            'cdc_error_templating_url' => $moduleUri . 'views/js/cdc-error-templating.js',
+            'cdc_error_templating_css' => $moduleUri . 'views/css/cdc-error-templating.css',
+        ];
+
+        $cdcJsFile = getenv('MBO_CDC_URL');
+        if (false === $cdcJsFile || !is_string($cdcJsFile) || empty($cdcJsFile)) {
+            $extraParams['cdc_script_not_found'] = true;
+            $extraParams['cdc_error_url'] = $moduleUri . 'views/js/cdc-error.js';
+        } else {
+            $extraParams['cdc_url'] = $cdcJsFile;
         }
 
-        return $response;
+
+        return $this->render(
+            '@Modules/ps_mbo/views/templates/admin/controllers/theme_catalog/addons_store.html.twig',
+            [
+                'layoutHeaderToolbarBtn' => $this->get('mbo.addons.toolbar')->getToolbarButtons(),
+                'layoutTitle' => $this->trans('Themes Catalog', 'Modules.Mbo.Themescatalog'),
+                'requireAddonsSearch' => true,
+                'requireBulkActions' => false,
+                'showContentHeader' => true,
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink('AdminModules'),
+                'requireFilterStatus' => false,
+                'level' => $this->authorizationLevel(static::CONTROLLER_NAME),
+                'shop_context' => $this->get('mbo.cdc.context_builder')->getViewContext(),
+                'errorMessage' => $this->trans(
+                    'You do not have permission to add this.',
+                    'Admin.Notifications.Error'
+                ),
+            ] + $extraParams
+        );
+    }
+
+    /**
+     * Responsible for displaying error block when CDC cannot be loaded.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function cdcErrorAction(): Response
+    {
+        return $this->render(
+            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/cdc-error.html.twig'
+        );
     }
 }
