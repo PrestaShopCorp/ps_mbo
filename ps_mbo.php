@@ -160,13 +160,13 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '2.3.3';
+        $this->version = '3.0.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
-            'min' => '1.7.6.0',
+            'min' => '1.7.7.0',
             'max' => '1.7.8.99',
         ];
 
