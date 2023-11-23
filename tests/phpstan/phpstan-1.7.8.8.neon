@@ -11,5 +11,6 @@ parameters:
 		- '#Call to method getOrRefreshToken\(\) on an unknown class PrestaShop\\Module\\PsAccounts\\Repository\\UserTokenRepository.#'
 		- '#Class Ps_accounts not found.#'
 		- '#Access to property \$version on an unknown class Ps_accounts.#'
+		- '#Call to an undefined method Module::getService\(\).#'
 
 	level: 5

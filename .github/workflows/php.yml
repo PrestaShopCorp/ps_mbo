@@ -31,7 +31,7 @@ jobs:
       - name: Pull PrestaShop files (Tag ${{ matrix.presta-versions }})
         run: docker run -tid --rm -v ps-volume:/var/www/html --name temp-ps prestashop/prestashop:${{ matrix.presta-versions }}
       - name: Wait for container to be loaded
-        run: sleep 20
+        run: sleep 10
       - name: Checkout
         uses: actions/checkout@v2.0.0
       - name: Cache vendor folder
