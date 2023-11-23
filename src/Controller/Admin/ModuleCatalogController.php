@@ -60,6 +60,8 @@ class ModuleCatalogController extends ModuleAbstractController
             $extraParams['cdc_url'] = $cdcJsFile;
         }
 
+        dd($cdcJsFile);
+
         /*********************
          * PrestaShop Account *
          * *******************/
