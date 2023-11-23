@@ -6,12 +6,16 @@ parameters:
 	dynamicConstantNames:
 		- _PS_VERSION_
 	ignoreErrors:
-		- '#Property ModuleCore::\$version \(float\) does not accept string.#'
-		- '#Parameter \#2 \$variable of static method ModuleCore::getPermissionStatic\(\) expects array, string given.#'
 		- '#Parameter \#1 \$idProfile of static method ProfileCore::getProfileAccess\(\) expects int, string given.#'
 		- '#Property TabCore::\$name \(string\) does not accept array\<int, string\>.#'
 		- '#Access to an undefined property Tab::\$wording.#'
 		- '#Access to an undefined property Cookie::\$id_employee.#'
+		- '#Access to an undefined property Cookie::\$id_employee.#'
+		- '#Access to an undefined property Cookie::\$id_employee.#'
+		- '#Class PrestaShop\\Module\\PsAccounts\\Repository\\UserTokenRepository not found.#'
+		- '#Call to method getOrRefreshToken\(\) on an unknown class PrestaShop\\Module\\PsAccounts\\Repository\\UserTokenRepository.#'
+		- '#Class Ps_accounts not found.#'
+		- '#Access to property \$version on an unknown class Ps_accounts.#'
 		-
 		    message: '#Property TabCore::\$name \(string\) does not accept array\<int\|string, mixed\>.#'
 		    path: ps_mbo.php

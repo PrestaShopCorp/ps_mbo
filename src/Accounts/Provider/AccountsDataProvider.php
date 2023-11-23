@@ -25,6 +25,7 @@ use Exception;
 use PrestaShop\Module\PsAccounts\Repository\UserTokenRepository;
 use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Domain\Module\Exception\ModuleNotFoundException;
 use PrestaShop\PsAccountsInstaller\Installer\Exception\ModuleNotInstalledException;
 use PrestaShop\PsAccountsInstaller\Installer\Exception\ModuleVersionException;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
@@ -135,8 +136,11 @@ class AccountsDataProvider
     {
         if ($this->isPsAccountsInstalled()) {
             if ($this->checkPsAccountsVersion()) {
-                return \Module::getInstanceByName(Installer::PS_ACCOUNTS_MODULE_NAME)
-                    ->getService(PsAccounts::PS_ACCOUNTS_SERVICE);
+                $psAccounts = \Module::getInstanceByName(Installer::PS_ACCOUNTS_MODULE_NAME);
+                if (!$psAccounts instanceof \Module) {
+                    throw new ModuleNotFoundException('Module ' . Installer::PS_ACCOUNTS_MODULE_NAME . ' not found');
+                }
+                return $psAccounts->getService(PsAccounts::PS_ACCOUNTS_SERVICE);
             }
             throw new ModuleVersionException('Module version expected : ' . $this->psAccountsVersion);
         }

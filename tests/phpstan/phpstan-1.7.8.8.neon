@@ -7,5 +7,9 @@ parameters:
 		- _PS_VERSION_
 	ignoreErrors:
 		- '#Access to an undefined property Cookie::\$id_employee.#'
+		- '#Class PrestaShop\\Module\\PsAccounts\\Repository\\UserTokenRepository not found.#'
+		- '#Call to method getOrRefreshToken\(\) on an unknown class PrestaShop\\Module\\PsAccounts\\Repository\\UserTokenRepository.#'
+		- '#Class Ps_accounts not found.#'
+		- '#Access to property \$version on an unknown class Ps_accounts.#'
 
 	level: 5
