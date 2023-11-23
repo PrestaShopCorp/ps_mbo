@@ -60,6 +60,8 @@ class ModuleCatalogController extends ModuleAbstractController
             $extraParams['cdc_url'] = $cdcJsFile;
         }
 
+        dd($cdcJsFile);
+
         /*********************
          * PrestaShop Account *
          * *******************/
@@ -74,10 +76,12 @@ class ModuleCatalogController extends ModuleAbstractController
             // Seems the module is not here, try to install it
             $accountsInstaller->install();
             $accountsFacade = $this->get('mbo.ps_accounts.facade');
-            $accountsService = $accountsFacade->getPsAccountsService();
-        } catch (\Exception $e) {
-            // Installation seems to not work properly
-            $accountsService = $accountsFacade = null;
+            try {
+                $accountsService = $accountsFacade->getPsAccountsService();
+            } catch (\Exception $e) {
+                // Installation seems to not work properly
+                $accountsService = $accountsFacade = null;
+            }
         }
 
         if (null !== $accountsFacade && null !== $accountsService) {
