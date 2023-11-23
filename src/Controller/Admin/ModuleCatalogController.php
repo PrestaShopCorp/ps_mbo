@@ -71,9 +71,13 @@ class ModuleCatalogController extends ModuleAbstractController
             $this->ensurePsAccountIsEnabled();
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
             $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+            // Seems the module is not here, try to install it
             $accountsInstaller->install();
             $accountsFacade = $this->get('mbo.ps_accounts.facade');
             $accountsService = $accountsFacade->getPsAccountsService();
+        } catch (\Exception $e) {
+            // Installation seems to not work properly
+            $accountsService = $accountsFacade = null;
         }
 
         if (null !== $accountsFacade && null !== $accountsService) {
@@ -85,7 +89,7 @@ class ModuleCatalogController extends ModuleAbstractController
 
                 // Retrieve the PrestaShop Account CDN
                 $urlAccountsCdn = $accountsService->getAccountsCdn();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 //osef ?
             }
         }
