@@ -71,9 +71,16 @@ class ModuleCatalogController extends ModuleAbstractController
             $this->ensurePsAccountIsEnabled();
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
             $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+            // Seems the module is not here, try to install it
             $accountsInstaller->install();
-            $accountsFacade = $this->get('mbo.ps_accounts.facade');
-            $accountsService = $accountsFacade->getPsAccountsService();
+            try {
+                $accountsFacade = $this->get('mbo.ps_accounts.facade');
+                $accountsService = $accountsFacade->getPsAccountsService();
+            } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
+                // Installation seems to not work properly
+                $accountsFacade = null;
+                $accountsService = null;
+            }
         }
 
         if (null !== $accountsFacade && null !== $accountsService) {
