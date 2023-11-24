@@ -25,7 +25,7 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Utils;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
-use PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeFailedException;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\SourceNotCheckedException;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -116,6 +116,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 
             $response = $this->httpClient->request('HEAD', $source, $authenticatedQueryParameters['options']);
         } catch (TransportExceptionInterface | \Exception $e) {
+            ErrorHelper::reportError($e);
             return false;
         }
 

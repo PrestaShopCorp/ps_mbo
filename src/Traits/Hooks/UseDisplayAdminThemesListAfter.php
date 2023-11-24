@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
 trait UseDisplayAdminThemesListAfter
 {
@@ -43,6 +44,7 @@ trait UseDisplayAdminThemesListAfter
             /** @var \Symfony\Bundle\FrameworkBundle\Routing\Router $router */
             $router = $this->get('router');
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return '';
         }
         $context = $contextBuilder->getViewContext();

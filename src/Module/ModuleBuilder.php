@@ -25,6 +25,7 @@ use Exception;
 use Module as LegacyModule;
 use PaymentModule;
 use PhpParser;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShopBundle\Service\Routing\Router;
 use Psr\Log\LoggerInterface;
 use stdClass;
@@ -170,6 +171,7 @@ class ModuleBuilder implements ModuleBuilderInterface
         try {
             $parser->parse(file_get_contents($filePath));
         } catch (PhpParser\Error $exception) {
+            ErrorHelper::reportError($exception);
             $this->logger->critical(
                 sprintf(
                     'Parse error detected in main class of module %s: %s',

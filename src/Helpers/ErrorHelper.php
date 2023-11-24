@@ -17,16 +17,33 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Handler\ErrorHandler;
+namespace PrestaShop\Module\Mbo\Helpers;
 
-use Exception;
+use PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandlerInterface;
 
-interface ErrorHandlerInterface
+class ErrorHelper
 {
     /**
-     * @param Exception $error
-     * @param array|null $data
+     * @var ErrorHandlerInterface
      */
-    public function handle(Exception $error, ?array $data = null): void;
+    private static $errorHandler;
+
+    /**
+     * @param \Exception $error
+     * @param array|null $data
+     *
+     * @return void
+     */
+    public static function reportError(\Exception $error, ?array $data = null): void
+    {
+        if (!self::$errorHandler instanceof ErrorHandlerInterface) {
+            self::$errorHandler = new \PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler();
+        }
+
+        if (self::$errorHandler) {
+            self::$errorHandler->handle($error, $data);
+        }
+    }
 }

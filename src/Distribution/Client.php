@@ -24,6 +24,7 @@ namespace PrestaShop\Module\Mbo\Distribution;
 use Context;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use stdClass;
 use Symfony\Component\Routing\Router;
 
@@ -171,6 +172,7 @@ class Client extends BaseClient
             );
         } catch (\Throwable $e) {
             // Do nothing if the tracking fails
+            ErrorHelper::reportError($e);
         }
     }
 }

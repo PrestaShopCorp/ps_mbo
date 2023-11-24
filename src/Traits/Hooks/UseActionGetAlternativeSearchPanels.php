@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Search\SearchPanel;
 use Symfony\Component\Routing\Router;
 
@@ -41,12 +42,14 @@ trait UseActionGetAlternativeSearchPanels
             /** @var \Symfony\Bundle\FrameworkBundle\Routing\Router $router */
             $router = $this->get('router');
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return [];
         }
 
         try {
             $catalogUrl = $router->generate('admin_mbo_catalog_module', [], Router::ABSOLUTE_PATH);
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return [];
         }
 

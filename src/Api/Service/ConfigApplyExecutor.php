@@ -24,6 +24,7 @@ use http\Exception\InvalidArgumentException;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\ConfigChangeCommandHandler;
 use PrestaShop\Module\Mbo\Distribution\Config\Exception\InvalidConfigException;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Tools;
 
 class ConfigApplyExecutor implements ServiceExecutorInterface
@@ -62,11 +63,11 @@ class ConfigApplyExecutor implements ServiceExecutorInterface
         try {
             $config = json_decode(Tools::getValue('conf'), true);
         } catch (\JsonException $exception) {
+            ErrorHelper::reportError($exception);
             throw new InvalidConfigException($exception->getMessage());
         }
 
         if ($config === null && json_last_error() !== JSON_ERROR_NONE) {
-            var_dump(Tools::getValue('conf'), gettype(Tools::getValue('conf')), $config, json_last_error_msg());
             throw new InvalidConfigException('Config given is invalid. Please check the structure.');
         }
 

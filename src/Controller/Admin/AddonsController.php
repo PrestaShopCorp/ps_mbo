@@ -24,6 +24,7 @@ namespace PrestaShop\Module\Mbo\Controller\Admin;
 use Configuration;
 use Exception;
 use PrestaShop\Module\Mbo\Addons\Exception\LoginErrorException;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeNotNeededException;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
@@ -98,6 +99,7 @@ class AddonsController extends FrameworkBundleAdminController
             // Clear previously filtered modules search
             $this->get('mbo.modules.repository')->clearCache();
         } catch (Exception $e) {
+            ErrorHelper::reportError($e);
             $response->setData([
                 'success' => 0,
                 'message' => $this->trans(
@@ -188,6 +190,7 @@ class AddonsController extends FrameworkBundleAdminController
                 );
             }
         } catch (Exception $e) {
+            ErrorHelper::reportError($e);
             if ($e->getPrevious() instanceof ModuleUpgradeNotNeededException) {
                 $upgradeResponse['status'] = true;
                 $upgradeResponse['msg'] = $this->trans(
@@ -201,6 +204,7 @@ class AddonsController extends FrameworkBundleAdminController
                 try {
                     $this->moduleManager->disable($moduleName);
                 } catch (Exception $subE) {
+                    ErrorHelper::reportError($subE);
                 }
 
                 $upgradeResponse['msg'] = $this->trans(

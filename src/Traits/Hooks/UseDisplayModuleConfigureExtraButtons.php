@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 trait UseDisplayModuleConfigureExtraButtons
@@ -37,6 +38,7 @@ trait UseDisplayModuleConfigureExtraButtons
             /** @var Router $router */
             $router = $this->get('router');
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return '';
         }
         $this->smarty->assign([

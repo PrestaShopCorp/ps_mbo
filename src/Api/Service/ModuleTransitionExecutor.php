@@ -22,6 +22,7 @@ namespace PrestaShop\Module\Mbo\Api\Service;
 
 use http\Exception\InvalidArgumentException;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
 use PrestaShop\Module\Mbo\Module\CommandHandler\ModuleStatusTransitionCommandHandler;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
@@ -88,6 +89,7 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
                 /** @var \PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer $cacheClearer */
                 $cacheClearer = $psMbo->get('prestashop.adapter.cache.clearer.symfony_cache_clearer');
             } catch (\Exception $e) {
+                ErrorHelper::reportError($e);
                 $cacheClearer = false;
             }
             if ($cacheClearer) {

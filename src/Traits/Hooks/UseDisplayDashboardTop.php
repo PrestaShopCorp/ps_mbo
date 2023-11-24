@@ -25,6 +25,7 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
 use Hook;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Tab\TabInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -180,6 +181,7 @@ trait UseDisplayDashboardTop
                 ]
             );
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return '';
         }
     }
@@ -238,6 +240,7 @@ trait UseDisplayDashboardTop
             );
         } catch (Exception $exception) {
             // Avoid fatal errors on ServiceNotFoundException
+            ErrorHelper::reportError($exception);
             return '';
         }
 
