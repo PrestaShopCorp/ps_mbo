@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\ActionsManager;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -41,6 +42,7 @@ trait UseActionBeforeInstallModule
             /** @var ModuleDataProvider $moduleDataProvider */
             $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return;
         }
 
@@ -54,6 +56,7 @@ trait UseActionBeforeInstallModule
             /** @var Repository $moduleRepository */
             $moduleRepository = $this->get('mbo.modules.repository');
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return;
         }
         $module = $moduleRepository->getModule($moduleName);
@@ -66,6 +69,7 @@ trait UseActionBeforeInstallModule
             /** @var ActionsManager $actionsManager */
             $actionsManager = $this->get('mbo.modules.actions_manager');
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return;
         }
         $actionsManager->install((int) $module->get('id'));

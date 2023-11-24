@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\Version;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
@@ -47,6 +48,7 @@ trait UseDisplayBackOfficeEmployeeMenu
             /** @var \PrestaShop\Module\Mbo\Distribution\Client $apiClient */
             $apiClient = $this->get('mbo.cdc.client.distribution_api');
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return;
         }
 
@@ -54,6 +56,7 @@ trait UseDisplayBackOfficeEmployeeMenu
             /** @var \Symfony\Component\Routing\Router $router */
             $router = $this->get('router');
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return;
         }
 
@@ -81,6 +84,7 @@ trait UseDisplayBackOfficeEmployeeMenu
                 );
             }
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return;
         }
     }

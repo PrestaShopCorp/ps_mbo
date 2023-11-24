@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\CollectionFactory;
 use PrestaShop\Module\Mbo\Module\Filters;
 use PrestaShop\Module\Mbo\Module\FiltersFactory;
@@ -51,6 +52,7 @@ trait UseActionListModules
             /** @var Repository $moduleRepository */
             $moduleRepository = $this->get('mbo.modules.repository');
         } catch (\Exception $exception) {
+            ErrorHelper::reportError($exception);
             return [];
         }
         $filters = $filtersFactory->create();
@@ -102,6 +104,7 @@ trait UseActionListModules
             /** @var \Twig\Environment $twigEnvironment */
             $twigEnvironment = $this->get('twig');
         } catch (\Exception $exception) {
+            ErrorHelper::reportError($exception);
             return '';
         }
 

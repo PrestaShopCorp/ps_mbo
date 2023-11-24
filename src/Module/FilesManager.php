@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module;
 
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
@@ -61,6 +62,7 @@ class FilesManager
             $handler = $this->sourceHandlerFactory->getHandler($source);
             $handler->handle($source);
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             throw new UnexpectedModuleSourceContentException('The module download failed', 0, $e);
         }
     }

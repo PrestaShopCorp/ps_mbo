@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
 trait UseDisplayEmptyModuleCategoryExtraMessage
 {
@@ -48,6 +49,7 @@ trait UseDisplayEmptyModuleCategoryExtraMessage
                 ]
             );
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return '';
         }
     }
