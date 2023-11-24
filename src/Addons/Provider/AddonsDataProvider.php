@@ -27,6 +27,7 @@ use Exception;
 use GuzzleHttp\Exception\ClientException;
 use PrestaShop\Module\Mbo\Addons\ApiClient;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUser;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
 /**
  * This class will provide data from Addons API
@@ -119,6 +120,7 @@ class AddonsDataProvider implements DataProviderInterface
         try {
             $moduleData = $this->request('module_download', $params);
         } catch (Exception $e) {
+            ErrorHelper::reportError($e);
             $message = $this->isUserAuthenticated() ?
                 'Error sent by Addons. You may be not allowed to download this module.'
                 : 'Error sent by Addons. You may need to be logged.';
@@ -206,6 +208,7 @@ class AddonsDataProvider implements DataProviderInterface
         try {
             return $this->marketplaceClient->{self::ADDONS_API_MODULE_ACTIONS[$action]}($params);
         } catch (Exception $e) {
+            ErrorHelper::reportError($e);
             self::$is_addons_up = false;
             throw $e;
         }

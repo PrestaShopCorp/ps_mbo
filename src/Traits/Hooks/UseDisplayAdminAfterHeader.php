@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
 use PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Security\PermissionChecker;
 use Symfony\Component\HttpFoundation\Request;
 use Tools;
@@ -48,6 +49,7 @@ trait UseDisplayAdminAfterHeader
             /** @var Environment $twig */
             $twig = $this->get('twig');
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return '';
         }
 
@@ -59,6 +61,7 @@ trait UseDisplayAdminAfterHeader
                 ]
             );
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return '';
         }
     }

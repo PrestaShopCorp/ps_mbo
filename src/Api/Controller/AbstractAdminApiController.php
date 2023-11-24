@@ -31,6 +31,7 @@ use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker;
 use PrestaShop\Module\Mbo\Helpers\Config as ConfigHelper;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use ps_mbo;
 use Psr\Log\LoggerInterface;
 use Tools;
@@ -79,10 +80,13 @@ abstract class AbstractAdminApiController extends ModuleAdminController
             $this->logger->info('API Call received = ' . $_SERVER['REQUEST_URI']);
             $this->authorize();
         } catch (IncompleteSignatureParamsException $exception) {
+            ErrorHelper::reportError($exception);
             $this->exitWithExceptionMessage($exception);
         } catch (UnauthorizedException $exception) {
+            ErrorHelper::reportError($exception);
             $this->exitWithExceptionMessage($exception);
         } catch (RetrieveNewKeyException $exception) {
+            ErrorHelper::reportError($exception);
             $this->exitWithExceptionMessage($exception);
         }
 

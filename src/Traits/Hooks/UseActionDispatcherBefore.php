@@ -28,6 +28,7 @@ use Language;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Symfony\Component\HttpFoundation\Request;
@@ -87,6 +88,7 @@ trait UseActionDispatcherBefore
             /** @var \Symfony\Component\Cache\DoctrineProvider $cacheProvider */
             $cacheProvider = $this->get('doctrine.cache.provider');
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             $cacheProvider = false;
         }
         $cacheKey = 'mbo_last_ps_version_api_config_check';
@@ -111,6 +113,7 @@ trait UseActionDispatcherBefore
             /** @var VersionChangeApplyConfigCommandHandler $configApplyHandler */
             $configApplyHandler = $this->get('mbo.distribution.api_version_change_config_apply_handler');
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return;
         }
         $configApplyHandler->handle($command);

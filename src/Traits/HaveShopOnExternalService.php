@@ -26,6 +26,7 @@ use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Ramsey\Uuid\Uuid;
 use Shop;
 
@@ -76,6 +77,7 @@ trait HaveShopOnExternalService
         } catch (Exception $exception) {
             // Do nothing here, the exception is caught to avoid displaying an error to the client
             // Furthermore, the operation can't be tried again later as the module is now disabled or uninstalled
+            ErrorHelper::reportError($exception);
         }
     }
 
@@ -118,6 +120,10 @@ trait HaveShopOnExternalService
                 $f = fopen($lockFile, 'w+');
                 fclose($f);
             }
+            ErrorHelper::reportError($exception, [
+                'method' => $method,
+                'params' => $params,
+            ]);
         }
     }
 
@@ -174,6 +180,6 @@ trait HaveShopOnExternalService
         $config = json_decode(json_encode($config), true);
 
         $command = new ConfigChangeCommand($config, _PS_VERSION_, $this->version);
-        $configCollection = $this->getService('mbo.distribution.api_config_change_handler')->handle($command);
+        $this->getService('mbo.distribution.api_config_change_handler')->handle($command);
     }
 }

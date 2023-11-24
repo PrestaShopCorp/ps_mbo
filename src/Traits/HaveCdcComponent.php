@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits;
 
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use ToolsCore as Tools;
 
 trait HaveCdcComponent
@@ -60,6 +61,7 @@ trait HaveCdcComponent
             /** @var \Symfony\Bundle\FrameworkBundle\Routing\Router $router */
             $router = $this->get('router');
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return false;
         }
         $this->context->smarty->assign(

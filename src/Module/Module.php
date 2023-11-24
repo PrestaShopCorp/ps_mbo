@@ -22,6 +22,7 @@ namespace PrestaShop\Module\Mbo\Module;
 
 use Exception;
 use Module as LegacyModule;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -204,6 +205,7 @@ class Module implements ModuleInterface
             try {
                 $this->instantiateLegacyModule();
             } catch (Exception $e) {
+                ErrorHelper::reportError($e);
                 $this->disk->set('is_valid', false);
 
                 return false;

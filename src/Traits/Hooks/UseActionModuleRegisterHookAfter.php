@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+
 trait UseActionModuleRegisterHookAfter
 {
     /**
@@ -44,7 +46,7 @@ trait UseActionModuleRegisterHookAfter
                 $this->putMboDashboardZoneTwoAtLastPosition();
             }
         } catch (\Exception $e) {
-            // Do nothing because it's not critical
+            ErrorHelper::reportError($e);
         }
     }
 

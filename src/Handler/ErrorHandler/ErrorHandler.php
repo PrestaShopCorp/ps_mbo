@@ -51,35 +51,47 @@ class ErrorHandler implements ErrorHandlerInterface
             return;
         }
 
-        \Sentry\init([
-            'dsn' => $this->dsn,
-            'release' => \ps_mbo::VERSION,
-        ]);
-
-        \Sentry\configureScope(function (Scope $scope): void {
-            $scope->setContext('shop info', [
-                'prestashop_version' => _PS_VERSION_,
-                'mbo_cdc_url' => getenv('MBO_CDC_URL'),
-                'distribution_api_url' => getenv('DISTRIBUTION_API_URL'),
-                'addons_api_url' => getenv('ADDONS_API_URL'),
+        try {
+            \Sentry\init([
+                'dsn' => $this->dsn,
+                'release' => \ps_mbo::VERSION,
+                'environment' => getenv('SENTRY_ENVIRONMENT'),
+                'traces_sample_rate' => 0.5,
+                'sample_rate' => 0.5,
             ]);
-        });
+
+            \Sentry\configureScope(function (Scope $scope): void {
+                $scope->setContext('shop info', [
+                    'prestashop_version' => _PS_VERSION_,
+                    'mbo_cdc_url' => getenv('MBO_CDC_URL'),
+                    'distribution_api_url' => getenv('DISTRIBUTION_API_URL'),
+                    'addons_api_url' => getenv('ADDONS_API_URL'),
+                ]);
+            });
+        } catch (Exception $e) {
+            // Do nothing here, Sentry seems not working well
+        }
     }
 
     /**
-     * @throws Exception
+     * {@inheritDoc}
      */
-    public function handle(Exception $error, $code = null, ?bool $throw = true, ?array $data = []): void
+    public function handle(Exception $error, ?array $data = []): void
     {
         if (empty($this->dsn)) {
             return;
         }
 
-        if (!empty($data)) {
-            \Sentry\configureScope(function (Scope $scope) use ($data): void {
-                $scope->setContext('additional data', $data);
-            });
+        try {
+            if (!empty($data)) {
+                \Sentry\configureScope(function (Scope $scope) use ($data): void {
+                    $scope->setContext('Additional data', $data);
+                });
+            }
+
+            \Sentry\captureException($error);
+        } catch (Exception $e) {
+            // Do nothing here, Sentry seems not working well
         }
-        \Sentry\captureException($error);
     }
 }

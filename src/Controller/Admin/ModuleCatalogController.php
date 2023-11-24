@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
@@ -79,6 +80,7 @@ class ModuleCatalogController extends ModuleAbstractController
             } catch (\Exception $e) {
                 // Installation seems to not work properly
                 $accountsService = $accountsFacade = null;
+                ErrorHelper::reportError($e);
             }
         }
 
@@ -92,7 +94,7 @@ class ModuleCatalogController extends ModuleAbstractController
                 // Retrieve the PrestaShop Account CDN
                 $urlAccountsCdn = $accountsService->getAccountsCdn();
             } catch (\Exception $e) {
-                //osef ?
+                ErrorHelper::reportError($e);
             }
         }
 

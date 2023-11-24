@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
 use PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Security\PermissionChecker;
 use Twig\Environment;
 
@@ -46,6 +47,7 @@ trait UseDisplayBackOfficeFooter
             /** @var PermissionChecker $permissionChecker */
             $permissionChecker = $this->get('mbo.security.permission_checker');
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return '';
         }
 
@@ -63,6 +65,7 @@ trait UseDisplayBackOfficeFooter
                 ]
             );
         } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
             return '';
         }
     }
