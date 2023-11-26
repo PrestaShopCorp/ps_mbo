@@ -175,6 +175,44 @@ class ModuleController extends ModuleControllerCore
     }
 
     /**
+     * @AdminSecurity("is_granted(['read'], 'ADMINMODULESSF_')")
+     *
+     * @param Request $request
+     */
+    public function uninstalledAction(Request $request)
+    {
+        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
+        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
+
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE)
+            ->setStatus(AddonListFilterStatus::UNINSTALLED);
+        $installedProducts = $moduleRepository->getFilteredList($filters);
+
+        $collection = AddonsCollection::createFrom($installedProducts);
+        $modulesProvider->generateAddonsUrls($collection);
+        $modules = $this->get('prestashop.adapter.presenter.module')
+            ->presentCollection($installedProducts);
+
+        return $this->render(
+            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/uninstalled-modules.html.twig',
+            [
+                'maxModulesDisplayed' => self::MAX_MODULES_DISPLAYED,
+                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
+                'layoutTitle' => $this->trans('Module manager', 'Admin.Modules.Feature'),
+                'modules' => $modules,
+                'requireAddonsSearch' => false,
+                'requireBulkActions' => false,
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink('AdminModules'),
+                'requireFilterStatus' => true,
+                'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
+                'errorMessage' => $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error'),
+            ]
+        );
+    }
+
+    /**
      * Construct Json struct for catalog body response.
      *
      * @param array $categories

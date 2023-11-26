@@ -79,3 +79,4 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_880975acc66fde83d195fef
                 Voici une sélection de modules, <strong>compatibles avec votre boutique</strong>, pour vous aider à atteindre vos objectifs.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7e54c75444e1a4f51ff694dec1d65387'] = 'Envoyez des e-mails et des notifications automatiques à vos clients en toute simplicité.<br>
                 Voici une sélection de modules, <strong>compatibles avec votre boutique</strong>, pour vous aider à atteindre vos objectifs.';
+$_MODULE['<{mbo}prestashop>modulesselection_7e7eca35ad49e426689ba8b14004b0d0'] = 'Modules non installés';

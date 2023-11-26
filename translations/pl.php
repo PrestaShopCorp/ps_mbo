@@ -80,3 +80,4 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_880975acc66fde83d195fef
                 Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7e54c75444e1a4f51ff694dec1d65387'] = 'Z łatwością wysyłaj e-maile i automatyczne powiadomienia do klientów.<br>
                 Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>modulesselection_7e7eca35ad49e426689ba8b14004b0d0'] = 'Odinstalowane moduły';

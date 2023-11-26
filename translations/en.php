@@ -23,3 +23,4 @@ $_MODULE['<{mbo}prestashop>modulescatalog_ddd8eef6f86868a07f62b0e3810711f0'] = '
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_3891fd60e8d944a2de2cb2fca3a3c8bf'] = 'More similar modules on Prestashop Marketplace';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_98dd43dfae05b11befe1f140e0ec787a'] = 'Installed';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_ddd8eef6f86868a07f62b0e3810711f0'] = 'Not Installed';
+$_MODULE['<{mbo}prestashop>modulesselection_7e7eca35ad49e426689ba8b14004b0d0'] = 'Uninstalled modules';

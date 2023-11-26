@@ -80,3 +80,4 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_880975acc66fde83d195fef
                 Ниже представлен набор модулей, <strong>совместимых с вашим магазином</strong>, Они помогут вам достичь поставленных целей.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7e54c75444e1a4f51ff694dec1d65387'] = 'Пользуйтесь автоматической рассылкой электронных писем и уведомлений клиентам.<br>
                 Ниже представлен набор модулей, <strong>совместимых с вашим магазином</strong>, Они помогут вам достичь поставленных целей.';
+$_MODULE['<{mbo}prestashop>modulesselection_7e7eca35ad49e426689ba8b14004b0d0'] = 'Неустановленные модули';
