@@ -270,16 +270,9 @@ class ApiClient
 
         try {
             $url = sprintf('/v2/products/%s', $name);
-//            file_put_contents(
-//                _PS_ROOT_DIR_ . '/var/logs/install.log',
-//                json_encode([
-//                    'response_get' => (string) $this->httpClient->get($url)->getBody(),
-//                    'response_request' => (string) $this->httpClient->request(self::HTTP_METHOD_GET, $url, [])->getBody(),
-//                    ])
-//            );
 
             $resp = $this->httpClient
-                ->request(self::HTTP_METHOD_GET, $url, [])
+                ->request(self::HTTP_METHOD_GET, $url, $options)
                 ->getBody();
         } catch(\Exception $e) {
             ErrorHelper::reportError($e, [
@@ -308,8 +301,11 @@ class ApiClient
      *
      * @return mixed
      */
-    public function processRequestAndReturn(?string $attributeToReturn = null, string $method = self::HTTP_METHOD_GET, $default = [])
-    {
+    public function processRequestAndReturn(
+        ?string $attributeToReturn = null,
+        string $method = self::HTTP_METHOD_GET,
+        $default = []
+    ) {
         $response = json_decode($this->processRequest($method));
 
         if (JSON_ERROR_NONE !== json_last_error()) {
@@ -326,7 +322,7 @@ class ApiClient
     /**
      * Process the request with the current parameters, given the $method, return the body as string
      *
-     * @return string
+     * @param string $method
      *
      * @throws GuzzleException
      */
