@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Addons;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use stdClass;
 
 class ApiClient
@@ -256,6 +257,45 @@ class ApiClient
             'method' => 'listing',
             'action' => 'customer-themes',
         ] + $params)->processRequestAndReturn('themes', self::HTTP_METHOD_POST, new stdClass());
+    }
+
+    public function getModuleByName(string $name): ?stdClass
+    {
+        $options = ['query' => $this->queryParameters];
+
+        $headers = $this->getHeaders();
+        if (!empty($headers)) {
+            $options['headers'] = $headers;
+        }
+
+        try {
+            $url = sprintf('/v2/products/%s', $name);
+//            file_put_contents(
+//                _PS_ROOT_DIR_ . '/var/logs/install.log',
+//                json_encode([
+//                    'response_get' => (string) $this->httpClient->get($url)->getBody(),
+//                    'response_request' => (string) $this->httpClient->request(self::HTTP_METHOD_GET, $url, [])->getBody(),
+//                    ])
+//            );
+
+            $resp = $this->httpClient
+                ->request(self::HTTP_METHOD_GET, $url, [])
+                ->getBody();
+        } catch(\Exception $e) {
+            ErrorHelper::reportError($e, [
+                'url' => $url,
+            ]);
+
+            throw $e;
+        }
+
+        $response = json_decode((string) $resp);
+
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            return new stdClass();
+        }
+
+        return $response;
     }
 
     /**
