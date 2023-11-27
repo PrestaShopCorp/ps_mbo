@@ -93,6 +93,7 @@ class ps_mbo extends Module
             'class_name' => 'AdminPsMboModule',
             'parent_class_name' => 'AdminParentModulesCatalog',
             'core_reference' => 'AdminModulesCatalog',
+            'position' => 1,
         ],
         'AdminPsMboAddons' => [
             'name' => 'Module selection',
@@ -102,6 +103,7 @@ class ps_mbo extends Module
             'class_name' => 'AdminPsMboAddons',
             'parent_class_name' => 'AdminParentModulesCatalog',
             'core_reference' => 'AdminAddonsCatalog',
+            'position' => 2,
         ],
         'AdminPsMboRecommended' => [
             'name' => 'Module recommended',

@@ -15,6 +15,7 @@ $_MODULE['<{mbo}prestashop>modulescatalog_70fd3879bc512e7d2048692d397fc3a0'] = '
 $_MODULE['<{mbo}prestashop>modulescatalog_d048f76f9814e8c7428e1129e0031001'] = 'Ни один из модулей партнера не соответствует вашему запросу';
 $_MODULE['<{mbo}prestashop>modulescatalog_5abe54968b4bf7951e94f53e4bc57f2b'] = 'Попробуйте разные ключевые слова и фильтры, или';
 $_MODULE['<{mbo}prestashop>modulescatalog_543d1ef44cfd0e95a602136501b40110'] = 'поиск в PrestaShop Marketplace.';
+$_MODULE['<{mbo}prestashop>modulescatalog_b63977613e79680b9425cdb43f158852'] = 'У вас нет ни одного неустановленного модуля.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_8c883385a642028c9366bb087618b216'] = 'Повышайте продажи';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1d929590b318c7d4746d15f1fdc19c81'] = 'Оптимизируйте каталог товаров';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b63003090cd7fae050a51da250bb0dc'] = 'Совершенствуйте стратегии работы с данными';

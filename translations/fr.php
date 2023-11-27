@@ -15,6 +15,7 @@ $_MODULE['<{mbo}prestashop>modulescatalog_70fd3879bc512e7d2048692d397fc3a0'] = '
 $_MODULE['<{mbo}prestashop>modulescatalog_d048f76f9814e8c7428e1129e0031001'] = 'Aucun module partenaire ne correspond à votre recherche';
 $_MODULE['<{mbo}prestashop>modulescatalog_5abe54968b4bf7951e94f53e4bc57f2b'] = 'Essayez différents mots-clés et filtres, ou';
 $_MODULE['<{mbo}prestashop>modulescatalog_543d1ef44cfd0e95a602136501b40110'] = 'rechercher sur la Marketplace PrestaShop.';
+$_MODULE['<{mbo}prestashop>modulescatalog_b63977613e79680b9425cdb43f158852'] = 'Vous n\'avez aucun module non installé.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_8c883385a642028c9366bb087618b216'] = 'Booster les ventes';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1d929590b318c7d4746d15f1fdc19c81'] = 'Optimiser le catalogue de produits';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b63003090cd7fae050a51da250bb0dc'] = 'Améliorer la stratégie de données';
