@@ -183,6 +183,32 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         return $temporaryZipFilename;
     }
 
+    /**
+     * @throws Exception
+     */
+    public function validate(string $zipFileName, string $expectedModuleName): bool
+    {
+        if (!$this->isZipFile($zipFileName)) {
+            throw new ModuleErrorException($this->translator->trans('This file does not seem to be a valid module zip', [], 'Admin.Modules.Notification'));
+        }
+
+        $zip = new ZipArchive();
+        if ($zip->open($zipFileName) === true) {
+            for ($i = 0; $i < $zip->numFiles; ++$i) {
+                if (preg_match(self::MODULE_REGEX, $zip->getNameIndex($i), $matches)) {
+                    $zip->close();
+
+                    $zipModuleName = $matches[1];
+
+                    return $zipModuleName === $expectedModuleName;
+                }
+            }
+            $zip->close();
+        }
+
+        throw new ModuleErrorException($this->translator->trans('Downloaded zip file does not contain the expected module', [], 'Admin.Modules.Notification'));
+    }
+
     public static function assertIsAddonsUrl($source)
     {
         return is_string($source) && 1 === preg_match(self::URL_VALIDATION_REGEX, $source);
@@ -223,33 +249,6 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             'source' => $source,
             'options' => $requestOptions,
         ];
-    }
-
-
-    /**
-     * @throws Exception
-     */
-    private function validate(string $zipFileName, string $expectedModuleName): bool
-    {
-        if (!$this->isZipFile($zipFileName)) {
-            throw new ModuleErrorException($this->translator->trans('This file does not seem to be a valid module zip', [], 'Admin.Modules.Notification'));
-        }
-
-        $zip = new ZipArchive();
-        if ($zip->open($zipFileName) === true) {
-            for ($i = 0; $i < $zip->numFiles; ++$i) {
-                if (preg_match(self::MODULE_REGEX, $zip->getNameIndex($i), $matches)) {
-                    $zip->close();
-
-                    $zipModuleName = $matches[1];
-
-                    return $zipModuleName === $expectedModuleName;
-                }
-            }
-            $zip->close();
-        }
-
-        throw new ModuleErrorException($this->translator->trans('Downloaded zip file does not contain the expected module', [], 'Admin.Modules.Notification'));
     }
 
     private function isZipFile(string $file)
