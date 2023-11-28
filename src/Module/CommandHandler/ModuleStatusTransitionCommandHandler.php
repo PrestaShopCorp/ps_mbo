@@ -127,6 +127,10 @@ final class ModuleStatusTransitionCommandHandler
                 $transitionCommand
             );
 
+            if($transitionName === ModuleStateMachine::NO_CHANGE_TRANSITION) {
+                return $this->buildModuleAndReturn($moduleName);
+            }
+
             // Check if the transition asked is possible
             if (!$this->moduleStateMachine->can($module, $transitionName)) {
                 throw new UnauthorizedModuleTransitionException(sprintf('Transition "%s" is not possible for module "%s"', $transitionCommand, $moduleName));
@@ -138,6 +142,11 @@ final class ModuleStatusTransitionCommandHandler
             ]);
         }
 
+        return $this->buildModuleAndReturn($moduleName);
+    }
+
+    protected function buildModuleAndReturn(string $moduleName): Module
+    {
         $this->moduleRepository->clearCache();
 
         $stdModule = new \stdClass();

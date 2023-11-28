@@ -36,6 +36,8 @@ class ModuleStateMachine extends StateMachine
 {
     public const MODULE_STATE_MACHINE_NAME = 'module_state_machine';
 
+    public const NO_CHANGE_TRANSITION = 'no_change_transition';
+
     public const STATUS_UNINSTALLED = 'uninstalled';
     public const STATUS_ENABLED__MOBILE_ENABLED = 'enabled__mobile_enabled';
     public const STATUS_ENABLED__MOBILE_DISABLED = 'enabled__mobile_disabled';
@@ -187,6 +189,10 @@ class ModuleStateMachine extends StateMachine
 
         if (!in_array($targetStatus, self::STATUSES)) {
             throw new UnknownStatusException();
+        }
+
+        if($originStatus === $targetStatus) {
+            return ModuleStateMachine::NO_CHANGE_TRANSITION;
         }
 
         $transitionName = mb_strtolower(sprintf(
