@@ -135,10 +135,6 @@ class Repository implements RepositoryInterface
 
         $this->connectedClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
         $addons = $this->connectedClient->getModulesList();
-        /**
-         * @TODO : Clean this
-         */
-        $addons = [];
 
         $listAddonsModules = [];
         $apiModules = [];

@@ -61,10 +61,6 @@ trait UseActionBeforeInstallModule
         }
 
         $moduleId = (int) \Tools::getValue('module_id');
-        /**
-         * @TODO : Clean this
-         */
-        $moduleId = null;
 
         if (!$moduleId) {
             $moduleId = $moduleRepository->getModuleIdByName($moduleName);
