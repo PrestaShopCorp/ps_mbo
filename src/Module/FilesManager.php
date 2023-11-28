@@ -67,6 +67,19 @@ class FilesManager
         }
     }
 
+    public function canInstallFromSource(string $source)
+    {
+        try {
+            $handler = $this->sourceHandlerFactory->getHandler($source);
+        } catch(SourceHandlerNotFoundException $e) {
+            ErrorHelper::reportError($e);
+            throw $e;
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+            throw new UnexpectedModuleSourceContentException('The module download failed', 0, $e);
+        }
+    }
+
     public function deleteModuleDirectory(string $moduleName): void
     {
         $moduleDir = _PS_MODULE_DIR_ . $moduleName;
