@@ -279,13 +279,13 @@ class ApiClient
                 'url' => $url,
             ]);
 
-            throw $e;
+            return null;
         }
 
         $response = json_decode((string) $resp);
 
         if (JSON_ERROR_NONE !== json_last_error()) {
-            return new stdClass();
+            return null;
         }
 
         return $response;
