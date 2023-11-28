@@ -25,7 +25,6 @@ use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException;
 use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever;
-use PrestaShop\Module\Mbo\Module\SourceRetriever\SourceRetrieverInterface;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
@@ -71,12 +70,15 @@ class ActionsManager
     /**
      * @throws UnexpectedModuleSourceContentException
      * @throws ModuleNewVersionNotFoundException
+     * @throws SourceHandlerNotFoundException
      */
     public function downloadAndReplaceModuleFiles(string $moduleName, string $source): void
     {
         if (is_string($source) && AddonsUrlSourceRetriever::assertIsAddonsUrl($source) && strpos($source, 'shop_url') === false) {
             $source .= '&shop_url=' . Config::getShopUrl();
         }
+
+        $this->filesManager->canInstallFromSource($source);
 
         $this->filesManager->deleteModuleDirectory($moduleName);
 
