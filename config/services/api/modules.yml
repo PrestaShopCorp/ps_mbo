@@ -35,3 +35,4 @@ services:
       - '@mbo.modules.state_machine'
       - '@mbo.modules.repository'
       - '@mbo.modules.actions_manager'
+      - '@mbo.modules.builder'

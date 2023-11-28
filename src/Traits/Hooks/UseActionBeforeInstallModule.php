@@ -59,10 +59,15 @@ trait UseActionBeforeInstallModule
             ErrorHelper::reportError($e);
             return;
         }
-        $module = $moduleRepository->getModule($moduleName);
 
-        if (null === $module) {
-            return;
+        $moduleId = (int) \Tools::getValue('module_id');
+
+        if (!$moduleId) {
+            $moduleId = $moduleRepository->getModuleIdByName($moduleName);
+
+            if (null === $moduleId) {
+                return;
+            }
         }
 
         try {
@@ -72,6 +77,6 @@ trait UseActionBeforeInstallModule
             ErrorHelper::reportError($e);
             return;
         }
-        $actionsManager->install((int) $module->get('id'));
+        $actionsManager->install($moduleId);
     }
 }

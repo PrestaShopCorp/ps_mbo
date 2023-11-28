@@ -30,6 +30,7 @@ use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use PrestaShop\Module\Mbo\Module\Exception\UnauthorizedModuleTransitionException;
 use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\Module\Mbo\Module\Module;
+use PrestaShop\Module\Mbo\Module\ModuleBuilder;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
@@ -50,15 +51,21 @@ final class ModuleStatusTransitionCommandHandler
      * @var ActionsManager
      */
     private $actionsManager;
+    /**
+     * @var ModuleBuilder
+     */
+    private $moduleBuilder;
 
     public function __construct(
         ModuleStateMachine $moduleStateMachine,
         Repository $moduleRepository,
-        ActionsManager $actionsManager
+        ActionsManager $actionsManager,
+        ModuleBuilder $moduleBuilder
     ) {
         $this->moduleStateMachine = $moduleStateMachine;
         $this->moduleRepository = $moduleRepository;
         $this->actionsManager = $actionsManager;
+        $this->moduleBuilder = $moduleBuilder;
     }
 
     /**
@@ -120,6 +127,10 @@ final class ModuleStatusTransitionCommandHandler
                 $transitionCommand
             );
 
+            if($transitionName === ModuleStateMachine::NO_CHANGE_TRANSITION) {
+                return $this->buildModuleAndReturn($moduleName);
+            }
+
             // Check if the transition asked is possible
             if (!$this->moduleStateMachine->can($module, $transitionName)) {
                 throw new UnauthorizedModuleTransitionException(sprintf('Transition "%s" is not possible for module "%s"', $transitionCommand, $moduleName));
@@ -131,8 +142,19 @@ final class ModuleStatusTransitionCommandHandler
             ]);
         }
 
+        return $this->buildModuleAndReturn($moduleName);
+    }
+
+    protected function buildModuleAndReturn(string $moduleName): Module
+    {
         $this->moduleRepository->clearCache();
 
-        return $this->moduleRepository->getModule($moduleName);
+        $stdModule = new \stdClass();
+        $stdModule->name = $moduleName;
+
+        return $this->moduleBuilder->build(
+            $stdModule,
+            $this->moduleRepository->findInDatabaseByName($moduleName)
+        );
     }
 }
