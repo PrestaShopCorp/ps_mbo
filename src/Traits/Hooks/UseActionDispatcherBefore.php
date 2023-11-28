@@ -31,6 +31,7 @@ use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Shop;
 use Symfony\Component\HttpFoundation\Request;
 use Tab;
 use Tools;
@@ -68,10 +69,42 @@ trait UseActionDispatcherBefore
 
     private function ensureShopIsRegistered(): void
     {
-        if (!file_exists($this->moduleCacheDir . 'registerShop.lock')) {
+        if (!file_exists($this->moduleCacheDir . 'registerShop.lock') && $this->ensureShopIsConfigured()) {
             return;
         }
         $this->registerShop();
+    }
+
+    private function ensureShopIsConfigured(): bool
+    {
+        $configurationList = [];
+        $configurationList['PS_MBO_SHOP_ADMIN_UUID'] = false;
+        $configurationList['PS_MBO_SHOP_ADMIN_MAIL'] = false;
+        $configurationList['PS_MBO_LAST_PS_VERSION_API_CONFIG'] = false;
+
+        foreach ($configurationList as $name => $value) {
+            if (Configuration::hasKey($name)) {
+                $configurationList[$name] = true;
+            }
+        }
+
+        if ($configurationList['PS_MBO_LAST_PS_VERSION_API_CONFIG']
+            && $configurationList['PS_MBO_SHOP_ADMIN_MAIL']
+            && $configurationList['PS_MBO_SHOP_ADMIN_UUID']) {
+            return true;
+        }
+
+        foreach (Shop::getShops(false, null, true) as $shopId) {
+            foreach ($configurationList as $name => $value) {
+                if (Configuration::hasKey($name, null, null, (int) $shopId)) {
+                    $configurationList[$name] = true;
+                }
+            }
+        }
+
+        return $configurationList['PS_MBO_LAST_PS_VERSION_API_CONFIG']
+            && $configurationList['PS_MBO_SHOP_ADMIN_MAIL']
+            && $configurationList['PS_MBO_SHOP_ADMIN_UUID'];
     }
 
     private function ensureShopIsUpdated(): void
@@ -114,6 +147,7 @@ trait UseActionDispatcherBefore
             $configApplyHandler = $this->get('mbo.distribution.api_version_change_config_apply_handler');
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
+
             return;
         }
         $configApplyHandler->handle($command);
