@@ -506,6 +506,9 @@ class ps_mbo extends Module
             $this->context->controller->addJs('/js/jquery/plugins/growl/jquery.growl.js?v=' . $this->version);
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css');
         }
+        if ('AdminPsMboModule' === Tools::getValue('controller')) {
+            $this->context->controller->addCSS($this->getPathUri() . 'views/css/connection-toolbar.css');
+        }
         $this->loadCdcMedia();
     }
 
