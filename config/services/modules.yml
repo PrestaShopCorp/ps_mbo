@@ -13,7 +13,6 @@ services:
       - "@doctrine.cache.provider"
       - "@=service('prestashop.adapter.legacy.configuration').get('_DB_PREFIX_')"
       - "@mbo.security.admin_authentication.provider"
-      - "@mbo.addons.client.api"
 
   mbo.modules.filters.factory:
     class: PrestaShop\Module\Mbo\Module\FiltersFactory
