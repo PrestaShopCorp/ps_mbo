@@ -63,6 +63,36 @@ class ModuleController extends ModuleControllerCore
 
         $context = $this->get('mbo.cdc.context_builder')->getViewContext();
 
+        /*********************
+         * PrestaShop Account *
+         * *******************/
+        $urlAccountsCdn = '';
+
+        try {
+            $accountsFacade = $this->get('mbo.ps_accounts.facade');
+            $accountsService = $accountsFacade->getPsAccountsService();
+            $this->ensurePsAccountIsEnabled();
+        } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
+            $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+            $accountsInstaller->install();
+            $accountsFacade = $this->get('mbo.ps_accounts.facade');
+            $accountsService = $accountsFacade->getPsAccountsService();
+        }
+
+        if (null !== $accountsFacade && null !== $accountsService) {
+            try {
+                \Media::addJsDef([
+                    'contextPsAccounts' => $accountsFacade->getPsAccountsPresenter()
+                        ->present('ps_mbo'),
+                ]);
+
+                // Retrieve the PrestaShop Account CDN
+                $urlAccountsCdn = $accountsService->getAccountsCdn();
+            } catch (Exception $e) {
+                //osef ?
+            }
+        }
+
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog.html.twig',
             [
@@ -76,6 +106,7 @@ class ModuleController extends ModuleControllerCore
                 'requireFilterStatus' => false,
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
                 'shop_context' => $context,
+                'urlAccountsCdn' => $urlAccountsCdn,
                 'errorMessage' => $this->trans(
                     'You do not have permission to add this.',
                     'Admin.Notifications.Error'
@@ -295,5 +326,15 @@ class ModuleController extends ModuleControllerCore
         }
 
         return $topMenuData;
+    }
+
+    private function ensurePsAccountIsEnabled()
+    {
+        $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+
+        if (null !== $accountsInstaller && !$accountsInstaller->isModuleEnabled()) {
+            $moduleManager = $this->get('prestashop.module.manager');
+            $moduleManager->enable($accountsInstaller->getModuleName());
+        }
     }
 }
