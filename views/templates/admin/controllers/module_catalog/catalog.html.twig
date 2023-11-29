@@ -26,6 +26,17 @@
     <script type="application/javascript" src="{{ cdc_error_url }}"></script>
   {% endif %}
 
+  {% if urlAccountsCdn is defined and urlAccountsCdn is not empty %}
+    {# PrestaShop Account #}
+    <script src="{{ urlAccountsCdn }}" rel=preload></script>
+    <script>
+      if (window?.psaccountsVue) {
+        window?.psaccountsVue?.init();
+        {% set shop_context = shop_context|merge({'accounts_component_loaded': true}) %}
+      }
+    </script>
+  {% endif %}
+
   <script>
     function addOrUpdateUrlParam(name, value)
     {
@@ -72,6 +83,8 @@
 {% endblock %}
 
 {% block content %}
+  <prestashop-accounts style="display: none;"></prestashop-accounts>
+
   <div class="mbo-catalog-wrapper cdc-container" id="cdc-container" data-error-path="{{ path('admin_mbo_module_cdc_error') }}"></div>
 
   {# Addons connect modal #}

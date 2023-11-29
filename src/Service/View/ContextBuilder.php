@@ -155,6 +155,7 @@ class ContextBuilder
             'admin_token' => $token,
             'refresh_url' => $refreshUrl,
             'installed_modules' => $this->getInstalledModules(),
+            'accounts_component_loaded' => false,
             'module_catalog_url' => $this->router->generate('admin_mbo_catalog_module'),
             'theme_catalog_url' => $this->router->generate('admin_mbo_catalog_theme'),
             'php_version' => phpversion(),
