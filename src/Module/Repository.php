@@ -23,7 +23,6 @@ namespace PrestaShop\Module\Mbo\Module;
 
 use Db;
 use Doctrine\Common\Cache\CacheProvider;
-use PrestaShop\Module\Mbo\Addons\ApiClient;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Distribution\ConnectedClient;
 use Psr\Log\LoggerInterface;
@@ -78,10 +77,6 @@ class Repository implements RepositoryInterface
      * @var string
      */
     protected $dbPrefix;
-    /**
-     * @var ApiClient
-     */
-    private $addonsClient;
 
     public function __construct(
         ConnectedClient $connectedClient,
@@ -90,8 +85,7 @@ class Repository implements RepositoryInterface
         string $localeCode,
         CacheProvider $cacheProvider,
         string $dbPrefix,
-        AdminAuthenticationProvider $adminAuthenticationProvider,
-        ApiClient $addonsClient
+        AdminAuthenticationProvider $adminAuthenticationProvider
     ) {
         $this->connectedClient = $connectedClient;
         $this->dbPrefix = $dbPrefix;
@@ -111,7 +105,6 @@ class Repository implements RepositoryInterface
         if ($this->cacheProvider->contains($this->cacheName)) {
             $this->cache = $this->cacheProvider->fetch($this->cacheName);
         }
-        $this->addonsClient = $addonsClient;
     }
 
     public function __destruct()
@@ -170,20 +163,6 @@ class Repository implements RepositoryInterface
         $this->cache = $listAddonsModules;
 
         return $this->cache;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function getModuleIdByName(string $name): ?int
-    {
-        $addon = $this->addonsClient->getModuleByName($name);
-
-        if (null === $addon) {
-            return null;
-        }
-
-        return (int) $addon->product->id_product;
     }
 
     /**
