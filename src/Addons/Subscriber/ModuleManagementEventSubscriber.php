@@ -30,6 +30,7 @@ use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Psr\Log\LoggerInterface;
@@ -73,7 +74,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
     private $versionChangeApplyConfigCommandHandler;
 
     /**
-     * @var SymfonyCacheClearer
+     * @var CacheClearerInterface
      */
     private $cacheClearer;
 
@@ -88,7 +89,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         Client $distributionClient,
         AdminAuthenticationProvider $adminAuthenticationProvider,
         VersionChangeApplyConfigCommandHandler $versionChangeApplyConfigCommandHandler,
-        SymfonyCacheClearer $cacheClearer
+        CacheClearerInterface $cacheClearer
     ) {
         $this->logger = $logger;
         $this->moduleRepository = $moduleRepository;

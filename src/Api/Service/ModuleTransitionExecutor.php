@@ -26,6 +26,7 @@ use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
 use PrestaShop\Module\Mbo\Module\CommandHandler\ModuleStatusTransitionCommandHandler;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Tools;
 
@@ -86,8 +87,8 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
         if (ModuleTransitionCommand::MODULE_COMMAND_DOWNLOAD === $transition) {
             // Clear the cache after download to force reload module services
             try {
-                /** @var \PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer $cacheClearer */
-                $cacheClearer = $psMbo->get('prestashop.adapter.cache.clearer.symfony_cache_clearer');
+                /** @var CacheClearerInterface $cacheClearer */
+                $cacheClearer = $psMbo->get('mbo.symfony_cache_clearer');
             } catch (\Exception $e) {
                 ErrorHelper::reportError($e);
                 $cacheClearer = false;
