@@ -22,13 +22,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Service;
 
+use Exception;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 class MboSymfonyCacheClearer implements CacheClearerInterface
 {
-
     private $shutdownRegistered = false;
 
     /**
@@ -36,24 +40,47 @@ class MboSymfonyCacheClearer implements CacheClearerInterface
      */
     public function clear()
     {
+        /* @var \AppKernel */
+        global $kernel;
+        if (!$kernel) {
+            return;
+        }
+
         if ($this->shutdownRegistered) {
             return;
         }
 
         $this->shutdownRegistered = true;
-        register_shutdown_function(function () {
-            // The cache may have been removed by Tools::clearSf2Cache, it happens during install
-            // process, in which case we don't run the cache:clear command because it is not only
-            // useless it will simply fail as the container caches classes have been removed
-            $cacheDir = _PS_ROOT_DIR_ . '/var/cache/' . _PS_ENV_ . '/';
-            if (file_exists($cacheDir)) {
-                $cache_files = Finder::create()
-                    ->in($cacheDir)
-                    ->depth('==0');
-                (new Filesystem())->remove($cache_files);
-            }
+        register_shutdown_function(function () use($kernel) {
+            try {
+                foreach (['prod', 'dev'] as $environment) {
+                    $cacheDir = _PS_ROOT_DIR_ . '/var/cache/' . $environment . '/';
+                    if (file_exists($cacheDir)) {
+                        $cache_files = Finder::create()
+                            ->in($cacheDir)
+                            ->depth('==0');
+                        (new Filesystem())->remove($cache_files);
+                    }
+                }
 
-            \Hook::exec('actionClearSf2Cache');
+                // Warmup prod environment only (not needed for dev since many things are dynamic)
+                $application = new Application($kernel);
+                $application->setAutoExit(false);
+                $input = new ArrayInput([
+                    'command' => 'cache:warmup',
+                    '--no-optional-warmers' => true,
+                    '--env' => 'prod',
+                    '--no-debug' => true,
+                ]);
+
+                $output = new NullOutput();
+                $application->doRun($input, $output);
+            } catch (Exception $e) {
+                // Do nothing but at least does not break the loop nor function
+                ErrorHelper::reportError($e);
+            } finally {
+                \Hook::exec('actionClearSf2Cache');
+            }
         });
     }
 }
