@@ -72,11 +72,15 @@ class ModuleController extends ModuleControllerCore
             $accountsFacade = $this->get('mbo.ps_accounts.facade');
             $accountsService = $accountsFacade->getPsAccountsService();
             $this->ensurePsAccountIsEnabled();
-        } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
-            $accountsInstaller = $this->get('mbo.ps_accounts.installer');
-            $accountsInstaller->install();
-            $accountsFacade = $this->get('mbo.ps_accounts.facade');
-            $accountsService = $accountsFacade->getPsAccountsService();
+        } catch (Exception $e) {
+            try {
+                $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+                $accountsInstaller->install();
+                $accountsFacade = $this->get('mbo.ps_accounts.facade');
+                $accountsService = $accountsFacade->getPsAccountsService();
+            } catch (Exception $e) {
+                $accountsFacade = $accountsService = null;
+            }
         }
 
         if (null !== $accountsFacade && null !== $accountsService) {

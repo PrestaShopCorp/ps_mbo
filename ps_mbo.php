@@ -33,6 +33,7 @@ use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PsAccountsInstaller\Installer\Installer;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
@@ -506,7 +507,14 @@ class ps_mbo extends Module
             $this->context->controller->addJs('/js/jquery/plugins/growl/jquery.growl.js?v=' . $this->version);
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css');
         }
-        if ('AdminPsMboModule' === Tools::getValue('controller')) {
+
+        $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+        $isPsAccountsEnabled = ($accountsInstaller instanceof Installer) && $accountsInstaller->isModuleEnabled();
+
+        if (
+            ('AdminPsMboModule' === Tools::getValue('controller')) // Module catalog / Marketplace
+            || $isPsAccountsEnabled // For Module manager
+        ) {
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/connection-toolbar.css');
         }
         $this->loadCdcMedia();
