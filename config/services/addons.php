@@ -38,7 +38,7 @@ return static function (ContainerConfigurator $container) {
             ref('mbo.cdc.client.distribution_api'),
             ref('mbo.security.admin_authentication.provider'),
             ref('mbo.distribution.api_version_change_config_apply_handler'),
-            ref('prestashop.adapter.cache.clearer.symfony_cache_clearer'),
+            ref('mbo.symfony_cache_clearer'),
         ])
         ->public()
         ->tag('kernel.event_subscriber');

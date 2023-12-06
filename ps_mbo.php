@@ -29,17 +29,14 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
-use LanguageCore as Language;
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
-use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
-use TabCore as Tab;
 
 class ps_mbo extends Module
 {
@@ -48,12 +45,10 @@ class ps_mbo extends Module
     use PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService;
     use PrestaShop\Module\Mbo\Traits\HaveConfigurationPage;
 
-    public const DEFAULT_ENV = '';
-
     /**
      * @var string
      */
-    public const VERSION = '4.5.3';
+    public const VERSION = '4.5.4';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminPsMboModule',
@@ -84,11 +79,6 @@ class ps_mbo extends Module
     private $serviceContainer;
 
     /**
-     * @var PermissionCheckerInterface
-     */
-    protected $permissionChecker;
-
-    /**
      * @var string
      */
     public $imgPath;
@@ -104,7 +94,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.5.3';
+        $this->version = '4.5.4';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
