@@ -235,14 +235,6 @@ class ps_mbo extends Module
         return true;
     }
 
-    private function enableByShop(int $shopId)
-    {
-        // Force context to all shops
-        Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
-
-        return parent::enable(true);
-    }
-
     /**
      * Disable Module.
      *
@@ -271,14 +263,6 @@ class ps_mbo extends Module
         $this->unregisterShop();
 
         return $this->handleTabAction('uninstall');
-    }
-
-    private function disableByShop(int $shopId)
-    {
-        // Force context to all shops
-        Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
-
-        return parent::disable(true);
     }
 
     /**
@@ -399,19 +383,6 @@ class ps_mbo extends Module
         return true;
     }
 
-    private function uninstallTables(): bool
-    {
-        $sqlQueries[] = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'mbo_api_config`';
-
-        foreach ($sqlQueries as $query) {
-            if (!Db::getInstance()->execute($query)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public function getAccountsDataProvider(): ?AccountsDataProvider
     {
         try {
@@ -420,15 +391,6 @@ class ps_mbo extends Module
             ErrorHelper::reportError($e);
             return null;
         }
-    }
-
-    /**
-     * @return void
-     */
-    private function loadEnv(): void
-    {
-        $dotenv = new Dotenv(true);
-        $dotenv->loadEnv(__DIR__ . '/.env');
     }
 
     public function postponeTabsTranslations(): void
@@ -447,5 +409,50 @@ class ps_mbo extends Module
             $f = fopen($lockFile, 'w+');
             fclose($f);
         }
+    }
+
+    private function enableByShop(int $shopId)
+    {
+        // Force context to all shops
+        Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
+
+        return parent::enable(true);
+    }
+
+    private function disableByShop(int $shopId)
+    {
+        // Force context to all shops
+        Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
+
+        return parent::disable(true);
+    }
+
+    private function uninstallTables(): bool
+    {
+        $sqlQueries[] = 'DROP TABLE IF EXISTS `' . _DB_PREFIX_ . 'mbo_api_config`';
+
+        foreach ($sqlQueries as $query) {
+            if (!Db::getInstance()->execute($query)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @return void
+     */
+    private function loadEnv(): void
+    {
+        $dotenv = new Dotenv(true);
+        $dotenv->loadEnv(__DIR__ . '/.env');
+    }
+
+    private function isPsAccountEnabled(): bool
+    {
+        $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+
+        return null !== $accountsInstaller && $accountsInstaller->isModuleEnabled();
     }
 }

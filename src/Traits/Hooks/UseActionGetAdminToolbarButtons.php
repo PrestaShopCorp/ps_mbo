@@ -47,7 +47,15 @@ trait UseActionGetAdminToolbarButtons
          */
         $extraToolbarButtons = $params['toolbar_extra_buttons_collection'];
 
-        if (!in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CONNECTION_TOOLBAR)) {
+        $controllersWithConnectionToolbar = self::CONTROLLERS_WITH_CONNECTION_TOOLBAR;
+        if (
+            $this->isPsAccountEnabled()
+            && ($key = array_search('AdminModulesManage', $controllersWithConnectionToolbar)) !== false
+        ) {
+            unset($controllersWithConnectionToolbar[$key]);
+        }
+
+        if (!in_array(Tools::getValue('controller'), $controllersWithConnectionToolbar)) {
             return $extraToolbarButtons;
         }
 
