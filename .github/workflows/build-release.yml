@@ -52,7 +52,7 @@ jobs:
 
       - name: Copy env files
         run: |
-          gcloud secrets versions access latest --project distribution-preprod --secret=mbo-module-env-2x > .env
+          gcloud secrets versions access latest --project distribution-preprod --secret=mbo-module-env-3x > .env
           rm -f .env.dist
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
@@ -97,7 +97,7 @@ jobs:
       - name: Copy env files
         run: |
           rm -f .env.dist
-          gcloud secrets versions access latest --project distribution-production-308520 --secret=mbo-module-env-2x > .env
+          gcloud secrets versions access latest --project distribution-production-308520 --secret=mbo-module-env-3x > .env
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
 
