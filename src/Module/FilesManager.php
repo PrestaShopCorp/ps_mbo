@@ -22,6 +22,8 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module;
 
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
@@ -54,28 +56,55 @@ class FilesManager
      * @throws SourceHandlerNotFoundException
      * @throws FileNotFoundException
      */
-    public function installFromZip(string $moduleZip): void
+    public function installFromSource(string $source): void
     {
-        if (!file_exists($moduleZip)) {
-            throw new FileNotFoundException('Unable to find module zip file given');
+        try {
+            $handler = $this->sourceHandlerFactory->getHandler($source);
+            $handler->handle($source);
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+            throw new UnexpectedModuleSourceContentException('The module download failed', 0, $e);
         }
-
-        $handler = $this->sourceHandlerFactory->getHandler($moduleZip);
-        $handler->handle($moduleZip);
     }
 
-    /**
-     * @param \stdClass $apiModule
-     */
-    public function deleteModuleDirectory(\stdClass $apiModule): void
+    public function canInstallFromSource(string $source)
     {
-        $moduleDir = _PS_MODULE_DIR_ . $apiModule->name;
+        try {
+            $handler = $this->sourceHandlerFactory->getHandler($source);
+        } catch(SourceHandlerNotFoundException $e) {
+            ErrorHelper::reportError($e);
+            throw $e;
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+            throw new UnexpectedModuleSourceContentException('The module download failed', 0, $e);
+        }
+    }
+
+    public function deleteModuleDirectory(string $moduleName): void
+    {
+        $moduleDir = _PS_MODULE_DIR_ . $moduleName;
 
         if (!is_dir($moduleDir)) {
             return;
         }
 
-        array_map('unlink', glob($moduleDir . DIRECTORY_SEPARATOR . '*.*'));
-        @rmdir($moduleDir);
+        $this->deleteDirectoryRecursively($moduleDir);
+    }
+
+    private function deleteDirectoryRecursively(string $directory): void
+    {
+        if (is_dir($directory)) {
+            $objects = scandir($directory);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (is_dir($directory. DIRECTORY_SEPARATOR .$object) && !is_link($directory."/".$object)) {
+                        $this->deleteDirectoryRecursively($directory . DIRECTORY_SEPARATOR . $object);
+                    } else {
+                        @unlink($directory . DIRECTORY_SEPARATOR . $object);
+                    }
+                }
+            }
+            @rmdir($directory);
+        }
     }
 }

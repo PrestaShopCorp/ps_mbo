@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,6 +61,43 @@ class ModuleCatalogController extends ModuleAbstractController
             $extraParams['cdc_url'] = $cdcJsFile;
         }
 
+        /*********************
+         * PrestaShop Account *
+         * *******************/
+        $urlAccountsCdn = '';
+
+        try {
+            $accountsFacade = $this->get('mbo.ps_accounts.facade');
+            $accountsService = $accountsFacade->getPsAccountsService();
+            $this->ensurePsAccountIsEnabled();
+        } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
+            $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+            // Seems the module is not here, try to install it
+            $accountsInstaller->install();
+            $accountsFacade = $this->get('mbo.ps_accounts.facade');
+            try {
+                $accountsService = $accountsFacade->getPsAccountsService();
+            } catch (\Exception $e) {
+                // Installation seems to not work properly
+                $accountsService = $accountsFacade = null;
+                ErrorHelper::reportError($e);
+            }
+        }
+
+        if (null !== $accountsFacade && null !== $accountsService) {
+            try {
+                \Media::addJsDef([
+                    'contextPsAccounts' => $accountsFacade->getPsAccountsPresenter()
+                        ->present('ps_mbo'),
+                ]);
+
+                // Retrieve the PrestaShop Account CDN
+                $urlAccountsCdn = $accountsService->getAccountsCdn();
+            } catch (\Exception $e) {
+                ErrorHelper::reportError($e);
+            }
+        }
+
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog.html.twig',
             [
@@ -73,6 +111,7 @@ class ModuleCatalogController extends ModuleAbstractController
                 'requireFilterStatus' => false,
                 'level' => $this->authorizationLevel(static::CONTROLLER_NAME),
                 'shop_context' => $this->get('mbo.cdc.context_builder')->getViewContext(),
+                'urlAccountsCdn' => $urlAccountsCdn,
                 'errorMessage' => $this->trans(
                     'You do not have permission to add this.',
                     'Admin.Notifications.Error'
@@ -113,5 +152,15 @@ class ModuleCatalogController extends ModuleAbstractController
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/cdc-error.html.twig'
         );
+    }
+
+    private function ensurePsAccountIsEnabled(): void
+    {
+        $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+
+        if (null !== $accountsInstaller && !$accountsInstaller->isModuleEnabled()) {
+            $moduleManager = $this->get('prestashop.module.manager');
+            $moduleManager->enable($accountsInstaller->getModuleName());
+        }
     }
 }

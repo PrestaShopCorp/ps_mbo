@@ -21,17 +21,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Module\Collection;
-use PrestaShop\Module\Mbo\Module\Filters;
-use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
 trait UseActionModuleRegisterHookAfter
 {
     /**
      * Hook actionModuleRegisterHookAfter.
-     * Trigered after a hook registration, by any module.
-     *
-     * @return array<array<string, string>>
+     * Triggered after a hook registration, by any module.
      */
     public function hookActionModuleRegisterHookAfter(array $params): void
     {
@@ -46,20 +42,20 @@ trait UseActionModuleRegisterHookAfter
             $hookName = $params['hook_name'];
 
             // The MBO hook 'dashboardZoneTwo' must be at the max position
-            if ('ps_mbo' !== $module->name && 'dashboardZoneTwo' === $hookName) {
-                $this->putMboDashboardZoneTwoAtFirstPosition();
+            if ('DashboardZoneTwo' === mb_ucfirst($hookName)) {
+                $this->putMboDashboardZoneTwoAtLastPosition();
             }
         } catch (\Exception $e) {
-            // Do nothing because it's not critical
+            ErrorHelper::reportError($e);
         }
     }
 
-    public function putMboDashboardZoneTwoAtFirstPosition(): void
+    public function putMboDashboardZoneTwoAtLastPosition(): void
     {
         // Check if the hook exists and get it's ID
         $sql = 'SELECT h.`id_hook`
                     FROM `' . _DB_PREFIX_ . 'hook` h
-                    WHERE h.`name` = \'dashboardZoneTwo\'';
+                    WHERE UPPER(h.`name`) = UPPER(\'dashboardZoneTwo\')';
         $row = \Db::getInstance()->getRow($sql);
         if (!$row) {
             return;
@@ -77,7 +73,7 @@ trait UseActionModuleRegisterHookAfter
             // Get module position in hook
             $sql = 'SELECT MAX(`position`) AS position
                     FROM `' . _DB_PREFIX_ . 'hook_module`
-                    WHERE `id_hook` = ' . (int)$idHook . ' AND `id_shop` = ' . (int)$shopId;
+                    WHERE `id_hook` = ' . (int) $idHook . ' AND `id_shop` = ' . (int) $shopId;
             if (!$position = \Db::getInstance()->getValue($sql)) {
                 $position = 0;
             }
@@ -85,7 +81,7 @@ trait UseActionModuleRegisterHookAfter
             // Check if MBO is not already at last position
             $sql = 'SELECT `position`
                     FROM `' . _DB_PREFIX_ . 'hook_module`
-                    WHERE `id_hook` = ' . (int)$idHook . ' AND `id_module` = ' . (int)$psMboId . ' AND `id_shop` = ' . (int)$shopId;
+                    WHERE `id_hook` = ' . (int) $idHook . ' AND `id_module` = ' . (int) $psMboId . ' AND `id_shop` = ' . (int) $shopId;
             $mboPosition = \Db::getInstance()->getValue($sql);
             if ($mboPosition === $position) {
                 // Nothing to do, MBO is already at last position
@@ -96,9 +92,9 @@ trait UseActionModuleRegisterHookAfter
             \Db::getInstance()->update(
                 'hook_module',
                 [
-                    'position' => (int)($position + 1),
+                    'position' => (int) ($position + 1),
                 ],
-                '`id_module` = ' . (int)$psMboId . ' AND `id_hook` = ' . (int)$idHook . ' AND `id_shop` = ' . (int)$shopId
+                '`id_module` = ' . (int) $psMboId . ' AND `id_hook` = ' . (int) $idHook . ' AND `id_shop` = ' . (int) $shopId
             );
         }
     }

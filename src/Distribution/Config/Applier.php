@@ -24,9 +24,7 @@ namespace PrestaShop\Module\Mbo\Distribution\Config;
 use Db;
 use Doctrine\DBAL\Query\QueryException;
 use PrestaShop\Module\Mbo\Distribution\Config\Appliers\Factory as AppliersFactory;
-use PrestaShop\Module\Mbo\Distribution\Config\Exception\CannotSaveConfigException;
 use PrestaShop\Module\Mbo\Distribution\Config\Exception\InvalidConfigException;
-use PrestaShopDatabaseException;
 
 final class Applier
 {
@@ -43,12 +41,12 @@ final class Applier
     /**
      * This method will receive an array of config objects and apply them.
      *
-     * @param Config[] $config
+     * @param Config[] $configCollection
+     * @param string $psVersion
+     * @param string $mboVersion
      *
      * @throws QueryException
      * @throws InvalidConfigException
-     * @throws CannotSaveConfigException
-     * @throws PrestaShopDatabaseException
      */
     public function apply(array $configCollection, string $psVersion, string $mboVersion)
     {
@@ -63,6 +61,10 @@ final class Applier
      * This method will determinate if the config given can be applied depending on the psVersion and mboVersion.
      *
      * @param Config $config
+     * @param string $psVersion
+     * @param string $mboVersion
+     *
+     * @return bool
      */
     private function canBeApplied(Config $config, string $psVersion, string $mboVersion): bool
     {
@@ -74,7 +76,7 @@ final class Applier
     /**
      * @param Config $config
      *
-     * @throws InvalidConfigException
+     * @throws InvalidConfigException|QueryException
      */
     private function applyConfig(Config $config): void
     {
@@ -89,7 +91,7 @@ final class Applier
             $sql[] = 'UPDATE `' . _DB_PREFIX_ . 'mbo_api_config` SET `applied` = 1 WHERE `id_mbo_api_config`=' . $config->getConfigId();
 
             foreach ($sql as $query) {
-                if (Db::getInstance()->execute($query) == false) {
+                if (Db::getInstance()->execute($query) === false) {
                     throw new QueryException($this->db->getMsgError());
                 }
             }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
 trait UseDisplayAdminThemesListAfter
 {
@@ -37,12 +38,21 @@ trait UseDisplayAdminThemesListAfter
      */
     public function hookDisplayAdminThemesListAfter(array $params): string
     {
-        $context = $this->get('mbo.cdc.context_builder')->getViewContext();
+        try {
+            /** @var \PrestaShop\Module\Mbo\Service\View\ContextBuilder $contextBuilder */
+            $contextBuilder = $this->get('mbo.cdc.context_builder');
+            /** @var \Symfony\Bundle\FrameworkBundle\Routing\Router $router */
+            $router = $this->get('router');
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+            return '';
+        }
+        $context = $contextBuilder->getViewContext();
         $context['recommendation_format'] = 'card';
 
         $this->smarty->assign([
             'shop_context' => json_encode($context),
-            'cdcErrorUrl' => $this->get('router')->generate('admin_mbo_module_cdc_error'),
+            'cdcErrorUrl' => $router->generate('admin_mbo_module_cdc_error'),
         ]);
 
         return $this->fetch('module:ps_mbo/views/templates/hook/recommended-themes.tpl');

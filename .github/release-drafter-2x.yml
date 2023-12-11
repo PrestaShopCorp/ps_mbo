@@ -1,0 +1,17 @@
+version-template: 2.3.$PATCH
+name-template: v$NEXT_PATCH_VERSION
+tag-template: v$NEXT_PATCH_VERSION
+latest: false
+categories:
+  - title: 🔨 Improvements
+    label: enhancement
+  - title: 🐛 Bug Fixes
+    label: bug
+  - title: 🚀 New Features
+    label: Feature
+change-template: '- #$NUMBER: $TITLE by @$AUTHOR'
+template: |
+  # Changes
+
+  $CHANGES
+

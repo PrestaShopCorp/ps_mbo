@@ -29,17 +29,15 @@ if (file_exists($autoloadPath)) {
     require_once $autoloadPath;
 }
 
-use LanguageCore as Language;
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
-use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
-use TabCore as Tab;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
 class ps_mbo extends Module
 {
@@ -48,15 +46,12 @@ class ps_mbo extends Module
     use PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService;
     use PrestaShop\Module\Mbo\Traits\HaveConfigurationPage;
 
-    public const DEFAULT_ENV = '';
-
     /**
      * @var string
      */
-    public const VERSION = '4.4.1';
+    public const VERSION = '4.7.0';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
-        'AdminPsMboModule',
         'AdminModulesManage',
         'AdminModulesSf',
     ];
@@ -84,11 +79,6 @@ class ps_mbo extends Module
     private $serviceContainer;
 
     /**
-     * @var PermissionCheckerInterface
-     */
-    protected $permissionChecker;
-
-    /**
      * @var string
      */
     public $imgPath;
@@ -104,7 +94,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.4.1';
+        $this->version = '4.7.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -120,7 +110,11 @@ class ps_mbo extends Module
         $this->moduleCacheDir = sprintf('%s/var/modules/%s/', rtrim(_PS_ROOT_DIR_, '/'), $this->name);
 
         $this->displayName = $this->trans('PrestaShop Marketplace in your Back Office', [], 'Modules.Mbo.Global');
-        $this->description = $this->trans('Browse the Addons marketplace directly from your back office to better meet your needs.', [], 'Modules.Mbo.Global');
+        $this->description = $this
+            ->trans('Browse the Addons marketplace directly from your back office to better meet your needs.',
+                [],
+                'Modules.Mbo.Global'
+            );
 
         if (self::checkModuleStatus()) {
             $this->bootHooks();
@@ -139,7 +133,7 @@ class ps_mbo extends Module
         try {
             $this->getService('mbo.ps_accounts.installer')->install();
         } catch (Exception $e) {
-            // For now, do nothing
+            ErrorHelper::reportError($e);
         }
 
         $this->installTables();
@@ -172,7 +166,7 @@ class ps_mbo extends Module
         $this->getAdminAuthenticationProvider()->deletePossibleApiUser();
         $this->getAdminAuthenticationProvider()->clearCache();
 
-        $lockFiles = ['registerShop', 'updateShop'];
+        $lockFiles = ['registerShop', 'updateShop', 'createApiUser'];
         foreach ($lockFiles as $lockFile) {
             if (file_exists($this->moduleCacheDir . $lockFile . '.lock')) {
                 unlink($this->moduleCacheDir . $lockFile . '.lock');
@@ -213,6 +207,9 @@ class ps_mbo extends Module
      */
     public function enable($force_all = false): bool
     {
+        if (self::checkModuleStatus()) {
+            return true;
+        }
         // Store previous context
         $previousContextType = Shop::getContext();
         $previousContextShopId = Shop::getContextShopID();
@@ -285,7 +282,8 @@ class ps_mbo extends Module
     }
 
     /**
-     * Override of native function to always retrieve Symfony container instead of legacy admin container on legacy context.
+     * Override of native function to always retrieve Symfony container instead of legacy admin
+     * container on legacy context.
      *
      * {@inheritdoc}
      */
@@ -338,7 +336,8 @@ class ps_mbo extends Module
             return false;
         }
 
-        // If active = 1 in the module table, the module must be associated to at least one shop to be considered as active
+        // If active = 1
+        //in the module table, the module must be associated to at least one shop to be considered as active
         $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`
         FROM `' . _DB_PREFIX_ . 'module` m
         LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
@@ -363,7 +362,7 @@ class ps_mbo extends Module
             $this->container = SymfonyContainer::getInstance();
         }
 
-        return $this->container->has('mbo.security.admin_authentication.provider') ?
+        return null !== $this->container && $this->container->has('mbo.security.admin_authentication.provider') ?
             $this->get('mbo.security.admin_authentication.provider') :
             new AdminAuthenticationProvider(
                 $this->get('doctrine.dbal.default_connection'),
@@ -413,9 +412,14 @@ class ps_mbo extends Module
         return true;
     }
 
-    public function getAccountsDataProvider(): AccountsDataProvider
+    public function getAccountsDataProvider(): ?AccountsDataProvider
     {
-        return $this->getService('mbo.accounts.data_provider');
+        try {
+            return $this->getService('mbo.accounts.data_provider');
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+            return null;
+        }
     }
 
     /**
@@ -431,49 +435,17 @@ class ps_mbo extends Module
     {
         /**it'
          * There is an issue for translating tabs during installation :
-         * Active modules translations files are loaded during the kernel boot. So the installing module translations are not known
+         * Active modules translations files are loaded during the kernel boot.
+         * So the installing module translations are not known
          * So, we postpone the tabs translations for the first time the module's code is executed.
          */
         $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
         if (!file_exists($lockFile)) {
             if (!is_dir($this->moduleCacheDir)) {
-                mkdir($this->moduleCacheDir);
+                mkdir($this->moduleCacheDir, 0777, true);
             }
             $f = fopen($lockFile, 'w+');
             fclose($f);
         }
-    }
-
-    private function translateTabsIfNeeded(): void
-    {
-        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
-        if (!file_exists($lockFile)) {
-            return;
-        }
-
-        $moduleTabs = Tab::getCollectionFromModule($this->name);
-        $languages = Language::getLanguages(false);
-
-        /**
-         * @var Tab $tab
-         */
-        foreach ($moduleTabs as $tab) {
-            if (!empty($tab->wording) && !empty($tab->wording_domain)) {
-                $tabNameByLangId = [];
-                foreach ($languages as $language) {
-                    $tabNameByLangId[$language['id_lang']] = $this->trans(
-                        $tab->wording,
-                        [],
-                        $tab->wording_domain,
-                        $language['locale']
-                    );
-                }
-
-                $tab->name = $tabNameByLangId;
-                $tab->save();
-            }
-        }
-
-        @unlink($lockFile);
     }
 }

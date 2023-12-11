@@ -37,6 +37,16 @@ class ModuleStatusTransitionCommand
     private $moduleName;
 
     /**
+     * @var int
+     */
+    private $moduleId;
+
+    /**
+     * @var string
+     */
+    private $moduleVersion;
+
+    /**
      * @var string|null
      */
     private $source;
@@ -44,16 +54,22 @@ class ModuleStatusTransitionCommand
     /**
      * @throws UnknownModuleTransitionCommandException
      */
-    public function __construct(string $command, string $moduleName, ?string $source = null)
-    {
+    public function __construct(
+        string $command,
+        string $moduleName,
+        int $moduleId,
+        string $moduleVersion,
+        ?string $source = null
+    ) {
         $this->command = new ModuleTransitionCommand($command);
         $this->moduleName = $moduleName;
+        $this->moduleId = $moduleId;
+        $this->moduleVersion = $moduleVersion;
 
-        // Read the source only if module is MBO. This feature is for testing purpose
-        if (
-            'ps_mbo' === $moduleName &&
-            in_array($command, [ModuleTransitionCommand::MODULE_COMMAND_DOWNLOAD])
-        ) {
+        if (in_array($command, [ModuleTransitionCommand::MODULE_COMMAND_DOWNLOAD])) {
+            if ('undefined' === $source) {
+                $source = null;
+            }
             $this->source = $source;
         }
     }
@@ -66,6 +82,16 @@ class ModuleStatusTransitionCommand
     public function getModuleName(): string
     {
         return $this->moduleName;
+    }
+
+    public function getModuleId(): int
+    {
+        return $this->moduleId;
+    }
+
+    public function getModuleVersion(): string
+    {
+        return $this->moduleVersion;
     }
 
     /**

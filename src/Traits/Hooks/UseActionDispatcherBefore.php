@@ -24,9 +24,16 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 use Cache;
 use Configuration;
 use Context;
+use Language;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
+use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Shop;
+use Symfony\Component\HttpFoundation\Request;
+use Tab;
 use Tools;
 
 trait UseActionDispatcherBefore
@@ -35,6 +42,7 @@ trait UseActionDispatcherBefore
      * Hook actionDispatcherBefore.
      *
      * @throws EmployeeException
+     * @throws CoreException
      */
     public function hookActionDispatcherBefore(array $params): void
     {
@@ -51,6 +59,7 @@ trait UseActionDispatcherBefore
             $this->ensureShopIsRegistered();
             $this->ensureShopIsUpdated();
             $this->ensureApiConfigIsApplied();
+            $this->ensureAddonsCookieIsValid($params);
         }
 
         if (self::checkModuleStatus()) { // If the module is not active, config values are not set yet
@@ -60,10 +69,42 @@ trait UseActionDispatcherBefore
 
     private function ensureShopIsRegistered(): void
     {
-        if (!file_exists($this->moduleCacheDir . 'registerShop.lock')) {
+        if (!file_exists($this->moduleCacheDir . 'registerShop.lock') && $this->ensureShopIsConfigured()) {
             return;
         }
         $this->registerShop();
+    }
+
+    private function ensureShopIsConfigured(): bool
+    {
+        $configurationList = [];
+        $configurationList['PS_MBO_SHOP_ADMIN_UUID'] = false;
+        $configurationList['PS_MBO_SHOP_ADMIN_MAIL'] = false;
+        $configurationList['PS_MBO_LAST_PS_VERSION_API_CONFIG'] = false;
+
+        foreach ($configurationList as $name => $value) {
+            if (Configuration::hasKey($name)) {
+                $configurationList[$name] = true;
+            }
+        }
+
+        if ($configurationList['PS_MBO_LAST_PS_VERSION_API_CONFIG']
+            && $configurationList['PS_MBO_SHOP_ADMIN_MAIL']
+            && $configurationList['PS_MBO_SHOP_ADMIN_UUID']) {
+            return true;
+        }
+
+        foreach (Shop::getShops(false, null, true) as $shopId) {
+            foreach ($configurationList as $name => $value) {
+                if (Configuration::hasKey($name, null, null, (int) $shopId)) {
+                    $configurationList[$name] = true;
+                }
+            }
+        }
+
+        return $configurationList['PS_MBO_LAST_PS_VERSION_API_CONFIG']
+            && $configurationList['PS_MBO_SHOP_ADMIN_MAIL']
+            && $configurationList['PS_MBO_SHOP_ADMIN_UUID'];
     }
 
     private function ensureShopIsUpdated(): void
@@ -76,10 +117,16 @@ trait UseActionDispatcherBefore
 
     private function ensureApiConfigIsApplied(): void
     {
-        $cacheProvider = $this->get('doctrine.cache.provider');
+        try {
+            /** @var \Symfony\Component\Cache\DoctrineProvider $cacheProvider */
+            $cacheProvider = $this->get('doctrine.cache.provider');
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+            $cacheProvider = false;
+        }
         $cacheKey = 'mbo_last_ps_version_api_config_check';
 
-        if ($cacheProvider->contains($cacheKey)) {
+        if ($cacheProvider && $cacheProvider->contains($cacheKey)) {
             $lastCheck = $cacheProvider->fetch($cacheKey);
 
             $timeSinceLastCheck = (strtotime('now') - strtotime($lastCheck)) / (60 * 60);
@@ -95,12 +142,22 @@ trait UseActionDispatcherBefore
 
         // Apply the config for the new PS version
         $command = new VersionChangeApplyConfigCommand(_PS_VERSION_, $this->version);
-        $configCollection = $this->get('mbo.distribution.api_version_change_config_apply_handler')->handle($command);
+        try {
+            /** @var VersionChangeApplyConfigCommandHandler $configApplyHandler */
+            $configApplyHandler = $this->get('mbo.distribution.api_version_change_config_apply_handler');
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+
+            return;
+        }
+        $configApplyHandler->handle($command);
 
         // Update the PS_MBO_LAST_PS_VERSION_API_CONFIG
         Configuration::updateValue('PS_MBO_LAST_PS_VERSION_API_CONFIG', _PS_VERSION_);
 
-        $cacheProvider->save($cacheKey, (new \DateTime())->format('Y-m-d H:i:s'), 0);
+        if ($cacheProvider) {
+            $cacheProvider->save($cacheKey, (new \DateTime())->format('Y-m-d H:i:s'), 0);
+        }
     }
 
     /**
@@ -111,6 +168,7 @@ trait UseActionDispatcherBefore
      *
      * @throws \PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException
      * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
+     * @throws \Exception
      */
     private function ensureApiUserExistAndIsLogged($controllerName, array $params): void
     {
@@ -133,5 +191,75 @@ trait UseActionDispatcherBefore
             $this->context->cookie = $cookie;
             Context::getContext()->cookie = $cookie;
         }
+    }
+
+    private function translateTabsIfNeeded(): void
+    {
+        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
+        if (!file_exists($lockFile)) {
+            return;
+        }
+
+        $moduleTabs = Tab::getCollectionFromModule($this->name);
+        $languages = Language::getLanguages(false);
+
+        /**
+         * @var Tab $tab
+         */
+        foreach ($moduleTabs as $tab) {
+            if (!empty($tab->wording) && !empty($tab->wording_domain)) {
+                $tabNameByLangId = [];
+                foreach ($languages as $language) {
+                    $tabNameByLangId[$language['id_lang']] = $this->trans(
+                        $tab->wording,
+                        [],
+                        $tab->wording_domain,
+                        $language['locale']
+                    );
+                }
+
+                $tab->name = $tabNameByLangId;
+                $tab->save();
+            }
+        }
+
+        @unlink($lockFile);
+    }
+
+    private function ensureAddonsCookieIsValid(array &$params): void
+    {
+        $request = $params['request'] ?? null;
+
+        if (!$request || !$request instanceof Request) {
+            return;
+        }
+
+        // Remove cookies if username is not a valid email
+        $cookies = $request->cookies->all();
+
+        $addonsUsernameCookie = $cookies['username_addons_v2'] ?? null;
+
+        if (!empty($addonsUsernameCookie)) {
+            $addonsUsernameCookie = $this->get('mbo.addons.user.credentials_encryptor')->decrypt($addonsUsernameCookie);
+            $usernameParts = explode('.', $addonsUsernameCookie);
+            $isValid = \Validate::isEmail($addonsUsernameCookie)
+                && mb_strlen($usernameParts[array_key_last($usernameParts)]) < 5;
+            // the 5 limit for the domain extension is totally arbitrary
+            // We made this check because Validate::isEmail doesn't check the length of the domain extension
+
+            if (!$isValid) {
+                $params['request'] = $this->clearAddonsCookiesFromRequest($request);
+            }
+        }
+    }
+
+    private function clearAddonsCookiesFromRequest(Request $request): Request
+    {
+        // Removes from cookies in the request
+        $request->cookies->remove('username_addons_v2');
+        $request->cookies->remove('password_addons_v2');
+        $request->cookies->remove('is_contributor_v2');
+
+        return $request;
     }
 }

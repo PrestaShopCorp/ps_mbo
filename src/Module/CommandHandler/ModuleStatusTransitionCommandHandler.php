@@ -30,6 +30,7 @@ use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use PrestaShop\Module\Mbo\Module\Exception\UnauthorizedModuleTransitionException;
 use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\Module\Mbo\Module\Module;
+use PrestaShop\Module\Mbo\Module\ModuleBuilder;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
@@ -50,15 +51,21 @@ final class ModuleStatusTransitionCommandHandler
      * @var ActionsManager
      */
     private $actionsManager;
+    /**
+     * @var ModuleBuilder
+     */
+    private $moduleBuilder;
 
     public function __construct(
         ModuleStateMachine $moduleStateMachine,
         Repository $moduleRepository,
-        ActionsManager $actionsManager
+        ActionsManager $actionsManager,
+        ModuleBuilder $moduleBuilder
     ) {
         $this->moduleStateMachine = $moduleStateMachine;
         $this->moduleRepository = $moduleRepository;
         $this->actionsManager = $actionsManager;
+        $this->moduleBuilder = $moduleBuilder;
     }
 
     /**
@@ -73,6 +80,8 @@ final class ModuleStatusTransitionCommandHandler
     {
         $apiModule = null;
         $moduleName = $command->getModuleName();
+        $moduleId = $command->getModuleId();
+        $moduleVersion = $command->getModuleVersion();
         $source = $command->getSource();
 
         // First get the module from DB
@@ -88,23 +97,13 @@ final class ModuleStatusTransitionCommandHandler
                 $dbModule['active']
             );
         } else {
-            $apiModule = $this->moduleRepository->getApiModule($moduleName);
-
-            if (null === $apiModule) {
-                throw new ModuleNotFoundException(sprintf('Module %s not found', $moduleName));
-            }
-
             $module = new TransitionModule(
                 $moduleName,
-                $apiModule->version,
+                $moduleVersion,
                 false,
                 false,
                 false
             );
-        }
-
-        if (null === $module) {
-            throw new ModuleNotFoundException(sprintf('Module %s not found', $moduleName));
         }
 
         // Check if transition asked can be mapped to an existing target status
@@ -112,12 +111,11 @@ final class ModuleStatusTransitionCommandHandler
 
         // Download a module before upgrade is not an actual module transition, so it cannot be handled by the StateMachine
         if (ModuleTransitionCommand::MODULE_COMMAND_DOWNLOAD === $transitionCommand) {
-            $module = $apiModule ?? $this->moduleRepository->getApiModule($moduleName);
-            if (null === $module) {
-                throw new ModuleNotFoundException(sprintf('Module %s not found', $moduleName));
+            if (null === $source) {
+                $source = $this->actionsManager->downloadModule($moduleId);
             }
 
-            $this->actionsManager->downloadAndReplaceModuleFiles($module, $source);
+            $this->actionsManager->downloadAndReplaceModuleFiles($moduleName, $source);
         } else {
             if (!array_key_exists($transitionCommand, ModuleTransitionCommand::MAPPING_TRANSITION_COMMAND_TARGET_STATUS)) {
                 throw new TransitionCommandToModuleStatusException(sprintf('Unable to map module transition command given %s', $transitionCommand));
@@ -128,6 +126,10 @@ final class ModuleStatusTransitionCommandHandler
                 $module,
                 $transitionCommand
             );
+
+            if($transitionName === ModuleStateMachine::NO_CHANGE_TRANSITION) {
+                return $this->buildModuleAndReturn($moduleName);
+            }
 
             // Check if the transition asked is possible
             if (!$this->moduleStateMachine->can($module, $transitionName)) {
@@ -140,8 +142,19 @@ final class ModuleStatusTransitionCommandHandler
             ]);
         }
 
+        return $this->buildModuleAndReturn($moduleName);
+    }
+
+    protected function buildModuleAndReturn(string $moduleName): Module
+    {
         $this->moduleRepository->clearCache();
 
-        return $this->moduleRepository->getModule($moduleName);
+        $stdModule = new \stdClass();
+        $stdModule->name = $moduleName;
+
+        return $this->moduleBuilder->build(
+            $stdModule,
+            $this->moduleRepository->findInDatabaseByName($moduleName)
+        );
     }
 }

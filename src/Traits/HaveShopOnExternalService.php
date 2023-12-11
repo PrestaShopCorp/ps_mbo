@@ -26,6 +26,7 @@ use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Ramsey\Uuid\Uuid;
 use Shop;
 
@@ -76,6 +77,7 @@ trait HaveShopOnExternalService
         } catch (Exception $exception) {
             // Do nothing here, the exception is caught to avoid displaying an error to the client
             // Furthermore, the operation can't be tried again later as the module is now disabled or uninstalled
+            ErrorHelper::reportError($exception);
         }
     }
 
@@ -95,11 +97,13 @@ trait HaveShopOnExternalService
                 return;
             }
 
+            $accountsDataProvider = $this->getAccountsDataProvider();
+
             // Add the default params
             $params = array_merge($params, [
                 'mbo_api_user_token' => $this->getAdminAuthenticationProvider()->getAdminToken(),
-                'accounts_token' => $this->getAccountsDataProvider()->getAccountsToken(),
-                'accounts_shop_id' => $this->getAccountsDataProvider()->getAccountsShopId(),
+                'accounts_token' => $accountsDataProvider ? $accountsDataProvider->getAccountsToken() : null,
+                'accounts_shop_id' => $accountsDataProvider ? $accountsDataProvider->getAccountsShopId() : null,
             ]);
             $distributionApi->setBearer($this->getAdminAuthenticationProvider()->getMboJWT());
             $distributionApi->{$method}($params);
@@ -111,11 +115,15 @@ trait HaveShopOnExternalService
             // Create the lock file
             if (!file_exists($lockFile)) {
                 if (!is_dir($this->moduleCacheDir)) {
-                    mkdir($this->moduleCacheDir);
+                    mkdir($this->moduleCacheDir, 0777, true);
                 }
                 $f = fopen($lockFile, 'w+');
                 fclose($f);
             }
+            ErrorHelper::reportError($exception, [
+                'method' => $method,
+                'params' => $params,
+            ]);
         }
     }
 
@@ -172,6 +180,6 @@ trait HaveShopOnExternalService
         $config = json_decode(json_encode($config), true);
 
         $command = new ConfigChangeCommand($config, _PS_VERSION_, $this->version);
-        $configCollection = $this->getService('mbo.distribution.api_config_change_handler')->handle($command);
+        $this->getService('mbo.distribution.api_config_change_handler')->handle($command);
     }
 }

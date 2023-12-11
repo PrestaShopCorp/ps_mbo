@@ -24,5 +24,9 @@ use Exception;
 
 interface ErrorHandlerInterface
 {
-    public function handle(Exception $error, $code = null, ?bool $throw = true, ?array $data = null);
+    /**
+     * @param Exception $error
+     * @param array|null $data
+     */
+    public function handle(Exception $error, ?array $data = null): void;
 }

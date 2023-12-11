@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
 trait UseDisplayEmptyModuleCategoryExtraMessage
 {
@@ -35,14 +36,21 @@ trait UseDisplayEmptyModuleCategoryExtraMessage
     {
         $categoryName = $params['category_name'];
 
-        /** @var LinksProvider $linksProvider */
-        $linksProvider = $this->get('mbo.addons.links_provider');
+        try {
+            /** @var \Twig\Environment $twig */
+            $twig = $this->get('twig');
+            /** @var LinksProvider $linksProvider */
+            $linksProvider = $this->get('mbo.addons.links_provider');
 
-        return $this->get('twig')->render(
-            '@Modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig', [
-                'categoryName' => $categoryName,
-                'categoryLink' => $linksProvider->getCategoryLink($categoryName),
-            ]
-        );
+            return $twig->render(
+                '@Modules/ps_mbo/views/templates/hook/twig/module_manager_empty_category.html.twig', [
+                    'categoryName' => $categoryName,
+                    'categoryLink' => $linksProvider->getCategoryLink($categoryName),
+                ]
+            );
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+            return '';
+        }
     }
 }

@@ -32,6 +32,8 @@ services:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleRecommendedController'
     arguments:
       - '@request_stack'
+    calls:
+      - [ setContainer, [ '@service_container' ] ]
 
   mbo.controller.themes.catalog:
     class: 'PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController'

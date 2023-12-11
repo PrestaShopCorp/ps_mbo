@@ -25,7 +25,9 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
 use Hook;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Tab\TabInterface;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use ToolsCore as Tools;
 
@@ -82,13 +84,24 @@ trait UseDisplayDashboardTop
      */
     public function hookDisplayDashboardTop(): string
     {
-        // Check if this page has already been processed by the hook to avoid duplciate content
+        // Check if this page has already been processed by the hook to avoid duplicate content
         if ($this->alreadyProcessedPage) {
             return '';
         }
         $this->alreadyProcessedPage = true;
 
         $values = Tools::getAllValues();
+        $moduleCacheDir = sprintf('%s/var/modules/ps_mbo/', rtrim(_PS_ROOT_DIR_, '/'));
+        $createApiUserLockFile = $moduleCacheDir . 'createApiUser.lock';
+
+        if (
+            isset($values['controller']) &&
+            ($values['controller'] === 'AdminPsMboModule') &&
+            file_exists($createApiUserLockFile)
+        ) {
+            return $this->displayFailedApiUser();
+        }
+
         //Check if we are on configuration page & if the module needs to have a push on this page
         if (
             isset($values['controller']) &&
@@ -151,6 +164,28 @@ trait UseDisplayDashboardTop
         return $this->fetch('module:ps_mbo/views/templates/hook/push-configuration.tpl');
     }
 
+    private function displayFailedApiUser()
+    {
+        try {
+            /** @var \Twig\Environment $twig */
+            $twig = $this->get('twig');
+
+            /**
+             * @var Router $router
+             */
+            $router = $this->get('router');
+
+            return $twig->render(
+                '@Modules/ps_mbo/views/templates/hook/twig/failed-api-user.html.twig', [
+                    'module_manager_link' => $router->generate('admin_module_manage'),
+                ]
+            );
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+            return '';
+        }
+    }
+
     /**
      * Compute & include data with recommended modules when needed
      *
@@ -205,6 +240,7 @@ trait UseDisplayDashboardTop
             );
         } catch (Exception $exception) {
             // Avoid fatal errors on ServiceNotFoundException
+            ErrorHelper::reportError($exception);
             return '';
         }
 

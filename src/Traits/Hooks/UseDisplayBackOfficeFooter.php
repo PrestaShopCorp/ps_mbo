@@ -23,6 +23,9 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
 use PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Security\PermissionChecker;
+use Twig\Environment;
 
 trait UseDisplayBackOfficeFooter
 {
@@ -36,20 +39,34 @@ trait UseDisplayBackOfficeFooter
      */
     public function hookDisplayBackOfficeFooter(array $params): string
     {
-        /** @var LinksProvider $linksProvider */
-        $linksProvider = $this->get('mbo.addons.links_provider');
+        try {
+            /** @var LinksProvider $linksProvider */
+            $linksProvider = $this->get('mbo.addons.links_provider');
+            /** @var Environment $twig */
+            $twig = $this->get('twig');
+            /** @var PermissionChecker $permissionChecker */
+            $permissionChecker = $this->get('mbo.security.permission_checker');
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+            return '';
+        }
 
-        return $this->get('twig')->render(
-            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig', [
-                'signUpLink' => $linksProvider->getSignUpLink(),
-                'passwordForgottenLink' => $linksProvider->getPasswordForgottenLink(),
-                'level' => $this->get('mbo.security.permission_checker')->getAuthorizationLevel(ModuleCatalogController::CONTROLLER_NAME),
-                'errorMessage' => $this->trans(
-                    'You do not have permission to add this.',
-                    [],
-                    'Admin.Notifications.Error'
-                ),
-            ]
-        );
+        try {
+            return $twig->render(
+                '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig', [
+                    'signUpLink' => $linksProvider->getSignUpLink(),
+                    'passwordForgottenLink' => $linksProvider->getPasswordForgottenLink(),
+                    'level' => $permissionChecker->getAuthorizationLevel(ModuleCatalogController::CONTROLLER_NAME),
+                    'errorMessage' => $this->trans(
+                        'You do not have permission to add this.',
+                        [],
+                        'Admin.Notifications.Error'
+                    ),
+                ]
+            );
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+            return '';
+        }
     }
 }

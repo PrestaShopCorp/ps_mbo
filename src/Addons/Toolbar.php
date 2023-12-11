@@ -25,7 +25,7 @@ use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * This service returns descriptions for the buttons to add into the Module configure toolbar
@@ -127,7 +127,6 @@ class Toolbar
         return [
             'href' => '#',
             'desc' => $this->translator->trans('Connect to Addons marketplace', [], 'Modules.Mbo.Addons', $this->translator->getLocale()),
-            'icon' => 'vpn_key',
             'help' => $this->translator->trans('Connect to Addons marketplace', [], 'Modules.Mbo.Addons', $this->translator->getLocale()),
         ];
     }
@@ -141,7 +140,6 @@ class Toolbar
         return [
             'href' => '#',
             'desc' => $this->addonsDataProvider->getAuthenticatedUserEmail(),
-            'icon' => 'exit_to_app',
             'help' => $this->translator->trans('Synchronized with Addons marketplace!', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
         ];
     }
@@ -155,7 +153,6 @@ class Toolbar
         return [
             'href' => '#',
             'desc' => $this->translator->trans('Connected', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()),
-            'icon' => 'check_circle',
             'help' => $this->translator->trans('Connected as', [], 'Modules.Mbo.Modulescatalog', $this->translator->getLocale()) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail()
         ];
     }

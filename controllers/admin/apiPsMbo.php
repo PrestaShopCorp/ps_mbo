@@ -22,6 +22,7 @@ use PrestaShop\Module\Mbo\Api\Controller\AbstractAdminApiController;
 use PrestaShop\Module\Mbo\Api\Exception\IncompleteSignatureParamsException;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
 use PrestaShop\Module\Mbo\Api\Service\Factory as ExcutorsFactory;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
 /**
  * This controller is responsible to execute actions on modules installed on the current shop.
@@ -45,6 +46,7 @@ class apiPsMboController extends AbstractAdminApiController
 
             $response = $executorsFactory->build($service)->execute($this->module);
         } catch (\Exception $exception) {
+            ErrorHelper::reportError($exception);
             $this->exitWithExceptionMessage($exception);
         }
 

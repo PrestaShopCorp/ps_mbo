@@ -177,6 +177,10 @@ class ContextBuilder
             'accounts_user_id' => $this->accountsDataProvider->getAccountsUserId(),
             'accounts_shop_id' => $this->accountsDataProvider->getAccountsShopId(),
             'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
+            'accounts_component_loaded' => false,
+            'module_catalog_url' => $this->router->generate('admin_mbo_catalog_module'),
+            'theme_catalog_url' => $this->router->generate('admin_mbo_catalog_theme'),
+            'php_version' => phpversion(),
         ];
     }
 
@@ -273,7 +277,7 @@ class ContextBuilder
                     'module_name' => $moduleName,
                 ]);
             }
-            $installedModules[] = (new InstalledModule($moduleId, $moduleName, $moduleStatus, $moduleVersion, $moduleConfigUrl))->toArray();
+            $installedModules[] = (new InstalledModule($moduleId, $moduleName, $moduleStatus, (string) $moduleVersion, $moduleConfigUrl))->toArray();
         }
 
         $this->cacheProvider->save($cacheKey, $installedModules, 86400); // Lifetime for 24h, will be purged at every action on modules

@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
 use Exception;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use Symfony\Component\Workflow\Exception\LogicException;
 use Symfony\Component\Workflow\Marking;
@@ -110,6 +111,7 @@ final class MarkingStore implements MarkingStoreInterface
                         throw new Exception($this->translator->trans('Unfortunately, the module did not return additional details.', [], 'Admin.Modules.Notification'));
                     }
                 } catch (Exception $e) {
+                    ErrorHelper::reportError($e);
                     throw new TransitionFailedException(sprintf('Unable to execute transition : %s', $e->getMessage()), 0, $e);
                 }
 

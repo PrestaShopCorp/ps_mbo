@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Addons;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use stdClass;
 
 class ApiClient
@@ -258,6 +259,38 @@ class ApiClient
         ] + $params)->processRequestAndReturn('themes', self::HTTP_METHOD_POST, new stdClass());
     }
 
+    public function getModuleByName(string $name): ?stdClass
+    {
+        $options = ['query' => $this->queryParameters];
+
+        $headers = $this->getHeaders();
+        if (!empty($headers)) {
+            $options['headers'] = $headers;
+        }
+
+        try {
+            $url = sprintf('/v2/products/%s', $name);
+
+            $resp = $this->httpClient
+                ->request(self::HTTP_METHOD_GET, $url, $options)
+                ->getBody();
+        } catch(\Exception $e) {
+            ErrorHelper::reportError($e, [
+                'url' => $url,
+            ]);
+
+            return null;
+        }
+
+        $response = json_decode((string) $resp);
+
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            return null;
+        }
+
+        return $response;
+    }
+
     /**
      * Process the request with the current parameters, given the $method, and return the $attribute from
      * the response body, or the default fallback value $default.
@@ -268,8 +301,11 @@ class ApiClient
      *
      * @return mixed
      */
-    public function processRequestAndReturn(?string $attributeToReturn = null, string $method = self::HTTP_METHOD_GET, $default = [])
-    {
+    public function processRequestAndReturn(
+        ?string $attributeToReturn = null,
+        string $method = self::HTTP_METHOD_GET,
+        $default = []
+    ) {
         $response = json_decode($this->processRequest($method));
 
         if (JSON_ERROR_NONE !== json_last_error()) {
@@ -286,7 +322,7 @@ class ApiClient
     /**
      * Process the request with the current parameters, given the $method, return the body as string
      *
-     * @return string
+     * @param string $method
      *
      * @throws GuzzleException
      */

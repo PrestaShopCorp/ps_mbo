@@ -17,4 +17,4 @@ services:
   mbo.accounts.data_provider:
     class: PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider
     arguments:
-      - '@mbo.ps_accounts.facade'
+      - "5.2.5"

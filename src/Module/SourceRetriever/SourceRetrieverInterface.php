@@ -29,15 +29,5 @@ interface SourceRetrieverInterface
      *
      * @return string
      */
-    public function get($source): string;
-
-    /**
-     * This method will check if the zip given contains the module expected.
-     *
-     * @param string $zipFileName
-     * @param string $moduleName
-     *
-     * @return bool
-     */
-    public function validate(string $zipFileName, string $moduleName): bool;
+    public function get($source, ?string $expectedModuleName = null, ?array $options = []): string;
 }

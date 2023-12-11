@@ -1,4 +1,22 @@
 <?php
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/AFL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
+ */
 
 namespace PrestaShop\Module\Mbo\Traits;
 
@@ -15,21 +33,29 @@ trait HaveConfigurationPage
             'cdc' => 'http://localhost:8080/mbo-cdc.umd.js',
             'api' => 'http://localhost:3000',
             'addons' => 'https://preprod-api-addons.prestashop.com',
+            'sentry_url' => '',
+            'sentry_environment' => '',
         ],
         'prestabulle' => [
             'cdc' => 'https://integration-assets.prestashop3.com/dst/mbo/#prestabulle#/mbo-cdc.umd.js',
             'api' => 'https://mbo-api-#prestabulle#.prestashop.com',
             'addons' => 'https://preprod-api-addons.prestashop.com',
+            'sentry_url' => 'https://aa99f8a351b641af994ac50b01e14e20@o298402.ingest.sentry.io/6520457',
+            'sentry_environment' => '#prestabulle#',
         ],
         'preprod' => [
             'cdc' => 'https://preproduction-assets.prestashop3.com/dst/mbo/v1/mbo-cdc.umd.js',
             'api' => 'https://mbo-api-preprod.prestashop.com',
             'addons' => 'https://preprod-api-addons.prestashop.com',
+            'sentry_url' => 'https://aa99f8a351b641af994ac50b01e14e20@o298402.ingest.sentry.io/6520457',
+            'sentry_environment' => 'preproduction',
         ],
         'prod' => [
             'cdc' => 'https://assets.prestashop3.com/dst/mbo/v1/mbo-cdc.umd.js',
             'api' => 'https://mbo-api.prestashop.com',
             'addons' => 'https://api-addons.prestashop.com',
+            'sentry_url' => 'https://aa99f8a351b641af994ac50b01e14e20@o298402.ingest.sentry.io/6520457',
+            'sentry_environment' => 'production',
         ],
     ];
 
@@ -79,16 +105,22 @@ trait HaveConfigurationPage
             $cdcUrl = str_replace('#prestabulle#', $newValue, $this->environmentData['prestabulle']['cdc']);
             $apiUrl = str_replace('#prestabulle#', $newValue, $this->environmentData['prestabulle']['api']);
             $addonsUrl = str_replace('#prestabulle#', $newValue, $this->environmentData['prestabulle']['addons']);
+            $sentryUrl = $this->environmentData['prestabulle']['sentry_url'];
+            $sentryEnvironment = str_replace('#prestabulle#', $newValue, $this->environmentData['prestabulle']['sentry_environment']);
         } else {
             $cdcUrl = $this->environmentData[$newValue]['cdc'];
             $apiUrl = $this->environmentData[$newValue]['api'];
             $addonsUrl = $this->environmentData[$newValue]['addons'];
+            $sentryUrl = $this->environmentData[$newValue]['sentry_url'];
+            $sentryEnvironment = $this->environmentData[$newValue]['sentry_environment'];
         }
 
         $envData = file_get_contents($envFilePath);
         $envData = preg_replace('#MBO_CDC_URL=".*"#', 'MBO_CDC_URL="' . $cdcUrl . '"', $envData);
         $envData = preg_replace('#DISTRIBUTION_API_URL=".*"#', 'DISTRIBUTION_API_URL="' . $apiUrl . '"', $envData);
         $envData = preg_replace('#ADDONS_API_URL=".*"#', 'ADDONS_API_URL="' . $addonsUrl . '"', $envData);
+        $envData = preg_replace('#SENTRY_CREDENTIALS=".*"#', 'SENTRY_CREDENTIALS="' . $sentryUrl . '"', $envData);
+        $envData = preg_replace('#SENTRY_ENVIRONMENT=".*"#', 'SENTRY_ENVIRONMENT="' . $sentryEnvironment . '"', $envData);
 
         // Update the .env file
         file_put_contents($envFilePath, $envData);

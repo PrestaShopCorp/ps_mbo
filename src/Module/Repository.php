@@ -122,7 +122,7 @@ class Repository implements RepositoryInterface
 
     public function fetchAll(bool $rawModules = false): array
     {
-        if ($this->cache !== null && !$rawModules) {
+        if (!empty($this->cache) && !$rawModules) {
             return $this->cache;
         }
 
@@ -159,11 +159,15 @@ class Repository implements RepositoryInterface
         if ($rawModules) {
             return $apiModules;
         }
+
         $this->cache = $listAddonsModules;
 
         return $this->cache;
     }
 
+    /**
+     * @TODO : Optimize using new Addons routes
+     */
     public function getApiModule(string $name): ?stdClass
     {
         $modules = $this->fetchAll(true);

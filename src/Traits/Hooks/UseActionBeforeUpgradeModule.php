@@ -21,8 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\ActionsManager;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 
 trait UseActionBeforeUpgradeModule
 {
@@ -36,6 +38,20 @@ trait UseActionBeforeUpgradeModule
      */
     public function hookActionBeforeUpgradeModule(array $params): void
     {
+        // Clear the cache after download to force reload module services
+        try {
+            /** @var CacheClearerInterface $cacheClearer */
+            $cacheClearer = $this->get('mbo.symfony_cache_clearer');
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+            $cacheClearer = false;
+        }
+        if ($cacheClearer) {
+            $cacheClearer->clear();
+        }
+
+        // @TODO : Remove this Hook... and don't forget to add migration to unregister it
+        return;
         if (!$this->needToDownloadModuleZip($params)) {
             return;
         }
@@ -53,7 +69,7 @@ trait UseActionBeforeUpgradeModule
 
         $module = $moduleActionsManager->findVersionForUpdate($moduleName);
         if (null !== $module) {
-            $moduleActionsManager->downloadAndReplaceModuleFiles($module);
+            $moduleActionsManager->downloadAndReplaceModuleFiles($moduleName);
         }
     }
 

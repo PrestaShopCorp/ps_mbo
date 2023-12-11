@@ -31,9 +31,15 @@ trait UseHooks
 {
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeEmployeeMenu;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne;
+    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo {
+        \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
+        \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne::loadCdcMediaFilesForControllers insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
+    }
+    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree {
+        \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
+        \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne::loadCdcMediaFilesForControllers insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
+    }
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayAdminThemesListAfter;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionBeforeDisableModule;
@@ -42,6 +48,7 @@ trait UseHooks
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionBeforeUninstallModule;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionGetAdminToolbarButtons;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionGetAlternativeSearchPanels;
+    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayAdminAfterHeader;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeFooter;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayModuleConfigureExtraButtons;
     use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionListModules;
