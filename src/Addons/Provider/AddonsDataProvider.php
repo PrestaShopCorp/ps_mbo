@@ -26,6 +26,7 @@ namespace PrestaShop\Module\Mbo\Addons\Provider;
 use Exception;
 use GuzzleHttp\Exception\ClientException;
 use PrestaShop\Module\Mbo\Addons\ApiClient;
+use PrestaShop\Module\Mbo\Addons\Exception\DownloadModuleException;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUser;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
@@ -107,7 +108,9 @@ class AddonsDataProvider implements DataProviderInterface
     }
 
     /**
-     * Downloads a module source from addons, store it and returns the file name
+     * Downloads a module source from addons, store it and returns the file name.
+     *
+     * @throws DownloadModuleException
      */
     public function downloadModule(int $moduleId): string
     {
@@ -132,14 +135,14 @@ class AddonsDataProvider implements DataProviderInterface
                     $message = 'Error sent by Addons. ' . $jsonContent['errors']['label'];
                 }
             }
-            throw new Exception($message, 0, $e);
+            throw new DownloadModuleException($message, 0, $e);
         }
 
         $temporaryZipFilename = tempnam($this->cacheDir, 'mod');
         if (file_put_contents($temporaryZipFilename, $moduleData) !== false) {
             return $temporaryZipFilename;
         } else {
-            throw new Exception('Cannot store module content in temporary file !');
+            throw new DownloadModuleException('Cannot store module content in temporary file !');
         }
     }
 

@@ -21,12 +21,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module;
 
+use Exception;
+use PrestaShop\Module\Mbo\Addons\Exception\DownloadModuleException;
 use PrestaShop\Module\Mbo\Helpers\Config;
-use PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException;
 use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever;
-use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
-use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
 class ActionsManager
@@ -53,8 +52,8 @@ class ActionsManager
     /**
      * @param int $moduleId
      *
-     * @throws SourceHandlerNotFoundException
-     * @throws FileNotFoundException
+     * @throws UnexpectedModuleSourceContentException
+     * @throws DownloadModuleException
      */
     public function install(int $moduleId): void
     {
@@ -63,6 +62,9 @@ class ActionsManager
         $this->filesManager->installFromSource($moduleZip);
     }
 
+    /**
+     * @throws DownloadModuleException
+     */
     public function downloadModule(int $moduleId): string
     {
         return $this->filesManager->downloadModule($moduleId);
@@ -71,7 +73,6 @@ class ActionsManager
     /**
      * @throws UnexpectedModuleSourceContentException
      * @throws SourceHandlerNotFoundException
-     * @throws FileNotFoundException
      */
     public function downloadAndReplaceModuleFiles(string $moduleName, string $source): void
     {

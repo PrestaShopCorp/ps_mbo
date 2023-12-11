@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\CommandHandler;
 
+use Exception;
+use PrestaShop\Module\Mbo\Addons\Exception\DownloadModuleException;
 use PrestaShop\Module\Mbo\Module\ActionsManager;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException;
@@ -33,6 +35,7 @@ use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
 use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
+use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
 final class ModuleStatusTransitionCommandHandler
@@ -71,10 +74,10 @@ final class ModuleStatusTransitionCommandHandler
 
     /**
      * @throws UnexpectedModuleSourceContentException
-     * @throws ModuleNewVersionNotFoundException
      * @throws UnauthorizedModuleTransitionException
      * @throws TransitionCommandToModuleStatusException
      * @throws SourceHandlerNotFoundException
+     * @throws DownloadModuleException
      */
     public function handle(ModuleStatusTransitionCommand $command): Module
     {
