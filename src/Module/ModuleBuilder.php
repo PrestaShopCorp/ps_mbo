@@ -26,9 +26,11 @@ use Module as LegacyModule;
 use PaymentModule;
 use PhpParser;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Helpers\UrlHelper;
 use PrestaShopBundle\Service\Routing\Router;
 use Psr\Log\LoggerInterface;
 use stdClass;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Validate;
 
 /**
@@ -136,9 +138,13 @@ class ModuleBuilder implements ModuleBuilderInterface
             && $module->attributes->getBoolean('is_configurable')
         ) {
             $module->attributes->set('urls', [
-                'configure' => $this->router->generate('admin_module_configure_action', [
-                    'module_name' => $moduleName,
-                ]),
+                'configure' => UrlHelper::transformToAbsoluteUrl($this->router->generate(
+                    'admin_module_configure_action',
+                    [
+                        'module_name' => $moduleName,
+                    ],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                )),
             ]);
         }
     }

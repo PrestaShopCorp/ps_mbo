@@ -31,6 +31,7 @@ use Language;
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Helpers\UrlHelper;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
 use PrestaShop\Module\Mbo\Tab\Tab;
@@ -40,7 +41,6 @@ use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 use Tools;
-use Validate;
 
 class ContextBuilder
 {
@@ -168,7 +168,7 @@ class ContextBuilder
             'shop_uuid' => Config::getShopMboUuid(),
             'mbo_token' => $this->adminAuthenticationProvider->getMboJWT(),
             'mbo_version' => \ps_mbo::VERSION,
-            'mbo_reset_url' => $this->transformToAbsoluteUrl(
+            'mbo_reset_url' => UrlHelper::transformToAbsoluteUrl(
                 $this->router->generate('admin_module_manage_action', [
                     'action' => 'reset',
                     'module_name' => 'ps_mbo',
@@ -182,8 +182,8 @@ class ContextBuilder
             'accounts_shop_id' => $this->accountsDataProvider->getAccountsShopId(),
             'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
             'accounts_component_loaded' => false,
-            'module_catalog_url' => $this->transformToAbsoluteUrl($this->router->generate('admin_mbo_catalog_module')),
-            'theme_catalog_url' => $this->transformToAbsoluteUrl($this->router->generate('admin_mbo_catalog_theme')),
+            'module_catalog_url' => UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_mbo_catalog_module')),
+            'theme_catalog_url' => UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_mbo_catalog_theme')),
             'php_version' => phpversion(),
         ];
     }
@@ -277,7 +277,7 @@ class ContextBuilder
             }
 
             if ($installedModule->isConfigurable()) {
-                $moduleConfigUrl = $this->transformToAbsoluteUrl(
+                $moduleConfigUrl = UrlHelper::transformToAbsoluteUrl(
                     $this->router->generate(
                         'admin_module_configure_action',
                         [
@@ -298,14 +298,5 @@ class ContextBuilder
     private function getCacheKey(): string
     {
         return sprintf('mbo_installed_modules_list_%s', Config::getShopMboUuid());
-    }
-
-    private function transformToAbsoluteUrl(string $url): string
-    {
-        if (Validate::isAbsoluteUrl($url)) {
-            return $url;
-        }
-
-        return rtrim(Config::getShopUrl(false), '/') . DIRECTORY_SEPARATOR . ltrim($url, '/');
     }
 }
