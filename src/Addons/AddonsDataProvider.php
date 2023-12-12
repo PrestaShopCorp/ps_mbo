@@ -168,10 +168,7 @@ class AddonsDataProvider implements AddonsInterface
      */
     public function isAddonsAuthenticated(): bool
     {
-        $request = Request::createFromGlobals();
-
-        return $request->cookies->get('username_addons', false)
-            && $request->cookies->get('password_addons', false);
+        return $this->isUserAuthenticated();
     }
 
     /**
