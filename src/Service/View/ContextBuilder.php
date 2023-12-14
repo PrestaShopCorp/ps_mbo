@@ -26,6 +26,7 @@ use Context;
 use Country;
 use Doctrine\Common\Cache\CacheProvider;
 use Language;
+use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Distribution\AuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
@@ -70,19 +71,25 @@ class ContextBuilder
      * @var AuthenticationProvider
      */
     private $distributionAuthenticationProvider;
+    /**
+     * @var AccountsDataProvider
+     */
+    private $accountsDataProvider;
 
     public function __construct(
         ContextAdapter $contextAdapter,
         ModuleRepository $moduleRepository,
         Router $router,
         AuthenticationProvider $distributionAuthenticationProvider,
-        CacheProvider $cacheProvider
+        CacheProvider $cacheProvider,
+        AccountsDataProvider $accountsDataProvider
     ) {
         $this->contextAdapter = $contextAdapter;
         $this->moduleRepository = $moduleRepository;
         $this->router = $router;
         $this->distributionAuthenticationProvider = $distributionAuthenticationProvider;
         $this->cacheProvider = $cacheProvider;
+        $this->accountsDataProvider = $accountsDataProvider;
     }
 
     /**
@@ -155,6 +162,9 @@ class ContextBuilder
             'admin_token' => $token,
             'refresh_url' => $refreshUrl,
             'installed_modules' => $this->getInstalledModules(),
+            'accounts_user_id' => $this->accountsDataProvider->getAccountsUserId(),
+            'accounts_shop_id' => $this->accountsDataProvider->getAccountsShopId(),
+            'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
             'accounts_component_loaded' => false,
             'module_catalog_url' => $this->router->generate('admin_mbo_catalog_module'),
             'theme_catalog_url' => $this->router->generate('admin_mbo_catalog_theme'),

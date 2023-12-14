@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        public: true
+
+    mbo.addons.client.http:
+      class: GuzzleHttp\Client
+      arguments:
+        $config:
+          base_url: "%env(ADDONS_API_URL)%"
+          timeout: "7200"
+          headers:
+              Accept: "application/json"
+          CURLOPT_FORBID_REUSE: true
+          CURLOPT_FRESH_CONNECT: true

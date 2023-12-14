@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    public: true
+
+  # Addons API Client
+  mbo.addons.client.api:
+    class: PrestaShop\Module\Mbo\Addons\ApiClient
+    arguments:
+      - "@mbo.addons.client.http"
+    calls:
+      - method: setDefaultParams
+        arguments:
+          - "@=service('translator').getLocale()"
+          - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
+          - "@=service('prestashop.adapter.legacy.configuration').get('_PS_BASE_URL_')"
+          - "@=service('prestashop.core.foundation.version').getSemVersion()"
