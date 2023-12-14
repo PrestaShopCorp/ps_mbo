@@ -25,7 +25,7 @@
     "firebase/php-jwt": "^6.0",
     "ramsey/uuid": "^3.9",
     "prestashop/prestashop-accounts-installer": "^1.0",
-    "symfony/dotenv": "^3.4.37"
+    "symfony/dotenv": "^4.4"
   },
   "require-dev": {
     "prestashop/php-dev-tools": "^3.0"
