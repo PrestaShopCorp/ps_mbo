@@ -5,8 +5,8 @@ on:
   push:
     branches:
       - master
-      - 2.2.x
-      - 2.3.x
+      - 2.4.x
+      - 3.0.x
 
 jobs:
   deploy:
@@ -119,7 +119,7 @@ jobs:
       - id: release_info
         uses: toolmantim/release-drafter@v5
         with:
-          config-name: release-drafter-2x.yml
+          config-name: release-drafter-3x.yml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Prepare for Release
