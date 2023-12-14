@@ -1,4 +1,4 @@
-version-template: 2.4.$PATCH
+version-template: 3.0.$PATCH
 name-template: 'v$NEXT_PATCH_VERSION'
 tag-template: 'v$NEXT_PATCH_VERSION'
 latest: 'false'
