@@ -26,7 +26,7 @@ use PrestaShop\Module\Mbo\UpgradeTracker;
  *
  * @return bool
  */
-function upgrade_module_2_3_4($module)
+function upgrade_module_2_4_0($module)
 {
     $module->updateHooks();
 
