@@ -15,6 +15,7 @@ $_MODULE['<{mbo}prestashop>modulescatalog_70fd3879bc512e7d2048692d397fc3a0'] = '
 $_MODULE['<{mbo}prestashop>modulescatalog_d048f76f9814e8c7428e1129e0031001'] = 'Nici un modul partener nu se potrivește cu căutarea ta';
 $_MODULE['<{mbo}prestashop>modulescatalog_5abe54968b4bf7951e94f53e4bc57f2b'] = 'Încercați diferite cuvinte cheie și filtre sau';
 $_MODULE['<{mbo}prestashop>modulescatalog_543d1ef44cfd0e95a602136501b40110'] = 'cauta in PrestaShop Marketplace.';
+$_MODULE['<{mbo}prestashop>modulescatalog_b63977613e79680b9425cdb43f158852'] = 'Nu aveți niciun modul dezinstalat.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_8c883385a642028c9366bb087618b216'] = 'Stimulează vânzările';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1d929590b318c7d4746d15f1fdc19c81'] = 'Optimizarea catalogului de produse';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b63003090cd7fae050a51da250bb0dc'] = 'Îmbunătățirea strategiei de date';
@@ -80,3 +81,4 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_880975acc66fde83d195fef
                 Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7e54c75444e1a4f51ff694dec1d65387'] = 'Trimiteți cu ușurință e-mailuri și notificări automate clienților dumneavoastră.<br>
                 Iată o selecție de module, <strong>compatibile cu magazinul dvs.</strong>, care să vă ajute să vă atingeți obiectivele.';
+$_MODULE['<{mbo}prestashop>modulesselection_7e7eca35ad49e426689ba8b14004b0d0'] = 'Module dezinstalate';
