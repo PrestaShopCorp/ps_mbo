@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7c2b1159fa28ade2a9c67302b1b88f4",
+    "content-hash": "aeb43cabdce4ca28c98caaef09294fa6",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -346,6 +346,46 @@
                 "source": "https://github.com/PrestaShop/circuit-breaker/tree/v3.0.0"
             },
             "time": "2019-06-13T10:50:14+00:00"
+        },
+        {
+            "name": "prestashop/prestashop-accounts-installer",
+            "version": "v1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShopCorp/prestashop-accounts-installer.git",
+                "reference": "0ad934bc540558db3944a9a1e5b08b852bb46e8b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShopCorp/prestashop-accounts-installer/zipball/0ad934bc540558db3944a9a1e5b08b852bb46e8b",
+                "reference": "0ad934bc540558db3944a9a1e5b08b852bb46e8b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "fzaninotto/faker": "^1.9",
+                "phpunit/phpunit": "^5.7",
+                "prestashop/php-dev-tools": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\PsAccountsInstaller\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Utility package to install `ps_accounts` module or present data to trigger manual install from psx configuration page.",
+            "support": {
+                "issues": "https://github.com/PrestaShopCorp/prestashop-accounts-installer/issues",
+                "source": "https://github.com/PrestaShopCorp/prestashop-accounts-installer/tree/v1.0.4"
+            },
+            "time": "2023-05-04T07:24:48+00:00"
         },
         {
             "name": "ramsey/uuid",
