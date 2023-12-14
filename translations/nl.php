@@ -15,6 +15,7 @@ $_MODULE['<{mbo}prestashop>modulescatalog_70fd3879bc512e7d2048692d397fc3a0'] = '
 $_MODULE['<{mbo}prestashop>modulescatalog_d048f76f9814e8c7428e1129e0031001'] = 'Geen enkele partnermodule komt overeen met uw zoekopdracht';
 $_MODULE['<{mbo}prestashop>modulescatalog_5abe54968b4bf7951e94f53e4bc57f2b'] = 'Probeer verschillende trefwoorden en filters, of';
 $_MODULE['<{mbo}prestashop>modulescatalog_543d1ef44cfd0e95a602136501b40110'] = 'zoek de PrestaShop Marketplace.';
+$_MODULE['<{mbo}prestashop>modulescatalog_b63977613e79680b9425cdb43f158852'] = 'U hebt geen niet-geïnstalleerde module.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_8c883385a642028c9366bb087618b216'] = 'Verhoog de verkoop';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1d929590b318c7d4746d15f1fdc19c81'] = 'Productcreatie optimaliseren';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b63003090cd7fae050a51da250bb0dc'] = 'Gegevensstrategie verbeteren';
@@ -80,3 +81,4 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_880975acc66fde83d195fef
                 Hier is een selectie van modules,<strong> compatibel met uw winkel </strong>, om u te helpen uw doelen te bereiken.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7e54c75444e1a4f51ff694dec1d65387'] = 'Stuur gemakkelijk automatische e-mails en meldingen naar uw klanten.<br>
                 Hier is een selectie van modules,<strong> compatibel met uw winkel </strong>, om u te helpen uw doelen te bereiken.';
+$_MODULE['<{mbo}prestashop>modulesselection_7e7eca35ad49e426689ba8b14004b0d0'] = 'Niet-geïnstalleerde modules';

@@ -93,6 +93,7 @@ class ps_mbo extends Module
             'class_name' => 'AdminPsMboModule',
             'parent_class_name' => 'AdminParentModulesCatalog',
             'core_reference' => 'AdminModulesCatalog',
+            'position' => 1,
         ],
         'AdminPsMboAddons' => [
             'name' => 'Module selection',
@@ -102,6 +103,7 @@ class ps_mbo extends Module
             'class_name' => 'AdminPsMboAddons',
             'parent_class_name' => 'AdminParentModulesCatalog',
             'core_reference' => 'AdminAddonsCatalog',
+            'position' => 2,
         ],
         'AdminPsMboRecommended' => [
             'name' => 'Module recommended',
@@ -117,6 +119,15 @@ class ps_mbo extends Module
             'parent_class_name' => 'AdminParentThemes',
             'core_reference' => 'AdminThemesCatalog',
         ],
+        'AdminPsMboUninstalledModules' => [
+            'name' => 'Uninstalled modules',
+            'wording' => 'Uninstalled modules',
+            'wording_domain' => 'Modules.Mbo.Modulesselection',
+            'visible' => true,
+            'position' => 2,
+            'class_name' => 'AdminPsMboUninstalledModules',
+            'parent_class_name' => 'AdminModulesSf',
+        ],
     ];
 
     const CONTROLLERS_WITH_CDC_SCRIPT = [
@@ -130,7 +141,9 @@ class ps_mbo extends Module
     const HOOKS = [
         'actionAdminControllerSetMedia',
         'actionDispatcherBefore',
+        'actionEmployeeSave',
         'actionGeneralPageSave',
+        'actionObjectEmployeeUpdateAfter',
         'actionObjectShopUrlUpdateAfter',
         'displayDashboardTop',
     ];
@@ -160,7 +173,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '2.3.3';
+        $this->version = '2.4.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -335,7 +348,6 @@ class ps_mbo extends Module
      */
     public function installTab(array $tabData)
     {
-        $position = 0;
         $tabNameByLangId = array_fill_keys(
             Language::getIDs(false),
             $tabData['name']
@@ -347,17 +359,22 @@ class ps_mbo extends Module
             if ($tabCoreId !== false) {
                 $tabCore = new Tab($tabCoreId);
                 $tabNameByLangId = $tabCore->name;
-                $position = $tabCore->position;
                 $tabCore->active = false;
                 $tabCore->save();
             }
         }
 
-        $tab = new Tab();
+        $idParent = empty($tabData['parent_class_name']) ? -1 : Tab::getIdFromClassName($tabData['parent_class_name']);
+
+        $tab = Tab::getInstanceFromClassName($tabData['class_name']);
+        if (!Validate::isLoadedObject($tab)) {
+            $tab = new Tab();
+            $tab->class_name = $tabData['class_name'];
+        }
+
         $tab->module = $this->name;
-        $tab->class_name = $tabData['class_name'];
-        $tab->position = (int) $position;
-        $tab->id_parent = empty($tabData['parent_class_name']) ? -1 : Tab::getIdFromClassName($tabData['parent_class_name']);
+        $tab->position = Tab::getNewLastPosition($idParent);
+        $tab->id_parent = $idParent;
         $tab->name = $tabNameByLangId;
         if (
             true === (bool) version_compare(_PS_VERSION_, '1.7.8', '>=') &&
@@ -368,14 +385,18 @@ class ps_mbo extends Module
             $tab->wording_domain = $tabData['wording_domain'];
         }
 
-        if (false === (bool) $tab->add()) {
+        if (!Validate::isLoadedObject($tab) && false === (bool) $tab->add()) {
             return false;
         }
 
         if (Validate::isLoadedObject($tab)) {
-            // Updating the id_parent will override the position, that's why we save 2 times
-            $tab->position = (int) $position;
+            $position = 0;
+            if (isset($tabData['position'])) {
+                $position = $tabData['position'];
+            }
+            $tab->cleanPositions($tab->id_parent);
             $tab->save();
+            $this->putTabInPosition($tab, $position);
         }
 
         return true;
@@ -591,6 +612,38 @@ class ps_mbo extends Module
         if (isset($params['route']) && $params['route'] === 'admin_preferences_save') {
             // User may have updated the SSL configuration
             $this->updateShop();
+        }
+    }
+
+    /**
+     * Hook actionEmployeeSave.
+     */
+    public function hookActionEmployeeSave(array $params)
+    {
+        $controllerName = Tools::getValue('controller');
+
+        if (
+            (isset($params['route']) && $params['route'] === 'admin_employees_edit')
+            || ('AdminEmployees' === $controllerName)
+        ) {
+            // User may have updated the employee language
+            $this->postponeTabsTranslations();
+        }
+    }
+
+    /**
+     * Hook actionObjectEmployeeUpdateAfter.
+     */
+    public function hookActionObjectEmployeeUpdateAfter(array $params)
+    {
+        $controllerName = Tools::getValue('controller');
+
+        if (
+            (isset($params['route']) && $params['route'] === 'admin_employees_edit')
+            || ('AdminEmployees' === $controllerName)
+        ) {
+            // User may have updated the employee language
+            $this->postponeTabsTranslations();
         }
     }
 
@@ -1104,5 +1157,34 @@ class ps_mbo extends Module
             return;
         }
         $this->updateShop();
+    }
+
+    private function putTabInPosition(Tab $tab, int $position)
+    {
+        // Check tab position in DB
+        $dbTabPosition = Db::getInstance()->getValue('
+			SELECT `position`
+			FROM `' . _DB_PREFIX_ . 'tab`
+			WHERE `id_tab` = ' . (int) $tab->id
+        );
+
+        if ((int) $dbTabPosition === $position) {
+            // Nothing to do, tab is already in the right position
+            return;
+        }
+
+        Db::getInstance()->execute(
+            '
+            UPDATE `' . _DB_PREFIX_ . 'tab`
+            SET `position` = `position`+1
+            WHERE `id_parent` = ' . (int) $tab->id_parent . ' AND `position` >= ' . $position . ' AND `id_tab` <> ' . (int) $tab->id
+        );
+
+        Db::getInstance()->execute(
+            '
+                UPDATE `' . _DB_PREFIX_ . 'tab`
+                SET `position` = ' . $position . '
+                WHERE `id_tab` = ' . (int) $tab->id
+        );
     }
 }

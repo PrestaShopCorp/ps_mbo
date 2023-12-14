@@ -15,6 +15,7 @@ $_MODULE['<{mbo}prestashop>modulescatalog_70fd3879bc512e7d2048692d397fc3a0'] = '
 $_MODULE['<{mbo}prestashop>modulescatalog_d048f76f9814e8c7428e1129e0031001'] = 'Żaden moduł partnerski nie pasuje do Twojego wyszukiwania';
 $_MODULE['<{mbo}prestashop>modulescatalog_5abe54968b4bf7951e94f53e4bc57f2b'] = 'Wypróbuj różne słowa kluczowe i filtry, lub';
 $_MODULE['<{mbo}prestashop>modulescatalog_543d1ef44cfd0e95a602136501b40110'] = 'szukaj w Prestashop Marketplace.';
+$_MODULE['<{mbo}prestashop>modulescatalog_b63977613e79680b9425cdb43f158852'] = 'Nie masz żadnego odinstalowanego modułu.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_8c883385a642028c9366bb087618b216'] = 'Zwiększ sprzedaż';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_1d929590b318c7d4746d15f1fdc19c81'] = 'Optymalizuj katalog produktów';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_0b63003090cd7fae050a51da250bb0dc'] = 'Popraw strategię w zakresie danych';
@@ -80,3 +81,4 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_880975acc66fde83d195fef
                 Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7e54c75444e1a4f51ff694dec1d65387'] = 'Z łatwością wysyłaj e-maile i automatyczne powiadomienia do klientów.<br>
                 Oto polecane, <strong>kompatybilne z Twoim sklepem moduły</strong>, które pomogą Ci osiągnąć Twoje cele.';
+$_MODULE['<{mbo}prestashop>modulesselection_7e7eca35ad49e426689ba8b14004b0d0'] = 'Odinstalowane moduły';
