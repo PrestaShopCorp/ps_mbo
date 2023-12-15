@@ -43,7 +43,8 @@ trait HaveTabs
         ],
         'AdminPsMboSelection' => [
             'name' => 'Modules in the spotlight',
-            'visible' => true,
+            'visible' => false,
+            'position' => 1,
             'class_name' => 'AdminPsMboSelection',
             'parent_class_name' => 'AdminPsMboModuleParent',
             'wording' => 'Modules in the spotlight',
@@ -52,6 +53,7 @@ trait HaveTabs
         'AdminPsMboModule' => [
             'name' => 'Marketplace',
             'visible' => true,
+            'position' => 0,
             'class_name' => 'AdminPsMboModule',
             'parent_class_name' => 'AdminPsMboModuleParent',
         ],
@@ -242,7 +244,7 @@ trait HaveTabs
         }
         // Install the new tabs
         foreach ($newTabs as $newTab) {
-            $this->installTab(static::$ADMIN_CONTROLLERS[$newTab], false);
+            $this->installTab(static::$ADMIN_CONTROLLERS[$newTab]);
         }
 
         foreach ($currentModuleTabs as $currentModuleTab) {
