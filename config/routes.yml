@@ -60,12 +60,6 @@ admin_mbo_security:
     defaults:
         _controller: mbo.controller.security:meAction
 
-admin_mbo_customer_bought_modules:
-    path: /addons/customer/modules
-    methods: [ GET ]
-    defaults:
-        _controller: mbo.controller.modules:getBoughtModulesAction
-
 admin_mbo_uninstalled_modules:
     path: /addons/modules/uninstalled
     methods: [GET]
