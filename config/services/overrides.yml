@@ -5,6 +5,7 @@ services:
     prestashop.adapter.admin.data_provider.addons:
         class: PrestaShop\Module\Mbo\Addons\AddonsDataProvider
         decorates: prestashop.core.admin.data_provider.addons_interface
+        decoration_on_invalid: ignore
         arguments:
             - '@mbo.addons.client.api'
             - '@prestashop.module.zip.manager'
