@@ -18,6 +18,13 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
+$rootDir = defined('_PS_ROOT_DIR_') ? _PS_ROOT_DIR_ : getenv('_PS_ROOT_DIR_');
+if (!$rootDir) {
+    $rootDir = __DIR__ . '/../../../';
+}
+
+require_once $rootDir . '/vendor/autoload.php';
+
 /**
  * @param ps_mbo $module
  *
@@ -25,6 +32,9 @@
  */
 function upgrade_module_4_7_0(Module $module): bool
 {
+    $module->updateHooks();
+    $module->updateTabs();
+
     $singleShop = \PrestaShop\Module\Mbo\Helpers\Config::getSingleShop();
     $domains = \Tools::getDomains();
 
@@ -44,9 +54,15 @@ function upgrade_module_4_7_0(Module $module): bool
         // concatenate the physical_uri
         $domainDef = reset($shopDomain[$domain]);
         if (isset($domainDef['physical']) && '/' !== $domainDef['physical']) {
-            $module->updateShop([
-                'shop_url' => \PrestaShop\Module\Mbo\Helpers\Config::getShopUrl(),
-            ]);
+            $moduleCacheDir = $module->moduleCacheDir;
+            $lockFile = $moduleCacheDir . 'updateShop.lock';
+            if (!file_exists($lockFile)) {
+                if (!is_dir($moduleCacheDir)) {
+                    mkdir($moduleCacheDir, 0777, true);
+                }
+                $f = fopen($lockFile, 'w+');
+                fclose($f);
+            }
         }
     }
 
