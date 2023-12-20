@@ -74,7 +74,7 @@ class ApiClient
         $this->httpClient = $httpClient;
     }
 
-    public function setDefaultParams(string $locale, $isoCode, string $domain, string $shopVersion)
+    public function setDefaultParams(string $locale, $isoCode, ?string $domain, string $shopVersion)
     {
         list($isoLang) = explode('-', $locale);
         $this->setQueryParams([
