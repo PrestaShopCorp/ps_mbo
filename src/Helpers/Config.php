@@ -30,10 +30,17 @@ class Config
      * @var string|null
      */
     private static $SHOP_MBO_UUID;
+
     /**
      * @var string|null
      */
     private static $SHOP_MBO_ADMIN_MAIL;
+
+    /**
+     * @var string|null
+     */
+    private static $SHOP_URL_WITHOUT_PHYSICAL_URI;
+
     /**
      * @var string|null
      */
@@ -92,8 +99,12 @@ class Config
      *
      * @return string|null
      */
-    public static function getShopUrl(): ?string
+    public static function getShopUrl(bool $withPhysicalUri = true): ?string
     {
+        if (!$withPhysicalUri && null !== self::$SHOP_URL_WITHOUT_PHYSICAL_URI) {
+            return self::$SHOP_URL_WITHOUT_PHYSICAL_URI;
+        }
+
         if (null === self::$SHOP_URL) {
             $singleShop = self::getSingleShop();
             $domains = \Tools::getDomains();
@@ -106,7 +117,6 @@ class Config
                     return isset($domain['id_shop']) && (int)$singleShop->id === (int)$domain['id_shop'];
                 }
             );
-
 
             $useSecureProtocol = self::isUsingSecureProtocol();
             if (empty($shopDomain)) { // If somehow we failed getting the shop_url from ps_shop_url, do it the old way, with configuration values
@@ -121,11 +131,13 @@ class Config
 
                 if ($domain) {
                     $domain = preg_replace('#(https?://)#', '', $domain);
-                    self::$SHOP_URL = ($useSecureProtocol ? 'https://' : 'http://') . $domain;
+                    self::$SHOP_URL = self::$SHOP_URL_WITHOUT_PHYSICAL_URI = ($useSecureProtocol ? 'https://' : 'http://') . $domain;
                 }
             } else {
                 $domain = array_keys($shopDomain)[0];
                 $domain = preg_replace('#(https?://)#', '', $domain);
+
+                self::$SHOP_URL_WITHOUT_PHYSICAL_URI = ($useSecureProtocol ? 'https://' : 'http://') . $domain;
 
                 // concatenate the physical_uri
                 $domainDef = reset($shopDomain[$domain]);
@@ -137,7 +149,7 @@ class Config
             }
         }
 
-        return self::$SHOP_URL;
+        return $withPhysicalUri ? self::$SHOP_URL : self::$SHOP_URL_WITHOUT_PHYSICAL_URI;
     }
 
     /**

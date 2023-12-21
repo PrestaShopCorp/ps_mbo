@@ -110,6 +110,33 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
     {
         $components = parse_url($url);
         $baseUrl = ($components['path'] ?? '');
+
+        $composedUrl = '';
+        if (!empty($components['scheme'])) {
+            $scheme = $components['scheme'];
+            $composedUrl .= $scheme . ':';
+        }
+
+        if (!empty($components['host'])) {
+            $composedUrl .= '//';
+            if (isset($components['user'])) {
+                $composedUrl .= $components['user'];
+                if (isset($components['pass'])) {
+                    $composedUrl .= ':' . $components['pass'];
+                }
+                $composedUrl .=  '@';
+            }
+
+            $composedUrl .= $components['host'];
+
+            // Only include the port if it is not the default port of the scheme
+            if (isset($components['port'])) {
+                $composedUrl .= ':' . $components['port'];
+            }
+        }
+
+        $composedUrl .= $baseUrl;
+
         $queryParams = [];
         if (isset($components['query'])) {
             $query = $components['query'];
@@ -118,19 +145,19 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
         }
 
         if (!isset($queryParams['_token'])) {
-            return $url;
+            return $composedUrl;
         }
 
         $adminToken = Tools::getValue('admin_token');
         $queryParams['_token'] = $adminToken;
 
-        $url = $baseUrl . '?' . http_build_query($queryParams, '', '&');
+        $composedUrl .=  '?' . http_build_query($queryParams, '', '&');
         if (isset($components['fragment']) && $components['fragment'] !== '') {
             /* This copy-paste from Symfony's UrlGenerator */
-            $url .= '#' . strtr(rawurlencode($components['fragment']), ['%2F' => '/', '%3F' => '?']);
+            $composedUrl .= '#' . strtr(rawurlencode($components['fragment']), ['%2F' => '/', '%3F' => '?']);
         }
 
-        return $url;
+        return $composedUrl;
     }
 
     private function authenticateAddonsUser(Session $session): void

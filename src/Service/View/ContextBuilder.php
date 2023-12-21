@@ -31,12 +31,14 @@ use Language;
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Helpers\UrlHelper;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
 use PrestaShop\Module\Mbo\Tab\Tab;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Module\Module as CoreModule;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 use Tools;
 
@@ -166,10 +168,12 @@ class ContextBuilder
             'shop_uuid' => Config::getShopMboUuid(),
             'mbo_token' => $this->adminAuthenticationProvider->getMboJWT(),
             'mbo_version' => \ps_mbo::VERSION,
-            'mbo_reset_url' => $this->router->generate('admin_module_manage_action', [
-                'action' => 'reset',
-                'module_name' => 'ps_mbo',
-            ]),
+            'mbo_reset_url' => UrlHelper::transformToAbsoluteUrl(
+                $this->router->generate('admin_module_manage_action', [
+                    'action' => 'reset',
+                    'module_name' => 'ps_mbo',
+                ])
+            ),
             'user_id' => $context->cookie->id_employee,
             'admin_token' => $token,
             'refresh_url' => $refreshUrl,
@@ -178,8 +182,8 @@ class ContextBuilder
             'accounts_shop_id' => $this->accountsDataProvider->getAccountsShopId(),
             'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
             'accounts_component_loaded' => false,
-            'module_catalog_url' => $this->router->generate('admin_mbo_catalog_module'),
-            'theme_catalog_url' => $this->router->generate('admin_mbo_catalog_theme'),
+            'module_catalog_url' => UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_mbo_catalog_module')),
+            'theme_catalog_url' => UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_mbo_catalog_theme')),
             'php_version' => phpversion(),
         ];
     }
@@ -273,9 +277,15 @@ class ContextBuilder
             }
 
             if ($installedModule->isConfigurable()) {
-                $moduleConfigUrl = $this->router->generate('admin_module_configure_action', [
-                    'module_name' => $moduleName,
-                ]);
+                $moduleConfigUrl = UrlHelper::transformToAbsoluteUrl(
+                    $this->router->generate(
+                        'admin_module_configure_action',
+                        [
+                        'module_name' => $moduleName,
+                        ],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    )
+                );
             }
             $installedModules[] = (new InstalledModule($moduleId, $moduleName, $moduleStatus, (string) $moduleVersion, $moduleConfigUrl))->toArray();
         }
