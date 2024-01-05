@@ -61,4 +61,6 @@
   }
 </script>
 
+<prestashop-accounts style="display: none;"></prestashop-accounts>
+
 <section id="cdc-tips-and-update-container" class="cdc-container" data-error-path="{$cdcErrorUrl}"></section>
