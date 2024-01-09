@@ -135,7 +135,7 @@ class ContextBuilder
     public function clearCache(): bool
     {
         $installedModulesCacheKey = $this->getInstalledModulesCacheKey();
-        $upgradableModulesCacheKey = $this->getInstalledModulesCacheKey();
+        $upgradableModulesCacheKey = $this->getUpgradableModulesCacheKey();
 
         if (
             $this->cacheProvider->contains($installedModulesCacheKey)
