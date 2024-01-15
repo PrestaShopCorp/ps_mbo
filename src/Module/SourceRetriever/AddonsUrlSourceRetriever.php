@@ -237,6 +237,11 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             $requestOptions['headers'] = [
                 'Authorization' => 'Bearer ' . $authParams['bearer'],
             ];
+
+            $accountsShopUuid = $this->addonsDataProvider->getAccountsShopUuid();
+            if (!empty($accountsShopUuid)) {
+                $requestOptions['accounts_shop_uuid'] = $accountsShopUuid;
+            }
         }
         if (null !== $authParams['credentials'] && is_array($authParams['credentials'])) {
             $params = array_merge($authParams['credentials'], $params);

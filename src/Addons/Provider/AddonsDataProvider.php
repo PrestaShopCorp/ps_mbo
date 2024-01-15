@@ -241,6 +241,15 @@ class AddonsDataProvider implements DataProviderInterface
 
     }
 
+    public function getAccountsShopUuid(): ?string
+    {
+        if (!$this->isUserAuthenticatedOnAccounts()) {
+            return null;
+        }
+
+        return $this->user->getAccountsShopUuid();
+    }
+
     /**
      * Check if the previous request to Addons has failed.
      *
