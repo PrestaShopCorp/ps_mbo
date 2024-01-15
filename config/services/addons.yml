@@ -2,16 +2,10 @@ services:
   _defaults:
     public: true
 
-  mbo.addons.user.credentials_encryptor:
-    class: PrestaShop\Module\Mbo\Addons\User\CredentialsEncryptor
-    arguments:
-      - '@mbo.security.admin_authentication.provider'
-
   mbo.addons.user:
     class: PrestaShop\Module\Mbo\Addons\User\AddonsUser
     arguments:
       - '@session'
-      - '@mbo.addons.user.credentials_encryptor'
       - '@mbo.accounts.data_provider'
 
   mbo.addons.user.provider:
@@ -47,11 +41,3 @@ services:
       - '@mbo.security.permission_checker'
       - '@mbo.addons.data_provider'
       - '@translator'
-
-  mbo.addons.event_listener.addons_credentials_encryption_listener:
-    class: PrestaShop\Module\Mbo\Addons\Listener\AddonsCredentialsEncryptionListener
-    arguments:
-      - '@session'
-      - '@mbo.addons.user.credentials_encryptor'
-    tags:
-      - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
