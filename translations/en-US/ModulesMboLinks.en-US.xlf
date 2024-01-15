@@ -1,35 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="src/Addons/Provider/LinksProvider.php" source-language="en-US" target-language="en-US" datatype="plaintext">
-    <body>
-      <trans-unit id="85cc355c70aa470ad3f43e155b7e5e4c">
-        <source>https://authv2.prestashop.com/register</source>
-        <target>https://authv2.prestashop.com/register</target>
-        <note>Line: 122</note>
-      </trans-unit>
-      <trans-unit id="6ab773a0870bec71712f3fae2641db30">
-        <source>https://authv2.prestashop.com/password/request </source>
-        <target>https://authv2.prestashop.com/password/request</target>
-        <note>Line: 129</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/Traits/Hooks/UseDisplayDashboardTop.php" source-language="en-US" target-language="en-US" datatype="plaintext">
     <body>
       <trans-unit id="9d86b7d3c7427a887c6e182f75deb3e0">
         <source><![CDATA[https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security]]></source>
         <target><![CDATA[https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security]]></target>
-        <note>Line: 144</note>
+        <note>Line: 145</note>
       </trans-unit>
       <trans-unit id="198214f6abf95fc35f5f0fb3b70946a3">
         <source><![CDATA[https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></source>
         <target><![CDATA[https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></target>
-        <note>Line: 151</note>
+        <note>Line: 152</note>
       </trans-unit>
       <trans-unit id="f9baae88cd2cd24d7c8b13fd1906aab6">
         <source><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></source>
         <target><![CDATA[https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN]]></target>
-        <note>Line: 158</note>
+        <note>Line: 159</note>
       </trans-unit>
     </body>
   </file>

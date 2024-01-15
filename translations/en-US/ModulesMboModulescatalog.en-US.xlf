@@ -2,20 +2,15 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="src/Addons/Toolbar.php" source-language="en-US" target-language="en-US" datatype="plaintext">
     <body>
-      <trans-unit id="fc7da9518fbe20ebcaccbf5f8fd0e7df">
-        <source>Synchronized with Addons marketplace!</source>
-        <target>Synchronized with Addons marketplace!</target>
-        <note>Line: 143</note>
-      </trans-unit>
       <trans-unit id="2ec0d16e4ca169baedb9b2d50ec5c6d7">
         <source>Connected</source>
         <target>Connected</target>
-        <note>Line: 155</note>
+        <note>Line: 139</note>
       </trans-unit>
       <trans-unit id="8bf910bb9ffa608d4c7fd6504667d62f">
         <source>Connected as</source>
         <target>Connected as</target>
-        <note>Line: 156</note>
+        <note>Line: 145</note>
       </trans-unit>
     </body>
   </file>
@@ -24,17 +19,17 @@
       <trans-unit id="cff7b4047c79f112e869481322d2924e">
         <source>Module %module% successfully upgraded.</source>
         <target>Module %module% successfully upgraded.</target>
-        <note>Line: 171</note>
+        <note>Line: 80</note>
       </trans-unit>
       <trans-unit id="22d6960d922158c548d123998be8dd91">
         <source>Upgrade of module %module% failed. %error%</source>
         <target>Upgrade of module %module% failed. %error%</target>
-        <note>Line: 207</note>
+        <note>Line: 118</note>
       </trans-unit>
       <trans-unit id="f8c9c7b6af2a8d50bc948bcf966c1d4b">
         <source>Module %module% is already up to date</source>
         <target>Module %module% is already up to date</target>
-        <note>Line: 194</note>
+        <note>Line: 104</note>
       </trans-unit>
     </body>
   </file>
@@ -43,7 +38,7 @@
       <trans-unit id="675e31b94580e2642405e2f8586d112e">
         <source>Marketplace</source>
         <target>Marketplace</target>
-        <note>Line: 67</note>
+        <note>Line: 105</note>
       </trans-unit>
     </body>
   </file>
@@ -52,7 +47,7 @@
       <trans-unit id="eb1b4bb3667dd670210c7822badc2f1d">
         <source>Check for updates</source>
         <target>Check for updates</target>
-        <note>Line: 46</note>
+        <note>Line: 48</note>
       </trans-unit>
     </body>
   </file>
@@ -67,35 +62,6 @@
         <source>Toggle Dropdown</source>
         <target>Toggle Dropdown</target>
         <note>Line: 47</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="views/templates/admin/controllers/module_catalog/includes/modal_addons_connect.html.twig" source-language="en-US" target-language="en-US" datatype="plaintext">
-    <body>
-      <trans-unit id="7234d2a9a27b5e8dba609efe02ee9548">
-        <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</source>
-        <target>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet?</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
-        <source>Sign up now</source>
-        <target>Sign up now</target>
-        <note>Line: 43</note>
-      </trans-unit>
-      <trans-unit id="43a3d8f3d278fff326a75c8137b62352">
-        <source>If you created your account using Google, please follow the forgotten password procedure of Addons Marketplace to create your password : </source>
-        <target>If you created your account using Google, please follow the forgotten password procedure of Addons Marketplace to create your password :</target>
-        <note>Line: 46</note>
-      </trans-unit>
-      <trans-unit id="32fe59513f5bbdd353b4527cc6af55ce">
-        <source>Reset your password</source>
-        <target>Reset your password</target>
-        <note>Line: 47</note>
-      </trans-unit>
-      <trans-unit id="6be2c07aa891bbaafc828e43e336abb4">
-        <source>Yes, log out</source>
-        <target>Yes, log out</target>
-        <note>Line: 103</note>
       </trans-unit>
     </body>
   </file>
