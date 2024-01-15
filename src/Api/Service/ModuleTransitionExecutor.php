@@ -167,20 +167,6 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
 
         if (null !== $accountsToken) {
             $session->set('accounts_token', $accountsToken);
-
-            return;
         }
-
-        // If we don't have accounts_token, we try to connect with addons credentials
-        $addonsUsername = Tools::getValue('addons_username', null);
-        $addonsPwd = Tools::getValue('addons_pwd', null);
-
-        if (!isset($addonsUsername) || !isset($addonsPwd)) {
-            return;
-        }
-
-        $session->set('username_addons_v2', $addonsUsername);
-        $session->set('password_addons_v2', $addonsPwd);
-        $session->set('is_contributor', '0');
     }
 }

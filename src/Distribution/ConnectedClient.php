@@ -55,7 +55,6 @@ class ConnectedClient extends BaseClient
         $countryIsoCode = mb_strtolower(Context::getContext()->country->iso_code);
 
         $userCacheKey = '';
-        $credentials = [];
         if ($this->user->isAuthenticated()) {
             $credentials = $this->user->getCredentials(true);
 
@@ -64,12 +63,6 @@ class ConnectedClient extends BaseClient
 
                 $this->setQueryParams([
                     'accounts_token' => $credentials['accounts_token'],
-                ]);
-            } else {
-                $userCacheKey = md5($credentials['username'] . $credentials['password']);
-                $this->setQueryParams([
-                    'addons_username' => $credentials['username'],
-                    'addons_pwd' => $credentials['password'],
                 ]);
             }
         }
