@@ -9,7 +9,8 @@
       </trans-unit>
       <trans-unit id="90c975a457ddd160fa2c64702ad47bce">
         <source>MBO employee explanation</source>
-        <target>MBO employee explanation</target>
+        <target>We've added a "PrestaShop Marketplace" employee for the PrestaShop Marketplace module to work correctly in your back office.
+                We will be able to perform actions on modules (update, activation, setup, etc.) on the behalf of the employees according to their rights</target>
         <note>Line: 60</note>
       </trans-unit>
     </body>
