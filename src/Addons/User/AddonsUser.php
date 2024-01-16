@@ -106,7 +106,7 @@ class AddonsUser implements UserInterface
         return !empty($accountsToken);
     }
 
-    /**     *
+    /**
      * @return mixed
      */
     private function getAccountsTokenFromSession()
