@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Db;
 use Exception;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
 
 trait UseDashboardZoneOne
@@ -38,7 +39,9 @@ trait UseDashboardZoneOne
      */
     public function hookDashboardZoneOne(array $params)
     {
-        return $this->smartyDisplayTpl('dashboard-zone-one.tpl');
+        return $this->smartyDisplayTpl('dashboard-zone-one.tpl', [
+            'urlAccountsCdn' => $this->loadPsAccounts(),
+        ]);
     }
 
     /**
@@ -81,5 +84,37 @@ trait UseDashboardZoneOne
         $id_hook = $result['0']['id_hook'];
 
         $this->updatePosition((int) $id_hook, false);
+    }
+
+    protected function loadPsAccounts(): string
+    {
+        /*********************
+         * PrestaShop Account *
+         * *******************/
+        $urlAccountsCdn = '';
+        $accountsFacade = $accountsService = null;
+
+        try {
+            $accountsFacade = $this->get('mbo.ps_accounts.facade');
+            $accountsService = $accountsFacade->getPsAccountsService();
+        } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
+            ErrorHelper::reportError($e);
+        }
+
+        if (null !== $accountsFacade && null !== $accountsService) {
+            try {
+                \Media::addJsDef([
+                    'contextPsAccounts' => $accountsFacade->getPsAccountsPresenter()
+                        ->present('ps_mbo'),
+                ]);
+
+                // Retrieve the PrestaShop Account CDN
+                $urlAccountsCdn = $accountsService->getAccountsCdn();
+            } catch (\Exception $e) {
+                ErrorHelper::reportError($e);
+            }
+        }
+
+        return $urlAccountsCdn;
     }
 }
