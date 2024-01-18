@@ -45,3 +45,8 @@ services:
       $addonsUrlSourceRetriever: '@mbo.modules.state_machine.source_retriever.url'
       $zipSourceHandler: '@prestashop.module.sourcehandler.zip'
     tags: [ core.module.source_handler ]
+
+  mbo.modules.helper:
+    class: PrestaShop\Module\Mbo\Service\ModulesHelper
+    arguments:
+      - '@mbo.modules.repository'
