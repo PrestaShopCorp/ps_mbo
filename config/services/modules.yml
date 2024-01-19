@@ -50,3 +50,4 @@ services:
     class: PrestaShop\Module\Mbo\Service\ModulesHelper
     arguments:
       - '@mbo.modules.repository'
+      - '@router'

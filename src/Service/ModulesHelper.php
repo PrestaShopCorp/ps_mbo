@@ -22,7 +22,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Service;
 
+use PrestaShop\Module\Mbo\Helpers\UrlHelper;
 use PrestaShop\Module\Mbo\Module\Repository;
+use PrestaShopBundle\Service\Routing\Router;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ModulesHelper
 {
@@ -31,14 +34,22 @@ class ModulesHelper
      */
     private $moduleRepository;
 
-    public function __construct(Repository $repository)
-    {
+    /**
+     * @var Router
+     */
+    private $router;
+
+    public function __construct(
+        Repository $repository,
+        Router $router
+    ) {
         $this->moduleRepository = $repository;
+        $this->router = $router;
     }
 
     public function findForUpdates(string $moduleName): array
     {
-        $currentVersion = $availableVersion = null;
+        $currentVersion = $availableVersion = $installUrl = $upgradeUrl = null;
         $upgradeAvailable = false;
 
         $db = \Db::getInstance();
@@ -49,23 +60,47 @@ class ModulesHelper
 
         if ($moduleCurrentVersion) {
             $currentVersion = $moduleCurrentVersion;
+        } else {
+            $installUrl = UrlHelper::transformToAbsoluteUrl(
+                $this->router->generate(
+                    'admin_module_manage_action',
+                    [
+                        'action' => 'install',
+                        'module_name' => $moduleName,
+                    ],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                )
+            );
         }
 
-        // We need to clear cache to get fresh data from addons
-        $this->moduleRepository->clearCache();
+        // We need to clear cache to get fresh data from addons. We clear it every 1h
+        $cacheAge = $this->moduleRepository->getCacheAge();
+        if (null !== $cacheAge && ((time() - $cacheAge) > 60*60)) {
+            $this->moduleRepository->clearCache();
+        }
 
-        $module = $this->moduleRepository->getApiModule($moduleName);
+        $module = $this->moduleRepository->getModule($moduleName);
 
         if (null !== $module) {
-            $availableVersion = (string)$module->version_available;
+            $availableVersion = (string)$module->get('version_available');
 
-            // If the current installed version is greater or equal than the one returned by Addons, an upgrade is available
+            // If the current installed version is >= than the one returned by Addons, an upgrade is available
             if (
                 null !== $availableVersion
                 && null !== $currentVersion
                 && version_compare($availableVersion, $currentVersion, 'gt')
             ) {
                 $upgradeAvailable = true;
+                $upgradeUrl = UrlHelper::transformToAbsoluteUrl(
+                    $this->router->generate(
+                        'admin_module_manage_action',
+                        [
+                            'action' => 'upgrade',
+                            'module_name' => $moduleName,
+                        ],
+                        UrlGeneratorInterface::ABSOLUTE_URL
+                    )
+                );
             }
         }
 
@@ -73,6 +108,10 @@ class ModulesHelper
             'current_version' => $currentVersion,
             'available_version' => $availableVersion,
             'upgrade_available' => $upgradeAvailable,
+            'urls' => [
+                'install' => $installUrl,
+                'upgrade' => $upgradeUrl,
+            ]
         ];
     }
 }
