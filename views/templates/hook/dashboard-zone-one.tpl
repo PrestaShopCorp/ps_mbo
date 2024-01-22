@@ -35,6 +35,16 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *}
 
+{if isset($urlAccountsCdn)}
+  <script src="{$urlAccountsCdn}" rel=preload></script>
+  <script>
+    if (window?.psaccountsVue) {
+      window?.psaccountsVue?.init();
+      {assign shop_context $shop_context|@json_decode:true|array_merge:['accounts_component_loaded' => true]|@json_encode}
+    }
+  </script>
+{/if}
+
 <script>
   if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
     if (typeof renderCdcError === 'function') {
@@ -50,5 +60,7 @@
     renderTipsAndUpdate(dashboardTipsAndUpdateContext, '#cdc-tips-and-update-container')
   }
 </script>
+
+<prestashop-accounts style="display: none;"></prestashop-accounts>
 
 <section id="cdc-tips-and-update-container" class="cdc-container" data-error-path="{$cdcErrorUrl}"></section>

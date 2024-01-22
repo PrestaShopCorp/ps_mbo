@@ -134,12 +134,21 @@ class ContextBuilder
 
     public function clearCache(): bool
     {
-        $cacheKey = $this->getCacheKey();
+        $installedModulesCacheKey = $this->getInstalledModulesCacheKey();
+        $upgradableModulesCacheKey = $this->getUpgradableModulesCacheKey();
 
-        if ($this->cacheProvider->contains($cacheKey)) {
-            if (!$this->cacheProvider->delete($cacheKey)) {
-                return false;
-            }
+        if (
+            $this->cacheProvider->contains($installedModulesCacheKey)
+            && !$this->cacheProvider->delete($installedModulesCacheKey)
+        ) {
+            return false;
+        }
+
+        if (
+            $this->cacheProvider->contains($upgradableModulesCacheKey)
+            && !$this->cacheProvider->delete($upgradableModulesCacheKey)
+        ) {
+            return false;
         }
 
         return true;
@@ -178,10 +187,12 @@ class ContextBuilder
             'admin_token' => $token,
             'refresh_url' => $refreshUrl,
             'installed_modules' => $this->getInstalledModules(),
+            'upgradable_modules' => $this->getUpgradableModules(),
             'accounts_user_id' => $this->accountsDataProvider->getAccountsUserId(),
             'accounts_shop_id' => $this->accountsDataProvider->getAccountsShopId(),
             'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
             'accounts_component_loaded' => false,
+            'module_manager_updates_tab_url' => UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_module_updates')),
             'module_catalog_url' => UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_mbo_catalog_module')),
             'theme_catalog_url' => UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_mbo_catalog_theme')),
             'php_version' => phpversion(),
@@ -248,7 +259,7 @@ class ContextBuilder
      */
     private function getInstalledModules(): array
     {
-        $cacheKey = $this->getCacheKey();
+        $cacheKey = $this->getInstalledModulesCacheKey();
 
         if ($this->cacheProvider->contains($cacheKey)) {
             return $this->cacheProvider->fetch($cacheKey);
@@ -264,7 +275,11 @@ class ContextBuilder
             $moduleDiskAttributes = $installedModule->getDiskAttributes();
             $moduleDatabaseAttributes = $installedModule->getDatabaseAttributes();
 
-            $module = new Module($moduleAttributes->all(), $moduleDiskAttributes->all(), $moduleDatabaseAttributes->all());
+            $module = new Module(
+                $moduleAttributes->all(),
+                $moduleDiskAttributes->all(),
+                $moduleDatabaseAttributes->all()
+            );
 
             $moduleId = (int) $moduleAttributes->get('id');
             $moduleName = $module->get('name');
@@ -287,16 +302,62 @@ class ContextBuilder
                     )
                 );
             }
-            $installedModules[] = (new InstalledModule($moduleId, $moduleName, $moduleStatus, (string) $moduleVersion, $moduleConfigUrl))->toArray();
+            $installedModules[] = (new InstalledModule(
+                $moduleId,
+                $moduleName,
+                $moduleStatus,
+                (string) $moduleVersion,
+                $moduleConfigUrl)
+            )->toArray();
         }
 
-        $this->cacheProvider->save($cacheKey, $installedModules, 86400); // Lifetime for 24h, will be purged at every action on modules
+        // Lifetime for 24h, will be purged at every action on modules
+        $this->cacheProvider->save($cacheKey, $installedModules, 86400);
 
         return $this->cacheProvider->fetch($cacheKey);
     }
 
-    private function getCacheKey(): string
+    private function getInstalledModulesCacheKey(): string
     {
         return sprintf('mbo_installed_modules_list_%s', Config::getShopMboUuid());
+    }
+
+    private function getUpgradableModulesCacheKey(): string
+    {
+        return sprintf('mbo_upgradable_modules_list_%s', Config::getShopMboUuid());
+    }
+
+    /**
+     * @return array<array>
+     */
+    private function getUpgradableModules(): array
+    {
+        $cacheKey = $this->getUpgradableModulesCacheKey();
+
+        if ($this->cacheProvider->contains($cacheKey)) {
+            return $this->cacheProvider->fetch($cacheKey);
+        }
+
+        $upgradableModulesCollection = $this->moduleRepository->getUpgradableModules();
+
+        $upgradableModules = [];
+
+        /** @var CoreModule $upgradableModule */
+        foreach ($upgradableModulesCollection as $upgradableModule) {
+            $moduleAttributes = $upgradableModule->getAttributes();
+
+            $moduleName = $moduleAttributes->get('name');
+
+            if (!$moduleName) {
+                continue;
+            }
+
+            $upgradableModules[] = $moduleName;
+        }
+
+        // Lifetime for 24h, will be purged at every action on modules
+        $this->cacheProvider->save($cacheKey, $upgradableModules, 86400);
+
+        return $this->cacheProvider->fetch($cacheKey);
     }
 }
