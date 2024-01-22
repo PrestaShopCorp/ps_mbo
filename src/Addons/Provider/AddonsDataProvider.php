@@ -224,7 +224,7 @@ class AddonsDataProvider implements DataProviderInterface
         // We merge the addons credentials
         if ($this->isUserAuthenticated()) {
             $credentials = $this->user->getCredentials();
-            if (array_key_exists('accounts_token', $credentials)) {
+            if (null !== $credentials && array_key_exists('accounts_token', $credentials)) {
                 $authParams['bearer'] = $credentials['accounts_token'];
                 // This is a bug for now, we need to give a couple of username/password even if a token is given
                 // It has to be cleaned once the bug fixed

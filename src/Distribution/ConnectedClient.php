@@ -58,7 +58,7 @@ class ConnectedClient extends BaseClient
         if ($this->user->isAuthenticated()) {
             $credentials = $this->user->getCredentials(true);
 
-            if (array_key_exists('accounts_token', $credentials)) {
+            if (null !== $credentials && array_key_exists('accounts_token', $credentials)) {
                 $userCacheKey = md5($credentials['accounts_token']);
 
                 $this->setQueryParams([
