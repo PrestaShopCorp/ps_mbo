@@ -106,6 +106,11 @@ class AddonsUser implements UserInterface
         return !empty($accountsToken);
     }
 
+    public function getAccountsShopUuid(): ?string
+    {
+        return $this->accountsDataProvider->getAccountsShopId();
+    }
+
     /**
      * @return mixed
      */
