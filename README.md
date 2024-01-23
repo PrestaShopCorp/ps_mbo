@@ -39,6 +39,12 @@ This module is compatible with the multistore :heavy_check_mark:
 
 Once installed it's available whatever the shop context
 
+## Tools and helpers
+
+MBO provides some tools for developers to gather informations on modules
+
+- [Update infos][tools-update-infos]
+
 ## Translations
 
 See [translations-docs][translations-docs]
@@ -84,3 +90,4 @@ This module is released under the [Academic Free License 3.0][AFL-3.0]
 [coding-standards]: https://devdocs.prestashop.com/1.7/development/coding-standards/
 [AFL-3.0]: https://opensource.org/licenses/AFL-3.0
 [translations-docs]: docs/translations.md
+[tools-update-infos]: docs/tools-update-infos.md

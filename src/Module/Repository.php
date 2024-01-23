@@ -111,13 +111,24 @@ class Repository implements RepositoryInterface
     {
         if ($this->cache !== null) {
             $this->cacheProvider->save($this->cacheName, $this->cache, 60 * 60 * 24); // A day of cache maximum.
+            $this->cacheProvider->save($this->cacheName . '_time', time(), 60 * 60 * 24); // A day of cache maximum.
         }
     }
 
     public function clearCache(): void
     {
         $this->cacheProvider->delete($this->cacheName);
+        $this->cacheProvider->delete($this->cacheName . '_time');
         $this->cache = null;
+    }
+
+    public function getCacheAge(): ?int
+    {
+        if ($this->cacheProvider->contains($this->cacheName . '_time')) {
+            return $this->cacheProvider->fetch($this->cacheName . '_time');
+        }
+
+        return null;
     }
 
     public function fetchAll(bool $rawModules = false): array
