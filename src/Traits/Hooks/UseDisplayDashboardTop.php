@@ -25,8 +25,11 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
 use Hook;
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Tab\TabInterface;
+use PrestaShopDatabaseException;
+use PrestaShopException;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use ToolsCore as Tools;
@@ -39,6 +42,7 @@ trait UseDisplayDashboardTop
      * @var string
      */
     protected static $ADMIN_MODULES_CONTROLLER = 'AdminModules';
+
     /**
      * Module with push content & link to addons on configuration page
      *
@@ -48,6 +52,7 @@ trait UseDisplayDashboardTop
         'contactform',
         'blockreassurance',
     ];
+
     /**
      * The hook is sometimes called multiple times in the same execution because it's called directly in tpl files & in
      * some configurations, multiple files can call/extend those.
@@ -65,7 +70,7 @@ trait UseDisplayDashboardTop
     /**
      * @return void
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function bootUseDisplayDashboardTop(): void
     {
@@ -80,7 +85,7 @@ trait UseDisplayDashboardTop
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function hookDisplayDashboardTop(): string
     {
@@ -103,18 +108,20 @@ trait UseDisplayDashboardTop
         }
 
         //Check if we are on configuration page & if the module needs to have a push on this page
-        if (
-            isset($values['controller']) &&
-            ($values['controller'] === self::$ADMIN_MODULES_CONTROLLER) &&
-            isset($values['configure']) &&
-            in_array($values['configure'], self::$MODULES_WITH_CONFIGURATION_PUSH)
-        ) {
-            return $this->displayPushOnConfigurationPage($values['configure']);
-        }
+        $shouldDisplayMessageInConfigPage = isset($values['controller'])
+            && ($values['controller'] === self::$ADMIN_MODULES_CONTROLLER)
+            && isset($values['configure'])
+            && in_array($values['configure'], self::$MODULES_WITH_CONFIGURATION_PUSH);
 
-        return $this->displayRecommendedModules($values['controller'] ?? '');
+        return $shouldDisplayMessageInConfigPage
+            ? $this->displayPushOnConfigurationPage($values['configure'])
+            : $this->displayRecommendedModules($values['controller'] ?? '');
     }
 
+    /**
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function useDisplayDashboardTopExtraOperations(): void
     {
         $hookName = 'actionMboRecommendedModules';
@@ -141,22 +148,46 @@ trait UseDisplayDashboardTop
         switch ($moduleName) {
             case 'contactform':
                 $this->smarty->assign([
-                    'catchPhrase' => $this->trans('For even more security on your website forms, consult our Security & Access modules category on the', [], 'Modules.Mbo.Global'),
-                    'linkTarget' => $this->trans('https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security', [], 'Modules.Mbo.Links'),
+                    'catchPhrase' => $this->trans(
+                        'For even more security on your website forms, consult our Security & Access modules category on the',
+                        [],
+                        'Modules.Mbo.Global'
+                    ),
+                    'linkTarget' => $this->trans(
+                        'https://addons.prestashop.com/en/429-website-security-access?utm_source=back-office&utm_medium=native-contactform&utm_campaign=back-office-EN&utm_content=security',
+                        [],
+                        'Modules.Mbo.Links'
+                    ),
                     'linkText' => $this->trans('PrestaShop Addons Marketplace', [], 'Modules.Mbo.Global'),
                 ]);
                 break;
             case 'blockreassurance':
                 $this->smarty->assign([
-                    'catchPhrase' => $this->trans('Discover more modules to improve your shop on', [], 'Modules.Mbo.Global'),
-                    'linkTarget' => $this->trans('https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN', [], 'Modules.Mbo.Links'),
+                    'catchPhrase' => $this->trans(
+                        'Discover more modules to improve your shop on',
+                        [],
+                        'Modules.Mbo.Global'
+                    ),
+                    'linkTarget' => $this->trans(
+                        'https://addons.prestashop.com/en/517-blocks-tabs-banners?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN',
+                        [],
+                        'Modules.Mbo.Links'
+                    ),
                     'linkText' => $this->trans('PrestaShop Addons Marketplace', [], 'Modules.Mbo.Global'),
                 ]);
                 break;
             default:
                 $this->smarty->assign([
-                    'catchPhrase' => $this->trans('Discover more modules to improve your shop on', [], 'Modules.Mbo.Global'),
-                    'linkTarget' => $this->trans('https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN', [], 'Modules.Mbo.Links'),
+                    'catchPhrase' => $this->trans(
+                        'Discover more modules to improve your shop on',
+                        [],
+                        'Modules.Mbo.Global'
+                    ),
+                    'linkTarget' => $this->trans(
+                        'https://addons.prestashop.com/?utm_source=back-office&utm_medium=modules&utm_campaign=back-office-EN',
+                        [],
+                        'Modules.Mbo.Links'
+                    ),
                     'linkText' => $this->trans('PrestaShop Addons Marketplace', [], 'Modules.Mbo.Global'),
                 ]);
         }
@@ -164,24 +195,29 @@ trait UseDisplayDashboardTop
         return $this->fetch('module:ps_mbo/views/templates/hook/push-configuration.tpl');
     }
 
-    private function displayFailedApiUser()
+    private function displayFailedApiUser(): string
     {
         try {
             /** @var \Twig\Environment $twig */
             $twig = $this->get('twig');
 
-            /**
-             * @var Router $router
-             */
+            /** @var Router $router*/
             $router = $this->get('router');
+
+            if (null === $twig || null === $router) {
+                throw new ExpectedServiceNotFoundException(
+                    'Some services not found in UseDisplayDashboardTop'
+                );
+            }
 
             return $twig->render(
                 '@Modules/ps_mbo/views/templates/hook/twig/failed-api-user.html.twig', [
                     'module_manager_link' => $router->generate('admin_module_manage'),
                 ]
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             ErrorHelper::reportError($e);
+
             return '';
         }
     }
@@ -189,9 +225,7 @@ trait UseDisplayDashboardTop
     /**
      * Compute & include data with recommended modules when needed
      *
-     * @return string
-     *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function displayRecommendedModules(string $controller): string
     {
@@ -203,16 +237,31 @@ trait UseDisplayDashboardTop
             'controller' => $controller,
         ]);
 
+
+        $afterContentType = TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE;
+        $recommendedButtonType = TabInterface::RECOMMENDED_BUTTON_TYPE;
+
         // We want to "hide" recommended modules from this controller
         if (!$recommendedModulesDisplayed) {
             // If we are trying to display as button, hide the button
-            if (in_array($controller, $this->controllersWithRecommendedModules[TabInterface::RECOMMENDED_BUTTON_TYPE])) {
+            if (
+                in_array(
+                    $controller,
+                    $this->controllersWithRecommendedModules[$recommendedButtonType]
+                )
+            ) {
                 return '';
-            } elseif (in_array($controller, $this->controllersWithRecommendedModules[TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE])) {
+            } elseif (
+                in_array(
+                    $controller,
+                    $this->controllersWithRecommendedModules[$afterContentType]
+                )
+            ) {
+
                 // We are trying to display after content, so move them to button adn remove from after content
-                foreach ($this->controllersWithRecommendedModules[TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE] as $k => $afterContentController) {
+                foreach ($this->controllersWithRecommendedModules[$afterContentType] as $k => $afterContentController) {
                     if ($afterContentController === $controller) {
-                        unset($this->controllersWithRecommendedModules[TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE][$k]);
+                        unset($this->controllersWithRecommendedModules[$afterContentType][$k]);
                         break;
                     }
                 }
@@ -220,17 +269,22 @@ trait UseDisplayDashboardTop
             }
         }
 
-        $shouldAttachRecommendedModulesAfterContent = $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE);
-        $shouldAttachRecommendedModulesButton = $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_BUTTON_TYPE);
+        $shouldAttachRecommendedModulesAfterContent = $this->shouldAttachRecommendedModules($afterContentType);
+        $shouldAttachRecommendedModulesButton = $this->shouldAttachRecommendedModules($recommendedButtonType);
 
         if (!$shouldAttachRecommendedModulesAfterContent && !$shouldAttachRecommendedModulesButton) {
             return '';
         }
 
-        /** @var UrlGeneratorInterface $router */
-        $router = $this->get('router');
-
         try {
+            /** @var UrlGeneratorInterface $router */
+            $router = $this->get('router');
+            if (null === $router) {
+                throw new ExpectedServiceNotFoundException(
+                    'Some services not found in UseDisplayDashboardTop'
+                );
+            }
+
             $recommendedModulesUrl = $router->generate(
                 'admin_mbo_recommended_modules',
                 [
@@ -334,7 +388,11 @@ trait UseDisplayDashboardTop
                 $title = $this->trans('Improve shipping', [], 'Modules.Mbo.Recommendedmodulesandservices');
                 break;
             case 'AdminPayment':
-                $title = $this->trans('Improve the checkout experience', [], 'Modules.Mbo.Recommendedmodulesandservices');
+                $title = $this->trans(
+                    'Improve the checkout experience',
+                    [],
+                    'Modules.Mbo.Recommendedmodulesandservices'
+                );
                 break;
             case 'AdminImages':
                 $title = $this->trans('Improve visuals', [], 'Modules.Mbo.Recommendedmodulesandservices');

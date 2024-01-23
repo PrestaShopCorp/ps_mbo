@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\SourceHandler;
 
+use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler;
@@ -49,6 +50,9 @@ class AddonsUrlSourceHandler implements SourceHandlerInterface
         $this->addonsUrlSourceRetriever = $addonsUrlSourceRetriever;
     }
 
+    /**
+     * @throws GuzzleException
+     */
     public function canHandle($source): bool
     {
         return $this->addonsUrlSourceRetriever->assertCanBeDownloaded($source);

@@ -42,11 +42,9 @@ trait UseDashboardZoneTwo
     /**
      * Display addons link on the middle column of the dashboard
      *
-     * @param array $params
-     *
      * @return false|string
      */
-    public function hookDashboardZoneTwo(array $params)
+    public function hookDashboardZoneTwo()
     {
         return $this->smartyDisplayTpl('dashboard-zone-two.tpl');
     }

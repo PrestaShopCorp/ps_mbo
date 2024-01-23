@@ -21,12 +21,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module;
 
+use Exception;
+use PrestaShop\Module\Mbo\Addons\Exception\DownloadModuleException;
 use PrestaShop\Module\Mbo\Helpers\Config;
-use PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException;
 use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever;
-use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
-use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
 class ActionsManager
@@ -38,6 +37,7 @@ class ActionsManager
 
     /**
      * @var Repository
+     * @TODO : Not needed anymore
      */
     private $moduleRepository;
 
@@ -52,8 +52,8 @@ class ActionsManager
     /**
      * @param int $moduleId
      *
-     * @throws SourceHandlerNotFoundException
-     * @throws FileNotFoundException
+     * @throws UnexpectedModuleSourceContentException
+     * @throws DownloadModuleException
      */
     public function install(int $moduleId): void
     {
@@ -62,6 +62,9 @@ class ActionsManager
         $this->filesManager->installFromSource($moduleZip);
     }
 
+    /**
+     * @throws DownloadModuleException
+     */
     public function downloadModule(int $moduleId): string
     {
         return $this->filesManager->downloadModule($moduleId);
@@ -69,54 +72,23 @@ class ActionsManager
 
     /**
      * @throws UnexpectedModuleSourceContentException
-     * @throws ModuleNewVersionNotFoundException
      * @throws SourceHandlerNotFoundException
      */
     public function downloadAndReplaceModuleFiles(string $moduleName, string $source): void
     {
-        if (is_string($source) && AddonsUrlSourceRetriever::assertIsAddonsUrl($source) && strpos($source, 'shop_url') === false) {
+        if (
+            AddonsUrlSourceRetriever::assertIsAddonsUrl($source)
+            && strpos($source, 'shop_url') === false
+        ) {
             $source .= '&shop_url=' . Config::getShopUrl();
         }
 
         $this->filesManager->canInstallFromSource($source);
 
-        $this->filesManager->deleteModuleDirectory($moduleName);
+        if ('ps_mbo' === $moduleName) {
+            $this->filesManager->deleteModuleDirectory($moduleName);
+        }
 
         $this->filesManager->installFromSource($source);
-    }
-
-    /**
-     * @param string $moduleName
-     *
-     * @return \stdClass|null
-     */
-    public function findVersionForUpdate(string $moduleName): ?\stdClass
-    {
-        $db = \Db::getInstance();
-        $request = 'SELECT `version` FROM `' . _DB_PREFIX_ . "module` WHERE name='" . $moduleName . "'";
-
-        /** @var string|false $moduleCurrentVersion */
-        $moduleCurrentVersion = $db->getValue($request);
-
-        if (!$moduleCurrentVersion) {
-            return null;
-        }
-        // We need to clear cache to get fresh data from addons
-        $this->moduleRepository->clearCache();
-
-        $module = $this->moduleRepository->getApiModule($moduleName);
-
-        if (null === $module) {
-            return null;
-        }
-
-        $versionAvailable = (string) $module->version_available;
-
-        // If the current installed version is greater or equal than the one returned by Addons, do nothing
-        if (version_compare($versionAvailable, $moduleCurrentVersion, 'gt')) {
-            return $module;
-        }
-
-        return null;
     }
 }

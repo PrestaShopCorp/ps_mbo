@@ -34,6 +34,7 @@ use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Shop;
 use Tab;
 use Tools;
 
@@ -80,6 +81,9 @@ class AdminAuthenticationProvider
         $this->cacheProvider = $cacheProvider;
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function createApiUser(): ?Employee
     {
         $moduleCacheDir = sprintf('%s/var/modules/ps_mbo/', rtrim(_PS_ROOT_DIR_, '/'));
@@ -132,14 +136,13 @@ class AdminAuthenticationProvider
         return $employee;
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function getApiUser(): ?Employee
     {
-        /**
-         * @var \Doctrine\DBAL\Connection $connection
-         */
-        $connection = $this->connection;
         //Get employee ID
-        $qb = $connection->createQueryBuilder();
+        $qb = $this->connection->createQueryBuilder();
         $qb->select('e.id_employee')
             ->from($this->dbPrefix . 'employee', 'e')
             ->andWhere('e.email = :email')
@@ -158,7 +161,7 @@ class AdminAuthenticationProvider
     }
 
     /**
-     * @throws EmployeeException
+     * @throws \Doctrine\DBAL\Exception
      */
     public function ensureApiUserExistence(): ?Employee
     {
@@ -171,6 +174,9 @@ class AdminAuthenticationProvider
         return $apiUser;
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function deletePossibleApiUser(): void
     {
         $connection = $this->connection;
@@ -211,6 +217,10 @@ class AdminAuthenticationProvider
         return $cookie;
     }
 
+    /**
+     * @throws EmployeeException
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function getAdminToken(): string
     {
         $cacheKey = $this->getAdminTokenCacheKey();
@@ -234,6 +244,10 @@ class AdminAuthenticationProvider
         return $this->cacheProvider->fetch($cacheKey);
     }
 
+    /**
+     * @throws EmployeeException
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function getMboJWT(): string
     {
         $cacheKey = $this->getJwtTokenCacheKey();
@@ -254,7 +268,8 @@ class AdminAuthenticationProvider
             return $jwtToken;
         }
 
-        $this->cacheProvider->save($cacheKey, $jwtToken, 0); // Lifetime infinite, will be purged when MBO is uninstalled
+        // Lifetime infinite, will be purged when MBO is uninstalled
+        $this->cacheProvider->save($cacheKey, $jwtToken, 0);
 
         return $this->cacheProvider->fetch($cacheKey);
     }
@@ -288,8 +303,8 @@ class AdminAuthenticationProvider
             'shop_mbo_uuid' => Config::getShopMboUuid(),
             'shop_mbo_admin_mail' => Config::getShopMboAdminMail(),
             'shop_url' => Config::getShopUrl(),
-            'multishop' => \Shop::isFeatureActive(),
-            'number_of_shops' => \Shop::getTotalShops(false, null),
+            'multishop' => Shop::isFeatureActive(),
+            'number_of_shops' => Shop::getTotalShops(false, null),
         ]);
     }
 }

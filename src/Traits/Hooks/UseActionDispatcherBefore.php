@@ -24,6 +24,8 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 use Cache;
 use Configuration;
 use Context;
+use Dispatcher;
+use Exception;
 use Language;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler;
@@ -116,9 +118,9 @@ trait UseActionDispatcherBefore
     private function ensureApiConfigIsApplied(): void
     {
         try {
-            /** @var \Symfony\Component\Cache\DoctrineProvider $cacheProvider */
+            /** @var DoctrineProvider $cacheProvider */
             $cacheProvider = $this->get('doctrine.cache.provider');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             ErrorHelper::reportError($e);
             $cacheProvider = false;
         }
@@ -143,7 +145,7 @@ trait UseActionDispatcherBefore
         try {
             /** @var VersionChangeApplyConfigCommandHandler $configApplyHandler */
             $configApplyHandler = $this->get('mbo.distribution.api_version_change_config_apply_handler');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             ErrorHelper::reportError($e);
 
             return;
@@ -164,15 +166,15 @@ trait UseActionDispatcherBefore
      *
      * @return void
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException
-     * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
-     * @throws \Exception
+     * @throws EmployeeException
+     * @throws CoreException
+     * @throws Exception
      */
     private function ensureApiUserExistAndIsLogged($controllerName, array $params): void
     {
         $apiUser = null;
         // Whatever the call in the MBO API, we check if the MBO API user exists
-        if (\Dispatcher::FC_ADMIN == (int) $params['controller_type'] || $controllerName === 'apiPsMbo') {
+        if (Dispatcher::FC_ADMIN == (int) $params['controller_type'] || $controllerName === 'apiPsMbo') {
             $apiUser = $this->getAdminAuthenticationProvider()->ensureApiUserExistence();
         }
 

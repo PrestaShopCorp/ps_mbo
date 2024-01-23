@@ -18,22 +18,9 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
-namespace PrestaShop\Module\Mbo\Module;
+namespace PrestaShop\Module\Mbo\Addons\Exception;
 
-interface RepositoryInterface
+class DownloadModuleException extends \Exception
 {
-    /**
-     * @return array<int|string, Module|\stdClass> retrieve a list of addons modules, regardless any $filter
-     */
-    public function fetchAll(bool $rawModules = false): array;
 
-    /**
-     * Get the new module presenter class of the specified name provided.
-     * It contains data from its instance, the disk, the database and from the marketplace if exists.
-     *
-     * @param string $name The technical name of the module
-     *
-     * @return Module|null
-     */
-    public function getModule(string $name): ?Module;
 }

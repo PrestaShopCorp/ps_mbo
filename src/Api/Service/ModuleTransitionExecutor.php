@@ -25,6 +25,14 @@ use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
 use PrestaShop\Module\Mbo\Module\CommandHandler\ModuleStatusTransitionCommandHandler;
+use PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException;
+use PrestaShop\Module\Mbo\Module\Exception\ModuleNotFoundException;
+use PrestaShop\Module\Mbo\Module\Exception\TransitionCommandToModuleStatusException;
+use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
+use PrestaShop\Module\Mbo\Module\Exception\UnauthorizedModuleTransitionException;
+use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
+use PrestaShop\Module\Mbo\Module\Exception\UnknownModuleTransitionCommandException;
+use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -54,6 +62,16 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
 
     /**
      * {@inheritDoc}
+     *
+     * @throws UnknownModuleTransitionCommandException
+     * @throws QueryParamsException
+     * @throws ModuleNewVersionNotFoundException
+     * @throws ModuleNotFoundException
+     * @throws TransitionCommandToModuleStatusException
+     * @throws TransitionFailedException
+     * @throws UnauthorizedModuleTransitionException
+     * @throws UnexpectedModuleSourceContentException
+     * @throws \Exception
      */
     public function execute(...$parameters): array
     {
@@ -73,16 +91,26 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
             throw new QueryParamsException('You need transition and module parameters');
         }
 
+        try {
+            $session = $psMbo->get('session');
+            if (!$session instanceof Session) {
+                throw new \Exception('ModuleTransitionExecutor : Session not found');
+            }
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+            throw $e;
+        }
         // Authenticate user to addons if credentials are provided
-        $this->authenticateAddonsUser($psMbo->get('session'));
+        $this->authenticateAddonsUser($session);
 
         $command = new ModuleStatusTransitionCommand($transition, $moduleName, $moduleId, $moduleVersion, $source);
 
-        /** @var \PrestaShop\Module\Mbo\Module\Module $module */
         $module = $this->moduleStatusTransitionCommandHandler->handle($command);
 
         $moduleUrls = $module->get('urls');
-        $configUrl = (bool) $module->get('is_configurable') && isset($moduleUrls['configure']) ? $this->generateTokenizedModuleActionUrl($moduleUrls['configure']) : null;
+        $configUrl = $module->get('is_configurable') && isset($moduleUrls['configure'])
+            ? $this->generateTokenizedModuleActionUrl($moduleUrls['configure'])
+            : null;
 
         if (ModuleTransitionCommand::MODULE_COMMAND_DOWNLOAD === $transition) {
             // Clear the cache after download to force reload module services
