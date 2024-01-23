@@ -84,31 +84,4 @@ trait UseActionGetAdminToolbarButtons
 
         return $extraToolbarButtons;
     }
-
-    /**
-     * @return void
-     *
-     * @throws Exception
-     */
-    public function bootUseActionGetAdminToolbarButtons(): void
-    {
-        if (method_exists($this, 'addAdminControllerMedia')) {
-            $this->addAdminControllerMedia('loadMediaGetAdminToolbarButtons');
-        }
-    }
-
-    /**
-     * Add JS and CSS file
-     *
-     * @return void
-     *
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
-     */
-    protected function loadMediaGetAdminToolbarButtons(): void
-    {
-        if (!in_array(Tools::getValue('controller'), self::CONTROLLERS_WITH_CONNECTION_TOOLBAR)) {
-            return;
-        }
-        $this->context->controller->addJs($this->getPathUri() . 'views/js/addons-connector.js?v=' . $this->version);
-    }
 }

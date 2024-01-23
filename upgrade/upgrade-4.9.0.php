@@ -17,36 +17,23 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Addons\User;
+$rootDir = defined('_PS_ROOT_DIR_') ? _PS_ROOT_DIR_ : getenv('_PS_ROOT_DIR_');
+if (!$rootDir) {
+    $rootDir = __DIR__ . '/../../../';
+}
 
-use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
+require_once $rootDir . '/vendor/autoload.php';
 
-class CredentialsEncryptor
+/**
+ * @param ps_mbo $module
+ *
+ * @return bool
+ */
+function upgrade_module_4_9_0(Module $module): bool
 {
-    /**
-     * @var AdminAuthenticationProvider
-     */
-    private $adminAuthenticationProvider;
+    $module->updateHooks();
+    $module->updateTabs();
 
-    public function __construct(AdminAuthenticationProvider $adminAuthenticationProvider)
-    {
-        $this->adminAuthenticationProvider = $adminAuthenticationProvider;
-    }
-
-    public function encrypt(string $value): string
-    {
-        return base64_encode(sprintf('%s%s', $value, $this->getSalt()));
-    }
-
-    public function decrypt(string $value): string
-    {
-        return str_replace($this->getSalt(), '', base64_decode($value));
-    }
-
-    private function getSalt(): string
-    {
-        return $this->adminAuthenticationProvider->getAdminToken();
-    }
+    return true;
 }

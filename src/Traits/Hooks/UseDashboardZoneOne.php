@@ -65,13 +65,7 @@ trait UseDashboardZoneOne
      */
     protected function loadMediaDashboardZoneOne(): void
     {
-        $additionalJs = [
-            $this->getPathUri() . 'views/js/addons-connector.js?v=' . $this->version,
-        ];
-        $additionalCss = [
-            $this->getPathUri() . 'views/css/addons-connect.css',
-        ];
-        $this->loadCdcMediaFilesForControllers(['AdminDashboard'], $additionalJs, $additionalCss);
+        $this->loadCdcMediaFilesForControllers(['AdminDashboard']);
     }
 
     public function useDashboardZoneOneExtraOperations()
