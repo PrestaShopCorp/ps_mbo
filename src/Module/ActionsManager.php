@@ -38,6 +38,7 @@ class ActionsManager
 
     /**
      * @var Repository
+     * @TODO : Not needed anymore
      */
     private $moduleRepository;
 
@@ -69,54 +70,24 @@ class ActionsManager
 
     /**
      * @throws UnexpectedModuleSourceContentException
-     * @throws ModuleNewVersionNotFoundException
      * @throws SourceHandlerNotFoundException
+     * @throws FileNotFoundException
      */
     public function downloadAndReplaceModuleFiles(string $moduleName, string $source): void
     {
-        if (is_string($source) && AddonsUrlSourceRetriever::assertIsAddonsUrl($source) && strpos($source, 'shop_url') === false) {
+        if (
+            AddonsUrlSourceRetriever::assertIsAddonsUrl($source)
+            && strpos($source, 'shop_url') === false
+        ) {
             $source .= '&shop_url=' . Config::getShopUrl();
         }
 
         $this->filesManager->canInstallFromSource($source);
 
-        $this->filesManager->deleteModuleDirectory($moduleName);
+        if ('ps_mbo' === $moduleName) {
+            $this->filesManager->deleteModuleDirectory($moduleName);
+        }
 
         $this->filesManager->installFromSource($source);
-    }
-
-    /**
-     * @param string $moduleName
-     *
-     * @return \stdClass|null
-     */
-    public function findVersionForUpdate(string $moduleName): ?\stdClass
-    {
-        $db = \Db::getInstance();
-        $request = 'SELECT `version` FROM `' . _DB_PREFIX_ . "module` WHERE name='" . $moduleName . "'";
-
-        /** @var string|false $moduleCurrentVersion */
-        $moduleCurrentVersion = $db->getValue($request);
-
-        if (!$moduleCurrentVersion) {
-            return null;
-        }
-        // We need to clear cache to get fresh data from addons
-        $this->moduleRepository->clearCache();
-
-        $module = $this->moduleRepository->getApiModule($moduleName);
-
-        if (null === $module) {
-            return null;
-        }
-
-        $versionAvailable = (string) $module->version_available;
-
-        // If the current installed version is greater or equal than the one returned by Addons, do nothing
-        if (version_compare($versionAvailable, $moduleCurrentVersion, 'gt')) {
-            return $module;
-        }
-
-        return null;
     }
 }

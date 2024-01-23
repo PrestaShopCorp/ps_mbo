@@ -23,6 +23,8 @@ namespace PrestaShop\Module\Mbo\Module\SourceRetriever;
 
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Utils;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
@@ -97,14 +99,17 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         $this->translator = $translator;
         $this->modulePath = rtrim($modulePath, '/') . '/';
 
-        $this->httpClient = $client = new Client([
+        $this->httpClient = new Client([
             'timeout' => '7200',
             'CURLOPT_FORBID_REUSE' => true,
             'CURLOPT_FRESH_CONNECT' => true,
         ]);
     }
 
-    public function assertCanBeDownloaded($source)
+    /**
+     * @throws GuzzleException
+     */
+    public function assertCanBeDownloaded($source): bool
     {
         if (!self::assertIsAddonsUrl($source)) {
             return false;
@@ -126,7 +131,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             $this->moduleName = $moduleName[1];
         }
 
-        $headers = $response->getHeaders(false);
+        $headers = $response->getHeaders();
 
         if (isset($headers['Content-Disposition'])
             && preg_match(self::ZIP_FILENAME_PATTERN, reset($headers['Content-Disposition']), $moduleName) === 1
@@ -148,13 +153,17 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         return false;
     }
 
-    public function getModuleName($source)
+    public function getModuleName($source): ?string
     {
         $this->assertSourceHasBeenChecked($source);
 
         return $this->moduleName;
     }
 
+    /**
+     * @throws GuzzleException
+     * @throws Exception
+     */
     public function get($source, ?string $expectedModuleName = null, ?array $options = []): string
     {
         $this->assertSourceHasBeenChecked($source);
@@ -189,7 +198,13 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     public function validate(string $zipFileName, string $expectedModuleName): bool
     {
         if (!$this->isZipFile($zipFileName)) {
-            throw new ModuleErrorException($this->translator->trans('This file does not seem to be a valid module zip', [], 'Admin.Modules.Notification'));
+            throw new ModuleErrorException(
+                $this->translator->trans(
+                    'This file does not seem to be a valid module zip',
+                    [],
+                    'Admin.Modules.Notification'
+                )
+            );
         }
 
         $zip = new ZipArchive();
@@ -206,10 +221,16 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             $zip->close();
         }
 
-        throw new ModuleErrorException($this->translator->trans('Downloaded zip file does not contain the expected module', [], 'Admin.Modules.Notification'));
+        throw new ModuleErrorException(
+            $this->translator->trans(
+                'Downloaded zip file does not contain the expected module',
+                [],
+                'Admin.Modules.Notification'
+            )
+        );
     }
 
-    public static function assertIsAddonsUrl($source)
+    public static function assertIsAddonsUrl($source): bool
     {
         return is_string($source) && 1 === preg_match(self::URL_VALIDATION_REGEX, $source);
     }
@@ -222,7 +243,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         }
     }
 
-    private function computeAuthentication(string $source)
+    private function computeAuthentication(string $source): array
     {
         $url_parts = parse_url($source);
         if (isset($url_parts['query'])) {
@@ -233,7 +254,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 
         $requestOptions = [];
         $authParams = $this->addonsDataProvider->getAuthenticationParams();
-        if (null !== $authParams['bearer'] && is_string($authParams['bearer'])) {
+        if (is_string($authParams['bearer'])) {
             $requestOptions['headers'] = [
                 'Authorization' => 'Bearer ' . $authParams['bearer'],
             ];
@@ -243,7 +264,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
                 $requestOptions['accounts_shop_uuid'] = $accountsShopUuid;
             }
         }
-        if (null !== $authParams['credentials'] && is_array($authParams['credentials'])) {
+        if (is_array($authParams['credentials'])) {
             $params = array_merge($authParams['credentials'], $params);
         }
 
@@ -256,7 +277,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         ];
     }
 
-    private function isZipFile(string $file)
+    private function isZipFile(string $file): bool
     {
         return is_file($file) && in_array(mime_content_type($file), self::AUTHORIZED_MIME);
     }

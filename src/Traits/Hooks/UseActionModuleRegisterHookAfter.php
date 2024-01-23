@@ -32,14 +32,7 @@ trait UseActionModuleRegisterHookAfter
     public function hookActionModuleRegisterHookAfter(array $params): void
     {
         try {
-            /**
-             * @var \ModuleCore $module The module which is registering a hook
-             */
-            $module = $params['object'];
-            /**
-             * @var string $hookName The hook being registered
-             */
-            $hookName = $params['hook_name'];
+            $hookName = (string) $params['hook_name'];
 
             // The MBO hook 'dashboardZoneTwo' must be at the max position
             if ('DashboardZoneTwo' === mb_ucfirst($hookName)) {

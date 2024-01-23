@@ -21,7 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
 trait UseActionObjectEmployeeUpdateBefore
 {
@@ -33,10 +34,17 @@ trait UseActionObjectEmployeeUpdateBefore
         if (empty($params) || empty($params['object']) || !$params['object'] instanceof \Employee) {
             return;
         }
-        $currentApiUser = $this->getApiUser();
-        if (!$currentApiUser) {
+        try {
+            $currentApiUser = $this->getAdminAuthenticationProvider()->getApiUser();
+            if (!$currentApiUser) {
+                throw new ExpectedServiceNotFoundException('Unable to get the Api User');
+            }
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+
             return;
         }
+
         if ($params['object']->id === $currentApiUser->id) {
             $params['object']->firstname = $currentApiUser->firstname;
             $params['object']->lastname = $currentApiUser->lastname;
@@ -45,18 +53,5 @@ trait UseActionObjectEmployeeUpdateBefore
             $params['object']->id_profile = $currentApiUser->id_profile;
             $params['object']->active = true;
         }
-    }
-
-    private function getApiUser()
-    {
-        $apiUserId = \Db::getInstance()->getValue(
-            'SELECT `id_employee` FROM `' . _DB_PREFIX_ . 'employee` WHERE `email` = "' . pSQL(Config::getShopMboAdminMail()) . '" AND active = 1'
-        );
-
-        if (!$apiUserId) {
-            return null;
-        }
-
-        return new \Employee((int) $apiUserId);
     }
 }

@@ -70,7 +70,7 @@ class FilesManager
     public function canInstallFromSource(string $source)
     {
         try {
-            $handler = $this->sourceHandlerFactory->getHandler($source);
+            $this->sourceHandlerFactory->getHandler($source);
         } catch(SourceHandlerNotFoundException $e) {
             ErrorHelper::reportError($e);
             throw $e;

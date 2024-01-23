@@ -45,7 +45,9 @@ trait UseActionAdminControllerSetMedia
     public function hookActionAdminControllerSetMedia(): void
     {
         if (Tools::getValue('controller') === "AdminPsMboModule") {
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/upload_module_with_cdc.js?v=' . $this->version);
+            $this->context->controller->addJs(
+                sprintf('%sviews/js/upload_module_with_cdc.js?v=%s', $this->getPathUri(), $this->version)
+            );
         }
 
         if (empty($this->adminControllerMediaMethods)) {
@@ -53,7 +55,9 @@ trait UseActionAdminControllerSetMedia
         }
 
         usort($this->adminControllerMediaMethods, function ($a, $b) {
-            return $a['order'] === $b['order'] ? 0 : ($a['order'] < $b['order'] ? -1 : 1);
+            $order = $a['order'] < $b['order'] ? -1 : 1;
+
+            return $a['order'] === $b['order'] ? 0 : $order;
         });
         foreach ($this->adminControllerMediaMethods as $setMediaMethod) {
             $this->{$setMediaMethod['method']}();

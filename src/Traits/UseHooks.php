@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits;
 
 use Db;
-use PrestaShop\Module\Mbo\Addons\User\CredentialsEncryptor;
+use PrestaShopDatabaseException;
 use Symfony\Component\String\UnicodeString;
 
 trait UseHooks
@@ -126,6 +126,7 @@ trait UseHooks
      * If a hook is missing, it will be added. If a hook is not declared in the module, it will be removed.
      *
      * @return void
+     * @throws PrestaShopDatabaseException
      */
     public function updateHooks(): void
     {

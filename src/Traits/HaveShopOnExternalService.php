@@ -27,6 +27,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use Ramsey\Uuid\Uuid;
 use Shop;
 
@@ -36,7 +37,8 @@ trait HaveShopOnExternalService
      * Register a shop for online services delivered by API.
      * So the module can correctly process actions (download, install, update..) on. modules
      *
-     * @return void
+     * @throws Exception
+     * @throws GuzzleException
      */
     private function registerShop(): void
     {
@@ -52,7 +54,7 @@ trait HaveShopOnExternalService
      *
      * @param array $params the params to send to the update method in Client
      *
-     * @return void
+     * @throws Exception
      */
     public function updateShop(array $params = []): void
     {
@@ -81,11 +83,16 @@ trait HaveShopOnExternalService
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function callServiceWithLockFile(string $method, array $params = []): void
     {
-        $this->getAdminAuthenticationProvider()->clearCache();
         $lockFile = $this->moduleCacheDir . $method . '.lock';
+
         try {
+            $this->getAdminAuthenticationProvider()->clearCache();
+
             // If the module is installed via command line or somehow the ADMIN_DIR is not defined,
             // we ignore the shop registration, so it will be done at any action on the backoffice
             if (php_sapi_name() === 'cli' || !defined('_PS_ADMIN_DIR_')) {
@@ -145,7 +152,7 @@ trait HaveShopOnExternalService
         foreach (Shop::getShops(false, null, true) as $shopId) {
             foreach ($this->configurationList as $name => $value) {
                 if (false === Configuration::hasKey($name, null, null, (int) $shopId)) {
-                    $result = $result && (bool) Configuration::updateValue(
+                    $result = $result && Configuration::updateValue(
                             $name,
                             $value,
                             false,
@@ -159,6 +166,12 @@ trait HaveShopOnExternalService
         return $result;
     }
 
+    /**
+     * @throws GuzzleException
+     * @throws EmployeeException
+     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
+     */
     private function syncApiConfig()
     {
         if (file_exists($this->moduleCacheDir . 'registerShop.lock')) {
