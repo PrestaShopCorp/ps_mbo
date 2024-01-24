@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
@@ -29,14 +30,18 @@ trait UseDisplayModuleConfigureExtraButtons
     /**
      * Hook displayModuleConfigureExtraButtons.
      * Add additional buttons on the module configure page's toolbar.
-     *
-     * @return string
      */
-    public function hookDisplayModuleConfigureExtraButtons(array $params): string
+    public function hookDisplayModuleConfigureExtraButtons(): string
     {
         try {
             /** @var Router $router */
             $router = $this->get('router');
+
+            if (null === $router) {
+                throw new ExpectedServiceNotFoundException(
+                    'Some services not found in UseDisplayModuleConfigureExtraButtons'
+                );
+            }
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
             return '';

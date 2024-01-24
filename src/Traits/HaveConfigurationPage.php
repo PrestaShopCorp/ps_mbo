@@ -106,7 +106,11 @@ trait HaveConfigurationPage
             $apiUrl = str_replace('#prestabulle#', $newValue, $this->environmentData['prestabulle']['api']);
             $addonsUrl = str_replace('#prestabulle#', $newValue, $this->environmentData['prestabulle']['addons']);
             $sentryUrl = $this->environmentData['prestabulle']['sentry_url'];
-            $sentryEnvironment = str_replace('#prestabulle#', $newValue, $this->environmentData['prestabulle']['sentry_environment']);
+            $sentryEnvironment = str_replace(
+                '#prestabulle#',
+                $newValue,
+                $this->environmentData['prestabulle']['sentry_environment']
+            );
         } else {
             $cdcUrl = $this->environmentData[$newValue]['cdc'];
             $apiUrl = $this->environmentData[$newValue]['api'];

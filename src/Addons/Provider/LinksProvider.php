@@ -117,18 +117,6 @@ class LinksProvider
         return $link;
     }
 
-    public function getSignUpLink(): string
-    {
-        return $this->translator->trans('https://authv2.prestashop.com/register', [], 'Modules.Mbo.Links')
-            . '?_ga=2.183749797.2029715227.1645605306-2047387021.1643627469'
-            . '&_gac=1.81371877.1644238612.CjwKCAiAo4OQBhBBEiwA5KWu_5UzrywbBPo4PKIYESy7K-noavdo7Z4riOZMJEoM9mE1IE3gks0thxoCZOwQAvD_BwE';
-    }
-
-    public function getPasswordForgottenLink(): string
-    {
-        return $this->translator->trans('https://authv2.prestashop.com/password/request ', [], 'Modules.Mbo.Links');
-    }
-
     public function getCategoryLink(string $categoryName): string
     {
         $category = $this->getCategoryByName($categoryName);

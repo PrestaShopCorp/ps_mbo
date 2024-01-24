@@ -66,7 +66,7 @@ class ModuleStatusTransitionCommand
         $this->moduleId = $moduleId;
         $this->moduleVersion = $moduleVersion;
 
-        if (in_array($command, [ModuleTransitionCommand::MODULE_COMMAND_DOWNLOAD])) {
+        if ($command === ModuleTransitionCommand::MODULE_COMMAND_DOWNLOAD) {
             if ('undefined' === $source) {
                 $source = null;
             }

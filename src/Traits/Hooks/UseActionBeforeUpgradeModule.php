@@ -21,74 +21,30 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
-use PrestaShop\Module\Mbo\Module\ActionsManager;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 
 trait UseActionBeforeUpgradeModule
 {
     /**
      * Hook actionBeforeUpgradeModule.
-     *
-     * @param array $params
-     *
-     * @throws \PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException
-     * @throws \PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException
      */
-    public function hookActionBeforeUpgradeModule(array $params): void
+    public function hookActionBeforeUpgradeModule(): void
     {
         // Clear the cache after download to force reload module services
         try {
             /** @var CacheClearerInterface $cacheClearer */
             $cacheClearer = $this->get('mbo.symfony_cache_clearer');
+            if (null === $cacheClearer) {
+                throw new ExpectedServiceNotFoundException('Unable to get MboCacheClearer service');
+            }
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
-            $cacheClearer = false;
-        }
-        if ($cacheClearer) {
-            $cacheClearer->clear();
-        }
 
-        // @TODO : Remove this Hook... and don't forget to add migration to unregister it
-        return;
-        if (!$this->needToDownloadModuleZip($params)) {
-            return;
-        }
-        /** @var ModuleDataProvider $moduleDataProvider */
-        $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
-
-        if (empty($params['moduleName']) || !$moduleDataProvider->isOnDisk($params['moduleName'])) {
             return;
         }
 
-        $moduleName = (string) $params['moduleName'];
-
-        /** @var ActionsManager $moduleActionsManager */
-        $moduleActionsManager = $this->get('mbo.modules.actions_manager');
-
-        $module = $moduleActionsManager->findVersionForUpdate($moduleName);
-        if (null !== $module) {
-            $moduleActionsManager->downloadAndReplaceModuleFiles($moduleName);
-        }
-    }
-
-    /**
-     * We proceed the download only if the update is launched by a back office action.
-     *
-     * @param array $params
-     *
-     * @return bool
-     */
-    private function needToDownloadModuleZip(array $params): bool
-    {
-        if (!empty($params['route']) && $params['route'] === 'admin_module_manage_action') {
-            return true;
-        }
-        if (!empty($params['request']) && $params['request']->get('_controller') === 'PrestaShopBundle\Controller\Admin\Improve\ModuleController::moduleAction' && $params['request']->get('action') === 'upgrade') {
-            return true;
-        }
-
-        return false;
+        $cacheClearer->clear();
     }
 }

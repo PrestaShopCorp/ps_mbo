@@ -36,11 +36,4 @@ interface RepositoryInterface
      * @return Module|null
      */
     public function getModule(string $name): ?Module;
-
-    /**
-     * @param string $name
-     *
-     * @return \stdClass|null
-     */
-    public function getApiModule(string $name): ?\stdClass;
 }

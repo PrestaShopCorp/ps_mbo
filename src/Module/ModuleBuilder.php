@@ -97,7 +97,7 @@ class ModuleBuilder implements ModuleBuilderInterface
             'path' => $this->moduleDirectory . $module->name,
         ];
 
-        if ($this->isModuleMainClassValid($module->name)) {
+        if ($moduleIsPresentOnDisk && $this->isModuleMainClassValid($module->name)) {
             $mainClassAttributes = [];
 
             // We load the main class of the module, and get its properties

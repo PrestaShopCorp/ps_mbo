@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use Exception;
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\CollectionFactory;
@@ -28,6 +30,7 @@ use PrestaShop\Module\Mbo\Module\Filters;
 use PrestaShop\Module\Mbo\Module\FiltersFactory;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
+use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -40,9 +43,9 @@ trait UseActionListModules
      *
      * @return array<array<string, string>>
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function hookActionListModules(array $params): array
+    public function hookActionListModules(): array
     {
         try {
             /** @var FiltersFactory $filtersFactory */
@@ -51,7 +54,11 @@ trait UseActionListModules
             $collectionFactory = $this->get('mbo.modules.collection.factory');
             /** @var Repository $moduleRepository */
             $moduleRepository = $this->get('mbo.modules.repository');
-        } catch (\Exception $exception) {
+
+            if (null === $filtersFactory || null === $collectionFactory || null === $moduleRepository) {
+                throw new ExpectedServiceNotFoundException('Some services not found in UseActionListModules');
+            }
+        } catch (Exception $exception) {
             ErrorHelper::reportError($exception);
             return [];
         }
@@ -101,9 +108,13 @@ trait UseActionListModules
     private function getAdditionalDescription(int $moduleId, string $moduleName): string
     {
         try {
-            /** @var \Twig\Environment $twigEnvironment */
+            /** @var Environment $twigEnvironment */
             $twigEnvironment = $this->get('twig');
-        } catch (\Exception $exception) {
+
+            if (null === $twigEnvironment) {
+                throw new ExpectedServiceNotFoundException('Unable to get Twig service');
+            }
+        } catch (Exception $exception) {
             ErrorHelper::reportError($exception);
             return '';
         }

@@ -26,6 +26,7 @@ namespace PrestaShop\Module\Mbo\Addons\Provider;
 use Exception;
 use GuzzleHttp\Exception\ClientException;
 use PrestaShop\Module\Mbo\Addons\ApiClient;
+use PrestaShop\Module\Mbo\Addons\Exception\DownloadModuleException;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUser;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
@@ -107,7 +108,9 @@ class AddonsDataProvider implements DataProviderInterface
     }
 
     /**
-     * Downloads a module source from addons, store it and returns the file name
+     * Downloads a module source from addons, store it and returns the file name.
+     *
+     * @throws DownloadModuleException
      */
     public function downloadModule(int $moduleId): string
     {
@@ -132,14 +135,14 @@ class AddonsDataProvider implements DataProviderInterface
                     $message = 'Error sent by Addons. ' . $jsonContent['errors']['label'];
                 }
             }
-            throw new Exception($message, 0, $e);
+            throw new DownloadModuleException($message, 0, $e);
         }
 
         $temporaryZipFilename = tempnam($this->cacheDir, 'mod');
         if (file_put_contents($temporaryZipFilename, $moduleData) !== false) {
             return $temporaryZipFilename;
         } else {
-            throw new Exception('Cannot store module content in temporary file !');
+            throw new DownloadModuleException('Cannot store module content in temporary file !');
         }
     }
 
@@ -224,7 +227,7 @@ class AddonsDataProvider implements DataProviderInterface
         // We merge the addons credentials
         if ($this->isUserAuthenticated()) {
             $credentials = $this->user->getCredentials();
-            if (array_key_exists('accounts_token', $credentials)) {
+            if (null !== $credentials && array_key_exists('accounts_token', $credentials)) {
                 $authParams['bearer'] = $credentials['accounts_token'];
                 // This is a bug for now, we need to give a couple of username/password even if a token is given
                 // It has to be cleaned once the bug fixed
@@ -239,6 +242,15 @@ class AddonsDataProvider implements DataProviderInterface
 
         return $authParams;
 
+    }
+
+    public function getAccountsShopUuid(): ?string
+    {
+        if (!$this->isUserAuthenticatedOnAccounts()) {
+            return null;
+        }
+
+        return $this->user->getAccountsShopUuid();
     }
 
     /**

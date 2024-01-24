@@ -21,12 +21,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits;
 
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use ToolsCore as Tools;
 
 trait HaveCdcComponent
 {
-    public function loadCdcMediaFilesForControllers(array $controllers = [], array $additionalJs = [], array $additionalCss = []): void
+    public function loadCdcMediaFilesForControllers(
+        array $controllers = [],
+        array $additionalJs = [],
+        array $additionalCss = []
+    ): void
     {
         if (in_array(Tools::getValue('controller'), $controllers)) {
             $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error-templating.js');
@@ -56,12 +63,19 @@ trait HaveCdcComponent
     public function smartyDisplayTpl(string $tpl, array $additionalParams = [])
     {
         try {
-            /** @var \PrestaShop\Module\Mbo\Service\View\ContextBuilder $contextBuilder */
+            /** @var ContextBuilder $contextBuilder */
             $contextBuilder = $this->get('mbo.cdc.context_builder');
-            /** @var \Symfony\Bundle\FrameworkBundle\Routing\Router $router */
+            /** @var Router $router */
             $router = $this->get('router');
+
+            if (null === $router || null === $contextBuilder) {
+                throw new ExpectedServiceNotFoundException(
+                    'Some services not found in HaveCdcComponent'
+                );
+            }
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
+
             return false;
         }
         $this->context->smarty->assign(

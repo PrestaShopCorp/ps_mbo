@@ -42,11 +42,9 @@ trait UseDashboardZoneThree
     /**
      * Display addons data & links in the third column of the dashboard
      *
-     * @param array $params
-     *
      * @return false|string
      */
-    public function hookDashboardZoneThree(array $params)
+    public function hookDashboardZoneThree()
     {
         return $this->smartyDisplayTpl('dashboard-zone-three.tpl');
     }

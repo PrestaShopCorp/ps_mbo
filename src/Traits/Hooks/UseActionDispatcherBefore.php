@@ -24,6 +24,8 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 use Cache;
 use Configuration;
 use Context;
+use Dispatcher;
+use Exception;
 use Language;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler;
@@ -32,7 +34,6 @@ use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Shop;
-use Symfony\Component\HttpFoundation\Request;
 use Tab;
 use Tools;
 
@@ -59,7 +60,6 @@ trait UseActionDispatcherBefore
             $this->ensureShopIsRegistered();
             $this->ensureShopIsUpdated();
             $this->ensureApiConfigIsApplied();
-            $this->ensureAddonsCookieIsValid($params);
         }
 
         if (self::checkModuleStatus()) { // If the module is not active, config values are not set yet
@@ -118,9 +118,9 @@ trait UseActionDispatcherBefore
     private function ensureApiConfigIsApplied(): void
     {
         try {
-            /** @var \Symfony\Component\Cache\DoctrineProvider $cacheProvider */
+            /** @var DoctrineProvider $cacheProvider */
             $cacheProvider = $this->get('doctrine.cache.provider');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             ErrorHelper::reportError($e);
             $cacheProvider = false;
         }
@@ -145,7 +145,7 @@ trait UseActionDispatcherBefore
         try {
             /** @var VersionChangeApplyConfigCommandHandler $configApplyHandler */
             $configApplyHandler = $this->get('mbo.distribution.api_version_change_config_apply_handler');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             ErrorHelper::reportError($e);
 
             return;
@@ -166,15 +166,15 @@ trait UseActionDispatcherBefore
      *
      * @return void
      *
-     * @throws \PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException
-     * @throws \PrestaShop\PrestaShop\Core\Exception\CoreException
-     * @throws \Exception
+     * @throws EmployeeException
+     * @throws CoreException
+     * @throws Exception
      */
     private function ensureApiUserExistAndIsLogged($controllerName, array $params): void
     {
         $apiUser = null;
         // Whatever the call in the MBO API, we check if the MBO API user exists
-        if (\Dispatcher::FC_ADMIN == (int) $params['controller_type'] || $controllerName === 'apiPsMbo') {
+        if (Dispatcher::FC_ADMIN == (int) $params['controller_type'] || $controllerName === 'apiPsMbo') {
             $apiUser = $this->getAdminAuthenticationProvider()->ensureApiUserExistence();
         }
 
@@ -224,42 +224,5 @@ trait UseActionDispatcherBefore
         }
 
         @unlink($lockFile);
-    }
-
-    private function ensureAddonsCookieIsValid(array &$params): void
-    {
-        $request = $params['request'] ?? null;
-
-        if (!$request || !$request instanceof Request) {
-            return;
-        }
-
-        // Remove cookies if username is not a valid email
-        $cookies = $request->cookies->all();
-
-        $addonsUsernameCookie = $cookies['username_addons_v2'] ?? null;
-
-        if (!empty($addonsUsernameCookie)) {
-            $addonsUsernameCookie = $this->get('mbo.addons.user.credentials_encryptor')->decrypt($addonsUsernameCookie);
-            $usernameParts = explode('.', $addonsUsernameCookie);
-            $isValid = \Validate::isEmail($addonsUsernameCookie)
-                && mb_strlen($usernameParts[array_key_last($usernameParts)]) < 5;
-            // the 5 limit for the domain extension is totally arbitrary
-            // We made this check because Validate::isEmail doesn't check the length of the domain extension
-
-            if (!$isValid) {
-                $params['request'] = $this->clearAddonsCookiesFromRequest($request);
-            }
-        }
-    }
-
-    private function clearAddonsCookiesFromRequest(Request $request): Request
-    {
-        // Removes from cookies in the request
-        $request->cookies->remove('username_addons_v2');
-        $request->cookies->remove('password_addons_v2');
-        $request->cookies->remove('is_contributor_v2');
-
-        return $request;
     }
 }

@@ -21,9 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons\User;
 
-use Exception;
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -31,16 +29,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class AddonsUser implements UserInterface
 {
-    /**
-     * @var CredentialsEncryptor
-     */
-    protected $encryption;
-
-    /**
-     * @var Request
-     */
-    private $request;
-
     /**
      * @var SessionInterface
      */
@@ -53,11 +41,8 @@ class AddonsUser implements UserInterface
 
     public function __construct(
         SessionInterface $session,
-        CredentialsEncryptor $encryption,
         AccountsDataProvider $accountsDataProvider
     ) {
-        $this->encryption = $encryption;
-        $this->request = Request::createFromGlobals();
         $this->session = $session;
         $this->accountsDataProvider = $accountsDataProvider;
     }
@@ -67,16 +52,15 @@ class AddonsUser implements UserInterface
      */
     public function isAuthenticated(): bool
     {
-        return $this->hasAccountsTokenInSession() || $this->isConnectedOnPsAccounts() || $this->hasCookieAuthenticated() || $this->hasSessionAuthenticated();
+        return $this->hasAccountsTokenInSession() || $this->isConnectedOnPsAccounts();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getCredentials(bool $encrypted = false): array
+    public function getCredentials(bool $encrypted = false): ?array
     {
-        $accountsToken = $this->getFromSession('accounts_token');
-
+        $accountsToken = $this->getAccountsTokenFromSession();
         if (null !== $accountsToken) {
             return ['accounts_token' => (string) $accountsToken];
         }
@@ -87,15 +71,7 @@ class AddonsUser implements UserInterface
             return ['accounts_token' => (string) $accountsToken];
         }
 
-        return $encrypted ?
-            [
-                'username' => $this->get('username_addons_v2'),
-                'password' => $this->get('password_addons_v2'),
-            ]
-            : [
-                'username' => $this->getAndDecrypt('username_addons_v2'),
-                'password' => $this->getAndDecrypt('password_addons_v2'),
-            ];
+        return null;
     }
 
     /**
@@ -109,9 +85,7 @@ class AddonsUser implements UserInterface
             if ($this->isConnectedOnPsAccounts()) {
                 $email = $this->accountsDataProvider->getAccountsUserEmail();
             } elseif ($this->hasAccountsTokenInSession()) { // Connected on ps_accounts with session
-                $email = $this->jwtDecode($this->getFromSession('accounts_token'))['email'];
-            } else { // Connected on addons
-                $email = $this->getAndDecrypt('username_addons_v2');
+                $email = $this->jwtDecode($this->getAccountsTokenFromSession())['email'];
             }
         }
 
@@ -122,7 +96,7 @@ class AddonsUser implements UserInterface
 
     public function hasAccountsTokenInSession(): bool
     {
-        return null !== $this->getFromSession('accounts_token');
+        return null !== $this->getAccountsTokenFromSession();
     }
 
     public function isConnectedOnPsAccounts(): bool
@@ -132,80 +106,17 @@ class AddonsUser implements UserInterface
         return !empty($accountsToken);
     }
 
+    public function getAccountsShopUuid(): ?string
+    {
+        return $this->accountsDataProvider->getAccountsShopId();
+    }
+
     /**
-     * @param string $key
-     *
      * @return mixed
      */
-    private function getFromCookie(string $key)
+    private function getAccountsTokenFromSession()
     {
-        return $this->request->cookies->get($key);
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return mixed
-     */
-    private function getFromSession(string $key)
-    {
-        return $this->session->get($key);
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return string|null
-     *
-     * @throws Exception
-     */
-    private function getAndDecrypt(string $key): ?string
-    {
-        $value = $this->get($key);
-        if (null !== $value) {
-            return $this->encryption->decrypt($value);
-        }
-
-        return null;
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return string|null
-     *
-     * @throws Exception
-     */
-    private function get(string $key): ?string
-    {
-        $sessionValue = $this->getFromSession($key);
-        if (null !== $sessionValue) {
-            return $sessionValue;
-        }
-
-        return $this->getFromCookie($key);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    private function hasCookieAuthenticated(): bool
-    {
-        $username = $this->getFromCookie('username_addons_v2');
-        $password = $this->getFromCookie('password_addons_v2');
-
-        return $username && $password && $this->credentialsAreValid($username, $password);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    private function hasSessionAuthenticated(): bool
-    {
-        $username = $this->getFromSession('username_addons_v2');
-        $password = $this->getFromSession('password_addons_v2');
-
-        return $username && $password && $this->credentialsAreValid($username, $password);
+        return $this->session->get('accounts_token');
     }
 
     /**
@@ -217,19 +128,5 @@ class AddonsUser implements UserInterface
         $jsonToken = base64_decode($payload);
 
         return json_decode($jsonToken, true);
-    }
-
-    private function credentialsAreValid(string $username, string $password): bool
-    {
-        if (empty($username) || empty($password)) {
-            return false;
-        }
-
-        $addonsUsername = $this->encryption->decrypt($username);
-        $usernameParts = explode('.', $addonsUsername);
-        // the 5 limit for the domain extension is totally arbitrary
-        // We made this check because Validate::isEmail doesn't check the length of the domain extension
-
-        return \Validate::isEmail($addonsUsername) && mb_strlen($usernameParts[array_key_last($usernameParts)]) < 5;
     }
 }

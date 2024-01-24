@@ -25,6 +25,7 @@ use Db;
 use Exception;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
+use PrestaShopDatabaseException;
 
 trait UseDashboardZoneOne
 {
@@ -33,11 +34,9 @@ trait UseDashboardZoneOne
     /**
      * Display "Advices and updates" block on the left column of the dashboard
      *
-     * @param array $params
-     *
      * @return false|string
      */
-    public function hookDashboardZoneOne(array $params)
+    public function hookDashboardZoneOne()
     {
         return $this->smartyDisplayTpl('dashboard-zone-one.tpl', [
             'urlAccountsCdn' => $this->loadPsAccounts(),
@@ -65,15 +64,12 @@ trait UseDashboardZoneOne
      */
     protected function loadMediaDashboardZoneOne(): void
     {
-        $additionalJs = [
-            $this->getPathUri() . 'views/js/addons-connector.js?v=' . $this->version,
-        ];
-        $additionalCss = [
-            $this->getPathUri() . 'views/css/addons-connect.css',
-        ];
-        $this->loadCdcMediaFilesForControllers(['AdminDashboard'], $additionalJs, $additionalCss);
+        $this->loadCdcMediaFilesForControllers(['AdminDashboard']);
     }
 
+    /**
+     * @throws PrestaShopDatabaseException
+     */
     public function useDashboardZoneOneExtraOperations()
     {
         //Update module position in Dashboard

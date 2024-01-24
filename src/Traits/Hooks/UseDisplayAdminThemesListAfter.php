@@ -22,7 +22,10 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 trait UseDisplayAdminThemesListAfter
 {
@@ -30,21 +33,24 @@ trait UseDisplayAdminThemesListAfter
      * Hook displayAdminThemesListAfter.
      * Includes content just after the themes list.
      *
-     * @param array $params
-     *
-     * @return string
-     *
      * @throws Exception
      */
-    public function hookDisplayAdminThemesListAfter(array $params): string
+    public function hookDisplayAdminThemesListAfter(): string
     {
         try {
-            /** @var \PrestaShop\Module\Mbo\Service\View\ContextBuilder $contextBuilder */
+            /** @var ContextBuilder $contextBuilder */
             $contextBuilder = $this->get('mbo.cdc.context_builder');
-            /** @var \Symfony\Bundle\FrameworkBundle\Routing\Router $router */
+            /** @var Router $router */
             $router = $this->get('router');
+
+            if (null === $contextBuilder || null === $router) {
+                throw new ExpectedServiceNotFoundException(
+                    'Some services not found in UseDisplayAdminThemesListAfter'
+                );
+            }
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
+
             return '';
         }
         $context = $contextBuilder->getViewContext();
@@ -84,7 +90,7 @@ trait UseDisplayAdminThemesListAfter
             $this->context->controller->addCss($this->getPathUri() . 'views/css/cdc-error-templating.css');
 
             $cdcJsFile = getenv('MBO_CDC_URL');
-            if (false === $cdcJsFile || !is_string($cdcJsFile) || empty($cdcJsFile)) {
+            if (!is_string($cdcJsFile) || empty($cdcJsFile)) {
                 $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error.js');
 
                 return;

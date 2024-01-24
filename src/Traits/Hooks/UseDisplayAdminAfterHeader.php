@@ -21,11 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
-use PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController;
+use Exception;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
-use PrestaShop\Module\Mbo\Security\PermissionChecker;
-use Symfony\Component\HttpFoundation\Request;
 use Tools;
 use Twig\Environment;
 
@@ -35,11 +32,9 @@ trait UseDisplayAdminAfterHeader
      * Hook displayAdminAfterHeader.
      * Adds content in BackOffice after header section
      *
-     * @param array $params
-     *
      * @return string
      */
-    public function hookDisplayAdminAfterHeader(array $params): string
+    public function hookDisplayAdminAfterHeader(): string
     {
         if (!$this->shouldDisplayMboUserExplanation()) {
             return '';
@@ -48,19 +43,18 @@ trait UseDisplayAdminAfterHeader
         try {
             /** @var Environment $twig */
             $twig = $this->get('twig');
-        } catch (\Exception $e) {
-            ErrorHelper::reportError($e);
-            return '';
-        }
 
-        try {
             return $twig->render(
                 '@Modules/ps_mbo/views/templates/hook/twig/explanation_mbo_employee.html.twig', [
-                    'title' => $this->trans('Why is there a "PrestaShop Marketplace" employee?', [], 'Modules.Mbo.Global'),
+                    'title' => $this->trans(
+                        'Why is there a "PrestaShop Marketplace" employee?',
+                        [],
+                        'Modules.Mbo.Global'
+                    ),
                     'message' => $this->trans('MBO employee explanation', [], 'Modules.Mbo.Global'),
                 ]
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             ErrorHelper::reportError($e);
             return '';
         }
@@ -88,8 +82,12 @@ trait UseDisplayAdminAfterHeader
     protected function loadMediaDisplayAdminAfterHeader(): void
     {
         if ($this->shouldDisplayMboUserExplanation()) {
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/mbo-user-explanation.js?v=' . $this->version);
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/mbo-user-explanation.css?v=' . $this->version);
+            $this->context->controller->addJs(
+                sprintf('%sviews/js/mbo-user-explanation.js?v=%s', $this->getPathUri(), $this->version)
+            );
+            $this->context->controller->addCSS(
+                sprintf('%sviews/css/mbo-user-explanation.css?v=%s', $this->getPathUri(), $this->version)
+            );
         }
     }
 
@@ -99,20 +97,17 @@ trait UseDisplayAdminAfterHeader
             return false;
         }
 
-        $requestStack = $this->get('request_stack');
-        if (null === $requestStack) {
+        try {
+            $requestStack = $this->get('request_stack');
+            if (null === $requestStack || null === $request = $requestStack->getCurrentRequest()) {
+                throw new Exception('Unable to get request');
+            }
+        } catch (Exception $e) {
+            ErrorHelper::reportError($e);
             return false;
         }
 
-        /**
-         * @var Request $request
-         */
-        $request = $this->get('request_stack')->getCurrentRequest();
         // because admin_employee_index and admin_employee_edit are in the same controller AdminEmployees
-        if (null === $request || 'admin_employees_index' !== $request->get('_route')) {
-            return false;
-        }
-
-        return true;
+        return 'admin_employees_index' === $request->get('_route');
     }
 }
