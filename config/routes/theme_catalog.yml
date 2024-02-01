@@ -2,6 +2,6 @@ admin_mbo_catalog_theme:
   path: /
   methods: [GET]
   defaults:
-    _controller: mbo.controller.themes.catalog:indexAction
+    _controller: 'PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController::indexAction'
     _legacy_controller: AdminPsMboTheme
     _legacy_link: AdminPsMboTheme

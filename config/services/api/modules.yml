@@ -14,7 +14,7 @@ services:
   mbo.modules.transitions_manager:
     class: 'PrestaShop\Module\Mbo\Module\Workflow\TransitionsManager'
     arguments:
-      - '@prestashop.module.manager'
+      - '@PrestaShop\PrestaShop\Core\Module\ModuleManager'
       - '@mbo.hook_exception_holder'
 
   mbo.modules.transition_builder:
