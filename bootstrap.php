@@ -25,4 +25,4 @@ if (!$rootDir) {
 
 require_once $rootDir . '/vendor/autoload.php';
 
-(new \Symfony\Component\Dotenv\Dotenv(true))->loadEnv(__DIR__ . '/.env');
+(new \Symfony\Component\Dotenv\Dotenv())->loadEnv(__DIR__ . '/.env');

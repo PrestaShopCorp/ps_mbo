@@ -20,29 +20,17 @@ services:
       - '@translator'
       - '@router'
 
-  mbo.controller.modules.catalog:
-    class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController'
+  PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController:
+    autowire: true
 
-  mbo.controller.modules.selection:
-    class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleSelectionController'
-    arguments:
-      - '@request_stack'
+  PrestaShop\Module\Mbo\Controller\Admin\ModuleSelectionController:
+    autowire: true
 
-  mbo.controller.modules.recommended:
-    class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleRecommendedController'
-    arguments:
-      - '@request_stack'
-    calls:
-      - [ setContainer, [ '@service_container' ] ]
+  PrestaShop\Module\Mbo\Controller\Admin\ModuleRecommendedController:
+    autowire: true
 
-  mbo.controller.themes.catalog:
-    class: 'PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController'
-    arguments:
-      - '@request_stack'
+  PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController:
+    autowire: true
 
-  mbo.controller.addons:
-    class: 'PrestaShop\Module\Mbo\Controller\Admin\AddonsController'
-    arguments:
-      - '@request_stack'
-      - '@prestashop.module.manager'
-      - '@prestashop.core.admin.module.repository'
+  PrestaShop\Module\Mbo\Controller\Admin\AddonsController:
+    autowire: true

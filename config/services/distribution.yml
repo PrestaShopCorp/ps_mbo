@@ -13,7 +13,8 @@ services:
       - "%ps_cache_dir%%/ps_mbo"
 
   mbo.doctrine.cache.provider:
-    class: Symfony\Component\Cache\DoctrineProvider
+    class: Doctrine\Common\Cache\Psr6\DoctrineProvider
+    factory: [ Doctrine\Common\Cache\Psr6\DoctrineProvider, wrap ]
     arguments:
       - "@mbo.doctrine.cache.adapter"
 

@@ -2,7 +2,7 @@ admin_mbo_catalog_module:
   path: /
   methods: [GET]
   defaults:
-    _controller: mbo.controller.modules.catalog:indexAction
+    _controller: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController::indexAction'
     _legacy_controller: AdminPsMboModule
     _legacy_link:
       - AdminPsMboModuleParent
@@ -12,7 +12,7 @@ admin_mbo_catalog_module_selection:
   path: /selection
   methods: [GET]
   defaults:
-    _controller: mbo.controller.modules.selection:indexAction
+    _controller: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleSelectionController::indexAction'
     _legacy_controller: AdminPsMboSelection
     _legacy_link: AdminPsMboSelection
 
@@ -20,4 +20,4 @@ admin_mbo_module_cdc_error:
   path: /cdc_error
   methods: [ GET ]
   defaults:
-    _controller: mbo.controller.modules.catalog:cdcErrorAction
+    _controller: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController::cdcErrorAction'

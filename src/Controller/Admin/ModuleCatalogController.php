@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
@@ -140,7 +141,7 @@ class ModuleCatalogController extends ModuleAbstractController
         $accountsEnabled = $accountsInstaller->isModuleEnabled();
         if ($accountsEnabled) return true;
 
-        $moduleManager = $this->get('prestashop.module.manager');
+        $moduleManager = $this->get('PrestaShop\PrestaShop\Core\Module\ModuleManager');
         return $moduleManager->enable($accountsInstaller->getModuleName());
     }
 

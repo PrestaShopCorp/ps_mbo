@@ -31,14 +31,14 @@ return static function (ContainerConfigurator $container) {
     if (ps_mbo::checkModuleStatus()) {
         $services->set('mbo.addons.event_subscriber', ModuleManagementEventSubscriber::class)
         ->args([
-            ref('logger'),
-            ref('mbo.modules.repository'),
-            ref('mbo.tab.collection.provider'),
-            ref('mbo.cdc.context_builder'),
-            ref('mbo.cdc.client.distribution_api'),
-            ref('mbo.security.admin_authentication.provider'),
-            ref('mbo.distribution.api_version_change_config_apply_handler'),
-            ref('mbo.symfony_cache_clearer'),
+            service('logger'),
+            service('mbo.modules.repository'),
+            service('mbo.tab.collection.provider'),
+            service('mbo.cdc.context_builder'),
+            service('mbo.cdc.client.distribution_api'),
+            service('mbo.security.admin_authentication.provider'),
+            service('mbo.distribution.api_version_change_config_apply_handler'),
+            service('mbo.symfony_cache_clearer'),
         ])
         ->public()
         ->tag('kernel.event_subscriber');
