@@ -6,7 +6,7 @@ services:
     class: PrestaShop\Module\Mbo\Service\View\ContextBuilder
     arguments:
       - '@prestashop.adapter.legacy.context'
-      - '@prestashop.core.admin.module.repository'
+      - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
       - '@router'
       - '@doctrine.cache.provider'
       - '@mbo.security.admin_authentication.provider'

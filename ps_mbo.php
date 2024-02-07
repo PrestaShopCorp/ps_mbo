@@ -445,7 +445,7 @@ class ps_mbo extends Module
      */
     private function loadEnv(): void
     {
-        $dotenv = new Dotenv(true);
+        $dotenv = new Dotenv();
         $dotenv->loadEnv(__DIR__ . '/.env');
     }
 

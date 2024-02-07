@@ -5,7 +5,7 @@ services:
   mbo.addons.user:
     class: PrestaShop\Module\Mbo\Addons\User\AddonsUser
     arguments:
-      - '@session'
+      - '@request_stack'
       - '@mbo.accounts.data_provider'
 
   mbo.addons.user.provider:
