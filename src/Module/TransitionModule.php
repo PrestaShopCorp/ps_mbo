@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module;
 
-use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
+use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
 
 class TransitionModule
 {
@@ -92,21 +92,21 @@ class TransitionModule
     public function getStatus(): string
     {
         if (!$this->installed) {
-            return ModuleStateMachine::STATUS_UNINSTALLED;
+            return TransitionInterface::STATUS_UNINSTALLED;
         }
 
         if ($this->active && $this->activeOnMobile) {
-            return ModuleStateMachine::STATUS_ENABLED__MOBILE_ENABLED;
+            return TransitionInterface::STATUS_ENABLED__MOBILE_ENABLED;
         }
 
         if ($this->active && !$this->activeOnMobile) {
-            return ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED;
+            return TransitionInterface::STATUS_ENABLED__MOBILE_DISABLED;
         }
 
         if (!$this->active && $this->activeOnMobile) {
-            return ModuleStateMachine::STATUS_DISABLED__MOBILE_ENABLED;
+            return TransitionInterface::STATUS_DISABLED__MOBILE_ENABLED;
         }
 
-        return ModuleStateMachine::STATUS_DISABLED__MOBILE_DISABLED;
+        return TransitionInterface::STATUS_DISABLED__MOBILE_DISABLED;
     }
 }

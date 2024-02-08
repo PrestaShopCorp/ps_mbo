@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module\ValueObject;
 
 use PrestaShop\Module\Mbo\Module\Exception\UnknownModuleTransitionCommandException;
-use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
+use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
 
 class ModuleTransitionCommand
 {
@@ -38,15 +38,15 @@ class ModuleTransitionCommand
     public const MODULE_COMMAND_DOWNLOAD = 'module.download';
 
     public const MAPPING_TRANSITION_COMMAND_TARGET_STATUS = [
-        self::MODULE_COMMAND_INSTALL => ModuleStateMachine::STATUS_ENABLED__MOBILE_ENABLED,
+        self::MODULE_COMMAND_INSTALL => TransitionInterface::STATUS_ENABLED__MOBILE_ENABLED,
         self::MODULE_COMMAND_ENABLE => 'computed',
         self::MODULE_COMMAND_DISABLE => 'computed',
         self::MODULE_COMMAND_MOBILE_ENABLE => 'computed',
         self::MODULE_COMMAND_MOBILE_DISABLE => 'computed',
-        self::MODULE_COMMAND_CONFIGURE => ModuleStateMachine::STATUS_CONFIGURED,
-        self::MODULE_COMMAND_RESET => ModuleStateMachine::STATUS_RESET,
-        self::MODULE_COMMAND_UPGRADE => ModuleStateMachine::STATUS_UPGRADED,
-        self::MODULE_COMMAND_UNINSTALL => ModuleStateMachine::STATUS_UNINSTALLED,
+        self::MODULE_COMMAND_CONFIGURE => TransitionInterface::STATUS_CONFIGURED,
+        self::MODULE_COMMAND_RESET => TransitionInterface::STATUS_RESET,
+        self::MODULE_COMMAND_UPGRADE => TransitionInterface::STATUS_UPGRADED,
+        self::MODULE_COMMAND_UNINSTALL => TransitionInterface::STATUS_UNINSTALLED,
     ];
 
     public const MODULE_COMMANDS = [

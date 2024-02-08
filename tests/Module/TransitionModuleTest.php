@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Tests\Module;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
+use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
 
 class TransitionModuleTest extends TestCase
 {
@@ -40,32 +41,32 @@ class TransitionModuleTest extends TestCase
     {
         yield [
             ['name' => 'my_module', 'version' => '1.0.0', 'installed' => false, 'active_on_mobile' => false, 'active' => false],
-            ModuleStateMachine::STATUS_UNINSTALLED,
+            TransitionInterface::STATUS_UNINSTALLED,
         ];
 
         yield [
             ['name' => 'my_module', 'version' => '1.0.0', 'installed' => false, 'active_on_mobile' => true, 'active' => true],
-            ModuleStateMachine::STATUS_UNINSTALLED,
+            TransitionInterface::STATUS_UNINSTALLED,
         ];
 
         yield [
             ['name' => 'my_module', 'version' => '1.0.0', 'installed' => true, 'active_on_mobile' => true, 'active' => true],
-            ModuleStateMachine::STATUS_ENABLED__MOBILE_ENABLED,
+            TransitionInterface::STATUS_ENABLED__MOBILE_ENABLED,
         ];
 
         yield [
             ['name' => 'my_module', 'version' => '1.0.0', 'installed' => true, 'active_on_mobile' => false, 'active' => true],
-            ModuleStateMachine::STATUS_ENABLED__MOBILE_DISABLED,
+            TransitionInterface::STATUS_ENABLED__MOBILE_DISABLED,
         ];
 
         yield [
             ['name' => 'my_module', 'version' => '1.0.0', 'installed' => true, 'active_on_mobile' => true, 'active' => false],
-            ModuleStateMachine::STATUS_DISABLED__MOBILE_ENABLED,
+            TransitionInterface::STATUS_DISABLED__MOBILE_ENABLED,
         ];
 
         yield [
             ['name' => 'my_module', 'version' => '1.0.0', 'installed' => true, 'active_on_mobile' => false, 'active' => false],
-            ModuleStateMachine::STATUS_DISABLED__MOBILE_DISABLED,
+            TransitionInterface::STATUS_DISABLED__MOBILE_DISABLED,
         ];
     }
 
