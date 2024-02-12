@@ -169,6 +169,7 @@ class ContextBuilder
             'module_catalog_url' => $this->router->generate('admin_mbo_catalog_module'),
             'theme_catalog_url' => $this->router->generate('admin_mbo_catalog_theme'),
             'php_version' => phpversion(),
+            'shop_creation_date' => defined('_PS_CREATION_DATE_') ? _PS_CREATION_DATE_ : null,
         ];
     }
 
