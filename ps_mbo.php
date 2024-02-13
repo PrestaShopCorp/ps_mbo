@@ -100,7 +100,7 @@ class ps_mbo extends Module
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
-            'min' => '8.0.0',
+            'min' => '8.0.2',
             'max' => _PS_VERSION_,
         ];
 
