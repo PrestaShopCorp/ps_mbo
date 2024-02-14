@@ -144,7 +144,7 @@ trait HaveTabs
         $tab->position = Tab::getNewLastPosition($idParent);
         $tab->id_parent = $idParent;
         $tab->name = $tabNameByLangId;
-        $tab->active = $tabData['visible'] ? $tabData['visible'] : false;
+        $tab->active = $tabData['visible'] ?: false;
 
         if (false === $activate) { // This case will happen when upgrading the module. We disable all the tabs
             $tab->active = false;
@@ -283,6 +283,7 @@ trait HaveTabs
 
         $tab->id_parent = $idParent;
         $tab->name = $tabNameByLangId;
+        $tab->active = $tabData['visible'] ?: false;
         if (!empty($tabData['wording']) && !empty($tabData['wording_domain'])) {
             $tab->wording = $tabData['wording'];
             $tab->wording_domain = $tabData['wording_domain'];
