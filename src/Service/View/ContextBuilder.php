@@ -33,7 +33,7 @@ use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\UrlHelper;
 use PrestaShop\Module\Mbo\Module\Module;
-use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
+use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
 use PrestaShop\Module\Mbo\Tab\Tab;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Module\Module as CoreModule;
@@ -115,7 +115,7 @@ class ContextBuilder
         $modules = [];
         // Filter : remove uninstalled modules
         foreach ($this->listInstalledModulesAndStatuses() as $installedModule) {
-            if ($installedModule['status'] !== ModuleStateMachine::STATUS_UNINSTALLED) {
+            if ($installedModule['status'] !== TransitionInterface::STATUS_UNINSTALLED) {
                 $modules[] = $installedModule['name'];
             }
         }

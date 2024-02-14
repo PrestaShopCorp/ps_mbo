@@ -34,17 +34,13 @@ use PrestaShop\Module\Mbo\Module\ModuleBuilder;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
-use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
-use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
+use PrestaShop\Module\Mbo\Module\Workflow\TransitionApplier;
+use PrestaShop\Module\Mbo\Module\Workflow\TransitionBuilder;
+use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
 final class ModuleStatusTransitionCommandHandler
 {
-    /**
-     * @var ModuleStateMachine
-     */
-    private $moduleStateMachine;
-
     /**
      * @var Repository
      */
@@ -59,17 +55,27 @@ final class ModuleStatusTransitionCommandHandler
      * @var ModuleBuilder
      */
     private $moduleBuilder;
+    /**
+     * @var TransitionBuilder
+     */
+    private $transitionBuilder;
+    /**
+     * @var TransitionApplier
+     */
+    private $transitionApplier;
 
     public function __construct(
-        ModuleStateMachine $moduleStateMachine,
         Repository $moduleRepository,
         ActionsManager $actionsManager,
-        ModuleBuilder $moduleBuilder
+        ModuleBuilder $moduleBuilder,
+        TransitionBuilder $transitionBuilder,
+        TransitionApplier $transitionApplier
     ) {
-        $this->moduleStateMachine = $moduleStateMachine;
         $this->moduleRepository = $moduleRepository;
         $this->actionsManager = $actionsManager;
         $this->moduleBuilder = $moduleBuilder;
+        $this->transitionBuilder = $transitionBuilder;
+        $this->transitionApplier = $transitionApplier;
     }
 
     /**
@@ -124,28 +130,18 @@ final class ModuleStatusTransitionCommandHandler
             }
 
             // Compute the state machine transition name
-            $transitionName = $this->moduleStateMachine->getTransition(
+            $transitionName = $this->transitionBuilder->getTransition(
                 $module,
                 $transitionCommand
             );
 
-            if($transitionName === ModuleStateMachine::NO_CHANGE_TRANSITION) {
+            // Do nothing, just return the module
+            if ($transitionName === TransitionInterface::NO_CHANGE_TRANSITION) {
                 return $this->buildModuleAndReturn($moduleName);
             }
 
-            // Check if the transition asked is possible
-            if (!$this->moduleStateMachine->can($module, $transitionName)) {
-                throw new UnauthorizedModuleTransitionException(
-                    sprintf(
-                        'Transition "%s" is not possible for module "%s"',
-                        $transitionCommand,
-                        $moduleName
-                    )
-                );
-            }
-
             // Execute the transition
-            $this->moduleStateMachine->apply($module, $transitionName, [
+            $this->transitionApplier->apply($module, $transitionName, [
                 'source' => $source,
             ]);
         }

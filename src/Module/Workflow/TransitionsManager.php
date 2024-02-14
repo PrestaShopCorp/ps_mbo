@@ -39,7 +39,7 @@ class TransitionsManager
         $this->moduleManager = $moduleManager;
     }
 
-    public function uninstalledToEnabledAndMobileEnabled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function uninstalledToEnabledAndMobileEnabled(TransitionModule $transitionModule, array $context): bool
     {
         return $this->install($transitionModule, $context);
     }
@@ -47,7 +47,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function enabledAndMobileEnabledToEnabledAndMobileDisabled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function enabledAndMobileEnabledToEnabledAndMobileDisabled(TransitionModule $transitionModule, array $context): bool
     {
         return $this->enable($transitionModule, $context) && $this->disableOnMobile($transitionModule);
     }
@@ -55,7 +55,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function enabledAndMobileEnabledToDisabledAndMobileEnabled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function enabledAndMobileEnabledToDisabledAndMobileEnabled(TransitionModule $transitionModule, array $context): bool
     {
         return $this->disable($transitionModule, $context) && $this->enableOnMobile($transitionModule);
     }
@@ -63,7 +63,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function enabledAndMobileEnabledToReset(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function enabledAndMobileEnabledToReset(TransitionModule $transitionModule, array $context): bool
     {
         return $this->reset($transitionModule, $context);
     }
@@ -71,12 +71,12 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function enabledAndMobileEnabledToUpgraded(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function enabledAndMobileEnabledToUpgraded(TransitionModule $transitionModule, array $context): bool
     {
         return $this->upgrade($transitionModule, $context);
     }
 
-    public function enabledAndMobileEnabledToConfigured(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function enabledAndMobileEnabledToConfigured(TransitionModule $transitionModule, array $context): bool
     {
         return true;
     }
@@ -84,7 +84,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function enabledAndMobileEnabledToUninstalled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function enabledAndMobileEnabledToUninstalled(TransitionModule $transitionModule, array $context): bool
     {
         return $this->uninstall($transitionModule, $context);
     }
@@ -92,7 +92,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function enabledAndMobileDisabledToInstalled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function enabledAndMobileDisabledToInstalled(TransitionModule $transitionModule, array $context): bool
     {
         return $this->install($transitionModule, $context);
     }
@@ -100,7 +100,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function enabledAndMobileDisabledToEnabledAndMobileEnabled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function enabledAndMobileDisabledToEnabledAndMobileEnabled(TransitionModule $transitionModule, array $context): bool
     {
         return $this->enable($transitionModule, $context) && $this->enableOnMobile($transitionModule);
     }
@@ -108,7 +108,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function enabledAndMobileDisabledToDisabledAndMobileDisabled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function enabledAndMobileDisabledToDisabledAndMobileDisabled(TransitionModule $transitionModule, array $context): bool
     {
         return $this->disable($transitionModule, $context) && $this->disableOnMobile($transitionModule);
     }
@@ -116,7 +116,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function enabledAndMobileDisabledToReset(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function enabledAndMobileDisabledToReset(TransitionModule $transitionModule, array $context): bool
     {
         return $this->reset($transitionModule, $context);
     }
@@ -124,7 +124,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function disabledAndMobileDisabledToReset(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function disabledAndMobileDisabledToReset(TransitionModule $transitionModule, array $context): bool
     {
         return $this->reset($transitionModule, $context);
     }
@@ -132,12 +132,12 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function enabledAndMobileDisabledToUpgraded(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function enabledAndMobileDisabledToUpgraded(TransitionModule $transitionModule, array $context): bool
     {
         return $this->upgrade($transitionModule, $context);
     }
 
-    public function enabledAndMobileDisabledToConfigured(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function enabledAndMobileDisabledToConfigured(TransitionModule $transitionModule, array $context): bool
     {
         return true;
     }
@@ -145,7 +145,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function enabledAndMobileDisabledToUninstalled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function enabledAndMobileDisabledToUninstalled(TransitionModule $transitionModule, array $context): bool
     {
         return $this->uninstall($transitionModule, $context);
     }
@@ -153,7 +153,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function disabledAndMobileEnabledToInstalled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function disabledAndMobileEnabledToInstalled(TransitionModule $transitionModule, array $context): bool
     {
         return $this->install($transitionModule, $context);
     }
@@ -161,7 +161,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function disabledAndMobileEnabledToEnabledAndMobileEnabled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function disabledAndMobileEnabledToEnabledAndMobileEnabled(TransitionModule $transitionModule, array $context): bool
     {
         return $this->enable($transitionModule, $context) && $this->enableOnMobile($transitionModule);
     }
@@ -169,7 +169,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function disabledAndMobileEnabledToReset(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function disabledAndMobileEnabledToReset(TransitionModule $transitionModule, array $context): bool
     {
         return $this->reset($transitionModule, $context);
     }
@@ -177,12 +177,12 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function disabledAndMobileEnabledToUpgraded(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function disabledAndMobileEnabledToUpgraded(TransitionModule $transitionModule, array $context): bool
     {
         return $this->upgrade($transitionModule, $context);
     }
 
-    public function disabledAndMobileEnabledToConfigured(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function disabledAndMobileEnabledToConfigured(TransitionModule $transitionModule, array $context): bool
     {
         return true;
     }
@@ -190,7 +190,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function disabledAndMobileEnabledToUninstalled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function disabledAndMobileEnabledToUninstalled(TransitionModule $transitionModule, array $context): bool
     {
         return $this->uninstall($transitionModule, $context);
     }
@@ -198,7 +198,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function disabledAndMobileDisabledToDisabledAndMobileEnabled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function disabledAndMobileDisabledToDisabledAndMobileEnabled(TransitionModule $transitionModule, array $context): bool
     {
         return $this->enable($transitionModule, $context) && $this->disableOnMobile($transitionModule);
     }
@@ -206,7 +206,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function disabledAndMobileDisabledToEnabledAndMobileDisabled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function disabledAndMobileDisabledToEnabledAndMobileDisabled(TransitionModule $transitionModule, array $context): bool
     {
         return $this->enable($transitionModule, $context) && $this->disableOnMobile($transitionModule);
     }
@@ -214,7 +214,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function disabledAndMobileDisabledToUpgraded(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function disabledAndMobileDisabledToUpgraded(TransitionModule $transitionModule, array $context): bool
     {
         return $this->upgrade($transitionModule, $context);
     }
@@ -222,7 +222,7 @@ class TransitionsManager
     /**
      * @throws Exception
      */
-    public function disabledAndMobileDisabledToUninstalled(TransitionModule $transitionModule, string $marking, array $context): bool
+    public function disabledAndMobileDisabledToUninstalled(TransitionModule $transitionModule, array $context): bool
     {
         return $this->uninstall($transitionModule, $context);
     }
