@@ -24,6 +24,7 @@ namespace PrestaShop\Module\Mbo\Traits;
 use Db;
 use Exception;
 use LanguageCore as Language;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Symfony\Component\String\UnicodeString;
 use TabCore as Tab;
 use ValidateCore as Validate;
@@ -41,6 +42,13 @@ trait HaveTabs
             'class_name' => 'AdminPsMboModuleParent',
             'parent_class_name' => 'AdminParentModulesSf',
         ],
+        'AdminPsMboModule' => [
+            'name' => 'Marketplace',
+            'visible' => true,
+            'position' => 0,
+            'class_name' => 'AdminPsMboModule',
+            'parent_class_name' => 'AdminPsMboModuleParent',
+        ],
         'AdminPsMboSelection' => [
             'name' => 'Modules in the spotlight',
             'visible' => false,
@@ -49,13 +57,6 @@ trait HaveTabs
             'parent_class_name' => 'AdminPsMboModuleParent',
             'wording' => 'Modules in the spotlight',
             'wording_domain' => 'Modules.Mbo.Modulesselection',
-        ],
-        'AdminPsMboModule' => [
-            'name' => 'Marketplace',
-            'visible' => true,
-            'position' => 0,
-            'class_name' => 'AdminPsMboModule',
-            'parent_class_name' => 'AdminPsMboModuleParent',
         ],
         'AdminPsMboRecommended' => [
             'name' => 'Modules recommandés',
@@ -251,6 +252,28 @@ trait HaveTabs
 
         foreach ($currentModuleTabs as $currentModuleTab) {
             if (!in_array($currentModuleTab, $oldTabs) && !in_array($currentModuleTab, $newTabs)) {
+                $tabData = static::$ADMIN_CONTROLLERS[$currentModuleTab];
+
+                $idParent = empty($tabData['parent_class_name'])
+                    ? -1
+                    : Tab::getIdFromClassName($tabData['parent_class_name'])
+                ;
+
+                $tabId = Tab::getIdFromClassName($tabData['class_name']);
+                try {
+                    $tab = new Tab($tabId);
+
+                    // This will reorder the tabs starting with 1
+                    $tab->cleanPositions($idParent);
+                } catch (\PrestaShopDatabaseException|\PrestaShopException $e) {
+                    ErrorHelper::reportError($e);
+                    throw new Exception('Failed to clean parent tab positions', 0, $e);
+                }
+            }
+        }
+
+        foreach ($currentModuleTabs as $currentModuleTab) {
+            if (!in_array($currentModuleTab, $oldTabs) && !in_array($currentModuleTab, $newTabs)) {
                 $this->updateTab(static::$ADMIN_CONTROLLERS[$currentModuleTab]);
             }
         }
@@ -301,12 +324,9 @@ trait HaveTabs
 
         if (
             Validate::isLoadedObject($tab)
-            && !empty($tabData['position'])
-            && $tab->position !== (int) $tabData['position']
+            && isset($tabData['position'])
+            && (int) $tab->position !== (int) $tabData['position']
         ) {
-            // This will reorder the tabs starting with 1
-            $tab->cleanPositions($idParent);
-
             $this->putTabInPosition($tab, $tabData['position']);
         }
 
@@ -322,7 +342,7 @@ trait HaveTabs
 			WHERE `id_tab` = ' . (int) $tab->id
         );
 
-        if ((int) $dbTabPosition === $position) {
+        if ((int) $dbTabPosition === (int) $position) {
             // Nothing to do, tab is already in the right position
             return;
         }
