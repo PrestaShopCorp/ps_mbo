@@ -164,7 +164,7 @@ trait UseHooks
         }
 
         foreach ($oldHooks as $oldHook) {
-            $this->unregisterHook($oldHook['id']);
+            $this->unregisterHook($oldHook['id_hook']);
         }
 
         if (!empty($newHooks)) {

@@ -82,6 +82,11 @@ trait UseActionListModules
             if (is_string($downloadUrl) && strpos($downloadUrl, 'shop_url') === false) {
                 $downloadUrl .= '&shop_url=' . $shopUrl;
             }
+
+            if ('ps_mbo' === $name) {
+                $downloadUrl = null;
+            }
+
             $modules[] = [
                 'name' => $name,
                 'displayName' => $module->get('displayName'),
