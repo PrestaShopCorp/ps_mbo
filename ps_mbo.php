@@ -226,7 +226,7 @@ class ps_mbo extends Module
         Shop::setContext($previousContextType, $previousContextShopId);
 
         // Install tab before registering shop, we need the tab to be active to create the good token
-        $this->handleTabAction('install');
+        $this->updateTabs();
         $this->postponeTabsTranslations();
 
         // Register online services

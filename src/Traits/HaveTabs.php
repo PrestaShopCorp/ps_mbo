@@ -120,11 +120,10 @@ trait HaveTabs
      * Used when module is enabled and in upgrade script.
      *
      * @param array $tabData
-     * @param bool $activate
      *
      * @return bool
      */
-    public function installTab(array $tabData, bool $activate = true): bool
+    public function installTab(array $tabData): bool
     {
         $tabNameByLangId = array_fill_keys(
             Language::getIDs(false),
@@ -146,10 +145,6 @@ trait HaveTabs
         $tab->id_parent = $idParent;
         $tab->name = $tabNameByLangId;
         $tab->active = $tabData['visible'] ?: false;
-
-        if (false === $activate) { // This case will happen when upgrading the module. We disable all the tabs
-            $tab->active = false;
-        }
 
         if (!empty($tabData['wording']) && !empty($tabData['wording_domain'])) {
             $tab->wording = $tabData['wording'];
@@ -208,12 +203,6 @@ trait HaveTabs
      */
     public function updateTabs(): void
     {
-        if (false === self::checkModuleStatus()) {
-            // If the MBO module is not active.
-            // We don't update the tabs, it will be done when the module is enabled.
-            return;
-        }
-
         $tabData = Db::getInstance()->executeS('
             SELECT class_name
             FROM `' . _DB_PREFIX_ . 'tab`
