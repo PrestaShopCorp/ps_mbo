@@ -146,6 +146,11 @@ trait HaveTabs
         $tab->name = $tabNameByLangId;
         $tab->active = $tabData['visible'] ?: false;
 
+        if (false === self::checkModuleStatus()) {
+            // If the MBO module is not active, we disable all the tabs. They will be enabled when MBO is enabling
+            $tab->active = false;
+        }
+
         if (!empty($tabData['wording']) && !empty($tabData['wording_domain'])) {
             $tab->wording = $tabData['wording'];
             $tab->wording_domain = $tabData['wording_domain'];
