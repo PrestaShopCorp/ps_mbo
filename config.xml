@@ -2,7 +2,7 @@
 <module>
   <name>ps_mbo</name>
   <displayName><![CDATA[PrestaShop Marketplace in your Back Office]]></displayName>
-  <version><![CDATA[4.10.1]]></version>
+  <version><![CDATA[4.10.2]]></version>
   <description><![CDATA[Discover the best PrestaShop modules to optimize your online store.]]></description>
   <author><![CDATA[PrestaShop]]></author>
   <tab><![CDATA[administration]]></tab>
