@@ -124,6 +124,7 @@ class ContextBuilder
             'modules' => $modules,
             'user_id' => $this->accountsDataProvider->getAccountsUserId(),
             'shop_id' => $this->accountsDataProvider->getAccountsShopId(),
+            'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
             'iso_lang' => $this->getLanguage()->getIsoCode(),
             'iso_code' => $this->getCountry()->iso_code,
             'mbo_version' => \ps_mbo::VERSION,
