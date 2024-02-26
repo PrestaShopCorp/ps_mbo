@@ -30,7 +30,7 @@ trait HaveConfigurationPage
 {
     private $environmentData = [
         'local' => [
-            'cdc' => 'http://localhost:8080/mbo-cdc.umd.js',
+            'cdc' => 'http://localhost:8080/dist/mbo-cdc.umd.js',
             'api' => 'http://localhost:3000',
             'addons' => 'https://preprod-api-addons.prestashop.com',
             'sentry_url' => '',
