@@ -188,6 +188,15 @@ class ps_mbo extends Module
             return true;
         }
 
+        // Execute them first
+        foreach ($eventDispatcher->getListeners(ModuleManagementEvent::UNINSTALL) as $listener) {
+            if ($listener[0] instanceof ModuleManagementEventSubscriber) {
+                $legacyModule = $this->get('prestashop.core.admin.module.repository')->getModule('ps_mbo');
+                $listener[0]->{(string)$listener[1]}(new ModuleManagementEvent($legacyModule));
+            }
+        }
+
+        //And then remove them
         foreach ($eventDispatcher->getListeners(ModuleManagementEvent::UNINSTALL) as $listener) {
             if ($listener[0] instanceof ModuleManagementEventSubscriber) {
                 $eventDispatcher->removeSubscriber($listener[0]);
