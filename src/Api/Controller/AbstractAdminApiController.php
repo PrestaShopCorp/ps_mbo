@@ -124,7 +124,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
             'status' => false,
             'httpCode' => $code,
             'plop' => get_class($exception),
-            'message' => $exception->getMessage(),
+            'message' => $this->translator->trans($exception->getMessage(), [], 'Modules.Mbo.Addons'),
             'context' => method_exists($exception, 'getContext') ? $exception->getContext() : [],
         ];
 

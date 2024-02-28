@@ -188,7 +188,7 @@ class AddonsUrlSourceRetrieverException extends Exception
         return [
             'message' => $message,
             'http_code' => 460 + (int) $code,
-            'technical_error_message' => self::$errors[$code] ?: 'Addons error',
+            'technical_error_message' => self::$errors[$code] ?? 'Addons error',
         ];
     }
 }
