@@ -19,18 +19,21 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Module\Workflow\Exception;
+namespace PrestaShop\Module\Mbo\Exception;
 
-class UnknownTransitionException extends \LogicException
+use Exception;
+use Throwable;
+
+class DownloadModuleException extends Exception
 {
     /**
      * @var array
      */
     private $context;
 
-    public function __construct(string $transitionName, array $context = [], Throwable $previous = null)
+    public function __construct(array $context = [], Throwable $previous = null)
     {
-        parent::__construct(sprintf('Unknown module transition "%s"', $transitionName), 0, $previous);
+        parent::__construct('Cannot have source to download the module', 0, $previous);
 
         $context['previous_exception_class'] = $previous ? get_class($previous) : null;
         $context['previous_exception_message'] = $previous ? $previous->getMessage() : null;

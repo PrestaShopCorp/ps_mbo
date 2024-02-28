@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Module\CommandHandler;
 
 use Exception;
 use PrestaShop\Module\Mbo\Addons\Exception\DownloadModuleException;
+use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
 use PrestaShop\Module\Mbo\Module\ActionsManager;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException;
@@ -79,11 +80,7 @@ final class ModuleStatusTransitionCommandHandler
     }
 
     /**
-     * @throws UnexpectedModuleSourceContentException
-     * @throws UnauthorizedModuleTransitionException
-     * @throws TransitionCommandToModuleStatusException
-     * @throws SourceHandlerNotFoundException
-     * @throws DownloadModuleException
+     * @throws Exception
      */
     public function handle(ModuleStatusTransitionCommand $command): Module
     {
@@ -121,11 +118,8 @@ final class ModuleStatusTransitionCommandHandler
                     ModuleTransitionCommand::MAPPING_TRANSITION_COMMAND_TARGET_STATUS
                 )
             ) {
-                throw new TransitionCommandToModuleStatusException(
-                    sprintf(
-                        'Unable to map module transition command given %s',
-                        $transitionCommand
-                    )
+                throw ModuleErrorHelper::reportAndConvertError(
+                    new TransitionCommandToModuleStatusException($command)
                 );
             }
 
