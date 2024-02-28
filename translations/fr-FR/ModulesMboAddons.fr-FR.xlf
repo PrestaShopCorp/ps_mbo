@@ -102,6 +102,11 @@
         <target state="final">Impossible de télécharger le module depuis Addons : Erreur inconnue</target>
         <note>Line: 128</note>
       </trans-unit>
+      <trans-unit id="03030f81145b330c3d6dbbb967234cee" approved="yes">
+        <source>Cannot have source to download the module</source>
+        <target state="final">La source de téléchargement du module est incorrecte.</target>
+        <note>Line: 128</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -102,6 +102,11 @@
         <target state="final">Cannot download the module from Addons : No explanation given by Addons</target>
         <note>Line: 128</note>
       </trans-unit>
+      <trans-unit id="03030f81145b330c3d6dbbb967234cee" approved="yes">
+        <source>Cannot have source to download the module</source>
+        <target state="final">Cannot have source to download the module</target>
+        <note>Line: 128</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>
