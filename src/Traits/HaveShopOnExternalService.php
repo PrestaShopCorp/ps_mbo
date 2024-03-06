@@ -26,9 +26,9 @@ use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
+use PrestaShop\Module\Mbo\Helpers\Uuid;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
-use Ramsey\Uuid\Uuid;
 use Shop;
 
 trait HaveShopOnExternalService
@@ -144,7 +144,7 @@ trait HaveShopOnExternalService
         $result = true;
 
         // Values generated
-        $adminUuid = Uuid::uuid4()->toString();
+        $adminUuid = Uuid::generate();
         $this->configurationList['PS_MBO_SHOP_ADMIN_UUID'] = $adminUuid;
         $this->configurationList['PS_MBO_SHOP_ADMIN_MAIL'] = sprintf('mbo-%s@prestashop.com', $adminUuid);
         $this->configurationList['PS_MBO_LAST_PS_VERSION_API_CONFIG'] = _PS_VERSION_;

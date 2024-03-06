@@ -23,7 +23,6 @@
     "ext-json": "*",
     "prestashop/circuit-breaker": "^4",
     "guzzlehttp/guzzle": "^7.4",
-    "ramsey/uuid": "^4.2",
     "sentry/sdk": "^3.3",
     "symfony/workflow": "^5.1",
     "symfony/string": "^5.1",
