@@ -147,7 +147,6 @@ class ps_mbo extends Module
         'actionObjectEmployeeUpdateAfter',
         'actionObjectShopUrlUpdateAfter',
         'displayDashboardTop',
-        'displayBackOfficeTop'
     ];
 
     public $configurationList = [
