@@ -31,8 +31,8 @@ use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\Module\Mbo\Distribution\AuthenticationProvider;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Helpers\Config;
-use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
+use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
 use Ramsey\Uuid\Uuid;
@@ -699,9 +699,9 @@ class ps_mbo extends Module
         if (!in_array(
             Tools::getValue('controller'),
             [
-                "AdminModulesManage",
-                "AdminModulesNotifications",
-                "AdminModulesUpdates",
+                'AdminModulesManage',
+                'AdminModulesNotifications',
+                'AdminModulesUpdates',
             ]
         )) {
             return false;
