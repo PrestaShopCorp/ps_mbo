@@ -709,7 +709,7 @@ class ps_mbo extends Module
 
         try {
             $requestStack = $this->get('request_stack');
-            if (null === $requestStack || null === $request = $requestStack->getCurrentRequest()) {
+            if (!$requestStack || !($request = $requestStack->getCurrentRequest())) {
                 throw new Exception('Unable to get request');
             }
         } catch (Exception $e) {
