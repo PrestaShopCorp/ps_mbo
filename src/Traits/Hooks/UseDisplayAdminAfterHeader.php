@@ -22,7 +22,9 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use Exception;
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use Tools;
 use Twig\Environment;
 
@@ -36,28 +38,22 @@ trait UseDisplayAdminAfterHeader
      */
     public function hookDisplayAdminAfterHeader(): string
     {
-        if (!$this->shouldDisplayMboUserExplanation()) {
+        $shouldDisplayMboUserExplanation = $this->shouldDisplayMboUserExplanation();
+        $shouldDisplayModuleManagerMessage = $this->shouldDisplayModuleManagerMessage();
+
+        if (!$shouldDisplayMboUserExplanation && !$shouldDisplayModuleManagerMessage) {
             return '';
         }
 
-        try {
-            /** @var Environment $twig */
-            $twig = $this->get('twig');
-
-            return $twig->render(
-                '@Modules/ps_mbo/views/templates/hook/twig/explanation_mbo_employee.html.twig', [
-                    'title' => $this->trans(
-                        'Why is there a "PrestaShop Marketplace" employee?',
-                        [],
-                        'Modules.Mbo.Global'
-                    ),
-                    'message' => $this->trans('MBO employee explanation', [], 'Modules.Mbo.Global'),
-                ]
-            );
-        } catch (Exception $e) {
-            ErrorHelper::reportError($e);
-            return '';
+        if ($shouldDisplayMboUserExplanation) {
+            return $this->renderMboUserExplanation();
         }
+
+        if ($shouldDisplayModuleManagerMessage) {
+            return $this->renderModuleManagerMessage();
+        }
+
+        return '';
     }
 
     /**
@@ -91,6 +87,59 @@ trait UseDisplayAdminAfterHeader
         }
     }
 
+    private function renderMboUserExplanation(): string
+    {
+        try {
+            /** @var Environment $twig */
+            $twig = $this->get('twig');
+
+            return $twig->render(
+                '@Modules/ps_mbo/views/templates/hook/twig/explanation_mbo_employee.html.twig', [
+                    'title' => $this->trans(
+                        'Why is there a "PrestaShop Marketplace" employee?',
+                        [],
+                        'Modules.Mbo.Global'
+                    ),
+                    'message' => $this->trans('MBO employee explanation', [], 'Modules.Mbo.Global'),
+                ]
+            );
+        } catch (Exception $e) {
+            ErrorHelper::reportError($e);
+            return '';
+        }
+    }
+
+    private function renderModuleManagerMessage(): string
+    {
+        try {
+            /** @var Environment $twig */
+            $twig = $this->get('twig');
+            /** @var ContextBuilder $contextBuilder */
+            $contextBuilder = $this->get('mbo.cdc.context_builder');
+
+            if (null === $contextBuilder || null === $twig) {
+                throw new ExpectedServiceNotFoundException(
+                    'Some services not found in UseDisplayAdminAfterHeader'
+                );
+            }
+
+            return $twig->render(
+                '@Modules/ps_mbo/views/templates/hook/twig/module_manager_message.html.twig', [
+                    'shop_context' => $contextBuilder->getViewContext(),
+                    'title' => $this->trans(
+                        'Why is there a "PrestaShop Marketplace" employee?',
+                        [],
+                        'Modules.Mbo.Global'
+                    ),
+                    'message' => $this->trans('MBO employee explanation', [], 'Modules.Mbo.Global'),
+                ]
+            );
+        } catch (Exception $e) {
+            ErrorHelper::reportError($e);
+            return '';
+        }
+    }
+
     private function shouldDisplayMboUserExplanation(): bool
     {
         if (Tools::getValue('controller') !== "AdminEmployees") {
@@ -109,5 +158,38 @@ trait UseDisplayAdminAfterHeader
 
         // because admin_employee_index and admin_employee_edit are in the same controller AdminEmployees
         return 'admin_employees_index' === $request->get('_route');
+    }
+
+    private function shouldDisplayModuleManagerMessage(): bool
+    {
+        if (
+            !in_array(
+                Tools::getValue('controller'),
+                [
+                    "AdminModulesManage",
+                    "AdminModulesNotifications",
+                    "AdminModulesUpdates",
+                ]
+            )
+        ) {
+            return false;
+        }
+
+        try {
+            $requestStack = $this->get('request_stack');
+            if (null === $requestStack || null === $request = $requestStack->getCurrentRequest()) {
+                throw new Exception('Unable to get request');
+            }
+        } catch (Exception $e) {
+            ErrorHelper::reportError($e);
+            return false;
+        }
+
+        // because admin_employee_index and admin_employee_edit are in the same controller AdminEmployees
+        return in_array($request->get('_route'), [
+            'admin_module_manage',
+            'admin_module_notification',
+            'admin_module_updates',
+        ]);
     }
 }
