@@ -121,75 +121,7 @@ class AddonsUrlSourceRetrieverException extends Exception
             $code = $jsonContent['errors']['code'];
         }
 
-        $message = 'No explanation given by Addons';
-
-        switch ($code) {
-            case self::WRONG_PARAMETERS:
-                $message = 'Wrong Parameters';
-                break;
-            case self::WRONG_MODULE_KEY:
-                $message = 'Wrong module key';
-                break;
-            case self::UNKNOWN_MODULE:
-                $message = 'Unknown module';
-                break;
-            case self::INVALID_CREDENTIALS:
-                $message = 'Invalid credentials';
-                break;
-            case self::INVALID_EMAIL_OR_PASSWORD:
-                $message = 'Invalid Email or Password too short';
-                break;
-            case self::ACCESS_DENIED:
-                $message = 'Access Denied';
-                break;
-            case self::INVALID_PRODUCT_FILE:
-                $message = 'Invalid product file';
-                break;
-            case self::TM_CURL_INVALID_LINK:
-                $message = 'Fatal error : CURL on TM link not valid.';
-                break;
-            case self::TM_INACTIVE_LINK:
-                $message = 'Fatal error : TM link is inactive.';
-                break;
-            case self::TM_INVALID_ORDER:
-                $message = 'Fatal error : Invalid TM order.';
-                break;
-            case self::INVALID_METHOD:
-                $message = 'Method doesn\'t exist !';
-                break;
-            case self::HTTPS_REQUIRED:
-                $message = 'HTTPS Required !';
-                break;
-            case self::INVALID_AUTH:
-                $message = 'Invalid Authentification.';
-                break;
-            case self::INVALID_EMAIL:
-                $message = 'Fatal error : Invalid Email.';
-                break;
-            case self::INVALID_PARAMETERS:
-                $message = 'Invalid Parameters';
-                break;
-            case self::METHOD_UNDEFINED:
-                $message = 'Fatal error : method is undefined.';
-                break;
-            case self::KO_LABEL:
-                $message = 'ko';
-                break;
-            case self::SERVICE_UNAVAILABLE:
-                $message = 'Service unavailable';
-                break;
-            case self::NO_ZIP_SERVICE:
-                $message = 'No download, Service';
-                break;
-            case self::WEBSITE_REFUSED:
-                $message = 'Store URL not matching';
-                break;
-            case self::NO_SELECTABLE_BUSINESS_CARE:
-                $message = 'No selectable support subscription';
-                break;
-            default:
-                break;
-        }
+        $message = self::$errors[$code] ?? 'No explanation given by Addons';
 
         // codes are
         return [
