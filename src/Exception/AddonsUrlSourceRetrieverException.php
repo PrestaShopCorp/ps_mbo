@@ -28,25 +28,27 @@ class AddonsUrlSourceRetrieverException extends Exception
 {
     private const UNKNOWN_ADDONS_CODE = '0030';
 
-    const WRONG_PARAMETERS          = '0000';
-    const WRONG_MODULE_KEY          = '0001';
-    const UNKNOWN_MODULE            = '0002';
-    const INVALID_CREDENTIALS       = '0003';
-    const INVALID_EMAIL_OR_PASSWORD = '0004';
-    const ACCESS_DENIED             = '0005';
-    const INVALID_PRODUCT_FILE      = '0006';
-    const TM_CURL_INVALID_LINK      = '0007';
-    const TM_INACTIVE_LINK          = '0008';
-    const TM_INVALID_ORDER          = '0009';
-    const INVALID_METHOD            = '0010';
-    const HTTPS_REQUIRED            = '0011';
-    const INVALID_AUTH              = '0012';
-    const INVALID_EMAIL             = '0013';
-    const INVALID_PARAMETERS        = '0014';
-    const METHOD_UNDEFINED          = '0015';
-    const KO_LABEL                  = '0016';
-    const SERVICE_UNAVAILABLE       = '0017';
-    const NO_ZIP_SERVICE            = '0018';
+    const WRONG_PARAMETERS              = '0000';
+    const WRONG_MODULE_KEY              = '0001';
+    const UNKNOWN_MODULE                = '0002';
+    const INVALID_CREDENTIALS           = '0003';
+    const INVALID_EMAIL_OR_PASSWORD     = '0004';
+    const ACCESS_DENIED                 = '0005';
+    const INVALID_PRODUCT_FILE          = '0006';
+    const TM_CURL_INVALID_LINK          = '0007';
+    const TM_INACTIVE_LINK              = '0008';
+    const TM_INVALID_ORDER              = '0009';
+    const INVALID_METHOD                = '0010';
+    const HTTPS_REQUIRED                = '0011';
+    const INVALID_AUTH                  = '0012';
+    const INVALID_EMAIL                 = '0013';
+    const INVALID_PARAMETERS            = '0014';
+    const METHOD_UNDEFINED              = '0015';
+    const KO_LABEL                      = '0016';
+    const SERVICE_UNAVAILABLE           = '0017';
+    const NO_ZIP_SERVICE                = '0018';
+    const WEBSITE_REFUSED               = '0019';
+    const NO_SELECTABLE_BUSINESS_CARE   = '0020';
 
     public static $errors = array(
         self::WRONG_PARAMETERS => 'Wrong Parameters',
@@ -67,7 +69,9 @@ class AddonsUrlSourceRetrieverException extends Exception
         self::METHOD_UNDEFINED => 'Fatal error : method is undefined.',
         self::KO_LABEL => 'ko',
         self::SERVICE_UNAVAILABLE => 'Service unavailable',
-        self::NO_ZIP_SERVICE => 'No download, Service'
+        self::NO_ZIP_SERVICE => 'No download, Service',
+        self::WEBSITE_REFUSED => 'Store URL not matching',
+        self::NO_SELECTABLE_BUSINESS_CARE => 'No selectable support subscription',
     );
 
 
@@ -85,10 +89,7 @@ class AddonsUrlSourceRetrieverException extends Exception
     {
         $addonsError = $this->getErrorSentByAddons($previous);
         parent::__construct(
-            sprintf(
-                'Cannot download the module from Addons : %s',
-                    $addonsError['message'] ?? 'No further information'
-            ),
+            $this->getCustomizedMessage($addonsError),
             $addonsError['http_code'] ?? 0,
             $previous
         );
@@ -180,6 +181,12 @@ class AddonsUrlSourceRetrieverException extends Exception
             case self::NO_ZIP_SERVICE:
                 $message = 'No download, Service';
                 break;
+            case self::WEBSITE_REFUSED:
+                $message = 'Store URL not matching';
+                break;
+            case self::NO_SELECTABLE_BUSINESS_CARE:
+                $message = 'No selectable support subscription';
+                break;
             default:
                 break;
         }
@@ -190,5 +197,20 @@ class AddonsUrlSourceRetrieverException extends Exception
             'http_code' => 460 + (int) $code,
             'technical_error_message' => self::$errors[$code] ?? 'Addons error',
         ];
+    }
+
+    private function getCustomizedMessage(array $addonsError): string
+    {
+        switch($addonsError['http_code']) {
+            case 460 + (int) self::WEBSITE_REFUSED:
+                return "Your store's URL doesn't match the one provided when the module was purchased.";
+            case 460 + (int) self::NO_SELECTABLE_BUSINESS_CARE:
+                return 'You need an active Business Care subscription to download this module.';
+            default:
+                return sprintf(
+                    'Cannot download the module from Addons : %s',
+                    $addonsError['message'] ?? 'No further information'
+                );
+        }
     }
 }

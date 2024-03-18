@@ -97,6 +97,16 @@
         <target state="final">Cannot download the module from Addons : No download, Service</target>
         <note>Line: 128</note>
       </trans-unit>
+      <trans-unit id="c50c69a75b3cbf0899b5ad6aa9097d8e" approved="yes">
+        <source>You need an active Business Care subscription to download this module.</source>
+        <target state="final">You need an active Business Care subscription to download this module.</target>
+        <note>Line: 128</note>
+      </trans-unit>
+      <trans-unit id="e17c17d29d487476c9a1b2532bfcc789" approved="yes">
+        <source>Your store's URL doesn't match the one provided when the module was purchased.</source>
+        <target state="final">Your store's URL doesn't match the one provided when the module was purchased.</target>
+        <note>Line: 128</note>
+      </trans-unit>
       <trans-unit id="3e421ba01a3de897f3fb72701b65561b" approved="yes">
         <source>Cannot download the module from Addons : No explanation given by Addons</source>
         <target state="final">Cannot download the module from Addons : No explanation given by Addons</target>
