@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Traits;
 use AdminController;
 use Configuration;
 use HelperForm;
+use PrestaShop\Module\Mbo\Service\MboSymfonyCacheClearer;
 use Symfony\Component\Dotenv\Dotenv;
 use Tools;
 
@@ -39,7 +40,7 @@ trait HaveConfigurationPage
         'prestabulle' => [
             'cdc' => 'https://integration-assets.prestashop3.com/dst/mbo/#prestabulle#/mbo-cdc.umd.js',
             'api' => 'https://mbo-api-#prestabulle#.prestashop.com',
-            'addons' => 'https://preprod-api-addons.prestashop.com',
+            'addons' => 'https://addons-api-#pod#.prestashop.com',
             'sentry_url' => 'https://aa99f8a351b641af994ac50b01e14e20@o298402.ingest.sentry.io/6520457',
             'sentry_environment' => '#prestabulle#',
         ],
@@ -93,38 +94,54 @@ trait HaveConfigurationPage
                 $output .= $this->saveNewDotenvData($envFilePath);
             }
         }
+        if (Tools::isSubmit('resetModule')) {
+            try {
+                $this->registerShop();
+                $output .= '<b>Module is now well configured</b>';
+            } catch (\Exception $e) {
+                $output .= '<b>An error occurred, please reset the module manually in the module manager</b>';
+            }
+        }
 
         return $output;
     }
 
     private function saveNewDotenvData(string $envFilePath): string
     {
-        $newValue = Tools::getValue('DISTRIBUTION_ENVIRONMENT');
-
-        if (strpos($newValue, 'prestabulle') !== false) {
-            $cdcUrl = str_replace('#prestabulle#', $newValue, $this->environmentData['prestabulle']['cdc']);
-            $apiUrl = str_replace('#prestabulle#', $newValue, $this->environmentData['prestabulle']['api']);
-            $addonsUrl = str_replace('#prestabulle#', $newValue, $this->environmentData['prestabulle']['addons']);
+        // Get & build MBO env data
+        $newMboValue = Tools::getValue('DISTRIBUTION_ENVIRONMENT');
+        if (strpos($newMboValue, 'prestabulle') !== false) {
+            $cdcUrl = str_replace('#prestabulle#', $newMboValue, $this->environmentData['prestabulle']['cdc']);
+            $apiUrl = str_replace('#prestabulle#', $newMboValue, $this->environmentData['prestabulle']['api']);
             $sentryUrl = $this->environmentData['prestabulle']['sentry_url'];
             $sentryEnvironment = str_replace(
                 '#prestabulle#',
-                $newValue,
+                $newMboValue,
                 $this->environmentData['prestabulle']['sentry_environment']
             );
         } else {
-            $cdcUrl = $this->environmentData[$newValue]['cdc'];
-            $apiUrl = $this->environmentData[$newValue]['api'];
-            $addonsUrl = $this->environmentData[$newValue]['addons'];
-            $sentryUrl = $this->environmentData[$newValue]['sentry_url'];
-            $sentryEnvironment = $this->environmentData[$newValue]['sentry_environment'];
+            $cdcUrl = $this->environmentData[$newMboValue]['cdc'];
+            $apiUrl = $this->environmentData[$newMboValue]['api'];
+            $sentryUrl = $this->environmentData[$newMboValue]['sentry_url'];
+            $sentryEnvironment = $this->environmentData[$newMboValue]['sentry_environment'];
         }
 
+        // Get & build Addons env data
+        $newAddonsValue = Tools::getValue('ADDONS_ENVIRONMENT');
+        if (strpos($newAddonsValue, 'pod') !== false) {
+            $addonsUrl = str_replace('#pod#', $newAddonsValue, $this->environmentData['prestabulle']['addons']);
+        } else {
+            $addonsUrl = $this->environmentData[$newAddonsValue]['addons'];
+        }
+
+        // Build .env content
         $envData = file_get_contents($envFilePath);
         $envData = preg_replace('#MBO_CDC_URL=".*"#', 'MBO_CDC_URL="' . $cdcUrl . '"', $envData);
         $envData = preg_replace('#DISTRIBUTION_API_URL=".*"#', 'DISTRIBUTION_API_URL="' . $apiUrl . '"', $envData);
         $envData = preg_replace('#ADDONS_API_URL=".*"#', 'ADDONS_API_URL="' . $addonsUrl . '"', $envData);
         $envData = preg_replace('#SENTRY_CREDENTIALS=".*"#', 'SENTRY_CREDENTIALS="' . $sentryUrl . '"', $envData);
-        $envData = preg_replace('#SENTRY_ENVIRONMENT=".*"#', 'SENTRY_ENVIRONMENT="' . $sentryEnvironment . '"', $envData);
+        $envData =
+            preg_replace('#SENTRY_ENVIRONMENT=".*"#', 'SENTRY_ENVIRONMENT="' . $sentryEnvironment . '"', $envData);
 
         // Update the .env file
         file_put_contents($envFilePath, $envData);
@@ -133,7 +150,19 @@ trait HaveConfigurationPage
         $dotenv = new Dotenv(true);
         $dotenv->overload($envFilePath);
 
-        return 'Configuration updated to <b>' . ucfirst($newValue) . "</b>.Don't forget to reset the module.";
+        /** @var MboSymfonyCacheClearer $cacheClearer */
+        $cacheClearer = $this->get('mbo.symfony_cache_clearer');
+        $cacheClearer->clear();
+
+        $message = '<div style="padding-bottom: 15px;">Configuration updated to :
+            <ul><li>MBO : ' . ucfirst($newMboValue) . '</li>
+                <li>Addons : ' . ucfirst($newAddonsValue). '</li>
+            </ul>';
+        $message .= '<b>Don\'t forget to reset the module.</b><br />';
+        $message .= '<form method="POST"><button type="submit" name="resetModule">Reset</button></form>';
+        $message .= '</div>';
+
+        return $message;
     }
 
     /**
@@ -143,18 +172,39 @@ trait HaveConfigurationPage
      */
     public function displayForm(): string
     {
-        $options = [[
+        $mboOptionsValues = [[
             'value' => 'local',
             'name' => 'Local',
         ]];
 
         for ($i = 1; $i < 10; ++$i) {
-            $options[] = [
+            $mboOptionsValues[] = [
                 'value' => "prestabulle$i",
                 'name' => "Prestabulle $i",
             ];
         }
-        $options = array_merge($options, [
+        $mboOptionsValues = array_merge($mboOptionsValues, [
+            [
+                'value' => 'preprod',
+                'name' => 'Preprod',
+            ],
+            [
+                'value' => 'prod',
+                'name' => 'Prod',
+            ],
+        ]);
+        $addonsOptionsValues = [[
+            'value' => 'local',
+            'name' => 'Local',
+        ]];
+
+        for ($i = 1; $i < 10; ++$i) {
+            $addonsOptionsValues[] = [
+                'value' => "pod$i",
+                'name' => "Pod $i",
+            ];
+        }
+        $addonsOptionsValues = array_merge($addonsOptionsValues, [
             [
                 'value' => 'preprod',
                 'name' => 'Preprod',
@@ -174,12 +224,23 @@ trait HaveConfigurationPage
                 'input' => [
                     [
                         'type' => 'select',
-                        'label' => $this->trans('Configuration value', [], 'Admin.Global'),
+                        'label' => $this->trans('MBO Configuration value', [], 'Admin.Global'),
                         'name' => 'DISTRIBUTION_ENVIRONMENT',
                         'options' => [
                             'id' => 'value',
                             'name' => 'name',
-                            'query' => $options,
+                            'query' => $mboOptionsValues,
+                        ],
+                        'required' => true,
+                    ],
+                    [
+                        'type' => 'select',
+                        'label' => $this->trans('Addons Configuration value', [], 'Admin.Global'),
+                        'name' => 'ADDONS_ENVIRONMENT',
+                        'options' => [
+                            'id' => 'value',
+                            'name' => 'name',
+                            'query' => $addonsOptionsValues,
                         ],
                         'required' => true,
                     ],
@@ -206,16 +267,31 @@ trait HaveConfigurationPage
 
         if (strpos($currentCdcUrl, 'prestabulle') !== false) {
             preg_match('#(prestabulle(?:\d+))#', $currentCdcUrl, $matches);
-            $currentValue = $matches[1];
+            $currentMboValue = $matches[1];
         } elseif (strpos($currentCdcUrl, 'preprod') !== false) {
-            $currentValue = 'preprod';
+            $currentMboValue = 'preprod';
         } elseif (strpos($currentCdcUrl, 'local') !== false) {
-            $currentValue = 'local';
+            $currentMboValue = 'local';
         } else {
-            $currentValue = 'prod';
+            $currentMboValue = 'prod';
         }
 
-        $helper->fields_value['DISTRIBUTION_ENVIRONMENT'] = $currentValue;
+        $helper->fields_value['DISTRIBUTION_ENVIRONMENT'] = $currentMboValue;
+
+        $currentAddonsUrl = getenv('ADDONS_API_URL');
+
+        if (strpos($currentAddonsUrl, 'pod') !== false) {
+            preg_match('#(pod(?:\d+))#', $currentAddonsUrl, $matches);
+            $currentAddonsValue = $matches[1];
+        } elseif (strpos($currentAddonsUrl, 'preprod') !== false) {
+            $currentAddonsValue = 'preprod';
+        } elseif (strpos($currentAddonsUrl, 'local') !== false) {
+            $currentAddonsValue = 'local';
+        } else {
+            $currentAddonsValue = 'prod';
+        }
+
+        $helper->fields_value['ADDONS_ENVIRONMENT'] = $currentAddonsValue;
 
         return $helper->generateForm([$form]);
     }
