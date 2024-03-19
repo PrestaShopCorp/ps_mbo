@@ -60,12 +60,12 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.WI_PROVIDER_PREPRODUCTION }}
           service_account: ${{ secrets.WI_SA_PREPRODUCTION }}
-          project_id: ps-mbo-preproduction
+          project_id: ${{ env.GCP_PROJECT }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: $GCP_PROJECT
+          project_id: ${{ env.GCP_PROJECT }}
 
       - name: Copy env files
         run: |
