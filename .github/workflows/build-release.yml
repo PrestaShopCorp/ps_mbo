@@ -65,7 +65,7 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ps-mbo-preproduction
+          project_id: $GCP_PROJECT
 
       - name: Copy env files
         run: |
@@ -112,6 +112,11 @@ jobs:
           service-account : ${{ secrets.WI_SA_PRODUCTION }}
           setup-gcloud: true
           registry-login: false
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: $GCP_PROJECT
 
       - name: Copy env files
         run: |
