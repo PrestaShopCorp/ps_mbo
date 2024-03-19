@@ -52,20 +52,19 @@ jobs:
         if: steps.retrieve-cache.outputs.cache-hit != 'true'
         run: exit 1
 
-      - name: Manually perform GCP CLI authentication
-        run: |
-          echo $GOOGLE_JSON_CRED > token.json
-          gcloud auth activate-service-account --key-file=token.json
-          rm token.json
-        env:
-          GOOGLE_JSON_CRED: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
+      - name: Auth GCP
+        uses: PrestaShopCorp/prestashop-github-action-gcp-auth@v1
+        with:
+          auth-mode: 'workload-federation'
+          provider: ${{ secrets.WI_PROVIDER_PREPRODUCTION }}
+          service-account : ${{ secrets.WI_SA_PREPRODUCTION }}
+          setup-gcloud: true
+          registry-login: false
 
       - name: Copy env files
         run: |
-          gcloud secrets versions access latest --project distribution-preprod --secret=mbo-module-env > .env
+          gcloud secrets versions access latest --project $GCP_PROJECT --secret=mbo-module-env > .env
           rm -f .env.dist
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PREPRODUCTION }}
 
       - name: Prepare the zip
         run: |
@@ -96,20 +95,19 @@ jobs:
         if: steps.retrieve-cache.outputs.cache-hit != 'true'
         run: exit 1
 
-      - name: Manually perform GCP CLI authentication
-        run: |
-          echo $GOOGLE_JSON_CRED > token.json
-          gcloud auth activate-service-account --key-file=token.json
-          rm token.json
-        env:
-          GOOGLE_JSON_CRED: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
+      - name: Auth GCP
+        uses: PrestaShopCorp/prestashop-github-action-gcp-auth@v1
+        with:
+          auth-mode: 'workload-federation'
+          provider: ${{ secrets.WI_PROVIDER_PRODUCTION }}
+          service-account : ${{ secrets.WI_SA_PRODUCTION }}
+          setup-gcloud: true
+          registry-login: false
 
       - name: Copy env files
         run: |
           rm -f .env.dist
-          gcloud secrets versions access latest --project distribution-production-308520 --secret=mbo-module-env > .env
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
+          gcloud secrets versions access latest --project $GCP_PROJECT --secret=mbo-module-env > .env
 
       - name: Remove test settings files
         run: |
