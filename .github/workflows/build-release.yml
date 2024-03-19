@@ -105,18 +105,16 @@ jobs:
         run: exit 1
 
       - name: Auth GCP
-        uses: PrestaShopCorp/prestashop-github-action-gcp-auth@v1
+        uses: google-github-actions/auth@v2
         with:
-          auth-mode: 'workload-federation'
-          provider: ${{ secrets.WI_PROVIDER_PRODUCTION }}
-          service-account : ${{ secrets.WI_SA_PRODUCTION }}
-          setup-gcloud: true
-          registry-login: false
+          workload_identity_provider: ${{ secrets.WI_PROVIDER_PRODUCTION }}
+          service_account: ${{ secrets.WI_SA_PRODUCTION }}
+          project_id: ${{ env.GCP_PROJECT }}
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: $GCP_PROJECT
+          project_id: ${{ env.GCP_PROJECT }}
 
       - name: Copy env files
         run: |
