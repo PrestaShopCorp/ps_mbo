@@ -61,6 +61,7 @@ jobs:
           workload_identity_provider: ${{ secrets.WI_PROVIDER_PREPRODUCTION }}
           service_account: ${{ secrets.WI_SA_PREPRODUCTION }}
 
+
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
         with:
