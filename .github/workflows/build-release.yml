@@ -56,17 +56,17 @@ jobs:
         run: exit 1
 
       - name: Auth GCP
-        uses: PrestaShopCorp/prestashop-github-action-gcp-auth@v1
+        uses: google-github-actions/auth@v2
         with:
-          auth-mode: 'workload-federation'
-          provider: ${{ secrets.WI_PROVIDER_PREPRODUCTION }}
-          service-account : ${{ secrets.WI_SA_PREPRODUCTION }}
-          setup-gcloud: true
-          registry-login: false
+          workload_identity_provider: ${{ secrets.WI_PROVIDER_PREPRODUCTION }}
+          service_account: ${{ secrets.WI_SA_PREPRODUCTION }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
 
       - name: Copy env files
         run: |
-          gcloud secrets versions access latest --project $GCP_PROJECT --secret=mbo-module-env > .env
+          gcloud secrets versions access latest --project ps-mbo-preproduction --secret=mbo-module-env > .env
           rm -f .env.dist
 
       - name: Prepare the zip
