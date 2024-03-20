@@ -30,7 +30,7 @@ use PrestaShop\Module\Mbo\Api\Exception\RetrieveNewKeyException;
 use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker;
-use PrestaShop\Module\Mbo\Exception\AddonsUrlSourceRetrieverException;
+use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
 use PrestaShop\Module\Mbo\Helpers\Config as ConfigHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use ps_mbo;
@@ -128,7 +128,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
             'context' => method_exists($exception, 'getContext') ? $exception->getContext() : [],
         ];
 
-        if ($exception instanceof AddonsUrlSourceRetrieverException) {
+        if ($exception instanceof AddonsDownloadModuleException) {
             $response['body']['statusText'] = $exception->getTechnicalErrorMessage();
         }
 

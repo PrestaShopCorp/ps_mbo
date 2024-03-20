@@ -26,6 +26,7 @@ use PrestaShop\Module\Mbo\Addons\ApiClient;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\ActionsManager;
+use PrestaShop\Module\Mbo\Service\HookExceptionHolder;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
@@ -91,6 +92,17 @@ trait UseActionBeforeInstallModule
             ErrorHelper::reportError($e);
             return;
         }
-        $actionsManager->install($moduleId);
+
+        try {
+            $actionsManager->install($moduleId);
+        } catch(\Exception $e) {
+            /** @var HookExceptionHolder $hookExceptionHolder */
+            $hookExceptionHolder = $this->get('mbo.hook_exception_holder');
+            if (null !== $hookExceptionHolder) {
+                $hookExceptionHolder->holdException('actionBeforeInstallModule', $e);
+            }
+
+            throw $e;
+        }
     }
 }

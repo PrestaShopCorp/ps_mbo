@@ -28,7 +28,7 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Utils;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
-use PrestaShop\Module\Mbo\Exception\AddonsUrlSourceRetrieverException;
+use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\SourceNotCheckedException;
@@ -133,7 +133,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
                     );
                 } catch (ClientException $clientException) {
                     throw ModuleErrorHelper::reportAndConvertError(
-                        new AddonsUrlSourceRetrieverException($clientException, $authenticatedQueryParameters ?? []),
+                        new AddonsDownloadModuleException($clientException, $authenticatedQueryParameters ?? []),
                         $authenticatedQueryParameters ?? []
                     );
                 }

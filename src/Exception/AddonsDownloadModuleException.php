@@ -24,7 +24,7 @@ namespace PrestaShop\Module\Mbo\Exception;
 use Exception;
 use GuzzleHttp\Exception\ClientException;
 
-class AddonsUrlSourceRetrieverException extends Exception
+class AddonsDownloadModuleException extends Exception
 {
     private const UNKNOWN_ADDONS_CODE = '0030';
 
@@ -123,7 +123,6 @@ class AddonsUrlSourceRetrieverException extends Exception
 
         $message = self::$errors[$code] ?? 'No explanation given by Addons';
 
-        // codes are
         return [
             'message' => $message,
             'http_code' => 460 + (int) $code,
