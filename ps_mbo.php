@@ -31,6 +31,7 @@ use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\Module\Mbo\Distribution\AuthenticationProvider;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
@@ -586,14 +587,26 @@ class ps_mbo extends Module
             return '';
         }
 
+        $shouldDisplayModuleManagerMessage = $this->shouldDisplayModuleManagerMessage();
+
+        $shopContext = null;
+        /** @var ContextBuilder $contextBuilder */
+        $contextBuilder = $this->get('mbo.cdc.context_builder');
+
+        if (null != $contextBuilder && $shouldDisplayModuleManagerMessage) {
+            $shopContext = $contextBuilder->getViewContext();
+        }
+
         $this->smarty->assign([
             'shouldAttachRecommendedModulesAfterContent' => $this->shouldAttachRecommendedModulesAfterContent(),
             'shouldAttachRecommendedModulesButton' => $this->shouldAttachRecommendedModulesButton(),
+            'shouldDisplayModuleManagerMessage' => $this->shouldDisplayModuleManagerMessage(),
             'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
             'recommendedModulesTitleTranslated' => $this->getRecommendedModulesButtonTitle(),
             'recommendedModulesDescriptionTranslated' => $this->getRecommendedModulesDescription(),
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
             'recommendedModulesUrl' => $recommendedModulesUrl,
+            'shopContext' => json_encode($shopContext),
         ]);
 
         return $this->fetch('module:ps_mbo/views/templates/hook/recommended-modules.tpl');
@@ -679,6 +692,36 @@ class ps_mbo extends Module
         }
 
         return true;
+    }
+
+    private function shouldDisplayModuleManagerMessage(): bool
+    {
+        if (!in_array(
+            Tools::getValue('controller'),
+            [
+                'AdminModulesManage',
+                'AdminModulesNotifications',
+                'AdminModulesUpdates',
+            ]
+        )) {
+            return false;
+        }
+
+        try {
+            $requestStack = $this->get('request_stack');
+            if (!$requestStack || !($request = $requestStack->getCurrentRequest())) {
+                throw new Exception('Unable to get request');
+            }
+        } catch (Exception $e) {
+            // ErrorHelper::reportError($e);
+            return false;
+        }
+        // because admin_employee_index and admin_employee_edit are in the same controller AdminEmployees
+        return in_array($request->get('_route'), [
+            'admin_module_manage',
+            'admin_module_notification',
+            'admin_module_updates',
+        ]);
     }
 
     /**
@@ -1078,7 +1121,7 @@ class ps_mbo extends Module
 
             if (
                 $authenticationProvider instanceof AuthenticationProvider
-                 && $distributionApi instanceof Client
+                && $distributionApi instanceof Client
             ) {
                 $distributionApi->setBearer($authenticationProvider->getMboJWT());
                 $distributionApi->unregisterShop();
@@ -1104,12 +1147,12 @@ class ps_mbo extends Module
             foreach ($this->configurationList as $name => $value) {
                 if (false === Configuration::hasKey($name, null, null, (int) $shopId)) {
                     $result = $result && (bool) Configuration::updateValue(
-                            $name,
-                            $value,
-                            false,
-                            null,
-                            (int) $shopId
-                        );
+                        $name,
+                        $value,
+                        false,
+                        null,
+                        (int) $shopId
+                    );
                 }
             }
         }
@@ -1173,7 +1216,8 @@ class ps_mbo extends Module
     private function putTabInPosition(Tab $tab, int $position)
     {
         // Check tab position in DB
-        $dbTabPosition = Db::getInstance()->getValue('
+        $dbTabPosition = Db::getInstance()->getValue(
+            '
 			SELECT `position`
 			FROM `' . _DB_PREFIX_ . 'tab`
 			WHERE `id_tab` = ' . (int) $tab->id

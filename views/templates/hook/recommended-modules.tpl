@@ -32,3 +32,28 @@
     });
   }
 </script>
+
+{if $shouldDisplayModuleManagerMessage}
+<script>
+$(document).ready( function () {
+  if (typeof window.mboCdc !== undefined && typeof window.mboCdc !== "undefined") {
+    const targetDiv = $('#main-div .content-div').first()
+
+    const divModuleManagerMessage = document.createElement("div");
+    divModuleManagerMessage.setAttribute("id", "module-manager-message-cdc-container");
+
+    divModuleManagerMessage.classList.add('module-manager-message-wrapper');
+    divModuleManagerMessage.classList.add('cdc-container');
+
+    targetDiv.prepend(divModuleManagerMessage)
+    const renderModulesManagerMessage = window.mboCdc.renderModulesManagerMessage
+
+    const context = {$shopContext};
+
+    renderModulesManagerMessage(context, '#module-manager-message-cdc-container')
+  } else {
+    alert('wooow')
+  }
+})
+</script>
+{/if}
