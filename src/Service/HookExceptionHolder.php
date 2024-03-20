@@ -24,6 +24,10 @@ namespace PrestaShop\Module\Mbo\Service;
 
 use Exception;
 
+/**
+ * Because the Core's HookManager makes the exceptions from hooks silent,
+ * this service will hold exceptions from hooks in case we want to reuse/log/throw them
+ */
 class HookExceptionHolder
 {
     private $listenedHooks = [];
