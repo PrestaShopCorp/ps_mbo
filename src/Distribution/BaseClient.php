@@ -60,6 +60,7 @@ class BaseClient
         'ps_version',
         'iso_lang',
         'iso_code',
+        'accounts_token',
         'addons_username',
         'addons_pwd',
         'catalogUrl',
