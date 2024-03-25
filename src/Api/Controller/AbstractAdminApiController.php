@@ -30,6 +30,7 @@ use PrestaShop\Module\Mbo\Api\Exception\RetrieveNewKeyException;
 use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker;
+use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
 use PrestaShop\Module\Mbo\Helpers\Config as ConfigHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use ps_mbo;
@@ -106,7 +107,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
 
     protected function exitWithExceptionMessage(Exception $exception): void
     {
-        $code = $exception->getCode() == 0 ? 500 : $exception->getCode();
+        $code = (int) $exception->getCode() === 0 ? 500 : $exception->getCode();
 
         if ($exception instanceof QueryParamsException) {
             $code = Config::INVALID_URL_QUERY;
@@ -122,8 +123,14 @@ abstract class AbstractAdminApiController extends ModuleAdminController
             'object_type' => $this->type,
             'status' => false,
             'httpCode' => $code,
-            'message' => $exception->getMessage(),
+            'previous_exception' => get_class($exception),
+            'message' => $this->translator->trans($exception->getMessage(), [], 'Modules.Mbo.Addons'),
+            'context' => method_exists($exception, 'getContext') ? $exception->getContext() : [],
         ];
+
+        if ($exception instanceof AddonsDownloadModuleException) {
+            $response['body']['statusText'] = $exception->getTechnicalErrorMessage();
+        }
 
         $this->dieWithResponse($response, (int) $code);
     }
@@ -139,6 +146,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
         }
 
         $response['httpCode'] = $code;
+        $response['httpStatusText'] = $httpStatusText;
 
         header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
         header('Content-Type: application/json;charset=utf-8');

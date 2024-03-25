@@ -22,8 +22,10 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
 use Exception;
+use PrestaShop\Module\Mbo\Exception\DownloadModuleException;
 use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
+use PrestaShop\Module\Mbo\Service\HookExceptionHolder;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 
 class TransitionsManager
@@ -32,11 +34,17 @@ class TransitionsManager
      * @var ModuleManager
      */
     private $moduleManager;
+    /**
+     * @var HookExceptionHolder
+     */
+    private $hookExceptionHolder;
 
     public function __construct(
-        ModuleManager $moduleManager
+        ModuleManager $moduleManager,
+        HookExceptionHolder $hookExceptionHolder
     ) {
         $this->moduleManager = $moduleManager;
+        $this->hookExceptionHolder = $hookExceptionHolder;
     }
 
     public function uninstalledToEnabledAndMobileEnabled(TransitionModule $transitionModule, array $context): bool
@@ -296,7 +304,20 @@ class TransitionsManager
 
         $error = $this->moduleManager->getError($moduleName);
         if (!empty($error)) {
-            throw new TransitionFailedException($error);
+            $transitionName = (new Transition(
+                $transitionModule->getStatus(),
+                TransitionInterface::STATUS_RESET
+            ))->getTransitionName();
+
+            throw new TransitionFailedException(
+                $transitionName,
+                [
+                    'transition' => $transitionName,
+                    'moduleName' => $moduleName,
+                    'moduleVersion' => $transitionModule->getVersion(),
+                ],
+                new \Exception($error)
+            );
         }
 
         return false;
@@ -338,13 +359,31 @@ class TransitionsManager
 
         $moduleName = $transitionModule->getName();
 
+        $this->hookExceptionHolder->reset();
+        $this->hookExceptionHolder->listenFor('actionBeforeInstallModule');
+
         if ($this->moduleManager->install($moduleName, $source)) {
             return true;
         }
 
         $error = $this->moduleManager->getError($moduleName);
         if (!empty($error)) {
-            throw new TransitionFailedException($error);
+            $transitionName = (new Transition(
+                $transitionModule->getStatus(),
+                TransitionInterface::STATUS_ENABLED__MOBILE_ENABLED
+            ))->getTransitionName();
+
+            $errorForHook = $this->hookExceptionHolder->getLastException('actionBeforeInstallModule');
+
+            throw $errorForHook ?? new TransitionFailedException(
+                $transitionName,
+                [
+                    'transition' => $transitionName,
+                    'moduleName' => $moduleName,
+                    'moduleVersion' => $transitionModule->getVersion(),
+                ],
+                new \Exception($error)
+            );
         }
 
         return false;

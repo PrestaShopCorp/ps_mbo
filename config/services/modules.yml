@@ -51,3 +51,6 @@ services:
     arguments:
       - '@mbo.modules.repository'
       - '@router'
+
+  mbo.hook_exception_holder:
+    class: PrestaShop\Module\Mbo\Service\HookExceptionHolder

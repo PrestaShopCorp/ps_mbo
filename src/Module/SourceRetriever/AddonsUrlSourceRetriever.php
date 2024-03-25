@@ -24,10 +24,13 @@ namespace PrestaShop\Module\Mbo\Module\SourceRetriever;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Utils;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
+use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\SourceNotCheckedException;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -121,6 +124,21 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 
             $response = $this->httpClient->request('HEAD', $source, $authenticatedQueryParameters['options']);
         } catch (TransportExceptionInterface | \Exception $e) {
+            if ($e instanceof ClientException) {
+                try {
+                     $this->httpClient->request(
+                        'GET',
+                        $source,
+                        $authenticatedQueryParameters['options']
+                    );
+                } catch (ClientException $clientException) {
+                    throw ModuleErrorHelper::reportAndConvertError(
+                        new AddonsDownloadModuleException($clientException, $authenticatedQueryParameters ?? []),
+                        $authenticatedQueryParameters ?? []
+                    );
+                }
+            }
+
             ErrorHelper::reportError($e);
             return false;
         }

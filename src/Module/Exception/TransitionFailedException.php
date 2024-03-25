@@ -22,4 +22,27 @@ namespace PrestaShop\Module\Mbo\Module\Exception;
 
 class TransitionFailedException extends \Exception
 {
+    /**
+     * @var array
+     */
+    private $context;
+
+    public function __construct(string $transitionName, array $context = [], \Throwable $previous = null)
+    {
+        parent::__construct(
+            sprintf('Module action failed without any further details. Transition "%s"', $transitionName),
+            0,
+            $previous
+        );
+
+        $context['previous_exception_class'] = $previous ? get_class($previous) : null;
+        $context['previous_exception_message'] = $previous ? $previous->getMessage() : null;
+
+        $this->context = $context;
+    }
+
+    public function getContext(): array
+    {
+        return $this->context;
+    }
 }

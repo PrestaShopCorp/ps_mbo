@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Module\Workflow;
 
 use Exception;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\Workflow\Exception\UnknownTransitionException;
@@ -49,31 +50,29 @@ class TransitionApplier
         $this->translator = $translator;
     }
 
+    /**
+     * @throws Exception
+     */
     public function apply(TransitionModule $module, string $transitionName, array $context = [])
     {
         $method = (new UnicodeString($transitionName))->camel()->toString();
-
-        if (!method_exists($this->transitionsManager, $method)) {
-            $e = new UnknownTransitionException(sprintf('Unknown module transition "%s"', $transitionName));
-            ErrorHelper::reportError($e);
-            throw $e;
-        }
+        $executionContext = [
+            'transition' => $transitionName,
+            'moduleName' => $module->getName(),
+            'moduleVersion' => $module->getVersion(),
+            'context' => $context,
+        ];
 
         try {
+            if (!method_exists($this->transitionsManager, $method)) {
+                throw new UnknownTransitionException($transitionName, $executionContext);
+            }
+
             if (!$this->transitionsManager->{$method}($module, $context)) {
-                throw new Exception(
-                    $this->translator->trans(
-                        'Unfortunately, the module did not return additional details.',
-                        [],
-                        'Admin.Modules.Notification'
-                    )
-                );
+                throw new TransitionFailedException($transitionName, $executionContext);
             }
         } catch (Exception $e) {
-            ErrorHelper::reportError($e);
-            throw new TransitionFailedException(
-                sprintf('Unable to execute transition : %s', $e->getMessage()), 0, $e
-            );
+            throw ModuleErrorHelper::reportAndConvertError($e, $executionContext);
         }
     }
 }
