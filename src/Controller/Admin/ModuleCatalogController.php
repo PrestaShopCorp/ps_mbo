@@ -121,28 +121,6 @@ class ModuleCatalogController extends ModuleAbstractController
     }
 
     /**
-     * Responsible for displaying the data inside the modal when user clicks on "See more" on module card
-     *
-     * @param int $moduleId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function seeMoreAction(int $moduleId): Response
-    {
-        return $this->render(
-            '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/see-more.html.twig',
-            [
-                'shop_context' => $this->get('mbo.cdc.context_builder')->getViewContext(),
-                'module' => [
-                    'attributes' => [
-                        'id' => $moduleId,
-                    ],
-                ],
-            ]
-        );
-    }
-
-    /**
      * Responsible for displaying error block when CDC cannot be loaded.
      *
      * @return \Symfony\Component\HttpFoundation\Response

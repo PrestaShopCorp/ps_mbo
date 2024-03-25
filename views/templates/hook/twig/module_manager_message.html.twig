@@ -16,10 +16,15 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *#}
-{% if module.attributes.id != "0" %}
-  <script>
-    if (!window.shopContext) {
-      window.shopContext = {{ shop_context|json_encode|raw }};
-    }
+<script>
+  if (typeof window.mboCdc !== undefined && typeof window.mboCdc !== "undefined") {
+    const renderModulesManagerMessage = window.mboCdc.renderModulesManagerMessage
+
+    const context = {{ shop_context|json_encode()|raw }};
+
+    renderModulesManagerMessage(context, '#module-manager-message-cdc-container')
+  } else {
+    alert('wooow')
+  }
 </script>
-{% endif %}
+<div class="module-manager-message-wrapper cdc-container" id="module-manager-message-cdc-container" data-error-path="{{ path('admin_mbo_module_cdc_error') }}"></div>

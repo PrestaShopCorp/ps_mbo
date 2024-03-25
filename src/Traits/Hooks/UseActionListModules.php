@@ -30,6 +30,7 @@ use PrestaShop\Module\Mbo\Module\Filters;
 use PrestaShop\Module\Mbo\Module\FiltersFactory;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -54,8 +55,15 @@ trait UseActionListModules
             $collectionFactory = $this->get('mbo.modules.collection.factory');
             /** @var Repository $moduleRepository */
             $moduleRepository = $this->get('mbo.modules.repository');
+            /** @var Router $router */
+            $router = $this->get('router');
 
-            if (null === $filtersFactory || null === $collectionFactory || null === $moduleRepository) {
+            if (
+                null === $filtersFactory
+                || null === $collectionFactory
+                || null === $moduleRepository
+                || null === $router
+            ) {
                 throw new ExpectedServiceNotFoundException('Some services not found in UseActionListModules');
             }
         } catch (Exception $exception) {
@@ -74,6 +82,11 @@ trait UseActionListModules
 
         $shopUrl = Config::getShopUrl();
         $modules = [];
+
+        $catalogUrl = $router->generate('admin_mbo_catalog_module', []);
+        $catalogUrlParts = parse_url($catalogUrl);
+        parse_str($catalogUrlParts['query'], $catalogUrlParams);
+
         /**
          * @var ModuleInterface $module
          */
@@ -87,11 +100,14 @@ trait UseActionListModules
                 $downloadUrl = null;
             }
 
+            $catalogUrlParams['mbo_cdc_path'] = sprintf('/#/module/%d/fullpage', (int) $module->get('id'));
+            $catalogUrlParts['query'] = http_build_query($catalogUrlParams);
+
             $modules[] = [
                 'name' => $name,
                 'displayName' => $module->get('displayName'),
                 'description' => $module->get('description'),
-                'additional_description' => $this->getAdditionalDescription((int) $module->get('id'), $name),
+                'additional_description' => $this->getAdditionalDescription(http_build_url($catalogUrlParts), $name),
                 'version' => (string) $module->get('version'),
                 'version_available' => $module->get('version_available'),
                 'author' => $module->get('author'),
@@ -106,11 +122,11 @@ trait UseActionListModules
     }
 
     /**
-     * @throws SyntaxError
-     * @throws RuntimeError
      * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    private function getAdditionalDescription(int $moduleId, string $moduleName): string
+    private function getAdditionalDescription(string $moduleUrl, string $moduleName): string
     {
         try {
             /** @var Environment $twigEnvironment */
@@ -126,12 +142,8 @@ trait UseActionListModules
 
         return $twigEnvironment->render(
             '@Modules/ps_mbo/views/templates/hook/twig/module_manager_additional_description.html.twig', [
-                'module' => [
-                    'attributes' => [
-                        'id' => $moduleId,
-                        'name' => $moduleName,
-                    ],
-                ],
+                'moduleUrl' => $moduleUrl,
+                'moduleName' => $moduleName,
             ]
         );
     }
