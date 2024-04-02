@@ -19,27 +19,28 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Module\Workflow\Exception;
+namespace PrestaShop\Module\Mbo\Helpers;
 
-class UnknownTransitionException extends \LogicException
+use Exception;
+use PrestaShop\Module\Mbo\Exception\DownloadModuleException;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
+
+class ModuleErrorHelper
 {
     /**
-     * @var array
+     * @param Exception $error
+     * @param array|null $data
+     *
+     * @return Exception
      */
-    private $context;
-
-    public function __construct(string $transitionName, array $context = [], Throwable $previous = null)
+    public static function reportAndConvertError(Exception $error, ?array $data = null): Exception
     {
-        parent::__construct(sprintf('Unknown module transition "%s"', $transitionName), 0, $previous);
+        ErrorHelper::reportError($error, $data);
 
-        $context['previous_exception_class'] = $previous ? get_class($previous) : null;
-        $context['previous_exception_message'] = $previous ? $previous->getMessage() : null;
+        if ($error instanceof SourceHandlerNotFoundException) {
+            $error = new DownloadModuleException($data, $error);
+        }
 
-        $this->context = $context;
-    }
-
-    public function getContext(): array
-    {
-        return $this->context;
+        return $error;
     }
 }

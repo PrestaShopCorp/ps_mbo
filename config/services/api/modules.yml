@@ -15,6 +15,7 @@ services:
     class: 'PrestaShop\Module\Mbo\Module\Workflow\TransitionsManager'
     arguments:
       - '@prestashop.module.manager'
+      - '@mbo.hook_exception_holder'
 
   mbo.modules.transition_builder:
     class: PrestaShop\Module\Mbo\Module\Workflow\TransitionBuilder
