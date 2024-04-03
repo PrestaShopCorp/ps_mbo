@@ -23,8 +23,6 @@
     const context = {{ shop_context|json_encode()|raw }};
 
     renderModulesManagerMessage(context, '#module-manager-message-cdc-container')
-  } else {
-    alert('wooow')
   }
 </script>
 <div class="module-manager-message-wrapper cdc-container" id="module-manager-message-cdc-container" data-error-path="{{ path('admin_mbo_module_cdc_error') }}"></div>
