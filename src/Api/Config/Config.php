@@ -23,12 +23,12 @@ namespace PrestaShop\Module\Mbo\Api\Config;
 
 class Config
 {
+    const UNAUTHORIZED_ERROR_CODE = 401;
     const DATABASE_QUERY_ERROR_CODE = 454;
     const DATABASE_INSERT_ERROR_CODE = 455;
+    const RETRIEVE_NEW_KEY_ERROR_CODE = 457;
     const INVALID_URL_QUERY = 458;
-    const UNAUTHORIZED_ERROR_CODE = 401;
     const INCOMPLETE_SIGNATURE_ERROR_CODE = 459;
-    const RETRIEVE_NEW_KEY_ERROR_CODE = 460;
 
     const HTTP_STATUS_MESSAGES = [
         self::DATABASE_QUERY_ERROR_CODE => 'Database syntax error',

@@ -49,7 +49,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '4.10.3';
+    public const VERSION = '4.11.0';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminModulesManage',
@@ -94,7 +94,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.10.3';
+        $this->version = '4.11.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -188,6 +188,15 @@ class ps_mbo extends Module
             return true;
         }
 
+        // Execute them first
+        foreach ($eventDispatcher->getListeners(ModuleManagementEvent::UNINSTALL) as $listener) {
+            if ($listener[0] instanceof ModuleManagementEventSubscriber) {
+                $legacyModule = $this->get('prestashop.core.admin.module.repository')->getModule('ps_mbo');
+                $listener[0]->{(string)$listener[1]}(new ModuleManagementEvent($legacyModule));
+            }
+        }
+
+        //And then remove them
         foreach ($eventDispatcher->getListeners(ModuleManagementEvent::UNINSTALL) as $listener) {
             if ($listener[0] instanceof ModuleManagementEventSubscriber) {
                 $eventDispatcher->removeSubscriber($listener[0]);

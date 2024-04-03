@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="src/Api/Controller/AbstractAdminApiController.php" source-language="en" target-language="nl" datatype="plaintext">
+  <file original="src/Api/Controller/AbstractAdminApiController.php" source-language="en" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8887eac24bdf4e9c007d02808923c551" approved="yes">
         <source>Cannot download the module from Addons : Wrong Parameters</source>

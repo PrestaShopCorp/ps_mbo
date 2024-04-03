@@ -28,6 +28,7 @@ use GuzzleHttp\Exception\ClientException;
 use PrestaShop\Module\Mbo\Addons\ApiClient;
 use PrestaShop\Module\Mbo\Addons\Exception\DownloadModuleException;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUser;
+use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
 /**
@@ -129,11 +130,7 @@ class AddonsDataProvider implements DataProviderInterface
                 : 'Error sent by Addons. You may need to be logged.';
 
             if ($e instanceof ClientException) {
-                $rawContent = $e->getResponse()->getBody()->getContents();
-                $jsonContent = json_decode($rawContent, true);
-                if (is_array($jsonContent) && isset($jsonContent['errors']['label'])) {
-                    $message = 'Error sent by Addons. ' . $jsonContent['errors']['label'];
-                }
+                throw new AddonsDownloadModuleException($e);
             }
             throw new DownloadModuleException($message, 0, $e);
         }

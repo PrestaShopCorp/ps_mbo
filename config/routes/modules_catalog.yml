@@ -16,14 +16,6 @@ admin_mbo_catalog_module_selection:
     _legacy_controller: AdminPsMboSelection
     _legacy_link: AdminPsMboSelection
 
-admin_mbo_module_see_more:
-  path: /see_more/{moduleId}
-  methods: [ GET ]
-  defaults:
-    _controller: mbo.controller.modules.catalog:seeMoreAction
-  requirements:
-    moduleId: \d+
-
 admin_mbo_module_cdc_error:
   path: /cdc_error
   methods: [ GET ]
