@@ -29,6 +29,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Utils;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
+use PrestaShop\Module\Mbo\Helpers\AddonsApiHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\SourceNotCheckedException;
@@ -39,7 +40,7 @@ use ZipArchive;
 
 class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 {
-    private const URL_VALIDATION_REGEX = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{0,256}api-addons\\.prestashop\\.com(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";
+    private const URL_VALIDATION_REGEX = '/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{0,256}api-addons\\.prestashop\\.com(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/';
 
     private const MODULE_REGEX = '/^(.*)\/\1\.php$/i';
 
@@ -122,13 +123,17 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             $authenticatedQueryParameters = $this->computeAuthentication($source);
             $source = $authenticatedQueryParameters['source'];
             $options = $authenticatedQueryParameters['options'] ?? [];
-            $options = $this->addCustomHeaderIfNeeded($options);
+
+            if (!is_array($options['headers'])) {
+                $options['headers'] = [];
+            }
+            $options['headers'] = array_merge($options['headers'], AddonsApiHelper::addCustomHeaderIfNeeded());
 
             $response = $this->httpClient->request('HEAD', $source, $options);
-        } catch (TransportExceptionInterface | \Exception $e) {
+        } catch (TransportExceptionInterface|\Exception $e) {
             if ($e instanceof ClientException) {
                 try {
-                     $this->httpClient->request(
+                    $this->httpClient->request(
                         'GET',
                         $source,
                         $options
@@ -142,6 +147,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             }
 
             ErrorHelper::reportError($e);
+
             return false;
         }
 
@@ -295,21 +301,6 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             'source' => $source,
             'options' => $requestOptions,
         ];
-    }
-
-    private function addCustomHeaderIfNeeded(array $options): array
-    {
-        if (!is_array($options['headers'])) {
-            $options['headers'] = [];
-        }
-        $customHeaderKey = getenv('ADDONS_API_HEADER_KEY');
-        $customHeaderValue = getenv('ADDONS_API_HEADER_VALUE');
-
-        if (!empty($customHeaderKey) && !empty($customHeaderValue)) {
-            $options['headers'][$customHeaderKey] = $customHeaderValue;
-        }
-
-        return $options;
     }
 
     private function isZipFile(string $file): bool
