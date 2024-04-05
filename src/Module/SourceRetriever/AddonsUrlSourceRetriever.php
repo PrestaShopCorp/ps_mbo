@@ -121,15 +121,17 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         try {
             $authenticatedQueryParameters = $this->computeAuthentication($source);
             $source = $authenticatedQueryParameters['source'];
+            $options = $authenticatedQueryParameters['options'] ?? [];
+            $options = $this->addCustomHeaderIfNeeded($options);
 
-            $response = $this->httpClient->request('HEAD', $source, $authenticatedQueryParameters['options']);
+            $response = $this->httpClient->request('HEAD', $source, $options);
         } catch (TransportExceptionInterface | \Exception $e) {
             if ($e instanceof ClientException) {
                 try {
                      $this->httpClient->request(
                         'GET',
                         $source,
-                        $authenticatedQueryParameters['options']
+                        $options
                     );
                 } catch (ClientException $clientException) {
                     throw ModuleErrorHelper::reportAndConvertError(
@@ -163,7 +165,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             && reset($headers['Content-Type']) === 'application/zip'
         ) {
             $this->handledSource = $source;
-            $this->handledSourceCredentials = $authenticatedQueryParameters['options'];
+            $this->handledSourceCredentials = $options;
 
             return true;
         }
@@ -293,6 +295,21 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             'source' => $source,
             'options' => $requestOptions,
         ];
+    }
+
+    private function addCustomHeaderIfNeeded(array $options): array
+    {
+        if (!is_array($options['headers'])) {
+            $options['headers'] = [];
+        }
+        $customHeaderKey = getenv('ADDONS_API_HEADER_KEY');
+        $customHeaderValue = getenv('ADDONS_API_HEADER_VALUE');
+
+        if (!empty($customHeaderKey) && !empty($customHeaderValue)) {
+            $options['headers'][$customHeaderKey] = $customHeaderValue;
+        }
+
+        return $options;
     }
 
     private function isZipFile(string $file): bool

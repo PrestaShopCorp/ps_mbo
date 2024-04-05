@@ -106,6 +106,16 @@ class ApiClient
 
     public function getHeaders(): array
     {
+        if (!is_array($this->headers)) {
+            $this->headers = [];
+        }
+        $customHeaderKey = getenv('ADDONS_API_HEADER_KEY');
+        $customHeaderValue = getenv('ADDONS_API_HEADER_VALUE');
+
+        if (!empty($customHeaderKey) && !empty($customHeaderValue)) {
+            $this->headers[$customHeaderKey] = $customHeaderValue;
+        }
+
         return $this->headers;
     }
 
@@ -274,7 +284,7 @@ class ApiClient
             $resp = $this->httpClient
                 ->request(self::HTTP_METHOD_GET, $url, $options)
                 ->getBody();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e, [
                 'url' => $url,
             ]);
