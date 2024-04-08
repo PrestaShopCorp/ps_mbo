@@ -29,6 +29,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Utils;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
+use PrestaShop\Module\Mbo\Helpers\AddonsApiHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\SourceNotCheckedException;
@@ -39,7 +40,7 @@ use ZipArchive;
 
 class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 {
-    private const URL_VALIDATION_REGEX = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{0,256}api-addons\\.prestashop\\.com(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";
+    private const URL_VALIDATION_REGEX = '/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{0,256}api-addons\\.prestashop\\.com(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/';
 
     private const MODULE_REGEX = '/^(.*)\/\1\.php$/i';
 
@@ -121,15 +122,21 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         try {
             $authenticatedQueryParameters = $this->computeAuthentication($source);
             $source = $authenticatedQueryParameters['source'];
+            $options = $authenticatedQueryParameters['options'] ?? [];
 
-            $response = $this->httpClient->request('HEAD', $source, $authenticatedQueryParameters['options']);
-        } catch (TransportExceptionInterface | \Exception $e) {
+            if (!is_array($options['headers'])) {
+                $options['headers'] = [];
+            }
+            $options['headers'] = array_merge($options['headers'], AddonsApiHelper::addCustomHeaderIfNeeded());
+
+            $response = $this->httpClient->request('HEAD', $source, $options);
+        } catch (TransportExceptionInterface|\Exception $e) {
             if ($e instanceof ClientException) {
                 try {
-                     $this->httpClient->request(
+                    $this->httpClient->request(
                         'GET',
                         $source,
-                        $authenticatedQueryParameters['options']
+                        $options
                     );
                 } catch (ClientException $clientException) {
                     throw ModuleErrorHelper::reportAndConvertError(
@@ -140,6 +147,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             }
 
             ErrorHelper::reportError($e);
+
             return false;
         }
 
@@ -163,7 +171,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             && reset($headers['Content-Type']) === 'application/zip'
         ) {
             $this->handledSource = $source;
-            $this->handledSourceCredentials = $authenticatedQueryParameters['options'];
+            $this->handledSourceCredentials = $options;
 
             return true;
         }

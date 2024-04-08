@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Addons;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use PrestaShop\Module\Mbo\Helpers\AddonsApiHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use stdClass;
 
@@ -106,7 +107,7 @@ class ApiClient
 
     public function getHeaders(): array
     {
-        return $this->headers;
+        return array_merge($this->headers, AddonsApiHelper::addCustomHeaderIfNeeded());
     }
 
     /**
@@ -274,7 +275,7 @@ class ApiClient
             $resp = $this->httpClient
                 ->request(self::HTTP_METHOD_GET, $url, $options)
                 ->getBody();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e, [
                 'url' => $url,
             ]);
