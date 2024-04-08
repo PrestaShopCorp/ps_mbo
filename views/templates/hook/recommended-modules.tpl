@@ -51,8 +51,6 @@ $(document).ready( function () {
     const context = {$shopContext};
 
     renderModulesManagerMessage(context, '#module-manager-message-cdc-container')
-  } else {
-    alert('wooow')
   }
 })
 </script>
