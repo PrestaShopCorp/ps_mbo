@@ -23,6 +23,7 @@ namespace PrestaShop\Module\Mbo\Traits;
 use AdminController;
 use Configuration;
 use HelperForm;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use Symfony\Component\Dotenv\Dotenv;
 use Tools;
 
@@ -147,10 +148,10 @@ trait HaveConfigurationPage
 
         // Force reload of the .env file
         $dotenv = new Dotenv(true);
-        $dotenv->overload($envFilePath);
+        $dotenv->load($envFilePath);
 
-        /** @var MboSymfonyCacheClearer $cacheClearer */
-        $cacheClearer = $this->get('mbo.symfony_cache_clearer');
+        /** @var SymfonyCacheClearer $cacheClearer */
+        $cacheClearer = $this->get('prestashop.adapter.cache.clearer.symfony_cache_clearer');
         $cacheClearer->clear();
 
         $message = '<div style="padding-bottom: 15px;">Configuration updated to :
