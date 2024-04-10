@@ -101,6 +101,11 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.G_CREDENTIAL_PRODUCTION }}
 
+      - name: Remove test settings files
+        run: |
+          rm -f ./src/Traits/HaveConfigurationPage.php
+          sed -i '/HaveConfigurationPage/d' ps_mbo.php
+
       - name: Create & upload artifact
         uses: actions/upload-artifact@v1
         with:

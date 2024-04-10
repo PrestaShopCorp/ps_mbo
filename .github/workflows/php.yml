@@ -1,5 +1,5 @@
 name: PHP tests
-on: [push, pull_request]
+on: [pull_request]
 jobs:
   php-linter:
     name: PHP Syntax check 7.1|7.2|7.4
