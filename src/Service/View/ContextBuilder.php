@@ -120,6 +120,8 @@ class ContextBuilder
             }
         }
 
+        $shopActivity = Config::getShopActivity();
+
         return [
             'modules' => $modules,
             'user_id' => $this->accountsDataProvider->getAccountsUserId(),
@@ -131,6 +133,8 @@ class ContextBuilder
             'ps_version' => _PS_VERSION_,
             'shop_url' => Config::getShopUrl(),
             'shop_creation_date' => defined('_PS_CREATION_DATE_') ? _PS_CREATION_DATE_ : null,
+            'shop_business_sector_id' => $shopActivity['id'],
+            'shop_business_sector' => $shopActivity['name'],
         ];
     }
 
@@ -161,6 +165,7 @@ class ContextBuilder
         $context = $this->getContext();
         $language = $this->getLanguage();
         $country = $this->getCountry();
+        $shopActivity = Config::getShopActivity();
 
         $token = Tools::getValue('_token');
 
@@ -199,6 +204,8 @@ class ContextBuilder
             'theme_catalog_url' => UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_mbo_catalog_theme')),
             'php_version' => phpversion(),
             'shop_creation_date' => defined('_PS_CREATION_DATE_') ? _PS_CREATION_DATE_ : null,
+            'shop_business_sector_id' => $shopActivity['id'],
+            'shop_business_sector' => $shopActivity['name'],
         ];
     }
 
