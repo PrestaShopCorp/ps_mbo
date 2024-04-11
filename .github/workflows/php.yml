@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.0.0
       - name: Run PHP-CS-Fixer
-        uses: sowbiba/github-action-php-cs-fixer@master
+        uses: sowbiba/github-action-php-cs-fixer@use-php-dev-tools-master
   phpstan:
     name: PHPStan
     runs-on: ubuntu-latest
