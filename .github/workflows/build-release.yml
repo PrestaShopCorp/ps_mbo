@@ -14,13 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.0.0
+        uses: 'actions/checkout@v4'
+        with:
+          path: ''
+
       - name: Install composer dependencies
         run: composer install --no-dev -o
+
       - name: Clean-up project
         uses: PrestaShopCorp/github-action-clean-before-deploy@v1.0
+
       - name: Cache module folder
-        uses: 'actions/cache@v3'
+        uses: 'actions/cache@v4'
         with:
           path: ./
           key: ${{ github.run_id }}
@@ -33,7 +38,7 @@ jobs:
 
       - name: Retrieve from cache module folder
         id: retrieve-cache
-        uses: 'actions/cache@v3'
+        uses: 'actions/cache@v4'
         with:
           path: ./
           key: ${{ github.run_id }}
@@ -77,7 +82,7 @@ jobs:
 
       - name: Retrieve from cache module folder
         id: retrieve-cache
-        uses: 'actions/cache@v3'
+        uses: 'actions/cache@v4'
         with:
           path: ./
           key: ${{ github.run_id }}
