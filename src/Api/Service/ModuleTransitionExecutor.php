@@ -166,10 +166,8 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
         $composedUrl .= $baseUrl;
 
         $queryParams = [];
-        if (isset($components['query'])) {
-            $query = $components['query'];
-
-            parse_str($query, $queryParams);
+        if (is_array($components) && isset($components['query']) && is_string($components['query'])) {
+            parse_str($components['query'], $queryParams);
         }
 
         if (!isset($queryParams['_token'])) {

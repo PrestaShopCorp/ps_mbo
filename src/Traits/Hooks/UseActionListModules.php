@@ -68,6 +68,7 @@ trait UseActionListModules
             }
         } catch (Exception $exception) {
             ErrorHelper::reportError($exception);
+
             return [];
         }
         $filters = $filtersFactory->create();
@@ -85,7 +86,11 @@ trait UseActionListModules
 
         $catalogUrl = $router->generate('admin_mbo_catalog_module', []);
         $catalogUrlParts = parse_url($catalogUrl);
-        parse_str($catalogUrlParts['query'], $catalogUrlParams);
+        $catalogUrlParams = [];
+
+        if (is_array($catalogUrlParts) && isset($catalogUrlParts['query']) && is_string($catalogUrlParts['query'])) {
+            parse_str($catalogUrlParts['query'], $catalogUrlParams);
+        }
 
         /**
          * @var ModuleInterface $module
@@ -137,6 +142,7 @@ trait UseActionListModules
             }
         } catch (Exception $exception) {
             ErrorHelper::reportError($exception);
+
             return '';
         }
 
