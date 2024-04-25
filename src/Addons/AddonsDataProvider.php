@@ -29,10 +29,14 @@ namespace PrestaShop\Module\Mbo\Addons;
 use Exception;
 use GuzzleHttp\Exception\ClientException;
 use PhpEncryption;
+use PrestaShop\Module\Mbo\Addons\Exception\DownloadModuleException;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUser;
+use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Data provider for new Architecture, about Addons.
@@ -93,6 +97,10 @@ class AddonsDataProvider implements AddonsInterface
      * @var AddonsUser
      */
     private $user;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @param ApiClient $apiClient
@@ -104,6 +112,7 @@ class AddonsDataProvider implements AddonsInterface
         ApiClient $apiClient,
         ModuleZipManager $zipManager,
         AddonsUser $user,
+        TranslatorInterface $translator,
         string $moduleChannel = null
     ) {
         $this->marketplaceClient = $apiClient;
@@ -112,8 +121,9 @@ class AddonsDataProvider implements AddonsInterface
         if (null === $moduleChannel) {
             $moduleChannel = self::ADDONS_API_MODULE_CHANNEL_STABLE;
         }
-        $this->moduleChannel = $moduleChannel;
         $this->user = $user;
+        $this->translator = $translator;
+        $this->moduleChannel = $moduleChannel;
     }
 
     /**
@@ -134,21 +144,17 @@ class AddonsDataProvider implements AddonsInterface
         try {
             $module_data = $this->request('module_download', $params);
         } catch (Exception $e) {
-            $message = 'Error sent by Addons.';
+            ErrorHelper::reportError($e);
+            $message = $this->isUserAuthenticated() ?
+                'Error sent by Addons. You may be not allowed to download this module.'
+                : 'Error sent by Addons. You may need to be logged.';
 
             if ($e instanceof ClientException) {
-                $rawContent = $e->getResponse()->getBody()->getContents();
-                $jsonContent = json_decode($rawContent, true);
-                if (is_array($jsonContent) && isset($jsonContent['errors']['label'])) {
-                    $message .= ' ' . $jsonContent['errors']['label'];
-                }
-            } else {
-                $message .= $this->isUserAuthenticated() ?
-                    ' You may be not allowed to download this module.'
-                    : ' You may need to be logged.';
+                $e = new AddonsDownloadModuleException($e);
+                $message = $this->translator->trans($e->getMessage(), [], 'Modules.Mbo.Errors');
             }
 
-            throw new Exception($message, 0, $e);
+            throw new DownloadModuleException($message, 0, $e);
         }
 
         $temp_filename = tempnam($this->cacheDir, 'mod');
@@ -157,7 +163,7 @@ class AddonsDataProvider implements AddonsInterface
 
             return true;
         } else {
-            throw new Exception('Cannot store module content in temporary folder !');
+            throw new DownloadModuleException('Cannot store module content in temporary folder !');
         }
     }
 

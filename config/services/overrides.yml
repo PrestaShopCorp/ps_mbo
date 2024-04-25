@@ -10,6 +10,7 @@ services:
             - '@mbo.addons.client.api'
             - '@prestashop.module.zip.manager'
             - '@mbo.addons.user'
+            - '@translator'
             - '@=service("prestashop.adapter.legacy.configuration").get("ADDONS_API_MODULE_CHANNEL", "stable")'
         properties:
             cacheDir: "%kernel.cache_dir%"

@@ -82,3 +82,26 @@ $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_880975acc66fde83d195fef
 $_MODULE['<{mbo}prestashop>recommendedmodulesandservices_7e54c75444e1a4f51ff694dec1d65387'] = 'Envie e-mails e notificações automáticas aos seus clientes com facilidade.<br>
                 Aqui está uma selecção de módulos,<strong> compatíveis com a sua loja</strong>, para o ajudar a atingir os seus objectivos.';
 $_MODULE['<{mbo}prestashop>modulesselection_7e7eca35ad49e426689ba8b14004b0d0'] = 'Módulos não instalados';
+$_MODULE['<{mbo}prestashop>errors_74ddbbd633f9a52e04ef4bff45fad75e'] = 'Your store\'s URL doesn\'t match the one provided when the module was purchased.';
+$_MODULE['<{mbo}prestashop>errors_c50c69a75b3cbf0899b5ad6aa9097d8e'] = 'You need an active Business Care subscription to download this module.';
+$_MODULE['<{mbo}prestashop>errors_8887eac24bdf4e9c007d02808923c551'] = 'Cannot download the module from Addons : Wrong Parameters';
+$_MODULE['<{mbo}prestashop>errors_f7e488de77b736b5ec99414365e84cb5'] = 'Cannot download the module from Addons : Wrong module key';
+$_MODULE['<{mbo}prestashop>errors_5f24472941ea87c03ebcc8224fe77ddc'] = 'Cannot download the module from Addons : Unknown module';
+$_MODULE['<{mbo}prestashop>errors_5b90372306e764476d96d9a841f76981'] = 'Cannot download the module from Addons : Invalid credentials';
+$_MODULE['<{mbo}prestashop>errors_fae66258cbd26ed50c5441eb700467ab'] = 'Cannot download the module from Addons : Invalid Email or Password too short';
+$_MODULE['<{mbo}prestashop>errors_639f486bd30ba0e038f9e31d9e6016c7'] = 'Cannot download the module from Addons : Access Denied';
+$_MODULE['<{mbo}prestashop>errors_050e606f234bb07918ff4a6ceb2d1e29'] = 'Cannot download the module from Addons : Invalid product file';
+$_MODULE['<{mbo}prestashop>errors_c6faa9515a1d0d9a10bbe728f692f0db'] = 'Cannot download the module from Addons : Fatal error : CURL on TM link not valid.';
+$_MODULE['<{mbo}prestashop>errors_fb5fa337461c29077d683e74674b4bd4'] = 'Cannot download the module from Addons : Fatal error : TM link is inactive.';
+$_MODULE['<{mbo}prestashop>errors_d875f0e2200663bc0384701c6293151f'] = 'Cannot download the module from Addons : Invalid TM order.';
+$_MODULE['<{mbo}prestashop>errors_f84e2f0f66117b99d39ee22e5a99b7f5'] = 'Cannot download the module from Addons : Method doesn\'t exist !';
+$_MODULE['<{mbo}prestashop>errors_6d52dd485542fe2636627495ebd3e473'] = 'Cannot download the module from Addons : HTTPS Required !';
+$_MODULE['<{mbo}prestashop>errors_e59b2d70b0680fcafee8d17b38b3dcb1'] = 'Cannot download the module from Addons : Invalid Authentification.';
+$_MODULE['<{mbo}prestashop>errors_376a184fa9e770cbd2a29ceed8035dbf'] = 'Cannot download the module from Addons : Fatal error : Invalid Email.';
+$_MODULE['<{mbo}prestashop>errors_814b5fbae7fcc94c6a1dbfaf9f4fe43b'] = 'Cannot download the module from Addons : Invalid Parameters';
+$_MODULE['<{mbo}prestashop>errors_ba9d7dd2b8c0eab8060ff62da17a6837'] = 'Cannot download the module from Addons : Fatal error : method is undefined.';
+$_MODULE['<{mbo}prestashop>errors_4aea8d6dccc06ee22a28991969bb13d1'] = 'Cannot download the module from Addons : ko';
+$_MODULE['<{mbo}prestashop>errors_8498ebd59d7d8aa4c3278148ed63b334'] = 'Cannot download the module from Addons : Service unavailable';
+$_MODULE['<{mbo}prestashop>errors_80faf61e79658d6018c8d545c1ab943c'] = 'Cannot download the module from Addons : No download, Service';
+$_MODULE['<{mbo}prestashop>errors_3e421ba01a3de897f3fb72701b65561b'] = 'Cannot download the module from Addons : No explanation given by Addons';
+$_MODULE['<{mbo}prestashop>errors_03030f81145b330c3d6dbbb967234cee'] = 'Cannot have source to download the module';
