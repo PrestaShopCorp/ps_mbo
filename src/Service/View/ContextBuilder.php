@@ -144,6 +144,7 @@ class ContextBuilder
         $refreshUrl = $this->router->generate('admin_mbo_security');
 
         $shopUuid = Config::getShopMboUuid();
+        $shopActivity = Config::getShopActivity();
 
         return [
             'currency' => $this->getCurrencyCode(),
@@ -170,6 +171,8 @@ class ContextBuilder
             'theme_catalog_url' => $this->router->generate('admin_mbo_catalog_theme'),
             'php_version' => phpversion(),
             'shop_creation_date' => defined('_PS_CREATION_DATE_') ? _PS_CREATION_DATE_ : null,
+            'shop_business_sector_id' => $shopActivity['id'],
+            'shop_business_sector' => $shopActivity['name'],
         ];
     }
 
