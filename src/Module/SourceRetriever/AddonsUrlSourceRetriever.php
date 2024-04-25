@@ -272,7 +272,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     private function computeAuthentication(string $source): array
     {
         $url_parts = parse_url($source);
-        if (isset($url_parts['query'])) {
+        if (is_array($url_parts) && isset($url_parts['query']) && is_string($url_parts['query'])) {
             parse_str($url_parts['query'], $params);
         } else {
             $params = [];
