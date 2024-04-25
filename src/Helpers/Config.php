@@ -131,10 +131,7 @@ class Config
     }
 
     /**
-     * @return array{
-     *     "id": int|null,
-     *     "name": string|null
-     * }
+     * @return array
      */
     public static function getShopActivity(): array
     {
