@@ -3,54 +3,40 @@ services:
   _defaults:
     public: true
 
-  mbo.modules.repository:
-    class: PrestaShop\Module\Mbo\Module\Repository
+  PrestaShop\Module\Mbo\Module\Repository:
+    autowire: true
     arguments:
-      - "@mbo.cdc.client.connected_distribution_api"
-      - "@mbo.modules.builder"
-      - "@logger"
-      - "@=service('translator').getLocale()"
-      - "@doctrine.cache.provider"
-      - "@=service('prestashop.adapter.legacy.configuration').get('_DB_PREFIX_')"
-      - "@mbo.security.admin_authentication.provider"
+      $cacheProvider: '@Doctrine\Common\Cache\Psr6\DoctrineProvider'
+      $localeCode: "@=service('translator').getLocale()"
+      $dbPrefix: "@=service('prestashop.adapter.legacy.configuration').get('_DB_PREFIX_')"
 
-  mbo.modules.filters.factory:
-    class: PrestaShop\Module\Mbo\Module\FiltersFactory
+  PrestaShop\Module\Mbo\Module\FiltersFactory:
+    autowire: true
 
-  mbo.modules.collection.factory:
-    class: PrestaShop\Module\Mbo\Module\CollectionFactory
+  PrestaShop\Module\Mbo\Module\CollectionFactory:
+    autowire: true
 
-  mbo.modules.builder:
-    class: PrestaShop\Module\Mbo\Module\ModuleBuilder
+  PrestaShop\Module\Mbo\Module\ModuleBuilder:
+    autowire: true
     arguments:
-      - '@router'
-      - "@logger"
-      - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
+      $moduleDirectory: "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
+      $router: '@prestashop.router'
 
-  mbo.modules.files_manager:
-    class: PrestaShop\Module\Mbo\Module\FilesManager
-    arguments:
-      - '@mbo.addons.data_provider'
-      - '@prestashop.module.factory.sourcehandler'
+  PrestaShop\Module\Mbo\Module\FilesManager:
+    autowire: true
 
-  mbo.modules.actions_manager:
-    class: PrestaShop\Module\Mbo\Module\ActionsManager
-    arguments:
-      - '@mbo.modules.files_manager'
-      - '@mbo.modules.repository'
+  PrestaShop\Module\Mbo\Module\ActionsManager:
+    autowire: true
 
-  mbo.modules.source_handler.addons_url:
-    class: PrestaShop\Module\Mbo\Module\SourceHandler\AddonsUrlSourceHandler
-    arguments:
-      $addonsUrlSourceRetriever: '@mbo.modules.source_retriever.url'
-      $zipSourceHandler: '@PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler'
+  PrestaShop\Module\Mbo\Module\SourceHandler\AddonsUrlSourceHandler:
+    autowire: true
+    autoconfigure: true
     tags: [ core.module.source_handler ]
 
-  mbo.modules.helper:
-    class: PrestaShop\Module\Mbo\Service\ModulesHelper
+  PrestaShop\Module\Mbo\Service\ModulesHelper:
+    autowire: true
     arguments:
-      - '@mbo.modules.repository'
-      - '@router'
+      $router: '@prestashop.router'
 
-  mbo.hook_exception_holder:
-    class: PrestaShop\Module\Mbo\Service\HookExceptionHolder
+  PrestaShop\Module\Mbo\Service\HookExceptionHolder:
+    autowire: true

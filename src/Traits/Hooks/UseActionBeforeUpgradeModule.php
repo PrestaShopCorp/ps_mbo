@@ -35,7 +35,7 @@ trait UseActionBeforeUpgradeModule
         // Clear the cache after download to force reload module services
         try {
             /** @var CacheClearerInterface $cacheClearer */
-            $cacheClearer = $this->get('mbo.symfony_cache_clearer');
+            $cacheClearer = $this->get(CacheClearerInterface::class);
             if (null === $cacheClearer) {
                 throw new ExpectedServiceNotFoundException('Unable to get MboCacheClearer service');
             }

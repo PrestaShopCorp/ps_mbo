@@ -41,7 +41,7 @@ trait UseActionGetAlternativeSearchPanels
     {
         try {
             /** @var Router $router */
-            $router = $this->get('router');
+            $router = $this->get(Router::class);
             if (null === $router) {
                 throw new ExpectedServiceNotFoundException('Unable to get router service');
             }

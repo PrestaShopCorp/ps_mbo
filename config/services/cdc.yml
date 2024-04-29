@@ -2,12 +2,8 @@ services:
   _defaults:
     public: true
 
-  mbo.cdc.context_builder:
-    class: PrestaShop\Module\Mbo\Service\View\ContextBuilder
+  PrestaShop\Module\Mbo\Service\View\ContextBuilder:
+    autowire: true
     arguments:
-      - '@prestashop.adapter.legacy.context'
-      - '@PrestaShop\PrestaShop\Core\Module\ModuleRepository'
-      - '@router'
-      - '@doctrine.cache.provider'
-      - '@mbo.security.admin_authentication.provider'
-      - '@mbo.accounts.data_provider'
+      $router: '@prestashop.router'
+      $cacheProvider: '@Doctrine\Common\Cache\Psr6\DoctrineProvider'

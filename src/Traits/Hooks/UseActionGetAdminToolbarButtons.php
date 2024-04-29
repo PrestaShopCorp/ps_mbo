@@ -61,7 +61,7 @@ trait UseActionGetAdminToolbarButtons
 
         try {
             /** @var Toolbar $addonsToolbar */
-            $addonsToolbar = $this->get('mbo.addons.toolbar');
+            $addonsToolbar = $this->get(Toolbar::class);
             $toolbarButtons = $addonsToolbar->getConnectionToolbar();
         } catch (Exception $e) {
             ErrorHelper::reportError($e);

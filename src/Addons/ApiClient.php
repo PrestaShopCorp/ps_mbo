@@ -25,6 +25,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Helpers\AddonsApiHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use Psr\Http\Client\ClientInterface;
 use stdClass;
 
 class ApiClient
@@ -71,7 +72,7 @@ class ApiClient
     /**
      * @param Client $httpClient
      */
-    public function __construct(Client $httpClient)
+    public function __construct(ClientInterface $httpClient)
     {
         $this->httpClient = $httpClient;
     }
