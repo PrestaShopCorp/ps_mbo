@@ -25,6 +25,7 @@ use Db;
 use Exception;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
+use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 use PrestaShopDatabaseException;
 
 trait UseDashboardZoneOne
@@ -91,7 +92,7 @@ trait UseDashboardZoneOne
         $accountsFacade = $accountsService = null;
 
         try {
-            $accountsFacade = $this->get('mbo.ps_accounts.facade');
+            $accountsFacade = $this->get(PsAccounts::class);
             $accountsService = $accountsFacade->getPsAccountsService();
             if ($this->ensurePsAccountIsEnabled()) $this->ensurePsEventbusEnabled();
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {

@@ -173,7 +173,7 @@ class ContextBuilder
             $token = Tools::getValue('token');
         }
 
-        $refreshUrl = Context::getContext()->link->getAdminLink('apiSecurityPsMbo');
+        $refreshUrl = Context::getContext()->link->getAdminLink('ApiSecurityPsMbo');
 
         return [
             'currency' => $this->getCurrencyCode(),

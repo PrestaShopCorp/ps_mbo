@@ -2,5 +2,7 @@ services:
   _defaults:
     public: true
 
-  mbo.symfony_cache_clearer:
-    class: 'PrestaShop\Module\Mbo\Service\MboSymfonyCacheClearer'
+  PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface: '@PrestaShop\Module\Mbo\Service\MboSymfonyCacheClearer'
+
+  PrestaShop\Module\Mbo\Service\MboSymfonyCacheClearer:
+    autowire: true

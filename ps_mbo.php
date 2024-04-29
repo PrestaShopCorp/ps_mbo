@@ -34,6 +34,7 @@ use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
@@ -101,7 +102,7 @@ class ps_mbo extends Module
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
             'min' => '8.0.2',
-            'max' => '8.99.99',
+            'max' => '9.99.99',
         ];
 
         parent::__construct();
@@ -131,7 +132,7 @@ class ps_mbo extends Module
     public function install(): bool
     {
         try {
-            $this->getService('mbo.ps_accounts.installer')->install();
+            $this->get(PrestaShop\PsAccountsInstaller\Installer\Installer::class)->install();
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
         }
@@ -182,7 +183,7 @@ class ps_mbo extends Module
 
         $this->uninstallTables();
 
-        /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher */
+        /** @var \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->get('event_dispatcher');
         if (!$eventDispatcher->hasListeners(ModuleManagementEvent::UNINSTALL)) {
             return true;
@@ -191,7 +192,7 @@ class ps_mbo extends Module
         // Execute them first
         foreach ($eventDispatcher->getListeners(ModuleManagementEvent::UNINSTALL) as $listener) {
             if ($listener[0] instanceof ModuleManagementEventSubscriber) {
-                $legacyModule = $this->get('prestashop.core.admin.module.repository')->getModule('ps_mbo');
+                $legacyModule = $this->get(ModuleRepository::class)->getModule('ps_mbo');
                 $listener[0]->{(string)$listener[1]}(new ModuleManagementEvent($legacyModule));
             }
         }
@@ -355,12 +356,12 @@ class ps_mbo extends Module
             $this->container = SymfonyContainer::getInstance();
         }
 
-        return null !== $this->container && $this->container->has('mbo.security.admin_authentication.provider') ?
-            $this->get('mbo.security.admin_authentication.provider') :
+        return null !== $this->container && $this->container->has(AdminAuthenticationProvider::class) ?
+            $this->get(AdminAuthenticationProvider::class) :
             new AdminAuthenticationProvider(
                 $this->get('doctrine.dbal.default_connection'),
                 $this->context,
-                $this->get('prestashop.core.crypto.hashing'),
+                $this->get('hashing'),
                 $this->get('doctrine.cache.provider'),
                 $this->container->getParameter('database_prefix')
             );
@@ -395,7 +396,7 @@ class ps_mbo extends Module
     public function getAccountsDataProvider(): ?AccountsDataProvider
     {
         try {
-            return $this->getService('mbo.accounts.data_provider');
+            return $this->get(AccountsDataProvider::class);
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
             return null;
@@ -455,12 +456,13 @@ class ps_mbo extends Module
     private function loadEnv(): void
     {
         $dotenv = new Dotenv();
+        $dotenv->usePutenv();
         $dotenv->loadEnv(__DIR__ . '/.env');
     }
 
     private function isPsAccountEnabled(): bool
     {
-        $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+        $accountsInstaller = $this->get(\PrestaShop\PsAccountsInstaller\Installer\Installer::class);
 
         return null !== $accountsInstaller && $accountsInstaller->isModuleEnabled();
     }

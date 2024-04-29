@@ -103,7 +103,7 @@ trait UseActionBeforeUpgradeModule
     {
         try {
             /** @var CacheClearerInterface $cacheClearer */
-            $cacheClearer = $this->get('mbo.symfony_cache_clearer');
+            $cacheClearer = $this->get(CacheClearerInterface::class);
             if (null === $cacheClearer) {
                 throw new ExpectedServiceNotFoundException('Unable to get MboCacheClearer service');
             }

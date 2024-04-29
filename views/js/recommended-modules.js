@@ -169,7 +169,7 @@ var mbo = {};
    * @param {boolean} config.shouldAttachRecommendedModulesAfterContent
    * @param {boolean} config.shouldAttachRecommendedModulesButton
    * @param {boolean} config.shouldUseLegacyTheme
-   * 
+   *
    * @constructor
    */
   var RecommendedModulesButton = function(config) {

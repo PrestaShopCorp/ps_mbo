@@ -21,6 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
+use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
+use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -37,15 +39,20 @@ class ModuleRecommendedController extends PrestaShopAdminController
      * @var RequestStack
      */
     protected $requestStack;
+    private TabCollectionProvider $tabCollectionProvider;
+    private ContextBuilder $contextBuilder;
 
     /**
      * @param RequestStack $requestStack
      */
     public function __construct(
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        TabCollectionProvider $tabCollectionProvider,
+        ContextBuilder $contextBuilder
     ) {
-        parent::__construct();
         $this->requestStack = $requestStack;
+        $this->tabCollectionProvider = $tabCollectionProvider;
+        $this->contextBuilder = $contextBuilder;
     }
 
     /**
@@ -65,9 +72,9 @@ class ModuleRecommendedController extends PrestaShopAdminController
 
                 return $this->redirectToRoute('admin_mbo_catalog_module', $routeParams);
             }
-            $tabCollection = $this->get('mbo.tab.collection.provider')->getTabCollection();
+            $tabCollection = $this->tabCollectionProvider->getTabCollection();
             $tab = $tabCollection->getTab($tabClassName);
-            $context = $this->get('mbo.cdc.context_builder')->getRecommendedModulesContext($tab);
+            $context = $this->contextBuilder->getRecommendedModulesContext($tab);
             $context['recommendation_format'] = $this->requestStack->getCurrentRequest()->get('recommendation_format');
             $response->setData([
                 'content' => $this->renderView(

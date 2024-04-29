@@ -89,6 +89,7 @@ class ContainerProvider
         ]));
 
         $loader->load('http_clients.yml');
+        $loader->load('addons.yml');
         $loader->load('distribution.yml');
         $loader->load('accounts.yml');
         $loader->load('eventbus.yml');

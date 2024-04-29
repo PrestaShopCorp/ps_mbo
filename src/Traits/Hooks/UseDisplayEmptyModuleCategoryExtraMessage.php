@@ -25,6 +25,7 @@ use Exception;
 use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use Twig\Environment;
 
 trait UseDisplayEmptyModuleCategoryExtraMessage
 {
@@ -37,10 +38,10 @@ trait UseDisplayEmptyModuleCategoryExtraMessage
         $categoryName = $params['category_name'];
 
         try {
-            /** @var \Twig\Environment $twig */
-            $twig = $this->get('twig');
+            /** @var Environment $twig */
+            $twig = $this->get(Environment::class);
             /** @var LinksProvider $linksProvider */
-            $linksProvider = $this->get('mbo.addons.links_provider');
+            $linksProvider = $this->get(LinksProvider::class);
 
             if (null === $linksProvider || null === $twig) {
                 throw new ExpectedServiceNotFoundException(

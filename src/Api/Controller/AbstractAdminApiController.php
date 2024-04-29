@@ -70,7 +70,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
     {
         parent::__construct();
 
-        $this->adminAuthenticationProvider = $this->module->get('mbo.security.admin_authentication.provider');
+        $this->adminAuthenticationProvider = $this->module->get(AdminAuthenticationProvider::class);
         $this->authorizationChecker = $this->module->get(AuthorizationChecker::class);
         $this->logger = $this->module->get('logger');
     }

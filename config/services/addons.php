@@ -29,18 +29,9 @@ return static function (ContainerConfigurator $container) {
 
     //Only load event subscriber when module is enabled to avoid logging events if disabled
     if (ps_mbo::checkModuleStatus()) {
-        $services->set('mbo.addons.event_subscriber', ModuleManagementEventSubscriber::class)
-        ->args([
-            service('logger'),
-            service('mbo.modules.repository'),
-            service('mbo.tab.collection.provider'),
-            service('mbo.cdc.context_builder'),
-            service('mbo.cdc.client.distribution_api'),
-            service('mbo.security.admin_authentication.provider'),
-            service('mbo.distribution.api_version_change_config_apply_handler'),
-            service('mbo.symfony_cache_clearer'),
-        ])
-        ->public()
-        ->tag('kernel.event_subscriber');
+        $services->set(ModuleManagementEventSubscriber::class)
+            ->autowire()
+            ->public()
+            ->tag('kernel.event_subscriber');
     }
 };
