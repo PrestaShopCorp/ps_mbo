@@ -164,6 +164,6 @@ class Config
      */
     private static function getDefaultShop()
     {
-        return new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+        return new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
     }
 }
