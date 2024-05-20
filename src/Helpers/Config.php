@@ -72,7 +72,7 @@ class Config
             // PS_MBO_SHOP_ADMIN_UUID have the same value for all shops
             // to prevent errors in a multishop context,
             // we request the shops list and get the config value for the 1st one
-            $singleShop = self::getSingleShop();
+            $singleShop = self::getDefaultShop();
 
             self::$SHOP_MBO_UUID = Configuration::get(
                 'PS_MBO_SHOP_ADMIN_UUID',
@@ -95,7 +95,7 @@ class Config
     public static function getShopUrl()
     {
         if (null === self::$SHOP_URL) {
-            $singleShop = self::getSingleShop();
+            $singleShop = self::getDefaultShop();
             $useSecureProtocol = self::isUsingSecureProtocol();
             $domainConfigKey = $useSecureProtocol ? 'PS_SHOP_DOMAIN_SSL' : 'PS_SHOP_DOMAIN';
 
@@ -120,7 +120,7 @@ class Config
      */
     public static function isUsingSecureProtocol()
     {
-        $singleShop = self::getSingleShop();
+        $singleShop = self::getDefaultShop();
 
         return (bool) Configuration::get(
             'PS_SSL_ENABLED',
@@ -135,7 +135,7 @@ class Config
      */
     public static function getShopActivity(): array
     {
-        $singleShop = self::getSingleShop();
+        $singleShop = self::getDefaultShop();
         $activity = [
             'id' => null,
             'name' => null,
@@ -162,10 +162,8 @@ class Config
     /**
      * @return Shop
      */
-    private static function getSingleShop()
+    private static function getDefaultShop()
     {
-        $shops = Shop::getShops(false, null, true);
-
-        return new Shop((int) reset($shops));
+        return new Shop(Configuration::get('PS_SHOP_DEFAULT'));
     }
 }
