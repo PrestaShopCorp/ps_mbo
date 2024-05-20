@@ -82,7 +82,7 @@ class Config
             // PS_MBO_SHOP_ADMIN_UUID have the same value for all shops
             // to prevent errors in a multishop context,
             // we request the shops list and get the config value for the 1st one
-            $singleShop = self::getSingleShop();
+            $singleShop = self::getDefaultShop();
 
             self::$SHOP_MBO_UUID = Configuration::get(
                 'PS_MBO_SHOP_ADMIN_UUID',
@@ -102,7 +102,7 @@ class Config
             // PS_MBO_SHOP_ADMIN_ADMIN_MAIL have the same value for all shops
             // to prevent errors in a multishop context,
             // we request the shops list and get the config value for the 1st one
-            $singleShop = self::getSingleShop();
+            $singleShop = self::getDefaultShop();
 
             self::$SHOP_MBO_ADMIN_MAIL = Configuration::get(
                 'PS_MBO_SHOP_ADMIN_MAIL',
@@ -129,7 +129,7 @@ class Config
         }
 
         if (null === self::$SHOP_URL) {
-            $singleShop = self::getSingleShop();
+            $singleShop = self::getDefaultShop();
             $domains = \Tools::getDomains();
 
             $shopDomain = array_filter(
@@ -180,7 +180,7 @@ class Config
      */
     public static function isUsingSecureProtocol(): bool
     {
-        $singleShop = self::getSingleShop();
+        $singleShop = self::getDefaultShop();
 
         return (bool) Configuration::get(
             'PS_SSL_ENABLED',
@@ -195,7 +195,7 @@ class Config
         // PS_MBO_LAST_PS_VERSION_API_CONFIG have the same value for all shops
         // to prevent errors in a multishop context,
         // we request the shops list and get the config value for the 1st one
-        $singleShop = self::getSingleShop();
+        $singleShop = self::getDefaultShop();
 
         return Configuration::get(
             'PS_MBO_LAST_PS_VERSION_API_CONFIG',
@@ -206,11 +206,9 @@ class Config
         );
     }
 
-    public static function getSingleShop(): Shop
+    public static function getDefaultShop(): Shop
     {
-        $shops = Shop::getShops(false, null, true);
-
-        return new Shop((int) reset($shops));
+        return new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
     }
 
     /**
@@ -221,7 +219,7 @@ class Config
      */
     public static function getShopActivity(): array
     {
-        $singleShop = self::getSingleShop();
+        $singleShop = self::getDefaultShop();
         $activity = [
             'id' => null,
             'name' => null,
