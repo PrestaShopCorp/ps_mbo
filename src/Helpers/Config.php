@@ -103,6 +103,7 @@ class Config
                 function ($domain) use ($singleShop) {
                     // Here we assume that every shop have a single domain (?)
                     $domain = reset($domain);
+
                     return isset($domain['id_shop']) && (int)$singleShop->id === (int)$domain['id_shop'];
                 }
             );
