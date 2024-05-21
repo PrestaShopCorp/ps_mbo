@@ -78,7 +78,7 @@ jobs:
           zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
 
       - name: Create & upload artifact for preprod
-        uses: 'actions/upload-artifact@v4'
+        uses: 'actions/upload-artifact@v1'
         with:
           name: ${{ github.event.repository.name }}.preprod
           path: ../${{ github.event.repository.name }}.zip
