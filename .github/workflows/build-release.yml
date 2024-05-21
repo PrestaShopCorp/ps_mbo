@@ -40,7 +40,7 @@ jobs:
     needs: [deploy]
     permissions:
       contents: 'read'
-      id-token: 'write'      
+      id-token: 'write'
     if: github.event_name == 'push' || github.event_name == 'pull_request'
     steps:
 
@@ -78,17 +78,17 @@ jobs:
           zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
 
       - name: Create & upload artifact for preprod
-        uses: 'actions/upload-artifact@v1'
+        uses: 'actions/upload-artifact@v4'
         with:
           name: ${{ github.event.repository.name }}.preprod
-          path: ../${{ github.event.repository.name }}.zip
+          path: /home/runner/work/ps_mbo/${{ github.event.repository.name }}.zip
 
   upload_release_asset_production:
     name: Upload the production zip asset to the release
     runs-on: ubuntu-latest
     permissions:
       contents: 'write'
-      id-token: 'write'      
+      id-token: 'write'
     if: github.event_name == 'release'
     needs: deploy
     steps:
