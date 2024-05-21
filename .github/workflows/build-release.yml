@@ -72,6 +72,10 @@ jobs:
           gcloud secrets versions access latest --project $GCP_PROJECT --secret=mbo-module-env > .env
           rm -f .env.dist
 
+      - name: Remove test settings files
+        run: |
+          rm -f gha-*.json
+
       - name: Prepare the zip
         run: |
           cd ..
@@ -123,6 +127,7 @@ jobs:
 
       - name: Remove test settings files
         run: |
+          rm -f gha-*.json
           rm -f ./src/Traits/HaveConfigurationPage.php
           sed -i '/HaveConfigurationPage/d' ps_mbo.php
 
