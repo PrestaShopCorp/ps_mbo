@@ -68,10 +68,10 @@ jobs:
           zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
 
       - name: Create & upload artifact for preprod
-        uses: 'actions/upload-artifact@v1'
+        uses: 'actions/upload-artifact@v4'
         with:
           name: ${{ github.event.repository.name }}.preprod
-          path: ../${{ github.event.repository.name }}.zip
+          path: /home/runner/work/ps_mbo/${{ github.event.repository.name }}.zip
 
   upload_release_asset_production:
     name: Upload the production zip asset to the release
@@ -112,10 +112,10 @@ jobs:
           sed -i '/HaveConfigurationPage/d' ps_mbo.php
 
       - name: Create & upload artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.repository.name }}
-          path: ../
+          path: /home/runner/work/ps_mbo/
 
   update_release_draft:
     runs-on: ubuntu-latest
