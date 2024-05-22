@@ -72,7 +72,7 @@ class Config
             // PS_MBO_SHOP_ADMIN_UUID have the same value for all shops
             // to prevent errors in a multishop context,
             // we request the shops list and get the config value for the 1st one
-            $singleShop = self::getSingleShop();
+            $singleShop = self::getDefaultShop();
 
             self::$SHOP_MBO_UUID = Configuration::get(
                 'PS_MBO_SHOP_ADMIN_UUID',
@@ -95,19 +95,44 @@ class Config
     public static function getShopUrl()
     {
         if (null === self::$SHOP_URL) {
-            $singleShop = self::getSingleShop();
-            $useSecureProtocol = self::isUsingSecureProtocol();
-            $domainConfigKey = $useSecureProtocol ? 'PS_SHOP_DOMAIN_SSL' : 'PS_SHOP_DOMAIN';
+            $singleShop = self::getDefaultShop();
+            $domains = \Tools::getDomains();
 
-            $domain = Configuration::get(
-                $domainConfigKey,
-                null,
-                $singleShop->id_shop_group,
-                $singleShop->id
+            $shopDomain = array_filter(
+                $domains,
+                function ($domain) use ($singleShop) {
+                    // Here we assume that every shop have a single domain (?)
+                    $domain = reset($domain);
+
+                    return isset($domain['id_shop']) && (int) $singleShop->id === (int) $domain['id_shop'];
+                }
             );
 
-            if ($domain) {
+            $useSecureProtocol = self::isUsingSecureProtocol();
+            if (empty($shopDomain)) {
+                $domainConfigKey = $useSecureProtocol ? 'PS_SHOP_DOMAIN_SSL' : 'PS_SHOP_DOMAIN';
+
+                $domain = Configuration::get(
+                    $domainConfigKey,
+                    null,
+                    $singleShop->id_shop_group,
+                    $singleShop->id
+                );
+
+                if ($domain) {
+                    $domain = preg_replace('#(https?://)#', '', $domain);
+                    self::$SHOP_URL = ($useSecureProtocol ? 'https://' : 'http://') . $domain;
+                }
+            } else {
+                $domain = array_keys($shopDomain)[0];
                 $domain = preg_replace('#(https?://)#', '', $domain);
+
+                // concatenate the physical_uri
+                $domainDef = reset($shopDomain[$domain]);
+                if (isset($domainDef['physical']) && '/' !== $domainDef['physical']) {
+                    $domain .= $domainDef['physical'];
+                }
+
                 self::$SHOP_URL = ($useSecureProtocol ? 'https://' : 'http://') . $domain;
             }
         }
@@ -120,7 +145,7 @@ class Config
      */
     public static function isUsingSecureProtocol()
     {
-        $singleShop = self::getSingleShop();
+        $singleShop = self::getDefaultShop();
 
         return (bool) Configuration::get(
             'PS_SSL_ENABLED',
@@ -135,7 +160,7 @@ class Config
      */
     public static function getShopActivity(): array
     {
-        $singleShop = self::getSingleShop();
+        $singleShop = self::getDefaultShop();
         $activity = [
             'id' => null,
             'name' => null,
@@ -162,10 +187,8 @@ class Config
     /**
      * @return Shop
      */
-    private static function getSingleShop()
+    private static function getDefaultShop()
     {
-        $shops = Shop::getShops(false, null, true);
-
-        return new Shop((int) reset($shops));
+        return new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
     }
 }
