@@ -2,15 +2,12 @@ services:
   _defaults:
     public: true
 
-  mbo.tab.collection.factory:
-    class: 'PrestaShop\Module\Mbo\Tab\TabCollectionFactory'
-    arguments:
-      - '@mbo.modules.repository'
+  PrestaShop\Module\Mbo\Tab\TabCollectionFactoryInterface: '@PrestaShop\Module\Mbo\Tab\TabCollectionFactory'
 
-  mbo.tab.collection.provider:
-    class: 'PrestaShop\Module\Mbo\Tab\TabCollectionProvider'
-    arguments:
-      - '@prestashop.adapter.legacy.context'
-      - '@mbo.externalcontent.provider'
-      - '@mbo.tab.collection.factory'
-      - '@doctrine.cache.provider'
+  PrestaShop\Module\Mbo\Tab\TabCollectionFactory:
+    autowire: true
+
+  PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface: '@PrestaShop\Module\Mbo\Tab\TabCollectionProvider'
+
+  PrestaShop\Module\Mbo\Tab\TabCollectionProvider:
+    autowire: true

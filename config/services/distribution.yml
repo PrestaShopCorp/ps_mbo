@@ -5,29 +5,32 @@ services:
   _defaults:
     public: true
 
-  mbo.doctrine.cache.adapter:
-    class: Symfony\Component\Cache\Adapter\FilesystemAdapter
-    arguments:
-      - ''
-      - 0
-      - "%ps_cache_dir%%/ps_mbo"
+  mbo_doctrine_cache_provider: '@Doctrine\Common\Cache\Psr6\DoctrineProvider'
 
-  mbo.doctrine.cache.provider:
-    class: Symfony\Component\Cache\DoctrineProvider
+  Symfony\Component\Cache\Adapter\FilesystemAdapter:
+    autowire: true
     arguments:
-      - "@mbo.doctrine.cache.adapter"
+      $namespace: ''
+      $defaultLifetime: 0
+      $directory: "%ps_cache_dir%%/ps_mbo"
+
+  Doctrine\Common\Cache\Psr6\DoctrineProvider:
+    autowire: true
+    autoconfigure: true
+    factory: [ Doctrine\Common\Cache\Psr6\DoctrineProvider, wrap ]
+    arguments:
+      $pool: '@Symfony\Component\Cache\Adapter\FilesystemAdapter'
 
   # Distribution API Client
-  mbo.cdc.client.distribution_api:
-    class: PrestaShop\Module\Mbo\Distribution\Client
+  PrestaShop\Module\Mbo\Distribution\Client:
+    autowire: true
     arguments:
-      - "@mbo.distribution_api.client.http"
-      - '@mbo.doctrine.cache.provider'
+      $httpClient: '@mbo.distribution_api.client.http'
+      $cacheProvider: '@Doctrine\Common\Cache\Psr6\DoctrineProvider'
 
   # Distribution API Client with addons user
-  mbo.cdc.client.connected_distribution_api:
-    class: PrestaShop\Module\Mbo\Distribution\ConnectedClient
+  PrestaShop\Module\Mbo\Distribution\ConnectedClient:
+    autowire: true
     arguments:
-      - "@mbo.distribution_api.client.http"
-      - '@mbo.doctrine.cache.provider'
-      - '@=service("mbo.addons.user.provider").getUser()'
+      $httpClient: '@mbo.distribution_api.client.http'
+      $cacheProvider: '@Doctrine\Common\Cache\Psr6\DoctrineProvider'

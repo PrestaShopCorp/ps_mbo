@@ -25,6 +25,7 @@ use Exception;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Tools;
 use Twig\Environment;
 
@@ -91,7 +92,7 @@ trait UseDisplayAdminAfterHeader
     {
         try {
             /** @var Environment $twig */
-            $twig = $this->get('twig');
+            $twig = $this->get(Environment::class);
 
             return $twig->render(
                 '@Modules/ps_mbo/views/templates/hook/twig/explanation_mbo_employee.html.twig', [
@@ -113,9 +114,9 @@ trait UseDisplayAdminAfterHeader
     {
         try {
             /** @var Environment $twig */
-            $twig = $this->get('twig');
+            $twig = $this->get(Environment::class);
             /** @var ContextBuilder $contextBuilder */
-            $contextBuilder = $this->get('mbo.cdc.context_builder');
+            $contextBuilder = $this->get(ContextBuilder::class);
 
             if (null === $contextBuilder || null === $twig) {
                 throw new ExpectedServiceNotFoundException(
@@ -147,7 +148,7 @@ trait UseDisplayAdminAfterHeader
         }
 
         try {
-            $requestStack = $this->get('request_stack');
+            $requestStack = $this->get(RequestStack::class);
             if (null === $requestStack || null === $request = $requestStack->getCurrentRequest()) {
                 throw new Exception('Unable to get request');
             }
@@ -176,7 +177,7 @@ trait UseDisplayAdminAfterHeader
         }
 
         try {
-            $requestStack = $this->get('request_stack');
+            $requestStack = $this->get(RequestStack::class);
             if (null === $requestStack || null === $request = $requestStack->getCurrentRequest()) {
                 throw new Exception('Unable to get request');
             }
