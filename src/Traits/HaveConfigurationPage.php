@@ -126,13 +126,11 @@ trait HaveConfigurationPage
             $sentryEnvironment = $this->environmentData[$newMboValue]['sentry_environment'];
         }
 
-        $apiHealthResponse = file_get_contents(rtrim($apiUrl, '/') . '/api/health' );
+        $apiHealthResponse = file_get_contents(rtrim($apiUrl, '/') . '/api/health');
         $apiHealthData = json_decode($apiHealthResponse, true);
 
         $addonsUrl = is_array($apiHealthData) && isset($apiHealthData['addons_api_url'])
             ? $apiHealthData['addons_api_url'] : $this->environmentData['preprod']['addons'];
-
-        dd($addonsUrl);
 
         // Build .env content
         $envData = file_get_contents($envFilePath);
@@ -156,7 +154,7 @@ trait HaveConfigurationPage
 
         $message = '<div style="padding-bottom: 15px;">Configuration updated to :
             <ul><li>MBO : ' . ucfirst($newMboValue) . '</li>
-                <li>Addons : ' . ucfirst($newAddonsValue). '</li>
+                <li>Addons : ' . ucfirst($newAddonsValue) . '</li>
             </ul>';
         $message .= '<b>Don\'t forget to reset the module.</b><br />';
         $message .= '<form method="POST"><button type="submit" name="resetModule">Reset</button></form>';
