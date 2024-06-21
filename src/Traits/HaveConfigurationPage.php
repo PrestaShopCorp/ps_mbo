@@ -126,13 +126,13 @@ trait HaveConfigurationPage
             $sentryEnvironment = $this->environmentData[$newMboValue]['sentry_environment'];
         }
 
-        // Get & build Addons env data
-        $newAddonsValue = Tools::getValue('ADDONS_ENVIRONMENT');
-        if (strpos($newAddonsValue, 'pod') !== false) {
-            $addonsUrl = str_replace('#pod#', $newAddonsValue, $this->environmentData['prestabulle']['addons']);
-        } else {
-            $addonsUrl = $this->environmentData[$newAddonsValue]['addons'];
-        }
+        $apiHealthResponse = file_get_contents(rtrim($apiUrl, '/') . '/api/health' );
+        $apiHealthData = json_decode($apiHealthResponse, true);
+
+        $addonsUrl = is_array($apiHealthData) && isset($apiHealthData['addons_api_url'])
+            ? $apiHealthData['addons_api_url'] : $this->environmentData['preprod']['addons'];
+
+        dd($addonsUrl);
 
         // Build .env content
         $envData = file_get_contents($envFilePath);
@@ -241,6 +241,7 @@ trait HaveConfigurationPage
                             'id' => 'value',
                             'name' => 'name',
                             'query' => $addonsOptionsValues,
+                            'disabled' => true,
                         ],
                         'required' => true,
                     ],
