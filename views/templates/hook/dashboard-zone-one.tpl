@@ -38,9 +38,10 @@
 {if isset($urlAccountsCdn)}
   <script src="{$urlAccountsCdn}" rel=preload></script>
   <script>
+    var psAccountLoaded = false;
     if (window?.psaccountsVue) {
       window?.psaccountsVue?.init();
-      {assign shop_context $shop_context|@json_decode:true|array_merge:['accounts_component_loaded' => true]|@json_encode}
+      psAccountLoaded = true;
     }
   </script>
 {/if}
@@ -56,6 +57,10 @@
     const renderTipsAndUpdate = window.mboCdc.renderDashboardTipsAndUpdate
 
     const dashboardTipsAndUpdateContext = {$shop_context};
+
+    if (psAccountLoaded) {
+      dashboardTipsAndUpdateContext.accounts_component_loaded = true;
+    }
 
     renderTipsAndUpdate(dashboardTipsAndUpdateContext, '#cdc-tips-and-update-container')
   }
