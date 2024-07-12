@@ -173,14 +173,14 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '2.4.0';
+        $this->version = '2.4.1';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
             'min' => '1.7.6.0',
-            'max' => '1.7.8.99',
+            'max' => '1.7.6.99',
         ];
 
         parent::__construct();
@@ -346,7 +346,7 @@ class ps_mbo extends Module
      *
      * @return bool
      */
-    public function installTab(array $tabData)
+    public function installTab($tabData)
     {
         $tabNameByLangId = array_fill_keys(
             Language::getIDs(false),
@@ -443,7 +443,7 @@ class ps_mbo extends Module
      *
      * @return bool
      */
-    public function uninstallTab(array $tabData)
+    public function uninstallTab($tabData)
     {
         $tabId = Tab::getIdFromClassName($tabData['class_name']);
         $tab = new Tab($tabId);
@@ -607,7 +607,7 @@ class ps_mbo extends Module
     /**
      * Hook actionGeneralPageSave.
      */
-    public function hookActionGeneralPageSave(array $params)
+    public function hookActionGeneralPageSave($params)
     {
         if (isset($params['route']) && $params['route'] === 'admin_preferences_save') {
             // User may have updated the SSL configuration
@@ -618,7 +618,7 @@ class ps_mbo extends Module
     /**
      * Hook actionEmployeeSave.
      */
-    public function hookActionEmployeeSave(array $params)
+    public function hookActionEmployeeSave($params)
     {
         $controllerName = Tools::getValue('controller');
 
@@ -634,7 +634,7 @@ class ps_mbo extends Module
     /**
      * Hook actionObjectEmployeeUpdateAfter.
      */
-    public function hookActionObjectEmployeeUpdateAfter(array $params)
+    public function hookActionObjectEmployeeUpdateAfter($params)
     {
         $controllerName = Tools::getValue('controller');
 
@@ -650,7 +650,7 @@ class ps_mbo extends Module
     /**
      * Hook actionGeneralPageSave.
      */
-    public function hookActionObjectShopUrlUpdateAfter(array $params)
+    public function hookActionObjectShopUrlUpdateAfter($params)
     {
         if ($params['object']->main) {
             // Clear cache to be sure to load correctly the shop with good data whe building the service later
@@ -1048,7 +1048,7 @@ class ps_mbo extends Module
         $this->callServiceWithLockFile('registerShop');
     }
 
-    public function updateShop(array $params = [])
+    public function updateShop($params = [])
     {
         $this->callServiceWithLockFile('updateShop', $params);
     }
@@ -1106,7 +1106,7 @@ class ps_mbo extends Module
         return $result;
     }
 
-    private function callServiceWithLockFile(string $method, array $params = [])
+    private function callServiceWithLockFile($method, $params = [])
     {
         $lockFile = $this->moduleCacheDir . $method . '.lock';
         try {
@@ -1159,7 +1159,7 @@ class ps_mbo extends Module
         $this->updateShop();
     }
 
-    private function putTabInPosition(Tab $tab, int $position)
+    private function putTabInPosition($tab, $position)
     {
         // Check tab position in DB
         $dbTabPosition = Db::getInstance()->getValue('
