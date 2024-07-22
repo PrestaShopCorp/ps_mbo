@@ -34,12 +34,12 @@ class CredentialsEncryptor
         $this->encryptor = new PhpEncryption(_NEW_COOKIE_KEY_);
     }
 
-    public function encrypt(string $value)
+    public function encrypt($value)
     {
         return $this->encryptor->encrypt($value);
     }
 
-    public function decrypt(string $value)
+    public function decrypt($value)
     {
         return $this->encryptor->decrypt($value);
     }
