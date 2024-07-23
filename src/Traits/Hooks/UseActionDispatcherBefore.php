@@ -25,6 +25,7 @@ use Cache;
 use Configuration;
 use Context;
 use Dispatcher;
+use Doctrine\Common\Cache\CacheProvider;
 use Exception;
 use Language;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
@@ -119,7 +120,7 @@ trait UseActionDispatcherBefore
     {
         try {
             /** @var DoctrineProvider $cacheProvider */
-            $cacheProvider = $this->get('doctrine.cache.provider');
+            $cacheProvider = $this->get(CacheProvider::class);
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
             $cacheProvider = false;
@@ -144,7 +145,7 @@ trait UseActionDispatcherBefore
         $command = new VersionChangeApplyConfigCommand(_PS_VERSION_, $this->version);
         try {
             /** @var VersionChangeApplyConfigCommandHandler $configApplyHandler */
-            $configApplyHandler = $this->get('mbo.distribution.api_version_change_config_apply_handler');
+            $configApplyHandler = $this->get(VersionChangeApplyConfigCommandHandler::class);
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
 

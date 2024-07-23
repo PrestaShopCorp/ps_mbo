@@ -170,7 +170,7 @@ class Client extends BaseClient
                 self::HTTP_METHOD_POST,
                 ['form_params' => $eventData]
             );
-        } catch (\Throwable $e) {
+        } catch (\Exception|GuzzleException $e) {
             // Do nothing if the tracking fails
             ErrorHelper::reportError($e);
         }
