@@ -48,11 +48,11 @@ class InstalledModule
     private $configUrl;
 
     public function __construct(
-        int $id,
-        string $name,
-        string $status,
-        string $version,
-        string $configUrl = null
+        $id,
+        $name,
+        $status,
+        $version,
+        $configUrl = null
     ) {
         $this->id = $id;
         $this->name = $name;

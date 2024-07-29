@@ -113,7 +113,7 @@ class BaseClient
      *
      * @return $this
      */
-    public function setBearer(string $jwt)
+    public function setBearer($jwt)
     {
         return $this->setHeaders(['Authorization' => 'Bearer ' . $jwt]);
     }
@@ -156,8 +156,8 @@ class BaseClient
      * @return mixed
      */
     protected function processRequestAndDecode(
-        string $uri,
-        string $method = self::HTTP_METHOD_GET,
+        $uri,
+        $method = self::HTTP_METHOD_GET,
         array $options = [],
         $default = []
     ) {
@@ -180,8 +180,8 @@ class BaseClient
      * @return string
      */
     protected function processRequest(
-        string $uri,
-        string $method,
+        $uri,
+        $method,
         array $options
     ) {
         $options = array_merge($options, [

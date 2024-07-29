@@ -1,22 +1,22 @@
 <?php
 
 /**
- * 2007-2020 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -173,14 +173,14 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '2.4.0';
+        $this->version = '2.4.1';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
         $this->need_instance = 0;
         $this->ps_versions_compliancy = [
             'min' => '1.7.6.0',
-            'max' => '1.7.8.99',
+            'max' => '1.7.6.99',
         ];
 
         parent::__construct();
@@ -346,7 +346,7 @@ class ps_mbo extends Module
      *
      * @return bool
      */
-    public function installTab(array $tabData)
+    public function installTab($tabData)
     {
         $tabNameByLangId = array_fill_keys(
             Language::getIDs(false),
@@ -443,7 +443,7 @@ class ps_mbo extends Module
      *
      * @return bool
      */
-    public function uninstallTab(array $tabData)
+    public function uninstallTab($tabData)
     {
         $tabId = Tab::getIdFromClassName($tabData['class_name']);
         $tab = new Tab($tabId);
@@ -607,7 +607,7 @@ class ps_mbo extends Module
     /**
      * Hook actionGeneralPageSave.
      */
-    public function hookActionGeneralPageSave(array $params)
+    public function hookActionGeneralPageSave($params)
     {
         if (isset($params['route']) && $params['route'] === 'admin_preferences_save') {
             // User may have updated the SSL configuration
@@ -618,7 +618,7 @@ class ps_mbo extends Module
     /**
      * Hook actionEmployeeSave.
      */
-    public function hookActionEmployeeSave(array $params)
+    public function hookActionEmployeeSave($params)
     {
         $controllerName = Tools::getValue('controller');
 
@@ -634,7 +634,7 @@ class ps_mbo extends Module
     /**
      * Hook actionObjectEmployeeUpdateAfter.
      */
-    public function hookActionObjectEmployeeUpdateAfter(array $params)
+    public function hookActionObjectEmployeeUpdateAfter($params)
     {
         $controllerName = Tools::getValue('controller');
 
@@ -650,7 +650,7 @@ class ps_mbo extends Module
     /**
      * Hook actionGeneralPageSave.
      */
-    public function hookActionObjectShopUrlUpdateAfter(array $params)
+    public function hookActionObjectShopUrlUpdateAfter($params)
     {
         if ($params['object']->main) {
             // Clear cache to be sure to load correctly the shop with good data whe building the service later
@@ -1048,7 +1048,7 @@ class ps_mbo extends Module
         $this->callServiceWithLockFile('registerShop');
     }
 
-    public function updateShop(array $params = [])
+    public function updateShop($params = [])
     {
         $this->callServiceWithLockFile('updateShop', $params);
     }
@@ -1106,7 +1106,7 @@ class ps_mbo extends Module
         return $result;
     }
 
-    private function callServiceWithLockFile(string $method, array $params = [])
+    private function callServiceWithLockFile($method, $params = [])
     {
         $lockFile = $this->moduleCacheDir . $method . '.lock';
         try {
@@ -1159,7 +1159,7 @@ class ps_mbo extends Module
         $this->updateShop();
     }
 
-    private function putTabInPosition(Tab $tab, int $position)
+    private function putTabInPosition($tab, $position)
     {
         // Check tab position in DB
         $dbTabPosition = Db::getInstance()->getValue('

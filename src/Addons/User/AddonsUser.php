@@ -89,7 +89,7 @@ class AddonsUser implements UserInterface
      *
      * @return mixed
      */
-    private function getFromCookie(string $key)
+    private function getFromCookie($key)
     {
         return $this->request->cookies->get($key);
     }
@@ -101,7 +101,7 @@ class AddonsUser implements UserInterface
      *
      * @throws Exception
      */
-    private function getAndDecrypt(string $key)
+    private function getAndDecrypt($key)
     {
         $value = $this->get($key);
         if (null !== $value) {
@@ -118,7 +118,7 @@ class AddonsUser implements UserInterface
      *
      * @throws Exception
      */
-    private function get(string $key)
+    private function get($key)
     {
         return $this->getFromCookie($key);
     }
