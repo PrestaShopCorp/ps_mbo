@@ -20,8 +20,8 @@
  */
 
 declare(strict_types=1);
-if (!defined('_PS_VERSION_')) {
-    exit;
+if (!defined('_PS_VERSION_') || version_compare(_PS_VERSION_, '8.0.2', '<')) {
+    return;
 }
 
 $autoloadPath = __DIR__ . '/vendor/autoload.php';
