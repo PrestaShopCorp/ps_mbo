@@ -646,10 +646,15 @@ class ps_mbo extends Module
             $moduleManagerRepository->clearCache();
 
             try {
+                /**
+                 * @var \PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider $modulesProvider
+                 */
                 $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-                $modulesProvider->clearCatalogCache();
             } catch (Exception $e) {
-                // Do nothing here
+                $modulesProvider = null;
+            }
+            if ($modulesProvider) {
+                $modulesProvider->clearCatalogCache();
             }
 
             $cacheProvider->save($cacheKey, true, 86400);
