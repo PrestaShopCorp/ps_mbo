@@ -34,6 +34,7 @@ use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -176,7 +177,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '3.1.3';
+        $this->version = '3.1.4';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -626,6 +627,37 @@ class ps_mbo extends Module
         if (in_array($controllerName, static::CONTROLLERS_WITH_CDC_SCRIPT)) {
             $this->ensureShopIsRegistered();
             $this->ensureShopIsUpdated();
+        }
+
+        try {
+            /**
+             * @var CacheProvider $cacheProvider
+             */
+            $cacheProvider = $this->get('doctrine.cache.provider');
+        } catch (Exception $e) {
+            $cacheProvider = null;
+        }
+        $cacheKey = 'mbo_cache_modules_list_cleared';
+
+        // Force clearing cache on module data at least once a day
+        if ($cacheProvider && !$cacheProvider->fetch($cacheKey)) {
+            $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+            $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
+            $moduleManagerRepository->clearCache();
+
+            try {
+                /**
+                 * @var \PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider $modulesProvider
+                 */
+                $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
+            } catch (Exception $e) {
+                $modulesProvider = null;
+            }
+            if ($modulesProvider) {
+                $modulesProvider->clearCatalogCache();
+            }
+
+            $cacheProvider->save($cacheKey, true, 86400);
         }
     }
 
