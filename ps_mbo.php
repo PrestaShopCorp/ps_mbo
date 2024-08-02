@@ -631,7 +631,7 @@ class ps_mbo extends Module
 
         try {
             /**
-             * @var $cacheProvider CacheProvider
+             * @var CacheProvider $cacheProvider
              */
             $cacheProvider = $this->get('doctrine.cache.provider');
         } catch (Exception $e) {
@@ -640,7 +640,7 @@ class ps_mbo extends Module
         $cacheKey = 'mbo_cache_modules_list_cleared';
 
         // Force clearing cache on module data at least once a day
-        if($cacheProvider && !$cacheProvider->fetch($cacheKey)) {
+        if ($cacheProvider && !$cacheProvider->fetch($cacheKey)) {
             $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
             $moduleManagerRepository = $moduleManagerBuilder->buildRepository();
             $moduleManagerRepository->clearCache();
