@@ -136,6 +136,12 @@ class ps_mbo extends Module
             ErrorHelper::reportError($e);
         }
 
+        try {
+            $this->getService('mbo.ps_eventbus.installer')->install();
+        } catch (Exception $e) {
+            ErrorHelper::reportError($e);
+        }
+
         $this->installTables();
         if (parent::install() && $this->registerHook($this->getHooksNames())) {
             // Do come extra operations on modules' registration like modifying orders
