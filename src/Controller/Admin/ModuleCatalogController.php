@@ -196,11 +196,11 @@ class ModuleCatalogController extends PrestaShopAdminController
      * Generates a documentation link.
      *
      * @param string $section Legacy controller name
-     * @param bool|string $title Help title
+     * @param null|string $title Help title
      *
      * @return string
      */
-    private function generateSidebarLink($section, $title = false)
+    protected function generateSidebarLink(string $section, ?string $title = null): string
     {
         if (empty($title)) {
             $title = $this->trans('Help', [], 'Admin.Global');

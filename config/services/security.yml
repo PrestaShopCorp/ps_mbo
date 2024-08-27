@@ -4,8 +4,6 @@ services:
 
 #  security.authorization_checker: '@Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface'
 
-  PrestaShop\PrestaShop\Core\Crypto\Hashing: '@hashing'
-
   PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider:
     autowire: true
     arguments:

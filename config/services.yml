@@ -28,6 +28,7 @@ services:
 
   PrestaShop\Module\Mbo\Controller\Admin\ModuleRecommendedController:
     autowire: true
+    autoconfigure: true
 
   PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController:
     autowire: true
