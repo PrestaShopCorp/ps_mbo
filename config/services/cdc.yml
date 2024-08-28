@@ -7,3 +7,6 @@ services:
     arguments:
       $router: '@prestashop.router'
       $cacheProvider: '@Doctrine\Common\Cache\Psr6\DoctrineProvider'
+
+  mbo.cdc.context_builder:
+    alias: PrestaShop\Module\Mbo\Service\View\ContextBuilder
