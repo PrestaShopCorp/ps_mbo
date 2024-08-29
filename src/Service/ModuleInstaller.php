@@ -66,6 +66,10 @@ class ModuleInstaller {
      * @return boolean
      */
     public function isModuleInstalled() {
+        if (false === $this->isShopVersion17()) {
+            return \Module::isInstalled($this->moduleName);
+        }
+
         return $this->moduleManager->isInstalled($this->moduleName);
     }
 

@@ -93,6 +93,7 @@ trait UseDashboardZoneOne
         try {
             $accountsFacade = $this->get('mbo.ps_accounts.facade');
             $accountsService = $accountsFacade->getPsAccountsService();
+            if ($this->ensurePsAccountIsEnabled()) $this->get('mbo.ps_eventbus.installer')->install();
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
             ErrorHelper::reportError($e);
         }
@@ -113,4 +114,21 @@ trait UseDashboardZoneOne
 
         return $urlAccountsCdn;
     }
+
+    /**
+     * Return true if ps_account is enabled
+     * 
+     * @return bool
+     */
+    private function ensurePsAccountIsEnabled(): bool {
+        $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+        if (!$accountsInstaller) return false;
+
+        $accountsEnabled = $accountsInstaller->isModuleEnabled();
+        if ($accountsEnabled) return true;
+
+        $moduleManager = $this->get('prestashop.module.manager');
+        return $moduleManager->enable($accountsInstaller->getModuleName());
+    }
+
 }

@@ -8,4 +8,4 @@ services:
     arguments:
       - "ps_eventbus"
       - "3.0.8"
-      - false
+      - true
