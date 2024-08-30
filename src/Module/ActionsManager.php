@@ -35,18 +35,9 @@ class ActionsManager
      */
     private $filesManager;
 
-    /**
-     * @var Repository
-     * @TODO : Not needed anymore
-     */
-    private $moduleRepository;
 
-    public function __construct(
-        FilesManager $filesManager,
-        Repository $moduleRepository
-    ) {
+    public function __construct(FilesManager $filesManager) {
         $this->filesManager = $filesManager;
-        $this->moduleRepository = $moduleRepository;
     }
 
     /**
@@ -57,7 +48,7 @@ class ActionsManager
      */
     public function install(int $moduleId): void
     {
-        $moduleZip = $this->filesManager->downloadModule($moduleId);
+        $moduleZip = $this->downloadModule($moduleId);
 
         $this->filesManager->installFromSource($moduleZip);
     }
