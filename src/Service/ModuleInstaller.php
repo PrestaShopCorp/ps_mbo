@@ -23,14 +23,15 @@ namespace PrestaShop\Module\Mbo\Service;
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
-class ModuleInstaller {
-    
+class ModuleInstaller
+{
     private $moduleName;
     private $moduleVersion;
     private $absoluteCompare;
     private $moduleManager;
 
-    public function __construct(string $moduleName, string $moduleVersion, bool $absoluteCompare) {
+    public function __construct(string $moduleName, string $moduleVersion, bool $absoluteCompare)
+    {
         $this->moduleName = $moduleName;
         $this->moduleVersion = $moduleVersion;
         $this->absoluteCompare = $absoluteCompare;
@@ -46,7 +47,8 @@ class ModuleInstaller {
      *
      * @throws \Exception
      */
-    public function install() {
+    public function install()
+    {
         if ($this->isModuleInstalled() && $this->isModuleVersionSatisfied()) {
             return true;
         }
@@ -59,13 +61,15 @@ class ModuleInstaller {
      */
     public function isShopVersion17()
     {
+        /* @SuppressWarnings("php:S1313") */
         return version_compare(_PS_VERSION_, '1.7.0.0', '>=');
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isModuleInstalled() {
+    public function isModuleInstalled()
+    {
         if (false === $this->isShopVersion17()) {
             return \Module::isInstalled($this->moduleName);
         }
@@ -74,15 +78,16 @@ class ModuleInstaller {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isModuleVersionSatisfied() {
+    public function isModuleVersionSatisfied()
+    {
         $module = \Module::getInstanceByName($this->moduleName);
+
         return version_compare(
             $module->version,
             $this->moduleVersion,
             $this->absoluteCompare ? '>' : '>='
         );
     }
-
 }
