@@ -1,0 +1,22 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ps_mbo
+  title: MBO Module
+  description: "Load CDC in given pages on BO. Handle module actions."
+  annotations:
+    sentry.io/project-slug: mbo-module
+    github.com/project-slug: PrestaShopCorp/ps_mbo
+spec:
+  type: module
+  owner: squad-mbo-journey
+  tech_lead: Vincent Garcia
+  pm: Samuel Boucher
+  lifecycle: production
+  system: mbo
+  consumesApis:
+    - disneystore-api
+    - accounts-api
+  dependsOn:
+    - component:mbo-ui
+---
