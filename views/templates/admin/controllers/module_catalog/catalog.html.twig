@@ -28,11 +28,13 @@
       <script type="application/javascript" src="{{ cdc_url }}"></script>
     {% endif %}
 
+    <script>
+      var psAccountLoaded = false;
+    </script>
     {% if urlAccountsCdn is defined and urlAccountsCdn is not empty %}
       {# PrestaShop Account #}
       <script src="{{ urlAccountsCdn }}" rel=preload></script>
       <script>
-        var psAccountLoaded = false;
         if (window?.psaccountsVue) {
           window?.psaccountsVue?.init();
           psAccountLoaded = true;
