@@ -60,8 +60,6 @@ class ModuleController extends ModuleControllerCore
             $extraParams['cdc_url'] = $cdcJsFile;
         }
 
-        $context = $this->get('mbo.cdc.context_builder')->getViewContext();
-
         /*********************
          * PrestaShop Account *
          * *******************/
@@ -110,7 +108,7 @@ class ModuleController extends ModuleControllerCore
                 'help_link' => $this->generateSidebarLink('AdminModules'),
                 'requireFilterStatus' => false,
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
-                'shop_context' => $context,
+                'shop_context' => $this->get('mbo.cdc.context_builder')->getViewContext(),
                 'urlAccountsCdn' => $urlAccountsCdn,
                 'errorMessage' => $this->trans(
                     'You do not have permission to add this.',
