@@ -30,7 +30,12 @@ class ModuleInstaller
     private $absoluteCompare;
     private $moduleManager;
 
-    public function __construct(string $moduleName, string $moduleVersion, bool $absoluteCompare)
+    /**
+     * @param string $moduleName
+     * @param string|null $moduleVersion
+     * @param bool $absoluteCompare
+     */
+    public function __construct(string $moduleName, string $moduleVersion = null, bool $absoluteCompare = false)
     {
         $this->moduleName = $moduleName;
         $this->moduleVersion = $moduleVersion;
@@ -82,6 +87,7 @@ class ModuleInstaller
      */
     public function isModuleVersionSatisfied()
     {
+        if (!$this->moduleVersion) return true;
         $module = \Module::getInstanceByName($this->moduleName);
 
         return version_compare(
