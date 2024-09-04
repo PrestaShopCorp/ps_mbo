@@ -87,7 +87,9 @@ class ModuleInstaller
      */
     public function isModuleVersionSatisfied()
     {
-        if (!$this->moduleVersion) return true;
+        if (!$this->moduleVersion) {
+            return true;
+        }
         $module = \Module::getInstanceByName($this->moduleName);
 
         return version_compare(
