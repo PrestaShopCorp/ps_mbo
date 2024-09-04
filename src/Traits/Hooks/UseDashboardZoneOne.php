@@ -95,7 +95,17 @@ trait UseDashboardZoneOne
             $accountsService = $accountsFacade->getPsAccountsService();
             if ($this->ensurePsAccountIsEnabled()) $this->get('mbo.ps_eventbus.installer')->install();
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
-            ErrorHelper::reportError($e);
+            $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+            // Seems the module is not here, try to install it
+            $accountsInstaller->install();
+            $accountsFacade = $this->get('mbo.ps_accounts.facade');
+            try {
+                $accountsService = $accountsFacade->getPsAccountsService();
+            } catch (\Exception $e) {
+                // Installation seems to not work properly
+                $accountsService = $accountsFacade = null;
+                ErrorHelper::reportError($e);
+            }
         }
 
         if (null !== $accountsFacade && null !== $accountsService) {
