@@ -64,6 +64,18 @@ class ModuleInstaller
     /**
      * @return bool
      */
+    public function enable()
+    {
+        if (!$this->moduleManager->isEnabled($this->moduleName)) {
+            return $this->moduleManager->enable($this->moduleName);
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
     public function isShopVersion17()
     {
         /* @SuppressWarnings("php:S1313") */
