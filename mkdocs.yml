@@ -1,6 +1,0 @@
-site_name: 'ps_mbo'
-nav:
-  - Account-interco: qa/account-interco.md
-
-plugins:
-  - techdocs-core
