@@ -14,9 +14,29 @@ spec:
   pm: Samuel Boucher
   lifecycle: production
   system: mbo
+  providesApis:
+    - ps_mbo-api
   consumesApis:
     - disneystore-api
     - accounts-api
   dependsOn:
     - component:mbo-ui
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ps_mbo-api
+  title: PS MBO Module API
+  description: " "  
+  annotations:
+    sentry.io/project-slug: mbo-module
+    github.com/project-slug: PrestaShopCorp/ps_mbo
+spec:
+  type: openapi
+  tech_lead: Vincent Garcia
+  pm: Samuel Boucher
+  owner: squad-mbo-journey
+  lifecycle: production
+  system: mbo
+  definition: " "
 ---

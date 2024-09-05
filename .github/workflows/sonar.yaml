@@ -1,0 +1,30 @@
+name: SonarQube scan
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feat/catalog-info]
+
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout the repository 🎁
+        uses: actions/checkout@v4
+
+      - name: Auth GCP 🔒
+        uses: PrestaShopCorp/prestashop-github-action-gcp-auth@v1
+        with:
+          auth-mode: 'json-file'
+          credentials-json: ${{ secrets.SONARQUBE_SECRET_KEY }}
+          gke-cluster-name: ${{ secrets.CLUSTER_NAME_INTEGRATION }}
+          setup-gcloud: false
+          registry-login: false
+
+      - name: Launch quality test ✅
+        uses: PrestaShopCorp/prestashop-github-action-sonarqube@v1
+        with:
+          sonar-token: ${{ secrets.SONAR_TOKEN }} # Your token sonarqube to identify your project
