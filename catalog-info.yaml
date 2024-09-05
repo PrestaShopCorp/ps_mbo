@@ -7,6 +7,7 @@ metadata:
   annotations:
     sentry.io/project-slug: mbo-module
     github.com/project-slug: PrestaShopCorp/ps_mbo
+    backstage.io/techdocs-ref: dir:.
 spec:
   type: module
   owner: squad-mbo-journey
