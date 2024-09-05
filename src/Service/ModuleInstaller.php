@@ -62,6 +62,18 @@ class ModuleInstaller {
     /**
      * @return bool
      */
+    public function enable()
+    {
+        if (!$this->moduleManager->isEnabled($this->moduleName)) {
+            return $this->moduleManager->enable($this->moduleName);
+        }
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
     public function isShopVersion17()
     {
         return version_compare(_PS_VERSION_, '1.7.0.0', '>=');
