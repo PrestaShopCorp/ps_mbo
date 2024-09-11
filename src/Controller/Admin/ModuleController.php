@@ -1,22 +1,22 @@
 <?php
 
 /**
- * 2007-2020 PrestaShop and Contributors
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * This source file is subject to the Academic Free License version 3.0
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2020 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
@@ -60,8 +60,6 @@ class ModuleController extends ModuleControllerCore
             $extraParams['cdc_url'] = $cdcJsFile;
         }
 
-        $context = $this->get('mbo.cdc.context_builder')->getViewContext();
-
         /*********************
          * PrestaShop Account *
          * *******************/
@@ -70,7 +68,9 @@ class ModuleController extends ModuleControllerCore
         try {
             $accountsFacade = $this->get('mbo.ps_accounts.facade');
             $accountsService = $accountsFacade->getPsAccountsService();
-            $this->ensurePsAccountIsEnabled();
+            if ($this->ensurePsAccountIsEnabled()) {
+                $this->ensurePsEventbusEnabled();
+            }
         } catch (Exception $e) {
             try {
                 $accountsInstaller = $this->get('mbo.ps_accounts.installer');
@@ -108,7 +108,7 @@ class ModuleController extends ModuleControllerCore
                 'help_link' => $this->generateSidebarLink('AdminModules'),
                 'requireFilterStatus' => false,
                 'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
-                'shop_context' => $context,
+                'shop_context' => $this->get('mbo.cdc.context_builder')->getViewContext(),
                 'urlAccountsCdn' => $urlAccountsCdn,
                 'errorMessage' => $this->trans(
                     'You do not have permission to add this.',
@@ -349,13 +349,35 @@ class ModuleController extends ModuleControllerCore
         return $topMenuData;
     }
 
+    /**
+     * @return bool
+     */
     private function ensurePsAccountIsEnabled()
     {
         $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+        // @phpstan-ignore booleanNot.alwaysFalse
+        if (!$accountsInstaller) {
+            return false;
+        }
 
-        if (null !== $accountsInstaller && !$accountsInstaller->isModuleEnabled()) {
-            $moduleManager = $this->get('prestashop.module.manager');
-            $moduleManager->enable($accountsInstaller->getModuleName());
+        $accountsEnabled = $accountsInstaller->isModuleEnabled();
+        if ($accountsEnabled) {
+            return true;
+        }
+
+        $moduleManager = $this->get('prestashop.module.manager');
+
+        return $moduleManager->enable($accountsInstaller->getModuleName());
+    }
+
+    /**
+     * @return void
+     */
+    private function ensurePsEventbusEnabled()
+    {
+        $installer = $this->get('mbo.ps_eventbus.installer');
+        if ($installer->install()) {
+            $installer->enable();
         }
     }
 }

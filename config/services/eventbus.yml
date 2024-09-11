@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  mbo.ps_eventbus.installer:
+    class: 'PrestaShop\Module\Mbo\Service\ModuleInstaller'
+    public: true
+    arguments:
+      - "ps_eventbus"
