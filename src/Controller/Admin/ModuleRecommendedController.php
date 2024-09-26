@@ -39,8 +39,16 @@ class ModuleRecommendedController extends PrestaShopAdminController
      * @var RequestStack
      */
     protected $requestStack;
-    private TabCollectionProvider $tabCollectionProvider;
-    private ContextBuilder $contextBuilder;
+
+    /**
+     * @var TabCollectionProvider
+     */
+    private $tabCollectionProvider;
+
+    /**
+     * @var ContextBuilder
+     */
+    private $contextBuilder;
 
     /**
      * @param RequestStack $requestStack

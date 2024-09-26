@@ -29,19 +29,13 @@ use PrestaShop\Module\Mbo\Addons\Toolbar;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\ModuleInstaller;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
-use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Twig\Environment;
 
 /**
  * Responsible of "Improve > Modules > Modules Catalog" page display.
@@ -49,15 +43,36 @@ use Twig\Environment;
 class ModuleCatalogController extends PrestaShopAdminController
 {
     public const CONTROLLER_NAME = 'ADMINMODULESSF';
-    private Toolbar $addonsToolbar;
-    private ContextBuilder $contextBuilder;
-    private ModuleManager $moduleManager;
-    private PsAccounts $psAccountsFacade;
-    private Installer $psAccountsInstaller;
-    private ModuleInstaller $psEventbusInstaller;
-    private LegacyContext $legacyContext;
-    private Documentation $documentation;
-    private AuthorizationCheckerInterface $authorizationChecker;
+    
+    /**
+     * @var Toolbar
+     */
+    private $addonsToolbar;
+
+    /**
+     * @var ContextBuilder
+     */
+    private $contextBuilder;
+
+    /**
+     * @var ModuleManager
+     */
+    private $moduleManager;
+
+    /**
+     * @var PsAccounts
+     */
+    private $psAccountsFacade;
+
+    /**
+     * @var Installer
+     */
+    private $psAccountsInstaller;
+
+    /**
+     * @var ModuleInstaller
+     */
+    private $psEventbusInstaller;
 
     public function __construct(
         Toolbar $addonsToolbar,
@@ -65,10 +80,7 @@ class ModuleCatalogController extends PrestaShopAdminController
         ModuleManager $moduleManager,
         PsAccounts $psAccountsFacade,
         Installer $psAccountsInstaller,
-        ModuleInstaller $psEventbusInstaller,
-        LegacyContext $legacyContext,
-        Documentation $documentation,
-        AuthorizationCheckerInterface $authorizationChecker
+        ModuleInstaller $psEventbusInstaller
     ) {
         $this->addonsToolbar = $addonsToolbar;
         $this->contextBuilder = $contextBuilder;
@@ -76,9 +88,6 @@ class ModuleCatalogController extends PrestaShopAdminController
         $this->psAccountsFacade = $psAccountsFacade;
         $this->psAccountsInstaller = $psAccountsInstaller;
         $this->psEventbusInstaller = $psEventbusInstaller;
-        $this->legacyContext = $legacyContext;
-        $this->documentation = $documentation;
-        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
