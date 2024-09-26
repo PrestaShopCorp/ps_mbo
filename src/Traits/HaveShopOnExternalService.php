@@ -26,6 +26,7 @@ use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
+use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\ConfigChangeCommandHandler;
 use PrestaShop\Module\Mbo\Helpers\Uuid;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
@@ -73,7 +74,7 @@ trait HaveShopOnExternalService
     {
         try {
             /** @var Client $distributionApi */
-            $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
+            $distributionApi = $this->get(Client::class);
             $distributionApi->setBearer($this->getAdminAuthenticationProvider()->getMboJWT());
             $distributionApi->unregisterShop();
         } catch (Exception $exception) {
@@ -99,7 +100,7 @@ trait HaveShopOnExternalService
                 throw new Exception();
             }
             /** @var Client $distributionApi */
-            $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
+            $distributionApi = $this->get(Client::class);
             if (!method_exists($distributionApi, $method)) {
                 return;
             }
@@ -180,7 +181,7 @@ trait HaveShopOnExternalService
         }
 
         /** @var Client $distributionApi */
-        $distributionApi = $this->getService('mbo.cdc.client.distribution_api');
+        $distributionApi = $this->get(Client::class);
 
         $distributionApi->setBearer($this->getAdminAuthenticationProvider()->getMboJWT());
         $config = $distributionApi->getApiConf();
@@ -193,6 +194,6 @@ trait HaveShopOnExternalService
         $config = json_decode(json_encode($config), true);
 
         $command = new ConfigChangeCommand($config, _PS_VERSION_, $this->version);
-        $this->getService('mbo.distribution.api_config_change_handler')->handle($command);
+        $this->get(ConfigChangeCommandHandler::class)->handle($command);
     }
 }

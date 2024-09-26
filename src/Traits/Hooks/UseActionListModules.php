@@ -50,13 +50,13 @@ trait UseActionListModules
     {
         try {
             /** @var FiltersFactory $filtersFactory */
-            $filtersFactory = $this->get('mbo.modules.filters.factory');
+            $filtersFactory = $this->get(FiltersFactory::class);
             /** @var CollectionFactory $collectionFactory */
-            $collectionFactory = $this->get('mbo.modules.collection.factory');
+            $collectionFactory = $this->get(CollectionFactory::class);
             /** @var Repository $moduleRepository */
-            $moduleRepository = $this->get('mbo.modules.repository');
+            $moduleRepository = $this->get(Repository::class);
             /** @var Router $router */
-            $router = $this->get('router');
+            $router = $this->get(Router::class);
 
             if (
                 null === $filtersFactory
@@ -135,7 +135,7 @@ trait UseActionListModules
     {
         try {
             /** @var Environment $twigEnvironment */
-            $twigEnvironment = $this->get('twig');
+            $twigEnvironment = $this->get(Environment::class);
 
             if (null === $twigEnvironment) {
                 throw new ExpectedServiceNotFoundException('Unable to get Twig service');

@@ -23,7 +23,8 @@ namespace PrestaShop\Module\Mbo\Distribution;
 
 use Context;
 use Doctrine\Common\Cache\CacheProvider;
-use GuzzleHttp\Client as HttpClient;
+use PrestaShop\Module\Mbo\Addons\User\AddonsUserProvider;
+use Psr\Http\Client\ClientInterface as HttpClient;
 use PrestaShop\Module\Mbo\Addons\User\UserInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
@@ -38,12 +39,15 @@ class ConnectedClient extends BaseClient
     /**
      * @param HttpClient $httpClient
      * @param CacheProvider $cacheProvider
-     * @param UserInterface $user
+     * @param AddonsUserProvider $addonsUserProvider
      */
-    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider, UserInterface $user)
-    {
+    public function __construct(
+        HttpClient $httpClient,
+        CacheProvider $cacheProvider,
+        AddonsUserProvider $addonsUserProvider
+    ) {
         parent::__construct($httpClient, $cacheProvider);
-        $this->user = $user;
+        $this->user = $addonsUserProvider->getUser();
     }
 
     /**

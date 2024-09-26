@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,21 +18,77 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
+use Exception;
+use LogicException;
+use PrestaShop\Module\Mbo\Addons\Toolbar;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
-use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
+use PrestaShop\Module\Mbo\Service\ModuleInstaller;
+use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Security\Permission;
+use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
+use PrestaShop\PsAccountsInstaller\Installer\Installer;
+use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Responsible of "Improve > Modules > Modules Catalog" page display.
  */
-class ModuleCatalogController extends ModuleAbstractController
+class ModuleCatalogController extends PrestaShopAdminController
 {
     public const CONTROLLER_NAME = 'ADMINMODULESSF';
+    
+    /**
+     * @var Toolbar
+     */
+    private $addonsToolbar;
+
+    /**
+     * @var ContextBuilder
+     */
+    private $contextBuilder;
+
+    /**
+     * @var ModuleManager
+     */
+    private $moduleManager;
+
+    /**
+     * @var PsAccounts
+     */
+    private $psAccountsFacade;
+
+    /**
+     * @var Installer
+     */
+    private $psAccountsInstaller;
+
+    /**
+     * @var ModuleInstaller
+     */
+    private $psEventbusInstaller;
+
+    public function __construct(
+        Toolbar $addonsToolbar,
+        ContextBuilder $contextBuilder,
+        ModuleManager $moduleManager,
+        PsAccounts $psAccountsFacade,
+        Installer $psAccountsInstaller,
+        ModuleInstaller $psEventbusInstaller
+    ) {
+        $this->addonsToolbar = $addonsToolbar;
+        $this->contextBuilder = $contextBuilder;
+        $this->moduleManager = $moduleManager;
+        $this->psAccountsFacade = $psAccountsFacade;
+        $this->psAccountsInstaller = $psAccountsInstaller;
+        $this->psEventbusInstaller = $psEventbusInstaller;
+    }
 
     /**
      * Module Catalog page
@@ -67,33 +124,30 @@ class ModuleCatalogController extends ModuleAbstractController
         $urlAccountsCdn = '';
 
         try {
-            $accountsFacade = $this->get('mbo.ps_accounts.facade');
-            $accountsService = $accountsFacade->getPsAccountsService();
+            $accountsService = $this->psAccountsFacade->getPsAccountsService();
             if ($this->ensurePsAccountIsEnabled()) $this->ensurePsEventbusEnabled();
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
-            $accountsInstaller = $this->get('mbo.ps_accounts.installer');
             // Seems the module is not here, try to install it
-            $accountsInstaller->install();
-            $accountsFacade = $this->get('mbo.ps_accounts.facade');
+            $this->psAccountsInstaller->install();
             try {
-                $accountsService = $accountsFacade->getPsAccountsService();
-            } catch (\Exception $e) {
+                $accountsService = $this->psAccountsFacade->getPsAccountsService();
+            } catch (Exception $e) {
                 // Installation seems to not work properly
-                $accountsService = $accountsFacade = null;
+                $accountsService = null;
                 ErrorHelper::reportError($e);
             }
         }
 
-        if (null !== $accountsFacade && null !== $accountsService) {
+        if (null !== $accountsService) {
             try {
                 \Media::addJsDef([
-                    'contextPsAccounts' => $accountsFacade->getPsAccountsPresenter()
+                    'contextPsAccounts' => $this->psAccountsFacade->getPsAccountsPresenter()
                         ->present('ps_mbo'),
                 ]);
 
                 // Retrieve the PrestaShop Account CDN
                 $urlAccountsCdn = $accountsService->getAccountsCdn();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 ErrorHelper::reportError($e);
             }
         }
@@ -101,8 +155,8 @@ class ModuleCatalogController extends ModuleAbstractController
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/catalog.html.twig',
             [
-                'layoutHeaderToolbarBtn' => $this->get('mbo.addons.toolbar')->getToolbarButtons(),
-                'layoutTitle' => $this->trans('Marketplace', 'Modules.Mbo.Modulescatalog'),
+                'layoutHeaderToolbarBtn' => $this->addonsToolbar->getToolbarButtons(),
+                'layoutTitle' => $this->trans('Marketplace', [], 'Modules.Mbo.Modulescatalog'),
                 'requireAddonsSearch' => true,
                 'requireBulkActions' => false,
                 'showContentHeader' => true,
@@ -110,10 +164,11 @@ class ModuleCatalogController extends ModuleAbstractController
                 'help_link' => $this->generateSidebarLink('AdminModules'),
                 'requireFilterStatus' => false,
                 'level' => $this->authorizationLevel(static::CONTROLLER_NAME),
-                'shop_context' => $this->get('mbo.cdc.context_builder')->getViewContext(),
+                'shop_context' => $this->contextBuilder->getViewContext(),
                 'urlAccountsCdn' => $urlAccountsCdn,
                 'errorMessage' => $this->trans(
                     'You do not have permission to add this.',
+                    [],
                     'Admin.Notifications.Error'
                 ),
             ] + $extraParams
@@ -134,21 +189,53 @@ class ModuleCatalogController extends ModuleAbstractController
 
     private function ensurePsAccountIsEnabled(): bool
     {
-        $accountsInstaller = $this->get('mbo.ps_accounts.installer');
-        if (!$accountsInstaller) return false;
+        if (version_compare(_PS_VERSION_, "9.0.0", ">=")) return false;
 
-        $accountsEnabled = $accountsInstaller->isModuleEnabled();
+        if (!$this->psAccountsInstaller) return false;
+
+        $accountsEnabled = $this->psAccountsInstaller->isModuleEnabled();
         if ($accountsEnabled) return true;
 
-        $moduleManager = $this->get('prestashop.module.manager');
-        return $moduleManager->enable($accountsInstaller->getModuleName());
+        return $this->moduleManager->enable($this->psAccountsInstaller->getModuleName());
     }
 
     private function ensurePsEventbusEnabled()
     {
-        $installer = $this->get('mbo.ps_eventbus.installer');
-        if ($installer->install()) {
-            $installer->enable();
+        if (version_compare(_PS_VERSION_, "9.0.0", ">=")) return false;
+
+        if ($this->psEventbusInstaller->install()) {
+            $this->psEventbusInstaller->enable();
         }
+    }
+
+
+    /**
+     * Checks if the attributes are granted against the current authentication token and optionally supplied object.
+     *
+     * @param string $controller name of the controller that token is tested against
+     *
+     * @return int
+     *
+     * @throws LogicException
+     */
+    private function authorizationLevel($controller)
+    {
+        if ($this->isGranted(Permission::DELETE, $controller)) {
+            return Permission::LEVEL_DELETE;
+        }
+
+        if ($this->isGranted(Permission::CREATE, $controller)) {
+            return Permission::LEVEL_CREATE;
+        }
+
+        if ($this->isGranted(Permission::UPDATE, $controller)) {
+            return Permission::LEVEL_UPDATE;
+        }
+
+        if ($this->isGranted(Permission::READ, $controller)) {
+            return Permission::LEVEL_READ;
+        }
+
+        return 0;
     }
 }

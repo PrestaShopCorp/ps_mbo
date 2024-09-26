@@ -151,7 +151,7 @@ trait HaveConfigurationPage
         $dotenv->overload($envFilePath);
 
         /** @var MboSymfonyCacheClearer $cacheClearer */
-        $cacheClearer = $this->get('mbo.symfony_cache_clearer');
+        $cacheClearer = $this->get(MboSymfonyCacheClearer::class);
         $cacheClearer->clear();
 
         $message = '<div style="padding-bottom: 15px;">Configuration updated to :

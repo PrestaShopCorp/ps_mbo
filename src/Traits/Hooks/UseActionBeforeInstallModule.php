@@ -61,7 +61,7 @@ trait UseActionBeforeInstallModule
 
         try {
             /** @var ApiClient $addonsClient */
-            $addonsClient = $this->get('mbo.addons.client.api');
+            $addonsClient = $this->get(ApiClient::class);
             if (null === $addonsClient) {
                 throw new ExpectedServiceNotFoundException('Unable to get Addons ApiClient');
             }
@@ -84,7 +84,7 @@ trait UseActionBeforeInstallModule
 
         try {
             /** @var ActionsManager $actionsManager */
-            $actionsManager = $this->get('mbo.modules.actions_manager');
+            $actionsManager = $this->get(ActionsManager::class);
             if (null === $actionsManager) {
                 throw new ExpectedServiceNotFoundException('Unable to get ActionsManager');
             }
@@ -97,7 +97,7 @@ trait UseActionBeforeInstallModule
             $actionsManager->install($moduleId);
         } catch(\Exception $e) {
             /** @var HookExceptionHolder $hookExceptionHolder */
-            $hookExceptionHolder = $this->get('mbo.hook_exception_holder');
+            $hookExceptionHolder = $this->get(HookExceptionHolder::class);
             if (null !== $hookExceptionHolder) {
                 $hookExceptionHolder->holdException('actionBeforeInstallModule', $e);
             }

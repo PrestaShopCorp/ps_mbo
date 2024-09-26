@@ -28,11 +28,12 @@ use Hook;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Tab\TabInterface;
+use PrestaShopBundle\Service\Routing\Router;
 use PrestaShopDatabaseException;
 use PrestaShopException;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use ToolsCore as Tools;
+use Twig\Environment;
 
 trait UseDisplayDashboardTop
 {
@@ -198,11 +199,11 @@ trait UseDisplayDashboardTop
     private function displayFailedApiUser(): string
     {
         try {
-            /** @var \Twig\Environment $twig */
-            $twig = $this->get('twig');
+            /** @var Environment $twig */
+            $twig = $this->get(Environment::class);
 
             /** @var Router $router*/
-            $router = $this->get('router');
+            $router = $this->get('prestashop.router');
 
             if (null === $twig || null === $router) {
                 throw new ExpectedServiceNotFoundException(
@@ -278,7 +279,7 @@ trait UseDisplayDashboardTop
 
         try {
             /** @var UrlGeneratorInterface $router */
-            $router = $this->get('router');
+            $router = $this->get('prestashop.router');
             if (null === $router) {
                 throw new ExpectedServiceNotFoundException(
                     'Some services not found in UseDisplayDashboardTop'

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,6 +18,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
@@ -25,6 +27,7 @@ use Db;
 use Exception;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
+use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 use PrestaShopDatabaseException;
 
 trait UseDashboardZoneOne
@@ -91,14 +94,14 @@ trait UseDashboardZoneOne
         $accountsFacade = $accountsService = null;
 
         try {
-            $accountsFacade = $this->get('mbo.ps_accounts.facade');
+            $accountsFacade = $this->get(PsAccounts::class);
             $accountsService = $accountsFacade->getPsAccountsService();
             if ($this->ensurePsAccountIsEnabled()) $this->ensurePsEventbusEnabled();
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
-            $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+            $accountsInstaller = $this->get(\PrestaShop\PsAccountsInstaller\Installer\Installer::class);
             // Seems the module is not here, try to install it
             $accountsInstaller->install();
-            $accountsFacade = $this->get('mbo.ps_accounts.facade');
+            $accountsFacade = $this->get(\PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts::class);
             try {
                 $accountsService = $accountsFacade->getPsAccountsService();
             } catch (\Exception $e) {
@@ -130,8 +133,11 @@ trait UseDashboardZoneOne
      * 
      * @return bool
      */
-    private function ensurePsAccountIsEnabled(): bool {
-        $accountsInstaller = $this->get('mbo.ps_accounts.installer');
+    private function ensurePsAccountIsEnabled(): bool
+    {
+        if (version_compare(_PS_VERSION_, "9.0.0", ">=")) return false;
+
+        $accountsInstaller = $this->get(\PrestaShop\PsAccountsInstaller\Installer\Installer::class);
         if (!$accountsInstaller) return false;
 
         $accountsEnabled = $accountsInstaller->isModuleEnabled();
@@ -143,6 +149,8 @@ trait UseDashboardZoneOne
 
     private function ensurePsEventbusEnabled()
     {
+        if (version_compare(_PS_VERSION_, "9.0.0", ">=")) return false;
+
         $installer = $this->get('mbo.ps_eventbus.installer');
         if ($installer->install()) {
             $installer->enable();
