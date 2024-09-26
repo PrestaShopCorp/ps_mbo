@@ -44,7 +44,7 @@ trait UseActionBeforeInstallModule
     {
         try {
             /** @var ModuleDataProvider $moduleDataProvider */
-            $moduleDataProvider = $this->get(ModuleDataProvider::class);
+            $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
             if (null === $moduleDataProvider) {
                 throw new ExpectedServiceNotFoundException('Unable to get ModuleDataProvider');
             }

@@ -28,6 +28,9 @@ services:
   PrestaShop\Module\Mbo\Module\ActionsManager:
     autowire: true
 
+  mbo.modules.actions_manager:
+    alias: PrestaShop\Module\Mbo\Module\ActionsManager
+
   PrestaShop\Module\Mbo\Module\SourceHandler\AddonsUrlSourceHandler:
     autowire: true
     autoconfigure: true
@@ -40,3 +43,6 @@ services:
 
   PrestaShop\Module\Mbo\Service\HookExceptionHolder:
     autowire: true
+
+  mbo.hook_exception_holder:
+    alias: PrestaShop\Module\Mbo\Service\HookExceptionHolder

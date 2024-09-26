@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,6 +18,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
@@ -25,6 +27,7 @@ use Exception;
 use LogicException;
 use PrestaShop\Module\Mbo\Addons\Toolbar;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Service\ModuleInstaller;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Help\Documentation;
@@ -51,6 +54,7 @@ class ModuleCatalogController extends PrestaShopAdminController
     private ModuleManager $moduleManager;
     private PsAccounts $psAccountsFacade;
     private Installer $psAccountsInstaller;
+    private ModuleInstaller $psEventbusInstaller;
     private LegacyContext $legacyContext;
     private Documentation $documentation;
     private AuthorizationCheckerInterface $authorizationChecker;
@@ -61,16 +65,17 @@ class ModuleCatalogController extends PrestaShopAdminController
         ModuleManager $moduleManager,
         PsAccounts $psAccountsFacade,
         Installer $psAccountsInstaller,
+        ModuleInstaller $psEventbusInstaller,
         LegacyContext $legacyContext,
         Documentation $documentation,
         AuthorizationCheckerInterface $authorizationChecker
-    )
-    {
+    ) {
         $this->addonsToolbar = $addonsToolbar;
         $this->contextBuilder = $contextBuilder;
         $this->moduleManager = $moduleManager;
         $this->psAccountsFacade = $psAccountsFacade;
         $this->psAccountsInstaller = $psAccountsInstaller;
+        $this->psEventbusInstaller = $psEventbusInstaller;
         $this->legacyContext = $legacyContext;
         $this->documentation = $documentation;
         $this->authorizationChecker = $authorizationChecker;
@@ -175,20 +180,22 @@ class ModuleCatalogController extends PrestaShopAdminController
 
     private function ensurePsAccountIsEnabled(): bool
     {
+        if (version_compare(_PS_VERSION_, "9.0.0", ">=")) return false;
+
         if (!$this->psAccountsInstaller) return false;
 
         $accountsEnabled = $this->psAccountsInstaller->isModuleEnabled();
         if ($accountsEnabled) return true;
 
-        $moduleManager = $this->get('PrestaShop\PrestaShop\Core\Module\ModuleManager');
-        return $moduleManager->enable($this->psAccountsInstaller->getModuleName());
+        return $this->moduleManager->enable($this->psAccountsInstaller->getModuleName());
     }
 
     private function ensurePsEventbusEnabled()
     {
-        $installer = $this->get('mbo.ps_eventbus.installer');
-        if ($installer->install()) {
-            $installer->enable();
+        if (version_compare(_PS_VERSION_, "9.0.0", ">=")) return false;
+
+        if ($this->psEventbusInstaller->install()) {
+            $this->psEventbusInstaller->enable();
         }
     }
 
