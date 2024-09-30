@@ -42,7 +42,7 @@ trait UseActionBeforeUpgradeModule
      */
     public function hookActionBeforeUpgradeModule(array $params): void
     {
-        if(isset($params['source']) && !$params['source']){
+        if(isset($params['source']) && $params['source']){
             $this->purgeCache();
             return;
         }
