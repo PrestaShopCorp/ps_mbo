@@ -2,35 +2,21 @@ services:
   _defaults:
     public: true
 
-  mbo.modules.source_retriever.url:
-    class: 'PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever'
+  PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever:
+    autowire: true
     arguments:
-      $addonsDataProvider: '@mbo.addons.data_provider'
-      $translator: '@translator'
       $modulePath: '%modules_dir%'
     properties:
       cacheDir: "%kernel.cache_dir%"
 
-  mbo.modules.transitions_manager:
-    class: 'PrestaShop\Module\Mbo\Module\Workflow\TransitionsManager'
-    arguments:
-      - '@prestashop.module.manager'
-      - '@mbo.hook_exception_holder'
+  PrestaShop\Module\Mbo\Module\Workflow\TransitionsManager:
+    autowire: true
 
-  mbo.modules.transition_builder:
-    class: PrestaShop\Module\Mbo\Module\Workflow\TransitionBuilder
+  PrestaShop\Module\Mbo\Module\Workflow\TransitionBuilder:
+    autowire: true
 
-  mbo.modules.transition_applier:
-    class: PrestaShop\Module\Mbo\Module\Workflow\TransitionApplier
-    arguments:
-      - '@mbo.modules.transitions_manager'
-      - '@translator'
+  PrestaShop\Module\Mbo\Module\Workflow\TransitionApplier:
+    autowire: true
 
-  mbo.modules.module_status_transition_handler:
-    class: 'PrestaShop\Module\Mbo\Module\CommandHandler\ModuleStatusTransitionCommandHandler'
-    arguments:
-      - '@mbo.modules.repository'
-      - '@mbo.modules.actions_manager'
-      - '@mbo.modules.builder'
-      - '@mbo.modules.transition_builder'
-      - '@mbo.modules.transition_applier'
+  PrestaShop\Module\Mbo\Module\CommandHandler\ModuleStatusTransitionCommandHandler:
+    autowire: true

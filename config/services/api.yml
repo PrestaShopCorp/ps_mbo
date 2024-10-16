@@ -16,23 +16,18 @@ services:
       - 'ps_mbo'
 
   PrestaShop\Module\Mbo\Api\Config\Env:
-    class: PrestaShop\Module\Mbo\Api\Config\Env
+    autowire: true
 
-  mbo.api.service.executors.module_transition:
-    class: PrestaShop\Module\Mbo\Api\Service\ModuleTransitionExecutor
-    arguments:
-      - '@mbo.modules.module_status_transition_handler'
+  PrestaShop\Module\Mbo\Api\Service\ModuleTransitionExecutor:
+    autowire: true
 
-  mbo.api.service.executors.config_apply:
-    class: PrestaShop\Module\Mbo\Api\Service\ConfigApplyExecutor
-    arguments:
-      - '@mbo.distribution.api_config_change_handler'
-      - '@ps_mbo'
+  PrestaShop\Module\Mbo\Api\Service\ConfigApplyExecutor:
+    autowire: true
 
-  mbo.api.service.factory:
-    class: PrestaShop\Module\Mbo\Api\Service\Factory
+  PrestaShop\Module\Mbo\Api\Service\Factory:
+    autowire: true
     arguments:
       - [
-          '@mbo.api.service.executors.module_transition',
-          '@mbo.api.service.executors.config_apply'
+          '@PrestaShop\Module\Mbo\Api\Service\ModuleTransitionExecutor',
+          '@PrestaShop\Module\Mbo\Api\Service\ConfigApplyExecutor'
       ]

@@ -2,19 +2,16 @@ services:
   _defaults:
     public: true
 
-  mbo.ps_accounts.installer:
-    class: 'PrestaShop\PsAccountsInstaller\Installer\Installer'
-    public: true
+  PrestaShop\PsAccountsInstaller\Installer\Installer:
+    autowire: true
     arguments:
-      - "5.2.5"
+      $psAccountsVersion: "5.2.5"
 
-  mbo.ps_accounts.facade:
-    class: 'PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts'
-    public: true
-    arguments:
-      - "@mbo.ps_accounts.installer"
+  PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts:
+    autowire: true
 
-  mbo.accounts.data_provider:
-    class: PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider
+  PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider:
+    autowire: true
+    autoconfigure: true
     arguments:
-      - "5.2.5"
+      $psAccountsVersion: "5.2.5"

@@ -51,10 +51,10 @@ trait UseDisplayBackOfficeEmployeeMenu
 
         try {
             /** @var Client $apiClient */
-            $apiClient = $this->get('mbo.cdc.client.distribution_api');
+            $apiClient = $this->get(Client::class);
 
             /** @var Router $router */
-            $router = $this->get('router');
+            $router = $this->get(Router::class);
 
             if (null === $apiClient || null === $router) {
                 throw new ExpectedServiceNotFoundException(

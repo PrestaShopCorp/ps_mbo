@@ -6,43 +6,32 @@ services:
   _defaults:
     public: true
 
-  mbo.externalcontent.provider:
-    class: 'PrestaShop\Module\Mbo\Service\ExternalContentProvider\ExternalContentProvider'
+  Symfony\Contracts\Translation\TranslatorInterface: '@PrestaShopBundle\Translation\TranslatorInterface'
 
-  mbo.addons.links_provider:
-    class: 'PrestaShop\Module\Mbo\Addons\Provider\LinksProvider'
+  PrestaShop\Module\Mbo\Service\ExternalContentProvider\ExternalContentProviderInterface: '@PrestaShop\Module\Mbo\Service\ExternalContentProvider\ExternalContentProvider'
+
+  PrestaShop\Module\Mbo\Service\ExternalContentProvider\ExternalContentProvider:
+    autowire: true
+
+  PrestaShop\Module\Mbo\Addons\Provider\LinksProvider:
+    autowire: true
     arguments:
-      - '@prestashop.core.foundation.version'
-      - '@prestashop.adapter.legacy.context'
-      - '@prestashop.adapter.legacy.configuration'
-      - '@request_stack'
-      - '@prestashop.categories_provider'
-      - '@translator'
-      - '@router'
+      $router: '@prestashop.router'
+      $categoriesProvider: '@prestashop.categories_provider'
 
-  mbo.controller.modules.catalog:
-    class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController'
+  PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController:
+    autowire: true
+    autoconfigure: true
 
-  mbo.controller.modules.selection:
-    class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleSelectionController'
-    arguments:
-      - '@request_stack'
+  PrestaShop\Module\Mbo\Controller\Admin\ModuleSelectionController:
+    autowire: true
 
-  mbo.controller.modules.recommended:
-    class: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleRecommendedController'
-    arguments:
-      - '@request_stack'
-    calls:
-      - [ setContainer, [ '@service_container' ] ]
+  PrestaShop\Module\Mbo\Controller\Admin\ModuleRecommendedController:
+    autowire: true
+    autoconfigure: true
 
-  mbo.controller.themes.catalog:
-    class: 'PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController'
-    arguments:
-      - '@request_stack'
+  PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController:
+    autowire: true
 
-  mbo.controller.addons:
-    class: 'PrestaShop\Module\Mbo\Controller\Admin\AddonsController'
-    arguments:
-      - '@request_stack'
-      - '@prestashop.module.manager'
-      - '@prestashop.core.admin.module.repository'
+  PrestaShop\Module\Mbo\Controller\Admin\AddonsController:
+    autowire: true

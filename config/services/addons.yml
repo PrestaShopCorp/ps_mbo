@@ -2,31 +2,24 @@ services:
   _defaults:
     public: true
 
-  mbo.addons.user:
-    class: PrestaShop\Module\Mbo\Addons\User\AddonsUser
-    arguments:
-      - '@session'
-      - '@mbo.accounts.data_provider'
+  PrestaShop\Module\Mbo\Addons\User\AddonsUser:
+    autowire: true
+    autoconfigure: true
 
-  mbo.addons.user.provider:
-    class: PrestaShop\Module\Mbo\Addons\User\AddonsUserProvider
-    arguments:
-      - "@mbo.addons.user"
+  PrestaShop\Module\Mbo\Addons\User\AddonsUserProvider:
+    autowire: true
+    autoconfigure: true
 
-  mbo.addons.data_provider:
-    class: PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider
-    arguments:
-      - '@mbo.addons.client.api'
-      - '@=service("mbo.addons.user.provider").getUser()'
-      - '@=service("prestashop.adapter.legacy.configuration").get("ADDONS_API_MODULE_CHANNEL", "stable")'
+  PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider:
+    autowire: true
     properties:
       cacheDir: "%kernel.cache_dir%"
 
   # Addons API Client
-  mbo.addons.client.api:
-    class: PrestaShop\Module\Mbo\Addons\ApiClient
+  PrestaShop\Module\Mbo\Addons\ApiClient:
+    autowire: true
     arguments:
-      - "@mbo.addons.client.http"
+      $httpClient: '@mbo.addons.client.http'
     calls:
       - method: setDefaultParams
         arguments:
@@ -35,9 +28,5 @@ services:
           - "@=service('prestashop.adapter.legacy.configuration').get('_PS_BASE_URL_')"
           - "@=service('prestashop.core.foundation.version').getSemVersion()"
 
-  mbo.addons.toolbar:
-    class: PrestaShop\Module\Mbo\Addons\Toolbar
-    arguments:
-      - '@mbo.security.permission_checker'
-      - '@mbo.addons.data_provider'
-      - '@translator'
+  PrestaShop\Module\Mbo\Addons\Toolbar:
+    autowire: true

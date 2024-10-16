@@ -39,9 +39,9 @@ trait UseDisplayAdminThemesListAfter
     {
         try {
             /** @var ContextBuilder $contextBuilder */
-            $contextBuilder = $this->get('mbo.cdc.context_builder');
+            $contextBuilder = $this->get(ContextBuilder::class);
             /** @var Router $router */
-            $router = $this->get('router');
+            $router = $this->get(Router::class);
 
             if (null === $contextBuilder || null === $router) {
                 throw new ExpectedServiceNotFoundException(
