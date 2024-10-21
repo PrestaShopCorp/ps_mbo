@@ -30,7 +30,7 @@ require_once $rootDir . '/vendor/autoload.php';
  *
  * @return bool
  */
-function upgrade_module_4_12_1(Module $module): bool
+function upgrade_module_4_13_0(Module $module): bool
 {
     $module->updateHooks();
     $module->updateTabs();
