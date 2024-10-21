@@ -21,7 +21,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use Cache;
+use Configuration;
+use Context;
 use Exception;
+use Language;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
@@ -30,9 +34,10 @@ use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Shop;
+use Tab;
 use Tools;
 use Twig\Environment;
-use Configuration;
 
 trait UseDisplayAdminAfterHeader
 {
@@ -113,6 +118,7 @@ trait UseDisplayAdminAfterHeader
             );
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
+
             return '';
         }
     }
@@ -144,13 +150,14 @@ trait UseDisplayAdminAfterHeader
             );
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
+
             return '';
         }
     }
 
     private function shouldDisplayMboUserExplanation(): bool
     {
-        if (Tools::getValue('controller') !== "AdminEmployees") {
+        if (Tools::getValue('controller') !== 'AdminEmployees') {
             return false;
         }
 
@@ -161,6 +168,7 @@ trait UseDisplayAdminAfterHeader
             }
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
+
             return false;
         }
 
@@ -174,9 +182,9 @@ trait UseDisplayAdminAfterHeader
             !in_array(
                 Tools::getValue('controller'),
                 [
-                    "AdminModulesManage",
-                    "AdminModulesNotifications",
-                    "AdminModulesUpdates",
+                    'AdminModulesManage',
+                    'AdminModulesNotifications',
+                    'AdminModulesUpdates',
                 ]
             )
         ) {
@@ -190,6 +198,7 @@ trait UseDisplayAdminAfterHeader
             }
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
+
             return false;
         }
 
@@ -204,6 +213,7 @@ trait UseDisplayAdminAfterHeader
     public function ensureModuleIsCorrectlySetUp(): void
     {
         $whitelistedControllers = [
+            'AdminPsMboModule',
             'AdminPsMboModuleParent',
             'AdminPsMboRecommended',
             'apiPsMbo',
@@ -255,7 +265,7 @@ trait UseDisplayAdminAfterHeader
 
         foreach (Shop::getShops(false, null, true) as $shopId) {
             foreach ($configurationList as $name => $value) {
-                if (Configuration::hasKey($name, null, null, (int)$shopId)) {
+                if (Configuration::hasKey($name, null, null, (int) $shopId)) {
                     $configurationList[$name] = true;
                 }
             }
