@@ -2,23 +2,17 @@ name: PHP tests
 on: [pull_request]
 jobs:
   php-linter:
-    name: PHP Syntax check 7.2 => 8.2
+    name: PHP Syntax check 8.1 => 8.3
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: PHP syntax checker 7.2
-        uses: prestashop/github-action-php-lint/7.2@master
-      - name: PHP syntax checker 7.3
-        uses: prestashop/github-action-php-lint/7.3@master
-      - name: PHP syntax checker 7.4
-        uses: prestashop/github-action-php-lint/7.4@master
-      - name: PHP syntax checker 8.0
-        uses: prestashop/github-action-php-lint/8.0@master
       - name: PHP syntax checker 8.1
         uses: prestashop/github-action-php-lint/8.1@master
       - name: PHP syntax checker 8.2
         uses: prestashop/github-action-php-lint/8.2@master
+      - name: PHP syntax checker 8.3
+        uses: prestashop/github-action-php-lint/8.3@master
   php-cs-fixer:
     name: PHP-CS-Fixer
     runs-on: ubuntu-latest
@@ -34,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        presta-versions: ['8.0.2', '8.1.5']
+        presta-versions: ['9.0.x']
     steps:
       - name: Pull PrestaShop files (Tag ${{ matrix.presta-versions }})
         run: docker run -tid --rm -v ps-volume:/var/www/html --name temp-ps prestashop/prestashop:${{ matrix.presta-versions }}
