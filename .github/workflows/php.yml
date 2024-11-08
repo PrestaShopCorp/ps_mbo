@@ -31,9 +31,8 @@ jobs:
         presta-versions: ['9.0.x']
     steps:
       - name: Pull PrestaShop files (Tag ${{ matrix.presta-versions }})
-        run: docker run -tid --rm -v ps-volume:/var/www/html --name temp-ps prestashop/prestashop:${{ matrix.presta-versions }}
-      - name: Wait for container to be loaded
-        run: sleep 10
+        run: docker run -tid --rm -v ps-volume:/var/www/html -v $PWD:/web/module --name temp-ps prestashop/prestashop:${{ matrix.presta-versions }}
+
       - name: Checkout
         uses: actions/checkout@v4
       - name: Cache vendor folder
@@ -47,8 +46,16 @@ jobs:
           path: ~/.composer/cache
           key: php-composer-cache
       - run: composer install
+
+      - name: Wait for container to be loaded
+        run: |
+          until docker exec temp-ps ls /var/www/html/vendor/autoload.php 2> /dev/null; do
+            echo Waiting for docker initialization...
+            sleep 5
+          done
       - name : Run PHPStan
-        run: docker run --rm --volumes-from temp-ps -v $PWD:/web/module -e _PS_ROOT_DIR_=/var/www/html --workdir=/web/module phpstan/phpstan:0.11.19 analyse --configuration=/web/module/tests/phpstan/phpstan-${{ matrix.presta-versions }}.neon
+        run: |
+          docker exec -e _PS_ROOT_DIR_=/var/www/html --workdir=/web/module temp-ps php /var/www/html/vendor/bin/phpstan analyse -c /web/module/tests/phpstan/phpstan-${{ matrix.presta-versions }}.neon --error-format=github
 
   phpunit:
     name: PHPUnit
