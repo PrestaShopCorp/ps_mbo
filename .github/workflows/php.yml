@@ -41,6 +41,8 @@ jobs:
         presta-versions: ['9.0.x']
     steps:
       - name: Pull PrestaShop files (Tag ${{ matrix.presta-versions }})
+        env:
+          DISABLE_MAKE: 1
         run: docker run -tid --rm -v ps-volume:/var/www/html -v $PWD:/web/module --name temp-ps prestashop/prestashop:${{ matrix.presta-versions }}
 
       - name: Checkout
