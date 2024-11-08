@@ -58,8 +58,11 @@ jobs:
           docker exec -e _PS_ROOT_DIR_=/var/www/html --workdir=/web/module temp-ps php /var/www/html/vendor/bin/phpstan analyse -c /web/module/tests/phpstan/phpstan-${{ matrix.presta-versions }}.neon --error-format=github
 
   phpunit:
-    name: PHPUnit
+    name: PHPUnit ${{ matrix.presta-versions }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        presta-versions: ['9.0.x']
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -85,4 +88,5 @@ jobs:
           key: php-composer-cache
 
       - run: composer install
-      - run: make phpunit
+      - run: |
+          ./tests/phpunit.sh ${{ matrix.presta-versions }}
