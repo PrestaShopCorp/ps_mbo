@@ -3,11 +3,10 @@
 PS_VERSION=$1
 
 # Clean container
-docker stop test-phpunit || true
 docker rm -f test-phpunit || true
 docker volume rm -f ps-volume || true
 
-docker run -tid --rm -v ps-volume:/var/www/html -v $PWD:/web/module --name test-phpunit prestashop/prestashop:$PS_VERSION
+docker run -e DISABLE_MAKE=1 -tid --rm -v ps-volume:/var/www/html -v $PWD:/web/module --name test-phpunit prestashop/prestashop:$PS_VERSION
 
 until docker exec test-phpunit ls /var/www/html/vendor/autoload.php 2> /dev/null; do
   echo Waiting for docker initialization...
@@ -15,9 +14,6 @@ until docker exec test-phpunit ls /var/www/html/vendor/autoload.php 2> /dev/null
 done
 
 docker exec \
-  -e PS_DOMAIN=localhost \
-  -e PS_ENABLE_SSL=0 \
-  -e PS_DEV_MODE=1 \
   -e _PS_ROOT_DIR_=/var/www/html \
   -w /web/module \
   test-phpunit \
