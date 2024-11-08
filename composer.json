@@ -38,9 +38,6 @@
     "symfony/event-dispatcher": "^6.4"
   },
   "autoload": {
-    "files": [
-      "bootstrap.php"
-    ],
     "psr-4": {
       "PrestaShop\\Module\\Mbo\\": "src/",
       "PrestaShop\\Module\\Mbo\\Tests\\": "tests"

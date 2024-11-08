@@ -6,7 +6,6 @@ parameters:
     - ../../ps_mbo.php
     # Tests folder
     - ..
-    - ../../bootstrap.php
   dynamicConstantNames:
     - _PS_VERSION_
 
