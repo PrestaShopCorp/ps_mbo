@@ -17,12 +17,22 @@ jobs:
     name: PHP-CS-Fixer
     runs-on: ubuntu-latest
     steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Run PHP-CS-Fixer
-        uses: prestashopcorp/github-action-php-cs-fixer@master
-        with:
-          other-cmds: '--config=.php-cs-fixer.dist.php'
+
+      - name: Validate composer config
+        run: composer validate --strict
+
+      - name: Composer Install
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
+
+      - name: Run PHPCSFixer
+        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
   phpstan:
     name: PHPStan
     runs-on: ubuntu-latest
@@ -67,8 +77,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
-          coverage: xdebug
+          php-version: 8.1
 
       - name: Checkout
         uses: actions/checkout@v4
