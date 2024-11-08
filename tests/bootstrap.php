@@ -17,17 +17,20 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-require __DIR__ . '/../vendor/autoload.php';
+
+$rootDir = getenv('_PS_ROOT_DIR_');
+if (!$rootDir) {
+    $rootDir = __DIR__ . '/../../../../';
+}
 
 define('_PS_IN_TEST_', true);
-define('_PS_ROOT_DIR_', __DIR__ . '/../../..');
+define('_PS_ROOT_DIR_', $rootDir);
 define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests/Resources/modules/');
 if (!defined('__PS_BASE_URI__')) {
     define('__PS_BASE_URI__', '');
 }
 
 require_once _PS_ROOT_DIR_ . '/vendor/autoload.php';
-$pathToModuleRoot = __DIR__ . '/../';
 
 // Add module composer autoloader
-require_once $pathToModuleRoot . 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
