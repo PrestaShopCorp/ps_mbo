@@ -134,9 +134,9 @@ jobs:
       - name: Prepare the production zip
         run: |
           cd ..
-          zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
+          zip -r ${{ github.event.repository.name }}_${{ github.event.release.name }}.zip ${{ github.event.repository.name }}
 
       - name: Publish the production zip
         uses: softprops/action-gh-release@v1
         with:
-          files: ../${{ github.event.repository.name }}.zip
+          files: ../${{ github.event.repository.name }}_${{ github.event.release.name }}.zip
