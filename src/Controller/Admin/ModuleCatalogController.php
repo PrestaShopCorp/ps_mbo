@@ -46,21 +46,6 @@ class ModuleCatalogController extends ModuleAbstractController
      */
     public function indexAction(): Response
     {
-        $moduleUri = __PS_BASE_URI__ . 'modules/ps_mbo/';
-
-        $extraParams = [
-            'cdc_error_templating_url' => $moduleUri . 'views/js/cdc-error-templating.js',
-            'cdc_error_templating_css' => $moduleUri . 'views/css/cdc-error-templating.css',
-        ];
-
-        $cdcJsFile = getenv('MBO_CDC_URL');
-        if (false === $cdcJsFile || !is_string($cdcJsFile) || empty($cdcJsFile)) {
-            $extraParams['cdc_script_not_found'] = true;
-            $extraParams['cdc_error_url'] = $moduleUri . 'views/js/cdc-error.js';
-        } else {
-            $extraParams['cdc_url'] = $cdcJsFile;
-        }
-
         /*********************
          * PrestaShop Account *
          * *******************/
@@ -116,7 +101,7 @@ class ModuleCatalogController extends ModuleAbstractController
                     'You do not have permission to add this.',
                     'Admin.Notifications.Error'
                 ),
-            ] + $extraParams
+            ]
         );
     }
 
