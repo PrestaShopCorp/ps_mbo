@@ -39,8 +39,7 @@ class AccountsDataProvider
 
     public function __construct(
         string $psAccountsVersion
-    )
-    {
+    ) {
         $this->psAccountsVersion = $psAccountsVersion;
     }
 
@@ -114,7 +113,6 @@ class AccountsDataProvider
             return false;
         }
     }
-
 
     /**
      * @param string $serviceName

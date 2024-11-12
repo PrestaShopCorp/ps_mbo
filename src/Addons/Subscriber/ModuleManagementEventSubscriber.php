@@ -29,7 +29,6 @@ use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
-use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShopBundle\Event\ModuleManagementEvent;

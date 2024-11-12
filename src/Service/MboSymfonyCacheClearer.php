@@ -36,7 +36,7 @@ class MboSymfonyCacheClearer implements CacheClearerInterface
     private $shutdownRegistered = false;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function clear()
     {
@@ -51,7 +51,7 @@ class MboSymfonyCacheClearer implements CacheClearerInterface
         }
 
         $this->shutdownRegistered = true;
-        register_shutdown_function(function () use($kernel) {
+        register_shutdown_function(function () use ($kernel) {
             try {
                 foreach (['prod', 'dev'] as $environment) {
                     $cacheDir = _PS_ROOT_DIR_ . '/var/cache/' . $environment . '/';

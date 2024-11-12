@@ -50,6 +50,7 @@ trait UseActionBeforeInstallModule
             }
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
+
             return;
         }
 
@@ -67,6 +68,7 @@ trait UseActionBeforeInstallModule
             }
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
+
             return;
         }
 
@@ -90,12 +92,13 @@ trait UseActionBeforeInstallModule
             }
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
+
             return;
         }
 
         try {
             $actionsManager->install($moduleId);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             /** @var HookExceptionHolder $hookExceptionHolder */
             $hookExceptionHolder = $this->get(HookExceptionHolder::class);
             if (null !== $hookExceptionHolder) {

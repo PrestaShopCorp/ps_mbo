@@ -42,8 +42,9 @@ trait UseActionBeforeUpgradeModule
      */
     public function hookActionBeforeUpgradeModule(array $params): void
     {
-        if(isset($params['source']) && !$params['source']){
+        if (isset($params['source']) && !$params['source']) {
             $this->purgeCache();
+
             return;
         }
 
@@ -57,6 +58,7 @@ trait UseActionBeforeUpgradeModule
             }
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
+
             return;
         }
 
@@ -80,12 +82,13 @@ trait UseActionBeforeUpgradeModule
             }
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
+
             return;
         }
 
         try {
             $actionsManager->install($moduleId);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             /** @var HookExceptionHolder $hookExceptionHolder */
             $hookExceptionHolder = $this->get('mbo.hook_exception_holder');
             if (null !== $hookExceptionHolder) {

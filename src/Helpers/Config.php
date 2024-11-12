@@ -134,10 +134,11 @@ class Config
 
             $shopDomain = array_filter(
                 $domains,
-                function($domain) use($singleShop) {
+                function ($domain) use ($singleShop) {
                     // Here we assume that every shop have a single domain (?)
                     $domain = reset($domain);
-                    return isset($domain['id_shop']) && (int)$singleShop->id === (int)$domain['id_shop'];
+
+                    return isset($domain['id_shop']) && (int) $singleShop->id === (int) $domain['id_shop'];
                 }
             );
 

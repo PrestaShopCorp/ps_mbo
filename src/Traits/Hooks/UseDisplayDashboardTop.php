@@ -202,13 +202,11 @@ trait UseDisplayDashboardTop
             /** @var Environment $twig */
             $twig = $this->get(Environment::class);
 
-            /** @var Router $router*/
+            /** @var Router $router */
             $router = $this->get('prestashop.router');
 
             if (null === $twig || null === $router) {
-                throw new ExpectedServiceNotFoundException(
-                    'Some services not found in UseDisplayDashboardTop'
-                );
+                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayDashboardTop');
             }
 
             return $twig->render(
@@ -238,7 +236,6 @@ trait UseDisplayDashboardTop
             'controller' => $controller,
         ]);
 
-
         $afterContentType = TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE;
         $recommendedButtonType = TabInterface::RECOMMENDED_BUTTON_TYPE;
 
@@ -258,7 +255,6 @@ trait UseDisplayDashboardTop
                     $this->controllersWithRecommendedModules[$afterContentType]
                 )
             ) {
-
                 // We are trying to display after content, so move them to button adn remove from after content
                 foreach ($this->controllersWithRecommendedModules[$afterContentType] as $k => $afterContentController) {
                     if ($afterContentController === $controller) {
@@ -281,9 +277,7 @@ trait UseDisplayDashboardTop
             /** @var UrlGeneratorInterface $router */
             $router = $this->get('prestashop.router');
             if (null === $router) {
-                throw new ExpectedServiceNotFoundException(
-                    'Some services not found in UseDisplayDashboardTop'
-                );
+                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayDashboardTop');
             }
 
             $recommendedModulesUrl = $router->generate(
@@ -296,6 +290,7 @@ trait UseDisplayDashboardTop
         } catch (Exception $exception) {
             // Avoid fatal errors on ServiceNotFoundException
             ErrorHelper::reportError($exception);
+
             return '';
         }
 

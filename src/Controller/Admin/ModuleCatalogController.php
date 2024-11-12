@@ -43,7 +43,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ModuleCatalogController extends PrestaShopAdminController
 {
     public const CONTROLLER_NAME = 'ADMINMODULESSF';
-    
+
     /**
      * @var Toolbar
      */
@@ -125,7 +125,9 @@ class ModuleCatalogController extends PrestaShopAdminController
 
         try {
             $accountsService = $this->psAccountsFacade->getPsAccountsService();
-            if ($this->ensurePsAccountIsEnabled()) $this->ensurePsEventbusEnabled();
+            if ($this->ensurePsAccountIsEnabled()) {
+                $this->ensurePsEventbusEnabled();
+            }
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
             // Seems the module is not here, try to install it
             $this->psAccountsInstaller->install();
@@ -189,25 +191,32 @@ class ModuleCatalogController extends PrestaShopAdminController
 
     private function ensurePsAccountIsEnabled(): bool
     {
-        if (version_compare(_PS_VERSION_, "9.0.0", ">=")) return false;
+        if (version_compare(_PS_VERSION_, '9.0.0', '>=')) {
+            return false;
+        }
 
-        if (!$this->psAccountsInstaller) return false;
+        if (!$this->psAccountsInstaller) {
+            return false;
+        }
 
         $accountsEnabled = $this->psAccountsInstaller->isModuleEnabled();
-        if ($accountsEnabled) return true;
+        if ($accountsEnabled) {
+            return true;
+        }
 
         return $this->moduleManager->enable($this->psAccountsInstaller->getModuleName());
     }
 
     private function ensurePsEventbusEnabled()
     {
-        if (version_compare(_PS_VERSION_, "9.0.0", ">=")) return false;
+        if (version_compare(_PS_VERSION_, '9.0.0', '>=')) {
+            return false;
+        }
 
         if ($this->psEventbusInstaller->install()) {
             $this->psEventbusInstaller->enable();
         }
     }
-
 
     /**
      * Checks if the attributes are granted against the current authentication token and optionally supplied object.

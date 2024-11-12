@@ -24,10 +24,10 @@ namespace PrestaShop\Module\Mbo\Distribution;
 use Context;
 use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUserProvider;
-use Psr\Http\Client\ClientInterface as HttpClient;
 use PrestaShop\Module\Mbo\Addons\User\UserInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use Psr\Http\Client\ClientInterface as HttpClient;
 
 class ConnectedClient extends BaseClient
 {
@@ -88,6 +88,7 @@ class ConnectedClient extends BaseClient
             $modulesList = $this->processRequestAndDecode('modules');
         } catch (\Throwable $e) {
             ErrorHelper::reportError($e);
+
             return [];
         }
         if (empty($modulesList) || !is_array($modulesList)) {

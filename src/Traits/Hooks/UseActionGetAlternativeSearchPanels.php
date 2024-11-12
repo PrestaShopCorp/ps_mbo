@@ -49,6 +49,7 @@ trait UseActionGetAlternativeSearchPanels
             $catalogUrl = $router->generate('admin_mbo_catalog_module', []);
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
+
             return [];
         }
 
@@ -74,7 +75,7 @@ trait UseActionGetAlternativeSearchPanels
                 $this->trans('Explore PrestaShop Marketplace', [], 'Modules.Mbo.Search'),
                 $catalogUrlPath,
                 $catalogUrlParams
-            )
+            ),
         ];
     }
 }

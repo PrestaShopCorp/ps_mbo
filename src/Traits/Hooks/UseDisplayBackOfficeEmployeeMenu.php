@@ -57,9 +57,7 @@ trait UseDisplayBackOfficeEmployeeMenu
             $router = $this->get(Router::class);
 
             if (null === $apiClient || null === $router) {
-                throw new ExpectedServiceNotFoundException(
-                    'Some services not found in UseDisplayBackOfficeEmployeeMenu'
-                );
+                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayBackOfficeEmployeeMenu');
             }
 
             $config = $apiClient->setRouter($router)->getEmployeeMenu();

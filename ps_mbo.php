@@ -33,12 +33,12 @@ use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
-use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
 class ps_mbo extends Module
 {
@@ -197,7 +197,7 @@ class ps_mbo extends Module
         foreach ($eventDispatcher->getListeners(ModuleManagementEvent::UNINSTALL) as $listener) {
             if ($listener[0] instanceof ModuleManagementEventSubscriber) {
                 $legacyModule = $this->get(ModuleRepository::class)->getModule('ps_mbo');
-                $listener[0]->{(string)$listener[1]}(new ModuleManagementEvent($legacyModule));
+                $listener[0]->{(string) $listener[1]}(new ModuleManagementEvent($legacyModule));
             }
         }
 
@@ -403,6 +403,7 @@ class ps_mbo extends Module
             return $this->get(AccountsDataProvider::class);
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
+
             return null;
         }
     }

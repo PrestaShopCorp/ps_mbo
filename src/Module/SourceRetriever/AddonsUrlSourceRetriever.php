@@ -139,10 +139,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
                         $options
                     );
                 } catch (ClientException $clientException) {
-                    throw ModuleErrorHelper::reportAndConvertError(
-                        new AddonsDownloadModuleException($clientException, $authenticatedQueryParameters ?? []),
-                        $authenticatedQueryParameters ?? []
-                    );
+                    throw ModuleErrorHelper::reportAndConvertError(new AddonsDownloadModuleException($clientException, $authenticatedQueryParameters ?? []), $authenticatedQueryParameters ?? []);
                 }
             }
 
@@ -224,13 +221,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     public function validate(string $zipFileName, string $expectedModuleName): bool
     {
         if (!$this->isZipFile($zipFileName)) {
-            throw new ModuleErrorException(
-                $this->translator->trans(
-                    'This file does not seem to be a valid module zip',
-                    [],
-                    'Admin.Modules.Notification'
-                )
-            );
+            throw new ModuleErrorException($this->translator->trans('This file does not seem to be a valid module zip', [], 'Admin.Modules.Notification'));
         }
 
         $zip = new ZipArchive();
@@ -247,13 +238,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             $zip->close();
         }
 
-        throw new ModuleErrorException(
-            $this->translator->trans(
-                'Downloaded zip file does not contain the expected module',
-                [],
-                'Admin.Modules.Notification'
-            )
-        );
+        throw new ModuleErrorException($this->translator->trans('Downloaded zip file does not contain the expected module', [], 'Admin.Modules.Notification'));
     }
 
     public static function assertIsAddonsUrl($source): bool

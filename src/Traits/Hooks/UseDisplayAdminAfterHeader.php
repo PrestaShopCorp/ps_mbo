@@ -106,6 +106,7 @@ trait UseDisplayAdminAfterHeader
             );
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
+
             return '';
         }
     }
@@ -119,9 +120,7 @@ trait UseDisplayAdminAfterHeader
             $contextBuilder = $this->get(ContextBuilder::class);
 
             if (null === $contextBuilder || null === $twig) {
-                throw new ExpectedServiceNotFoundException(
-                    'Some services not found in UseDisplayAdminAfterHeader'
-                );
+                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayAdminAfterHeader');
             }
 
             return $twig->render(
@@ -137,13 +136,14 @@ trait UseDisplayAdminAfterHeader
             );
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
+
             return '';
         }
     }
 
     private function shouldDisplayMboUserExplanation(): bool
     {
-        if (Tools::getValue('controller') !== "AdminEmployees") {
+        if (Tools::getValue('controller') !== 'AdminEmployees') {
             return false;
         }
 
@@ -154,6 +154,7 @@ trait UseDisplayAdminAfterHeader
             }
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
+
             return false;
         }
 
@@ -167,9 +168,9 @@ trait UseDisplayAdminAfterHeader
             !in_array(
                 Tools::getValue('controller'),
                 [
-                    "AdminModulesManage",
-                    "AdminModulesNotifications",
-                    "AdminModulesUpdates",
+                    'AdminModulesManage',
+                    'AdminModulesNotifications',
+                    'AdminModulesUpdates',
                 ]
             )
         ) {
@@ -183,6 +184,7 @@ trait UseDisplayAdminAfterHeader
             }
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
+
             return false;
         }
 

@@ -156,7 +156,7 @@ trait HaveConfigurationPage
 
         $message = '<div style="padding-bottom: 15px;">Configuration updated to :
             <ul><li>MBO : ' . ucfirst($newMboValue) . '</li>
-                <li>Addons : ' . ucfirst($newAddonsValue). '</li>
+                <li>Addons : ' . ucfirst($newAddonsValue) . '</li>
             </ul>';
         $message .= '<b>Don\'t forget to reset the module.</b><br />';
         $message .= '<form method="POST"><button type="submit" name="resetModule">Reset</button></form>';
