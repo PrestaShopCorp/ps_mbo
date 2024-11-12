@@ -38,9 +38,9 @@ trait UseDisplayAdminThemesListAfter
     public function hookDisplayAdminThemesListAfter(): string
     {
         try {
-            /** @var ContextBuilder $contextBuilder */
+            /** @var ContextBuilder|null $contextBuilder */
             $contextBuilder = $this->get(ContextBuilder::class);
-            /** @var Router $router */
+            /** @var Router|null $router */
             $router = $this->get(Router::class);
 
             if (null === $contextBuilder || null === $router) {

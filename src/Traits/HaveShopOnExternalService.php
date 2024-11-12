@@ -27,6 +27,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\ConfigChangeCommandHandler;
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\Uuid;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
@@ -194,6 +195,11 @@ trait HaveShopOnExternalService
         $config = json_decode(json_encode($config), true);
 
         $command = new ConfigChangeCommand($config, _PS_VERSION_, $this->version);
-        $this->get(ConfigChangeCommandHandler::class)->handle($command);
+        /** @var ConfigChangeCommandHandler|null $commandHandler */
+        $commandHandler = $this->get(ConfigChangeCommandHandler::class);
+        if (null === $commandHandler) {
+            throw new ExpectedServiceNotFoundException('Unable to get ConfigChangeCommandHandler');
+        }
+        $commandHandler->handle($command);
     }
 }

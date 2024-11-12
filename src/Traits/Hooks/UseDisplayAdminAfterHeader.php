@@ -50,11 +50,7 @@ trait UseDisplayAdminAfterHeader
             return $this->renderMboUserExplanation();
         }
 
-        if ($shouldDisplayModuleManagerMessage) {
-            return $this->renderModuleManagerMessage();
-        }
-
-        return '';
+        return $this->renderModuleManagerMessage();
     }
 
     /**
@@ -114,9 +110,9 @@ trait UseDisplayAdminAfterHeader
     private function renderModuleManagerMessage(): string
     {
         try {
-            /** @var Environment $twig */
+            /** @var Environment|null $twig */
             $twig = $this->get(Environment::class);
-            /** @var ContextBuilder $contextBuilder */
+            /** @var ContextBuilder|null $contextBuilder */
             $contextBuilder = $this->get(ContextBuilder::class);
 
             if (null === $contextBuilder || null === $twig) {
@@ -148,6 +144,7 @@ trait UseDisplayAdminAfterHeader
         }
 
         try {
+            /** @var RequestStack|null $requestStack */
             $requestStack = $this->get(RequestStack::class);
             if (null === $requestStack || null === $request = $requestStack->getCurrentRequest()) {
                 throw new Exception('Unable to get request');
@@ -178,6 +175,7 @@ trait UseDisplayAdminAfterHeader
         }
 
         try {
+            /** @var RequestStack|null $requestStack */
             $requestStack = $this->get(RequestStack::class);
             if (null === $requestStack || null === $request = $requestStack->getCurrentRequest()) {
                 throw new Exception('Unable to get request');

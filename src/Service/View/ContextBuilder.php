@@ -34,7 +34,7 @@ use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\UrlHelper;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
-use PrestaShop\Module\Mbo\Tab\Tab;
+use PrestaShop\Module\Mbo\Tab\TabInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Module\Module as CoreModule;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
@@ -101,7 +101,7 @@ class ContextBuilder
         return $context;
     }
 
-    public function getRecommendedModulesContext(Tab $tab): array
+    public function getRecommendedModulesContext(TabInterface $tab): array
     {
         $context = $this->getCommonContextContent();
 

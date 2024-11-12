@@ -31,9 +31,9 @@ use Symfony\Component\Routing\Router;
 class Client extends BaseClient
 {
     /**
-     * @var Router
+     * @var Router|null
      */
-    private $router;
+    private $router = null;
 
     public function setRouter(Router $router): self
     {

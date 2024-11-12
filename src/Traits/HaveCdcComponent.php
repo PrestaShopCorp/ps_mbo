@@ -62,9 +62,9 @@ trait HaveCdcComponent
     public function smartyDisplayTpl(string $tpl, array $additionalParams = [])
     {
         try {
-            /** @var ContextBuilder $contextBuilder */
+            /** @var ContextBuilder|null $contextBuilder */
             $contextBuilder = $this->get('mbo.cdc.context_builder');
-            /** @var Router $router */
+            /** @var Router|null $router */
             $router = $this->get('router');
 
             if (null === $router || null === $contextBuilder) {

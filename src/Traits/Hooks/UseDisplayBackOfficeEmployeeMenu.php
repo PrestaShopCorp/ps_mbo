@@ -50,10 +50,10 @@ trait UseDisplayBackOfficeEmployeeMenu
         }
 
         try {
-            /** @var Client $apiClient */
+            /** @var Client|null $apiClient */
             $apiClient = $this->get(Client::class);
 
-            /** @var Router $router */
+            /** @var Router|null $router */
             $router = $this->get(Router::class);
 
             if (null === $apiClient || null === $router) {

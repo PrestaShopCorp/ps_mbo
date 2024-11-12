@@ -43,7 +43,7 @@ trait UseActionBeforeInstallModule
     public function hookActionBeforeInstallModule(array $params): void
     {
         try {
-            /** @var ModuleDataProvider $moduleDataProvider */
+            /** @var ModuleDataProvider|null $moduleDataProvider */
             $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
             if (null === $moduleDataProvider) {
                 throw new ExpectedServiceNotFoundException('Unable to get ModuleDataProvider');
@@ -61,7 +61,7 @@ trait UseActionBeforeInstallModule
         $moduleName = (string) $params['moduleName'];
 
         try {
-            /** @var ApiClient $addonsClient */
+            /** @var ApiClient|null $addonsClient */
             $addonsClient = $this->get(ApiClient::class);
             if (null === $addonsClient) {
                 throw new ExpectedServiceNotFoundException('Unable to get Addons ApiClient');
@@ -85,7 +85,7 @@ trait UseActionBeforeInstallModule
         }
 
         try {
-            /** @var ActionsManager $actionsManager */
+            /** @var ActionsManager|null $actionsManager */
             $actionsManager = $this->get(ActionsManager::class);
             if (null === $actionsManager) {
                 throw new ExpectedServiceNotFoundException('Unable to get ActionsManager');

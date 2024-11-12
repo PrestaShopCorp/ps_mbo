@@ -34,7 +34,7 @@ trait UseDisplayModuleConfigureExtraButtons
     public function hookDisplayModuleConfigureExtraButtons(): string
     {
         try {
-            /** @var Router $router */
+            /** @var Router|null $router */
             $router = $this->get(Router::class);
 
             if (null === $router) {

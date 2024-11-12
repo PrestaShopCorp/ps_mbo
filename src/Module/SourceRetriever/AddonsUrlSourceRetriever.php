@@ -65,11 +65,6 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     public $cacheDir;
 
     /**
-     * @var string
-     */
-    private $modulePath;
-
-    /**
      * @var AddonsDataProvider
      */
     private $addonsDataProvider;
@@ -97,11 +92,9 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     public function __construct(
         AddonsDataProvider $addonsDataProvider,
         TranslatorInterface $translator,
-        string $modulePath
     ) {
         $this->addonsDataProvider = $addonsDataProvider;
         $this->translator = $translator;
-        $this->modulePath = rtrim($modulePath, '/') . '/';
 
         $this->httpClient = new Client([
             'timeout' => '7200',
@@ -119,6 +112,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             return false;
         }
 
+        $authenticatedQueryParameters = [];
         try {
             $authenticatedQueryParameters = $this->computeAuthentication($source);
             $source = $authenticatedQueryParameters['source'];
@@ -139,7 +133,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
                         $options
                     );
                 } catch (ClientException $clientException) {
-                    throw ModuleErrorHelper::reportAndConvertError(new AddonsDownloadModuleException($clientException, $authenticatedQueryParameters ?? []), $authenticatedQueryParameters ?? []);
+                    throw ModuleErrorHelper::reportAndConvertError(new AddonsDownloadModuleException($clientException, $authenticatedQueryParameters), $authenticatedQueryParameters);
                 }
             }
 
@@ -257,7 +251,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     private function computeAuthentication(string $source): array
     {
         $url_parts = parse_url($source);
-        if (is_array($url_parts) && isset($url_parts['query']) && is_string($url_parts['query'])) {
+        if (is_array($url_parts) && isset($url_parts['query'])) {
             parse_str($url_parts['query'], $params);
         } else {
             $params = [];

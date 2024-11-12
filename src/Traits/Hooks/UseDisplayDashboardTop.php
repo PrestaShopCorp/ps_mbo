@@ -199,10 +199,10 @@ trait UseDisplayDashboardTop
     private function displayFailedApiUser(): string
     {
         try {
-            /** @var Environment $twig */
+            /** @var Environment|null $twig */
             $twig = $this->get(Environment::class);
 
-            /** @var Router $router */
+            /** @var Router|null $router */
             $router = $this->get('prestashop.router');
 
             if (null === $twig || null === $router) {
@@ -240,6 +240,7 @@ trait UseDisplayDashboardTop
         $recommendedButtonType = TabInterface::RECOMMENDED_BUTTON_TYPE;
 
         // We want to "hide" recommended modules from this controller
+        // @phpstan-ignore-next-line
         if (!$recommendedModulesDisplayed) {
             // If we are trying to display as button, hide the button
             if (
@@ -274,7 +275,7 @@ trait UseDisplayDashboardTop
         }
 
         try {
-            /** @var UrlGeneratorInterface $router */
+            /** @var UrlGeneratorInterface|null $router */
             $router = $this->get('prestashop.router');
             if (null === $router) {
                 throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayDashboardTop');

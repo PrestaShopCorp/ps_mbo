@@ -9,5 +9,6 @@ parameters:
     - ../../bootstrap.php
   dynamicConstantNames:
     - _PS_VERSION_
+    - ps_mbo::VERSION
 
   level: 5

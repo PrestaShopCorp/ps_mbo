@@ -113,7 +113,7 @@ final class ModuleStatusTransitionCommandHandler
                     ModuleTransitionCommand::MAPPING_TRANSITION_COMMAND_TARGET_STATUS
                 )
             ) {
-                throw ModuleErrorHelper::reportAndConvertError(new TransitionCommandToModuleStatusException($command));
+                throw ModuleErrorHelper::reportAndConvertError(new TransitionCommandToModuleStatusException($transitionCommand));
             }
 
             // Compute the state machine transition name

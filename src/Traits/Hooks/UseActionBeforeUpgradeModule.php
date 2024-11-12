@@ -51,7 +51,7 @@ trait UseActionBeforeUpgradeModule
         $moduleName = (string) $params['moduleName'];
 
         try {
-            /** @var ApiClient $addonsClient */
+            /** @var ApiClient|null $addonsClient */
             $addonsClient = $this->get('mbo.addons.client.api');
             if (null === $addonsClient) {
                 throw new ExpectedServiceNotFoundException('Unable to get Addons ApiClient');
@@ -75,7 +75,7 @@ trait UseActionBeforeUpgradeModule
         }
 
         try {
-            /** @var ActionsManager $actionsManager */
+            /** @var ActionsManager|null $actionsManager */
             $actionsManager = $this->get('mbo.modules.actions_manager');
             if (null === $actionsManager) {
                 throw new ExpectedServiceNotFoundException('Unable to get ActionsManager');
@@ -105,7 +105,7 @@ trait UseActionBeforeUpgradeModule
     private function purgeCache(): void
     {
         try {
-            /** @var CacheClearerInterface $cacheClearer */
+            /** @var CacheClearerInterface|null $cacheClearer */
             $cacheClearer = $this->get(CacheClearerInterface::class);
             if (null === $cacheClearer) {
                 throw new ExpectedServiceNotFoundException('Unable to get MboCacheClearer service');

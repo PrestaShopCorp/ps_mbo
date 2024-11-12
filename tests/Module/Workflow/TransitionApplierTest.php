@@ -29,13 +29,6 @@ use Symfony\Component\String\UnicodeString;
 
 class TransitionApplierTest extends AbstractTransitionTest
 {
-    protected $translator;
-
-    protected function setUp(): void
-    {
-        $this->translator = $this->mockTranslator('Unfortunately, the module did not return additional details.', [], 'Admin.Modules.Notification', 'Unfortunately, the module did not return additional details.');
-    }
-
     /**
      * @dataProvider getModuleAttributesAndAppliedTransitions
      */
@@ -62,7 +55,7 @@ class TransitionApplierTest extends AbstractTransitionTest
             ->with($module, [])
         ;
 
-        $transitionApplier = new TransitionApplier($transitionsManager, $this->translator);
+        $transitionApplier = new TransitionApplier($transitionsManager);
 
         // Application will throw an exception because transitionManager object is a mock
         $this->expectException(TransitionFailedException::class);

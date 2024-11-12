@@ -119,11 +119,11 @@ trait UseActionDispatcherBefore
     private function ensureApiConfigIsApplied(): void
     {
         try {
-            /** @var DoctrineProvider $cacheProvider */
+            /** @var CacheProvider|null $cacheProvider */
             $cacheProvider = $this->get(CacheProvider::class);
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
-            $cacheProvider = false;
+            $cacheProvider = null;
         }
         $cacheKey = 'mbo_last_ps_version_api_config_check';
 

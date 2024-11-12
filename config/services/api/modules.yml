@@ -4,8 +4,6 @@ services:
 
   PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever:
     autowire: true
-    arguments:
-      $modulePath: '%modules_dir%'
     properties:
       cacheDir: "%kernel.cache_dir%"
 

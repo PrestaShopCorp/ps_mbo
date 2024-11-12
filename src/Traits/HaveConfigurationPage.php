@@ -147,8 +147,8 @@ trait HaveConfigurationPage
         file_put_contents($envFilePath, $envData);
 
         // Force reload of the .env file
-        $dotenv = new Dotenv(true);
-        $dotenv->overload($envFilePath);
+        $dotEnv = new Dotenv();
+        $dotEnv->overload($envFilePath);
 
         /** @var MboSymfonyCacheClearer $cacheClearer */
         $cacheClearer = $this->get(MboSymfonyCacheClearer::class);

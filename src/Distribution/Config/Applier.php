@@ -90,9 +90,10 @@ final class Applier
             $sql = [];
             $sql[] = 'UPDATE `' . _DB_PREFIX_ . 'mbo_api_config` SET `applied` = 1 WHERE `id_mbo_api_config`=' . $config->getConfigId();
 
+            $db = Db::getInstance();
             foreach ($sql as $query) {
-                if (Db::getInstance()->execute($query) === false) {
-                    throw new QueryException($this->db->getMsgError());
+                if ($db->execute($query) === false) {
+                    throw new QueryException($db->getMsgError());
                 }
             }
         }

@@ -21,9 +21,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
+use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
+use PrestaShop\Module\Mbo\Service\ExternalContentProvider\ExternalContentProviderInterface;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
@@ -33,45 +35,33 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 class ModuleSelectionController extends PrestaShopAdminController
 {
     /**
-     * @var RequestStack
-     */
-    protected $requestStack;
-
-    /**
-     * @param RequestStack $requestStack
-     */
-    public function __construct(
-        RequestStack $requestStack
-    ) {
-        parent::__construct();
-        $this->requestStack = $requestStack;
-    }
-
-    /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @return Response
      */
-    public function indexAction(): Response
-    {
+    public function indexAction(
+        Request $request,
+        LinksProvider $linksProvider,
+        ExternalContentProviderInterface $externalContentProvider,
+    ): Response {
         $response = new Response();
 
         try {
             $response->setContent($this->renderView(
                 '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/addons_store.html.twig',
                 [
-                    'pageContent' => $this->get('mbo.externalcontent.provider')->getContent(
-                        $this->get('mbo.addons.links_provider')->getSelectionLink()
+                    'pageContent' => $externalContentProvider->getContent(
+                        $linksProvider->getSelectionLink()
                     ),
                     'layoutHeaderToolbarBtn' => [],
-                    'layoutTitle' => $this->trans('Modules in the spotlight', 'Modules.Mbo.Modulesselection'),
+                    'layoutTitle' => $this->trans('Modules in the spotlight', [], 'Modules.Mbo.Modulesselection'),
                     'requireAddonsSearch' => true,
                     'requireBulkActions' => false,
                     'showContentHeader' => true,
                     'enableSidebar' => true,
-                    'help_link' => $this->generateSidebarLink($this->requestStack->getCurrentRequest()->get('_legacy_controller')),
+                    'help_link' => $this->generateSidebarLink($request->get('_legacy_controller')),
                     'requireFilterStatus' => false,
-                    'level' => $this->authorizationLevel($this->requestStack->getCurrentRequest()->get('_legacy_controller')),
+                    'level' => $this->getAuthorizationLevel($request->get('_legacy_controller')),
                 ]
             ));
         } catch (ServiceUnavailableHttpException $exception) {

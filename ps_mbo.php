@@ -136,7 +136,11 @@ class ps_mbo extends Module
     public function install(): bool
     {
         try {
-            $this->get(PrestaShop\PsAccountsInstaller\Installer\Installer::class)->install();
+            /** @var PrestaShop\PsAccountsInstaller\Installer\Installer|null $installer */
+            $installer = $this->get(PrestaShop\PsAccountsInstaller\Installer\Installer::class);
+            if ($installer) {
+                $installer->install();
+            }
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
         }
@@ -196,7 +200,9 @@ class ps_mbo extends Module
         // Execute them first
         foreach ($eventDispatcher->getListeners(ModuleManagementEvent::UNINSTALL) as $listener) {
             if ($listener[0] instanceof ModuleManagementEventSubscriber) {
-                $legacyModule = $this->get(ModuleRepository::class)->getModule('ps_mbo');
+                /** @var ModuleRepository $moduleRepository */
+                $moduleRepository = $this->get(ModuleRepository::class);
+                $legacyModule = $moduleRepository->getModule('ps_mbo');
                 $listener[0]->{(string) $listener[1]}(new ModuleManagementEvent($legacyModule));
             }
         }
@@ -467,6 +473,7 @@ class ps_mbo extends Module
 
     private function isPsAccountEnabled(): bool
     {
+        /** @var \PrestaShop\PsAccountsInstaller\Installer\Installer|null $accountsInstaller */
         $accountsInstaller = $this->get(\PrestaShop\PsAccountsInstaller\Installer\Installer::class);
 
         return null !== $accountsInstaller && $accountsInstaller->isModuleEnabled();

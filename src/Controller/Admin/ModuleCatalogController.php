@@ -111,7 +111,7 @@ class ModuleCatalogController extends PrestaShopAdminController
         ];
 
         $cdcJsFile = getenv('MBO_CDC_URL');
-        if (false === $cdcJsFile || !is_string($cdcJsFile) || empty($cdcJsFile)) {
+        if (!is_string($cdcJsFile) || empty($cdcJsFile)) {
             $extraParams['cdc_script_not_found'] = true;
             $extraParams['cdc_error_url'] = $moduleUri . 'views/js/cdc-error.js';
         } else {
@@ -191,14 +191,6 @@ class ModuleCatalogController extends PrestaShopAdminController
 
     private function ensurePsAccountIsEnabled(): bool
     {
-        if (version_compare(_PS_VERSION_, '9.0.0', '>=')) {
-            return false;
-        }
-
-        if (!$this->psAccountsInstaller) {
-            return false;
-        }
-
         $accountsEnabled = $this->psAccountsInstaller->isModuleEnabled();
         if ($accountsEnabled) {
             return true;
@@ -207,12 +199,8 @@ class ModuleCatalogController extends PrestaShopAdminController
         return $this->moduleManager->enable($this->psAccountsInstaller->getModuleName());
     }
 
-    private function ensurePsEventbusEnabled()
+    private function ensurePsEventbusEnabled(): void
     {
-        if (version_compare(_PS_VERSION_, '9.0.0', '>=')) {
-            return false;
-        }
-
         if ($this->psEventbusInstaller->install()) {
             $this->psEventbusInstaller->enable();
         }

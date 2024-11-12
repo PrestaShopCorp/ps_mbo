@@ -29,6 +29,8 @@ use PrestaShopDatabaseException;
 
 final class Factory
 {
+    private Db $db;
+
     public function __construct()
     {
         $this->db = Db::getInstance();

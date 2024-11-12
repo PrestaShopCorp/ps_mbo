@@ -26,8 +26,11 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 use Db;
 use Exception;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Service\ModuleInstaller;
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
+use PrestaShop\PsAccountsInstaller\Installer\Installer;
 use PrestaShopDatabaseException;
 
 trait UseDashboardZoneOne
@@ -94,22 +97,31 @@ trait UseDashboardZoneOne
         $accountsFacade = $accountsService = null;
 
         try {
+            /** @var PsAccounts|null $accountsFacade */
             $accountsFacade = $this->get(PsAccounts::class);
-            $accountsService = $accountsFacade->getPsAccountsService();
-            if ($this->ensurePsAccountIsEnabled()) {
-                $this->ensurePsEventbusEnabled();
+            if ($accountsFacade) {
+                $accountsService = $accountsFacade->getPsAccountsService();
+                if ($this->ensurePsAccountIsEnabled()) {
+                    $this->ensurePsEventbusEnabled();
+                }
             }
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
-            $accountsInstaller = $this->get(\PrestaShop\PsAccountsInstaller\Installer\Installer::class);
-            // Seems the module is not here, try to install it
-            $accountsInstaller->install();
-            $accountsFacade = $this->get(\PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts::class);
-            try {
-                $accountsService = $accountsFacade->getPsAccountsService();
-            } catch (\Exception $e) {
-                // Installation seems to not work properly
-                $accountsService = $accountsFacade = null;
-                ErrorHelper::reportError($e);
+            /** @var Installer|null $accountsInstaller */
+            $accountsInstaller = $this->get(Installer::class);
+            if ($accountsInstaller) {
+                // Seems the module is not here, try to install it
+                $accountsInstaller->install();
+                /** @var PsAccounts|null $accountsFacade */
+                $accountsFacade = $this->get(PsAccounts::class);
+                if ($accountsFacade) {
+                    try {
+                        $accountsService = $accountsFacade->getPsAccountsService();
+                    } catch (\Exception $e) {
+                        // Installation seems to not work properly
+                        $accountsService = $accountsFacade = null;
+                        ErrorHelper::reportError($e);
+                    }
+                }
             }
         }
 
@@ -137,11 +149,8 @@ trait UseDashboardZoneOne
      */
     private function ensurePsAccountIsEnabled(): bool
     {
-        if (version_compare(_PS_VERSION_, '9.0.0', '>=')) {
-            return false;
-        }
-
-        $accountsInstaller = $this->get(\PrestaShop\PsAccountsInstaller\Installer\Installer::class);
+        /** @var Installer|null $accountsInstaller */
+        $accountsInstaller = $this->get(Installer::class);
         if (!$accountsInstaller) {
             return false;
         }
@@ -151,19 +160,17 @@ trait UseDashboardZoneOne
             return true;
         }
 
+        /** @var ModuleManager|null $moduleManager */
         $moduleManager = $this->get('prestashop.module.manager');
 
-        return $moduleManager->enable($accountsInstaller->getModuleName());
+        return $moduleManager && $moduleManager->enable($accountsInstaller->getModuleName());
     }
 
-    private function ensurePsEventbusEnabled()
+    private function ensurePsEventbusEnabled(): void
     {
-        if (version_compare(_PS_VERSION_, '9.0.0', '>=')) {
-            return false;
-        }
-
+        /** @var ModuleInstaller|null $installer */
         $installer = $this->get('mbo.ps_eventbus.installer');
-        if ($installer->install()) {
+        if ($installer && $installer->install()) {
             $installer->enable();
         }
     }

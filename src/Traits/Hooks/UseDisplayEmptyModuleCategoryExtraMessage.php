@@ -38,9 +38,9 @@ trait UseDisplayEmptyModuleCategoryExtraMessage
         $categoryName = $params['category_name'];
 
         try {
-            /** @var Environment $twig */
+            /** @var Environment|null $twig */
             $twig = $this->get(Environment::class);
-            /** @var LinksProvider $linksProvider */
+            /** @var LinksProvider|null $linksProvider */
             $linksProvider = $this->get(LinksProvider::class);
 
             if (null === $linksProvider || null === $twig) {

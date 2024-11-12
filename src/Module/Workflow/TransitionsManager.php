@@ -56,7 +56,7 @@ class TransitionsManager
      */
     public function enabledAndMobileEnabledToEnabledAndMobileDisabled(TransitionModule $transitionModule, array $context): bool
     {
-        return $this->enable($transitionModule, $context) && $this->disableOnMobile($transitionModule);
+        return $this->enable($transitionModule, $context);
     }
 
     /**
@@ -64,7 +64,7 @@ class TransitionsManager
      */
     public function enabledAndMobileEnabledToDisabledAndMobileEnabled(TransitionModule $transitionModule, array $context): bool
     {
-        return $this->disable($transitionModule, $context) && $this->enableOnMobile($transitionModule);
+        return $this->disable($transitionModule, $context);
     }
 
     /**
@@ -109,7 +109,7 @@ class TransitionsManager
      */
     public function enabledAndMobileDisabledToEnabledAndMobileEnabled(TransitionModule $transitionModule, array $context): bool
     {
-        return $this->enable($transitionModule, $context) && $this->enableOnMobile($transitionModule);
+        return $this->enable($transitionModule, $context);
     }
 
     /**
@@ -117,7 +117,7 @@ class TransitionsManager
      */
     public function enabledAndMobileDisabledToDisabledAndMobileDisabled(TransitionModule $transitionModule, array $context): bool
     {
-        return $this->disable($transitionModule, $context) && $this->disableOnMobile($transitionModule);
+        return $this->disable($transitionModule, $context);
     }
 
     /**
@@ -170,7 +170,7 @@ class TransitionsManager
      */
     public function disabledAndMobileEnabledToEnabledAndMobileEnabled(TransitionModule $transitionModule, array $context): bool
     {
-        return $this->enable($transitionModule, $context) && $this->enableOnMobile($transitionModule);
+        return $this->enable($transitionModule, $context);
     }
 
     /**
@@ -207,7 +207,7 @@ class TransitionsManager
      */
     public function disabledAndMobileDisabledToDisabledAndMobileEnabled(TransitionModule $transitionModule, array $context): bool
     {
-        return $this->enable($transitionModule, $context) && $this->disableOnMobile($transitionModule);
+        return $this->enable($transitionModule, $context);
     }
 
     /**
@@ -215,7 +215,7 @@ class TransitionsManager
      */
     public function disabledAndMobileDisabledToEnabledAndMobileDisabled(TransitionModule $transitionModule, array $context): bool
     {
-        return $this->enable($transitionModule, $context) && $this->disableOnMobile($transitionModule);
+        return $this->enable($transitionModule, $context);
     }
 
     /**
@@ -260,34 +260,6 @@ class TransitionsManager
         $moduleName = $transitionModule->getName();
 
         return $this->moduleManager->disable($moduleName);
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function enableOnMobile(TransitionModule $transitionModule, ?array $context = []): bool
-    {
-        if ($transitionModule->isActiveOnMobile()) {
-            return true;
-        }
-
-        $moduleName = $transitionModule->getName();
-
-        return $this->moduleManager->enableMobile($moduleName);
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function disableOnMobile(TransitionModule $transitionModule, ?array $context = []): bool
-    {
-        if (!$transitionModule->isActiveOnMobile()) {
-            return true;
-        }
-
-        $moduleName = $transitionModule->getName();
-
-        return $this->moduleManager->disableMobile($moduleName);
     }
 
     /**

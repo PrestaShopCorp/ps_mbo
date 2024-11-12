@@ -25,7 +25,6 @@ use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
 use PrestaShop\Module\Mbo\Module\Workflow\Transition;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractTransitionTest extends TestCase
 {
@@ -426,32 +425,5 @@ abstract class AbstractTransitionTest extends TestCase
         }
 
         return $convertedTransitions;
-    }
-
-    /**
-     * Mock translator
-     *
-     * @param string|array $value
-     * @param array $params
-     * @param string $domain
-     * @param string $returnValue
-     */
-    protected function mockTranslator($value, $params = [], $domain = '', $returnValue = null)
-    {
-        $translatorMock = \Mockery::mock(TranslatorInterface::class);
-
-        if (is_array($value)) {
-            foreach ($value as $val) {
-                $translatorMock->shouldReceive('trans')
-                    ->with($val[0][0], $val[0][1], $val[0][2])
-                    ->andReturn($val[1]);
-            }
-        } else {
-            $translatorMock->shouldReceive('trans')
-                ->with($value, $params, $domain)
-                ->andReturn($returnValue);
-        }
-
-        return $translatorMock;
     }
 }
