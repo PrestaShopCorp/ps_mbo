@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\SourceRetriever;
 
-use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
@@ -36,7 +35,6 @@ use PrestaShop\Module\Mbo\Module\Exception\SourceNotCheckedException;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use ZipArchive;
 
 class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 {
@@ -179,7 +177,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 
     /**
      * @throws GuzzleException
-     * @throws Exception
+     * @throws \Exception
      */
     public function get($source, ?string $expectedModuleName = null, ?array $options = []): string
     {
@@ -188,7 +186,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         // First save the file to filesystem
         $temporaryFilename = tempnam($this->cacheDir, 'mod');
         if (false === $temporaryFilename) {
-            throw new Exception('Failed to create temporary file to store downloaded source');
+            throw new \Exception('Failed to create temporary file to store downloaded source');
         }
 
         $temporaryZipFilename = $temporaryFilename . '.zip';
@@ -210,7 +208,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function validate(string $zipFileName, string $expectedModuleName): bool
     {
@@ -218,7 +216,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             throw new ModuleErrorException($this->translator->trans('This file does not seem to be a valid module zip', [], 'Admin.Modules.Notification'));
         }
 
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
         if ($zip->open($zipFileName) === true) {
             for ($i = 0; $i < $zip->numFiles; ++$i) {
                 if (preg_match(self::MODULE_REGEX, $zip->getNameIndex($i), $matches)) {

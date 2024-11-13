@@ -25,7 +25,6 @@ use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Helpers\Config;
-use ps_mbo;
 
 class BaseClient
 {
@@ -71,7 +70,7 @@ class BaseClient
 
     /**
      * @param HttpClient $httpClient
-     * @param \Doctrine\Common\Cache\CacheProvider $cacheProvider
+     * @param CacheProvider $cacheProvider
      */
     public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider)
     {
@@ -129,7 +128,7 @@ class BaseClient
             'uuid' => Config::getShopMboUuid(),
             'shop_url' => Config::getShopUrl(),
             'admin_path' => sprintf('/%s/', trim(str_replace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_), '/')),
-            'mbo_version' => ps_mbo::VERSION,
+            'mbo_version' => \ps_mbo::VERSION,
             'ps_version' => _PS_VERSION_,
         ], $params);
     }
@@ -151,7 +150,7 @@ class BaseClient
         string $uri,
         string $method = self::HTTP_METHOD_GET,
         array $options = [],
-        $default = []
+        $default = [],
     ) {
         $response = json_decode($this->processRequest($uri, $method, $options));
 
@@ -176,7 +175,7 @@ class BaseClient
     protected function processRequest(
         string $uri = '',
         string $method = self::HTTP_METHOD_GET,
-        array $options = []
+        array $options = [],
     ): string {
         $options = array_merge($options, [
             'query' => $this->queryParameters,

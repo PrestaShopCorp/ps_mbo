@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
-use Exception;
 use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Service\HookExceptionHolder;
@@ -40,7 +39,7 @@ class TransitionsManager
 
     public function __construct(
         ModuleManager $moduleManager,
-        HookExceptionHolder $hookExceptionHolder
+        HookExceptionHolder $hookExceptionHolder,
     ) {
         $this->moduleManager = $moduleManager;
         $this->hookExceptionHolder = $hookExceptionHolder;
@@ -52,7 +51,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function enabledAndMobileEnabledToEnabledAndMobileDisabled(TransitionModule $transitionModule, array $context): bool
     {
@@ -60,7 +59,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function enabledAndMobileEnabledToDisabledAndMobileEnabled(TransitionModule $transitionModule, array $context): bool
     {
@@ -68,7 +67,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function enabledAndMobileEnabledToReset(TransitionModule $transitionModule, array $context): bool
     {
@@ -76,7 +75,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function enabledAndMobileEnabledToUpgraded(TransitionModule $transitionModule, array $context): bool
     {
@@ -89,7 +88,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function enabledAndMobileEnabledToUninstalled(TransitionModule $transitionModule, array $context): bool
     {
@@ -97,7 +96,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function enabledAndMobileDisabledToInstalled(TransitionModule $transitionModule, array $context): bool
     {
@@ -105,7 +104,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function enabledAndMobileDisabledToEnabledAndMobileEnabled(TransitionModule $transitionModule, array $context): bool
     {
@@ -113,7 +112,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function enabledAndMobileDisabledToDisabledAndMobileDisabled(TransitionModule $transitionModule, array $context): bool
     {
@@ -121,7 +120,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function enabledAndMobileDisabledToReset(TransitionModule $transitionModule, array $context): bool
     {
@@ -129,7 +128,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function disabledAndMobileDisabledToReset(TransitionModule $transitionModule, array $context): bool
     {
@@ -137,7 +136,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function enabledAndMobileDisabledToUpgraded(TransitionModule $transitionModule, array $context): bool
     {
@@ -150,7 +149,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function enabledAndMobileDisabledToUninstalled(TransitionModule $transitionModule, array $context): bool
     {
@@ -158,7 +157,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function disabledAndMobileEnabledToInstalled(TransitionModule $transitionModule, array $context): bool
     {
@@ -166,7 +165,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function disabledAndMobileEnabledToEnabledAndMobileEnabled(TransitionModule $transitionModule, array $context): bool
     {
@@ -174,7 +173,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function disabledAndMobileEnabledToReset(TransitionModule $transitionModule, array $context): bool
     {
@@ -182,7 +181,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function disabledAndMobileEnabledToUpgraded(TransitionModule $transitionModule, array $context): bool
     {
@@ -195,7 +194,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function disabledAndMobileEnabledToUninstalled(TransitionModule $transitionModule, array $context): bool
     {
@@ -203,7 +202,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function disabledAndMobileDisabledToDisabledAndMobileEnabled(TransitionModule $transitionModule, array $context): bool
     {
@@ -211,7 +210,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function disabledAndMobileDisabledToEnabledAndMobileDisabled(TransitionModule $transitionModule, array $context): bool
     {
@@ -219,7 +218,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function disabledAndMobileDisabledToUpgraded(TransitionModule $transitionModule, array $context): bool
     {
@@ -227,7 +226,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function disabledAndMobileDisabledToUninstalled(TransitionModule $transitionModule, array $context): bool
     {
@@ -235,7 +234,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function enable(TransitionModule $transitionModule, ?array $context = []): bool
     {
@@ -249,7 +248,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function disable(TransitionModule $transitionModule, ?array $context = []): bool
     {
@@ -263,7 +262,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function reset(TransitionModule $transitionModule, ?array $context = []): bool
     {
@@ -291,7 +290,7 @@ class TransitionsManager
      * If not, please call ModuleStatusCommandHandler with "download" as command or
      * directly ActionsManager::downloadAndReplaceModuleFiles to upgrade the module files
      *
-     * @throws Exception
+     * @throws \Exception
      */
     private function upgrade(TransitionModule $transitionModule, ?array $context = []): bool
     {
@@ -301,7 +300,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function uninstall(TransitionModule $transitionModule, ?array $context = []): bool
     {
@@ -311,7 +310,7 @@ class TransitionsManager
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function install(TransitionModule $transitionModule, ?array $context = []): bool
     {

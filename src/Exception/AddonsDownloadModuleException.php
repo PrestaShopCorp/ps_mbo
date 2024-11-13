@@ -21,10 +21,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Exception;
 
-use Exception;
 use GuzzleHttp\Exception\ClientException;
 
-class AddonsDownloadModuleException extends Exception
+class AddonsDownloadModuleException extends \Exception
 {
     private const UNKNOWN_ADDONS_CODE = '0030';
 

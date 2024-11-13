@@ -103,7 +103,7 @@ class PermissionChecker implements PermissionCheckerInterface
 
         foreach ($attributes as $attribute) {
             if (
-                Access::isGranted(
+                \Access::isGranted(
                     [
                         sprintf('ROLE_MOD_TAB_%s_%s', strtoupper($controllerName), strtoupper($attribute)),
                     ],

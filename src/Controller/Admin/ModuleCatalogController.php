@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use Exception;
-use LogicException;
 use PrestaShop\Module\Mbo\Addons\Toolbar;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\ModuleInstaller;
@@ -80,7 +78,7 @@ class ModuleCatalogController extends PrestaShopAdminController
         ModuleManager $moduleManager,
         PsAccounts $psAccountsFacade,
         Installer $psAccountsInstaller,
-        ModuleInstaller $psEventbusInstaller
+        ModuleInstaller $psEventbusInstaller,
     ) {
         $this->addonsToolbar = $addonsToolbar;
         $this->contextBuilder = $contextBuilder;
@@ -133,7 +131,7 @@ class ModuleCatalogController extends PrestaShopAdminController
             $this->psAccountsInstaller->install();
             try {
                 $accountsService = $this->psAccountsFacade->getPsAccountsService();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // Installation seems to not work properly
                 $accountsService = null;
                 ErrorHelper::reportError($e);
@@ -149,7 +147,7 @@ class ModuleCatalogController extends PrestaShopAdminController
 
                 // Retrieve the PrestaShop Account CDN
                 $urlAccountsCdn = $accountsService->getAccountsCdn();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 ErrorHelper::reportError($e);
             }
         }
@@ -180,7 +178,7 @@ class ModuleCatalogController extends PrestaShopAdminController
     /**
      * Responsible for displaying error block when CDC cannot be loaded.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cdcErrorAction(): Response
     {
@@ -213,7 +211,7 @@ class ModuleCatalogController extends PrestaShopAdminController
      *
      * @return int
      *
-     * @throws LogicException
+     * @throws \LogicException
      */
     private function authorizationLevel($controller)
     {

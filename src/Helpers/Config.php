@@ -84,7 +84,7 @@ class Config
             // we request the shops list and get the config value for the 1st one
             $singleShop = self::getDefaultShop();
 
-            self::$SHOP_MBO_UUID = Configuration::get(
+            self::$SHOP_MBO_UUID = \Configuration::get(
                 'PS_MBO_SHOP_ADMIN_UUID',
                 null,
                 $singleShop->id_shop_group,
@@ -104,7 +104,7 @@ class Config
             // we request the shops list and get the config value for the 1st one
             $singleShop = self::getDefaultShop();
 
-            self::$SHOP_MBO_ADMIN_MAIL = Configuration::get(
+            self::$SHOP_MBO_ADMIN_MAIL = \Configuration::get(
                 'PS_MBO_SHOP_ADMIN_MAIL',
                 null,
                 $singleShop->id_shop_group,
@@ -146,7 +146,7 @@ class Config
             if (empty($shopDomain)) { // If somehow we failed getting the shop_url from ps_shop_url, do it the old way, with configuration values
                 $domainConfigKey = $useSecureProtocol ? 'PS_SHOP_DOMAIN_SSL' : 'PS_SHOP_DOMAIN';
 
-                $domain = Configuration::get(
+                $domain = \Configuration::get(
                     $domainConfigKey,
                     null,
                     $singleShop->id_shop_group,
@@ -183,7 +183,7 @@ class Config
     {
         $singleShop = self::getDefaultShop();
 
-        return (bool) Configuration::get(
+        return (bool) \Configuration::get(
             'PS_SSL_ENABLED',
             null,
             $singleShop->id_shop_group,
@@ -198,7 +198,7 @@ class Config
         // we request the shops list and get the config value for the 1st one
         $singleShop = self::getDefaultShop();
 
-        return Configuration::get(
+        return \Configuration::get(
             'PS_MBO_LAST_PS_VERSION_API_CONFIG',
             null,
             $singleShop->id_shop_group,
@@ -207,9 +207,9 @@ class Config
         );
     }
 
-    public static function getDefaultShop(): Shop
+    public static function getDefaultShop(): \Shop
     {
-        return new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
+        return new \Shop((int) \Configuration::get('PS_SHOP_DEFAULT'));
     }
 
     /**
@@ -226,7 +226,7 @@ class Config
             'name' => null,
         ];
 
-        $activityId = (int) Configuration::get(
+        $activityId = (int) \Configuration::get(
             'PS_SHOP_ACTIVITY',
             null,
             $singleShop->id_shop_group,

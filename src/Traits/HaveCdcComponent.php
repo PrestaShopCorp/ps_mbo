@@ -32,7 +32,7 @@ trait HaveCdcComponent
     public function loadCdcMediaFilesForControllers(
         array $controllers = [],
         array $additionalJs = [],
-        array $additionalCss = []
+        array $additionalCss = [],
     ): void {
         if (in_array(Tools::getValue('controller'), $controllers)) {
             $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error-templating.js');

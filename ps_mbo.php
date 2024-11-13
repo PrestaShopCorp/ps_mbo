@@ -75,7 +75,7 @@ class ps_mbo extends Module
     protected $container;
 
     /**
-     * @var \PrestaShop\Module\Mbo\DependencyInjection\ServiceContainer
+     * @var PrestaShop\Module\Mbo\DependencyInjection\ServiceContainer
      */
     private $serviceContainer;
 
@@ -98,7 +98,7 @@ class ps_mbo extends Module
         // This value must be hard-coded to respect Addons rules, so we must make sure that the const value is always synced with this one
         $this->version = '5.0.0';
         if ($this->version !== self::VERSION) {
-            throw new \PrestaShopException('The values from ps_mbo::$version and ps_mbo::VERSION must be identical');
+            throw new PrestaShopException('The values from ps_mbo::$version and ps_mbo::VERSION must be identical');
         }
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
@@ -191,7 +191,7 @@ class ps_mbo extends Module
 
         $this->uninstallTables();
 
-        /** @var \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher */
+        /** @var Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->get('event_dispatcher');
         if (!$eventDispatcher->hasListeners(ModuleManagementEvent::UNINSTALL)) {
             return true;
@@ -207,7 +207,7 @@ class ps_mbo extends Module
             }
         }
 
-        //And then remove them
+        // And then remove them
         foreach ($eventDispatcher->getListeners(ModuleManagementEvent::UNINSTALL) as $listener) {
             if ($listener[0] instanceof ModuleManagementEventSubscriber) {
                 $eventDispatcher->removeSubscriber($listener[0]);
@@ -308,7 +308,7 @@ class ps_mbo extends Module
     public function getService($serviceName)
     {
         if ($this->serviceContainer === null) {
-            $this->serviceContainer = new \PrestaShop\Module\Mbo\DependencyInjection\ServiceContainer(
+            $this->serviceContainer = new PrestaShop\Module\Mbo\DependencyInjection\ServiceContainer(
                 $this->name . str_replace('.', '', $this->version),
                 $this->getLocalPath()
             );
@@ -341,7 +341,7 @@ class ps_mbo extends Module
         }
 
         // If active = 1
-        //in the module table, the module must be associated to at least one shop to be considered as active
+        // in the module table, the module must be associated to at least one shop to be considered as active
         $result = Db::getInstance()->getRow('SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`
         FROM `' . _DB_PREFIX_ . 'module` m
         LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON m.`id_module` = ms.`id_module`
@@ -356,9 +356,9 @@ class ps_mbo extends Module
     /**
      * Get an existing or build an instance of AdminAuthenticationProvider
      *
-     * @return \PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider
+     * @return AdminAuthenticationProvider
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getAdminAuthenticationProvider(): AdminAuthenticationProvider
     {
@@ -407,7 +407,7 @@ class ps_mbo extends Module
     {
         try {
             return $this->get(AccountsDataProvider::class);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             ErrorHelper::reportError($e);
 
             return null;
@@ -473,8 +473,8 @@ class ps_mbo extends Module
 
     private function isPsAccountEnabled(): bool
     {
-        /** @var \PrestaShop\PsAccountsInstaller\Installer\Installer|null $accountsInstaller */
-        $accountsInstaller = $this->get(\PrestaShop\PsAccountsInstaller\Installer\Installer::class);
+        /** @var PrestaShop\PsAccountsInstaller\Installer\Installer|null $accountsInstaller */
+        $accountsInstaller = $this->get(PrestaShop\PsAccountsInstaller\Installer\Installer::class);
 
         return null !== $accountsInstaller && $accountsInstaller->isModuleEnabled();
     }

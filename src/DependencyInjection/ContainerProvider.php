@@ -51,7 +51,7 @@ class ContainerProvider
     public function __construct(
         string $moduleName,
         string $moduleLocalPath,
-        CacheDirectoryProvider $cacheDirectory
+        CacheDirectoryProvider $cacheDirectory,
     ) {
         $this->moduleName = $moduleName;
         $this->moduleLocalPath = $moduleLocalPath;

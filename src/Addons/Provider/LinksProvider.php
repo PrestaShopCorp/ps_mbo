@@ -25,7 +25,6 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Foundation\Version;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
-use stdClass;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Router;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -83,7 +82,7 @@ class LinksProvider
         RequestStack $requestStack,
         CategoriesProvider $categoriesProvider,
         TranslatorInterface $trans,
-        Router $router
+        Router $router,
     ) {
         $this->version = $version;
         $this->context = $context;
@@ -135,9 +134,9 @@ class LinksProvider
      *
      * @param string $categoryName
      *
-     * @return stdClass|null
+     * @return \stdClass|null
      */
-    private function getCategoryByName(string $categoryName): ?stdClass
+    private function getCategoryByName(string $categoryName): ?\stdClass
     {
         foreach ($this->categoriesProvider->getCategories() as $parentCategory) {
             foreach ($parentCategory->subMenu as $childCategory) {

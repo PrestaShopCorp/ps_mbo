@@ -21,22 +21,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use Cache;
-use Configuration;
-use Context;
-use Dispatcher;
 use Doctrine\Common\Cache\CacheProvider;
-use Exception;
-use Language;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use Shop;
-use Tab;
-use Tools;
 
 trait UseActionDispatcherBefore
 {
@@ -48,7 +39,7 @@ trait UseActionDispatcherBefore
      */
     public function hookActionDispatcherBefore(array $params): void
     {
-        $controllerName = Tools::getValue('controller');
+        $controllerName = \Tools::getValue('controller');
 
         $this->translateTabsIfNeeded();
 
@@ -84,7 +75,7 @@ trait UseActionDispatcherBefore
         $configurationList['PS_MBO_LAST_PS_VERSION_API_CONFIG'] = false;
 
         foreach ($configurationList as $name => $value) {
-            if (Configuration::hasKey($name)) {
+            if (\Configuration::hasKey($name)) {
                 $configurationList[$name] = true;
             }
         }
@@ -95,9 +86,9 @@ trait UseActionDispatcherBefore
             return true;
         }
 
-        foreach (Shop::getShops(false, null, true) as $shopId) {
+        foreach (\Shop::getShops(false, null, true) as $shopId) {
             foreach ($configurationList as $name => $value) {
-                if (Configuration::hasKey($name, null, null, (int) $shopId)) {
+                if (\Configuration::hasKey($name, null, null, (int) $shopId)) {
                     $configurationList[$name] = true;
                 }
             }
@@ -121,7 +112,7 @@ trait UseActionDispatcherBefore
         try {
             /** @var CacheProvider|null $cacheProvider */
             $cacheProvider = $this->get(CacheProvider::class);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e);
             $cacheProvider = null;
         }
@@ -146,7 +137,7 @@ trait UseActionDispatcherBefore
         try {
             /** @var VersionChangeApplyConfigCommandHandler $configApplyHandler */
             $configApplyHandler = $this->get(VersionChangeApplyConfigCommandHandler::class);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e);
 
             return;
@@ -154,7 +145,7 @@ trait UseActionDispatcherBefore
         $configApplyHandler->handle($command);
 
         // Update the PS_MBO_LAST_PS_VERSION_API_CONFIG
-        Configuration::updateValue('PS_MBO_LAST_PS_VERSION_API_CONFIG', _PS_VERSION_);
+        \Configuration::updateValue('PS_MBO_LAST_PS_VERSION_API_CONFIG', _PS_VERSION_);
 
         if ($cacheProvider) {
             $cacheProvider->save($cacheKey, (new \DateTime())->format('Y-m-d H:i:s'), 0);
@@ -169,13 +160,13 @@ trait UseActionDispatcherBefore
      *
      * @throws EmployeeException
      * @throws CoreException
-     * @throws Exception
+     * @throws \Exception
      */
     private function ensureApiUserExistAndIsLogged($controllerName, array $params): void
     {
         $apiUser = null;
         // Whatever the call in the MBO API, we check if the MBO API user exists
-        if (Dispatcher::FC_ADMIN == (int) $params['controller_type'] || $controllerName === 'apiPsMbo') {
+        if (\Dispatcher::FC_ADMIN == (int) $params['controller_type'] || $controllerName === 'apiPsMbo') {
             $apiUser = $this->getAdminAuthenticationProvider()->ensureApiUserExistence();
         }
 
@@ -186,11 +177,11 @@ trait UseActionDispatcherBefore
         if (!$apiUser->isLoggedBack()) { // Log the user
             $cookie = $this->getAdminAuthenticationProvider()->apiUserLogin($apiUser);
 
-            Cache::clean('isLoggedBack' . $apiUser->id);
+            \Cache::clean('isLoggedBack' . $apiUser->id);
 
             $this->context->employee = $apiUser;
             $this->context->cookie = $cookie;
-            Context::getContext()->cookie = $cookie;
+            \Context::getContext()->cookie = $cookie;
         }
     }
 
@@ -201,11 +192,11 @@ trait UseActionDispatcherBefore
             return;
         }
 
-        $moduleTabs = Tab::getCollectionFromModule($this->name);
-        $languages = Language::getLanguages(false);
+        $moduleTabs = \Tab::getCollectionFromModule($this->name);
+        $languages = \Language::getLanguages(false);
 
         /**
-         * @var Tab $tab
+         * @var \Tab $tab
          */
         foreach ($moduleTabs as $tab) {
             if (!empty($tab->wording) && !empty($tab->wording_domain)) {

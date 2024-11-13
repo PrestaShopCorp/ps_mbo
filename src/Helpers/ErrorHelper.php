@@ -23,19 +23,18 @@ namespace PrestaShop\Module\Mbo\Helpers;
 
 use PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler;
 use PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandlerInterface;
-use Throwable;
 
 class ErrorHelper
 {
     private static ?ErrorHandlerInterface $errorHandler = null;
 
     /**
-     * @param Throwable $error
+     * @param \Throwable $error
      * @param array|null $data
      *
      * @return void
      */
-    public static function reportError(Throwable $error, ?array $data = null): void
+    public static function reportError(\Throwable $error, ?array $data = null): void
     {
         if (!self::$errorHandler instanceof ErrorHandlerInterface) {
             self::$errorHandler = new ErrorHandler();

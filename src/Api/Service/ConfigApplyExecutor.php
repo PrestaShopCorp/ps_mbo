@@ -25,7 +25,6 @@ use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\ConfigChangeCommandHandler;
 use PrestaShop\Module\Mbo\Distribution\Config\Exception\InvalidConfigException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
-use Tools;
 
 class ConfigApplyExecutor implements ServiceExecutorInterface
 {
@@ -61,7 +60,7 @@ class ConfigApplyExecutor implements ServiceExecutorInterface
         $module = $parameters[0];
 
         try {
-            $config = json_decode(Tools::getValue('conf'), true);
+            $config = json_decode(\Tools::getValue('conf'), true);
         } catch (\JsonException $exception) {
             ErrorHelper::reportError($exception);
             throw new InvalidConfigException($exception->getMessage());

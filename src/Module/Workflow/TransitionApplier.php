@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
-use Exception;
 use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
@@ -42,7 +41,7 @@ class TransitionApplier
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function apply(TransitionModule $module, string $transitionName, array $context = [])
     {
@@ -62,7 +61,7 @@ class TransitionApplier
             if (!$this->transitionsManager->{$method}($module, $context)) {
                 throw new TransitionFailedException($transitionName, $executionContext);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw ModuleErrorHelper::reportAndConvertError($e, $executionContext);
         }
     }

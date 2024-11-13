@@ -67,7 +67,7 @@ class TabCollectionProvider implements TabCollectionProviderInterface
         LegacyContext $context,
         ExternalContentProviderInterface $externalContentProvider,
         TabCollectionFactoryInterface $tabCollectionFactory,
-        CacheProvider $cacheProvider = null
+        ?CacheProvider $cacheProvider = null,
     ) {
         $this->context = $context;
         $this->externalContentProvider = $externalContentProvider;

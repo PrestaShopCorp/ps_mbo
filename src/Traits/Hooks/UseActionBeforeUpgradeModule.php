@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use Exception;
 use PrestaShop\Module\Mbo\Addons\ApiClient;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
@@ -30,7 +29,6 @@ use PrestaShop\Module\Mbo\Service\HookExceptionHolder;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
-use Tools;
 
 trait UseActionBeforeUpgradeModule
 {
@@ -62,7 +60,7 @@ trait UseActionBeforeUpgradeModule
             return;
         }
 
-        $moduleId = (int) Tools::getValue('module_id');
+        $moduleId = (int) \Tools::getValue('module_id');
 
         if (!$moduleId) {
             $addon = $addonsClient->getModuleByName($moduleName);
@@ -80,7 +78,7 @@ trait UseActionBeforeUpgradeModule
             if (null === $actionsManager) {
                 throw new ExpectedServiceNotFoundException('Unable to get ActionsManager');
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e);
 
             return;

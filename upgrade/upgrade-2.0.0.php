@@ -50,7 +50,7 @@ function upgrade_module_2_0_0($module)
         false === $module->registerHook([
             'actionAdminControllerSetMedia',
             'displayDashboardTop',
-            ])
+        ])
     ) {
         return false;
     }

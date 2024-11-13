@@ -55,7 +55,7 @@ trait UseActionModuleRegisterHookAfter
         }
         $idHook = $row['id_hook'];
 
-        //Get Module MBO ID
+        // Get Module MBO ID
         $sql = 'SELECT m.`id_module`
                     FROM `' . _DB_PREFIX_ . 'module` m
                     WHERE m.`name` = \'ps_mbo\'';

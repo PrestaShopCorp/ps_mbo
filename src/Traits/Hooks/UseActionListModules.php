@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use Exception;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
@@ -44,7 +43,7 @@ trait UseActionListModules
      *
      * @return array<array<string, string>>
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function hookActionListModules(): array
     {
@@ -66,7 +65,7 @@ trait UseActionListModules
             ) {
                 throw new ExpectedServiceNotFoundException('Some services not found in UseActionListModules');
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             ErrorHelper::reportError($exception);
 
             return [];
@@ -140,7 +139,7 @@ trait UseActionListModules
             if (null === $twigEnvironment) {
                 throw new ExpectedServiceNotFoundException('Unable to get Twig service');
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             ErrorHelper::reportError($exception);
 
             return '';

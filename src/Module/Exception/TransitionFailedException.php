@@ -27,7 +27,7 @@ class TransitionFailedException extends \Exception
      */
     private $context;
 
-    public function __construct(string $transitionName, array $context = [], \Throwable $previous = null)
+    public function __construct(string $transitionName, array $context = [], ?\Throwable $previous = null)
     {
         parent::__construct(
             sprintf('Module action failed without any further details. Transition "%s"', $transitionName),

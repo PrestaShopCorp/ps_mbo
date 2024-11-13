@@ -88,7 +88,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         Client $distributionClient,
         AdminAuthenticationProvider $adminAuthenticationProvider,
         VersionChangeApplyConfigCommandHandler $versionChangeApplyConfigCommandHandler,
-        CacheClearerInterface $cacheClearer
+        CacheClearerInterface $cacheClearer,
     ) {
         $this->logger = $logger;
         $this->moduleRepository = $moduleRepository;

@@ -21,12 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use Exception;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Tools;
 use Twig\Environment;
 
 trait UseDisplayAdminAfterHeader
@@ -56,7 +54,7 @@ trait UseDisplayAdminAfterHeader
     /**
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function bootUseDisplayAdminAfterHeader(): void
     {
@@ -70,7 +68,7 @@ trait UseDisplayAdminAfterHeader
      *
      * @return void
      *
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
+     * @see UseActionAdminControllerSetMedia
      */
     protected function loadMediaDisplayAdminAfterHeader(): void
     {
@@ -100,7 +98,7 @@ trait UseDisplayAdminAfterHeader
                     'message' => $this->trans('MBO employee explanation', [], 'Modules.Mbo.Global'),
                 ]
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e);
 
             return '';
@@ -130,7 +128,7 @@ trait UseDisplayAdminAfterHeader
                     'message' => $this->trans('MBO employee explanation', [], 'Modules.Mbo.Global'),
                 ]
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e);
 
             return '';
@@ -139,7 +137,7 @@ trait UseDisplayAdminAfterHeader
 
     private function shouldDisplayMboUserExplanation(): bool
     {
-        if (Tools::getValue('controller') !== 'AdminEmployees') {
+        if (\Tools::getValue('controller') !== 'AdminEmployees') {
             return false;
         }
 
@@ -147,9 +145,9 @@ trait UseDisplayAdminAfterHeader
             /** @var RequestStack|null $requestStack */
             $requestStack = $this->get(RequestStack::class);
             if (null === $requestStack || null === $request = $requestStack->getCurrentRequest()) {
-                throw new Exception('Unable to get request');
+                throw new \Exception('Unable to get request');
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e);
 
             return false;
@@ -163,7 +161,7 @@ trait UseDisplayAdminAfterHeader
     {
         if (
             !in_array(
-                Tools::getValue('controller'),
+                \Tools::getValue('controller'),
                 [
                     'AdminModulesManage',
                     'AdminModulesNotifications',
@@ -178,9 +176,9 @@ trait UseDisplayAdminAfterHeader
             /** @var RequestStack|null $requestStack */
             $requestStack = $this->get(RequestStack::class);
             if (null === $requestStack || null === $request = $requestStack->getCurrentRequest()) {
-                throw new Exception('Unable to get request');
+                throw new \Exception('Unable to get request');
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e);
 
             return false;

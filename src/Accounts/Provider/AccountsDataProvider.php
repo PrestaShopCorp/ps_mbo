@@ -21,9 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Accounts\Provider;
 
-use Db;
-use Exception;
-use Module;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PsAccountsInstaller\Installer\Exception\ModuleNotInstalledException;
 use PrestaShop\PsAccountsInstaller\Installer\Exception\ModuleVersionException;
@@ -38,7 +35,7 @@ class AccountsDataProvider
     private $psAccountsVersion;
 
     public function __construct(
-        string $psAccountsVersion
+        string $psAccountsVersion,
     ) {
         $this->psAccountsVersion = $psAccountsVersion;
     }
@@ -53,7 +50,7 @@ class AccountsDataProvider
             return '';
         }
 
-        /** @var Module|null $psAccountsModule */
+        /** @var \Module|null $psAccountsModule */
         $psAccountsModule = ServiceLocator::get('ps_accounts');
         if (null === $psAccountsModule || !method_exists($psAccountsModule, 'getService')) {
             return '';
@@ -66,7 +63,7 @@ class AccountsDataProvider
 
         try {
             $token = $accountsUserTokenRepository->getOrRefreshToken();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return '';
         }
 
@@ -81,7 +78,7 @@ class AccountsDataProvider
 
         try {
             $shopUuid = $this->getAccountsService()->getShopUuid();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $shopUuid = null;
         }
 
@@ -92,7 +89,7 @@ class AccountsDataProvider
     {
         try {
             $userUuid = $this->getAccountsService()->getUserUuid();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $userUuid = null;
         }
 
@@ -103,7 +100,7 @@ class AccountsDataProvider
     {
         try {
             $email = $this->getAccountsService()->getEmail();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $email = null;
         }
 
@@ -114,7 +111,7 @@ class AccountsDataProvider
     {
         try {
             return $this->getAccountsService()->isAccountLinked();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -152,7 +149,7 @@ class AccountsDataProvider
 
         $sqlQuery = 'SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($moduleName) . '" AND `active` = 1';
 
-        return (int) Db::getInstance()->getValue($sqlQuery) > 0;
+        return (int) \Db::getInstance()->getValue($sqlQuery) > 0;
     }
 
     private function checkPsAccountsVersion()

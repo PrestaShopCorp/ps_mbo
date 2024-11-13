@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits;
 
 use Db;
-use Exception;
 use LanguageCore as Language;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Symfony\Component\String\UnicodeString;
@@ -97,7 +96,7 @@ trait HaveTabs
      *
      * @return bool
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function handleTabAction(string $action): bool
     {
@@ -209,13 +208,13 @@ trait HaveTabs
      */
     public function updateTabs(): void
     {
-        $tabData = Db::getInstance()->executeS('
+        $tabData = \Db::getInstance()->executeS('
             SELECT class_name
             FROM `' . _DB_PREFIX_ . 'tab`
             WHERE `module` = "' . pSQL($this->name) . '"'
         );
 
-        //Flatten $tabData array
+        // Flatten $tabData array
         $tabData = array_unique(array_map('current', $tabData));
         $currentModuleTabs = array_keys(static::$ADMIN_CONTROLLERS);
 
@@ -278,7 +277,7 @@ trait HaveTabs
                     $tab->cleanPositions($idParent);
                 } catch (\PrestaShopDatabaseException|\PrestaShopException $e) {
                     ErrorHelper::reportError($e);
-                    throw new Exception('Failed to clean parent tab positions', 0, $e);
+                    throw new \Exception('Failed to clean parent tab positions', 0, $e);
                 }
             }
         }
@@ -353,7 +352,7 @@ trait HaveTabs
     private function putTabInPosition(Tab $tab, int $position): void
     {
         // Check tab position in DB
-        $dbTabPosition = Db::getInstance()->getValue('
+        $dbTabPosition = \Db::getInstance()->getValue('
 			SELECT `position`
 			FROM `' . _DB_PREFIX_ . 'tab`
 			WHERE `id_tab` = ' . (int) $tab->id
@@ -364,7 +363,7 @@ trait HaveTabs
             return;
         }
 
-        Db::getInstance()->execute(
+        \Db::getInstance()->execute(
             '
             UPDATE `' . _DB_PREFIX_ . 'tab`
             SET `position` = `position`+1
@@ -373,7 +372,7 @@ trait HaveTabs
             AND `id_tab` <> ' . (int) $tab->id
         );
 
-        Db::getInstance()->execute(
+        \Db::getInstance()->execute(
             '
                 UPDATE `' . _DB_PREFIX_ . 'tab`
                 SET `position` = ' . $position . '

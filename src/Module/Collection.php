@@ -22,14 +22,11 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module;
 
 use ArrayAccess;
-use ArrayIterator;
-use Countable;
-use IteratorAggregate;
 
 /**
  * An ArrayCollection is a Collection implementation that wraps a regular PHP array.
  */
-class Collection implements ArrayAccess, Countable, IteratorAggregate
+class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     /**
      * An array containing the addons of this collection.
@@ -49,11 +46,11 @@ class Collection implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * @return ArrayIterator
+     * @return \ArrayIterator
      */
-    public function getIterator(): ArrayIterator
+    public function getIterator(): \ArrayIterator
     {
-        return new ArrayIterator($this->data);
+        return new \ArrayIterator($this->data);
     }
 
     /**

@@ -26,7 +26,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Helpers\AddonsApiHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Psr\Http\Client\ClientInterface;
-use stdClass;
 
 class ApiClient
 {
@@ -116,9 +115,9 @@ class ApiClient
      *
      * @param array{username_addons: string, password_addons: string} $params
      *
-     * @return stdClass
+     * @return \stdClass
      */
-    public function getCheckCustomer(array $params): stdClass
+    public function getCheckCustomer(array $params): \stdClass
     {
         return $this->setQueryParams([
             'method' => 'check_customer',
@@ -130,9 +129,9 @@ class ApiClient
      *
      * @param array{username_addons: string, password_addons: string, module_name: string, module_key: string} $params
      *
-     * @return stdClass
+     * @return \stdClass
      */
-    public function getCheckModule(array $params): stdClass
+    public function getCheckModule(array $params): \stdClass
     {
         return $this->setQueryParams([
             'method' => 'check',
@@ -258,10 +257,10 @@ class ApiClient
         return $this->setQueryParams([
             'method' => 'listing',
             'action' => 'customer-themes',
-        ] + $params)->processRequestAndReturn('themes', self::HTTP_METHOD_POST, new stdClass());
+        ] + $params)->processRequestAndReturn('themes', self::HTTP_METHOD_POST, new \stdClass());
     }
 
-    public function getModuleByName(string $name): ?stdClass
+    public function getModuleByName(string $name): ?\stdClass
     {
         $options = ['query' => $this->queryParameters];
 
@@ -306,7 +305,7 @@ class ApiClient
     public function processRequestAndReturn(
         ?string $attributeToReturn = null,
         string $method = self::HTTP_METHOD_GET,
-        $default = []
+        $default = [],
     ) {
         $response = json_decode($this->processRequest($method));
 

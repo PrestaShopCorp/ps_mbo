@@ -59,7 +59,7 @@ class Config
         string $psVersion,
         string $mboVersion,
         bool $applied,
-        ?int $configId = null
+        ?int $configId = null,
     ) {
         $this->configId = $configId;
         $this->configKey = $configKey;

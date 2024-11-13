@@ -23,15 +23,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use Db;
-use Exception;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\ModuleInstaller;
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
-use PrestaShopDatabaseException;
 
 trait UseDashboardZoneOne
 {
@@ -52,7 +49,7 @@ trait UseDashboardZoneOne
     /**
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function bootUseDashboardZoneOne(): void
     {
@@ -64,7 +61,7 @@ trait UseDashboardZoneOne
     /**
      * Add JS and CSS file
      *
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
+     * @see UseActionAdminControllerSetMedia
      *
      * @return void
      */
@@ -74,15 +71,15 @@ trait UseDashboardZoneOne
     }
 
     /**
-     * @throws PrestaShopDatabaseException
+     * @throws \PrestaShopDatabaseException
      */
     public function useDashboardZoneOneExtraOperations()
     {
-        //Update module position in Dashboard
+        // Update module position in Dashboard
         $query = 'SELECT id_hook FROM ' . _DB_PREFIX_ . "hook WHERE name = 'dashboardZoneOne'";
 
         /** @var array $result */
-        $result = Db::getInstance()->ExecuteS($query);
+        $result = \Db::getInstance()->ExecuteS($query);
         $id_hook = $result['0']['id_hook'];
 
         $this->updatePosition((int) $id_hook, false);

@@ -51,7 +51,7 @@ class Toolbar
     public function __construct(
         PermissionCheckerInterface $permissionChecker,
         AddonsDataProvider $addonsDataProvider,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
     ) {
         $this->permissionChecker = $permissionChecker;
         $this->addonsDataProvider = $addonsDataProvider;

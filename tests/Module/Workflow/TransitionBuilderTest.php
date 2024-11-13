@@ -122,7 +122,7 @@ class TransitionBuilderTest extends AbstractTransitionTest
         array $moduleAttributes,
         string $transitionCommand,
         string $transitionName,
-        string $targetStatus
+        string $targetStatus,
     ) {
         $module = $this->getTransitionModule(
             $moduleAttributes['name'],

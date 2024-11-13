@@ -34,8 +34,8 @@ function upgrade_module_4_7_0(Module $module): bool
     $module->updateHooks();
     $module->updateTabs();
 
-    $singleShop = \PrestaShop\Module\Mbo\Helpers\Config::getDefaultShop();
-    $domains = \Tools::getDomains();
+    $singleShop = PrestaShop\Module\Mbo\Helpers\Config::getDefaultShop();
+    $domains = Tools::getDomains();
 
     $shopDomain = array_filter(
         $domains,

@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use Exception;
 use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
@@ -53,7 +52,7 @@ trait UseDisplayEmptyModuleCategoryExtraMessage
                     'categoryLink' => $linksProvider->getCategoryLink($categoryName),
                 ]
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e);
 
             return '';

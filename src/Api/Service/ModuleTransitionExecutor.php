@@ -36,7 +36,6 @@ use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Tools;
 
 class ModuleTransitionExecutor implements ServiceExecutorInterface
 {
@@ -81,11 +80,11 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
 
         $psMbo = $parameters[0];
 
-        $transition = Tools::getValue('action');
-        $moduleName = Tools::getValue('module');
-        $moduleId = (int) Tools::getValue('module_id');
-        $moduleVersion = Tools::getValue('module_version');
-        $source = Tools::getValue('source', null);
+        $transition = \Tools::getValue('action');
+        $moduleName = \Tools::getValue('module');
+        $moduleId = (int) \Tools::getValue('module_id');
+        $moduleVersion = \Tools::getValue('module_version');
+        $source = \Tools::getValue('source', null);
 
         if (empty($transition) || empty($moduleName)) {
             throw new QueryParamsException('You need transition and module parameters');
@@ -174,7 +173,7 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
             return $composedUrl;
         }
 
-        $adminToken = Tools::getValue('admin_token');
+        $adminToken = \Tools::getValue('admin_token');
         $queryParams['_token'] = $adminToken;
 
         $composedUrl .= '?' . http_build_query($queryParams, '', '&');
@@ -189,7 +188,7 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
     private function authenticateAddonsUser(Session $session): void
     {
         // If we receive an accounts_token, we use it to connect to addons
-        $accountsToken = Tools::getValue('accounts_token', null);
+        $accountsToken = \Tools::getValue('accounts_token', null);
 
         if (null !== $accountsToken) {
             $session->set('accounts_token', $accountsToken);

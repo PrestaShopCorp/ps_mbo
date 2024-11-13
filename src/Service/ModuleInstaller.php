@@ -35,7 +35,7 @@ class ModuleInstaller
      * @param string|null $moduleVersion
      * @param bool $absoluteCompare
      */
-    public function __construct(string $moduleName, string $moduleVersion = null, bool $absoluteCompare = false)
+    public function __construct(string $moduleName, ?string $moduleVersion = null, bool $absoluteCompare = false)
     {
         $this->moduleName = $moduleName;
         $this->moduleVersion = $moduleVersion;

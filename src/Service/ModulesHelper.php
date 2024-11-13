@@ -41,7 +41,7 @@ class ModulesHelper
 
     public function __construct(
         Repository $repository,
-        Router $router
+        Router $router,
     ) {
         $this->moduleRepository = $repository;
         $this->router = $router;

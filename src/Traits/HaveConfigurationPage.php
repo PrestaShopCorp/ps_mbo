@@ -20,12 +20,9 @@
 
 namespace PrestaShop\Module\Mbo\Traits;
 
-use AdminController;
 use Configuration;
-use HelperForm;
 use PrestaShop\Module\Mbo\Service\MboSymfonyCacheClearer;
 use Symfony\Component\Dotenv\Dotenv;
-use Tools;
 
 trait HaveConfigurationPage
 {
@@ -75,7 +72,7 @@ trait HaveConfigurationPage
     private function handleSaveForm(): string
     {
         $output = '';
-        if (Tools::isSubmit('submit' . $this->name)) {
+        if (\Tools::isSubmit('submit' . $this->name)) {
             $possibleEnvFiles = [
                 '.env',
                 '.env.local',
@@ -94,7 +91,7 @@ trait HaveConfigurationPage
                 $output .= $this->saveNewDotenvData($envFilePath);
             }
         }
-        if (Tools::isSubmit('resetModule')) {
+        if (\Tools::isSubmit('resetModule')) {
             try {
                 $this->registerShop();
                 $output .= '<b>Module is now well configured</b>';
@@ -109,7 +106,7 @@ trait HaveConfigurationPage
     private function saveNewDotenvData(string $envFilePath): string
     {
         // Get & build MBO env data
-        $newMboValue = Tools::getValue('DISTRIBUTION_ENVIRONMENT');
+        $newMboValue = \Tools::getValue('DISTRIBUTION_ENVIRONMENT');
         if (strpos($newMboValue, 'prestabulle') !== false) {
             $cdcUrl = str_replace('#prestabulle#', $newMboValue, $this->environmentData['prestabulle']['cdc']);
             $apiUrl = str_replace('#prestabulle#', $newMboValue, $this->environmentData['prestabulle']['api']);
@@ -127,7 +124,7 @@ trait HaveConfigurationPage
         }
 
         // Get & build Addons env data
-        $newAddonsValue = Tools::getValue('ADDONS_ENVIRONMENT');
+        $newAddonsValue = \Tools::getValue('ADDONS_ENVIRONMENT');
         if (strpos($newAddonsValue, 'pod') !== false) {
             $addonsUrl = str_replace('#pod#', $newAddonsValue, $this->environmentData['prestabulle']['addons']);
         } else {
@@ -252,16 +249,16 @@ trait HaveConfigurationPage
             ],
         ];
 
-        $helper = new HelperForm();
+        $helper = new \HelperForm();
 
         // Module, token and currentIndex
         $helper->table = $this->table;
         $helper->name_controller = $this->name;
-        $helper->token = Tools::getAdminTokenLite('AdminModules');
-        $helper->currentIndex = AdminController::$currentIndex . '&' . http_build_query(['configure' => $this->name]);
+        $helper->token = \Tools::getAdminTokenLite('AdminModules');
+        $helper->currentIndex = \AdminController::$currentIndex . '&' . http_build_query(['configure' => $this->name]);
         $helper->submit_action = 'submit' . $this->name;
 
-        $helper->default_form_language = (int) Configuration::get('PS_LANG_DEFAULT');
+        $helper->default_form_language = (int) \Configuration::get('PS_LANG_DEFAULT');
 
         $currentCdcUrl = getenv('MBO_CDC_URL');
 

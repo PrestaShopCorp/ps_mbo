@@ -20,7 +20,6 @@
 
 namespace PrestaShop\Module\Mbo\Module;
 
-use Exception;
 use Module as LegacyModule;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
@@ -36,7 +35,7 @@ class Module implements ModuleInterface
     /**
      * @var LegacyModule Module The instance of the legacy module
      */
-    public $instance = null;
+    public $instance;
 
     /**
      * Module attributes (name, displayName etc.).
@@ -178,7 +177,7 @@ class Module implements ModuleInterface
     /**
      * @return LegacyModule|null
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function getInstance(): ?LegacyModule
     {
@@ -204,7 +203,7 @@ class Module implements ModuleInterface
             // We try to instantiate the legacy class if not done yet
             try {
                 $this->instantiateLegacyModule();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 ErrorHelper::reportError($e);
                 $this->disk->set('is_valid', false);
 

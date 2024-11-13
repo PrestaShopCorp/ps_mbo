@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use Exception;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeNotNeededException;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
@@ -72,7 +71,7 @@ class AddonsController extends PrestaShopAdminController
                     'Modules.Mbo.Modulescatalog',
                 );
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e);
             if ($e->getPrevious() instanceof ModuleUpgradeNotNeededException) {
                 $upgradeResponse['status'] = true;
@@ -86,7 +85,7 @@ class AddonsController extends PrestaShopAdminController
             } else {
                 try {
                     $moduleManager->disable($moduleName);
-                } catch (Exception $subE) {
+                } catch (\Exception $subE) {
                     ErrorHelper::reportError($subE);
                 }
 

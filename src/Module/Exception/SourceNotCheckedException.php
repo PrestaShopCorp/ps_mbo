@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\Exception;
 
-use RuntimeException;
-
-class SourceNotCheckedException extends RuntimeException
+class SourceNotCheckedException extends \RuntimeException
 {
 }

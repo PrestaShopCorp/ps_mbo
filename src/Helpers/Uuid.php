@@ -21,12 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Helpers;
 
-use Exception;
-
 class Uuid
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public static function generate(): string
     {

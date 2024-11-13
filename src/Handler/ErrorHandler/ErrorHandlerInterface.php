@@ -20,13 +20,11 @@
 
 namespace PrestaShop\Module\Mbo\Handler\ErrorHandler;
 
-use Throwable;
-
 interface ErrorHandlerInterface
 {
     /**
-     * @param Throwable $error
+     * @param \Throwable $error
      * @param array|null $data
      */
-    public function handle(Throwable $error, ?array $data = null): void;
+    public function handle(\Throwable $error, ?array $data = null): void;
 }

@@ -21,13 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module;
 
-use Db;
 use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Distribution\ConnectedClient;
 use Psr\Log\LoggerInterface;
-use Shop;
-use stdClass;
 
 /**
  * Retrieves modules' raw information from Addons and database
@@ -85,7 +82,7 @@ class Repository implements RepositoryInterface
         string $localeCode,
         CacheProvider $cacheProvider,
         string $dbPrefix,
-        AdminAuthenticationProvider $adminAuthenticationProvider
+        AdminAuthenticationProvider $adminAuthenticationProvider,
     ) {
         $this->connectedClient = $connectedClient;
         $this->dbPrefix = $dbPrefix;
@@ -142,7 +139,7 @@ class Repository implements RepositoryInterface
 
         $listAddonsModules = [];
         $apiModules = [];
-        /** @var stdClass $addon */
+        /** @var \stdClass $addon */
         foreach ($addons as $addonsType => $addon) {
             if (empty($addon->name)) {
                 $this->logger->error(sprintf('The addon with id %s does not have name.', $addon->id));
@@ -185,7 +182,7 @@ class Repository implements RepositoryInterface
 
     public function findInDatabaseByName(string $name): ?array
     {
-        $result = Db::getInstance()->getRow(
+        $result = \Db::getInstance()->getRow(
             sprintf(
                 'SELECT `id_module` as `id`, `active`, `version` FROM `%smodule` WHERE `name` = \'%s\'',
                 $this->dbPrefix,
@@ -197,12 +194,12 @@ class Repository implements RepositoryInterface
             return null;
         }
 
-        $enableStatuses = Db::getInstance()->getRow(
+        $enableStatuses = \Db::getInstance()->getRow(
             'SELECT m.`id_module` as `active`, ms.`id_module` as `shop_active`, ms.`enable_device` as `enable_device`' .
             'FROM `' . $this->dbPrefix . 'module` m ' .
             'LEFT JOIN `' . $this->dbPrefix . 'module_shop` ms ON m.`id_module` = ms.`id_module` ' .
             'WHERE `name` = "' . pSQL($name) . '" ' .
-            'AND ms.`id_shop` IN (' . implode(',', array_map('intval', Shop::getContextListShopID())) . ')');
+            'AND ms.`id_shop` IN (' . implode(',', array_map('intval', \Shop::getContextListShopID())) . ')');
 
         $result['installed'] = true;
         $result['active'] = ($result['active'] ?? false) && ($enableStatuses['shop_active'] ?? false);

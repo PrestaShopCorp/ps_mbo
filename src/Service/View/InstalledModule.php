@@ -52,7 +52,7 @@ class InstalledModule
         string $name,
         string $status,
         string $version,
-        ?string $configUrl = null
+        ?string $configUrl = null,
     ) {
         $this->id = $id;
         $this->name = $name;

@@ -22,38 +22,37 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits;
 
 use Db;
-use PrestaShopDatabaseException;
 use Symfony\Component\String\UnicodeString;
 
 trait UseHooks
 {
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayBackOfficeEmployeeMenu;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo {
-        \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
-        \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne::loadCdcMediaFilesForControllers insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
+    use Hooks\UseDisplayBackOfficeEmployeeMenu;
+    use Hooks\UseDashboardZoneOne;
+    use Hooks\UseDashboardZoneTwo {
+        Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
+        Hooks\UseDashboardZoneOne::loadCdcMediaFilesForControllers insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
     }
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree {
-        \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
-        \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneOne::loadCdcMediaFilesForControllers insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
+    use Hooks\UseDashboardZoneThree {
+        Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
+        Hooks\UseDashboardZoneOne::loadCdcMediaFilesForControllers insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
     }
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayAdminThemesListAfter;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayDashboardTop;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionBeforeInstallModule;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionGetAdminToolbarButtons;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionGetAlternativeSearchPanels;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayAdminAfterHeader;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayModuleConfigureExtraButtons;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionListModules;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionModuleRegisterHookAfter;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionDispatcherBefore;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionObjectShopUrlUpdateAfter;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionGeneralPageSave;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionBeforeUpgradeModule;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionObjectEmployeeDeleteBefore;
-    use \PrestaShop\Module\Mbo\Traits\Hooks\UseActionObjectEmployeeUpdateBefore;
+    use Hooks\UseDisplayAdminThemesListAfter;
+    use Hooks\UseDisplayDashboardTop;
+    use Hooks\UseActionAdminControllerSetMedia;
+    use Hooks\UseActionBeforeInstallModule;
+    use Hooks\UseActionGetAdminToolbarButtons;
+    use Hooks\UseActionGetAlternativeSearchPanels;
+    use Hooks\UseDisplayAdminAfterHeader;
+    use Hooks\UseDisplayModuleConfigureExtraButtons;
+    use Hooks\UseActionListModules;
+    use Hooks\UseActionModuleRegisterHookAfter;
+    use Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
+    use Hooks\UseActionDispatcherBefore;
+    use Hooks\UseActionObjectShopUrlUpdateAfter;
+    use Hooks\UseActionGeneralPageSave;
+    use Hooks\UseActionBeforeUpgradeModule;
+    use Hooks\UseActionObjectEmployeeDeleteBefore;
+    use Hooks\UseActionObjectEmployeeUpdateBefore;
 
     /**
      * @var array An array of method that can be called to register media in the actionAdminControllerSetMedia hook
@@ -111,9 +110,9 @@ trait UseHooks
     protected function getTraitNames(): array
     {
         $traits = [];
-        //Retrieve all used classes and iterate
+        // Retrieve all used classes and iterate
         foreach (class_uses(UseHooks::class) as $trait) {
-            //Get only the class name eg. 'UseAdminControllerSetMedia'
+            // Get only the class name eg. 'UseAdminControllerSetMedia'
             $traits[] = (new UnicodeString($trait))->afterLast('\\')->toString();
         }
 
@@ -127,11 +126,11 @@ trait UseHooks
      *
      * @return void
      *
-     * @throws PrestaShopDatabaseException
+     * @throws \PrestaShopDatabaseException
      */
     public function updateHooks(): void
     {
-        $hookData = Db::getInstance()->executeS('
+        $hookData = \Db::getInstance()->executeS('
             SELECT DISTINCT(phm.id_hook), name
             FROM `' . _DB_PREFIX_ . 'hook_module` phm
             JOIN `' . _DB_PREFIX_ . 'hook` ph ON ph.id_hook=phm.id_hook

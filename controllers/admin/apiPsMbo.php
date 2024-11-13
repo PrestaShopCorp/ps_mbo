@@ -45,7 +45,7 @@ class apiPsMboController extends AbstractAdminApiController
             $executorsFactory = $this->module->get('mbo.api.service.factory');
 
             $response = $executorsFactory->build($service)->execute($this->module);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             ErrorHelper::reportError($exception);
             $this->exitWithExceptionMessage($exception);
         }
@@ -65,10 +65,10 @@ class apiPsMboController extends AbstractAdminApiController
         $actionUuid = Tools::getValue('action_uuid');
 
         if (
-            !$action ||
-            !$module ||
-            !$adminToken ||
-            !$actionUuid
+            !$action
+            || !$module
+            || !$adminToken
+            || !$actionUuid
         ) {
             throw new IncompleteSignatureParamsException('Expected signature elements are not given');
         }
