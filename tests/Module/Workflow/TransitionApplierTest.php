@@ -29,13 +29,6 @@ use Symfony\Component\String\UnicodeString;
 
 class TransitionApplierTest extends AbstractTransitionTest
 {
-    protected $translator;
-
-    protected function setUp(): void
-    {
-        $this->translator = $this->mockTranslator('Unfortunately, the module did not return additional details.', [], 'Admin.Modules.Notification', 'Unfortunately, the module did not return additional details.');
-    }
-
     /**
      * @dataProvider getModuleAttributesAndAppliedTransitions
      */
@@ -43,7 +36,7 @@ class TransitionApplierTest extends AbstractTransitionTest
         array $moduleAttributes,
         string $transitionCommand,
         string $transitionName,
-        string $targetStatus
+        string $targetStatus,
     ) {
         $module = $this->getTransitionModule(
             $moduleAttributes['name'],
@@ -62,7 +55,7 @@ class TransitionApplierTest extends AbstractTransitionTest
             ->with($module, [])
         ;
 
-        $transitionApplier = new TransitionApplier($transitionsManager, $this->translator);
+        $transitionApplier = new TransitionApplier($transitionsManager);
 
         // Application will throw an exception because transitionManager object is a mock
         $this->expectException(TransitionFailedException::class);
@@ -77,11 +70,11 @@ class TransitionApplierTest extends AbstractTransitionTest
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
-            ], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_MOBILE_DISABLE, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__ENABLED_MOBILE_DISABLED, //transitionName
-            TransitionInterface::STATUS_ENABLED__MOBILE_DISABLED, //target status
+                'active_on_mobile' => true,
+            ], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_MOBILE_DISABLE, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__ENABLED_MOBILE_DISABLED, // transitionName
+            TransitionInterface::STATUS_ENABLED__MOBILE_DISABLED, // target status
         ];
 
         yield [
@@ -90,11 +83,11 @@ class TransitionApplierTest extends AbstractTransitionTest
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
-            ], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_DISABLE, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__DISABLED_MOBILE_ENABLED, //transitionName
-            TransitionInterface::STATUS_DISABLED__MOBILE_ENABLED, //target status
+                'active_on_mobile' => true,
+            ], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_DISABLE, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__DISABLED_MOBILE_ENABLED, // transitionName
+            TransitionInterface::STATUS_DISABLED__MOBILE_ENABLED, // target status
         ];
 
         yield [
@@ -103,11 +96,11 @@ class TransitionApplierTest extends AbstractTransitionTest
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
-            ], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_RESET, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__RESET, //transitionName
-            TransitionInterface::STATUS_RESET, //target status
+                'active_on_mobile' => true,
+            ], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_RESET, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__RESET, // transitionName
+            TransitionInterface::STATUS_RESET, // target status
         ];
 
         yield [
@@ -116,11 +109,11 @@ class TransitionApplierTest extends AbstractTransitionTest
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
-            ], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_CONFIGURE, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__CONFIGURED, //transitionName
-            TransitionInterface::STATUS_CONFIGURED, //target status
+                'active_on_mobile' => true,
+            ], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_CONFIGURE, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__CONFIGURED, // transitionName
+            TransitionInterface::STATUS_CONFIGURED, // target status
         ];
 
         yield [
@@ -129,11 +122,11 @@ class TransitionApplierTest extends AbstractTransitionTest
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
-            ], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_UPGRADE, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__UPGRADED, //transitionName
-            TransitionInterface::STATUS_UPGRADED, //target status
+                'active_on_mobile' => true,
+            ], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_UPGRADE, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__UPGRADED, // transitionName
+            TransitionInterface::STATUS_UPGRADED, // target status
         ];
 
         yield [
@@ -142,11 +135,11 @@ class TransitionApplierTest extends AbstractTransitionTest
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
-            ], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_UNINSTALL, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__UNINSTALLED, //transitionName
-            TransitionInterface::STATUS_UNINSTALLED, //target status
+                'active_on_mobile' => true,
+            ], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_UNINSTALL, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__UNINSTALLED, // transitionName
+            TransitionInterface::STATUS_UNINSTALLED, // target status
         ];
 
         yield [
@@ -155,130 +148,130 @@ class TransitionApplierTest extends AbstractTransitionTest
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
-            ], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_MOBILE_DISABLE, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__ENABLED_MOBILE_DISABLED, //transitionName
-            TransitionInterface::STATUS_ENABLED__MOBILE_DISABLED, //target status
+                'active_on_mobile' => true,
+            ], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_MOBILE_DISABLE, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__ENABLED_MOBILE_DISABLED, // transitionName
+            TransitionInterface::STATUS_ENABLED__MOBILE_DISABLED, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_DISABLE, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__DISABLED_MOBILE_ENABLED, //transitionName
-            TransitionInterface::STATUS_DISABLED__MOBILE_ENABLED, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_DISABLE, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__DISABLED_MOBILE_ENABLED, // transitionName
+            TransitionInterface::STATUS_DISABLED__MOBILE_ENABLED, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_RESET, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__RESET, //transitionName
-            TransitionInterface::STATUS_RESET, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_RESET, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__RESET, // transitionName
+            TransitionInterface::STATUS_RESET, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_UPGRADE, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__UPGRADED, //transitionName
-            TransitionInterface::STATUS_UPGRADED, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_UPGRADE, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__UPGRADED, // transitionName
+            TransitionInterface::STATUS_UPGRADED, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_CONFIGURE, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__CONFIGURED, //transitionName
-            TransitionInterface::STATUS_CONFIGURED, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_CONFIGURE, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__CONFIGURED, // transitionName
+            TransitionInterface::STATUS_CONFIGURED, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_UNINSTALL, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__UNINSTALLED, //transitionName
-            TransitionInterface::STATUS_UNINSTALLED, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => true], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_UNINSTALL, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__UNINSTALLED, // transitionName
+            TransitionInterface::STATUS_UNINSTALLED, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_MOBILE_ENABLE, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_DISABLED__ENABLED_MOBILE_ENABLED, //transitionName
-            TransitionInterface::STATUS_ENABLED__MOBILE_ENABLED, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_MOBILE_ENABLE, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_DISABLED__ENABLED_MOBILE_ENABLED, // transitionName
+            TransitionInterface::STATUS_ENABLED__MOBILE_ENABLED, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_RESET, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_DISABLED__RESET, //transitionName
-            TransitionInterface::STATUS_RESET, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_RESET, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_DISABLED__RESET, // transitionName
+            TransitionInterface::STATUS_RESET, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_UPGRADE, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_DISABLED__UPGRADED, //transitionName
-            TransitionInterface::STATUS_UPGRADED, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_UPGRADE, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_DISABLED__UPGRADED, // transitionName
+            TransitionInterface::STATUS_UPGRADED, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_CONFIGURE, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_DISABLED__CONFIGURED, //transitionName
-            TransitionInterface::STATUS_CONFIGURED, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_CONFIGURE, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_DISABLED__CONFIGURED, // transitionName
+            TransitionInterface::STATUS_CONFIGURED, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_UNINSTALL, //transition command
-            self::TRANSITION_NAME_ENABLED_MOBILE_DISABLED__UNINSTALLED, //transitionName
-            TransitionInterface::STATUS_UNINSTALLED, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => true, 'active_on_mobile' => false], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_UNINSTALL, // transition command
+            self::TRANSITION_NAME_ENABLED_MOBILE_DISABLED__UNINSTALLED, // transitionName
+            TransitionInterface::STATUS_UNINSTALLED, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_ENABLE, //transition command
-            self::TRANSITION_NAME_DISABLED_MOBILE_ENABLED__ENABLED_MOBILE_ENABLED, //transitionName
-            TransitionInterface::STATUS_ENABLED__MOBILE_ENABLED, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_ENABLE, // transition command
+            self::TRANSITION_NAME_DISABLED_MOBILE_ENABLED__ENABLED_MOBILE_ENABLED, // transitionName
+            TransitionInterface::STATUS_ENABLED__MOBILE_ENABLED, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_ENABLE, //transition command
-            self::TRANSITION_NAME_DISABLED_MOBILE_ENABLED__ENABLED_MOBILE_ENABLED, //transitionName
-            TransitionInterface::STATUS_ENABLED__MOBILE_ENABLED, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_ENABLE, // transition command
+            self::TRANSITION_NAME_DISABLED_MOBILE_ENABLED__ENABLED_MOBILE_ENABLED, // transitionName
+            TransitionInterface::STATUS_ENABLED__MOBILE_ENABLED, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_RESET, //transition command
-            self::TRANSITION_NAME_DISABLED_MOBILE_ENABLED__RESET, //transitionName
-            TransitionInterface::STATUS_RESET, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_RESET, // transition command
+            self::TRANSITION_NAME_DISABLED_MOBILE_ENABLED__RESET, // transitionName
+            TransitionInterface::STATUS_RESET, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_UPGRADE, //transition command
-            self::TRANSITION_NAME_DISABLED_MOBILE_ENABLED__UPGRADED, //transitionName
-            TransitionInterface::STATUS_UPGRADED, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_UPGRADE, // transition command
+            self::TRANSITION_NAME_DISABLED_MOBILE_ENABLED__UPGRADED, // transitionName
+            TransitionInterface::STATUS_UPGRADED, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_CONFIGURE, //transition command
-            self::TRANSITION_NAME_DISABLED_MOBILE_ENABLED__CONFIGURED, //transitionName
-            TransitionInterface::STATUS_CONFIGURED, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_CONFIGURE, // transition command
+            self::TRANSITION_NAME_DISABLED_MOBILE_ENABLED__CONFIGURED, // transitionName
+            TransitionInterface::STATUS_CONFIGURED, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_UNINSTALL, //transition command
-            self::TRANSITION_NAME_DISABLED_MOBILE_ENABLED__UNINSTALLED, //transitionName
-            TransitionInterface::STATUS_UNINSTALLED, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => true, 'active' => false, 'active_on_mobile' => true], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_UNINSTALL, // transition command
+            self::TRANSITION_NAME_DISABLED_MOBILE_ENABLED__UNINSTALLED, // transitionName
+            TransitionInterface::STATUS_UNINSTALLED, // target status
         ];
 
         yield [
-            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => false, 'active' => false, 'active_on_mobile' => false], //module attributes
-            ModuleTransitionCommand::MODULE_COMMAND_INSTALL, //transition command
-            self::TRANSITION_NAME_UNINSTALLED__ENABLED_MOBILE_ENABLED, //transitionName
-            TransitionInterface::STATUS_ENABLED__MOBILE_ENABLED, //target status
+            ['name' => 'x_module', 'version' => '1.0.0', 'installed' => false, 'active' => false, 'active_on_mobile' => false], // module attributes
+            ModuleTransitionCommand::MODULE_COMMAND_INSTALL, // transition command
+            self::TRANSITION_NAME_UNINSTALLED__ENABLED_MOBILE_ENABLED, // transitionName
+            TransitionInterface::STATUS_ENABLED__MOBILE_ENABLED, // target status
         ];
     }
 }

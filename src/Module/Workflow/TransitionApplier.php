@@ -21,14 +21,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
-use Exception;
-use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\Workflow\Exception\UnknownTransitionException;
 use Symfony\Component\String\UnicodeString;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TransitionApplier
 {
@@ -37,21 +34,14 @@ class TransitionApplier
      */
     private $transitionsManager;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     public function __construct(
         TransitionsManager $transitionsManager,
-        TranslatorInterface $translator
     ) {
         $this->transitionsManager = $transitionsManager;
-        $this->translator = $translator;
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function apply(TransitionModule $module, string $transitionName, array $context = [])
     {
@@ -71,7 +61,7 @@ class TransitionApplier
             if (!$this->transitionsManager->{$method}($module, $context)) {
                 throw new TransitionFailedException($transitionName, $executionContext);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw ModuleErrorHelper::reportAndConvertError($e, $executionContext);
         }
     }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Service;
 
-use Exception;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -36,7 +35,7 @@ class MboSymfonyCacheClearer implements CacheClearerInterface
     private $shutdownRegistered = false;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function clear()
     {
@@ -51,7 +50,7 @@ class MboSymfonyCacheClearer implements CacheClearerInterface
         }
 
         $this->shutdownRegistered = true;
-        register_shutdown_function(function () use($kernel) {
+        register_shutdown_function(function () use ($kernel) {
             try {
                 foreach (['prod', 'dev'] as $environment) {
                     $cacheDir = _PS_ROOT_DIR_ . '/var/cache/' . $environment . '/';
@@ -75,7 +74,7 @@ class MboSymfonyCacheClearer implements CacheClearerInterface
 
                 $output = new NullOutput();
                 $application->doRun($input, $output);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // Do nothing but at least does not break the loop nor function
                 ErrorHelper::reportError($e);
             } finally {

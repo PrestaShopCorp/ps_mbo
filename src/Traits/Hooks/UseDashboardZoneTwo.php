@@ -54,7 +54,7 @@ trait UseDashboardZoneTwo
      *
      * @return void
      *
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
+     * @see UseActionAdminControllerSetMedia
      */
     protected function loadMediaForDashboardColumnTwo(): void
     {

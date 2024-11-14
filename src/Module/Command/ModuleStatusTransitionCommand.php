@@ -59,7 +59,7 @@ class ModuleStatusTransitionCommand
         string $moduleName,
         int $moduleId,
         string $moduleVersion,
-        ?string $source = null
+        ?string $source = null,
     ) {
         $this->command = new ModuleTransitionCommand($command);
         $this->moduleName = $moduleName;

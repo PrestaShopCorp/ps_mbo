@@ -78,6 +78,20 @@ Please respect the [coding standards][coding-standards]
 **TIPS** : To ease your development phase, you can modify the module directly on the shop sources and then copy modifications to your fork.
 
 
+### Running PHPStan locally
+
+In case you have static analysis error returned by PHPStan it may be easier to fix it locally and to be able to check if the PHPStan rules are satisfied.
+The module needs the PrestaShop core code as a reference since it uses its classes, so you have two possibilities to run phpstan:
+- checkout this module inside your shop's `modules` folder, then phpstan can find the root folder relatively
+- specify some shop's path as the root folder so phpstan knows where to look for the core classes using the `_PS_ROOT_DIR_` env variable
+
+```shell
+# Module installed in a shop (in modules folder)
+$ ./vendor/bin/phpstan analyze -c tests/phpstan/phpstan-9.0.x.neon
+# Module in an independent folder
+$ _PS_ROOT_DIR_=/path/to/shop ./vendor/bin/phpstan analyze -c tests/phpstan/phpstan-9.0.x.neon
+```
+
 ## License
 
 This module is released under the [Academic Free License 3.0][AFL-3.0] 

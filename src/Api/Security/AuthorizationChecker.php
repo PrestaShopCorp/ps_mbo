@@ -59,7 +59,7 @@ class AuthorizationChecker
     public function __construct(
         CacheProvider $cacheProvider,
         Client $distributionClient,
-        AdminAuthenticationProvider $adminAuthenticationProvider
+        AdminAuthenticationProvider $adminAuthenticationProvider,
     ) {
         $this->cacheProvider = $cacheProvider;
         $this->distributionClient = $distributionClient;
@@ -82,8 +82,8 @@ class AuthorizationChecker
         }
 
         if (
-            null === $storedKeyVersion ||
-            $storedKeyVersion !== $keyVersion
+            null === $storedKeyVersion
+            || $storedKeyVersion !== $keyVersion
         ) {
             // Ask for a new key and store keyVersion and Key
             $this->retrieveNewKey();

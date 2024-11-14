@@ -42,7 +42,7 @@ class ServiceContainer
 
     public function __construct(
         string $moduleName,
-        string $moduleLocalPath
+        string $moduleLocalPath,
     ) {
         $this->moduleName = $moduleName;
         $this->moduleLocalPath = $moduleLocalPath;

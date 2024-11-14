@@ -51,7 +51,7 @@ class Toolbar
     public function __construct(
         PermissionCheckerInterface $permissionChecker,
         AddonsDataProvider $addonsDataProvider,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
     ) {
         $this->permissionChecker = $permissionChecker;
         $this->addonsDataProvider = $addonsDataProvider;
@@ -146,7 +146,7 @@ class Toolbar
                 [],
                 'Modules.Mbo.Modulescatalog',
                 $this->translator->getLocale()
-            ) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail()
+            ) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail(),
         ];
     }
 }

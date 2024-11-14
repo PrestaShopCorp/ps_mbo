@@ -20,9 +20,7 @@
 
 namespace PrestaShop\Module\Mbo\Module;
 
-use stdClass;
-
 interface ModuleBuilderInterface
 {
-    public function build(stdClass $module): Module;
+    public function build(\stdClass $module): Module;
 }

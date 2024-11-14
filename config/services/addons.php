@@ -22,13 +22,12 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
-use ps_mbo;
 
 return static function (ContainerConfigurator $container) {
     $services = $container->services();
 
-    //Only load event subscriber when module is enabled to avoid logging events if disabled
-    if (ps_mbo::checkModuleStatus()) {
+    // Only load event subscriber when module is enabled to avoid logging events if disabled
+    if (\ps_mbo::checkModuleStatus()) {
         $services->set(ModuleManagementEventSubscriber::class)
             ->autowire()
             ->public()

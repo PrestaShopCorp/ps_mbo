@@ -44,7 +44,7 @@ class HookExceptionHolder
         ];
     }
 
-    public function holdException(string $hookName, Exception $exception): void
+    public function holdException(string $hookName, \Exception $exception): void
     {
         if (!array_key_exists($hookName, $this->listenedHooks)) {
             // Hook exceptions not listened. Throw Exception ? log ?
@@ -54,7 +54,7 @@ class HookExceptionHolder
         $this->listenedHooks[$hookName]['exception'] = $exception;
     }
 
-    public function getLastException(string $hookName): ?Exception
+    public function getLastException(string $hookName): ?\Exception
     {
         if (!array_key_exists($hookName, $this->listenedHooks)) {
             // Hook exceptions not listened. Throw Exception ? log ?

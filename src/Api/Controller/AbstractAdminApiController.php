@@ -21,8 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Api\Controller;
 
-use Exception;
-use ModuleAdminController;
 use PrestaShop\Module\Mbo\Api\Config\Config;
 use PrestaShop\Module\Mbo\Api\Exception\IncompleteSignatureParamsException;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
@@ -33,11 +31,9 @@ use PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker;
 use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
 use PrestaShop\Module\Mbo\Helpers\Config as ConfigHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
-use ps_mbo;
 use Psr\Log\LoggerInterface;
-use Tools;
 
-abstract class AbstractAdminApiController extends ModuleAdminController
+abstract class AbstractAdminApiController extends \ModuleAdminController
 {
     /**
      * Endpoint name
@@ -52,7 +48,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
     protected $adminAuthenticationProvider;
 
     /**
-     * @var ps_mbo
+     * @var \ps_mbo
      */
     public $module;
 
@@ -105,7 +101,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
         $this->dieWithResponse($response, $httpCode);
     }
 
-    protected function exitWithExceptionMessage(Exception $exception): void
+    protected function exitWithExceptionMessage(\Exception $exception): void
     {
         $code = (int) $exception->getCode() === 0 ? 500 : $exception->getCode();
 
@@ -164,7 +160,7 @@ abstract class AbstractAdminApiController extends ModuleAdminController
      */
     protected function authorize()
     {
-        $keyVersion = Tools::getValue('version');
+        $keyVersion = \Tools::getValue('version');
         $signature = isset($_SERVER['HTTP_MBO_SIGNATURE']) ? $_SERVER['HTTP_MBO_SIGNATURE'] : false;
 
         if (!$keyVersion || !$signature) {
@@ -188,17 +184,17 @@ abstract class AbstractAdminApiController extends ModuleAdminController
     protected function buildSignatureMessage(): string
     {
         // Payload elements
-        $adminToken = Tools::getValue('admin_token');
-        $actionUuid = Tools::getValue('action_uuid');
+        $adminToken = \Tools::getValue('admin_token');
+        $actionUuid = \Tools::getValue('action_uuid');
 
         if (
-            !$adminToken ||
-            !$actionUuid
+            !$adminToken
+            || !$actionUuid
         ) {
             throw new IncompleteSignatureParamsException('Expected signature elements are not given');
         }
 
-        $keyVersion = Tools::getValue('version');
+        $keyVersion = \Tools::getValue('version');
 
         return json_encode([
             'admin_token' => $adminToken,

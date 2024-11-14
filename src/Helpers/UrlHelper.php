@@ -21,13 +21,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Helpers;
 
-use Validate;
-
 class UrlHelper
 {
     public static function transformToAbsoluteUrl(string $url): string
     {
-        if (Validate::isAbsoluteUrl($url)) {
+        if (\Validate::isAbsoluteUrl($url)) {
             return $url;
         }
 

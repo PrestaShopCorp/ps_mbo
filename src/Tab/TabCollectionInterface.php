@@ -20,11 +20,10 @@
 
 namespace PrestaShop\Module\Mbo\Tab;
 
-use ArrayAccess;
 use Countable;
 use IteratorAggregate;
 
-interface TabCollectionInterface extends ArrayAccess, IteratorAggregate, Countable
+interface TabCollectionInterface extends \ArrayAccess, IteratorAggregate, Countable
 {
     /**
      * Add a tab to this collection.

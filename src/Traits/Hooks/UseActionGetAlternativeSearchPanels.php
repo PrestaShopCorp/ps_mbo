@@ -40,7 +40,7 @@ trait UseActionGetAlternativeSearchPanels
     public function hookActionGetAlternativeSearchPanels(array $params): array
     {
         try {
-            /** @var Router $router */
+            /** @var Router|null $router */
             $router = $this->get(Router::class);
             if (null === $router) {
                 throw new ExpectedServiceNotFoundException('Unable to get router service');
@@ -49,6 +49,7 @@ trait UseActionGetAlternativeSearchPanels
             $catalogUrl = $router->generate('admin_mbo_catalog_module', []);
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
+
             return [];
         }
 
@@ -74,7 +75,7 @@ trait UseActionGetAlternativeSearchPanels
                 $this->trans('Explore PrestaShop Marketplace', [], 'Modules.Mbo.Search'),
                 $catalogUrlPath,
                 $catalogUrlParams
-            )
+            ),
         ];
     }
 }

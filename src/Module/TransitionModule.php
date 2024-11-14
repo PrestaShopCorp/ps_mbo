@@ -55,7 +55,7 @@ class TransitionModule
         string $version,
         bool $installed,
         bool $activeOnMobile,
-        bool $active
+        bool $active,
     ) {
         $this->name = $name;
         $this->installed = $installed;

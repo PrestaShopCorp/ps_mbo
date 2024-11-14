@@ -41,7 +41,7 @@ class AddonsUser implements UserInterface
 
     public function __construct(
         RequestStack $requestStack,
-        AccountsDataProvider $accountsDataProvider
+        AccountsDataProvider $accountsDataProvider,
     ) {
         $this->requestStack = $requestStack;
         $this->accountsDataProvider = $accountsDataProvider;

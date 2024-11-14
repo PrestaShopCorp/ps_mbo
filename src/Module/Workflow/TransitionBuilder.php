@@ -104,11 +104,10 @@ class TransitionBuilder
     {
         $moduleStatus = $module->getStatus();
 
-        return array_filter($this->allowedTransitions, function(TransitionInterface $transition) use ($moduleStatus) {
+        return array_filter($this->allowedTransitions, function (TransitionInterface $transition) use ($moduleStatus) {
             return 0 === strcasecmp($moduleStatus, $transition->getFromStatus());
         });
     }
-
 
     /**
      * @return Transition[]
@@ -146,7 +145,7 @@ class TransitionBuilder
                 TransitionInterface::STATUS_CONFIGURED,
                 TransitionInterface::STATUS_UNINSTALLED,
                 TransitionInterface::STATUS_DISABLED__MOBILE_ENABLED,
-                TransitionInterface::STATUS_ENABLED__MOBILE_DISABLED
+                TransitionInterface::STATUS_ENABLED__MOBILE_DISABLED,
             ],
             TransitionInterface::STATUS_UNINSTALLED => [
                 TransitionInterface::STATUS_ENABLED__MOBILE_ENABLED,

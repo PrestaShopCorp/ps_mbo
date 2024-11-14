@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use Exception;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
@@ -44,18 +43,18 @@ trait UseActionListModules
      *
      * @return array<array<string, string>>
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function hookActionListModules(): array
     {
         try {
-            /** @var FiltersFactory $filtersFactory */
+            /** @var FiltersFactory|null $filtersFactory */
             $filtersFactory = $this->get(FiltersFactory::class);
-            /** @var CollectionFactory $collectionFactory */
+            /** @var CollectionFactory|null $collectionFactory */
             $collectionFactory = $this->get(CollectionFactory::class);
-            /** @var Repository $moduleRepository */
+            /** @var Repository|null $moduleRepository */
             $moduleRepository = $this->get(Repository::class);
-            /** @var Router $router */
+            /** @var Router|null $router */
             $router = $this->get(Router::class);
 
             if (
@@ -66,7 +65,7 @@ trait UseActionListModules
             ) {
                 throw new ExpectedServiceNotFoundException('Some services not found in UseActionListModules');
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             ErrorHelper::reportError($exception);
 
             return [];
@@ -88,7 +87,7 @@ trait UseActionListModules
         $catalogUrlParts = parse_url($catalogUrl);
         $catalogUrlParams = [];
 
-        if (is_array($catalogUrlParts) && isset($catalogUrlParts['query']) && is_string($catalogUrlParts['query'])) {
+        if (is_array($catalogUrlParts) && isset($catalogUrlParts['query'])) {
             parse_str($catalogUrlParts['query'], $catalogUrlParams);
         }
 
@@ -134,13 +133,13 @@ trait UseActionListModules
     private function getAdditionalDescription(string $moduleUrl, string $moduleName): string
     {
         try {
-            /** @var Environment $twigEnvironment */
+            /** @var Environment|null $twigEnvironment */
             $twigEnvironment = $this->get(Environment::class);
 
             if (null === $twigEnvironment) {
                 throw new ExpectedServiceNotFoundException('Unable to get Twig service');
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             ErrorHelper::reportError($exception);
 
             return '';

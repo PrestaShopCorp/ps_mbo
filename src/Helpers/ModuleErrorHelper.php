@@ -21,19 +21,18 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Helpers;
 
-use Exception;
 use PrestaShop\Module\Mbo\Exception\DownloadModuleException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
 class ModuleErrorHelper
 {
     /**
-     * @param Exception $error
+     * @param \Exception $error
      * @param array|null $data
      *
-     * @return Exception
+     * @return \Exception
      */
-    public static function reportAndConvertError(Exception $error, ?array $data = null): Exception
+    public static function reportAndConvertError(\Exception $error, ?array $data = null): \Exception
     {
         ErrorHelper::reportError($error, $data);
 

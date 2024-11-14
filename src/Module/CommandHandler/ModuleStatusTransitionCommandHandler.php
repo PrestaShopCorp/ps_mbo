@@ -21,15 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\CommandHandler;
 
-use Exception;
-use PrestaShop\Module\Mbo\Addons\Exception\DownloadModuleException;
 use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
 use PrestaShop\Module\Mbo\Module\ActionsManager;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
-use PrestaShop\Module\Mbo\Module\Exception\ModuleNewVersionNotFoundException;
 use PrestaShop\Module\Mbo\Module\Exception\TransitionCommandToModuleStatusException;
-use PrestaShop\Module\Mbo\Module\Exception\UnauthorizedModuleTransitionException;
-use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentException;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\ModuleBuilder;
 use PrestaShop\Module\Mbo\Module\Repository;
@@ -38,7 +33,6 @@ use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionApplier;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionBuilder;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
-use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
 final class ModuleStatusTransitionCommandHandler
 {
@@ -70,7 +64,7 @@ final class ModuleStatusTransitionCommandHandler
         ActionsManager $actionsManager,
         ModuleBuilder $moduleBuilder,
         TransitionBuilder $transitionBuilder,
-        TransitionApplier $transitionApplier
+        TransitionApplier $transitionApplier,
     ) {
         $this->moduleRepository = $moduleRepository;
         $this->actionsManager = $actionsManager;
@@ -80,7 +74,7 @@ final class ModuleStatusTransitionCommandHandler
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function handle(ModuleStatusTransitionCommand $command): Module
     {
@@ -118,9 +112,7 @@ final class ModuleStatusTransitionCommandHandler
                     ModuleTransitionCommand::MAPPING_TRANSITION_COMMAND_TARGET_STATUS
                 )
             ) {
-                throw ModuleErrorHelper::reportAndConvertError(
-                    new TransitionCommandToModuleStatusException($command)
-                );
+                throw ModuleErrorHelper::reportAndConvertError(new TransitionCommandToModuleStatusException($transitionCommand));
             }
 
             // Compute the state machine transition name

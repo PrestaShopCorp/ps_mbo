@@ -26,7 +26,7 @@ use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
@@ -36,41 +36,16 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 class ModuleRecommendedController extends PrestaShopAdminController
 {
     /**
-     * @var RequestStack
-     */
-    protected $requestStack;
-
-    /**
-     * @var TabCollectionProvider
-     */
-    private $tabCollectionProvider;
-
-    /**
-     * @var ContextBuilder
-     */
-    private $contextBuilder;
-
-    /**
-     * @param RequestStack $requestStack
-     */
-    public function __construct(
-        RequestStack $requestStack,
-        TabCollectionProvider $tabCollectionProvider,
-        ContextBuilder $contextBuilder
-    ) {
-        $this->requestStack = $requestStack;
-        $this->tabCollectionProvider = $tabCollectionProvider;
-        $this->contextBuilder = $contextBuilder;
-    }
-
-    /**
      * @return JsonResponse|RedirectResponse
      */
-    public function indexAction(): Response
-    {
+    public function indexAction(
+        Request $request,
+        TabCollectionProvider $tabCollectionProvider,
+        ContextBuilder $contextBuilder,
+    ): Response {
         $response = new JsonResponse();
         try {
-            $tabClassName = $this->requestStack->getCurrentRequest()->get('tabClassName');
+            $tabClassName = $request->get('tabClassName');
             if (null === $tabClassName) { // In case the recommended modules page is requested without giving tab context, we redirect to Modules catalog page
                 $routeParams = [];
                 $query = \Tools::getValue('bo_query');
@@ -80,10 +55,10 @@ class ModuleRecommendedController extends PrestaShopAdminController
 
                 return $this->redirectToRoute('admin_mbo_catalog_module', $routeParams);
             }
-            $tabCollection = $this->tabCollectionProvider->getTabCollection();
+            $tabCollection = $tabCollectionProvider->getTabCollection();
             $tab = $tabCollection->getTab($tabClassName);
-            $context = $this->contextBuilder->getRecommendedModulesContext($tab);
-            $context['recommendation_format'] = $this->requestStack->getCurrentRequest()->get('recommendation_format');
+            $context = $contextBuilder->getRecommendedModulesContext($tab);
+            $context['recommendation_format'] = $request->get('recommendation_format');
             $response->setData([
                 'content' => $this->renderView(
                     '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/recommended-modules.html.twig',

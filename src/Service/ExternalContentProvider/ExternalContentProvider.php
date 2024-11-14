@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Service\ExternalContentProvider;
 
-use Closure;
 use PrestaShop\CircuitBreaker\FactorySettings;
 use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
@@ -99,9 +98,9 @@ class ExternalContentProvider implements ExternalContentProviderInterface
     /**
      * Called by CircuitBreaker if the service is unavailable
      *
-     * @return Closure
+     * @return \Closure
      */
-    protected function circuitBreakerFallback(): Closure
+    protected function circuitBreakerFallback(): \Closure
     {
         return function () {
             throw new ServiceUnavailableHttpException(self::THRESHOLD_SECONDS);

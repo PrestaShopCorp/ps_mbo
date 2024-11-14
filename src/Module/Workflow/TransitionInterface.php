@@ -29,9 +29,9 @@ interface TransitionInterface
     public const STATUS_ENABLED__MOBILE_DISABLED = 'enabled__mobile_disabled';
     public const STATUS_DISABLED__MOBILE_ENABLED = 'disabled__mobile_enabled';
     public const STATUS_DISABLED__MOBILE_DISABLED = 'disabled__mobile_disabled';
-    public const STATUS_RESET = 'reset'; //virtual status
-    public const STATUS_UPGRADED = 'upgraded'; //virtual status
-    public const STATUS_CONFIGURED = 'configured'; //virtual status
+    public const STATUS_RESET = 'reset'; // virtual status
+    public const STATUS_UPGRADED = 'upgraded'; // virtual status
+    public const STATUS_CONFIGURED = 'configured'; // virtual status
 
     public const STATUSES = [
         self::STATUS_UNINSTALLED,

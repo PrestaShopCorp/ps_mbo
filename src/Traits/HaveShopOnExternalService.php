@@ -27,8 +27,9 @@ use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\ConfigChangeCommandHandler;
-use PrestaShop\Module\Mbo\Helpers\Uuid;
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Helpers\Uuid;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use Shop;
 
@@ -38,7 +39,7 @@ trait HaveShopOnExternalService
      * Register a shop for online services delivered by API.
      * So the module can correctly process actions (download, install, update..) on. modules
      *
-     * @throws Exception
+     * @throws \Exception
      * @throws GuzzleException
      */
     private function registerShop(): void
@@ -55,7 +56,7 @@ trait HaveShopOnExternalService
      *
      * @param array $params the params to send to the update method in Client
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function updateShop(array $params = []): void
     {
@@ -77,7 +78,7 @@ trait HaveShopOnExternalService
             $distributionApi = $this->get(Client::class);
             $distributionApi->setBearer($this->getAdminAuthenticationProvider()->getMboJWT());
             $distributionApi->unregisterShop();
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             // Do nothing here, the exception is caught to avoid displaying an error to the client
             // Furthermore, the operation can't be tried again later as the module is now disabled or uninstalled
             ErrorHelper::reportError($exception);
@@ -85,7 +86,7 @@ trait HaveShopOnExternalService
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function callServiceWithLockFile(string $method, array $params = []): void
     {
@@ -97,7 +98,7 @@ trait HaveShopOnExternalService
             // If the module is installed via command line or somehow the ADMIN_DIR is not defined,
             // we ignore the shop registration, so it will be done at any action on the backoffice
             if (php_sapi_name() === 'cli' || !defined('_PS_ADMIN_DIR_')) {
-                throw new Exception();
+                throw new \Exception();
             }
             /** @var Client $distributionApi */
             $distributionApi = $this->get(Client::class);
@@ -119,7 +120,7 @@ trait HaveShopOnExternalService
             if (file_exists($lockFile)) {
                 unlink($lockFile);
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             // Create the lock file
             if (!file_exists($lockFile)) {
                 if (!is_dir($this->moduleCacheDir)) {
@@ -150,16 +151,16 @@ trait HaveShopOnExternalService
         $this->configurationList['PS_MBO_SHOP_ADMIN_MAIL'] = sprintf('mbo-%s@prestashop.com', $adminUuid);
         $this->configurationList['PS_MBO_LAST_PS_VERSION_API_CONFIG'] = _PS_VERSION_;
 
-        foreach (Shop::getShops(false, null, true) as $shopId) {
+        foreach (\Shop::getShops(false, null, true) as $shopId) {
             foreach ($this->configurationList as $name => $value) {
-                if (false === Configuration::hasKey($name, null, null, (int) $shopId)) {
-                    $result = $result && Configuration::updateValue(
-                            $name,
-                            $value,
-                            false,
-                            null,
-                            (int) $shopId
-                        );
+                if (false === \Configuration::hasKey($name, null, null, (int) $shopId)) {
+                    $result = $result && \Configuration::updateValue(
+                        $name,
+                        $value,
+                        false,
+                        null,
+                        (int) $shopId
+                    );
                 }
             }
         }
@@ -171,7 +172,7 @@ trait HaveShopOnExternalService
      * @throws GuzzleException
      * @throws EmployeeException
      * @throws \Doctrine\DBAL\Exception
-     * @throws Exception
+     * @throws \Exception
      */
     private function syncApiConfig()
     {
@@ -194,6 +195,11 @@ trait HaveShopOnExternalService
         $config = json_decode(json_encode($config), true);
 
         $command = new ConfigChangeCommand($config, _PS_VERSION_, $this->version);
-        $this->get(ConfigChangeCommandHandler::class)->handle($command);
+        /** @var ConfigChangeCommandHandler|null $commandHandler */
+        $commandHandler = $this->get(ConfigChangeCommandHandler::class);
+        if (null === $commandHandler) {
+            throw new ExpectedServiceNotFoundException('Unable to get ConfigChangeCommandHandler');
+        }
+        $commandHandler->handle($command);
     }
 }

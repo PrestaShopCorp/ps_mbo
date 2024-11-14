@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Handler\ErrorHandler;
 
-use Exception;
 use Sentry\Client;
 use Sentry\State\Scope;
 use Sentry\UserDataBag;
@@ -68,7 +67,7 @@ class ErrorHandler implements ErrorHandlerInterface
                     'addons_api_url' => getenv('ADDONS_API_URL'),
                 ]);
             });
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             // Do nothing here, Sentry seems not working well
         }
     }
@@ -76,7 +75,7 @@ class ErrorHandler implements ErrorHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handle(Exception $error, ?array $data = []): void
+    public function handle(\Throwable $error, ?array $data = []): void
     {
         if (empty($this->dsn)) {
             return;
@@ -90,7 +89,7 @@ class ErrorHandler implements ErrorHandlerInterface
             }
 
             \Sentry\captureException($error);
-        } catch (Exception $e) {
+        } catch (\Throwable $e) {
             // Do nothing here, Sentry seems not working well
         }
     }

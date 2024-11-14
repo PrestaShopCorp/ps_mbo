@@ -34,16 +34,15 @@ trait UseDisplayModuleConfigureExtraButtons
     public function hookDisplayModuleConfigureExtraButtons(): string
     {
         try {
-            /** @var Router $router */
+            /** @var Router|null $router */
             $router = $this->get(Router::class);
 
             if (null === $router) {
-                throw new ExpectedServiceNotFoundException(
-                    'Some services not found in UseDisplayModuleConfigureExtraButtons'
-                );
+                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayModuleConfigureExtraButtons');
             }
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
+
             return '';
         }
         $this->smarty->assign([

@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use Exception;
 use PrestaShop\Module\Mbo\Addons\ApiClient;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
@@ -30,7 +29,6 @@ use PrestaShop\Module\Mbo\Service\HookExceptionHolder;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
-use Tools;
 
 trait UseActionBeforeInstallModule
 {
@@ -43,13 +41,14 @@ trait UseActionBeforeInstallModule
     public function hookActionBeforeInstallModule(array $params): void
     {
         try {
-            /** @var ModuleDataProvider $moduleDataProvider */
+            /** @var ModuleDataProvider|null $moduleDataProvider */
             $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
             if (null === $moduleDataProvider) {
                 throw new ExpectedServiceNotFoundException('Unable to get ModuleDataProvider');
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e);
+
             return;
         }
 
@@ -60,17 +59,18 @@ trait UseActionBeforeInstallModule
         $moduleName = (string) $params['moduleName'];
 
         try {
-            /** @var ApiClient $addonsClient */
+            /** @var ApiClient|null $addonsClient */
             $addonsClient = $this->get(ApiClient::class);
             if (null === $addonsClient) {
                 throw new ExpectedServiceNotFoundException('Unable to get Addons ApiClient');
             }
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
+
             return;
         }
 
-        $moduleId = (int) Tools::getValue('module_id');
+        $moduleId = (int) \Tools::getValue('module_id');
 
         if (!$moduleId) {
             $addon = $addonsClient->getModuleByName($moduleName);
@@ -83,19 +83,20 @@ trait UseActionBeforeInstallModule
         }
 
         try {
-            /** @var ActionsManager $actionsManager */
+            /** @var ActionsManager|null $actionsManager */
             $actionsManager = $this->get(ActionsManager::class);
             if (null === $actionsManager) {
                 throw new ExpectedServiceNotFoundException('Unable to get ActionsManager');
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e);
+
             return;
         }
 
         try {
             $actionsManager->install($moduleId);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             /** @var HookExceptionHolder $hookExceptionHolder */
             $hookExceptionHolder = $this->get(HookExceptionHolder::class);
             if (null !== $hookExceptionHolder) {

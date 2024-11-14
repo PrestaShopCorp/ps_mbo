@@ -21,47 +21,22 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use Exception;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\ModuleUpgradeNotNeededException;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class AddonsController extends PrestaShopAdminController
 {
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
-
-    /**
-     * @var ModuleManager
-     */
-    private $moduleManager;
-
-    /**
-     * @var ModuleRepository
-     */
-    private $moduleRepository;
-
-    public function __construct(
-        RequestStack $requestStack,
+    public function upgradeModuleAction(
+        Request $request,
         ModuleManager $moduleManager,
-        ModuleRepository $moduleRepository
-    ) {
-        parent::__construct();
-        $this->requestStack = $requestStack;
-        $this->moduleManager = $moduleManager;
-        $this->moduleRepository = $moduleRepository;
-    }
-
-    public function upgradeModuleAction(): JsonResponse
-    {
-        $request = $this->requestStack->getCurrentRequest();
+        ModuleRepository $moduleRepository,
+    ): JsonResponse {
         $moduleName = $request->request->get('moduleName');
 
         if (null === $moduleName) {
@@ -70,7 +45,7 @@ class AddonsController extends PrestaShopAdminController
 
         try {
             $upgradeResponse = [
-                'status' => $this->moduleManager->upgrade($moduleName),
+                'status' => $moduleManager->upgrade($moduleName),
                 'msg' => '',
                 'module_name' => $moduleName,
             ];
@@ -78,49 +53,49 @@ class AddonsController extends PrestaShopAdminController
             if ($upgradeResponse['status'] === true) {
                 $upgradeResponse['msg'] = $this->trans(
                     'Module %module% successfully upgraded.',
+                    ['%module%' => $moduleName],
                     'Modules.Mbo.Modulescatalog',
-                    ['%module%' => $moduleName]
                 );
-                $upgradeResponse['is_configurable'] = (bool) $this->moduleRepository
+                $upgradeResponse['is_configurable'] = (bool) $moduleRepository
                     ->getModule($moduleName)
                     ->attributes
                     ->get('is_configurable');
             } else {
-                $error = $this->moduleManager->getError($moduleName);
+                $error = $moduleManager->getError($moduleName);
                 $upgradeResponse['msg'] = $this->trans(
                     'Upgrade of module %module% failed. %error%',
-                    'Modules.Mbo.Modulescatalog',
                     [
                         '%module%' => $moduleName,
                         '%error%' => $error,
-                    ]
+                    ],
+                    'Modules.Mbo.Modulescatalog',
                 );
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e);
             if ($e->getPrevious() instanceof ModuleUpgradeNotNeededException) {
                 $upgradeResponse['status'] = true;
                 $upgradeResponse['msg'] = $this->trans(
                     'Module %module% is already up to date',
-                    'Modules.Mbo.Modulescatalog',
                     [
                         '%module%' => $moduleName,
-                    ]
+                    ],
+                    'Modules.Mbo.Modulescatalog',
                 );
             } else {
                 try {
-                    $this->moduleManager->disable($moduleName);
-                } catch (Exception $subE) {
+                    $moduleManager->disable($moduleName);
+                } catch (\Exception $subE) {
                     ErrorHelper::reportError($subE);
                 }
 
                 $upgradeResponse['msg'] = $this->trans(
                     'Upgrade of module %module% failed. %error%',
-                    'Modules.Mbo.Modulescatalog',
                     [
                         '%module%' => $moduleName,
                         '%error%' => $e->getMessage(),
-                    ]
+                    ],
+                    'Modules.Mbo.Modulescatalog',
                 );
             }
         }

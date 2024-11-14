@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use Db;
-use Exception;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Service\ModuleInstaller;
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
-use PrestaShopDatabaseException;
+use PrestaShop\PsAccountsInstaller\Installer\Installer;
 
 trait UseDashboardZoneOne
 {
@@ -49,7 +49,7 @@ trait UseDashboardZoneOne
     /**
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function bootUseDashboardZoneOne(): void
     {
@@ -61,7 +61,7 @@ trait UseDashboardZoneOne
     /**
      * Add JS and CSS file
      *
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
+     * @see UseActionAdminControllerSetMedia
      *
      * @return void
      */
@@ -71,15 +71,15 @@ trait UseDashboardZoneOne
     }
 
     /**
-     * @throws PrestaShopDatabaseException
+     * @throws \PrestaShopDatabaseException
      */
     public function useDashboardZoneOneExtraOperations()
     {
-        //Update module position in Dashboard
+        // Update module position in Dashboard
         $query = 'SELECT id_hook FROM ' . _DB_PREFIX_ . "hook WHERE name = 'dashboardZoneOne'";
 
         /** @var array $result */
-        $result = Db::getInstance()->ExecuteS($query);
+        $result = \Db::getInstance()->ExecuteS($query);
         $id_hook = $result['0']['id_hook'];
 
         $this->updatePosition((int) $id_hook, false);
@@ -94,20 +94,31 @@ trait UseDashboardZoneOne
         $accountsFacade = $accountsService = null;
 
         try {
+            /** @var PsAccounts|null $accountsFacade */
             $accountsFacade = $this->get(PsAccounts::class);
-            $accountsService = $accountsFacade->getPsAccountsService();
-            if ($this->ensurePsAccountIsEnabled()) $this->ensurePsEventbusEnabled();
-        } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
-            $accountsInstaller = $this->get(\PrestaShop\PsAccountsInstaller\Installer\Installer::class);
-            // Seems the module is not here, try to install it
-            $accountsInstaller->install();
-            $accountsFacade = $this->get(\PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts::class);
-            try {
+            if ($accountsFacade) {
                 $accountsService = $accountsFacade->getPsAccountsService();
-            } catch (\Exception $e) {
-                // Installation seems to not work properly
-                $accountsService = $accountsFacade = null;
-                ErrorHelper::reportError($e);
+                if ($this->ensurePsAccountIsEnabled()) {
+                    $this->ensurePsEventbusEnabled();
+                }
+            }
+        } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
+            /** @var Installer|null $accountsInstaller */
+            $accountsInstaller = $this->get(Installer::class);
+            if ($accountsInstaller) {
+                // Seems the module is not here, try to install it
+                $accountsInstaller->install();
+                /** @var PsAccounts|null $accountsFacade */
+                $accountsFacade = $this->get(PsAccounts::class);
+                if ($accountsFacade) {
+                    try {
+                        $accountsService = $accountsFacade->getPsAccountsService();
+                    } catch (\Exception $e) {
+                        // Installation seems to not work properly
+                        $accountsService = $accountsFacade = null;
+                        ErrorHelper::reportError($e);
+                    }
+                }
             }
         }
 
@@ -130,29 +141,33 @@ trait UseDashboardZoneOne
 
     /**
      * Return true if ps_account is enabled
-     * 
+     *
      * @return bool
      */
     private function ensurePsAccountIsEnabled(): bool
     {
-        if (version_compare(_PS_VERSION_, "9.0.0", ">=")) return false;
-
-        $accountsInstaller = $this->get(\PrestaShop\PsAccountsInstaller\Installer\Installer::class);
-        if (!$accountsInstaller) return false;
+        /** @var Installer|null $accountsInstaller */
+        $accountsInstaller = $this->get(Installer::class);
+        if (!$accountsInstaller) {
+            return false;
+        }
 
         $accountsEnabled = $accountsInstaller->isModuleEnabled();
-        if ($accountsEnabled) return true;
+        if ($accountsEnabled) {
+            return true;
+        }
 
+        /** @var ModuleManager|null $moduleManager */
         $moduleManager = $this->get('prestashop.module.manager');
-        return $moduleManager->enable($accountsInstaller->getModuleName());
+
+        return $moduleManager && $moduleManager->enable($accountsInstaller->getModuleName());
     }
 
-    private function ensurePsEventbusEnabled()
+    private function ensurePsEventbusEnabled(): void
     {
-        if (version_compare(_PS_VERSION_, "9.0.0", ">=")) return false;
-
+        /** @var ModuleInstaller|null $installer */
         $installer = $this->get('mbo.ps_eventbus.installer');
-        if ($installer->install()) {
+        if ($installer && $installer->install()) {
             $installer->enable();
         }
     }

@@ -23,14 +23,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use Exception;
 use Hook;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Tab\TabInterface;
 use PrestaShopBundle\Service\Routing\Router;
-use PrestaShopDatabaseException;
-use PrestaShopException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use ToolsCore as Tools;
 use Twig\Environment;
@@ -71,7 +68,7 @@ trait UseDisplayDashboardTop
     /**
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function bootUseDisplayDashboardTop(): void
     {
@@ -86,7 +83,7 @@ trait UseDisplayDashboardTop
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function hookDisplayDashboardTop(): string
     {
@@ -101,14 +98,14 @@ trait UseDisplayDashboardTop
         $createApiUserLockFile = $moduleCacheDir . 'createApiUser.lock';
 
         if (
-            isset($values['controller']) &&
-            ($values['controller'] === 'AdminPsMboModule') &&
-            file_exists($createApiUserLockFile)
+            isset($values['controller'])
+            && ($values['controller'] === 'AdminPsMboModule')
+            && file_exists($createApiUserLockFile)
         ) {
             return $this->displayFailedApiUser();
         }
 
-        //Check if we are on configuration page & if the module needs to have a push on this page
+        // Check if we are on configuration page & if the module needs to have a push on this page
         $shouldDisplayMessageInConfigPage = isset($values['controller'])
             && ($values['controller'] === self::$ADMIN_MODULES_CONTROLLER)
             && isset($values['configure'])
@@ -120,16 +117,16 @@ trait UseDisplayDashboardTop
     }
 
     /**
-     * @throws PrestaShopDatabaseException
-     * @throws PrestaShopException
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
      */
     public function useDisplayDashboardTopExtraOperations(): void
     {
         $hookName = 'actionMboRecommendedModules';
 
-        $id_hook = Hook::getIdByName($hookName, false);
+        $id_hook = \Hook::getIdByName($hookName, false);
         if (!$id_hook) {
-            $new_hook = new Hook();
+            $new_hook = new \Hook();
             $new_hook->name = pSQL($hookName);
             $new_hook->title = '';
             $new_hook->position = true;
@@ -199,16 +196,14 @@ trait UseDisplayDashboardTop
     private function displayFailedApiUser(): string
     {
         try {
-            /** @var Environment $twig */
+            /** @var Environment|null $twig */
             $twig = $this->get(Environment::class);
 
-            /** @var Router $router*/
+            /** @var Router|null $router */
             $router = $this->get('prestashop.router');
 
             if (null === $twig || null === $router) {
-                throw new ExpectedServiceNotFoundException(
-                    'Some services not found in UseDisplayDashboardTop'
-                );
+                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayDashboardTop');
             }
 
             return $twig->render(
@@ -216,7 +211,7 @@ trait UseDisplayDashboardTop
                     'module_manager_link' => $router->generate('admin_module_manage'),
                 ]
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e);
 
             return '';
@@ -226,23 +221,23 @@ trait UseDisplayDashboardTop
     /**
      * Compute & include data with recommended modules when needed
      *
-     * @throws Exception
+     * @throws \Exception
      */
     protected function displayRecommendedModules(string $controller): string
     {
         $recommendedModulesDisplayed = true;
 
         // Ask to modules if recommended modules should be displayed in this context
-        Hook::exec('actionMboRecommendedModules', [
+        \Hook::exec('actionMboRecommendedModules', [
             'recommendedModulesDisplayed' => &$recommendedModulesDisplayed,
             'controller' => $controller,
         ]);
-
 
         $afterContentType = TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE;
         $recommendedButtonType = TabInterface::RECOMMENDED_BUTTON_TYPE;
 
         // We want to "hide" recommended modules from this controller
+        // @phpstan-ignore-next-line
         if (!$recommendedModulesDisplayed) {
             // If we are trying to display as button, hide the button
             if (
@@ -258,7 +253,6 @@ trait UseDisplayDashboardTop
                     $this->controllersWithRecommendedModules[$afterContentType]
                 )
             ) {
-
                 // We are trying to display after content, so move them to button adn remove from after content
                 foreach ($this->controllersWithRecommendedModules[$afterContentType] as $k => $afterContentController) {
                     if ($afterContentController === $controller) {
@@ -278,12 +272,10 @@ trait UseDisplayDashboardTop
         }
 
         try {
-            /** @var UrlGeneratorInterface $router */
+            /** @var UrlGeneratorInterface|null $router */
             $router = $this->get('prestashop.router');
             if (null === $router) {
-                throw new ExpectedServiceNotFoundException(
-                    'Some services not found in UseDisplayDashboardTop'
-                );
+                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayDashboardTop');
             }
 
             $recommendedModulesUrl = $router->generate(
@@ -293,9 +285,10 @@ trait UseDisplayDashboardTop
                     'recommendation_format' => $shouldAttachRecommendedModulesButton ? 'modal' : 'card',
                 ]
             );
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             // Avoid fatal errors on ServiceNotFoundException
             ErrorHelper::reportError($exception);
+
             return '';
         }
 
@@ -336,7 +329,7 @@ trait UseDisplayDashboardTop
      *
      * @return void
      *
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
+     * @see UseActionAdminControllerSetMedia
      */
     protected function loadMediaForDashboardTop(): void
     {

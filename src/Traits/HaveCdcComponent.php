@@ -32,9 +32,8 @@ trait HaveCdcComponent
     public function loadCdcMediaFilesForControllers(
         array $controllers = [],
         array $additionalJs = [],
-        array $additionalCss = []
-    ): void
-    {
+        array $additionalCss = [],
+    ): void {
         if (in_array(Tools::getValue('controller'), $controllers)) {
             $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error-templating.js');
             $this->context->controller->addCss($this->getPathUri() . 'views/css/cdc-error-templating.css');
@@ -63,15 +62,13 @@ trait HaveCdcComponent
     public function smartyDisplayTpl(string $tpl, array $additionalParams = [])
     {
         try {
-            /** @var ContextBuilder $contextBuilder */
+            /** @var ContextBuilder|null $contextBuilder */
             $contextBuilder = $this->get('mbo.cdc.context_builder');
-            /** @var Router $router */
+            /** @var Router|null $router */
             $router = $this->get('router');
 
             if (null === $router || null === $contextBuilder) {
-                throw new ExpectedServiceNotFoundException(
-                    'Some services not found in HaveCdcComponent'
-                );
+                throw new ExpectedServiceNotFoundException('Some services not found in HaveCdcComponent');
             }
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);

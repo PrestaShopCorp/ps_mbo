@@ -22,8 +22,6 @@ namespace PrestaShop\Module\Mbo\Distribution\Config\Appliers;
 
 use PrestaShop\Module\Mbo\Distribution\Config\Config;
 use PrestaShop\Module\Mbo\Distribution\Config\Exception\InvalidConfigException;
-use Tab;
-use Validate;
 
 class ThemeCatalogMenuConfigApplier implements ConfigApplierInterface
 {
@@ -54,12 +52,12 @@ class ThemeCatalogMenuConfigApplier implements ConfigApplierInterface
 
     private function getThemeCatalogMenu()
     {
-        $tab = Tab::getInstanceFromClassName('AdminPsMboTheme');
+        $tab = \Tab::getInstanceFromClassName('AdminPsMboTheme');
 
-        return Validate::isLoadedObject($tab) ? $tab : null;
+        return \Validate::isLoadedObject($tab) ? $tab : null;
     }
 
-    private function applyUp(Tab $themeCatalogMenu): bool
+    private function applyUp(\Tab $themeCatalogMenu): bool
     {
         $themeCatalogMenu->enabled = true;
         $themeCatalogMenu->active = true;
@@ -67,7 +65,7 @@ class ThemeCatalogMenuConfigApplier implements ConfigApplierInterface
         return $themeCatalogMenu->save();
     }
 
-    private function applyDown(Tab $themeCatalogMenu): bool
+    private function applyDown(\Tab $themeCatalogMenu): bool
     {
         $themeCatalogMenu->enabled = false;
         $themeCatalogMenu->active = false;

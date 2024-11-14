@@ -2,44 +2,49 @@ name: PHP tests
 on: [pull_request]
 jobs:
   php-linter:
-    name: PHP Syntax check 7.2 => 8.2
+    name: PHP Syntax check 8.1 => 8.3
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: PHP syntax checker 7.2
-        uses: prestashop/github-action-php-lint/7.2@master
-      - name: PHP syntax checker 7.3
-        uses: prestashop/github-action-php-lint/7.3@master
-      - name: PHP syntax checker 7.4
-        uses: prestashop/github-action-php-lint/7.4@master
-      - name: PHP syntax checker 8.0
-        uses: prestashop/github-action-php-lint/8.0@master
       - name: PHP syntax checker 8.1
         uses: prestashop/github-action-php-lint/8.1@master
       - name: PHP syntax checker 8.2
         uses: prestashop/github-action-php-lint/8.2@master
+      - name: PHP syntax checker 8.3
+        uses: prestashop/github-action-php-lint/8.3@master
   php-cs-fixer:
     name: PHP-CS-Fixer
     runs-on: ubuntu-latest
     steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Run PHP-CS-Fixer
-        uses: prestashopcorp/github-action-php-cs-fixer@master
-        with:
-          other-cmds: '--config=.php-cs-fixer.dist.php'
+
+      - name: Validate composer config
+        run: composer validate --strict
+
+      - name: Composer Install
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
+
+      - name: Run PHPCSFixer
+        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
   phpstan:
     name: PHPStan
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        presta-versions: ['8.0.2', '8.1.5']
+        presta-versions: ['9.0.x']
     steps:
       - name: Pull PrestaShop files (Tag ${{ matrix.presta-versions }})
-        run: docker run -tid --rm -v ps-volume:/var/www/html --name temp-ps prestashop/prestashop:${{ matrix.presta-versions }}
-      - name: Wait for container to be loaded
-        run: sleep 10
+        env:
+          DISABLE_MAKE: 1
+        run: docker run -tid --rm -v ps-volume:/var/www/html -v $PWD:/web/module --name temp-ps prestashop/prestashop:${{ matrix.presta-versions }}
+
       - name: Checkout
         uses: actions/checkout@v4
       - name: Cache vendor folder
@@ -53,18 +58,28 @@ jobs:
           path: ~/.composer/cache
           key: php-composer-cache
       - run: composer install
+
+      - name: Wait for container to be loaded
+        run: |
+          until docker exec temp-ps ls /var/www/html/vendor/autoload.php 2> /dev/null; do
+            echo Waiting for docker initialization...
+            sleep 5
+          done
       - name : Run PHPStan
-        run: docker run --rm --volumes-from temp-ps -v $PWD:/web/module -e _PS_ROOT_DIR_=/var/www/html --workdir=/web/module phpstan/phpstan:0.11.19 analyse --configuration=/web/module/tests/phpstan/phpstan-${{ matrix.presta-versions }}.neon
+        run: |
+          docker exec -e _PS_ROOT_DIR_=/var/www/html --workdir=/web/module temp-ps php /var/www/html/vendor/bin/phpstan analyse -c /web/module/tests/phpstan/phpstan-${{ matrix.presta-versions }}.neon --error-format=github
 
   phpunit:
-    name: PHPUnit
+    name: PHPUnit ${{ matrix.presta-versions }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        presta-versions: ['9.0.x']
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
-          coverage: xdebug
+          php-version: 8.1
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -84,4 +99,5 @@ jobs:
           key: php-composer-cache
 
       - run: composer install
-      - run: make phpunit
+      - run: |
+          ./tests/phpunit.sh ${{ matrix.presta-versions }}

@@ -23,24 +23,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Service\View;
 
-use Configuration;
-use Context;
-use Country;
 use Doctrine\Common\Cache\CacheProvider;
-use Language;
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\UrlHelper;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
-use PrestaShop\Module\Mbo\Tab\Tab;
+use PrestaShop\Module\Mbo\Tab\TabInterface;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Module\Module as CoreModule;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
-use Tools;
 
 class ContextBuilder
 {
@@ -82,7 +77,7 @@ class ContextBuilder
         Router $router,
         CacheProvider $cacheProvider,
         AdminAuthenticationProvider $adminAuthenticationProvider,
-        AccountsDataProvider $accountsDataProvider
+        AccountsDataProvider $accountsDataProvider,
     ) {
         $this->contextAdapter = $contextAdapter;
         $this->moduleRepository = $moduleRepository;
@@ -96,12 +91,12 @@ class ContextBuilder
     {
         $context = $this->getCommonContextContent();
 
-        $context['prestaShop_controller_class_name'] = Tools::getValue('controller');
+        $context['prestaShop_controller_class_name'] = \Tools::getValue('controller');
 
         return $context;
     }
 
-    public function getRecommendedModulesContext(Tab $tab): array
+    public function getRecommendedModulesContext(TabInterface $tab): array
     {
         $context = $this->getCommonContextContent();
 
@@ -167,13 +162,13 @@ class ContextBuilder
         $country = $this->getCountry();
         $shopActivity = Config::getShopActivity();
 
-        $token = Tools::getValue('_token');
+        $token = \Tools::getValue('_token');
 
         if (false === $token) {
-            $token = Tools::getValue('token');
+            $token = \Tools::getValue('token');
         }
 
-        $refreshUrl = Context::getContext()->link->getAdminLink('ApiSecurityPsMbo');
+        $refreshUrl = \Context::getContext()->link->getAdminLink('ApiSecurityPsMbo');
 
         return [
             'currency' => $this->getCurrencyCode(),
@@ -209,19 +204,19 @@ class ContextBuilder
         ];
     }
 
-    private function getContext(): Context
+    private function getContext(): \Context
     {
         return $this->contextAdapter->getContext();
     }
 
-    private function getLanguage(): Language
+    private function getLanguage(): \Language
     {
-        return $this->getContext()->language ?? new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+        return $this->getContext()->language ?? new \Language((int) \Configuration::get('PS_LANG_DEFAULT'));
     }
 
-    private function getCountry(): Country
+    private function getCountry(): \Country
     {
-        return $this->getContext()->country ?? new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
+        return $this->getContext()->country ?? new \Country((int) \Configuration::get('PS_COUNTRY_DEFAULT'));
     }
 
     private function getCurrencyCode(): string
@@ -306,7 +301,7 @@ class ContextBuilder
                     $this->router->generate(
                         'admin_module_configure_action',
                         [
-                        'module_name' => $moduleName,
+                            'module_name' => $moduleName,
                         ],
                         UrlGeneratorInterface::ABSOLUTE_URL
                     )

@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
-use Exception;
-use LogicException;
 use PrestaShop\Module\Mbo\Addons\Toolbar;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\ModuleInstaller;
@@ -43,7 +41,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ModuleCatalogController extends PrestaShopAdminController
 {
     public const CONTROLLER_NAME = 'ADMINMODULESSF';
-    
+
     /**
      * @var Toolbar
      */
@@ -80,7 +78,7 @@ class ModuleCatalogController extends PrestaShopAdminController
         ModuleManager $moduleManager,
         PsAccounts $psAccountsFacade,
         Installer $psAccountsInstaller,
-        ModuleInstaller $psEventbusInstaller
+        ModuleInstaller $psEventbusInstaller,
     ) {
         $this->addonsToolbar = $addonsToolbar;
         $this->contextBuilder = $contextBuilder;
@@ -111,7 +109,7 @@ class ModuleCatalogController extends PrestaShopAdminController
         ];
 
         $cdcJsFile = getenv('MBO_CDC_URL');
-        if (false === $cdcJsFile || !is_string($cdcJsFile) || empty($cdcJsFile)) {
+        if (!is_string($cdcJsFile) || empty($cdcJsFile)) {
             $extraParams['cdc_script_not_found'] = true;
             $extraParams['cdc_error_url'] = $moduleUri . 'views/js/cdc-error.js';
         } else {
@@ -125,13 +123,15 @@ class ModuleCatalogController extends PrestaShopAdminController
 
         try {
             $accountsService = $this->psAccountsFacade->getPsAccountsService();
-            if ($this->ensurePsAccountIsEnabled()) $this->ensurePsEventbusEnabled();
+            if ($this->ensurePsAccountIsEnabled()) {
+                $this->ensurePsEventbusEnabled();
+            }
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
             // Seems the module is not here, try to install it
             $this->psAccountsInstaller->install();
             try {
                 $accountsService = $this->psAccountsFacade->getPsAccountsService();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // Installation seems to not work properly
                 $accountsService = null;
                 ErrorHelper::reportError($e);
@@ -147,7 +147,7 @@ class ModuleCatalogController extends PrestaShopAdminController
 
                 // Retrieve the PrestaShop Account CDN
                 $urlAccountsCdn = $accountsService->getAccountsCdn();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 ErrorHelper::reportError($e);
             }
         }
@@ -178,7 +178,7 @@ class ModuleCatalogController extends PrestaShopAdminController
     /**
      * Responsible for displaying error block when CDC cannot be loaded.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cdcErrorAction(): Response
     {
@@ -189,25 +189,20 @@ class ModuleCatalogController extends PrestaShopAdminController
 
     private function ensurePsAccountIsEnabled(): bool
     {
-        if (version_compare(_PS_VERSION_, "9.0.0", ">=")) return false;
-
-        if (!$this->psAccountsInstaller) return false;
-
         $accountsEnabled = $this->psAccountsInstaller->isModuleEnabled();
-        if ($accountsEnabled) return true;
+        if ($accountsEnabled) {
+            return true;
+        }
 
         return $this->moduleManager->enable($this->psAccountsInstaller->getModuleName());
     }
 
-    private function ensurePsEventbusEnabled()
+    private function ensurePsEventbusEnabled(): void
     {
-        if (version_compare(_PS_VERSION_, "9.0.0", ">=")) return false;
-
         if ($this->psEventbusInstaller->install()) {
             $this->psEventbusInstaller->enable();
         }
     }
-
 
     /**
      * Checks if the attributes are granted against the current authentication token and optionally supplied object.
@@ -216,7 +211,7 @@ class ModuleCatalogController extends PrestaShopAdminController
      *
      * @return int
      *
-     * @throws LogicException
+     * @throws \LogicException
      */
     private function authorizationLevel($controller)
     {

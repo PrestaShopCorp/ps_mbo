@@ -40,7 +40,7 @@ class AddonsUrlSourceHandler implements SourceHandlerInterface
 
     public function __construct(
         AddonsUrlSourceRetriever $addonsUrlSourceRetriever,
-        ZipSourceHandler $zipSourceHandler
+        ZipSourceHandler $zipSourceHandler,
     ) {
         $this->zipSourceHandler = $zipSourceHandler;
         $this->addonsUrlSourceRetriever = $addonsUrlSourceRetriever;

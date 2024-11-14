@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use Exception;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
@@ -33,20 +32,18 @@ trait UseDisplayAdminThemesListAfter
      * Hook displayAdminThemesListAfter.
      * Includes content just after the themes list.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function hookDisplayAdminThemesListAfter(): string
     {
         try {
-            /** @var ContextBuilder $contextBuilder */
+            /** @var ContextBuilder|null $contextBuilder */
             $contextBuilder = $this->get(ContextBuilder::class);
-            /** @var Router $router */
+            /** @var Router|null $router */
             $router = $this->get(Router::class);
 
             if (null === $contextBuilder || null === $router) {
-                throw new ExpectedServiceNotFoundException(
-                    'Some services not found in UseDisplayAdminThemesListAfter'
-                );
+                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayAdminThemesListAfter');
             }
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
@@ -67,7 +64,7 @@ trait UseDisplayAdminThemesListAfter
     /**
      * @return void
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function bootUseDisplayAdminThemesListAfter(): void
     {
@@ -79,7 +76,7 @@ trait UseDisplayAdminThemesListAfter
     /**
      * Add JS and CSS file
      *
-     * @see \PrestaShop\Module\Mbo\Traits\Hooks\UseActionAdminControllerSetMedia
+     * @see UseActionAdminControllerSetMedia
      *
      * @return void
      */
