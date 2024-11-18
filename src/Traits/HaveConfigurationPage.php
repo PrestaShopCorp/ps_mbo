@@ -21,7 +21,8 @@
 namespace PrestaShop\Module\Mbo\Traits;
 
 use Configuration;
-use PrestaShop\Module\Mbo\Service\MboSymfonyCacheClearer;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Component\Dotenv\Dotenv;
 
 trait HaveConfigurationPage
@@ -147,9 +148,11 @@ trait HaveConfigurationPage
         $dotEnv = new Dotenv();
         $dotEnv->overload($envFilePath);
 
-        /** @var MboSymfonyCacheClearer $cacheClearer */
-        $cacheClearer = $this->get(MboSymfonyCacheClearer::class);
-        $cacheClearer->clear();
+        /** @var CacheClearerInterface|null $cacheClearer */
+        $cacheClearer = $this->get(SymfonyCacheClearer::class);
+        if ($cacheClearer) {
+            $cacheClearer->clear();
+        }
 
         $message = '<div style="padding-bottom: 15px;">Configuration updated to :
             <ul><li>MBO : ' . ucfirst($newMboValue) . '</li>

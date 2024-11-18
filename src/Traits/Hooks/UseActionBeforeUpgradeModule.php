@@ -26,6 +26,7 @@ use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\ActionsManager;
 use PrestaShop\Module\Mbo\Service\HookExceptionHolder;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
@@ -104,7 +105,7 @@ trait UseActionBeforeUpgradeModule
     {
         try {
             /** @var CacheClearerInterface|null $cacheClearer */
-            $cacheClearer = $this->get(CacheClearerInterface::class);
+            $cacheClearer = $this->get(SymfonyCacheClearer::class);
             if (null === $cacheClearer) {
                 throw new ExpectedServiceNotFoundException('Unable to get MboCacheClearer service');
             }
