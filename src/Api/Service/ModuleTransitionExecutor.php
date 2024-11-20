@@ -34,6 +34,7 @@ use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentExceptio
 use PrestaShop\Module\Mbo\Module\Exception\UnknownModuleTransitionCommandException;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -114,8 +115,8 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
         if (ModuleTransitionCommand::MODULE_COMMAND_DOWNLOAD === $transition) {
             // Clear the cache after download to force reload module services
             try {
-                /** @var CacheClearerInterface $cacheClearer */
-                $cacheClearer = $psMbo->get('mbo.symfony_cache_clearer');
+                /** @var CacheClearerInterface|false $cacheClearer */
+                $cacheClearer = $psMbo->get(SymfonyCacheClearer::class);
             } catch (\Exception $e) {
                 ErrorHelper::reportError($e);
                 $cacheClearer = false;

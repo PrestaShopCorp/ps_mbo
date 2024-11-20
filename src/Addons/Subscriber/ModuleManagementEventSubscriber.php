@@ -29,7 +29,6 @@ use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
-use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Psr\Log\LoggerInterface;
@@ -72,14 +71,6 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
      */
     private $versionChangeApplyConfigCommandHandler;
 
-    /**
-     * @var CacheClearerInterface
-     */
-    private $cacheClearer;
-
-    /** @var bool */
-    private $cleared = false;
-
     public function __construct(
         LoggerInterface $logger,
         Repository $moduleRepository,
@@ -88,7 +79,6 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         Client $distributionClient,
         AdminAuthenticationProvider $adminAuthenticationProvider,
         VersionChangeApplyConfigCommandHandler $versionChangeApplyConfigCommandHandler,
-        CacheClearerInterface $cacheClearer,
     ) {
         $this->logger = $logger;
         $this->moduleRepository = $moduleRepository;
@@ -97,7 +87,6 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         $this->distributionClient = $distributionClient;
         $this->adminAuthenticationProvider = $adminAuthenticationProvider;
         $this->versionChangeApplyConfigCommandHandler = $versionChangeApplyConfigCommandHandler;
-        $this->cacheClearer = $cacheClearer;
     }
 
     public static function getSubscribedEvents(): array
@@ -116,12 +105,10 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
                 ['onUninstall'],
             ],
             ModuleManagementEvent::ENABLE => [
-                ['clearSfCache'],
                 ['clearCatalogCache'],
                 ['onEnable'],
             ],
             ModuleManagementEvent::DISABLE => [
-                ['clearSfCache'],
                 ['clearCatalogCache'],
                 ['onDisable'],
             ],
@@ -130,7 +117,6 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
                 ['onUpgrade'],
             ],
             ModuleManagementEvent::RESET => [
-                ['clearSfCache'],
                 ['clearCatalogCache'],
                 ['onReset'],
             ],
@@ -142,14 +128,6 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         $this->moduleRepository->clearCache();
         $this->tabCollectionProvider->clearCache();
         $this->contextBuilder->clearCache();
-    }
-
-    public function clearSfCache(ModuleManagementEvent $event): void
-    {
-        if (!$this->cleared) {
-            $this->cacheClearer->clear();
-            $this->cleared = true;
-        }
     }
 
     public function onInstall(ModuleManagementEvent $event): void
