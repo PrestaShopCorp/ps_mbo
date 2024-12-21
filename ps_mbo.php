@@ -291,7 +291,7 @@ class ps_mbo extends Module
      *
      * {@inheritdoc}
      */
-    public function get($serviceName)
+    public function get($serviceName): ?object
     {
         if (null === $this->container) {
             $this->container = SymfonyContainer::getInstance();
