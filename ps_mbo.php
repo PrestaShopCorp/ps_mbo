@@ -34,10 +34,8 @@ use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\Event\ModuleManagementEvent;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
 
 class ps_mbo extends Module
@@ -68,11 +66,6 @@ class ps_mbo extends Module
         'PS_MBO_SHOP_ADMIN_MAIL' => '',
         'PS_MBO_LAST_PS_VERSION_API_CONFIG' => '',
     ];
-
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
 
     /**
      * @var PrestaShop\Module\Mbo\DependencyInjection\ServiceContainer
@@ -286,21 +279,6 @@ class ps_mbo extends Module
     }
 
     /**
-     * Override of native function to always retrieve Symfony container instead of legacy admin
-     * container on legacy context.
-     *
-     * {@inheritdoc}
-     */
-    public function get($serviceName)
-    {
-        if (null === $this->container) {
-            $this->container = SymfonyContainer::getInstance();
-        }
-
-        return $this->container->get($serviceName);
-    }
-
-    /**
      * @param string $serviceName
      *
      * @return object|null
@@ -362,18 +340,14 @@ class ps_mbo extends Module
      */
     public function getAdminAuthenticationProvider(): AdminAuthenticationProvider
     {
-        if (null === $this->container) {
-            $this->container = SymfonyContainer::getInstance();
-        }
-
-        return null !== $this->container && $this->container->has(AdminAuthenticationProvider::class) ?
+        return $this->getContainer()->has(AdminAuthenticationProvider::class) ?
             $this->get(AdminAuthenticationProvider::class) :
             new AdminAuthenticationProvider(
                 $this->get('doctrine.dbal.default_connection'),
                 $this->context,
                 $this->get('hashing'),
                 $this->get('doctrine.cache.provider'),
-                $this->container->getParameter('database_prefix')
+                $this->getContainer()->getParameter('database_prefix')
             );
     }
 
