@@ -33,41 +33,45 @@ jobs:
 
       - name: Run PHPCSFixer
         run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+
+  # Run PHPStan against the module and a PrestaShop release
   phpstan:
     name: PHPStan
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        presta-versions: ['9.0.x']
+        presta-version: [ '9.0.x' ]
+        # The 8.4 compatibility is not available yet, this should be uncommented whe the phpstan docker is ready
+        # php-version: [ '8.1', '8.2', '8.3', '8.4' ]
+        php-version: [ '8.1', '8.2', '8.3' ]
     steps:
-      - name: Pull PrestaShop files (Tag ${{ matrix.presta-versions }})
-        env:
-          DISABLE_MAKE: 1
-        run: docker run -tid --rm -v ps-volume:/var/www/html -v $PWD:/web/module --name temp-ps prestashop/prestashop:${{ matrix.presta-versions }}
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }})
 
       - name: Checkout
         uses: actions/checkout@v4
+
+      # Add vendor folder in cache to make next builds faster
       - name: Cache vendor folder
         uses: actions/cache@v4
         with:
           path: vendor
           key: php-${{ hashFiles('composer.lock') }}
+
+      # Add composer local folder in cache to make next builds faster
       - name: Cache composer folder
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: ~/.composer/cache
           key: php-composer-cache
+
       - run: composer install
 
-      - name: Wait for container to be loaded
-        run: |
-          until docker exec temp-ps ls /var/www/html/vendor/autoload.php 2> /dev/null; do
-            echo Waiting for docker initialization...
-            sleep 5
-          done
-      - name : Run PHPStan
-        run: |
-          docker exec -e _PS_ROOT_DIR_=/var/www/html --workdir=/web/module temp-ps php /var/www/html/vendor/bin/phpstan analyse -c /web/module/tests/phpstan/phpstan-${{ matrix.presta-versions }}.neon --error-format=github
+      # Docker images prestashop/prestashop may be used, even if the shop remains uninstalled
+      - name: Execute PHPStan on PrestaShop (Tag ${{ matrix.presta-version }}-${{ matrix.php-version }}))
+        run: ./tests/phpstan.sh ${{ matrix.presta-version }} ${{ matrix.php-version }}
 
   phpunit:
     name: PHPUnit ${{ matrix.presta-versions }}
