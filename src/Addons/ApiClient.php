@@ -332,6 +332,7 @@ class ApiClient
      * @param string $method
      *
      * @return string
+     *
      * @throws ClientExceptionInterface
      */
     public function processRequest(string $method = self::HTTP_METHOD_GET): string
@@ -342,6 +343,7 @@ class ApiClient
         foreach ($headers as $name => $value) {
             $request = $request->withHeader($name, $value);
         }
+
         return $this->httpClient->sendRequest($request)->getBody()->getContents();
     }
 
