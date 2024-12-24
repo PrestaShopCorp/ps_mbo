@@ -21,10 +21,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\SourceRetriever;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\GuzzleException;
+
+use PrestaShop\Module\Mbo\Addons\Exception\ClientRequestException;
+use Psr\Http\Client\ClientInterface;
 use GuzzleHttp\Psr7\Utils;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
@@ -33,7 +32,6 @@ use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\SourceNotCheckedException;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AddonsUrlSourceRetriever implements SourceRetrieverInterface
@@ -88,22 +86,14 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     protected $translator;
 
     public function __construct(
-        AddonsDataProvider $addonsDataProvider,
+        AddonsDataProvider  $addonsDataProvider,
         TranslatorInterface $translator,
-    ) {
+    )
+    {
         $this->addonsDataProvider = $addonsDataProvider;
         $this->translator = $translator;
-
-        $this->httpClient = new Client([
-            'timeout' => '7200',
-            'CURLOPT_FORBID_REUSE' => true,
-            'CURLOPT_FRESH_CONNECT' => true,
-        ]);
     }
 
-    /**
-     * @throws GuzzleException
-     */
     public function assertCanBeDownloaded($source): bool
     {
         if (!self::assertIsAddonsUrl($source)) {
@@ -121,18 +111,16 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             }
             $options['headers'] = array_merge($options['headers'], AddonsApiHelper::addCustomHeaderIfNeeded());
 
-            $response = $this->httpClient->request('HEAD', $source, $options);
-        } catch (TransportExceptionInterface|\Exception $e) {
-            if ($e instanceof ClientException) {
-                try {
-                    $this->httpClient->request(
-                        'GET',
-                        $source,
-                        $options
-                    );
-                } catch (ClientException $clientException) {
-                    throw ModuleErrorHelper::reportAndConvertError(new AddonsDownloadModuleException($clientException, $authenticatedQueryParameters), $authenticatedQueryParameters);
-                }
+            $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory();
+            $request = $psr17Factory->createServerRequest('HEAD', $source);
+            foreach ($options['headers'] as $name => $value) {
+                $request = $request->withHeader($name, $value);
+            }
+
+            $response = $this->httpClient->sendRequest($request);
+        } catch (\Throwable $e) {
+            if ($e instanceof ClientRequestException) {
+                throw ModuleErrorHelper::reportAndConvertError(new AddonsDownloadModuleException($e, $authenticatedQueryParameters), $authenticatedQueryParameters);
             }
 
             ErrorHelper::reportError($e);
@@ -175,10 +163,6 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         return $this->moduleName;
     }
 
-    /**
-     * @throws GuzzleException
-     * @throws \Exception
-     */
     public function get($source, ?string $expectedModuleName = null, ?array $options = []): string
     {
         $this->assertSourceHasBeenChecked($source);

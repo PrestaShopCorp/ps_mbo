@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Api\Security;
 
 use Doctrine\Common\Cache\CacheProvider;
-use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Api\Exception\RetrieveNewKeyException;
 use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Distribution\Client;
@@ -112,7 +111,7 @@ class AuthorizationChecker
 
             $this->cacheProvider->save($this->keyVersionCacheIndex, $keyVersion, 0);
             $this->cacheProvider->save($this->keyCacheIndex, $key, 0);
-        } catch (\Exception|GuzzleException $e) {
+        } catch (\Throwable $e) {
             ErrorHelper::reportError($e);
             throw new RetrieveNewKeyException('Unable to retrieve signing key');
         }

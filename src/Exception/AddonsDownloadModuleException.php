@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Exception;
 
-use GuzzleHttp\Exception\ClientException;
 
 class AddonsDownloadModuleException extends \Exception
 {
@@ -83,7 +82,7 @@ class AddonsDownloadModuleException extends \Exception
      */
     private $technicalErrorMessage;
 
-    public function __construct(ClientException $previous, array $context = [])
+    public function __construct(\Throwable $previous, array $context = [])
     {
         $addonsError = $this->getErrorSentByAddons($previous);
         parent::__construct(
@@ -109,7 +108,7 @@ class AddonsDownloadModuleException extends \Exception
         return $this->technicalErrorMessage;
     }
 
-    private function getErrorSentByAddons(ClientException $exception): array
+    private function getErrorSentByAddons(\Throwable $exception): array
     {
         $rawContent = $exception->getResponse()->getBody()->getContents();
         $jsonContent = json_decode($rawContent, true);

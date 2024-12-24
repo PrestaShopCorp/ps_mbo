@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Distribution;
 
 use Doctrine\Common\Cache\CacheProvider;
-use GuzzleHttp\Client as HttpClient;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUserProvider;
 use PrestaShop\Module\Mbo\Addons\User\UserInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
@@ -37,11 +36,6 @@ class ConnectedClient extends BaseClient
      */
     private $user;
 
-    /**
-     * @param HttpClient $httpClient
-     * @param CacheProvider $cacheProvider
-     * @param AddonsUserProvider $addonsUserProvider
-     */
     public function __construct(
         string $apiUrl,
         ClientInterface $httpClient,
