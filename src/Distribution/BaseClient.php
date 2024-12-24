@@ -164,7 +164,7 @@ class BaseClient
         array $options = [],
         $default = [],
     ) {
-        $response = json_decode($this->processRequest($uri, $method, $options), true);
+        $response = json_decode($this->processRequest($uri, $method, $options));
 
         if (JSON_ERROR_NONE !== json_last_error()) {
             return $default;
@@ -192,16 +192,19 @@ class BaseClient
     ): string {
         $queryString = !empty($this->queryParameters) ? '?' . http_build_query($this->queryParameters) : '';
         $request = $this->requestFactory->createServerRequest($method, $this->apiUrl . '/api/' . ltrim($uri, '/') . $queryString);
+        if(empty($this->headers['Content-Type'])) {
+            $this->headers['Accept'] = 'application/json';
+            $this->headers['Content-Type'] = 'application/json';
+        }
         foreach ($this->headers as $name => $value) {
             $request = $request->withHeader($name, $value);
         }
 
         if(!empty($options['form_params'])) {
-            if(!empty($this->headers['Content-Type']) && $this->headers['Content-Type'] === 'application/json') {
-                $request = $request->withBody($this->createStream(json_encode($options['form_params'])));
-            } else {
-                $request = $request->withHeader('Content-Type', 'application/x-www-form-urlencoded');
+            if($this->headers['Content-Type'] === 'application/x-www-form-urlencoded') {
                 $request = $request->withParsedBody($options['form_params']);
+            } else {
+                $request = $request->withBody($this->createStream(json_encode($options['form_params'])));
             }
         }
 
