@@ -27,6 +27,8 @@ use PrestaShop\Module\Mbo\Addons\User\AddonsUserProvider;
 use PrestaShop\Module\Mbo\Addons\User\UserInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
 class ConnectedClient extends BaseClient
 {
@@ -41,11 +43,13 @@ class ConnectedClient extends BaseClient
      * @param AddonsUserProvider $addonsUserProvider
      */
     public function __construct(
-        HttpClient $httpClient,
+        string $apiUrl,
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
         CacheProvider $cacheProvider,
         AddonsUserProvider $addonsUserProvider,
     ) {
-        parent::__construct($httpClient, $cacheProvider);
+        parent::__construct($apiUrl, $httpClient, $requestFactory, $cacheProvider);
         $this->user = $addonsUserProvider->getUser();
     }
 

@@ -21,11 +21,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons;
 
+use PrestaShop\Module\Mbo\Addons\Exception\ClientRequestException;
 use PrestaShop\Module\Mbo\Helpers\AddonsApiHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\ServerRequestFactoryInterface;
 
 class ApiClient
 {
@@ -40,9 +41,9 @@ class ApiClient
     protected $httpClient;
 
     /**
-     * @var RequestFactoryInterface
+     * @var ServerRequestFactoryInterface
      */
-    protected RequestFactoryInterface $requestFactory;
+    protected ServerRequestFactoryInterface $requestFactory;
 
     /**
      * @var array<string, string>
@@ -78,7 +79,7 @@ class ApiClient
     /**
      * @param ClientInterface $httpClient
      */
-    public function __construct(string $apiUrl, ClientInterface $httpClient, RequestFactoryInterface $requestFactory)
+    public function __construct(string $apiUrl, ClientInterface $httpClient, ServerRequestFactoryInterface $requestFactory)
     {
         $this->apiUrl = $apiUrl;
         $this->httpClient = $httpClient;
@@ -334,17 +335,23 @@ class ApiClient
      * @return string
      *
      * @throws ClientExceptionInterface
+     * @throws ClientRequestException
      */
     public function processRequest(string $method = self::HTTP_METHOD_GET): string
     {
         $queryString = !empty($this->queryParameters) ? '?' . http_build_query($this->queryParameters) : '';
         $headers = $this->getHeaders();
-        $request = $this->requestFactory->createRequest($method, $this->apiUrl . $queryString);
+        $request = $this->requestFactory->createServerRequest($method, $this->apiUrl . $queryString);
         foreach ($headers as $name => $value) {
             $request = $request->withHeader($name, $value);
         }
 
-        return $this->httpClient->sendRequest($request)->getBody()->getContents();
+        $response = $this->httpClient->sendRequest($request);
+        if($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
+            throw new ClientRequestException($response->getReasonPhrase(), $response->getStatusCode());
+        }
+
+        return $response->getBody()->getContents();
     }
 
     /**

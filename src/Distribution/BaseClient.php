@@ -22,9 +22,11 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Distribution;
 
 use Doctrine\Common\Cache\CacheProvider;
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\GuzzleException;
+use PrestaShop\Module\Mbo\Exception\ClientRequestException;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\ServerRequestFactoryInterface;
 
 class BaseClient
 {
@@ -32,10 +34,18 @@ class BaseClient
     public const HTTP_METHOD_POST = 'POST';
     public const HTTP_METHOD_PUT = 'PUT';
     public const HTTP_METHOD_DELETE = 'DELETE';
+
+    protected string $apiUrl;
+
     /**
-     * @var HttpClient
+     * @var ClientInterface
      */
     protected $httpClient;
+
+    /**
+     * @var ServerRequestFactoryInterface
+     */
+    protected ServerRequestFactoryInterface $requestFactory;
     /**
      * @var CacheProvider
      */
@@ -68,13 +78,15 @@ class BaseClient
      */
     protected $headers = [];
 
-    /**
-     * @param HttpClient $httpClient
-     * @param CacheProvider $cacheProvider
-     */
-    public function __construct(HttpClient $httpClient, CacheProvider $cacheProvider)
-    {
+    public function __construct(
+        string $apiUrl,
+        ClientInterface $httpClient,
+        ServerRequestFactoryInterface $requestFactory,
+        CacheProvider $cacheProvider
+    ) {
+        $this->apiUrl = $apiUrl;
         $this->httpClient = $httpClient;
+        $this->requestFactory = $requestFactory;
         $this->cacheProvider = $cacheProvider;
     }
 
@@ -144,7 +156,7 @@ class BaseClient
      *
      * @return mixed
      *
-     * @throws GuzzleException
+     * @throws ClientExceptionInterface
      */
     protected function processRequestAndDecode(
         string $uri,
@@ -152,7 +164,7 @@ class BaseClient
         array $options = [],
         $default = [],
     ) {
-        $response = json_decode($this->processRequest($uri, $method, $options));
+        $response = json_decode($this->processRequest($uri, $method, $options), true);
 
         if (JSON_ERROR_NONE !== json_last_error()) {
             return $default;
@@ -170,20 +182,41 @@ class BaseClient
      *
      * @return string
      *
-     * @throws GuzzleException
+     * @throws ClientExceptionInterface
+     * @throws ClientRequestException
      */
     protected function processRequest(
         string $uri = '',
         string $method = self::HTTP_METHOD_GET,
         array $options = [],
     ): string {
-        $options = array_merge($options, [
-            'query' => $this->queryParameters,
-            'headers' => $this->headers,
-        ]);
+        $queryString = !empty($this->queryParameters) ? '?' . http_build_query($this->queryParameters) : '';
+        $request = $this->requestFactory->createServerRequest($method, $this->apiUrl . '/api/' . ltrim($uri, '/') . $queryString);
+        foreach ($this->headers as $name => $value) {
+            $request = $request->withHeader($name, $value);
+        }
 
-        return (string) $this->httpClient
-            ->request($method, '/api/' . ltrim($uri, '/'), $options)
-            ->getBody();
+        if(!empty($options['form_params'])) {
+            if(!empty($this->headers['Content-Type']) && $this->headers['Content-Type'] === 'application/json') {
+                $request = $request->withBody($this->createStream(json_encode($options['form_params'])));
+            } else {
+                $request = $request->withHeader('Content-Type', 'application/x-www-form-urlencoded');
+                $request = $request->withParsedBody($options['form_params']);
+            }
+        }
+
+
+        $response = $this->httpClient->sendRequest($request);
+        if($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
+            throw new ClientRequestException($response->getReasonPhrase(), $response->getStatusCode());
+        }
+
+        return $response->getBody()->getContents();
+    }
+
+    private function createStream(string $content): \Psr\Http\Message\StreamInterface
+    {
+        $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory();
+        return $psr17Factory->createStream($content);
     }
 }

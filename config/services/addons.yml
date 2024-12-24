@@ -21,7 +21,7 @@ services:
     arguments:
       $apiUrl: "%env(DISTRIBUTION_API_URL)%"
       $httpClient: '@Psr\Http\Client\ClientInterface'
-      $requestFactory: '@Psr\Http\Message\RequestFactoryInterface'
+      $requestFactory: '@Psr\Http\Message\ServerRequestFactoryInterface'
     calls:
       - method: setDefaultParams
         arguments:
