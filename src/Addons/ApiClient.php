@@ -23,7 +23,6 @@ namespace PrestaShop\Module\Mbo\Addons;
 
 use PrestaShop\Module\Mbo\Helpers\AddonsApiHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
-use Psr\Http\Message\StreamInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -272,22 +271,19 @@ class ApiClient
 
     public function getModuleByName(string $name): ?\stdClass
     {
-        $options = ['query' => $this->queryParameters];
+        $url = sprintf('/v2/products/%s', $name);
+        $queryString = !empty($this->queryParameters) ? '?' . http_build_query($this->queryParameters) : '';
+        $request = $this->requestFactory->createRequest(self::HTTP_METHOD_GET, $this->apiUrl . $url . $queryString);
 
         $headers = $this->getHeaders();
-        if (!empty($headers)) {
-            $options['headers'] = $headers;
+        foreach ($headers as $name => $value) {
+            $request = $request->withHeader($name, $value);
         }
-
         try {
-            $url = sprintf('/v2/products/%s', $name);
-
-            $resp = $this->httpClient
-                ->request(self::HTTP_METHOD_GET, $url, $options)
-                ->getBody();
-        } catch (\Exception $e) {
+            $resp = $this->httpClient->sendRequest($request)->getBody()->getContents();
+        } catch (\Throwable $e) {
             ErrorHelper::reportError($e, [
-                'url' => $url,
+                'url' => $request->getUri(),
             ]);
 
             return null;
@@ -335,7 +331,8 @@ class ApiClient
      *
      * @param string $method
      *
-     * @throws GuzzleException
+     * @return string
+     * @throws ClientExceptionInterface
      */
     public function processRequest(string $method = self::HTTP_METHOD_GET): string
     {
@@ -345,12 +342,7 @@ class ApiClient
         foreach ($headers as $name => $value) {
             $request = $request->withHeader($name, $value);
         }
-
-        try {
-            return $this->httpClient->sendRequest($request)->getBody()->getContents();
-        } catch (ClientExceptionInterface $e) {
-            throw new \RuntimeException('HTTP request failed: ' . $e->getMessage());
-        }
+        return $this->httpClient->sendRequest($request)->getBody()->getContents();
     }
 
     /**
