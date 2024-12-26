@@ -26,7 +26,7 @@ use PrestaShop\Module\Mbo\Helpers\AddonsApiHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\ServerRequestFactoryInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
 class ApiClient
 {
@@ -41,9 +41,9 @@ class ApiClient
     protected $httpClient;
 
     /**
-     * @var ServerRequestFactoryInterface
+     * @var RequestFactoryInterface
      */
-    protected ServerRequestFactoryInterface $requestFactory;
+    protected RequestFactoryInterface $requestFactory;
 
     /**
      * @var array<string, string>
@@ -79,7 +79,7 @@ class ApiClient
     /**
      * @param ClientInterface $httpClient
      */
-    public function __construct(string $apiUrl, ClientInterface $httpClient, ServerRequestFactoryInterface $requestFactory)
+    public function __construct(string $apiUrl, ClientInterface $httpClient, RequestFactoryInterface $requestFactory)
     {
         $this->apiUrl = $apiUrl;
         $this->httpClient = $httpClient;
@@ -341,7 +341,7 @@ class ApiClient
     {
         $queryString = !empty($this->queryParameters) ? '?' . http_build_query($this->queryParameters) : '';
         $headers = $this->getHeaders();
-        $request = $this->requestFactory->createServerRequest($method, $this->apiUrl . $queryString);
+        $request = $this->requestFactory->createRequest($method, $this->apiUrl . $queryString);
         foreach ($headers as $name => $value) {
             $request = $request->withHeader($name, $value);
         }
