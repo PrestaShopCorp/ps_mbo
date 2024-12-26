@@ -26,7 +26,7 @@ use PrestaShop\Module\Mbo\Exception\ClientRequestException;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\ServerRequestFactoryInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
 class BaseClient
 {
@@ -43,9 +43,9 @@ class BaseClient
     protected $httpClient;
 
     /**
-     * @var ServerRequestFactoryInterface
+     * @var RequestFactoryInterface
      */
-    protected ServerRequestFactoryInterface $requestFactory;
+    protected RequestFactoryInterface $requestFactory;
     /**
      * @var CacheProvider
      */
@@ -81,7 +81,7 @@ class BaseClient
     public function __construct(
         string $apiUrl,
         ClientInterface $httpClient,
-        ServerRequestFactoryInterface $requestFactory,
+        RequestFactoryInterface $requestFactory,
         CacheProvider $cacheProvider
     ) {
         $this->apiUrl = $apiUrl;
@@ -191,7 +191,7 @@ class BaseClient
         array $options = [],
     ): string {
         $queryString = !empty($this->queryParameters) ? '?' . http_build_query($this->queryParameters) : '';
-        $request = $this->requestFactory->createServerRequest($method, $this->apiUrl . '/api/' . ltrim($uri, '/') . $queryString);
+        $request = $this->requestFactory->createRequest($method, $this->apiUrl . '/api/' . ltrim($uri, '/') . $queryString);
         if(empty($this->headers['Content-Type'])) {
             $this->headers['Accept'] = 'application/json';
             $this->headers['Content-Type'] = 'application/json';
@@ -202,7 +202,7 @@ class BaseClient
 
         if(!empty($options['form_params'])) {
             if($this->headers['Content-Type'] === 'application/x-www-form-urlencoded') {
-                $request = $request->withParsedBody($options['form_params']);
+                $request = $request->withBody($this->createStream(urlencode(serialize($options['form_params']))));
             } else {
                 $request = $request->withBody($this->createStream(json_encode($options['form_params'])));
             }
