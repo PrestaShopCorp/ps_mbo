@@ -21,10 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\SourceRetriever;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Utils;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
@@ -33,7 +29,9 @@ use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\SourceNotCheckedException;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AddonsUrlSourceRetriever implements SourceRetrieverInterface
@@ -78,7 +76,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     private $handledSourceCredentials;
 
     /**
-     * @var ClientInterface
+     * @var HttpClientInterface
      */
     private $httpClient;
 
@@ -90,20 +88,13 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     public function __construct(
         AddonsDataProvider $addonsDataProvider,
         TranslatorInterface $translator,
+        HttpClientInterface $httpClient,
     ) {
         $this->addonsDataProvider = $addonsDataProvider;
         $this->translator = $translator;
-
-        $this->httpClient = new Client([
-            'timeout' => '7200',
-            'CURLOPT_FORBID_REUSE' => true,
-            'CURLOPT_FRESH_CONNECT' => true,
-        ]);
+        $this->httpClient = $httpClient;
     }
 
-    /**
-     * @throws GuzzleException
-     */
     public function assertCanBeDownloaded($source): bool
     {
         if (!self::assertIsAddonsUrl($source)) {
@@ -122,15 +113,11 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             $options['headers'] = array_merge($options['headers'], AddonsApiHelper::addCustomHeaderIfNeeded());
 
             $response = $this->httpClient->request('HEAD', $source, $options);
-        } catch (TransportExceptionInterface|\Exception $e) {
-            if ($e instanceof ClientException) {
+        } catch (TransportExceptionInterface $e) {
+            if ($e instanceof ClientExceptionInterface) {
                 try {
-                    $this->httpClient->request(
-                        'GET',
-                        $source,
-                        $options
-                    );
-                } catch (ClientException $clientException) {
+                    $this->httpClient->request('GET', $source, $options);
+                } catch (ClientExceptionInterface $clientException) {
                     throw ModuleErrorHelper::reportAndConvertError(new AddonsDownloadModuleException($clientException, $authenticatedQueryParameters), $authenticatedQueryParameters);
                 }
             }
@@ -175,10 +162,6 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         return $this->moduleName;
     }
 
-    /**
-     * @throws GuzzleException
-     * @throws \Exception
-     */
     public function get($source, ?string $expectedModuleName = null, ?array $options = []): string
     {
         $this->assertSourceHasBeenChecked($source);

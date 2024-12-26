@@ -21,9 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits;
 
-use Configuration;
-use Exception;
-use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\ConfigChangeCommandHandler;
@@ -31,7 +28,6 @@ use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\Uuid;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
-use Shop;
 
 trait HaveShopOnExternalService
 {
@@ -40,7 +36,6 @@ trait HaveShopOnExternalService
      * So the module can correctly process actions (download, install, update..) on. modules
      *
      * @throws \Exception
-     * @throws GuzzleException
      */
     private function registerShop(): void
     {
@@ -68,8 +63,6 @@ trait HaveShopOnExternalService
      * When the module is disabled or uninstalled, remove it from online services
      *
      * @return void
-     *
-     * @throws GuzzleException
      */
     private function unregisterShop(): void
     {
@@ -169,7 +162,6 @@ trait HaveShopOnExternalService
     }
 
     /**
-     * @throws GuzzleException
      * @throws EmployeeException
      * @throws \Doctrine\DBAL\Exception
      * @throws \Exception

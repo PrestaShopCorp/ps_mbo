@@ -25,12 +25,16 @@ services:
   PrestaShop\Module\Mbo\Distribution\Client:
     autowire: true
     arguments:
-      $httpClient: '@mbo.distribution_api.client.http'
+      $apiUrl: "%env(DISTRIBUTION_API_URL)%"
+      $httpClient: '@Psr\Http\Client\ClientInterface'
+      $requestFactory: '@Psr\Http\Message\ServerRequestFactoryInterface'
       $cacheProvider: '@Doctrine\Common\Cache\Psr6\DoctrineProvider'
 
   # Distribution API Client with addons user
   PrestaShop\Module\Mbo\Distribution\ConnectedClient:
     autowire: true
     arguments:
-      $httpClient: '@mbo.distribution_api.client.http'
+      $apiUrl: "%env(DISTRIBUTION_API_URL)%"
+      $httpClient: '@Psr\Http\Client\ClientInterface'
+      $requestFactory: '@Psr\Http\Message\ServerRequestFactoryInterface'
       $cacheProvider: '@Doctrine\Common\Cache\Psr6\DoctrineProvider'

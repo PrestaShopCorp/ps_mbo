@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons\Provider;
 
-use GuzzleHttp\Exception\ClientException;
 use PrestaShop\Module\Mbo\Addons\ApiClient;
 use PrestaShop\Module\Mbo\Addons\Exception\DownloadModuleException;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUser;
 use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use Symfony\Component\HttpClient\Exception\ClientException;
 
 /**
  * This class will provide data from Addons API

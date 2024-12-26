@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Distribution;
 
-use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Symfony\Component\Routing\Router;
@@ -44,8 +43,6 @@ class Client extends BaseClient
      * Get a new key from Distribution API.
      *
      * @return \stdClass
-     *
-     * @throws GuzzleException
      */
     public function retrieveNewKey(): \stdClass
     {
@@ -58,8 +55,6 @@ class Client extends BaseClient
      * @param array $params
      *
      * @return \stdClass
-     *
-     * @throws GuzzleException
      *
      * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::registerShop
      */
@@ -76,8 +71,6 @@ class Client extends BaseClient
      * Unregister a Shop on Distribution API.
      *
      * @return \stdClass
-     *
-     * @throws GuzzleException
      */
     public function unregisterShop()
     {
@@ -93,8 +86,6 @@ class Client extends BaseClient
      * @param array $params
      *
      * @return \stdClass
-     *
-     * @throws GuzzleException
      *
      * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::updateShop
      */
@@ -148,8 +139,6 @@ class Client extends BaseClient
      *
      * @return array
      *
-     * @throws GuzzleException
-     *
      * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::registerShop
      */
     public function getApiConf(): array
@@ -171,7 +160,7 @@ class Client extends BaseClient
                 self::HTTP_METHOD_POST,
                 ['form_params' => $eventData]
             );
-        } catch (\Exception|GuzzleException $e) {
+        } catch (\Throwable $e) {
             // Do nothing if the tracking fails
             ErrorHelper::reportError($e);
         }
