@@ -347,7 +347,7 @@ class ApiClient
         }
 
         $response = $this->httpClient->sendRequest($request);
-        if($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
+        if ($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
             throw new ClientRequestException($response->getReasonPhrase(), $response->getStatusCode());
         }
 

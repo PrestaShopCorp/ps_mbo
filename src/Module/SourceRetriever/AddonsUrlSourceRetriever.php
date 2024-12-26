@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\SourceRetriever;
 
-
 use GuzzleHttp\Psr7\Utils;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
@@ -87,11 +86,10 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     protected $translator;
 
     public function __construct(
-        AddonsDataProvider  $addonsDataProvider,
+        AddonsDataProvider $addonsDataProvider,
         TranslatorInterface $translator,
-        HttpClientInterface $httpClient
-    )
-    {
+        HttpClientInterface $httpClient,
+    ) {
         $this->addonsDataProvider = $addonsDataProvider;
         $this->translator = $translator;
         $this->httpClient = $httpClient;
@@ -115,7 +113,6 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             $options['headers'] = array_merge($options['headers'], AddonsApiHelper::addCustomHeaderIfNeeded());
 
             $response = $this->httpClient->request('HEAD', $source, $options);
-
         } catch (TransportExceptionInterface $e) {
             if ($e instanceof ClientExceptionInterface) {
                 try {

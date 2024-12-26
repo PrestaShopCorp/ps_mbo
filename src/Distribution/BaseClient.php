@@ -82,7 +82,7 @@ class BaseClient
         string $apiUrl,
         ClientInterface $httpClient,
         RequestFactoryInterface $requestFactory,
-        CacheProvider $cacheProvider
+        CacheProvider $cacheProvider,
     ) {
         $this->apiUrl = $apiUrl;
         $this->httpClient = $httpClient;
@@ -192,7 +192,7 @@ class BaseClient
     ): string {
         $queryString = !empty($this->queryParameters) ? '?' . http_build_query($this->queryParameters) : '';
         $request = $this->requestFactory->createRequest($method, $this->apiUrl . '/api/' . ltrim($uri, '/') . $queryString);
-        if(empty($this->headers['Content-Type'])) {
+        if (empty($this->headers['Content-Type'])) {
             $this->headers['Accept'] = 'application/json';
             $this->headers['Content-Type'] = 'application/json';
         }
@@ -200,17 +200,16 @@ class BaseClient
             $request = $request->withHeader($name, $value);
         }
 
-        if(!empty($options['form_params'])) {
-            if($this->headers['Content-Type'] === 'application/x-www-form-urlencoded') {
+        if (!empty($options['form_params'])) {
+            if ($this->headers['Content-Type'] === 'application/x-www-form-urlencoded') {
                 $request = $request->withBody($this->createStream(urlencode(serialize($options['form_params']))));
             } else {
                 $request = $request->withBody($this->createStream(json_encode($options['form_params'])));
             }
         }
 
-
         $response = $this->httpClient->sendRequest($request);
-        if($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
+        if ($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
             throw new ClientRequestException($response->getReasonPhrase(), $response->getStatusCode());
         }
 
@@ -220,6 +219,7 @@ class BaseClient
     private function createStream(string $content): \Psr\Http\Message\StreamInterface
     {
         $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory();
+
         return $psr17Factory->createStream($content);
     }
 }
