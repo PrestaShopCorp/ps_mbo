@@ -22,8 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module\SourceRetriever;
 
 
-use PrestaShop\Module\Mbo\Addons\Exception\ClientRequestException;
-use Psr\Http\Client\ClientInterface;
 use GuzzleHttp\Psr7\Utils;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
@@ -32,6 +30,9 @@ use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\SourceNotCheckedException;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AddonsUrlSourceRetriever implements SourceRetrieverInterface
@@ -76,7 +77,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     private $handledSourceCredentials;
 
     /**
-     * @var ClientInterface
+     * @var HttpClientInterface
      */
     private $httpClient;
 
@@ -88,10 +89,12 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     public function __construct(
         AddonsDataProvider  $addonsDataProvider,
         TranslatorInterface $translator,
+        HttpClientInterface $httpClient
     )
     {
         $this->addonsDataProvider = $addonsDataProvider;
         $this->translator = $translator;
+        $this->httpClient = $httpClient;
     }
 
     public function assertCanBeDownloaded($source): bool
@@ -111,16 +114,15 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             }
             $options['headers'] = array_merge($options['headers'], AddonsApiHelper::addCustomHeaderIfNeeded());
 
-            $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory();
-            $request = $psr17Factory->createServerRequest('HEAD', $source);
-            foreach ($options['headers'] as $name => $value) {
-                $request = $request->withHeader($name, $value);
-            }
+            $response = $this->httpClient->request('HEAD', $source, $options);
 
-            $response = $this->httpClient->sendRequest($request);
-        } catch (\Throwable $e) {
-            if ($e instanceof ClientRequestException) {
-                throw ModuleErrorHelper::reportAndConvertError(new AddonsDownloadModuleException($e, $authenticatedQueryParameters), $authenticatedQueryParameters);
+        } catch (TransportExceptionInterface $e) {
+            if ($e instanceof ClientExceptionInterface) {
+                try {
+                    $this->httpClient->request('GET', $source, $options);
+                } catch (ClientExceptionInterface $clientException) {
+                    throw ModuleErrorHelper::reportAndConvertError(new AddonsDownloadModuleException($clientException, $authenticatedQueryParameters), $authenticatedQueryParameters);
+                }
             }
 
             ErrorHelper::reportError($e);

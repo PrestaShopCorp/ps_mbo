@@ -29,6 +29,7 @@ use PrestaShop\Module\Mbo\Addons\Exception\DownloadModuleException;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUser;
 use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use Symfony\Component\HttpClient\Exception\ClientException;
 
 /**
  * This class will provide data from Addons API
@@ -128,7 +129,7 @@ class AddonsDataProvider implements DataProviderInterface
                 'Error sent by Addons. You may be not allowed to download this module.'
                 : 'Error sent by Addons. You may need to be logged.';
 
-            if ($e instanceof ClientRequestException) {
+            if ($e instanceof ClientException) {
                 throw new AddonsDownloadModuleException($e);
             }
             throw new DownloadModuleException($message, 0, $e);

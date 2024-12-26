@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Exception;
 
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 
 class AddonsDownloadModuleException extends \Exception
 {
@@ -82,7 +83,7 @@ class AddonsDownloadModuleException extends \Exception
      */
     private $technicalErrorMessage;
 
-    public function __construct(\Throwable $previous, array $context = [])
+    public function __construct(ClientExceptionInterface $previous, array $context = [])
     {
         $addonsError = $this->getErrorSentByAddons($previous);
         parent::__construct(
@@ -108,9 +109,9 @@ class AddonsDownloadModuleException extends \Exception
         return $this->technicalErrorMessage;
     }
 
-    private function getErrorSentByAddons(\Throwable $exception): array
+    private function getErrorSentByAddons(ClientExceptionInterface $exception): array
     {
-        $rawContent = $exception->getResponse()->getBody()->getContents();
+        $rawContent = $exception->getResponse()->getContent();
         $jsonContent = json_decode($rawContent, true);
 
         $code = self::UNKNOWN_ADDONS_CODE;
