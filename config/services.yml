@@ -32,6 +32,7 @@ services:
 
   PrestaShop\Module\Mbo\Controller\Admin\ThemeCatalogController:
     autowire: true
+    autoconfigure: true
 
   PrestaShop\Module\Mbo\Controller\Admin\AddonsController:
     autowire: true

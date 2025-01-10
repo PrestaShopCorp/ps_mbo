@@ -56,7 +56,7 @@ class AccountsDataProvider
             return '';
         }
 
-        $accountsUserTokenRepository = $psAccountsModule->getService('\PrestaShop\Module\PsAccounts\Repository\UserTokenRepository');
+        $accountsUserTokenRepository = $psAccountsModule->getService('PrestaShop\Module\PsAccounts\Repository\UserTokenRepository');
         if (!$accountsUserTokenRepository) {
             return '';
         }
