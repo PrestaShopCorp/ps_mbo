@@ -40,7 +40,7 @@ trait UseActionAdminControllerSetMedia
     /**
      * Hook actionAdminControllerSetMedia.
      */
-    public function hookActionAdminControllerSetMedia(): void
+    public function hookActionAdminControllerSetMedia($params): void
     {
         if (\Tools::getValue('controller') === 'AdminPsMboModule') {
             $this->context->controller->addJs(
@@ -58,7 +58,7 @@ trait UseActionAdminControllerSetMedia
             return $a['order'] === $b['order'] ? 0 : $order;
         });
         foreach ($this->adminControllerMediaMethods as $setMediaMethod) {
-            $this->{$setMediaMethod['method']}();
+            $this->{$setMediaMethod['method']}($params);
         }
     }
 
@@ -84,9 +84,10 @@ trait UseActionAdminControllerSetMedia
     /**
      * Add JS and CSS file
      *
+     * @param array $hookParams
      * @return void
      */
-    protected function loadMediaForAdminControllerSetMedia(): void
+    protected function loadMediaForAdminControllerSetMedia(array $hookParams): void
     {
         if (in_array(\Tools::getValue('controller'), self::CONTROLLERS_WITH_CDC_SCRIPT)) {
             $this->context->controller->addJs('/js/jquery/plugins/growl/jquery.growl.js?v=' . $this->version);
@@ -103,10 +104,10 @@ trait UseActionAdminControllerSetMedia
             // Add it to have all script work on all pages...
             $this->context->controller->addJs('/admin-dev/themes/default/js/bundle/default.js?v=' . _PS_VERSION_);
         }
-        $this->loadCdcMedia();
+        $this->loadCdcMedia($hookParams);
     }
 
-    private function loadCdcMedia(): void
+    private function loadCdcMedia(array $hookParams): void
     {
         $controllerName = \Tools::getValue('controller');
         if (!is_string($controllerName)) {
@@ -118,6 +119,13 @@ trait UseActionAdminControllerSetMedia
         ) {
             return;
         }
+        if(
+            Tab::mayDisplayRecommendedModules($controllerName)
+            && $this->isSymfonyContext() && !empty($hookParams['route']) && !str_ends_with($hookParams['route'], '_index')
+        ) {
+            return;
+        }
+
 
         $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error-templating.js');
         $this->context->controller->addCss($this->getPathUri() . 'views/css/cdc-error-templating.css');

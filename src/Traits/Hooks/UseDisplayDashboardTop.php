@@ -85,7 +85,7 @@ trait UseDisplayDashboardTop
      *
      * @throws \Exception
      */
-    public function hookDisplayDashboardTop(): string
+    public function hookDisplayDashboardTop($params): string
     {
         // Check if this page has already been processed by the hook to avoid duplicate content
         if ($this->alreadyProcessedPage) {
@@ -113,7 +113,7 @@ trait UseDisplayDashboardTop
 
         return $shouldDisplayMessageInConfigPage
             ? $this->displayPushOnConfigurationPage($values['configure'])
-            : $this->displayRecommendedModules($values['controller'] ?? '');
+            : $this->displayRecommendedModules($values['controller'] ?? '', $params);
     }
 
     /**
@@ -223,8 +223,12 @@ trait UseDisplayDashboardTop
      *
      * @throws \Exception
      */
-    protected function displayRecommendedModules(string $controller): string
+    protected function displayRecommendedModules(string $controller, array $hookParams): string
     {
+        if ($this->isSymfonyContext() && !empty($hookParams['route']) && !str_ends_with($hookParams['route'], '_index')) {
+            return '';
+        }
+
         $recommendedModulesDisplayed = true;
 
         // Ask to modules if recommended modules should be displayed in this context
@@ -331,15 +335,17 @@ trait UseDisplayDashboardTop
      *
      * @see UseActionAdminControllerSetMedia
      */
-    protected function loadMediaForDashboardTop(): void
+    protected function loadMediaForDashboardTop($hookParams): void
     {
-        // has to be loaded in header to prevent flash of content
-        $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
-
+        if ($this->isSymfonyContext() && !empty($hookParams['route']) && !str_ends_with($hookParams['route'], '_index')) {
+            return;
+        }
         if (
             $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_BUTTON_TYPE)
             || $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE)
         ) {
+            // has to be loaded in header to prevent flash of content
+            $this->context->controller->addJs($this->getPathUri() . 'views/js/recommended-modules.js?v=' . $this->version);
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/recommended-modules.css');
         }
     }
