@@ -85,6 +85,7 @@ trait UseActionAdminControllerSetMedia
      * Add JS and CSS file
      *
      * @param array $hookParams
+     *
      * @return void
      */
     protected function loadMediaForAdminControllerSetMedia(array $hookParams): void
@@ -119,13 +120,12 @@ trait UseActionAdminControllerSetMedia
         ) {
             return;
         }
-        if(
+        if (
             Tab::mayDisplayRecommendedModules($controllerName)
             && $this->isSymfonyContext() && !empty($hookParams['route']) && !str_ends_with($hookParams['route'], '_index')
         ) {
             return;
         }
-
 
         $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error-templating.js');
         $this->context->controller->addCss($this->getPathUri() . 'views/css/cdc-error-templating.css');
