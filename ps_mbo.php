@@ -61,6 +61,21 @@ class ps_mbo extends Module
         'AdminModulesManage',
     ];
 
+    /**
+     * @var string
+     */
+    public const API_CLIENT_NAME = "ps_mbo";
+
+    /**
+     * @var string
+     */
+    public const API_CLIENT_ID = "mbo_client";
+
+     /**
+     * @var integer
+     */
+    public const API_CLIENT_LIFETIME = 600;
+
     public $configurationList = [
         'PS_MBO_SHOP_ADMIN_UUID' => '', // 'ADMIN' because there will be only one for all shops in a multishop context
         'PS_MBO_SHOP_ADMIN_MAIL' => '',

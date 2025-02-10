@@ -28,6 +28,8 @@ use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\Uuid;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\AddApiClientCommand;
+use PrestaShop\PrestaShop\Core\Domain\ApiClient\Command\DeleteApiClientCommand;
 
 trait HaveShopOnExternalService
 {
@@ -83,16 +85,8 @@ trait HaveShopOnExternalService
      */
     private function callServiceWithLockFile(string $method, array $params = []): void
     {
-        $lockFile = $this->moduleCacheDir . $method . '.lock';
-
         try {
             $this->getAdminAuthenticationProvider()->clearCache();
-
-            // If the module is installed via command line or somehow the ADMIN_DIR is not defined,
-            // we ignore the shop registration, so it will be done at any action on the backoffice
-            if (php_sapi_name() === 'cli' || !defined('_PS_ADMIN_DIR_')) {
-                throw new \Exception();
-            }
             /** @var Client $distributionApi */
             $distributionApi = $this->get(Client::class);
             if (!method_exists($distributionApi, $method)) {
@@ -103,25 +97,14 @@ trait HaveShopOnExternalService
 
             // Add the default params
             $params = array_merge($params, [
-                'mbo_api_user_token' => $this->getAdminAuthenticationProvider()->getAdminToken(),
+                'mbo_client_secret' => $this->createAPIClientCommand()->getSecret(),
                 'accounts_token' => $accountsDataProvider ? $accountsDataProvider->getAccountsToken() : null,
                 'accounts_shop_id' => $accountsDataProvider ? $accountsDataProvider->getAccountsShopId() : null,
             ]);
             $distributionApi->setBearer($this->getAdminAuthenticationProvider()->getMboJWT());
             $distributionApi->{$method}($params);
 
-            if (file_exists($lockFile)) {
-                unlink($lockFile);
-            }
         } catch (\Exception $exception) {
-            // Create the lock file
-            if (!file_exists($lockFile)) {
-                if (!is_dir($this->moduleCacheDir)) {
-                    mkdir($this->moduleCacheDir, 0777, true);
-                }
-                $f = fopen($lockFile, 'w+');
-                fclose($f);
-            }
             ErrorHelper::reportError($exception, [
                 'method' => $method,
                 'params' => $params,
@@ -193,5 +176,36 @@ trait HaveShopOnExternalService
             throw new ExpectedServiceNotFoundException('Unable to get ConfigChangeCommandHandler');
         }
         $commandHandler->handle($command);
+    }
+
+    private function createAPIClientCommand()
+    {
+        try {
+            return $this->apiClientRepository->getByClientId(self::API_CLIENT_ID);
+        } catch (NoResultException) {
+        }
+        
+        $command = new AddApiClientCommand(
+            self::API_CLIENT_NAME,
+            self::API_CLIENT_ID,
+            true,
+            '',
+            self::API_CLIENT_LIFETIME,
+            ["module_read", "module_write"]
+        );
+
+        $commandBus = $this->getContainer()->get('prestashop.core.command_bus');
+       return $commandBus->handle($command);
+    }
+
+    private function deleteAPIClientCommand()
+    {        
+        try {
+            $apiClient = $this->apiClientRepository->getByClientId(self::API_CLIENT_ID);
+            $command = new DeleteApiClientCommand($apiClient->getId());
+            $this->commandBus->handle($command);
+        } catch (NoResultException) {
+            return;
+        }
     }
 }
