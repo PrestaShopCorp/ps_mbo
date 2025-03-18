@@ -42,7 +42,6 @@ class ps_mbo extends Module
 {
     use PrestaShop\Module\Mbo\Traits\HaveTabs;
     use PrestaShop\Module\Mbo\Traits\UseHooks;
-    use PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService;
     use PrestaShop\Module\Mbo\Traits\HaveConfigurationPage;
 
     /**
@@ -242,9 +241,6 @@ class ps_mbo extends Module
         $this->updateTabs();
         $this->postponeTabsTranslations();
 
-        // Register online services
-        $this->registerShop();
-
         return true;
     }
 
@@ -271,9 +267,6 @@ class ps_mbo extends Module
 
         // Restore previous context
         Shop::setContext($previousContextType, $previousContextShopId);
-
-        // Unregister from online services
-        $this->unregisterShop();
 
         return $this->handleTabAction('uninstall');
     }

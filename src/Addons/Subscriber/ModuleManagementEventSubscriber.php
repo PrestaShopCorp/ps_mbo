@@ -169,11 +169,6 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
 
         $module = $event->getModule();
         if ('ps_mbo' === $module->get('name')) {
-            // Update shop config to transmit correct versions to Distribution API
-            /** @var \ps_mbo $psMbo */
-            $psMbo = $module->getInstance();
-            $psMbo->updateShop();
-
             // Apply config dur to PS and MBO version changes
             $this->applyConfigOnVersionChange($module);
         }

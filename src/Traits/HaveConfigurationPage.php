@@ -92,14 +92,6 @@ trait HaveConfigurationPage
                 $output .= $this->saveNewDotenvData($envFilePath);
             }
         }
-        if (\Tools::isSubmit('resetModule')) {
-            try {
-                $this->registerShop();
-                $output .= '<b>Module is now well configured</b>';
-            } catch (\Exception $e) {
-                $output .= '<b>An error occurred, please reset the module manually in the module manager</b>';
-            }
-        }
 
         return $output;
     }

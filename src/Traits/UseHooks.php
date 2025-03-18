@@ -48,8 +48,6 @@ trait UseHooks
     use Hooks\UseActionModuleRegisterHookAfter;
     use Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
     use Hooks\UseActionDispatcherBefore;
-    use Hooks\UseActionObjectShopUrlUpdateAfter;
-    use Hooks\UseActionGeneralPageSave;
     use Hooks\UseActionBeforeUpgradeModule;
     use Hooks\UseActionObjectEmployeeDeleteBefore;
     use Hooks\UseActionObjectEmployeeUpdateBefore;

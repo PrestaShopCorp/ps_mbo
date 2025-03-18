@@ -49,22 +49,13 @@ trait UseActionDispatcherBefore
             'AdminPsMboRecommended',
             'apiPsMbo',
         ])) {
-            $this->ensureShopIsRegistered();
-            $this->ensureShopIsUpdated();
+            $this->ensureShopIsConfigured();
             $this->ensureApiConfigIsApplied();
         }
 
         if (self::checkModuleStatus()) { // If the module is not active, config values are not set yet
             $this->ensureApiUserExistAndIsLogged($controllerName, $params);
         }
-    }
-
-    private function ensureShopIsRegistered(): void
-    {
-        if (!file_exists($this->moduleCacheDir . 'registerShop.lock') && $this->ensureShopIsConfigured()) {
-            return;
-        }
-        $this->registerShop();
     }
 
     private function ensureShopIsConfigured(): bool
@@ -97,14 +88,6 @@ trait UseActionDispatcherBefore
         return $configurationList['PS_MBO_LAST_PS_VERSION_API_CONFIG']
             && $configurationList['PS_MBO_SHOP_ADMIN_MAIL']
             && $configurationList['PS_MBO_SHOP_ADMIN_UUID'];
-    }
-
-    private function ensureShopIsUpdated(): void
-    {
-        if (!file_exists($this->moduleCacheDir . 'updateShop.lock')) {
-            return;
-        }
-        $this->updateShop();
     }
 
     private function ensureApiConfigIsApplied(): void
