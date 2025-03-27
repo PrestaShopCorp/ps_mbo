@@ -32,9 +32,11 @@ class UrlHelper
         return rtrim(Config::getShopUrl(false), '/') . DIRECTORY_SEPARATOR . ltrim($url, '/');
     }
 
-    public static function getQueryParameterValue(string $url, string $key): string {
+    public static function getQueryParameterValue(string $url, string $key): string
+    {
         $parameters = [];
         parse_str(parse_url($url, PHP_URL_QUERY), $parameters);
+
         return $parameters[$key] ?? '';
-    } 
+    }
 }

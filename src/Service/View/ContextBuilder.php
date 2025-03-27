@@ -212,11 +212,12 @@ class ContextBuilder
                 'disable' => $this->generateActionUrl('disable'),
                 'reset' => $this->generateActionUrl('reset'),
                 'upgrade' => $this->generateActionUrl('upgrade'),
-            ]
+            ],
         ];
     }
 
-    private function generateActionUrl(string $action): string {
+    private function generateActionUrl(string $action): string
+    {
         return UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_module_manage_action', [
             'action' => $action,
             'module_name' => ':module',

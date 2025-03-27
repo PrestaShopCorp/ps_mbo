@@ -24,7 +24,6 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Search\SearchPanel;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 trait UseActionGetAlternativeSearchPanels
 {
