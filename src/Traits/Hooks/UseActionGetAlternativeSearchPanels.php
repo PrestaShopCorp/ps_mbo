@@ -40,9 +40,8 @@ trait UseActionGetAlternativeSearchPanels
     public function hookActionGetAlternativeSearchPanels(array $params): array
     {
         try {
-            /** @var Router|null $router */
-            $router = $this->get(Router::class);
-            if (null === $router) {
+            $router = $this->context->controller->get('router');
+            if ($router == null) {
                 throw new ExpectedServiceNotFoundException('Unable to get router service');
             }
 
