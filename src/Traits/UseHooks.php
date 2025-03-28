@@ -49,8 +49,6 @@ trait UseHooks
     use Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
     use Hooks\UseActionDispatcherBefore;
     use Hooks\UseActionBeforeUpgradeModule;
-    use Hooks\UseActionObjectEmployeeDeleteBefore;
-    use Hooks\UseActionObjectEmployeeUpdateBefore;
 
     /**
      * @var array An array of method that can be called to register media in the actionAdminControllerSetMedia hook

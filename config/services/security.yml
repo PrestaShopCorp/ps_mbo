@@ -7,8 +7,6 @@ services:
   PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider:
     autowire: true
     arguments:
-      $context: "@=service('prestashop.adapter.legacy.context').getContext()"
-      $dbPrefix: '%database_prefix%'
       $cacheProvider: '@Doctrine\Common\Cache\Psr6\DoctrineProvider'
 
   PrestaShop\Module\Mbo\Api\Security\AuthorizationChecker:

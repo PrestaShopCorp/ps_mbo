@@ -49,45 +49,8 @@ trait UseActionDispatcherBefore
             'AdminPsMboRecommended',
             'apiPsMbo',
         ])) {
-            $this->ensureShopIsConfigured();
             $this->ensureApiConfigIsApplied();
         }
-
-        if (self::checkModuleStatus()) { // If the module is not active, config values are not set yet
-            $this->ensureApiUserExistAndIsLogged($controllerName, $params);
-        }
-    }
-
-    private function ensureShopIsConfigured(): bool
-    {
-        $configurationList = [];
-        $configurationList['PS_MBO_SHOP_ADMIN_UUID'] = false;
-        $configurationList['PS_MBO_SHOP_ADMIN_MAIL'] = false;
-        $configurationList['PS_MBO_LAST_PS_VERSION_API_CONFIG'] = false;
-
-        foreach ($configurationList as $name => $value) {
-            if (\Configuration::hasKey($name)) {
-                $configurationList[$name] = true;
-            }
-        }
-
-        if ($configurationList['PS_MBO_LAST_PS_VERSION_API_CONFIG']
-            && $configurationList['PS_MBO_SHOP_ADMIN_MAIL']
-            && $configurationList['PS_MBO_SHOP_ADMIN_UUID']) {
-            return true;
-        }
-
-        foreach (\Shop::getShops(false, null, true) as $shopId) {
-            foreach ($configurationList as $name => $value) {
-                if (\Configuration::hasKey($name, null, null, (int) $shopId)) {
-                    $configurationList[$name] = true;
-                }
-            }
-        }
-
-        return $configurationList['PS_MBO_LAST_PS_VERSION_API_CONFIG']
-            && $configurationList['PS_MBO_SHOP_ADMIN_MAIL']
-            && $configurationList['PS_MBO_SHOP_ADMIN_UUID'];
     }
 
     private function ensureApiConfigIsApplied(): void
@@ -132,39 +95,6 @@ trait UseActionDispatcherBefore
 
         if ($cacheProvider) {
             $cacheProvider->save($cacheKey, (new \DateTime())->format('Y-m-d H:i:s'), 0);
-        }
-    }
-
-    /**
-     * @param string|bool $controllerName
-     * @param array $params
-     *
-     * @return void
-     *
-     * @throws EmployeeException
-     * @throws CoreException
-     * @throws \Exception
-     */
-    private function ensureApiUserExistAndIsLogged($controllerName, array $params): void
-    {
-        $apiUser = null;
-        // Whatever the call in the MBO API, we check if the MBO API user exists
-        if (\Dispatcher::FC_ADMIN == (int) $params['controller_type'] || $controllerName === 'apiPsMbo') {
-            $apiUser = $this->getAdminAuthenticationProvider()->ensureApiUserExistence();
-        }
-
-        if ($controllerName !== 'apiPsMbo' || !$apiUser) {
-            return;
-        }
-
-        if (!$apiUser->isLoggedBack()) { // Log the user
-            $cookie = $this->getAdminAuthenticationProvider()->apiUserLogin($apiUser);
-
-            \Cache::clean('isLoggedBack' . $apiUser->id);
-
-            $this->context->employee = $apiUser;
-            $this->context->cookie = $cookie;
-            \Context::getContext()->cookie = $cookie;
         }
     }
 

@@ -94,16 +94,6 @@ trait UseDisplayDashboardTop
         $this->alreadyProcessedPage = true;
 
         $values = Tools::getAllValues();
-        $moduleCacheDir = sprintf('%s/var/modules/ps_mbo/', rtrim(_PS_ROOT_DIR_, '/'));
-        $createApiUserLockFile = $moduleCacheDir . 'createApiUser.lock';
-
-        if (
-            isset($values['controller'])
-            && ($values['controller'] === 'AdminPsMboModule')
-            && file_exists($createApiUserLockFile)
-        ) {
-            return $this->displayFailedApiUser();
-        }
 
         // Check if we are on configuration page & if the module needs to have a push on this page
         $shouldDisplayMessageInConfigPage = isset($values['controller'])
