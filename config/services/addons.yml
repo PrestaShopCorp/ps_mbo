@@ -19,7 +19,7 @@ services:
   PrestaShop\Module\Mbo\Addons\ApiClient:
     autowire: true
     arguments:
-      $apiUrl: "%env(DISTRIBUTION_API_URL)%"
+      $apiUrl: "%env(ADDONS_API_URL)%"
       $httpClient: '@Psr\Http\Client\ClientInterface'
       $requestFactory: '@Psr\Http\Message\ServerRequestFactoryInterface'
     calls:
