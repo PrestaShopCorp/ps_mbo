@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,6 +18,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Api\Security;
@@ -36,10 +38,16 @@ class AdminAuthenticationProvider
      */
     private $cacheProvider;
 
+    /**
+     * @var string
+     */
+    private $shopUrl;
+
     public function __construct(
         CacheProvider $cacheProvider,
     ) {
         $this->cacheProvider = $cacheProvider;
+        $this->shopUrl = Config::getShopUrl();
     }
 
     /**
@@ -75,67 +83,33 @@ class AdminAuthenticationProvider
      * @throws EmployeeException
      * @throws \Doctrine\DBAL\Exception
      */
-    public function getAdminToken(): string
-    {
-        $cacheKey = $this->getAdminTokenCacheKey();
-
-        if (!($token = $this->cacheProvider->fetch($cacheKey))) {
-            $token = $this->getDefaultUserToken();
-        }
-
-        return $token;
-    }
-
-    /**
-     * @throws EmployeeException
-     * @throws \Doctrine\DBAL\Exception
-     */
     public function getMboJWT(): string
     {
+        $shopUrl = Config::getShopUrl();
         $cacheKey = $this->getJwtTokenCacheKey();
 
-        if ($this->cacheProvider->contains($cacheKey)) {
-            return $this->cacheProvider->fetch($cacheKey);
+        if (!($jwtToken = $this->cacheProvider->fetch($cacheKey))) {
+            $mboToken = \Tools::getAdminToken('apiPsMbo' . \Tab::getIdFromClassName('apiPsMbo') . self::DEFAULT_EMPLOYEE_ID);
+            $jwtToken = JWT::encode([
+                'shop_url' => $shopUrl,
+                'mbo_version' => \ps_mbo::VERSION,
+                'ps_version' => _PS_VERSION_,
+            ], $mboToken, 'HS256');
+
+            // Lifetime infinite, will be purged when MBO is uninstalled
+            $this->cacheProvider->save($cacheKey, $jwtToken, 0);
         }
 
-        $mboUserToken = $this->getAdminToken();
-
-        $shopUrl = Config::getShopUrl();
-        $shopUuid = Config::getShopMboUuid();
-
-        $jwtToken = JWT::encode(['shop_url' => $shopUrl, 'shop_uuid' => $shopUuid], $mboUserToken, 'HS256');
-
-        // Don't put in cache if we have the default user token
-        if ($this->getDefaultUserToken() === $mboUserToken) {
-            return $jwtToken;
-        }
-
-        // Lifetime infinite, will be purged when MBO is uninstalled
-        $this->cacheProvider->save($cacheKey, $jwtToken, 0);
-
-        return $this->cacheProvider->fetch($cacheKey);
+        return $jwtToken;
     }
 
     public function clearCache(): void
     {
-        $this->cacheProvider->delete($this->getAdminTokenCacheKey());
         $this->cacheProvider->delete($this->getJwtTokenCacheKey());
-    }
-
-    private function getAdminTokenCacheKey(): string
-    {
-        return sprintf('mbo_admin_token_%s', Config::getShopMboUuid());
     }
 
     private function getJwtTokenCacheKey(): string
     {
-        return sprintf('mbo_jwt_token_%s', Config::getShopMboUuid());
-    }
-
-    private function getDefaultUserToken(): string
-    {
-        $idTab = \Tab::getIdFromClassName('apiPsMbo');
-
-        return \Tools::getAdminToken('apiPsMbo' . (int) $idTab . self::DEFAULT_EMPLOYEE_ID);
+        return sprintf('mbo_jwt_token_%s', md5($this->shopUrl));
     }
 }
