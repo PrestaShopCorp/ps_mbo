@@ -326,7 +326,8 @@ class ps_mbo extends Module
         return $this->getContainer()->has(AdminAuthenticationProvider::class) ?
             $this->get(AdminAuthenticationProvider::class) :
             new AdminAuthenticationProvider(
-                $this->get('doctrine.cache.provider')
+                $this->get('doctrine.cache.provider'),
+                $this->context,
             );
     }
 

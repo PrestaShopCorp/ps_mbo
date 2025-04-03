@@ -168,7 +168,6 @@ class ContextBuilder
             $token = \Tools::getValue('token');
         }
 
-        $refreshUrl = \Context::getContext()->link->getAdminLink('ApiSecurityPsMbo');
         $mboResetUrl = UrlHelper::transformToAbsoluteUrl(
             $this->router->generate('admin_module_manage_action', [
                 'action' => 'reset',
@@ -188,7 +187,7 @@ class ContextBuilder
             'mbo_reset_url' => $mboResetUrl,
             'user_id' => $context->cookie->id_employee,
             'admin_token' => $token,
-            'refresh_url' => $refreshUrl,
+            'refresh_url' => '',
             'installed_modules' => $this->getInstalledModules(),
             'upgradable_modules' => $this->getUpgradableModules(),
             'accounts_user_id' => $this->accountsDataProvider->getAccountsUserId(),

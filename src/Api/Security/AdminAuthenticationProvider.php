@@ -25,29 +25,29 @@ namespace PrestaShop\Module\Mbo\Api\Security;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Firebase\JWT\JWT;
+use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 class AdminAuthenticationProvider
 {
-    private const DEFAULT_EMPLOYEE_ID = 42;
-
     /**
      * @var CacheProvider
      */
     private $cacheProvider;
 
     /**
-     * @var string
+     * @var \Context
      */
-    private $shopUrl;
+    private $context;
 
     public function __construct(
         CacheProvider $cacheProvider,
+        \Context $context,
     ) {
         $this->cacheProvider = $cacheProvider;
-        $this->shopUrl = Config::getShopUrl();
+        $this->context = $context;
     }
 
     /**
@@ -89,7 +89,7 @@ class AdminAuthenticationProvider
         $cacheKey = $this->getJwtTokenCacheKey();
 
         if (!($jwtToken = $this->cacheProvider->fetch($cacheKey))) {
-            $mboToken = \Tools::getAdminToken('apiPsMbo' . \Tab::getIdFromClassName('apiPsMbo') . self::DEFAULT_EMPLOYEE_ID);
+            $mboToken = $this->getMboToken();
             $jwtToken = JWT::encode([
                 'shop_url' => $shopUrl,
                 'mbo_version' => \ps_mbo::VERSION,
@@ -108,8 +108,18 @@ class AdminAuthenticationProvider
         $this->cacheProvider->delete($this->getJwtTokenCacheKey());
     }
 
+    private function getMboToken(): string
+    {
+        $employee = $this->context->employee;
+        if (!($employee instanceof \Employee)) {
+            throw new UnauthorizedException('User is not connected');
+        }
+
+        return \Tools::getAdminToken('apiPsMbo' . \Tab::getIdFromClassName('apiPsMbo') . $employee->id);
+    }
+
     private function getJwtTokenCacheKey(): string
     {
-        return sprintf('mbo_jwt_token_%s', md5($this->shopUrl));
+        return sprintf('mbo_jwt_token_%s', $this->getMboToken());
     }
 }
