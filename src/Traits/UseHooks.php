@@ -47,7 +47,6 @@ trait UseHooks
     use Hooks\UseActionListModules;
     use Hooks\UseActionModuleRegisterHookAfter;
     use Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
-    use Hooks\UseActionDispatcherBefore;
     use Hooks\UseActionBeforeUpgradeModule;
 
     /**
