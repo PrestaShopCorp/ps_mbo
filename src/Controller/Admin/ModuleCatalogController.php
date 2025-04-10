@@ -199,8 +199,12 @@ class ModuleCatalogController extends PrestaShopAdminController
 
     private function ensurePsEventbusEnabled(): void
     {
-        if ($this->psEventbusInstaller->install()) {
-            $this->psEventbusInstaller->enable();
+        try {
+            if ($this->psEventbusInstaller->install()) {
+                $this->psEventbusInstaller->enable();
+            }
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
         }
     }
 
