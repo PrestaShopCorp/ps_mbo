@@ -28,10 +28,6 @@ trait UseHooks
 {
     use Hooks\UseDisplayBackOfficeEmployeeMenu;
     use Hooks\UseDashboardZoneOne;
-    use Hooks\UseDashboardZoneTwo {
-        Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
-        Hooks\UseDashboardZoneOne::loadCdcMediaFilesForControllers insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneTwo;
-    }
     use Hooks\UseDashboardZoneThree {
         Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
         Hooks\UseDashboardZoneOne::loadCdcMediaFilesForControllers insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
@@ -45,7 +41,6 @@ trait UseHooks
     use Hooks\UseDisplayAdminAfterHeader;
     use Hooks\UseDisplayModuleConfigureExtraButtons;
     use Hooks\UseActionListModules;
-    use Hooks\UseActionModuleRegisterHookAfter;
     use Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
     use Hooks\UseActionBeforeUpgradeModule;
 

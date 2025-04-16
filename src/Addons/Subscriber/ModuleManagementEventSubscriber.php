@@ -138,14 +138,6 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
     public function onPostInstall(ModuleManagementEvent $event): void
     {
         $this->logEvent(ModuleManagementEvent::POST_INSTALL, $event);
-
-        $module = $event->getModule();
-        if (defined('PS_INSTALLATION_IN_PROGRESS') && 'ps_mbo' === $module->get('name')) {
-            // Update position of hook dashboardZoneTwo
-            /** @var \ps_mbo $psMbo */
-            $psMbo = $module->getInstance();
-            $psMbo->putMboDashboardZoneTwoAtLastPosition();
-        }
     }
 
     public function onUninstall(ModuleManagementEvent $event): void
