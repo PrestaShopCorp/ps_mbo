@@ -215,10 +215,6 @@ trait UseDisplayDashboardTop
      */
     protected function displayRecommendedModules(string $controller, array $hookParams): string
     {
-        if ($this->isSymfonyContext() && !empty($hookParams['route']) && !str_ends_with($hookParams['route'], '_index')) {
-            return '';
-        }
-
         $recommendedModulesDisplayed = true;
 
         // Ask to modules if recommended modules should be displayed in this context
@@ -289,7 +285,7 @@ trait UseDisplayDashboardTop
         $this->smarty->assign([
             'shouldAttachRecommendedModulesAfterContent' => $shouldAttachRecommendedModulesAfterContent,
             'shouldAttachRecommendedModulesButton' => $shouldAttachRecommendedModulesButton,
-            'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
+            'shouldUseLegacyTheme' => $this->isAdminLegacyContext() || $hookParams['route'] === 'admin_legacy_controller_route',
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
             'recommendedModulesUrl' => $recommendedModulesUrl,
             'recommendedModulesTitleTranslated' => $this->getRecommendedModulesButtonTitle($controller),
@@ -327,9 +323,6 @@ trait UseDisplayDashboardTop
      */
     protected function loadMediaForDashboardTop($hookParams): void
     {
-        if ($this->isSymfonyContext() && !empty($hookParams['route']) && !str_ends_with($hookParams['route'], '_index')) {
-            return;
-        }
         if (
             $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_BUTTON_TYPE)
             || $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE)
