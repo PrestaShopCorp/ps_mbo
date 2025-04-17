@@ -17,20 +17,22 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-declare(strict_types=1);
+$rootDir = defined('_PS_ROOT_DIR_') ? _PS_ROOT_DIR_ : getenv('_PS_ROOT_DIR_');
+if (!$rootDir) {
+    $rootDir = __DIR__ . '/../../../';
+}
 
-namespace PrestaShop\Module\Mbo\Traits\Hooks;
+require_once $rootDir . '/vendor/autoload.php';
 
-trait UseActionGeneralPageSave
+/**
+ * @param ps_mbo $module
+ *
+ * @return bool
+ */
+function upgrade_module_5_0_0(Module $module): bool
 {
-    /**
-     * @param array $params
-     */
-    public function hookActionGeneralPageSave(array $params): void
-    {
-        if (isset($params['route']) && $params['route'] === 'admin_preferences_save') {
-            // User may have updated the SSL configuration
-            $this->updateShop();
-        }
-    }
+    $module->updateHooks();
+    $module->updateTabs();
+
+    return true;
 }

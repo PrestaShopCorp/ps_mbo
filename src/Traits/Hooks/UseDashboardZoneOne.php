@@ -165,10 +165,14 @@ trait UseDashboardZoneOne
 
     private function ensurePsEventbusEnabled(): void
     {
-        /** @var ModuleInstaller|null $installer */
-        $installer = $this->get('mbo.ps_eventbus.installer');
-        if ($installer && $installer->install()) {
-            $installer->enable();
+        try {
+            /** @var ModuleInstaller|null $installer */
+            $installer = $this->get('mbo.ps_eventbus.installer');
+            if ($installer && $installer->install()) {
+                $installer->enable();
+            }
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
         }
     }
 }

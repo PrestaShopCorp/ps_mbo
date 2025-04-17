@@ -94,16 +94,6 @@ trait UseDisplayDashboardTop
         $this->alreadyProcessedPage = true;
 
         $values = Tools::getAllValues();
-        $moduleCacheDir = sprintf('%s/var/modules/ps_mbo/', rtrim(_PS_ROOT_DIR_, '/'));
-        $createApiUserLockFile = $moduleCacheDir . 'createApiUser.lock';
-
-        if (
-            isset($values['controller'])
-            && ($values['controller'] === 'AdminPsMboModule')
-            && file_exists($createApiUserLockFile)
-        ) {
-            return $this->displayFailedApiUser();
-        }
 
         // Check if we are on configuration page & if the module needs to have a push on this page
         $shouldDisplayMessageInConfigPage = isset($values['controller'])
@@ -225,10 +215,6 @@ trait UseDisplayDashboardTop
      */
     protected function displayRecommendedModules(string $controller, array $hookParams): string
     {
-        if ($this->isSymfonyContext() && !empty($hookParams['route']) && !str_ends_with($hookParams['route'], '_index')) {
-            return '';
-        }
-
         $recommendedModulesDisplayed = true;
 
         // Ask to modules if recommended modules should be displayed in this context
@@ -299,7 +285,7 @@ trait UseDisplayDashboardTop
         $this->smarty->assign([
             'shouldAttachRecommendedModulesAfterContent' => $shouldAttachRecommendedModulesAfterContent,
             'shouldAttachRecommendedModulesButton' => $shouldAttachRecommendedModulesButton,
-            'shouldUseLegacyTheme' => $this->isAdminLegacyContext(),
+            'shouldUseLegacyTheme' => $this->isAdminLegacyContext() || $hookParams['route'] === 'admin_legacy_controller_route',
             'recommendedModulesCloseTranslated' => $this->trans('Close', [], 'Admin.Actions'),
             'recommendedModulesUrl' => $recommendedModulesUrl,
             'recommendedModulesTitleTranslated' => $this->getRecommendedModulesButtonTitle($controller),
@@ -337,9 +323,6 @@ trait UseDisplayDashboardTop
      */
     protected function loadMediaForDashboardTop($hookParams): void
     {
-        if ($this->isSymfonyContext() && !empty($hookParams['route']) && !str_ends_with($hookParams['route'], '_index')) {
-            return;
-        }
         if (
             $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_BUTTON_TYPE)
             || $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE)

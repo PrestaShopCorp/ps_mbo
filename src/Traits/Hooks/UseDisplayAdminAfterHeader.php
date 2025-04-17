@@ -21,7 +21,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use Doctrine\Common\Cache\CacheProvider;
+use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
+use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
+use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -37,6 +41,8 @@ trait UseDisplayAdminAfterHeader
      */
     public function hookDisplayAdminAfterHeader(): string
     {
+        $this->ensureModuleIsCorrectlySetUp();
+
         $shouldDisplayMboUserExplanation = $this->shouldDisplayMboUserExplanation();
         $shouldDisplayModuleManagerMessage = $this->shouldDisplayModuleManagerMessage();
 
@@ -190,5 +196,103 @@ trait UseDisplayAdminAfterHeader
             'admin_module_notification',
             'admin_module_updates',
         ]);
+    }
+
+    private function ensureModuleIsCorrectlySetUp(): void
+    {
+        $this->translateTabsIfNeeded();
+
+        $whitelistedControllers = [
+            'AdminPsMboModule',
+            'AdminPsMboModuleParent',
+            'AdminPsMboRecommended',
+            'apiPsMbo',
+            'apiSecurityPsMbo',
+            'AdminModulesManage',
+        ];
+        $controllerName = \Tools::getValue('controller');
+        if (!in_array($controllerName, $whitelistedControllers)) {
+            return;
+        }
+
+        $this->ensureApiConfigIsApplied();
+    }
+
+    private function ensureApiConfigIsApplied(): void
+    {
+        try {
+            /** @var CacheProvider|null $cacheProvider */
+            $cacheProvider = $this->get(CacheProvider::class);
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+            $cacheProvider = null;
+        }
+        $cacheKey = 'mbo_last_ps_version_api_config_check';
+
+        if ($cacheProvider && $cacheProvider->contains($cacheKey)) {
+            $lastCheck = $cacheProvider->fetch($cacheKey);
+
+            $timeSinceLastCheck = (strtotime('now') - strtotime($lastCheck)) / (60 * 60);
+            if ($timeSinceLastCheck < 3) { // If last check happened lss than 3hrs, do nothing
+                return;
+            }
+        }
+
+        if (_PS_VERSION_ === Config::getLastPsVersionApiConfig()) {
+            // Config already applied for this version of PS
+            return;
+        }
+
+        // Apply the config for the new PS version
+        $command = new VersionChangeApplyConfigCommand(_PS_VERSION_, $this->version);
+        try {
+            /** @var VersionChangeApplyConfigCommandHandler $configApplyHandler */
+            $configApplyHandler = $this->get(VersionChangeApplyConfigCommandHandler::class);
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+
+            return;
+        }
+        $configApplyHandler->handle($command);
+
+        // Update the PS_MBO_LAST_PS_VERSION_API_CONFIG
+        \Configuration::updateValue('PS_MBO_LAST_PS_VERSION_API_CONFIG', _PS_VERSION_);
+
+        if ($cacheProvider) {
+            $cacheProvider->save($cacheKey, (new \DateTime())->format('Y-m-d H:i:s'), 0);
+        }
+    }
+
+    private function translateTabsIfNeeded(): void
+    {
+        $lockFile = $this->moduleCacheDir . 'translate_tabs.lock';
+        if (!file_exists($lockFile)) {
+            return;
+        }
+
+        $moduleTabs = \Tab::getCollectionFromModule($this->name);
+        $languages = \Language::getLanguages(false);
+
+        /**
+         * @var \Tab $tab
+         */
+        foreach ($moduleTabs as $tab) {
+            if (!empty($tab->wording) && !empty($tab->wording_domain)) {
+                $tabNameByLangId = [];
+                foreach ($languages as $language) {
+                    $tabNameByLangId[$language['id_lang']] = $this->trans(
+                        $tab->wording,
+                        [],
+                        $tab->wording_domain,
+                        $language['locale']
+                    );
+                }
+
+                $tab->name = $tabNameByLangId;
+                $tab->save();
+            }
+        }
+
+        @unlink($lockFile);
     }
 }

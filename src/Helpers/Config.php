@@ -57,11 +57,6 @@ class Config
     /**
      * @var string|null
      */
-    private static $SHOP_MBO_ADMIN_MAIL;
-
-    /**
-     * @var string|null
-     */
     private static $SHOP_URL_WITHOUT_PHYSICAL_URI;
 
     /**
@@ -72,7 +67,6 @@ class Config
     public static function resetConfigValues(): void
     {
         self::$SHOP_MBO_UUID = null;
-        self::$SHOP_MBO_ADMIN_MAIL = null;
         self::$SHOP_URL = null;
     }
 
@@ -94,26 +88,6 @@ class Config
         }
 
         return self::$SHOP_MBO_UUID;
-    }
-
-    public static function getShopMboAdminMail(): ?string
-    {
-        if (null === self::$SHOP_MBO_ADMIN_MAIL) {
-            // PS_MBO_SHOP_ADMIN_ADMIN_MAIL have the same value for all shops
-            // to prevent errors in a multishop context,
-            // we request the shops list and get the config value for the 1st one
-            $singleShop = self::getDefaultShop();
-
-            self::$SHOP_MBO_ADMIN_MAIL = \Configuration::get(
-                'PS_MBO_SHOP_ADMIN_MAIL',
-                null,
-                $singleShop->id_shop_group,
-                $singleShop->id,
-                null
-            );
-        }
-
-        return self::$SHOP_MBO_ADMIN_MAIL;
     }
 
     /**

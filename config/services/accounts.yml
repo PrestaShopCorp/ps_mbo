@@ -5,7 +5,7 @@ services:
   PrestaShop\PsAccountsInstaller\Installer\Installer:
     autowire: true
     arguments:
-      $psAccountsVersion: "5.2.5"
+      $psAccountsVersion: "7.1.2"
 
   PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts:
     autowire: true
@@ -14,4 +14,4 @@ services:
     autowire: true
     autoconfigure: true
     arguments:
-      $psAccountsVersion: "5.2.5"
+      $psAccountsVersion: "7.1.2"

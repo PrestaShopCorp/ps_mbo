@@ -42,7 +42,6 @@ class ps_mbo extends Module
 {
     use PrestaShop\Module\Mbo\Traits\HaveTabs;
     use PrestaShop\Module\Mbo\Traits\UseHooks;
-    use PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService;
     use PrestaShop\Module\Mbo\Traits\HaveConfigurationPage;
 
     /**
@@ -63,7 +62,6 @@ class ps_mbo extends Module
 
     public $configurationList = [
         'PS_MBO_SHOP_ADMIN_UUID' => '', // 'ADMIN' because there will be only one for all shops in a multishop context
-        'PS_MBO_SHOP_ADMIN_MAIL' => '',
         'PS_MBO_LAST_PS_VERSION_API_CONFIG' => '',
     ];
 
@@ -144,7 +142,6 @@ class ps_mbo extends Module
             $this->installHooks();
 
             $this->getAdminAuthenticationProvider()->clearCache();
-            $this->getAdminAuthenticationProvider()->createApiUser();
             $this->postponeTabsTranslations();
 
             return true;
@@ -165,15 +162,7 @@ class ps_mbo extends Module
             return false;
         }
 
-        $this->getAdminAuthenticationProvider()->deletePossibleApiUser();
         $this->getAdminAuthenticationProvider()->clearCache();
-
-        $lockFiles = ['registerShop', 'updateShop', 'createApiUser'];
-        foreach ($lockFiles as $lockFile) {
-            if (file_exists($this->moduleCacheDir . $lockFile . '.lock')) {
-                unlink($this->moduleCacheDir . $lockFile . '.lock');
-            }
-        }
 
         foreach (array_keys($this->configurationList) as $name) {
             Configuration::deleteByName($name);
@@ -242,9 +231,6 @@ class ps_mbo extends Module
         $this->updateTabs();
         $this->postponeTabsTranslations();
 
-        // Register online services
-        $this->registerShop();
-
         return true;
     }
 
@@ -271,9 +257,6 @@ class ps_mbo extends Module
 
         // Restore previous context
         Shop::setContext($previousContextType, $previousContextShopId);
-
-        // Unregister from online services
-        $this->unregisterShop();
 
         return $this->handleTabAction('uninstall');
     }
@@ -343,11 +326,8 @@ class ps_mbo extends Module
         return $this->getContainer()->has(AdminAuthenticationProvider::class) ?
             $this->get(AdminAuthenticationProvider::class) :
             new AdminAuthenticationProvider(
-                $this->get('doctrine.dbal.default_connection'),
-                $this->context,
-                $this->get('hashing'),
                 $this->get('doctrine.cache.provider'),
-                $this->getContainer()->getParameter('database_prefix')
+                $this->context,
             );
     }
 

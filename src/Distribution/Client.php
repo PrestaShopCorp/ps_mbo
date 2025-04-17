@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Distribution;
 
-use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Symfony\Component\Routing\Router;
 
@@ -47,55 +46,6 @@ class Client extends BaseClient
     public function retrieveNewKey(): \stdClass
     {
         return $this->processRequestAndDecode('shops/get-pub-key');
-    }
-
-    /**
-     * Register new Shop on Distribution API.
-     *
-     * @param array $params
-     *
-     * @return \stdClass
-     *
-     * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::registerShop
-     */
-    public function registerShop(array $params = []): \stdClass
-    {
-        return $this->processRequestAndDecode(
-            'shops',
-            self::HTTP_METHOD_POST,
-            ['form_params' => $this->mergeShopDataWithParams($params)]
-        );
-    }
-
-    /**
-     * Unregister a Shop on Distribution API.
-     *
-     * @return \stdClass
-     */
-    public function unregisterShop()
-    {
-        return $this->processRequestAndDecode(
-            'shops/' . Config::getShopMboUuid(),
-            self::HTTP_METHOD_DELETE
-        );
-    }
-
-    /**
-     * Update shop on Distribution API.
-     *
-     * @param array $params
-     *
-     * @return \stdClass
-     *
-     * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::updateShop
-     */
-    public function updateShop(array $params): \stdClass
-    {
-        return $this->processRequestAndDecode(
-            'shops/' . Config::getShopMboUuid(),
-            self::HTTP_METHOD_PUT,
-            ['form_params' => $this->mergeShopDataWithParams($params)]
-        );
     }
 
     /**
@@ -132,18 +82,6 @@ class Client extends BaseClient
         $this->cacheProvider->save($cacheKey, $conf, 60 * 60 * 24); // A day
 
         return $this->cacheProvider->fetch($cacheKey);
-    }
-
-    /**
-     * Retrieve API config from Distribution API.
-     *
-     * @return array
-     *
-     * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::registerShop
-     */
-    public function getApiConf(): array
-    {
-        return $this->processRequestAndDecode('shops/conf-mbo');
     }
 
     /**

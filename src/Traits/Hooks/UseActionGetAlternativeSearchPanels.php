@@ -24,7 +24,6 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Search\SearchPanel;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 trait UseActionGetAlternativeSearchPanels
 {
@@ -40,9 +39,8 @@ trait UseActionGetAlternativeSearchPanels
     public function hookActionGetAlternativeSearchPanels(array $params): array
     {
         try {
-            /** @var Router|null $router */
-            $router = $this->get(Router::class);
-            if (null === $router) {
+            $router = $this->context->controller->get('router');
+            if ($router == null) {
                 throw new ExpectedServiceNotFoundException('Unable to get router service');
             }
 
