@@ -27,27 +27,18 @@ use Doctrine\Common\Cache\CacheProvider;
 use Firebase\JWT\JWT;
 use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 class AdminAuthenticationProvider
 {
-    /**
-     * @var CacheProvider
-     */
-    private $cacheProvider;
-
-    /**
-     * @var \Context
-     */
-    private $context;
-
     public function __construct(
-        CacheProvider $cacheProvider,
-        \Context $context,
+        private readonly EmployeeContext $employeeContext,
+        private readonly ApiClientContext $apiClientContext,
+        private readonly CacheProvider $cacheProvider,
     ) {
-        $this->cacheProvider = $cacheProvider;
-        $this->context = $context;
     }
 
     /**
@@ -110,10 +101,12 @@ class AdminAuthenticationProvider
 
     private function getMboToken(): string
     {
-        if($this->context && $this->context->employee && $this->context->employee instanceof \Employee) {
-            $salt = $this->context->employee->id;
+        if ($this->employeeContext->getEmployee()) {
+            $salt = $this->employeeContext->getEmployee()->getId();
+        } elseif ($this->apiClientContext->getApiClient()) {
+            $salt = $this->apiClientContext->getApiClient()->getId();
         } else {
-            $salt = 'APIClient';
+            throw new UnauthorizedException('No employee or api client found');
         }
 
         return \Tools::getAdminToken('apiPsMbo' . \Tab::getIdFromClassName('apiPsMbo') . $salt);

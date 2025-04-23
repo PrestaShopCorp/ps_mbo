@@ -31,7 +31,6 @@ if (file_exists($autoloadPath)) {
 
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
-use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
@@ -141,7 +140,6 @@ class ps_mbo extends Module
             // Do come extra operations on modules' registration like modifying orders
             $this->installHooks();
 
-            $this->getAdminAuthenticationProvider()->clearCache();
             $this->postponeTabsTranslations();
 
             return true;
@@ -161,8 +159,6 @@ class ps_mbo extends Module
         if (!parent::uninstall()) {
             return false;
         }
-
-        $this->getAdminAuthenticationProvider()->clearCache();
 
         foreach (array_keys($this->configurationList) as $name) {
             Configuration::deleteByName($name);
@@ -312,23 +308,6 @@ class ps_mbo extends Module
         } else {
             return false;
         }
-    }
-
-    /**
-     * Get an existing or build an instance of AdminAuthenticationProvider
-     *
-     * @return AdminAuthenticationProvider
-     *
-     * @throws Exception
-     */
-    public function getAdminAuthenticationProvider(): AdminAuthenticationProvider
-    {
-        return $this->getContainer()->has(AdminAuthenticationProvider::class) ?
-            $this->get(AdminAuthenticationProvider::class) :
-            new AdminAuthenticationProvider(
-                $this->get('doctrine.cache.provider'),
-                $this->context,
-            );
     }
 
     public function installTables(?string $table = null): bool
