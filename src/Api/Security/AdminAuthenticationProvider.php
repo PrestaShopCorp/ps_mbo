@@ -110,12 +110,13 @@ class AdminAuthenticationProvider
 
     private function getMboToken(): string
     {
-        $employee = $this->context->employee;
-        if (!($employee instanceof \Employee)) {
-            throw new UnauthorizedException('User is not connected');
+        if($this->context && $this->context->employee && $this->context->employee instanceof \Employee) {
+            $salt = $this->context->employee->id;
+        } else {
+            $salt = 'APIClient';
         }
 
-        return \Tools::getAdminToken('apiPsMbo' . \Tab::getIdFromClassName('apiPsMbo') . $employee->id);
+        return \Tools::getAdminToken('apiPsMbo' . \Tab::getIdFromClassName('apiPsMbo') . $salt);
     }
 
     private function getJwtTokenCacheKey(): string

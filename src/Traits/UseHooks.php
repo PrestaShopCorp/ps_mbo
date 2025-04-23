@@ -26,7 +26,6 @@ use Symfony\Component\String\UnicodeString;
 
 trait UseHooks
 {
-    use Hooks\UseDisplayBackOfficeEmployeeMenu;
     use Hooks\UseDashboardZoneOne;
     use Hooks\UseDashboardZoneThree {
         Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;

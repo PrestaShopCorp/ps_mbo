@@ -47,7 +47,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '5.0.0';
+    public const VERSION = '5.0.1';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminModulesManage',
@@ -87,7 +87,7 @@ class ps_mbo extends Module
     {
         $this->name = 'ps_mbo';
         // This value must be hard-coded to respect Addons rules, so we must make sure that the const value is always synced with this one
-        $this->version = '5.0.0';
+        $this->version = '5.0.1';
         if ($this->version !== self::VERSION) {
             throw new PrestaShopException('The values from ps_mbo::$version and ps_mbo::VERSION must be identical');
         }

@@ -173,12 +173,21 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
 
     protected function logEvent(string $eventName, ModuleManagementEvent $event): void
     {
-        $data = $this->contextBuilder->getEventContext();
+        try {
+            $data = $this->contextBuilder->getEventContext();
+        } catch (\Exception $e) {
+            // Do nothing, we don't want to block the module action
+            return;
+        }
         $data['event_name'] = $eventName;
         $data['module_name'] = $event->getModule()->get('name');
 
-        $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
-        $this->distributionClient->trackEvent($data);
+        try {
+            $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
+            $this->distributionClient->trackEvent($data);
+        } catch (\Exception $e) {
+            // Do nothing, we don't want to block the module action
+        }
     }
 
     private function applyConfigOnVersionChange(ModuleInterface $module)
