@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons\Subscriber;
 
+use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
@@ -173,12 +174,16 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
 
     protected function logEvent(string $eventName, ModuleManagementEvent $event): void
     {
-        $data = $this->contextBuilder->getEventContext();
-        $data['event_name'] = $eventName;
-        $data['module_name'] = $event->getModule()->get('name');
+        try {
+            $data = $this->contextBuilder->getEventContext();
+            $data['event_name'] = $eventName;
+            $data['module_name'] = $event->getModule()->get('name');
 
-        $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
-        $this->distributionClient->trackEvent($data);
+            $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
+            $this->distributionClient->trackEvent($data);
+        } catch (\Throwable) {
+            // Do nothing, but prevent breaking the module workflow for impossible tracking
+        }
     }
 
     private function applyConfigOnVersionChange(ModuleInterface $module)
