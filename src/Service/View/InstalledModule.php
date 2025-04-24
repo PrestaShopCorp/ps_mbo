@@ -29,7 +29,8 @@ class InstalledModule
         private readonly string $version,
         private readonly ?string $configUrl = null,
         private readonly ?string $downloadUrl = null,
-    ) {}
+    ) {
+    }
 
     public function toArray(): array
     {

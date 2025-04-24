@@ -45,15 +45,15 @@ class ContextBuilder
     public const DEFAULT_CURRENCY_CODE = 'EUR';
 
     public function __construct(
-       private readonly EmployeeContext $employeeContext,
-       private readonly CurrencyContext $currencyContext,
-       private readonly LanguageContext $languageContext,
-       private readonly CountryContext $countryContext,
-       private readonly ModuleRepository $moduleRepository,
-       private readonly Router $router,
-       private readonly CacheProvider $cacheProvider,
-       private readonly AdminAuthenticationProvider $adminAuthenticationProvider,
-       private readonly AccountsDataProvider $accountsDataProvider,
+        private readonly EmployeeContext $employeeContext,
+        private readonly CurrencyContext $currencyContext,
+        private readonly LanguageContext $languageContext,
+        private readonly CountryContext $countryContext,
+        private readonly ModuleRepository $moduleRepository,
+        private readonly Router $router,
+        private readonly CacheProvider $cacheProvider,
+        private readonly AdminAuthenticationProvider $adminAuthenticationProvider,
+        private readonly AccountsDataProvider $accountsDataProvider,
     ) {
     }
 
@@ -128,7 +128,7 @@ class ContextBuilder
     private function getCommonContextContent(): array
     {
         $userId = null;
-        if($this->employeeContext->getEmployee()){
+        if ($this->employeeContext->getEmployee()) {
             $userId = $this->employeeContext->getEmployee()->getId();
         }
 
@@ -194,7 +194,7 @@ class ContextBuilder
             'module_name' => ':module',
         ];
 
-        if(in_array($action, ['install', 'upgrade'])) {
+        if (in_array($action, ['install', 'upgrade'])) {
             $params['id'] = '_module_id_';
             $params['source'] = '_download_url_';
         }
@@ -204,12 +204,12 @@ class ContextBuilder
 
     private function getLanguage(): string
     {
-        return $this->languageContext->getIsoCode() ?? (new \Language((int)\Configuration::get('PS_LANG_DEFAULT')))->getIsoCode();
+        return $this->languageContext->getIsoCode();
     }
 
     private function getCountry(): string
     {
-        return mb_strtolower($this->countryContext->getIsoCode() ?? (new \Country((int)\Configuration::get('PS_COUNTRY_DEFAULT')))->iso_code);
+        return mb_strtolower($this->countryContext->getIsoCode());
     }
 
     private function getCurrencyCode(): string
