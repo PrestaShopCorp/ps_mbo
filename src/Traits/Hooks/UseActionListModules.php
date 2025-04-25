@@ -38,7 +38,7 @@ use Twig\Error\SyntaxError;
 trait UseActionListModules
 {
     /**
-     * Hook displayModuleConfigureExtraButtons.
+     * Hook actionListModules.
      * Add additional buttons on the module configure page's toolbar.
      *
      * @return array<array<string, string>>

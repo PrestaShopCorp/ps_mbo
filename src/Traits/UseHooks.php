@@ -38,7 +38,6 @@ trait UseHooks
     use Hooks\UseActionGetAdminToolbarButtons;
     use Hooks\UseActionGetAlternativeSearchPanels;
     use Hooks\UseDisplayAdminAfterHeader;
-    use Hooks\UseDisplayModuleConfigureExtraButtons;
     use Hooks\UseActionListModules;
     use Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
     use Hooks\UseActionBeforeUpgradeModule;
