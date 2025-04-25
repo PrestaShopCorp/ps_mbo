@@ -39,12 +39,12 @@ trait UseDisplayAdminAfterHeader
      *
      * @return string
      */
-    public function hookDisplayAdminAfterHeader(): string
+    public function hookDisplayAdminAfterHeader($params): string
     {
         $this->ensureModuleIsCorrectlySetUp();
 
         $shouldDisplayMboUserExplanation = $this->shouldDisplayMboUserExplanation();
-        $shouldDisplayModuleManagerMessage = $this->shouldDisplayModuleManagerMessage();
+        $shouldDisplayModuleManagerMessage = $this->shouldDisplayModuleManagerMessage($params);
 
         if (!$shouldDisplayMboUserExplanation && !$shouldDisplayModuleManagerMessage) {
             return '';
@@ -115,7 +115,7 @@ trait UseDisplayAdminAfterHeader
     {
         try {
             /** @var Environment|null $twig */
-            $twig = $this->get(Environment::class);
+            $twig = $this->get('twig');
             /** @var ContextBuilder|null $contextBuilder */
             $contextBuilder = $this->get(ContextBuilder::class);
 
@@ -163,39 +163,16 @@ trait UseDisplayAdminAfterHeader
         return 'admin_employees_index' === $request->get('_route');
     }
 
-    private function shouldDisplayModuleManagerMessage(): bool
+    private function shouldDisplayModuleManagerMessage($params = []): bool
     {
-        if (
-            !in_array(
-                \Tools::getValue('controller'),
-                [
-                    'AdminModulesManage',
-                    'AdminModulesNotifications',
-                    'AdminModulesUpdates',
-                ]
-            )
-        ) {
-            return false;
-        }
-
-        try {
-            /** @var RequestStack|null $requestStack */
-            $requestStack = $this->get(RequestStack::class);
-            if (null === $requestStack || null === $request = $requestStack->getCurrentRequest()) {
-                throw new \Exception('Unable to get request');
-            }
-        } catch (\Exception $e) {
-            ErrorHelper::reportError($e);
-
-            return false;
-        }
-
-        // because admin_employee_index and admin_employee_edit are in the same controller AdminEmployees
-        return in_array($request->get('_route'), [
-            'admin_module_manage',
-            'admin_module_notification',
-            'admin_module_updates',
-        ]);
+        return in_array(
+            $params['route'],
+            [
+                'admin_module_manage',
+                'admin_module_notification',
+                'admin_module_updates',
+            ]
+        );
     }
 
     private function ensureModuleIsCorrectlySetUp(): void
