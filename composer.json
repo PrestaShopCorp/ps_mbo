@@ -13,7 +13,10 @@
   "config": {
     "preferred-install": "dist",
     "optimize-autoloader": true,
-    "prepend-autoloader": false
+    "prepend-autoloader": false,
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
   },
   "require": {
     "php": ">=8.1.0",
@@ -26,7 +29,8 @@
     "symfony/string": "^6.4",
     "prestashop/prestashop-accounts-installer": "^1.0",
     "firebase/php-jwt": "^6.3",
-    "symfony/dotenv": "^6.4"
+    "symfony/dotenv": "^6.4",
+    "php-http/message": "^1.16"
   },
   "require-dev": {
     "prestashop/php-dev-tools": "^4",
