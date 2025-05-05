@@ -21,28 +21,14 @@
     if (typeof renderCdcError === 'function') {
       window.$(document).ready(function() {
         renderCdcError($('#cdc-dashboard-news'));
-        renderCdcError($('#cdc-stay-by-your-side'));
-        renderCdcError($('#cdc-dashboard-ps-update'));
       });
     }
   } else {
     const dashboardNewsContext = {$shop_context};
-    const dashboardStayByYourSideContext = {$shop_context};
-    const dashboardPrestashopUpdateContext = {$shop_context};
 
     const renderNews = window.mboCdc.renderDashboardNews
     renderNews(dashboardNewsContext, '#cdc-dashboard-news')
-
-    const renderStayByYourSide = window.mboCdc.renderDashboardStayByYourSide
-    renderStayByYourSide(dashboardStayByYourSideContext, '#cdc-stay-by-your-side')
-
-    const renderPrestashopUpdate = window.mboCdc.renderDashboardPrestashopUpdate
-    renderPrestashopUpdate(dashboardPrestashopUpdateContext, '#cdc-dashboard-ps-update')
   }
 </script>
 
 <section id="cdc-dashboard-news" class="dash_news cdc-container" data-error-path="{$cdcErrorUrl}"></section>
-
-<section id="cdc-dashboard-ps-update" class="cdc-container" data-error-path="{$cdcErrorUrl}"></section>
-
-<section id="cdc-stay-by-your-side" class="cdc-container" data-error-path="{$cdcErrorUrl}"></section>
