@@ -92,10 +92,11 @@ trait UseDisplayDashboardTop
 
         $values = Tools::getAllValues();
 
-        // Check if we are on configuration page & if the module needs to have a push on this page
+        // Check if we are on a configuration page and if the module needs to have a push on this page
         $shouldDisplayMessageInConfigPage = isset($params['route'])
             && $params['route'] === 'admin_module_configure_action'
-            && isset($params['request']);
+            && isset($params['request'])
+            && in_array($params['request']->get('module_name'), self::$MODULES_WITH_CONFIGURATION_PUSH);
 
         return $shouldDisplayMessageInConfigPage
             ? $this->displayPushOnConfigurationPage($params['request']->get('module_name'))
