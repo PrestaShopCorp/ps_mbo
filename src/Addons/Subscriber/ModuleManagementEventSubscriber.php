@@ -71,6 +71,8 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
      */
     private $versionChangeApplyConfigCommandHandler;
 
+    private $shutdownClearCacheRegistered = false;
+
     public function __construct(
         LoggerInterface $logger,
         Repository $moduleRepository,
@@ -97,7 +99,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
                 ['onInstall'],
             ],
             ModuleManagementEvent::POST_INSTALL => [
-                ['clearCatalogCache'],
+                ['clearCatalogCacheOnShutdown'],
                 ['onPostInstall'],
             ],
             ModuleManagementEvent::UNINSTALL => [
@@ -128,6 +130,18 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         $this->moduleRepository->clearCache();
         $this->tabCollectionProvider->clearCache();
         $this->contextBuilder->clearCache();
+    }
+
+    public function clearCatalogCacheOnShutdown(): void
+    {
+        if ($this->shutdownClearCacheRegistered) {
+            return;
+        }
+
+        $this->shutdownClearCacheRegistered = true;
+        register_shutdown_function(function () {
+            $this->clearCatalogCache();
+        });
     }
 
     public function onInstall(ModuleManagementEvent $event): void
