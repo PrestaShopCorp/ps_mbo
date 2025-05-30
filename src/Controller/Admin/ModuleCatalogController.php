@@ -25,9 +25,7 @@ namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use PrestaShop\Module\Mbo\Addons\Toolbar;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
-use PrestaShop\Module\Mbo\Service\ModuleInstaller;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
-use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
@@ -53,11 +51,6 @@ class ModuleCatalogController extends PrestaShopAdminController
     private $contextBuilder;
 
     /**
-     * @var ModuleManager
-     */
-    private $moduleManager;
-
-    /**
      * @var PsAccounts
      */
     private $psAccountsFacade;
@@ -67,25 +60,16 @@ class ModuleCatalogController extends PrestaShopAdminController
      */
     private $psAccountsInstaller;
 
-    /**
-     * @var ModuleInstaller
-     */
-    private $psEventbusInstaller;
-
     public function __construct(
         Toolbar $addonsToolbar,
         ContextBuilder $contextBuilder,
-        ModuleManager $moduleManager,
         PsAccounts $psAccountsFacade,
         Installer $psAccountsInstaller,
-        ModuleInstaller $psEventbusInstaller,
     ) {
         $this->addonsToolbar = $addonsToolbar;
         $this->contextBuilder = $contextBuilder;
-        $this->moduleManager = $moduleManager;
         $this->psAccountsFacade = $psAccountsFacade;
         $this->psAccountsInstaller = $psAccountsInstaller;
-        $this->psEventbusInstaller = $psEventbusInstaller;
     }
 
     /**
@@ -123,9 +107,6 @@ class ModuleCatalogController extends PrestaShopAdminController
 
         try {
             $accountsService = $this->psAccountsFacade->getPsAccountsService();
-            if ($this->ensurePsAccountIsEnabled()) {
-                $this->ensurePsEventbusEnabled();
-            }
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
             // Seems the module is not here, try to install it
             $this->psAccountsInstaller->install();
@@ -185,27 +166,6 @@ class ModuleCatalogController extends PrestaShopAdminController
         return $this->render(
             '@Modules/ps_mbo/views/templates/admin/controllers/module_catalog/cdc-error.html.twig'
         );
-    }
-
-    private function ensurePsAccountIsEnabled(): bool
-    {
-        $accountsEnabled = $this->psAccountsInstaller->isModuleEnabled();
-        if ($accountsEnabled) {
-            return true;
-        }
-
-        return $this->moduleManager->enable($this->psAccountsInstaller->getModuleName());
-    }
-
-    private function ensurePsEventbusEnabled(): void
-    {
-        try {
-            if ($this->psEventbusInstaller->install()) {
-                $this->psEventbusInstaller->enable();
-            }
-        } catch (\Exception $e) {
-            ErrorHelper::reportError($e);
-        }
     }
 
     /**
