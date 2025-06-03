@@ -92,8 +92,6 @@ trait UseDashboardZoneOne
 
         try {
             $accountsFacade = $this->get('mbo.ps_accounts.facade');
-            $accountsService = $accountsFacade->getPsAccountsService();
-            if ($this->ensurePsAccountIsEnabled()) $this->ensurePsEventbusEnabled();
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
             $accountsInstaller = $this->get('mbo.ps_accounts.installer');
             // Seems the module is not here, try to install it
@@ -127,25 +125,23 @@ trait UseDashboardZoneOne
 
     /**
      * Return true if ps_account is enabled
-     * 
+     *
      * @return bool
      */
-    private function ensurePsAccountIsEnabled(): bool {
+    private function ensurePsAccountIsEnabled(): bool
+    {
         $accountsInstaller = $this->get('mbo.ps_accounts.installer');
-        if (!$accountsInstaller) return false;
+        if (!$accountsInstaller) {
+            return false;
+        }
 
         $accountsEnabled = $accountsInstaller->isModuleEnabled();
-        if ($accountsEnabled) return true;
+        if ($accountsEnabled) {
+            return true;
+        }
 
         $moduleManager = $this->get('prestashop.module.manager');
-        return $moduleManager->enable($accountsInstaller->getModuleName());
-    }
 
-    private function ensurePsEventbusEnabled()
-    {
-        $installer = $this->get('mbo.ps_eventbus.installer');
-        if ($installer->install()) {
-            $installer->enable();
-        }
+        return $moduleManager->enable($accountsInstaller->getModuleName());
     }
 }
