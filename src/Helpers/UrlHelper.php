@@ -33,4 +33,15 @@ class UrlHelper
 
         return rtrim(Config::getShopUrl(false), '/') . DIRECTORY_SEPARATOR . ltrim($url, '/');
     }
+
+    public static function getQueryParameterValue(string $url, string $key): string
+    {
+        $parameters = [];
+        $query = parse_url($url, PHP_URL_QUERY);
+        if (is_string($query)) {
+            parse_str($query, $parameters);
+        }
+
+        return $parameters[$key] ?? '';
+    }
 }

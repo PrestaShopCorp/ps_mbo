@@ -173,6 +173,12 @@ class ContextBuilder
             $token = Tools::getValue('token');
         }
 
+        $mboResetUrl = UrlHelper::transformToAbsoluteUrl(
+            $this->router->generate('admin_module_manage_action', [
+                'action' => 'reset',
+                'module_name' => 'ps_mbo',
+            ])
+        );
         $refreshUrl = Context::getContext()->link->getAdminLink('apiSecurityPsMbo');
 
         return [
@@ -184,12 +190,7 @@ class ContextBuilder
             'shop_uuid' => Config::getShopMboUuid(),
             'mbo_token' => $this->adminAuthenticationProvider->getMboJWT(),
             'mbo_version' => \ps_mbo::VERSION,
-            'mbo_reset_url' => UrlHelper::transformToAbsoluteUrl(
-                $this->router->generate('admin_module_manage_action', [
-                    'action' => 'reset',
-                    'module_name' => 'ps_mbo',
-                ])
-            ),
+            'mbo_reset_url' => $mboResetUrl,
             'user_id' => $context->cookie->id_employee,
             'admin_token' => $token,
             'refresh_url' => $refreshUrl,
@@ -206,7 +207,33 @@ class ContextBuilder
             'shop_creation_date' => defined('_PS_CREATION_DATE_') ? _PS_CREATION_DATE_ : null,
             'shop_business_sector_id' => $shopActivity['id'],
             'shop_business_sector' => $shopActivity['name'],
+
+            'actions_token' => UrlHelper::getQueryParameterValue($mboResetUrl, '_token'),
+            'actions_url' => [
+                'install' => $this->generateActionUrl('install'),
+                'uninstall' => $this->generateActionUrl('uninstall'),
+                'delete' => $this->generateActionUrl('delete'),
+                'enable' => $this->generateActionUrl('enable'),
+                'disable' => $this->generateActionUrl('disable'),
+                'reset' => $this->generateActionUrl('reset'),
+                'upgrade' => $this->generateActionUrl('upgrade'),
+            ],
         ];
+    }
+
+    private function generateActionUrl(string $action): string
+    {
+        $params = [
+            'action' => $action,
+            'module_name' => ':module',
+        ];
+
+        if (in_array($action, ['install', 'upgrade'])) {
+            $params['id'] = '_module_id_';
+            $params['source'] = '_download_url_';
+        }
+
+        return UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_module_manage_action', $params));
     }
 
     private function getContext(): Context
