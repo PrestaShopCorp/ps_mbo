@@ -35,9 +35,14 @@ jobs:
     strategy:
       matrix:
         presta-versions: ['8.0.2', '8.1.5']
+        php-versions: [7.4]
     steps:
-      - name: Pull PrestaShop files (Tag ${{ matrix.presta-versions }})
-        run: docker run -tid --rm -v ps-volume:/var/www/html --name temp-ps prestashop/prestashop:${{ matrix.presta-versions }}
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+      - name: Pull PrestaShop files (Tag ${{ matrix.presta-versions }} for PHP {{ matrix.php-versions }})
+        run: docker run -tid --rm -v ps-volume:/var/www/html --name temp-ps prestashop/prestashop:${{ matrix.presta-versions }}-${{ matrix.php-versions }}
       - name: Wait for container to be loaded
         run: sleep 10
       - name: Checkout
@@ -57,14 +62,17 @@ jobs:
         run: docker run --rm --volumes-from temp-ps -v $PWD:/web/module -e _PS_ROOT_DIR_=/var/www/html --workdir=/web/module phpstan/phpstan:0.11.19 analyse --configuration=/web/module/tests/phpstan/phpstan-${{ matrix.presta-versions }}.neon
 
   phpunit:
-    name: PHPUnit
+    name: PHPUnit ${{ matrix.presta-versions }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        presta-versions: ['1.7.8.x', '8.0.x', '8.1.x','8.2.x']
+        php-versions: [7.4]
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
-          coverage: xdebug
+          php-version: ${{ matrix.php-versions }}
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -84,4 +92,5 @@ jobs:
           key: php-composer-cache
 
       - run: composer install
-      - run: make phpunit
+      - run: |
+          ./tests/phpunit.sh ${{ matrix.presta-versions }} ${{ matrix.php-versions }}

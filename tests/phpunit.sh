@@ -1,5 +1,6 @@
 #!/bin/bash
 PS_VERSION=$1
+PHP_VERSION=$2
 
 set -e
 
@@ -9,23 +10,16 @@ echo "Pull PrestaShop files (Tag ${PS_VERSION})"
 docker rm -f temp-ps || true
 docker volume rm -f ps-volume || true
 
-docker run -tid --rm -v ps-volume:/var/www/html --name temp-ps prestashop/prestashop:$PS_VERSION
+docker run -tid --rm -v ps-volume:/var/www/html -v $PWD:/web/module --name temp-ps prestashop/prestashop:$PS_VERSION-$PHP_VERSION
 
 # The nightly image needs more time to unzip the PrestaShop archive
 while [[ -z "$(docker exec -t temp-ps ls)" ]]; do sleep 5; done
 
-# Clear previous instance of the module in the PrestaShop volume
-echo "Clear previous module"
-
-docker exec -t temp-ps rm -rf /var/www/html/modules/ps_mbo
-
-# Run a container for PHPUnit, having access to the module content and PrestaShop sources.
-# This tool is outside the composer.json because of the compatibility with PHP 5.6
-echo "Run PHPStan using phpstan-${PS_VERSION}.neon file"
-
-docker run --rm --volumes-from temp-ps \
-       -v $PWD:/var/www/html/modules/ps_mbo \
-       -e _PS_ROOT_DIR_=/var/www/html \
-       --workdir=/var/www/html/modules/ps_mbo ghcr.io/phpstan/phpstan:1.4.10 \
-       analyse \
-       --configuration=/var/www/html/modules/ps_mbo/tests/phpstan/phpstan-${PS_VERSION}.neon
+docker exec \
+  -e _PS_ROOT_DIR_=/var/www/html \
+  -w /web/module \
+  test-phpunit \
+  sh -c " \
+    echo \"Testing module v\`cat config.xml | grep '<version>' | sed 's/^.*\[CDATA\[\(.*\)\]\].*/\1/'\`\n\" && \
+    ./vendor/bin/phpunit -c ./tests/phpunit.xml \
+  "
