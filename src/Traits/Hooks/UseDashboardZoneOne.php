@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
-use PrestaShop\Module\Mbo\Service\ModuleInstaller;
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
@@ -96,12 +95,6 @@ trait UseDashboardZoneOne
         try {
             /** @var PsAccounts|null $accountsFacade */
             $accountsFacade = $this->get(PsAccounts::class);
-            if ($accountsFacade) {
-                $accountsService = $accountsFacade->getPsAccountsService();
-                if ($this->ensurePsAccountIsEnabled()) {
-                    $this->ensurePsEventbusEnabled();
-                }
-            }
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
             /** @var Installer|null $accountsInstaller */
             $accountsInstaller = $this->get(Installer::class);
@@ -161,18 +154,5 @@ trait UseDashboardZoneOne
         $moduleManager = $this->get('prestashop.module.manager');
 
         return $moduleManager && $moduleManager->enable($accountsInstaller->getModuleName());
-    }
-
-    private function ensurePsEventbusEnabled(): void
-    {
-        try {
-            /** @var ModuleInstaller|null $installer */
-            $installer = $this->get('mbo.ps_eventbus.installer');
-            if ($installer && $installer->install()) {
-                $installer->enable();
-            }
-        } catch (\Exception $e) {
-            ErrorHelper::reportError($e);
-        }
     }
 }

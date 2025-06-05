@@ -91,7 +91,6 @@ class ContainerProvider
         $loader->load('addons.yml');
         $loader->load('distribution.yml');
         $loader->load('accounts.yml');
-        $loader->load('eventbus.yml');
         $loader->load('handler.yml');
         $loader->load('api/distribution.yml');
 

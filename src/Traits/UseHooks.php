@@ -26,7 +26,6 @@ use Symfony\Component\String\UnicodeString;
 
 trait UseHooks
 {
-    use Hooks\UseDisplayBackOfficeEmployeeMenu;
     use Hooks\UseDashboardZoneOne;
     use Hooks\UseDashboardZoneThree {
         Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
@@ -39,7 +38,6 @@ trait UseHooks
     use Hooks\UseActionGetAdminToolbarButtons;
     use Hooks\UseActionGetAlternativeSearchPanels;
     use Hooks\UseDisplayAdminAfterHeader;
-    use Hooks\UseDisplayModuleConfigureExtraButtons;
     use Hooks\UseActionListModules;
     use Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
     use Hooks\UseActionBeforeUpgradeModule;

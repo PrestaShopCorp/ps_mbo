@@ -107,7 +107,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             $source = $authenticatedQueryParameters['source'];
             $options = $authenticatedQueryParameters['options'] ?? [];
 
-            if (!is_array($options['headers'])) {
+            if (empty($options['headers'])) {
                 $options['headers'] = [];
             }
             $options['headers'] = array_merge($options['headers'], AddonsApiHelper::addCustomHeaderIfNeeded());

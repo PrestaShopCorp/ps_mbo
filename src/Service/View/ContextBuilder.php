@@ -31,8 +31,11 @@ use PrestaShop\Module\Mbo\Helpers\UrlHelper;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
 use PrestaShop\Module\Mbo\Tab\TabInterface;
-use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Module\Module as CoreModule;
+use PrestaShop\PrestaShop\Core\Context\CountryContext;
+use PrestaShop\PrestaShop\Core\Context\CurrencyContext;
+use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
@@ -41,50 +44,17 @@ class ContextBuilder
 {
     public const DEFAULT_CURRENCY_CODE = 'EUR';
 
-    /**
-     * @var ContextAdapter
-     */
-    private $contextAdapter;
-
-    /**
-     * @var ModuleRepository
-     */
-    private $moduleRepository;
-
-    /**
-     * @var Router
-     */
-    private $router;
-
-    /**
-     * @var CacheProvider
-     */
-    private $cacheProvider;
-
-    /**
-     * @var AdminAuthenticationProvider
-     */
-    private $adminAuthenticationProvider;
-
-    /**
-     * @var AccountsDataProvider
-     */
-    private $accountsDataProvider;
-
     public function __construct(
-        ContextAdapter $contextAdapter,
-        ModuleRepository $moduleRepository,
-        Router $router,
-        CacheProvider $cacheProvider,
-        AdminAuthenticationProvider $adminAuthenticationProvider,
-        AccountsDataProvider $accountsDataProvider,
+        private readonly EmployeeContext $employeeContext,
+        private readonly CurrencyContext $currencyContext,
+        private readonly LanguageContext $languageContext,
+        private readonly CountryContext $countryContext,
+        private readonly ModuleRepository $moduleRepository,
+        private readonly Router $router,
+        private readonly CacheProvider $cacheProvider,
+        private readonly AdminAuthenticationProvider $adminAuthenticationProvider,
+        private readonly AccountsDataProvider $accountsDataProvider,
     ) {
-        $this->contextAdapter = $contextAdapter;
-        $this->moduleRepository = $moduleRepository;
-        $this->router = $router;
-        $this->cacheProvider = $cacheProvider;
-        $this->adminAuthenticationProvider = $adminAuthenticationProvider;
-        $this->accountsDataProvider = $accountsDataProvider;
     }
 
     public function getViewContext(): array
@@ -122,8 +92,8 @@ class ContextBuilder
             'user_id' => $this->accountsDataProvider->getAccountsUserId(),
             'shop_id' => $this->accountsDataProvider->getAccountsShopId(),
             'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
-            'iso_lang' => $this->getLanguage()->getIsoCode(),
-            'iso_code' => $this->getCountry()->iso_code,
+            'iso_lang' => $this->getLanguage(),
+            'iso_code' => $this->getCountry(),
             'mbo_version' => \ps_mbo::VERSION,
             'ps_version' => _PS_VERSION_,
             'shop_url' => Config::getShopUrl(),
@@ -157,9 +127,11 @@ class ContextBuilder
 
     private function getCommonContextContent(): array
     {
-        $context = $this->getContext();
-        $language = $this->getLanguage();
-        $country = $this->getCountry();
+        $userId = null;
+        if ($this->employeeContext->getEmployee()) {
+            $userId = $this->employeeContext->getEmployee()->getId();
+        }
+
         $shopActivity = Config::getShopActivity();
 
         $token = \Tools::getValue('_token');
@@ -177,15 +149,15 @@ class ContextBuilder
 
         return [
             'currency' => $this->getCurrencyCode(),
-            'iso_lang' => $language->getIsoCode(),
-            'iso_code' => mb_strtolower($country->iso_code),
+            'iso_lang' => $this->getLanguage(),
+            'iso_code' => $this->getCountry(),
             'shop_version' => _PS_VERSION_,
             'shop_url' => Config::getShopUrl(),
             'shop_uuid' => Config::getShopMboUuid(),
             'mbo_token' => $this->adminAuthenticationProvider->getMboJWT(),
             'mbo_version' => \ps_mbo::VERSION,
             'mbo_reset_url' => $mboResetUrl,
-            'user_id' => $context->cookie->id_employee,
+            'user_id' => $userId,
             'admin_token' => $token,
             'refresh_url' => '',
             'installed_modules' => $this->getInstalledModules(),
@@ -217,36 +189,36 @@ class ContextBuilder
 
     private function generateActionUrl(string $action): string
     {
-        return UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_module_manage_action', [
+        $params = [
             'action' => $action,
             'module_name' => ':module',
-        ]));
+        ];
+
+        if (in_array($action, ['install', 'upgrade'])) {
+            $params['id'] = '_module_id_';
+            $params['source'] = '_download_url_';
+        }
+
+        return UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_module_manage_action', $params));
     }
 
-    private function getContext(): \Context
+    private function getLanguage(): string
     {
-        return $this->contextAdapter->getContext();
+        return $this->languageContext->getIsoCode();
     }
 
-    private function getLanguage(): \Language
+    private function getCountry(): string
     {
-        return $this->getContext()->language ?? new \Language((int) \Configuration::get('PS_LANG_DEFAULT'));
-    }
-
-    private function getCountry(): \Country
-    {
-        return $this->getContext()->country ?? new \Country((int) \Configuration::get('PS_COUNTRY_DEFAULT'));
+        return mb_strtolower($this->countryContext->getIsoCode());
     }
 
     private function getCurrencyCode(): string
     {
-        $currency = $this->getContext()->currency;
-
-        if (null === $currency || !in_array($currency->iso_code, ['EUR', 'USD', 'GBP'])) {
+        if (!in_array($this->currencyContext->getIsoCode(), ['EUR', 'USD', 'GBP'])) {
             return self::DEFAULT_CURRENCY_CODE;
         }
 
-        return $currency->iso_code;
+        return $this->currencyContext->getIsoCode();
     }
 
     /**
@@ -331,7 +303,9 @@ class ContextBuilder
                 $moduleName,
                 $moduleStatus,
                 (string) $moduleVersion,
-                $moduleConfigUrl)
+                $moduleConfigUrl,
+                $installedModule->get('download_url'),
+            )
             )->toArray();
         }
 

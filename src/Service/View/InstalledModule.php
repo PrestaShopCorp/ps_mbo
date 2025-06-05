@@ -22,43 +22,14 @@ namespace PrestaShop\Module\Mbo\Service\View;
 
 class InstalledModule
 {
-    /**
-     * @var int
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $status;
-
-    /**
-     * @var string
-     */
-    private $version;
-
-    /**
-     * @var string
-     */
-    private $configUrl;
-
     public function __construct(
-        int $id,
-        string $name,
-        string $status,
-        string $version,
-        ?string $configUrl = null,
+        private readonly int $id,
+        private readonly string $name,
+        private readonly string $status,
+        private readonly string $version,
+        private readonly ?string $configUrl = null,
+        private readonly ?string $downloadUrl = null,
     ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->status = $status;
-        $this->version = $version;
-        $this->configUrl = $configUrl;
     }
 
     public function toArray(): array
@@ -69,6 +40,7 @@ class InstalledModule
             'status' => $this->status,
             'version' => $this->version,
             'config_url' => $this->configUrl,
+            'download_url' => $this->downloadUrl,
         ];
     }
 }

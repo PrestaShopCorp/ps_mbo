@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -15,20 +16,22 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
- *}
-<script>
-  if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
-    if (typeof renderCdcError === 'function') {
-      window.$(document).ready(function() {
-        renderCdcError($('#cdc-dashboard-news'));
-      });
-    }
-  } else {
-    const dashboardNewsContext = {$shop_context};
+ */
+$rootDir = defined('_PS_ROOT_DIR_') ? _PS_ROOT_DIR_ : getenv('_PS_ROOT_DIR_');
+if (!$rootDir) {
+    $rootDir = __DIR__ . '/../../../';
+}
 
-    const renderNews = window.mboCdc.renderDashboardNews
-    renderNews(dashboardNewsContext, '#cdc-dashboard-news')
-  }
-</script>
+require_once $rootDir . '/vendor/autoload.php';
 
-<section id="cdc-dashboard-news" class="dash_news cdc-container" data-error-path="{$cdcErrorUrl}"></section>
+/**
+ * @param ps_mbo $module
+ *
+ * @return bool
+ */
+function upgrade_module_5_0_1(Module $module): bool
+{
+    $module->updateHooks();
+
+    return true;
+}

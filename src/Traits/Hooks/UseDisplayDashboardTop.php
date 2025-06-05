@@ -23,14 +23,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use Hook;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Tab\TabInterface;
-use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use ToolsCore as Tools;
-use Twig\Environment;
 
 trait UseDisplayDashboardTop
 {
@@ -95,14 +92,14 @@ trait UseDisplayDashboardTop
 
         $values = Tools::getAllValues();
 
-        // Check if we are on configuration page & if the module needs to have a push on this page
-        $shouldDisplayMessageInConfigPage = isset($values['controller'])
-            && ($values['controller'] === self::$ADMIN_MODULES_CONTROLLER)
-            && isset($values['configure'])
-            && in_array($values['configure'], self::$MODULES_WITH_CONFIGURATION_PUSH);
+        // Check if we are on a configuration page and if the module needs to have a push on this page
+        $shouldDisplayMessageInConfigPage = isset($params['route'])
+            && $params['route'] === 'admin_module_configure_action'
+            && isset($params['request'])
+            && in_array($params['request']->get('module_name'), self::$MODULES_WITH_CONFIGURATION_PUSH);
 
         return $shouldDisplayMessageInConfigPage
-            ? $this->displayPushOnConfigurationPage($values['configure'])
+            ? $this->displayPushOnConfigurationPage($params['request']->get('module_name'))
             : $this->displayRecommendedModules($values['controller'] ?? '', $params);
     }
 
@@ -181,31 +178,6 @@ trait UseDisplayDashboardTop
         }
 
         return $this->fetch('module:ps_mbo/views/templates/hook/push-configuration.tpl');
-    }
-
-    private function displayFailedApiUser(): string
-    {
-        try {
-            /** @var Environment|null $twig */
-            $twig = $this->get(Environment::class);
-
-            /** @var Router|null $router */
-            $router = $this->get('prestashop.router');
-
-            if (null === $twig || null === $router) {
-                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayDashboardTop');
-            }
-
-            return $twig->render(
-                '@Modules/ps_mbo/views/templates/hook/twig/failed-api-user.html.twig', [
-                    'module_manager_link' => $router->generate('admin_module_manage'),
-                ]
-            );
-        } catch (\Exception $e) {
-            ErrorHelper::reportError($e);
-
-            return '';
-        }
     }
 
     /**

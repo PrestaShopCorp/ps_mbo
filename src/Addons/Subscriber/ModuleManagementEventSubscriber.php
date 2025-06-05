@@ -71,6 +71,8 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
      */
     private $versionChangeApplyConfigCommandHandler;
 
+    private $shutdownClearCacheRegistered = false;
+
     public function __construct(
         LoggerInterface $logger,
         Repository $moduleRepository,
@@ -97,7 +99,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
                 ['onInstall'],
             ],
             ModuleManagementEvent::POST_INSTALL => [
-                ['clearCatalogCache'],
+                ['clearCatalogCacheOnShutdown'],
                 ['onPostInstall'],
             ],
             ModuleManagementEvent::UNINSTALL => [
@@ -128,6 +130,18 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         $this->moduleRepository->clearCache();
         $this->tabCollectionProvider->clearCache();
         $this->contextBuilder->clearCache();
+    }
+
+    public function clearCatalogCacheOnShutdown(): void
+    {
+        if ($this->shutdownClearCacheRegistered) {
+            return;
+        }
+
+        $this->shutdownClearCacheRegistered = true;
+        register_shutdown_function(function () {
+            $this->clearCatalogCache();
+        });
     }
 
     public function onInstall(ModuleManagementEvent $event): void
@@ -173,12 +187,21 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
 
     protected function logEvent(string $eventName, ModuleManagementEvent $event): void
     {
-        $data = $this->contextBuilder->getEventContext();
+        try {
+            $data = $this->contextBuilder->getEventContext();
+        } catch (\Exception $e) {
+            // Do nothing, we don't want to block the module action
+            return;
+        }
         $data['event_name'] = $eventName;
         $data['module_name'] = $event->getModule()->get('name');
 
-        $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
-        $this->distributionClient->trackEvent($data);
+        try {
+            $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
+            $this->distributionClient->trackEvent($data);
+        } catch (\Exception $e) {
+            // Do nothing, we don't want to block the module action
+        }
     }
 
     private function applyConfigOnVersionChange(ModuleInterface $module)

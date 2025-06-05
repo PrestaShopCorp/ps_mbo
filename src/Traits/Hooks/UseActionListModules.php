@@ -38,7 +38,7 @@ use Twig\Error\SyntaxError;
 trait UseActionListModules
 {
     /**
-     * Hook displayModuleConfigureExtraButtons.
+     * Hook actionListModules.
      * Add additional buttons on the module configure page's toolbar.
      *
      * @return array<array<string, string>>
@@ -55,7 +55,7 @@ trait UseActionListModules
             /** @var Repository|null $moduleRepository */
             $moduleRepository = $this->get(Repository::class);
             /** @var Router|null $router */
-            $router = $this->get(Router::class);
+            $router = $this->get('router');
 
             if (
                 null === $filtersFactory
@@ -100,10 +100,6 @@ trait UseActionListModules
                 $downloadUrl .= '&shop_url=' . $shopUrl;
             }
 
-            if ('ps_mbo' === $name) {
-                $downloadUrl = null;
-            }
-
             $catalogUrlParams['mbo_cdc_path'] = sprintf('/#/module/%d/fullpage', (int) $module->get('id'));
             $catalogUrlParts['query'] = http_build_query($catalogUrlParams);
 
@@ -119,6 +115,7 @@ trait UseActionListModules
                 'download_url' => $downloadUrl,
                 'img' => $module->get('img'),
                 'tab' => $module->get('tab'),
+                'id' => $module->get('id'),
             ];
         }
 
