@@ -1026,16 +1026,16 @@
         },
         {
             "name": "prestashop/prestashop-accounts-installer",
-            "version": "v1.0.1",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShopCorp/prestashop-accounts-installer.git",
-                "reference": "f038af2408968d1045330b32aa1fed65fcaf4c9b"
+                "reference": "0ad934bc540558db3944a9a1e5b08b852bb46e8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShopCorp/prestashop-accounts-installer/zipball/f038af2408968d1045330b32aa1fed65fcaf4c9b",
-                "reference": "f038af2408968d1045330b32aa1fed65fcaf4c9b",
+                "url": "https://api.github.com/repos/PrestaShopCorp/prestashop-accounts-installer/zipball/0ad934bc540558db3944a9a1e5b08b852bb46e8b",
+                "reference": "0ad934bc540558db3944a9a1e5b08b852bb46e8b",
                 "shasum": ""
             },
             "require": {
@@ -1060,9 +1060,9 @@
             "description": "Utility package to install `ps_accounts` module or present data to trigger manual install from psx configuration page.",
             "support": {
                 "issues": "https://github.com/PrestaShopCorp/prestashop-accounts-installer/issues",
-                "source": "https://github.com/PrestaShopCorp/prestashop-accounts-installer/tree/v1.0.1"
+                "source": "https://github.com/PrestaShopCorp/prestashop-accounts-installer/tree/v1.0.4"
             },
-            "time": "2021-07-23T15:40:36+00:00"
+            "time": "2023-05-04T07:24:48+00:00"
         },
         {
             "name": "psr/container",
@@ -5663,5 +5663,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.6.0"
 }

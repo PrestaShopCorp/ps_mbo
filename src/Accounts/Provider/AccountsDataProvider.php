@@ -136,6 +136,17 @@ class AccountsDataProvider
         throw new ModuleNotInstalledException('Module not installed : ' . Installer::PS_ACCOUNTS_MODULE_NAME);
     }
 
+    public function getAccountsShopToken(): string
+    {
+        try {
+            $shopToken = $this->getAccountsService()->getOrRefreshToken();
+        } catch (Exception $e) {
+            $shopToken = null;
+        }
+
+        return $shopToken ?: '';
+    }
+
     /**
      * @return bool
      */
