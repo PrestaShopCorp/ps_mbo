@@ -29,7 +29,6 @@ use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
-use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShopBundle\Event\ModuleManagementEvent;
@@ -41,6 +40,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ModuleManagementEventSubscriber implements EventSubscriberInterface
 {
+    const WATERMARK_FILENAME = '/.info';
     /**
      * @var LoggerInterface
      */
@@ -228,9 +228,30 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         $data = $this->contextBuilder->getEventContext();
         $data['event_name'] = $eventName;
         $data['module_name'] = $event->getModule()->get('name');
+        if (in_array($eventName, [
+            ModuleManagementEvent::INSTALL,
+            ModuleManagementEvent::UPGRADE,
+        ])) {
+            $data['module_watermark'] = $this->getModuleWatermark($event->getModule());
+        }
 
         $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
         $this->distributionClient->trackEvent($data);
+    }
+
+    private function getModuleWatermark(ModuleInterface $module): string
+    {
+        $fileName = _PS_MODULE_DIR_ . $module->get('name') . self::WATERMARK_FILENAME;
+        if (! file_exists($fileName)) return '';
+
+        try {
+            $fileHandle = fopen($fileName, 'r');
+            $contents = fread($fileHandle, filesize($fileName));
+            fclose($fileHandle);
+        } catch (\Exception $e) {
+            $contents = '';
+        }
+        return $contents ?: '';
     }
 
     private function applyConfigOnVersionChange(ModuleInterface $module)

@@ -192,7 +192,7 @@ class ps_mbo extends Module
         foreach ($eventDispatcher->getListeners(ModuleManagementEvent::UNINSTALL) as $listener) {
             if ($listener[0] instanceof ModuleManagementEventSubscriber) {
                 $legacyModule = $this->get('prestashop.core.admin.module.repository')->getModule('ps_mbo');
-                $listener[0]->{(string)$listener[1]}(new ModuleManagementEvent($legacyModule));
+                $listener[0]->{(string) $listener[1]}(new ModuleManagementEvent($legacyModule));
             }
         }
 
@@ -398,6 +398,7 @@ class ps_mbo extends Module
             return $this->getService('mbo.accounts.data_provider');
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
+
             return null;
         }
     }

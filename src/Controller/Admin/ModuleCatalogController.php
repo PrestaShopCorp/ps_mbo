@@ -54,7 +54,7 @@ class ModuleCatalogController extends ModuleAbstractController
         try {
             $accountsFacade = $this->get('mbo.ps_accounts.facade');
             $accountsService = $accountsFacade->getPsAccountsService();
-            if ($this->ensurePsAccountIsEnabled()) $this->ensurePsEventbusEnabled();
+            $this->ensurePsAccountIsEnabled();
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
             $accountsInstaller = $this->get('mbo.ps_accounts.installer');
             // Seems the module is not here, try to install it
@@ -120,20 +120,16 @@ class ModuleCatalogController extends ModuleAbstractController
     private function ensurePsAccountIsEnabled(): bool
     {
         $accountsInstaller = $this->get('mbo.ps_accounts.installer');
-        if (!$accountsInstaller) return false;
+        if (!$accountsInstaller) {
+            return false;
+        }
 
-        $accountsEnabled = $accountsInstaller->isModuleEnabled();
-        if ($accountsEnabled) return true;
+        if ($accountsInstaller->isModuleEnabled() && $accountsInstaller->checkModuleVersion()) {
+            return true;
+        }
 
         $moduleManager = $this->get('prestashop.module.manager');
-        return $moduleManager->enable($accountsInstaller->getModuleName());
-    }
 
-    private function ensurePsEventbusEnabled()
-    {
-        $installer = $this->get('mbo.ps_eventbus.installer');
-        if ($installer->install()) {
-            $installer->enable();
-        }
+        return $moduleManager->enable($accountsInstaller->getModuleName());
     }
 }
