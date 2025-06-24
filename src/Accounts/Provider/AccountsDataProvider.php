@@ -68,6 +68,17 @@ class AccountsDataProvider
         return null === $token ? '' : (string) $token;
     }
 
+    public function getAccountsShopToken(): ?string
+    {
+        try {
+            $shopToken = $this->getAccountsService()->getOrRefreshToken();
+        } catch (\Exception $e) {
+            $shopToken = null;
+        }
+
+        return $shopToken ?: null;
+    }
+
     /**
      * @return string|null
      */
