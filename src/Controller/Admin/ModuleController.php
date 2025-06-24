@@ -68,9 +68,7 @@ class ModuleController extends ModuleControllerCore
         try {
             $accountsFacade = $this->get('mbo.ps_accounts.facade');
             $accountsService = $accountsFacade->getPsAccountsService();
-            if ($this->ensurePsAccountIsEnabled()) {
-                $this->ensurePsEventbusEnabled();
-            }
+            $this->ensurePsAccountIsEnabled();
         } catch (Exception $e) {
             try {
                 $accountsInstaller = $this->get('mbo.ps_accounts.installer');
@@ -355,12 +353,13 @@ class ModuleController extends ModuleControllerCore
     private function ensurePsAccountIsEnabled()
     {
         $accountsInstaller = $this->get('mbo.ps_accounts.installer');
-        // @phpstan-ignore booleanNot.alwaysFalse
-        if (!$accountsInstaller) {
-            return false;
+
+        try {
+            $accountsEnabled = $accountsInstaller->isModuleEnabled();
+        } catch (Exception $e) {
+            $accountsEnabled = false;
         }
 
-        $accountsEnabled = $accountsInstaller->isModuleEnabled();
         if ($accountsEnabled) {
             return true;
         }
@@ -368,16 +367,5 @@ class ModuleController extends ModuleControllerCore
         $moduleManager = $this->get('prestashop.module.manager');
 
         return $moduleManager->enable($accountsInstaller->getModuleName());
-    }
-
-    /**
-     * @return void
-     */
-    private function ensurePsEventbusEnabled()
-    {
-        $installer = $this->get('mbo.ps_eventbus.installer');
-        if ($installer->install()) {
-            $installer->enable();
-        }
     }
 }
