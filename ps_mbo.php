@@ -44,6 +44,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ps_mbo extends Module
 {
     use PrestaShop\Module\Mbo\Traits\HaveConfigurationPage;
+
+    const VERSION = '3.2.0';
     const TABS_WITH_RECOMMENDED_MODULES_BUTTON = [
         'AdminOrders', // Orders> Orders
         'AdminInvoices', // Orders > Invoices

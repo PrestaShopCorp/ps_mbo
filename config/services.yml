@@ -81,6 +81,8 @@ services:
       class: PrestaShop\Module\Mbo\EventSubscriber\ModuleEventSubscriber
       arguments:
           - '@logger'
+          - '@mbo.cdc.context_builder'
+          - '@mbo.cdc.client.distribution_api'
       tags:
           - { name: kernel.event_subscriber }
 
