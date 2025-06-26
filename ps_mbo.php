@@ -534,15 +534,7 @@ class ps_mbo extends Module
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css');
         }
 
-        $accountsInstaller = $this->get('mbo.ps_accounts.installer');
-        $isPsAccountsEnabled = ($accountsInstaller instanceof Installer) && $accountsInstaller->isModuleEnabled();
-
-        if (
-            ('AdminPsMboModule' === Tools::getValue('controller')) // Module catalog / Marketplace
-            || $isPsAccountsEnabled // For Module manager
-        ) {
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/connection-toolbar.css');
-        }
+        $this->context->controller->addCSS($this->getPathUri() . 'views/css/connection-toolbar.css');
         $this->loadCdcMedia();
     }
 
