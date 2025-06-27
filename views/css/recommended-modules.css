@@ -172,6 +172,7 @@
     overflow-x: hidden;
     max-width: 862px;
     width: 100%;
+    pointer-events: auto;
   }
 }
 
