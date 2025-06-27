@@ -20,6 +20,9 @@
 
 namespace PrestaShop\Module\Mbo\EventSubscriber;
 
+use PrestaShop\Module\Mbo\Distribution\AuthenticationProvider;
+use PrestaShop\Module\Mbo\Distribution\Client;
+use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\UpgradeTracker;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Psr\Log\LoggerInterface;
@@ -36,12 +39,37 @@ class ModuleEventSubscriber implements EventSubscriberInterface
     private $logger;
 
     /**
+     * @var AuthenticationProvider
+     */
+    private $adminAuthenticationProvider;
+    /**
+     * @var ContextBuilder
+     */
+    private $contextBuilder;
+
+    /**
+     * @var Client
+     */
+    private $distributionClient;
+
+    const WATERMARK_FILENAME = '/.info';
+
+    /**
      * @param LoggerInterface $logger
+     * @param AuthenticationProvider $adminAuthenticationProvider
+     * @param ContextBuilder $contextBuilder
+     * @param Client $distributionClient
      */
     public function __construct(
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        AuthenticationProvider $adminAuthenticationProvider,
+        ContextBuilder $contextBuilder,
+        Client $distributionClient
     ) {
         $this->logger = $logger;
+        $this->adminAuthenticationProvider = $adminAuthenticationProvider;
+        $this->contextBuilder = $contextBuilder;
+        $this->distributionClient = $distributionClient;
     }
 
     /**
@@ -50,7 +78,13 @@ class ModuleEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            ModuleManagementEvent::UPGRADE => 'pushDistributionTracking',
+            ModuleManagementEvent::UPGRADE => [
+                ['pushDistributionTracking'],
+                ['logModuleUpgrade'],
+            ],
+            ModuleManagementEvent::INSTALL => [
+                ['logModuleInstall'],
+            ],
         ];
     }
 
@@ -66,5 +100,49 @@ class ModuleEventSubscriber implements EventSubscriberInterface
         }
 
         (new UpgradeTracker())->postTracking($module->getInstance());
+    }
+
+    public function logModuleUpgrade(ModuleManagementEvent $event)
+    {
+        $this->logEvent(ModuleManagementEvent::UPGRADE, $event);
+    }
+
+    public function logModuleInstall(ModuleManagementEvent $event)
+    {
+        $this->logEvent(ModuleManagementEvent::INSTALL, $event);
+    }
+
+    private function logEvent(string $eventName, ModuleManagementEvent $event)
+    {
+        $data = $this->contextBuilder->getEventContext();
+        $data['event_name'] = $eventName;
+        $data['module_name'] = $event->getModule()->get('name');
+        if (in_array($eventName, [
+            ModuleManagementEvent::INSTALL,
+            ModuleManagementEvent::UPGRADE,
+        ])) {
+            $data['module_watermark'] = $this->getModuleWatermark($event->getModule());
+        }
+
+        $this->distributionClient->setBearer($this->adminAuthenticationProvider->getMboJWT());
+        $this->distributionClient->trackEvent($data);
+    }
+
+    private function getModuleWatermark($module)
+    {
+        $fileName = _PS_MODULE_DIR_ . $module->get('name') . self::WATERMARK_FILENAME;
+        if (!file_exists($fileName)) {
+            return '';
+        }
+        try {
+            $fileHandle = fopen($fileName, 'r');
+            $contents = fread($fileHandle, filesize($fileName));
+            fclose($fileHandle);
+        } catch (\Exception $e) {
+            // If the file is not readable, return an empty string
+            return $contents = '';
+        }
+
+        return $contents;
     }
 }

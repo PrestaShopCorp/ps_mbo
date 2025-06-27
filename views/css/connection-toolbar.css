@@ -19,6 +19,12 @@
 .adminpsmbomodule .header-toolbar .container-fluid,
 .adminpsmbomodule .header-toolbar .page-head-tabs,
 .adminmodulesmanage #page-header-desc-configuration-addons_connect,
-.adminmodulesmanage #page-header-desc-configuration-addons_logout {
+.adminmodulesmanage #page-header-desc-configuration-addons_logout,
+.adminmodulesupdates #page-header-desc-configuration-addons_connect,
+.adminmodulesupdates #page-header-desc-configuration-addons_logout,
+.adminmodulesnotifications #page-header-desc-configuration-addons_connect,
+.adminmodulesnotifications #page-header-desc-configuration-addons_logout,
+.adminpsmbouninstalledmodules #page-header-desc-configuration-addons_connect,
+.adminpsmbouninstalledmodules #page-header-desc-configuration-addons_logout {
   display: none;
 }

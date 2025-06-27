@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -21,6 +22,7 @@
 namespace PrestaShop\Module\Mbo\Distribution;
 
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use stdClass;
 
 class Client extends BaseClient
@@ -72,5 +74,24 @@ class Client extends BaseClient
             self::HTTP_METHOD_PUT,
             ['body' => $this->mergeShopDataWithParams($params)]
         );
+    }
+
+    /**
+     * @param array $eventData
+     *
+     * @return void
+     */
+    public function trackEvent(array $eventData)
+    {
+        try {
+            $this->processRequestAndDecode(
+                'shops/events',
+                self::HTTP_METHOD_POST,
+                ['body' => $eventData]
+            );
+        } catch (\Exception $e) {
+            // Do nothing, we don't want to block the module action
+            ErrorHelper::reportError($e);
+        }
     }
 }
