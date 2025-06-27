@@ -89,7 +89,7 @@ class Client extends BaseClient
                 self::HTTP_METHOD_POST,
                 ['body' => $eventData]
             );
-        } catch (\Throwable $e) {
+        } catch (\Exception $e) {
             // Do nothing, we don't want to block the module action
             ErrorHelper::reportError($e);
         }
