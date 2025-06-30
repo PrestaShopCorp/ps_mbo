@@ -120,6 +120,34 @@ class ContextBuilder
         return true;
     }
 
+    public function getEventContext(): array
+    {
+        $modules = [];
+        // Filter : remove uninstalled modules
+        foreach ($this->getInstalledModules() as $installedModule) {
+            if ($installedModule['status'] !== self::STATUS_UNINSTALLED) {
+                $modules[] = $installedModule['name'];
+            }
+        }
+
+        $shopActivity = Config::getShopActivity();
+
+        return [
+            'modules' => $modules,
+            'user_id' => $this->accountsDataProvider->getAccountsUserId(),
+            'shop_id' => $this->accountsDataProvider->getAccountsShopId(),
+            'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
+            'iso_lang' => $this->getLanguage()->getIsoCode(),
+            'iso_code' => $this->getCountry()->iso_code,
+            'mbo_version' => \ps_mbo::VERSION,
+            'ps_version' => _PS_VERSION_,
+            'shop_url' => Config::getShopUrl(),
+            'shop_creation_date' => defined('_PS_CREATION_DATE_') ? _PS_CREATION_DATE_ : null,
+            'shop_business_sector_id' => $shopActivity['id'],
+            'shop_business_sector' => $shopActivity['name'],
+        ];
+    }
+
     /**
      * @return array
      */
@@ -165,7 +193,8 @@ class ContextBuilder
             'installed_modules' => $this->getInstalledModules(),
             'accounts_user_id' => $this->accountsDataProvider->getAccountsUserId(),
             'accounts_shop_id' => $this->accountsDataProvider->getAccountsShopId(),
-            'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
+            'accounts_token' => $this->accountsDataProvider->getAccountsToken() ?? '',
+            'accounts_shop_token' => $this->accountsDataProvider->getAccountsShopToken(),
             'accounts_component_loaded' => false,
             'module_catalog_url' => $this->router->generate('admin_mbo_catalog_module'),
             'theme_catalog_url' => $this->router->generate('admin_mbo_catalog_theme'),

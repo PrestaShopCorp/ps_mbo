@@ -35,7 +35,6 @@ use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use PrestaShop\PsAccountsInstaller\Installer\Installer;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
@@ -44,6 +43,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ps_mbo extends Module
 {
     use PrestaShop\Module\Mbo\Traits\HaveConfigurationPage;
+
+    const VERSION = '3.2.1';
     const TABS_WITH_RECOMMENDED_MODULES_BUTTON = [
         'AdminOrders', // Orders> Orders
         'AdminInvoices', // Orders > Invoices
@@ -177,7 +178,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '3.2.0';
+        $this->version = '3.2.1';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -532,15 +533,7 @@ class ps_mbo extends Module
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css');
         }
 
-        $accountsInstaller = $this->get('mbo.ps_accounts.installer');
-        $isPsAccountsEnabled = ($accountsInstaller instanceof Installer) && $accountsInstaller->isModuleEnabled();
-
-        if (
-            ('AdminPsMboModule' === Tools::getValue('controller')) // Module catalog / Marketplace
-            || $isPsAccountsEnabled // For Module manager
-        ) {
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/connection-toolbar.css');
-        }
+        $this->context->controller->addCSS($this->getPathUri() . 'views/css/connection-toolbar.css');
         $this->loadCdcMedia();
     }
 
