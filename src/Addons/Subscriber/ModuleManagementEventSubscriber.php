@@ -98,7 +98,6 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
                 ['clearCatalogCache'],
                 ['onInstall'],
             ],
-            ModuleManagementEvent::POST_INSTALL => [],
             ModuleManagementEvent::UNINSTALL => [
                 ['clearCatalogCache'],
                 ['onUninstall'],
