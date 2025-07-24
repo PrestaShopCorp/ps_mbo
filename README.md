@@ -10,13 +10,27 @@ The module **ps_mbo** is the PrestaShop modules marketplace within your shop Bac
 
 It is responsible for :
 
-- Displaying the modules catalogue
+- Displaying the module catalogue
 - Actions on modules : install, uninstall, upgrade, ...
-- Linking your backoffice to Addons
+- Linking your backoffice to purchases made on Addons
+
+## ⚠️ Version Compatibility
+
+**Important**: Make sure to download the module version that matches your PrestaShop version.
+
+| Module Version | Compatible PrestaShop |
+|----------------|-----------------------|
+| v5.x           | 9.x                   |
+| v4.x           | 8.x                   |
+| v3.x           | 1.7.7 & 1.7.8         |
+
+> **Technical Note**: This segmentation is necessary due to strong dependencies between the module, PrestaShop core, and Symfony version changes that significantly impact compatibility.
+
+**Download Options**:
+- **Addons Marketplace**: The module is also available on the [PrestaShop Addons marketplace](https://addons.prestashop.com/en/marketplace-builder/39574-prestashop-marketplace-in-your-back-office.html). When specifying your shop version during download, the platform will automatically provide the latest compatible version.
+- **Manual Verification**: You can also check the `ps_mbo.php` file and verify the `ps_versions_compliancy` array in the version tag to confirm compatibility.
 
 ## Installation
-
-MBO is integrated by default on PrestaShop Edition versions.
 
 You can install it manually by downloading the latest release on https://github.com/PrestaShopCorp/ps_mbo/releases and uploading it through the Module manager page of your Backoffice.
 
