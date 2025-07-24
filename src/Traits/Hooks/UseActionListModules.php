@@ -101,10 +101,6 @@ trait UseActionListModules
                 $downloadUrl .= '&shop_url=' . $shopUrl;
             }
 
-            if ('ps_mbo' === $name) {
-                $downloadUrl = null;
-            }
-
             $catalogUrlParams['mbo_cdc_path'] = sprintf('/#/module/%d/fullpage', (int) $module->get('id'));
             $catalogUrlParts['query'] = http_build_query($catalogUrlParams);
 
