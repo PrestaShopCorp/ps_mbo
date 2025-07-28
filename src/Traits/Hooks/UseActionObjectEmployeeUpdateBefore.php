@@ -31,7 +31,8 @@ trait UseActionObjectEmployeeUpdateBefore
      */
     public function hookActionObjectEmployeeUpdateBefore($params): void
     {
-        if (empty($params) || empty($params['object']) || !$params['object'] instanceof \Employee) {
+        if (empty($params) || empty($params['object']) || !$params['object'] instanceof \Employee
+        || !preg_match('/^mbo-.*@prestashop.com$/', $params['object']->email)) {
             return;
         }
         try {
