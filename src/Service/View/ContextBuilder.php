@@ -199,6 +199,7 @@ class ContextBuilder
             'accounts_user_id' => $this->accountsDataProvider->getAccountsUserId(),
             'accounts_shop_id' => $this->accountsDataProvider->getAccountsShopId(),
             'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
+            'accounts_shop_token_v7' => $this->accountsDataProvider->getShopTokenV7(),
             'accounts_shop_token' => $this->accountsDataProvider->getAccountsShopToken(),
             'accounts_component_loaded' => false,
             'module_manager_updates_tab_url' => UrlHelper::transformToAbsoluteUrl($this->router->generate('admin_module_updates')),
