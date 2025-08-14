@@ -7,7 +7,6 @@ on:
     types: [released, prereleased]
   push:
     branches-ignore:
-      - feat/*
       - fix/*
 
 env:
