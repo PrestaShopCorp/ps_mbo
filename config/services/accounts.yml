@@ -6,7 +6,7 @@ services:
     class: 'PrestaShop\PsAccountsInstaller\Installer\Installer'
     public: true
     arguments:
-      - "7.0.4"
+      - "5.1.1" # getShopUuid available since 5.1.1
 
   mbo.ps_accounts.facade:
     class: 'PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts'
@@ -17,4 +17,4 @@ services:
   mbo.accounts.data_provider:
     class: PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider
     arguments:
-      - "7.0.4"
+      - "5.1.1" # getShopUuid available since 5.1.1
