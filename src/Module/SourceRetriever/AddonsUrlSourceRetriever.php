@@ -110,7 +110,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             if (empty($options['headers'])) {
                 $options['headers'] = [];
             }
-            $options['headers'] = array_merge($options['headers'], AddonsApiHelper::addCustomHeaderIfNeeded());
+            $options['headers'] = array_merge($options['headers'], AddonsApiHelper::addCustomHeaders());
 
             $response = $this->httpClient->request('HEAD', $source, $options);
         } catch (TransportExceptionInterface $e) {
