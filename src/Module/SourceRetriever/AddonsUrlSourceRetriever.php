@@ -203,6 +203,10 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         $temporaryZipFilename = $temporaryFilename . '.zip';
         rename($temporaryFilename, $temporaryZipFilename);
 
+        if (!is_array($options['headers'])) {
+            $options['headers'] = [];
+        }
+        $options['headers'] = array_merge($options['headers'], AddonsApiHelper::addCustomHeaders());
         $resource = fopen($temporaryZipFilename, 'w');
         $stream = Utils::streamFor($resource);
         $this->httpClient->request(
