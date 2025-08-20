@@ -27,15 +27,18 @@ class AddonsApiHelper
     /**
      * @return array
      */
-    public static function addCustomHeaderIfNeeded()
+    public static function addCustomHeaders()
     {
+        $defaultCustomHeaders = [
+            'X-PrestaShop-MBO' => \ps_mbo::VERSION,
+        ];
         $customHeaderKey = getenv('ADDONS_API_HEADER_KEY');
         $customHeaderValue = getenv('ADDONS_API_HEADER_VALUE');
 
         if (empty($customHeaderKey) || empty($customHeaderValue)) {
-            return [];
+            return $defaultCustomHeaders;
         }
 
-        return [$customHeaderKey => $customHeaderValue];
+        return array_merge($defaultCustomHeaders, [$customHeaderKey => $customHeaderValue]);
     }
 }

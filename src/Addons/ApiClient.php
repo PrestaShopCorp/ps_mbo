@@ -106,7 +106,7 @@ class ApiClient
 
     public function getHeaders()
     {
-        return array_merge($this->headers, AddonsApiHelper::addCustomHeaderIfNeeded());
+        return array_merge($this->headers, AddonsApiHelper::addCustomHeaders());
     }
 
     /**
