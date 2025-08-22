@@ -25,8 +25,11 @@ services:
   # Addons API Client
   mbo.addons.client.api:
     class: PrestaShop\Module\Mbo\Addons\ApiClient
+    autowire: true
     arguments:
-      - "@mbo.addons.client.http"
+      $apiUrl: "%env(ADDONS_API_URL)%"
+      $httpClient: '@Psr\Http\Client\ClientInterface'
+      $requestFactory: '@Psr\Http\Message\ServerRequestFactoryInterface'
     calls:
       - method: setDefaultParams
         arguments:
