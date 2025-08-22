@@ -21,13 +21,17 @@ services:
   mbo.cdc.client.distribution_api:
     class: PrestaShop\Module\Mbo\Distribution\Client
     arguments:
-      - "@mbo.distribution_api.client.http"
+      - "%env(DISTRIBUTION_API_URL)%"
+      - '@Psr\Http\Client\ClientInterface'
+      - '@Psr\Http\Message\ServerRequestFactoryInterface'
       - '@mbo.doctrine.cache.provider'
 
   # Distribution API Client with addons user
   mbo.cdc.client.connected_distribution_api:
     class: PrestaShop\Module\Mbo\Distribution\ConnectedClient
     arguments:
-      - "@mbo.distribution_api.client.http"
+      - "%env(DISTRIBUTION_API_URL)%"
+      - '@Psr\Http\Client\ClientInterface'
+      - '@Psr\Http\Message\ServerRequestFactoryInterface'
       - '@mbo.doctrine.cache.provider'
-      - '@=service("mbo.addons.user.provider").getUser()'
+      - '@=service("mbo.addons.user.provider")'
