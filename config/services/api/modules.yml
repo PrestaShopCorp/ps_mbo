@@ -4,10 +4,10 @@ services:
 
   mbo.modules.source_retriever.url:
     class: 'PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever'
+    autowire: true
     arguments:
       $addonsDataProvider: '@mbo.addons.data_provider'
       $translator: '@translator'
-      $modulePath: '%modules_dir%'
     properties:
       cacheDir: "%kernel.cache_dir%"
 
