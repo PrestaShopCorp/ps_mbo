@@ -28,11 +28,12 @@ class ModuleOverrideChecker
 {
     private $overrides = [];
 
+    private const CUSTOM_DEV = "_CUSTOM_DEV_";
     private const PATTERNS = [
         'class' => '/class\s+(\w+)\s+extends\s+(\w+)/',
-        'method' => '#/\*(?:\s|\*)+module:\s+(\w+)[^/]*/\s+((?:public|private|protected)\s+(?:\w|\s)*function\s+(\w+))#',
-        'property' => '#/\*(?:\s|\*)+module:\s+(\w+)[^/]*/\s+((?:public|private|protected)\s+(?:\w|\s)*\$(\w+))#',
-        'constant' => '#/\*(?:\s|\*)+module:\s+(\w+)[^/]*/\s+((?:public|private|protected)?\s+(?:\w|\s)*const\s+(?:\w*\s+)*(\w+))#',
+        'method' => '#(?:/\*(?:\s|\*)+module:\s+(\w+)[^/]*/\s+)?((?:public|private|protected)\s+(?:\w|\s)*function\s+(\w+))#',
+        'property' => '#(?:/\*(?:\s|\*)+module:\s+(\w+)[^/]*/\s+)?((?:public|private|protected)\s+(?:\w|\s)*\$(\w+))#',
+        'constant' => '#(?:/\*(?:\s|\*)+module:\s+(\w+)[^/]*/\s+)?((?:public|private|protected)?\s+(?:\w|\s)*const\s+(?:\w*\s+)*(\w+))#',
     ];
 
     public function listOverridesFromPsDirectory(): array
@@ -131,9 +132,9 @@ class ModuleOverrideChecker
 
         for ($i = 0; $i < count($matches[1]); $i++) {
             $formattedOverrides[$matches[3][$i]] = [
-                'name' => $matches[3][$i],
-                'signature' => $matches[2][$i],
-                'module' => $matches[1][$i],
+                'name' => trim($matches[3][$i]),
+                'signature' => trim($matches[2][$i]),
+                'module' => empty($matches[1][$i]) ? self::CUSTOM_DEV : trim($matches[1][$i]),
             ];
         }
 
