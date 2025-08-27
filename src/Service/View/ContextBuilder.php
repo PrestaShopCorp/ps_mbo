@@ -33,6 +33,7 @@ use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\UrlHelper;
 use PrestaShop\Module\Mbo\Module\Module;
+use PrestaShop\Module\Mbo\Module\ModuleOverrideChecker;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
 use PrestaShop\Module\Mbo\Tab\Tab;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
@@ -166,6 +167,7 @@ class ContextBuilder
         $language = $this->getLanguage();
         $country = $this->getCountry();
         $shopActivity = Config::getShopActivity();
+        $overrideChecker = ModuleOverrideChecker::getInstance();
 
         $token = Tools::getValue('_token');
 
@@ -209,7 +211,7 @@ class ContextBuilder
             'shop_creation_date' => defined('_PS_CREATION_DATE_') ? _PS_CREATION_DATE_ : null,
             'shop_business_sector_id' => $shopActivity['id'],
             'shop_business_sector' => $shopActivity['name'],
-
+            'overrides_on_shop' => $overrideChecker->listOverridesFromPsDirectory(),
             'actions_token' => UrlHelper::getQueryParameterValue($mboResetUrl, '_token'),
             'actions_url' => [
                 'install' => $this->generateActionUrl('install'),
@@ -335,7 +337,7 @@ class ContextBuilder
                     $this->router->generate(
                         'admin_module_configure_action',
                         [
-                        'module_name' => $moduleName,
+                            'module_name' => $moduleName,
                         ],
                         UrlGeneratorInterface::ABSOLUTE_URL
                     )
