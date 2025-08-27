@@ -28,13 +28,24 @@ class ModuleOverrideChecker
 {
     private array $overrides = [];
 
-    private const CUSTOM_DEV = "_CUSTOM_DEV_";
+    private static ?ModuleOverrideChecker $instance;
+
+    private const CUSTOM_DEV = '_CUSTOM_DEV_';
     private const PATTERNS = [
         'class' => '/class\s+(\w+)\s+extends\s+(\w+)/',
         'method' => '#(?:/\*(?:\s|\*)+module:\s+(\w+)[^/]*/\s+)?((?:public|private|protected)\s+(?:\w|\s)*function\s+(\w+))#',
         'property' => '#(?:/\*(?:\s|\*)+module:\s+(\w+)[^/]*/\s+)?((?:public|private|protected)\s+(?:\w|\s)*\$(\w+))#',
         'constant' => '#(?:/\*(?:\s|\*)+module:\s+(\w+)[^/]*/\s+)?((?:public|private|protected)?\s+(?:\w|\s)*const\s+(?:\w*\s+)*(\w+))#',
     ];
+
+    public static function getInstance(): self
+    {
+        if (empty(self::$instance)) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
 
     public function listOverridesFromPsDirectory(): array
     {
@@ -55,6 +66,12 @@ class ModuleOverrideChecker
 
     public function extractOverridesFromFiles(array $fileList): array
     {
+        $cacheKey = sha1(implode('_', $fileList));
+        if (isset($this->overrides[$cacheKey])) {
+            return $this->overrides[$cacheKey];
+        }
+
+        $this->overrides[$cacheKey] = [];
         foreach ($fileList as $file) {
             $overrideFile = rtrim(_PS_OVERRIDE_DIR_, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . ltrim($file, DIRECTORY_SEPARATOR);
 
@@ -67,7 +84,7 @@ class ModuleOverrideChecker
                 $conflictingConstants = $this->extractConflictingElements($overrideFileContent, 'constant');
 
                 if (!empty($className) && ($conflictingMethods || $conflictingProperties || $conflictingConstants)) {
-                    $this->overrides[$file] = [
+                    $this->overrides[$cacheKey][$file] = [
                         'class' => [
                             'signature' => $className[0],
                             'name' => $className[1],
@@ -81,12 +98,7 @@ class ModuleOverrideChecker
             }
         }
 
-        return $this->overrides;
-    }
-
-    public function getOverrides(): array
-    {
-        return $this->overrides;
+        return $this->overrides[$cacheKey];
     }
 
     public function resetOverrides(): array
@@ -130,7 +142,7 @@ class ModuleOverrideChecker
     {
         $formattedOverrides = [];
 
-        for ($i = 0; $i < count($matches[1]); $i++) {
+        for ($i = 0; $i < count($matches[1]); ++$i) {
             $formattedOverrides[$matches[3][$i]] = [
                 'name' => trim($matches[3][$i]),
                 'signature' => trim($matches[2][$i]),
