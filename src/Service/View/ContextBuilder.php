@@ -29,6 +29,7 @@ use Language;
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Distribution\AuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Module\ModuleOverrideChecker;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShop\PrestaShop\Adapter\Module\Module as CoreModule;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
@@ -157,6 +158,7 @@ class ContextBuilder
         $language = $this->getLanguage();
         $country = $this->getCountry();
         $psMbo = \Module::getInstanceByName('ps_mbo');
+        $overrideChecker = ModuleOverrideChecker::getInstance();
 
         $psMboVersion = false;
         if (\Validate::isLoadedObject($psMbo)) {
@@ -202,6 +204,7 @@ class ContextBuilder
             'shop_creation_date' => defined('_PS_CREATION_DATE_') ? _PS_CREATION_DATE_ : null,
             'shop_business_sector_id' => $shopActivity['id'],
             'shop_business_sector' => $shopActivity['name'],
+            'overrides_on_shop' => $overrideChecker->listOverridesFromPsDirectory(),
         ];
     }
 
