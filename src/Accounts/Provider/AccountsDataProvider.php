@@ -80,6 +80,22 @@ class AccountsDataProvider
     }
 
     /**
+     * Get Hydra ps_accounts shop token, available since ps_accounts 7.1.1
+     *
+     * @return string
+     */
+    public function getShopTokenV7(): string
+    {
+        try {
+            $shopToken = $this->getAccountsService()->getShopToken();
+        } catch (\Exception $e) {
+            $shopToken = null;
+        }
+
+        return $shopToken ?: '';
+    }
+
+    /**
      * @return string|null
      */
     public function getAccountsShopId()
