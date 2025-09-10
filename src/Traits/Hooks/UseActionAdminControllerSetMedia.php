@@ -94,10 +94,6 @@ trait UseActionAdminControllerSetMedia
             $this->context->controller->addJs('/js/jquery/plugins/growl/jquery.growl.js?v=' . $this->version);
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/module-catalog.css');
         }
-        if (in_array(\Tools::getValue('controller'), self::CONTROLLERS_WITH_CONNECTION_TOOLBAR)) {
-            $this->context->controller->addCSS($this->getPathUri() . 'views/css/connection-toolbar.css');
-            $this->context->controller->addJS($this->getPathUri() . 'views/js/connection-toolbar.js');
-        }
         if ('AdminPsMboModule' === \Tools::getValue('controller')) {
             $this->context->controller->addCSS($this->getPathUri() . 'views/css/hide-toolbar.css');
         }

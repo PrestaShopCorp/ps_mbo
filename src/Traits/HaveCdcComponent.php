@@ -56,10 +56,7 @@ trait HaveCdcComponent
         }
     }
 
-    /**
-     * @return false|string
-     */
-    public function smartyDisplayTpl(string $tpl, array $additionalParams = [])
+    public function smartyDisplayTpl(string $tpl, array $additionalParams = []): string
     {
         try {
             /** @var ContextBuilder|null $contextBuilder */
@@ -73,7 +70,7 @@ trait HaveCdcComponent
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
 
-            return false;
+            return '';
         }
         $this->context->smarty->assign(
             array_merge([

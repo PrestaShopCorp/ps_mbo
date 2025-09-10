@@ -47,6 +47,7 @@
 {/if}
 
 <script>
+  window.mboDashboardContext = null;
   if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
     if (typeof renderCdcError === 'function') {
       window.$(document).ready(function() {
@@ -56,13 +57,14 @@
   } else {
     const renderTipsAndUpdate = window.mboCdc.renderDashboardTipsAndUpdate
 
-    const dashboardTipsAndUpdateContext = {$shop_context};
+    window.mboDashboardContext = {$shop_context};
 
     if (psAccountLoaded) {
-      dashboardTipsAndUpdateContext.accounts_component_loaded = true;
+      window.mboDashboardContext.accounts_component_loaded = true;
     }
 
-    renderTipsAndUpdate(dashboardTipsAndUpdateContext, '#cdc-tips-and-update-container')
+    renderTipsAndUpdate(window.mboDashboardContext, '#cdc-tips-and-update-container')
+
   }
 </script>
 
