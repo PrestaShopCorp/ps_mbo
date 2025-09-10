@@ -25,7 +25,6 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
-use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
 
@@ -131,29 +130,5 @@ trait UseDashboardZoneOne
         }
 
         return $urlAccountsCdn;
-    }
-
-    /**
-     * Return true if ps_account is enabled
-     *
-     * @return bool
-     */
-    private function ensurePsAccountIsEnabled(): bool
-    {
-        /** @var Installer|null $accountsInstaller */
-        $accountsInstaller = $this->get(Installer::class);
-        if (!$accountsInstaller) {
-            return false;
-        }
-
-        $accountsEnabled = $accountsInstaller->isModuleEnabled();
-        if ($accountsEnabled) {
-            return true;
-        }
-
-        /** @var ModuleManager|null $moduleManager */
-        $moduleManager = $this->get('prestashop.module.manager');
-
-        return $moduleManager && $moduleManager->enable($accountsInstaller->getModuleName());
     }
 }
