@@ -29,13 +29,10 @@ trait UseHooks
     use Hooks\UseDashboardZoneOne;
     use Hooks\UseDashboardZoneThree {
         Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
-        Hooks\UseDashboardZoneOne::loadCdcMediaFilesForControllers insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
     }
     use Hooks\UseDisplayAdminThemesListAfter;
-    use Hooks\UseDisplayDashboardTop;
     use Hooks\UseActionAdminControllerSetMedia;
     use Hooks\UseActionBeforeInstallModule;
-    use Hooks\UseActionGetAdminToolbarButtons;
     use Hooks\UseActionGetAlternativeSearchPanels;
     use Hooks\UseDisplayAdminAfterHeader;
     use Hooks\UseActionListModules;

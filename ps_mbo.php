@@ -48,11 +48,6 @@ class ps_mbo extends Module
      */
     public const VERSION = '5.0.3';
 
-    public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
-        'AdminModulesManage',
-        'AdminModulesSf',
-    ];
-
     public const CONTROLLERS_WITH_CDC_SCRIPT = [
         'AdminModulesNotifications',
         'AdminModulesUpdates',

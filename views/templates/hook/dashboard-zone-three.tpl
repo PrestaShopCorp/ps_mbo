@@ -19,15 +19,22 @@
 <script>
   if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
     if (typeof renderCdcError === 'function') {
-      window.$(document).ready(function() {
+      window.$(document).ready(function () {
         renderCdcError($('#cdc-dashboard-news'));
       });
     }
   } else {
-    const dashboardNewsContext = {$shop_context};
-
     const renderNews = window.mboCdc.renderDashboardNews
-    renderNews(dashboardNewsContext, '#cdc-dashboard-news')
+    if (!window.mboDashboardContext) {
+      setTimeout(() => {
+          if (window.mboDashboardContext) {
+            renderNews(window.mboDashboardContext, '#cdc-dashboard-news')
+          }
+        },
+        1000)
+    } else {
+      renderNews(window.mboDashboardContext, '#cdc-dashboard-news')
+    }
   }
 </script>
 
