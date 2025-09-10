@@ -165,22 +165,6 @@ class Config
         );
     }
 
-    public static function getLastPsVersionApiConfig(): ?string
-    {
-        // PS_MBO_LAST_PS_VERSION_API_CONFIG have the same value for all shops
-        // to prevent errors in a multishop context,
-        // we request the shops list and get the config value for the 1st one
-        $singleShop = self::getDefaultShop();
-
-        return \Configuration::get(
-            'PS_MBO_LAST_PS_VERSION_API_CONFIG',
-            null,
-            $singleShop->id_shop_group,
-            $singleShop->id,
-            null
-        );
-    }
-
     public static function getDefaultShop(): \Shop
     {
         return new \Shop((int) \Configuration::get('PS_SHOP_DEFAULT'));

@@ -74,7 +74,6 @@ class Toolbar
         )) {
             return array_merge(
                 $this->getAddModuleToolbar(),
-                $this->getConnectionToolbar()
             );
         }
 
@@ -105,48 +104,6 @@ class Toolbar
                     $this->translator->getLocale()
                 ),
             ],
-        ];
-    }
-
-    /**
-     * Returns button definition for Addons login/logout, depending on the user authentication status.
-     *
-     * @return array
-     */
-    public function getConnectionToolbar(): array
-    {
-        $toolbarButtons = [];
-
-        if (
-            $this->addonsDataProvider->isUserAuthenticated()
-            && $this->addonsDataProvider->isUserAuthenticatedOnAccounts()
-        ) {
-            $toolbarButtons['accounts_logout'] = $this->getAccountsStatusButton();
-        }
-
-        return $toolbarButtons;
-    }
-
-    public function getAccountsStatusButton(): ?array
-    {
-        if (!$this->addonsDataProvider->isUserAuthenticatedOnAccounts()) {
-            return null;
-        }
-
-        return [
-            'href' => '#',
-            'desc' => $this->translator->trans(
-                'Connected',
-                [],
-                'Modules.Mbo.Modulescatalog',
-                $this->translator->getLocale()
-            ),
-            'help' => $this->translator->trans(
-                'Connected as',
-                [],
-                'Modules.Mbo.Modulescatalog',
-                $this->translator->getLocale()
-            ) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail(),
         ];
     }
 }
