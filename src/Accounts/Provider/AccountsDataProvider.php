@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Accounts\Provider;
 
-use Exception;
 use PrestaShop\Module\PsAccounts\Repository\UserTokenRepository;
 use PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
@@ -70,7 +69,7 @@ class AccountsDataProvider
             $token = $accountsUserTokenRepository->getOrRefreshToken();
 
             return null === $token ? '' : (string) $token;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return '';
         }
     }
@@ -129,7 +128,6 @@ class AccountsDataProvider
             try {
                 $shopToken = $this->psAccountsService->getShopToken();
             } catch (\Exception $e) {
-                
             }
         }
 
