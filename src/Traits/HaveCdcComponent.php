@@ -21,11 +21,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits;
 
+use Exception;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use ToolsCore as Tools;
 
 trait HaveCdcComponent
 {
@@ -40,7 +40,7 @@ trait HaveCdcComponent
             if (null === $router || null === $contextBuilder) {
                 throw new ExpectedServiceNotFoundException('Some services not found in HaveCdcComponent');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             ErrorHelper::reportError($e);
 
             return '';
