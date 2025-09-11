@@ -17,25 +17,25 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *}
 <script>
-  if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
-    if (typeof renderCdcError === 'function') {
-      window.$(document).ready(function () {
+  window.$(document).ready(function () {
+    if (typeof window.mboCdc == undefined || typeof window.mboCdc == "undefined") {
+      if (typeof renderCdcError === 'function') {
         renderCdcError($('#cdc-dashboard-news'));
-      });
-    }
-  } else {
-    const renderNews = window.mboCdc.renderDashboardNews
-    if (!window.mboDashboardContext) {
-      setTimeout(() => {
-          if (window.mboDashboardContext) {
-            renderNews(window.mboDashboardContext, '#cdc-dashboard-news')
-          }
-        },
-        1000)
+      }
     } else {
-      renderNews(window.mboDashboardContext, '#cdc-dashboard-news')
+      const renderNews = window.mboCdc.renderDashboardNews
+      if (!window.mboDashboardContext) {
+        setTimeout(() => {
+            if (window.mboDashboardContext) {
+              renderNews(window.mboDashboardContext, '#cdc-dashboard-news')
+            }
+          },
+          1000)
+      } else {
+        renderNews(window.mboDashboardContext, '#cdc-dashboard-news')
+      }
     }
-  }
+  });
 </script>
 
 <section id="cdc-dashboard-news" class="dash_news cdc-container" data-error-path="{$cdcErrorUrl}"></section>

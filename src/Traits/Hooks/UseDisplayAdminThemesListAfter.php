@@ -40,7 +40,7 @@ trait UseDisplayAdminThemesListAfter
             /** @var ContextBuilder|null $contextBuilder */
             $contextBuilder = $this->get(ContextBuilder::class);
             /** @var Router|null $router */
-            $router = $this->get(Router::class);
+            $router = $this->get('router');
 
             if (null === $contextBuilder || null === $router) {
                 throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayAdminThemesListAfter');
@@ -53,47 +53,13 @@ trait UseDisplayAdminThemesListAfter
         $context = $contextBuilder->getViewContext();
         $context['recommendation_format'] = 'card';
 
+        $extraParams = self::getCdcMediaUrl();
+
         $this->smarty->assign([
             'shop_context' => json_encode($context),
             'cdcErrorUrl' => $router->generate('admin_mbo_module_cdc_error'),
-        ]);
+        ] + $extraParams);
 
         return $this->fetch('module:ps_mbo/views/templates/hook/recommended-themes.tpl');
-    }
-
-    /**
-     * @return void
-     *
-     * @throws \Exception
-     */
-    public function bootUseDisplayAdminThemesListAfter(): void
-    {
-        if (method_exists($this, 'addAdminControllerMedia')) {
-            $this->addAdminControllerMedia('loadMediaAdminThemesListAfter');
-        }
-    }
-
-    /**
-     * Add JS and CSS file
-     *
-     * @see UseActionAdminControllerSetMedia
-     *
-     * @return void
-     */
-    protected function loadMediaAdminThemesListAfter(): void
-    {
-        if (\Tools::getValue('controller') === 'AdminThemes') {
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error-templating.js');
-            $this->context->controller->addCss($this->getPathUri() . 'views/css/cdc-error-templating.css');
-
-            $cdcJsFile = getenv('MBO_CDC_URL');
-            if (!is_string($cdcJsFile) || empty($cdcJsFile)) {
-                $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error.js');
-
-                return;
-            }
-
-            $this->context->controller->addJs($cdcJsFile);
-        }
     }
 }

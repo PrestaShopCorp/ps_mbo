@@ -18,15 +18,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use Db;
+use Exception;
+use Media;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
+use PrestaShopDatabaseException;
 
 trait UseDashboardZoneOne
 {
@@ -39,45 +42,23 @@ trait UseDashboardZoneOne
      */
     public function hookDashboardZoneOne()
     {
+        $extraParams = self::getCdcMediaUrl();
+
         return $this->smartyDisplayTpl('dashboard-zone-one.tpl', [
             'urlAccountsCdn' => $this->loadPsAccounts(),
-        ]);
+        ] + $extraParams);
     }
 
     /**
-     * @return void
-     *
-     * @throws \Exception
+     * @throws PrestaShopDatabaseException
      */
-    public function bootUseDashboardZoneOne(): void
-    {
-        if (method_exists($this, 'addAdminControllerMedia')) {
-            $this->addAdminControllerMedia('loadMediaDashboardZoneOne');
-        }
-    }
-
-    /**
-     * Add JS and CSS file
-     *
-     * @see UseActionAdminControllerSetMedia
-     *
-     * @return void
-     */
-    protected function loadMediaDashboardZoneOne(): void
-    {
-        $this->loadCdcMediaFilesForControllers(['AdminDashboard']);
-    }
-
-    /**
-     * @throws \PrestaShopDatabaseException
-     */
-    public function useDashboardZoneOneExtraOperations()
+    public function useDashboardZoneOneExtraOperations(): void
     {
         // Update module position in Dashboard
         $query = 'SELECT id_hook FROM ' . _DB_PREFIX_ . "hook WHERE name = 'dashboardZoneOne'";
 
         /** @var array $result */
-        $result = \Db::getInstance()->ExecuteS($query);
+        $result = Db::getInstance()->ExecuteS($query);
         $id_hook = $result['0']['id_hook'];
 
         $this->updatePosition((int) $id_hook, false);
@@ -106,7 +87,7 @@ trait UseDashboardZoneOne
                 if ($accountsFacade) {
                     try {
                         $accountsService = $accountsFacade->getPsAccountsService();
-                    } catch (\Exception $e) {
+                    } catch (Exception $e) {
                         // Installation seems to not work properly
                         $accountsService = $accountsFacade = null;
                         ErrorHelper::reportError($e);
@@ -117,14 +98,14 @@ trait UseDashboardZoneOne
 
         if (null !== $accountsFacade && null !== $accountsService) {
             try {
-                \Media::addJsDef([
+                Media::addJsDef([
                     'contextPsAccounts' => $accountsFacade->getPsAccountsPresenter()
                         ->present('ps_mbo'),
                 ]);
 
                 // Retrieve the PrestaShop Account CDN
                 $urlAccountsCdn = $accountsService->getAccountsCdn();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 ErrorHelper::reportError($e);
             }
         }
