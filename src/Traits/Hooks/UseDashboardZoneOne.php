@@ -95,6 +95,7 @@ trait UseDashboardZoneOne
         try {
             /** @var PsAccounts|null $accountsFacade */
             $accountsFacade = $this->get(PsAccounts::class);
+            $accountsService = $accountsFacade->getPsAccountsService();
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
             /** @var Installer|null $accountsInstaller */
             $accountsInstaller = $this->get(Installer::class);
