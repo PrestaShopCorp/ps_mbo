@@ -32,12 +32,10 @@ trait HaveCdcComponent
     public function smartyDisplayTpl(string $tpl, array $additionalParams = []): string
     {
         try {
-            /** @var ContextBuilder|null $contextBuilder */
-            $contextBuilder = $this->get('mbo.cdc.context_builder');
             /** @var Router|null $router */
             $router = $this->get('router');
 
-            if (null === $router || null === $contextBuilder) {
+            if (null === $router) {
                 throw new ExpectedServiceNotFoundException('Some services not found in HaveCdcComponent');
             }
         } catch (Exception $e) {
@@ -45,9 +43,9 @@ trait HaveCdcComponent
 
             return '';
         }
+
         $this->context->smarty->assign(
             array_merge([
-                'shop_context' => json_encode($contextBuilder->getViewContext()),
                 'cdcErrorUrl' => $router->generate('admin_mbo_module_cdc_error'),
             ], $additionalParams)
         );

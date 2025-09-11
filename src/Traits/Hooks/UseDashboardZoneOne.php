@@ -25,7 +25,9 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 use Db;
 use Exception;
 use Media;
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
@@ -44,9 +46,23 @@ trait UseDashboardZoneOne
     {
         $extraParams = self::getCdcMediaUrl();
 
+        try {
+            /** @var ContextBuilder|null $contextBuilder */
+            $contextBuilder = $this->get('mbo.cdc.context_builder');
+
+            if (null === $contextBuilder) {
+                throw new ExpectedServiceNotFoundException('Some services not found in HaveCdcComponent');
+            }
+        } catch (Exception $e) {
+            ErrorHelper::reportError($e);
+
+            return '';
+        }
+
         return $this->smartyDisplayTpl('dashboard-zone-one.tpl', [
-            'urlAccountsCdn' => $this->loadPsAccounts(),
-        ] + $extraParams);
+                'urlAccountsCdn' => $this->loadPsAccounts(),
+                'shop_context' => json_encode($contextBuilder->getViewContext()),
+            ] + $extraParams);
     }
 
     /**
@@ -61,7 +77,7 @@ trait UseDashboardZoneOne
         $result = Db::getInstance()->ExecuteS($query);
         $id_hook = $result['0']['id_hook'];
 
-        $this->updatePosition((int) $id_hook, false);
+        $this->updatePosition((int)$id_hook, false);
     }
 
     protected function loadPsAccounts(): string

@@ -8,14 +8,6 @@ admin_mbo_catalog_module:
       - AdminPsMboModuleParent
       - AdminPsMboModule
 
-admin_mbo_catalog_module_selection:
-  path: /selection
-  methods: [GET]
-  defaults:
-    _controller: 'PrestaShop\Module\Mbo\Controller\Admin\ModuleSelectionController::indexAction'
-    _legacy_controller: AdminPsMboSelection
-    _legacy_link: AdminPsMboSelection
-
 admin_mbo_module_cdc_error:
   path: /cdc_error
   methods: [ GET ]
