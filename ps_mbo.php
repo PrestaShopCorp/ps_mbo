@@ -18,7 +18,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
 declare(strict_types=1);
 if (!defined('_PS_VERSION_') || version_compare(_PS_VERSION_, '8.0.2', '<')) {
     return;
@@ -47,11 +46,6 @@ class ps_mbo extends Module
      * @var string
      */
     public const VERSION = '5.1.0';
-
-    public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
-        'AdminModulesManage',
-        'AdminModulesSf',
-    ];
 
     public const CONTROLLERS_WITH_CDC_SCRIPT = [
         'AdminModulesNotifications',

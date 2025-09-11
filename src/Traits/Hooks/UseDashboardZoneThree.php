@@ -21,24 +21,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
-
 trait UseDashboardZoneThree
 {
-    use HaveCdcComponent;
-
-    /**
-     * @return void
-     *
-     * @throws \Exception
-     */
-    public function bootUseDashboardZoneThree(): void
-    {
-        if (method_exists($this, 'addAdminControllerMedia')) {
-            $this->addAdminControllerMedia('loadMediaForDashboardColumnThree');
-        }
-    }
-
     /**
      * Display addons data & links in the third column of the dashboard
      *
@@ -47,17 +31,5 @@ trait UseDashboardZoneThree
     public function hookDashboardZoneThree()
     {
         return $this->smartyDisplayTpl('dashboard-zone-three.tpl');
-    }
-
-    /**
-     * Add JS and CSS file
-     *
-     * @return void
-     *
-     * @see UseActionAdminControllerSetMedia
-     */
-    protected function loadMediaForDashboardColumnThree(): void
-    {
-        $this->loadCdcMediaFilesForControllers(['AdminDashboard']);
     }
 }
