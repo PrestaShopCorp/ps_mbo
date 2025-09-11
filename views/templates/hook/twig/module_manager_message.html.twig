@@ -16,13 +16,25 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *#}
+<script defer type="application/javascript" src="{{ cdc_error_templating_url }}"></script>
+
+<script type="application/javascript" src="{{ cdc_error_templating_url }}"></script>
+
+{% if cdc_script_not_found is defined and cdc_script_not_found is same as(true) %}
+  <script type="application/javascript" src="{{ cdc_error_url }}"></script>
+{% else %}
+  <script type="application/javascript" src="{{ cdc_url }}"></script>
+{% endif %}
+
 <script>
-  if (typeof window.mboCdc !== undefined && typeof window.mboCdc !== "undefined") {
-    const renderModulesManagerMessage = window.mboCdc.renderModulesManagerMessage
+  window.$(document).ready(function () {
+    if (typeof window.mboCdc !== undefined && typeof window.mboCdc !== "undefined") {
+      const renderModulesManagerMessage = window.mboCdc.renderModulesManagerMessage
 
-    const context = {{ shop_context|json_encode()|raw }};
+      const context = {{ shop_context|json_encode()|raw }};
 
-    renderModulesManagerMessage(context, '#module-manager-message-cdc-container')
-  }
+      renderModulesManagerMessage(context, '#module-manager-message-cdc-container')
+    }
+  });
 </script>
 <div class="module-manager-message-wrapper cdc-container" id="module-manager-message-cdc-container" data-error-path="{{ path('admin_mbo_module_cdc_error') }}"></div>

@@ -29,33 +29,6 @@ use ToolsCore as Tools;
 
 trait HaveCdcComponent
 {
-    public function loadCdcMediaFilesForControllers(
-        array $controllers = [],
-        array $additionalJs = [],
-        array $additionalCss = [],
-    ): void {
-        if (in_array(Tools::getValue('controller'), $controllers)) {
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error-templating.js');
-            $this->context->controller->addCss($this->getPathUri() . 'views/css/cdc-error-templating.css');
-
-            $cdcJsFile = getenv('MBO_CDC_URL');
-            if (!is_string($cdcJsFile) || empty($cdcJsFile)) {
-                $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error.js');
-
-                return;
-            }
-
-            $this->context->controller->addJs($cdcJsFile);
-
-            foreach ($additionalJs as $jsPath) {
-                $this->context->controller->addJs($jsPath);
-            }
-            foreach ($additionalCss as $cssPath) {
-                $this->context->controller->addCSS($cssPath);
-            }
-        }
-    }
-
     public function smartyDisplayTpl(string $tpl, array $additionalParams = []): string
     {
         try {
