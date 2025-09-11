@@ -33,29 +33,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class Toolbar
 {
-    /**
-     * @var PermissionCheckerInterface
-     */
-    private $permissionChecker;
-
-    /**
-     * @var AddonsDataProvider
-     */
-    private $addonsDataProvider;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     public function __construct(
-        PermissionCheckerInterface $permissionChecker,
-        AddonsDataProvider $addonsDataProvider,
-        TranslatorInterface $translator,
+        private readonly PermissionCheckerInterface $permissionChecker,
+        private readonly TranslatorInterface $translator,
     ) {
-        $this->permissionChecker = $permissionChecker;
-        $this->addonsDataProvider = $addonsDataProvider;
-        $this->translator = $translator;
     }
 
     /**
@@ -72,9 +53,7 @@ class Toolbar
                 PageVoter::LEVEL_UPDATE,
             ]
         )) {
-            return array_merge(
-                $this->getAddModuleToolbar(),
-            );
+            return $this->getAddModuleToolbar();
         }
 
         return [];

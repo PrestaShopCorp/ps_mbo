@@ -2,10 +2,6 @@ modules_catalog:
   resource: './routes/modules_catalog.yml'
   prefix: /mbo/modules/catalog
 
-recommended_modules:
-  resource: './routes/recommended_modules.yml'
-  prefix: /mbo/modules/recommended
-
 themes_catalog:
   resource: './routes/theme_catalog.yml'
   prefix: /mbo/themes/catalog
