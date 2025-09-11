@@ -31,8 +31,11 @@ jobs:
       - name: Composer Install
         run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
 
+      - name: Remove Cache
+        run: rm -f .php-cs-fixer.cache
+
       - name: Run PHPCSFixer
-        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff --config .php-cs-fixer.dist.php
 
   # Run PHPStan against the module and a PrestaShop release
   phpstan:
