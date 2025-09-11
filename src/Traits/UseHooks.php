@@ -31,7 +31,6 @@ trait UseHooks
         Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
     }
     use Hooks\UseDisplayAdminThemesListAfter;
-    use Hooks\UseActionAdminControllerSetMedia;
     use Hooks\UseActionBeforeInstallModule;
     use Hooks\UseActionGetAlternativeSearchPanels;
     use Hooks\UseDisplayAdminAfterHeader;
@@ -161,5 +160,27 @@ trait UseHooks
                 }
             }
         }
+    }
+
+    public static function getCdcMediaUrl(): array
+    {
+        $moduleUri = __PS_BASE_URI__ . 'modules/ps_mbo/';
+
+        $extraParams = [
+            'growl' => 'js/jquery/plugins/growl/jquery.growl.js?v=' . self::VERSION,
+            'upload' => $moduleUri . 'views/js/upload_module_with_cdc.js?v=' . self::VERSION,
+            'cdc_error_templating_url' => $moduleUri . 'views/js/cdc-error-templating.js?v=' . self::VERSION,
+            'cdc_error_templating_css' => $moduleUri . 'views/css/cdc-error-templating.css?v=' . self::VERSION,
+        ];
+
+        $cdcJsFile = getenv('MBO_CDC_URL');
+        if (!is_string($cdcJsFile) || empty($cdcJsFile)) {
+            $extraParams['cdc_script_not_found'] = true;
+            $extraParams['cdc_error_url'] = $moduleUri . 'views/js/cdc-error.js?v=' . self::VERSION;
+        } else {
+            $extraParams['cdc_url'] = $cdcJsFile;
+        }
+
+        return $extraParams;
     }
 }
