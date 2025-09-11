@@ -39,13 +39,6 @@ trait UseHooks
     use Hooks\UseActionBeforeUpgradeModule;
 
     /**
-     * @var array An array of method that can be called to register media in the actionAdminControllerSetMedia hook
-     *
-     * @see UseActionAdminControllerSetMedia
-     */
-    protected $adminControllerMediaMethods = [];
-
-    /**
      * Try to call the "bootHookClassName" method on each hook class.
      *
      * @return void
