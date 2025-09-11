@@ -18,7 +18,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Controller\Admin;
@@ -85,20 +84,7 @@ class ModuleCatalogController extends PrestaShopAdminController
      */
     public function indexAction(): Response
     {
-        $moduleUri = __PS_BASE_URI__ . 'modules/ps_mbo/';
-
-        $extraParams = [
-            'cdc_error_templating_url' => $moduleUri . 'views/js/cdc-error-templating.js',
-            'cdc_error_templating_css' => $moduleUri . 'views/css/cdc-error-templating.css',
-        ];
-
-        $cdcJsFile = getenv('MBO_CDC_URL');
-        if (!is_string($cdcJsFile) || empty($cdcJsFile)) {
-            $extraParams['cdc_script_not_found'] = true;
-            $extraParams['cdc_error_url'] = $moduleUri . 'views/js/cdc-error.js';
-        } else {
-            $extraParams['cdc_url'] = $cdcJsFile;
-        }
+        $extraParams = \ps_mbo::getCdcMediaUrl();
 
         /*********************
          * PrestaShop Account *
