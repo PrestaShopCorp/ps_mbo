@@ -30,9 +30,13 @@ until docker exec temp-ps ls /var/www/html/vendor/autoload.php 2> /dev/null; do
   sleep 5
 done
 
+
 # Clear previous instance of the module in the PrestaShop volume
 echo "Clear previous module and copy current one"
 docker exec -t temp-ps rm -rf /var/www/html/modules/ps_mbo
+
+echo "Install required ps_accounts module"
+docker exec -t temp-ps php bin/console prestashop:module install ps_accounts
 
 echo "Run PHPStan using phpstan-${PS_VERSION}.neon file"
 docker run --rm --volumes-from temp-ps \
