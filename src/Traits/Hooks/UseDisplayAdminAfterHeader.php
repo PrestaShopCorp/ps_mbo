@@ -56,10 +56,12 @@ trait UseDisplayAdminAfterHeader
                 throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayAdminAfterHeader');
             }
 
+            $extraParams = self::getCdcMediaUrl();
+
             return $twig->render(
                 '@Modules/ps_mbo/views/templates/hook/twig/module_manager_message.html.twig', [
                     'shop_context' => $contextBuilder->getViewContext(),
-                ]
+                ] + $extraParams,
             );
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
