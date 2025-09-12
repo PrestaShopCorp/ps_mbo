@@ -120,7 +120,7 @@ class AccountsDataProvider
         }
 
         $shopToken = null;
-        if ($this->psAccountsService && method_exists($this->psAccountsService, 'getShopToken')) {
+        if (method_exists($this->psAccountsService, 'getShopToken')) {
             try {
                 $shopToken = $this->psAccountsService->getShopToken();
             } catch (\Exception $e) {
