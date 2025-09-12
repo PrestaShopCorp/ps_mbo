@@ -169,20 +169,18 @@ class AccountsDataProvider
      */
     private function getService(string $serviceName)
     {
-        if (\Module::isInstalled($this->moduleName)) {
-            if ($this->checkPsAccountsVersion()) {
-                $module = \Module::getInstanceByName($this->moduleName);
-                if ($module && method_exists($module, 'getService')) {
-                    return $module->getService($serviceName);
-                }
+        $service = null;
+        $module = null;
 
-                return null;
-            }
-
-            return null;
+        if (\Module::isInstalled($this->moduleName) && $this->checkPsAccountsVersion()) {
+            $module = \Module::getInstanceByName($this->moduleName);
         }
 
-        return null;
+        if ($module && method_exists($module, 'getService')) {
+            $service = $module->getService($serviceName);
+        }
+
+        return $service;
     }
 
     private function checkPsAccountsVersion(): bool
