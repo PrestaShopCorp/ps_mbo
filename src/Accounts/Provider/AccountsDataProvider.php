@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Accounts\Provider;
 
-use PrestaShop\Module\PsAccounts\Repository\UserTokenRepository;
 use PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
@@ -32,9 +31,8 @@ class AccountsDataProvider
     private $psAccountsVersion;
     private $moduleName;
 
-    public function __construct(
-        string $psAccountsVersion
-    ) {
+    public function __construct(string $psAccountsVersion)
+    {
         $this->psAccountsVersion = $psAccountsVersion;
         $this->moduleName = Installer::PS_ACCOUNTS_MODULE_NAME;
         try {
@@ -62,10 +60,8 @@ class AccountsDataProvider
         }
 
         try {
-            /**
-             * @var UserTokenRepository $accountsUserTokenRepository
-             */
-            $accountsUserTokenRepository = $this->getService(UserTokenRepository::class);
+            // @phpstan-ignore class.notFound
+            $accountsUserTokenRepository = $this->getService(\PrestaShop\Module\PsAccounts\Repository\UserTokenRepository::class);
             $token = $accountsUserTokenRepository->getOrRefreshToken();
 
             return null === $token ? '' : (string) $token;
@@ -124,7 +120,7 @@ class AccountsDataProvider
         }
 
         $shopToken = null;
-        if ($this->psAccountsService && method_exists($this->psAccountsService, 'getShopToken')) {
+        if (method_exists($this->psAccountsService, 'getShopToken')) {
             try {
                 $shopToken = $this->psAccountsService->getShopToken();
             } catch (\Exception $e) {
@@ -173,16 +169,18 @@ class AccountsDataProvider
      */
     private function getService(string $serviceName)
     {
-        if (\Module::isInstalled($this->moduleName)) {
-            if ($this->checkPsAccountsVersion()) {
-                return \Module::getInstanceByName($this->moduleName)
-                    ->getService($serviceName);
-            }
+        $service = null;
+        $module = null;
 
-            return null;
+        if (\Module::isInstalled($this->moduleName) && $this->checkPsAccountsVersion()) {
+            $module = \Module::getInstanceByName($this->moduleName);
         }
 
-        return null;
+        if ($module && method_exists($module, 'getService')) {
+            $service = $module->getService($serviceName);
+        }
+
+        return $service;
     }
 
     private function checkPsAccountsVersion(): bool
