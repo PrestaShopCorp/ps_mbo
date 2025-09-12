@@ -10,5 +10,6 @@ parameters:
   dynamicConstantNames:
     - _PS_VERSION_
     - ps_mbo::VERSION
-
+  ignoreErrors:
+    - '#^Class PrestaShop\\Module\\PsAccounts\\Repository\\UserTokenRepository not found.$#'
   level: 5

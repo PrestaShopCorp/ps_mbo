@@ -60,6 +60,7 @@ class AccountsDataProvider
         }
 
         try {
+            // @phpstan-ignore class.notFound
             $accountsUserTokenRepository = $this->getService(\PrestaShop\Module\PsAccounts\Repository\UserTokenRepository::class);
             $token = $accountsUserTokenRepository->getOrRefreshToken();
 
