@@ -171,8 +171,11 @@ class AccountsDataProvider
     {
         if (\Module::isInstalled($this->moduleName)) {
             if ($this->checkPsAccountsVersion()) {
-                return \Module::getInstanceByName($this->moduleName)
-                    ->getService($serviceName);
+                $module = \Module::getInstanceByName($this->moduleName);
+                if ($module) {
+                    return $module->getService($serviceName);
+                }
+                return null;
             }
 
             return null;
