@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Accounts\Provider;
 
-use PrestaShop\Module\PsAccounts\Repository\UserTokenRepository;
 use PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
@@ -32,9 +31,8 @@ class AccountsDataProvider
     private $psAccountsVersion;
     private $moduleName;
 
-    public function __construct(
-        string $psAccountsVersion
-    ) {
+    public function __construct(string $psAccountsVersion)
+    {
         $this->psAccountsVersion = $psAccountsVersion;
         $this->moduleName = Installer::PS_ACCOUNTS_MODULE_NAME;
         try {
@@ -62,10 +60,7 @@ class AccountsDataProvider
         }
 
         try {
-            /**
-             * @var UserTokenRepository $accountsUserTokenRepository
-             */
-            $accountsUserTokenRepository = $this->getService(UserTokenRepository::class);
+            $accountsUserTokenRepository = $this->getService(\PrestaShop\Module\PsAccounts\Repository\UserTokenRepository::class);
             $token = $accountsUserTokenRepository->getOrRefreshToken();
 
             return null === $token ? '' : (string) $token;
