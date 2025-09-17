@@ -31,6 +31,7 @@ trait UseHooks
         Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
     }
     use Hooks\UseDisplayAdminThemesListAfter;
+    use Hooks\UseDisplayDashboardTop;
     use Hooks\UseActionBeforeInstallModule;
     use Hooks\UseActionGetAlternativeSearchPanels;
     use Hooks\UseDisplayAdminAfterHeader;
@@ -164,6 +165,7 @@ trait UseHooks
             'upload' => $moduleUri . 'views/js/upload_module_with_cdc.js?v=' . self::VERSION,
             'cdc_error_templating_url' => $moduleUri . 'views/js/cdc-error-templating.js?v=' . self::VERSION,
             'cdc_error_templating_css' => $moduleUri . 'views/css/cdc-error-templating.css?v=' . self::VERSION,
+            'cdc_script_not_found' => false,
         ];
 
         $cdcJsFile = getenv('MBO_CDC_URL');
