@@ -64,7 +64,6 @@ interface TabInterface
      * @var string[]
      */
     public const TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT = [
-        'AdminMarketing',
         'AdminPayment',
         'AdminCarriers',
     ];
