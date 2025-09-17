@@ -16,18 +16,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  *}
+<script defer type="application/javascript" src="{$cdc_error_templating_url}"></script>
+
+{if $cdc_script_not_found}
+  <script defer type="application/javascript" src="{$cdc_error_url}"></script>
+{else}
+  <script defer type="application/javascript" src="{$cdc_url}"></script>
+{/if}
+<script defer type="application/javascript" src="{$recommended_modules_js}"></script>
+<link rel="stylesheet" href="{$recommended_modules_css}" type="text/css" media="all">
 
 <script>
-  if (undefined !== mbo) {
-    mbo.initialize({
-      translations: {
-        'Recommended Modules and Services': '{$recommendedModulesTitleTranslated|escape:'javascript'}',
-        'Close': '{$recommendedModulesCloseTranslated|escape:'javascript'}',
-      },
-      recommendedModulesUrl: '{$recommendedModulesUrl|escape:'javascript'}',
-      shouldAttachRecommendedModulesAfterContent: {$shouldAttachRecommendedModulesAfterContent|intval},
-      shouldAttachRecommendedModulesButton: {$shouldAttachRecommendedModulesButton|intval},
-      shouldUseLegacyTheme: {$shouldUseLegacyTheme|intval},
-    });
-  }
+  window.$(document).ready(function () {
+    if (undefined !== mbo) {
+      mbo.initialize({
+        translations: {
+          'Recommended Modules and Services': '{$recommendedModulesTitleTranslated|escape:'javascript'}',
+          'Close': '{$recommendedModulesCloseTranslated|escape:'javascript'}',
+        },
+        recommendedModulesUrl: '{$recommendedModulesUrl|escape:'javascript'}',
+        shouldAttachRecommendedModulesAfterContent: {$shouldAttachRecommendedModulesAfterContent|intval},
+        shouldAttachRecommendedModulesButton: {$shouldAttachRecommendedModulesButton|intval},
+        shouldUseLegacyTheme: {$shouldUseLegacyTheme|intval},
+      });
+    }
+  });
 </script>
