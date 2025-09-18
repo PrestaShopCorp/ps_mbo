@@ -21,6 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Api\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class UnknownServiceException extends \Exception
 {
 }

@@ -24,6 +24,10 @@ namespace PrestaShop\Module\Mbo\Helpers;
 use Configuration;
 use Shop;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class Config
 {
     const AVAILABLE_SHOP_ACTIVITIES = [

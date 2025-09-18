@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -29,6 +28,10 @@ use PrestaShop\Module\Mbo\Addons\User\AddonsUser;
 use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Symfony\Component\HttpClient\Exception\ClientException;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 /**
  * This class will provide data from Addons API
@@ -100,7 +103,7 @@ class AddonsDataProvider implements DataProviderInterface
     public function __construct(
         ApiClient $apiClient,
         AddonsUser $user,
-        ?string $moduleChannel = null,
+        string $moduleChannel = null,
     ) {
         $this->marketplaceClient = $apiClient;
         $this->moduleChannel = $moduleChannel ?? self::ADDONS_API_MODULE_CHANNEL_STABLE;

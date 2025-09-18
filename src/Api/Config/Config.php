@@ -21,6 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Api\Config;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class Config
 {
     const UNAUTHORIZED_ERROR_CODE = 401;

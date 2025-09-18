@@ -25,6 +25,10 @@ use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait HaveCdcComponent
 {
     public function smartyDisplayTpl(string $tpl, array $additionalParams = []): string

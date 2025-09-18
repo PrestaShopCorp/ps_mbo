@@ -26,6 +26,10 @@ use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * This service returns descriptions for the buttons to add into the Module configure toolbar
  * (like addons connect, update module CTA, ...)

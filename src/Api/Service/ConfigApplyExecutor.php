@@ -26,6 +26,10 @@ use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\ConfigChangeCommand
 use PrestaShop\Module\Mbo\Distribution\Config\Exception\InvalidConfigException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ConfigApplyExecutor implements ServiceExecutorInterface
 {
     const SERVICE = 'config';
@@ -33,7 +37,7 @@ class ConfigApplyExecutor implements ServiceExecutorInterface
     /**
      * @var ConfigChangeCommandHandler
      */
-    private $configChangeCommandHandler;
+    private ConfigChangeCommandHandler $configChangeCommandHandler;
 
     public function __construct(ConfigChangeCommandHandler $configChangeCommandHandler)
     {

@@ -26,6 +26,10 @@ use PrestaShop\CircuitBreaker\SimpleCircuitBreakerFactory;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Gateway to retrieve content from external source.
  */

@@ -24,6 +24,10 @@ namespace PrestaShop\Module\Mbo\Module\ValueObject;
 use PrestaShop\Module\Mbo\Module\Exception\UnknownModuleTransitionCommandException;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ModuleTransitionCommand
 {
     public const MODULE_COMMAND_INSTALL = 'module.install';

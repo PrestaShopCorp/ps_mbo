@@ -21,6 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Helpers;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Api send us version formatted like 8000000
  * Where we have 3 digits per points => 8000000 => 8.000.000 => 8.0.0
@@ -57,6 +61,6 @@ class Version
             $arrayVersion[$k] = str_pad($versionNumber, 3, '0', STR_PAD_LEFT);
         }
 
-        return intval(implode($arrayVersion));
+        return (int) implode($arrayVersion);
     }
 }

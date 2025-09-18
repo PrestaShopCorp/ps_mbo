@@ -30,6 +30,10 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait UseActionBeforeInstallModule
 {
     /**

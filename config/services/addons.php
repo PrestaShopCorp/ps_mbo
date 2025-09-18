@@ -23,6 +23,10 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 return static function (ContainerConfigurator $container) {
     $services = $container->services();
 

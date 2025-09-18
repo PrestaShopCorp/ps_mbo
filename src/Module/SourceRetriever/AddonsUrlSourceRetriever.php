@@ -34,6 +34,10 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 {
     private const URL_VALIDATION_REGEX = '/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{0,256}api-addons\\.prestashop\\.com(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/';
@@ -162,7 +166,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         return $this->moduleName;
     }
 
-    public function get($source, ?string $expectedModuleName = null, ?array $options = []): string
+    public function get($source, string $expectedModuleName = null, ?array $options = []): string
     {
         $this->assertSourceHasBeenChecked($source);
 

@@ -31,10 +31,10 @@
     if (undefined !== mbo) {
       mbo.initialize({
         translations: {
-          'Recommended Modules and Services': '{$recommendedModulesTitleTranslated|escape:'javascript'}',
-          'Close': '{$recommendedModulesCloseTranslated|escape:'javascript'}',
+          'Recommended Modules and Services': '{$recommendedModulesTitleTranslated|escape:'javascript':'UTF-8'}',
+          'Close': '{$recommendedModulesCloseTranslated|escape:'javascript':'UTF-8'}',
         },
-        recommendedModulesUrl: '{$recommendedModulesUrl|escape:'javascript'}',
+        recommendedModulesUrl: '{$recommendedModulesUrl|escape:'javascript':'UTF-8'}',
         shouldAttachRecommendedModulesAfterContent: {$shouldAttachRecommendedModulesAfterContent|intval},
         shouldAttachRecommendedModulesButton: {$shouldAttachRecommendedModulesButton|intval},
         shouldUseLegacyTheme: {$shouldUseLegacyTheme|intval},

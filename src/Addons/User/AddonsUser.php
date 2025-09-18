@@ -24,6 +24,10 @@ namespace PrestaShop\Module\Mbo\Addons\User;
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * This class will read user information stored in cookies
  */

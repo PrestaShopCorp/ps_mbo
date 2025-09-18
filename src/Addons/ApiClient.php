@@ -28,6 +28,10 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ApiClient
 {
     public const HTTP_METHOD_GET = 'GET';
@@ -310,7 +314,7 @@ class ApiClient
      * @return mixed
      */
     public function processRequestAndReturn(
-        ?string $attributeToReturn = null,
+        string $attributeToReturn = null,
         string $method = self::HTTP_METHOD_GET,
         $default = [],
     ) {

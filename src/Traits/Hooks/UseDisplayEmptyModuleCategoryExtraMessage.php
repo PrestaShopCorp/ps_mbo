@@ -26,6 +26,10 @@ use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Twig\Environment;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait UseDisplayEmptyModuleCategoryExtraMessage
 {
     /**

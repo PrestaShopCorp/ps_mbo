@@ -23,6 +23,10 @@ namespace PrestaShop\Module\Mbo\Module;
 
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class TransitionModule
 {
     /**

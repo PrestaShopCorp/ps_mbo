@@ -20,6 +20,10 @@
 
 namespace PrestaShop\Module\Mbo\Service\ExternalContentProvider;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 interface ExternalContentProviderInterface
 {
     /**

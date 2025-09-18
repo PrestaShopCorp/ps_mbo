@@ -23,6 +23,10 @@ namespace PrestaShop\Module\Mbo\Module\Workflow\Exception;
 
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class NotAllowedTransitionException extends \LogicException
 {
     public function __construct(TransitionModule $module, string $originStatus, string $targetStatus)

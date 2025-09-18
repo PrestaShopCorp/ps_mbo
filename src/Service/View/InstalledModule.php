@@ -20,6 +20,10 @@
 
 namespace PrestaShop\Module\Mbo\Service\View;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class InstalledModule
 {
     public function __construct(

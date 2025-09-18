@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -29,8 +28,11 @@ use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 /**
  * Responsible of "Improve > Modules > Modules Catalog" page display.

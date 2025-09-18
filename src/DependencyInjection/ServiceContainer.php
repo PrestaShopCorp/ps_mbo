@@ -23,6 +23,10 @@ namespace PrestaShop\Module\Mbo\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ServiceContainer
 {
     /**
