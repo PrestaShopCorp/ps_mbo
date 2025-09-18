@@ -24,6 +24,10 @@ namespace PrestaShop\Module\Mbo\Module\Command;
 use PrestaShop\Module\Mbo\Module\Exception\UnknownModuleTransitionCommandException;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ModuleStatusTransitionCommand
 {
     /**
@@ -59,7 +63,7 @@ class ModuleStatusTransitionCommand
         string $moduleName,
         int $moduleId,
         string $moduleVersion,
-        ?string $source = null,
+        string $source = null,
     ) {
         $this->command = new ModuleTransitionCommand($command);
         $this->moduleName = $moduleName;

@@ -17,6 +17,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 /**
  * @param ps_mbo $module
@@ -27,9 +30,6 @@ function upgrade_module_4_4_1(Module $module): bool
 {
     $module->updateHooks();
     $module->updateTabs();
-
-    // The MBO hook 'dashboardZoneTwo' must be at the max position
-    $module->putMboDashboardZoneTwoAtLastPosition();
 
     return true;
 }

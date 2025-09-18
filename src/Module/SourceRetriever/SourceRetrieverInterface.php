@@ -20,6 +20,10 @@
 
 namespace PrestaShop\Module\Mbo\Module\SourceRetriever;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 interface SourceRetrieverInterface
 {
     /**
@@ -29,5 +33,5 @@ interface SourceRetrieverInterface
      *
      * @return string
      */
-    public function get($source, ?string $expectedModuleName = null, ?array $options = []): string;
+    public function get($source, string $expectedModuleName = null, ?array $options = []): string;
 }

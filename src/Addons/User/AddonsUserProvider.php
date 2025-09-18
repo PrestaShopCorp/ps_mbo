@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -22,6 +21,10 @@
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons\User;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class AddonsUserProvider
 {

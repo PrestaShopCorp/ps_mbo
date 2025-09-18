@@ -29,6 +29,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Responsible of render json data for ajax display of Recommended Modules.
  */

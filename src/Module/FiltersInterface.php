@@ -20,6 +20,10 @@
 
 namespace PrestaShop\Module\Mbo\Module;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 interface FiltersInterface
 {
     public function setStatus(int $status): FiltersInterface;

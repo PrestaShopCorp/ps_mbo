@@ -32,6 +32,10 @@ use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Performs actions on Module lifecycle events
  */

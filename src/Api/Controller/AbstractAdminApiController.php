@@ -33,6 +33,10 @@ use PrestaShop\Module\Mbo\Helpers\Config as ConfigHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Psr\Log\LoggerInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 abstract class AbstractAdminApiController extends \ModuleAdminController
 {
     /**

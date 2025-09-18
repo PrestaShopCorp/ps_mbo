@@ -20,6 +20,10 @@
 
 namespace PrestaShop\Module\Mbo\Module\Filters;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class Device
 {
     public const COMPUTER = 1;

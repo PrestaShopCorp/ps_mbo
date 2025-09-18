@@ -28,6 +28,10 @@ use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class AuthorizationChecker
 {
     /**

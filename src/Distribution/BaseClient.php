@@ -24,16 +24,20 @@ namespace PrestaShop\Module\Mbo\Distribution;
 use Doctrine\Common\Cache\CacheProvider;
 use PrestaShop\Module\Mbo\Exception\ClientRequestException;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\PrestaShop\Core\Context\CountryContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class BaseClient
 {
     public const HTTP_METHOD_GET = 'GET';
     public const HTTP_METHOD_POST = 'POST';
-    public const HTTP_METHOD_PUT = 'PUT';
-    public const HTTP_METHOD_DELETE = 'DELETE';
 
     protected string $apiUrl;
 
@@ -83,6 +87,8 @@ class BaseClient
         ClientInterface $httpClient,
         RequestFactoryInterface $requestFactory,
         CacheProvider $cacheProvider,
+        protected readonly LanguageContext $languageContext,
+        protected readonly CountryContext $countryContext,
     ) {
         $this->apiUrl = $apiUrl;
         $this->httpClient = $httpClient;

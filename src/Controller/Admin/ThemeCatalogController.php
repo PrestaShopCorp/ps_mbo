@@ -24,10 +24,13 @@ namespace PrestaShop\Module\Mbo\Controller\Admin;
 use PrestaShop\Module\Mbo\Addons\Provider\LinksProvider;
 use PrestaShop\Module\Mbo\Service\ExternalContentProvider\ExternalContentProviderInterface;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 /**
  * Responsible of "Improve > Design > Themes Catalog" page display.

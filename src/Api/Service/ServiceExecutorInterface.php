@@ -20,6 +20,10 @@
 
 namespace PrestaShop\Module\Mbo\Api\Service;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 interface ServiceExecutorInterface
 {
     /**

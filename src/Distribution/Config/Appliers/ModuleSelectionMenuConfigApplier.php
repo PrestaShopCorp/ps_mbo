@@ -23,6 +23,10 @@ namespace PrestaShop\Module\Mbo\Distribution\Config\Appliers;
 use PrestaShop\Module\Mbo\Distribution\Config\Config;
 use PrestaShop\Module\Mbo\Distribution\Config\Exception\InvalidConfigException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ModuleSelectionMenuConfigApplier implements ConfigApplierInterface
 {
     public function supports(string $configKey): bool

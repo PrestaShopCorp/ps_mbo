@@ -20,6 +20,14 @@
 
 namespace PrestaShop\Module\Mbo\Module\Filters;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class Status
 {
     public const FLAG = 'status';

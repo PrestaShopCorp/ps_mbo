@@ -24,6 +24,10 @@ namespace PrestaShop\Module\Mbo\Helpers;
 use PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler;
 use PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandlerInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ErrorHelper
 {
     private static ?ErrorHandlerInterface $errorHandler = null;
@@ -34,7 +38,7 @@ class ErrorHelper
      *
      * @return void
      */
-    public static function reportError(\Throwable $error, ?array $data = null): void
+    public static function reportError(\Throwable $error, array $data = null): void
     {
         if (!self::$errorHandler instanceof ErrorHandlerInterface) {
             self::$errorHandler = new ErrorHandler();

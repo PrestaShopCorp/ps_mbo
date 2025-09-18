@@ -28,6 +28,10 @@ use Symfony\Component\String\UnicodeString;
 use TabCore as Tab;
 use ValidateCore as Validate;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait HaveTabs
 {
     /**

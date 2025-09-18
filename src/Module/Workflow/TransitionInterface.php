@@ -20,6 +20,10 @@
 
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 interface TransitionInterface
 {
     public const NO_CHANGE_TRANSITION = 'no_change_transition';

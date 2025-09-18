@@ -23,6 +23,10 @@ namespace PrestaShop\Module\Mbo\Api\Repository;
 
 use Symfony\Component\Finder\Finder;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ModuleRepository
 {
     public function getInstalledModules(): array

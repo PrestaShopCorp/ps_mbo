@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -18,6 +17,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
 declare(strict_types=1);
 if (!defined('_PS_VERSION_') || version_compare(_PS_VERSION_, '8.0.2', '<')) {
     return;
@@ -292,7 +292,7 @@ class ps_mbo extends Module
         }
     }
 
-    public function installTables(?string $table = null): bool
+    public function installTables(string $table = null): bool
     {
         $sqlQueries = [];
 

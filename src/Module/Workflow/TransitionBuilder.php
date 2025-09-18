@@ -26,6 +26,10 @@ use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
 use PrestaShop\Module\Mbo\Module\Workflow\Exception\NotAllowedTransitionException;
 use PrestaShop\Module\Mbo\Module\Workflow\Exception\UnknownStatusException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class TransitionBuilder
 {
     /**

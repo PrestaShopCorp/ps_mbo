@@ -21,6 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Helper class to define filters for modules list.
  */

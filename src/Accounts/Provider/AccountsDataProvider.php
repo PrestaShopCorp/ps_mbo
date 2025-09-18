@@ -25,6 +25,10 @@ use PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class AccountsDataProvider
 {
     private $psAccountsService;

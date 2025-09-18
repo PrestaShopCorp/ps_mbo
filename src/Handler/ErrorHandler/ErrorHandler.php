@@ -25,6 +25,10 @@ use Sentry\Client;
 use Sentry\State\Scope;
 use Sentry\UserDataBag;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ErrorHandler implements ErrorHandlerInterface
 {
     /**

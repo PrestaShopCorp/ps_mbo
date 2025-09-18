@@ -25,6 +25,10 @@ use PrestaShop\Module\Mbo\Distribution\Config\Applier;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\Factory;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class ConfigChangeCommandHandler
 {
     /**

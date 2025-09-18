@@ -26,6 +26,10 @@ use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Distribution\ConnectedClient;
 use Psr\Log\LoggerInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Retrieves modules' raw information from Addons and database
  */

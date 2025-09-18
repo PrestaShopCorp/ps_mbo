@@ -26,6 +26,10 @@ use Doctrine\DBAL\Query\QueryException;
 use PrestaShop\Module\Mbo\Distribution\Config\Exception\CannotSaveConfigException;
 use PrestaShop\Module\Mbo\Distribution\Config\Exception\InvalidConfigException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class Factory
 {
     private \Db $db;

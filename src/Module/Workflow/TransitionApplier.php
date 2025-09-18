@@ -27,6 +27,10 @@ use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\Workflow\Exception\UnknownTransitionException;
 use Symfony\Component\String\UnicodeString;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class TransitionApplier
 {
     /**

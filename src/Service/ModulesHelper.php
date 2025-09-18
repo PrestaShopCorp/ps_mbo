@@ -27,6 +27,10 @@ use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShopBundle\Service\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ModulesHelper
 {
     /**

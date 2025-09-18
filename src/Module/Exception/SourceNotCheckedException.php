@@ -22,6 +22,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class SourceNotCheckedException extends \RuntimeException
 {
 }

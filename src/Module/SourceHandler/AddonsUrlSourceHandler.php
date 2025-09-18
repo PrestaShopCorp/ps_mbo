@@ -25,6 +25,10 @@ use PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class AddonsUrlSourceHandler implements SourceHandlerInterface
 {
     /**

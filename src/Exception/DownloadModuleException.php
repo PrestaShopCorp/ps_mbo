@@ -21,6 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class DownloadModuleException extends \Exception
 {
     /**
@@ -28,7 +32,7 @@ class DownloadModuleException extends \Exception
      */
     private $context;
 
-    public function __construct(array $context = [], ?\Throwable $previous = null)
+    public function __construct(array $context = [], \Throwable $previous = null)
     {
         parent::__construct('Cannot have source to download the module', 0, $previous);
 
