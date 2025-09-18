@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use Exception;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Tab\TabInterface;
@@ -35,7 +34,7 @@ trait UseDisplayDashboardTop
      *
      * @var string[]
      */
-    protected static array $MODULES_WITH_CONFIGURATION_PUSH = [
+    protected static array $modulesWithConfigurationPush = [
         'contactform',
         'blockreassurance',
     ];
@@ -54,7 +53,7 @@ trait UseDisplayDashboardTop
         TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE => TabInterface::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT,
     ];
 
-    protected static array $ROUTE_AFTER_CONTENT = [
+    protected static array $routeAfterContent = [
         'admin_carriers_index',
         'admin_payment_methods',
         'admin_legacy_controller_route',
@@ -66,7 +65,7 @@ trait UseDisplayDashboardTop
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function hookDisplayDashboardTop($params): string
     {
@@ -80,7 +79,7 @@ trait UseDisplayDashboardTop
         $shouldDisplayMessageInConfigPage = isset($params['route'])
             && $params['route'] === 'admin_module_configure_action'
             && isset($params['request'])
-            && in_array($params['request']->get('module_name'), self::$MODULES_WITH_CONFIGURATION_PUSH);
+            && in_array($params['request']->get('module_name'), self::$modulesWithConfigurationPush);
 
         return $shouldDisplayMessageInConfigPage
             ? $this->displayPushOnConfigurationPage($params['request']->get('module_name'))
@@ -149,21 +148,18 @@ trait UseDisplayDashboardTop
     /**
      * Compute & include data with recommended modules when needed
      *
-     * @throws Exception
+     * @throws \Exception
      */
     protected function displayRecommendedModules(string $controller, array $hookParams): string
     {
         $shouldAttachRecommendedModulesAfterContent = $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE);
         $shouldAttachRecommendedModulesButton = $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_BUTTON_TYPE);
 
-        if (!$shouldAttachRecommendedModulesAfterContent && !$shouldAttachRecommendedModulesButton) {
-            return '';
-        }
-
         // Show only in content if index page
-        $shouldDisplayAfterContent = isset($hookParams['route']) && in_array($hookParams['route'], self::$ROUTE_AFTER_CONTENT);
+        $shouldDisplayAfterContent = isset($hookParams['route']) && in_array($hookParams['route'], self::$routeAfterContent);
 
-        if ($shouldAttachRecommendedModulesAfterContent && !$shouldDisplayAfterContent) {
+        if ((!$shouldAttachRecommendedModulesAfterContent && !$shouldAttachRecommendedModulesButton)
+            || ($shouldAttachRecommendedModulesAfterContent && !$shouldDisplayAfterContent)) {
             return '';
         }
 
@@ -181,7 +177,7 @@ trait UseDisplayDashboardTop
                     'recommendation_format' => $shouldAttachRecommendedModulesButton ? 'modal' : 'card',
                 ]
             );
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             // Avoid fatal errors on ServiceNotFoundException
             ErrorHelper::reportError($exception);
 
