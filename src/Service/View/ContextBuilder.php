@@ -39,10 +39,8 @@ use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
-use ps_mbo;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
-use Tools;
 
 class ContextBuilder
 {
@@ -67,7 +65,7 @@ class ContextBuilder
     {
         $context = $this->getCommonContextContent();
 
-        $context['prestaShop_controller_class_name'] = Tools::getValue('controller');
+        $context['prestaShop_controller_class_name'] = \Tools::getValue('controller');
 
         return $context;
     }
@@ -100,7 +98,7 @@ class ContextBuilder
             'accounts_token' => $this->accountsDataProvider->getAccountsToken(),
             'iso_lang' => $this->getLanguage(),
             'iso_code' => $this->getCountry(),
-            'mbo_version' => ps_mbo::VERSION,
+            'mbo_version' => \ps_mbo::VERSION,
             'ps_version' => _PS_VERSION_,
             'shop_url' => Config::getShopUrl(),
             'shop_creation_date' => defined('_PS_CREATION_DATE_') ? _PS_CREATION_DATE_ : null,
@@ -141,10 +139,10 @@ class ContextBuilder
         $shopActivity = Config::getShopActivity();
         $overrideChecker = ModuleOverrideChecker::getInstance();
 
-        $token = Tools::getValue('_token');
+        $token = \Tools::getValue('_token');
 
         if (false === $token) {
-            $token = Tools::getValue('token');
+            $token = \Tools::getValue('token');
         }
 
         $mboResetUrl = UrlHelper::transformToAbsoluteUrl(
@@ -162,7 +160,7 @@ class ContextBuilder
             'shop_url' => Config::getShopUrl(),
             'shop_uuid' => Config::getShopMboUuid(),
             'mbo_token' => $this->adminAuthenticationProvider->getMboJWT(),
-            'mbo_version' => ps_mbo::VERSION,
+            'mbo_version' => \ps_mbo::VERSION,
             'mbo_reset_url' => $mboResetUrl,
             'user_id' => $userId,
             'admin_token' => $token,
