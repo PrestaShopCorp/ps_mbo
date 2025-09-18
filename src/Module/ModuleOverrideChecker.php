@@ -24,6 +24,10 @@ namespace PrestaShop\Module\Mbo\Module;
 
 use Symfony\Component\Finder\Finder;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ModuleOverrideChecker
 {
     private array $overrides = [];

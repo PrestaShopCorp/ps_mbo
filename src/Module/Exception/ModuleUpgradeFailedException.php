@@ -20,6 +20,10 @@
 
 namespace PrestaShop\Module\Mbo\Module\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ModuleUpgradeFailedException extends \Exception
 {
 }

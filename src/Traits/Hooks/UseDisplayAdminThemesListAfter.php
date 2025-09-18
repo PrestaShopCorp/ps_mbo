@@ -26,6 +26,10 @@ use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait UseDisplayAdminThemesListAfter
 {
     /**

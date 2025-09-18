@@ -23,6 +23,10 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait UseDashboardZoneThree
 {
     use HaveCdcComponent;

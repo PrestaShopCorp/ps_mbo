@@ -24,6 +24,10 @@ namespace PrestaShop\Module\Mbo\Traits;
 use Db;
 use Symfony\Component\String\UnicodeString;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait UseHooks
 {
     use Hooks\UseDashboardZoneOne;

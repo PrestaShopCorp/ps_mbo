@@ -31,6 +31,10 @@ use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait UseActionBeforeUpgradeModule
 {
     /**

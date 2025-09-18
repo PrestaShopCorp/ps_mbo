@@ -25,6 +25,10 @@ use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Search\SearchPanel;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait UseActionGetAlternativeSearchPanels
 {
     /**

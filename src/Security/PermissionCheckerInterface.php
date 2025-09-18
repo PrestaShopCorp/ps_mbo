@@ -21,6 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Security;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 interface PermissionCheckerInterface
 {
     /**

@@ -31,6 +31,10 @@ use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait UseDisplayAdminAfterHeader
 {
     /**

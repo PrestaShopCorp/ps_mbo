@@ -23,6 +23,10 @@ namespace PrestaShop\Module\Mbo\Exception;
 
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class AddonsDownloadModuleException extends \Exception
 {
     private const UNKNOWN_ADDONS_CODE = '0030';

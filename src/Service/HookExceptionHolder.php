@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Service;
 
-use Exception;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 /**
  * Because the Core's HookManager makes the exceptions from hooks silent,

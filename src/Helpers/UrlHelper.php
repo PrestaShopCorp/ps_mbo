@@ -21,6 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Helpers;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class UrlHelper
 {
     public static function transformToAbsoluteUrl(string $url): string

@@ -20,6 +20,10 @@
 
 namespace PrestaShop\Module\Mbo\Module;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Creates class to filter modules list
  */

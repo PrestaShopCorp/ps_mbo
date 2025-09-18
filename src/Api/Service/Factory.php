@@ -23,6 +23,10 @@ namespace PrestaShop\Module\Mbo\Api\Service;
 
 use PrestaShop\Module\Mbo\Api\Exception\UnknownServiceException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class Factory
 {
     private const ALLOWED_SERVICES = [

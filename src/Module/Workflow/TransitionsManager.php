@@ -26,6 +26,10 @@ use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Service\HookExceptionHolder;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class TransitionsManager
 {
     /**

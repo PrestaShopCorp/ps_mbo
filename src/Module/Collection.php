@@ -21,7 +21,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module;
 
-use ArrayAccess;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 /**
  * An ArrayCollection is a Collection implementation that wraps a regular PHP array.

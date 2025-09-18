@@ -21,6 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\Workflow\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class UnknownTransitionException extends \LogicException
 {
     /**
@@ -28,7 +32,7 @@ class UnknownTransitionException extends \LogicException
      */
     private $context;
 
-    public function __construct(string $transitionName, array $context = [], ?\Throwable $previous = null)
+    public function __construct(string $transitionName, array $context = [], \Throwable $previous = null)
     {
         parent::__construct(sprintf('Unknown module transition "%s"', $transitionName), 0, $previous);
 

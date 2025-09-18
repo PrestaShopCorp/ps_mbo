@@ -34,6 +34,10 @@ use PrestaShop\Module\Mbo\Module\Workflow\TransitionApplier;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionBuilder;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class ModuleStatusTransitionCommandHandler
 {
     /**

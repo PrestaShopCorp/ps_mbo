@@ -29,6 +29,10 @@ use PrestaShopBundle\Service\Routing\Router;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Builds a Module object with the data provided by Addons, the database, the Core and some static links
  */
@@ -76,7 +80,7 @@ class ModuleBuilder implements ModuleBuilderInterface
         $this->moduleDirectory = $moduleDirectory;
     }
 
-    public function build(\stdClass $module, ?array $database = null): Module
+    public function build(\stdClass $module, array $database = null): Module
     {
         /* Convert module to array */
         $attributes = json_decode(json_encode($module), true);

@@ -24,6 +24,10 @@ namespace PrestaShop\Module\Mbo\Tab;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Repository;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class TabCollectionFactory implements TabCollectionFactoryInterface
 {
     /**

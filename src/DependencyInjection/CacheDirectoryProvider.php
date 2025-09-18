@@ -21,6 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\DependencyInjection;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Class responsible for returning cache directory path.
  */

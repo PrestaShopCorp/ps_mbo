@@ -25,6 +25,10 @@ use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Component\Dotenv\Dotenv;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait HaveConfigurationPage
 {
     private $environmentData = [

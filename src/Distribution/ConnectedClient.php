@@ -26,8 +26,14 @@ use PrestaShop\Module\Mbo\Addons\User\AddonsUserProvider;
 use PrestaShop\Module\Mbo\Addons\User\UserInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\PrestaShop\Core\Context\CountryContext;
+use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class ConnectedClient extends BaseClient
 {
@@ -42,8 +48,10 @@ class ConnectedClient extends BaseClient
         RequestFactoryInterface $requestFactory,
         CacheProvider $cacheProvider,
         AddonsUserProvider $addonsUserProvider,
+        LanguageContext $languageContext,
+        CountryContext $countryContext,
     ) {
-        parent::__construct($apiUrl, $httpClient, $requestFactory, $cacheProvider);
+        parent::__construct($apiUrl, $httpClient, $requestFactory, $cacheProvider, $languageContext, $countryContext);
         $this->user = $addonsUserProvider->getUser();
     }
 
@@ -52,8 +60,8 @@ class ConnectedClient extends BaseClient
      */
     public function getModulesList(): array
     {
-        $languageIsoCode = \Context::getContext()->language->getIsoCode();
-        $countryIsoCode = mb_strtolower(\Context::getContext()->country->iso_code);
+        $languageIsoCode = $this->languageContext->getIsoCode();
+        $countryIsoCode = $this->countryContext->getIsoCode();
 
         $userCacheKey = '';
         if ($this->user->isAuthenticated()) {
