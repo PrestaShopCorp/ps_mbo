@@ -26,6 +26,7 @@
 
 <script>
   window.$(document).ready(function () {
+    $('#main-div').prepend('<div class="module-manager-message-wrapper cdc-container" id="module-manager-message-cdc-container" data-error-path="{{ path('admin_mbo_module_cdc_error') }}"></div>')
     if (typeof window.mboCdc !== undefined && typeof window.mboCdc !== "undefined") {
       const renderModulesManagerMessage = window.mboCdc.renderModulesManagerMessage
 
@@ -35,4 +36,3 @@
     }
   });
 </script>
-<div class="module-manager-message-wrapper cdc-container" id="module-manager-message-cdc-container" data-error-path="{{ path('admin_mbo_module_cdc_error') }}"></div>
