@@ -18,7 +18,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
 declare(strict_types=1);
 if (!defined('_PS_VERSION_') || version_compare(_PS_VERSION_, '8.0.2', '<')) {
     return;
@@ -47,11 +46,6 @@ class ps_mbo extends Module
      * @var string
      */
     public const VERSION = '5.1.0';
-
-    public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
-        'AdminModulesManage',
-        'AdminModulesSf',
-    ];
 
     public const CONTROLLERS_WITH_CDC_SCRIPT = [
         'AdminModulesNotifications',
@@ -87,9 +81,6 @@ class ps_mbo extends Module
         $this->name = 'ps_mbo';
         // This value must be hard-coded to respect Addons rules, so we must make sure that the const value is always synced with this one
         $this->version = '5.1.0';
-        if ($this->version !== self::VERSION) {
-            throw new PrestaShopException('The values from ps_mbo::$version and ps_mbo::VERSION must be identical');
-        }
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';

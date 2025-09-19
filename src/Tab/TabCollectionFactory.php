@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Tab;
 
-use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Repository;
 
 class TabCollectionFactory implements TabCollectionFactoryInterface
@@ -46,12 +45,6 @@ class TabCollectionFactory implements TabCollectionFactoryInterface
             return $tabCollection;
         }
 
-        $modulesData = $this->getModules($data);
-
-        if (empty($modulesData)) {
-            return $tabCollection;
-        }
-
         foreach ($data as $tabClassName => $tabData) {
             $tab = new Tab();
             $tab->setLegacyClassName($tabClassName);
@@ -61,23 +54,5 @@ class TabCollectionFactory implements TabCollectionFactoryInterface
         }
 
         return $tabCollection;
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return array<string, Module>
-     */
-    protected function getModules(array $data): array
-    {
-        $moduleNames = [];
-
-        foreach ($data as $tabData) {
-            foreach ($tabData['recommendedModules'] as $moduleName) {
-                $moduleNames[$moduleName] = $this->moduleRepository->getModule($moduleName);
-            }
-        }
-
-        return $moduleNames;
     }
 }
