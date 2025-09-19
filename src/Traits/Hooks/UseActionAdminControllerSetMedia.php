@@ -23,6 +23,10 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Tab\Tab;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait UseActionAdminControllerSetMedia
 {
     /**

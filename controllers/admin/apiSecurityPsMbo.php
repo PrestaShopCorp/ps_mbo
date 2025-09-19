@@ -21,6 +21,10 @@
 use PrestaShop\Module\Mbo\Api\Config\Config;
 use PrestaShop\Module\Mbo\Api\Controller\AbstractAdminApiController;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * This controller only checks if the user is connected using the token given in parameter.
  * Note that if the token is valid, the user session is extended.
@@ -32,7 +36,7 @@ class apiSecurityPsMboController extends AbstractAdminApiController
     /**
      * @return void
      */
-    public function postProcess()
+    public function postProcess(): void
     {
         $this->exitWithResponse([
             'message' => 'User still connected',

@@ -35,6 +35,10 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait UseActionListModules
 {
     /**

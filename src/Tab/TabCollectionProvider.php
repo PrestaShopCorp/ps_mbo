@@ -26,6 +26,10 @@ use PrestaShop\Module\Mbo\Service\ExternalContentProvider\ExternalContentProvide
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * Get tabs used to group modules from Addons
  */
@@ -67,7 +71,7 @@ class TabCollectionProvider implements TabCollectionProviderInterface
         LegacyContext $context,
         ExternalContentProviderInterface $externalContentProvider,
         TabCollectionFactoryInterface $tabCollectionFactory,
-        ?CacheProvider $cacheProvider = null,
+        CacheProvider $cacheProvider = null,
     ) {
         $this->context = $context;
         $this->externalContentProvider = $externalContentProvider;

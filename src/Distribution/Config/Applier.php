@@ -25,6 +25,10 @@ use Doctrine\DBAL\Query\QueryException;
 use PrestaShop\Module\Mbo\Distribution\Config\Appliers\Factory as AppliersFactory;
 use PrestaShop\Module\Mbo\Distribution\Config\Exception\InvalidConfigException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 final class Applier
 {
     /**

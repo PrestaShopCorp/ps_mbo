@@ -25,6 +25,10 @@ use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 /**
  * This class is the interface to the legacy Module class.
  *
@@ -33,7 +37,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class Module implements ModuleInterface
 {
     /**
-     * @var LegacyModule Module The instance of the legacy module
+     * @var LegacyModule|\ModuleCore|false|null Module The instance of the legacy module
      */
     public $instance;
 
@@ -134,7 +138,7 @@ class Module implements ModuleInterface
      * @param array|null $disk
      * @param array|null $database
      */
-    public function __construct(?array $attributes = null, ?array $disk = null, ?array $database = null)
+    public function __construct(array $attributes = null, array $disk = null, array $database = null)
     {
         $this->attributes = new ParameterBag($this->attributes_default);
         $this->disk = new ParameterBag($this->disk_default);
@@ -175,13 +179,13 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @return LegacyModule|null
+     * @return LegacyModule
      *
      * @throws \Exception
      */
     public function getInstance(): ?LegacyModule
     {
-        if (!$this->hasValidInstance()) {
+        if (!$this->instance || !$this->instance instanceof LegacyModule || !$this->hasValidInstance()) {
             return null;
         }
 

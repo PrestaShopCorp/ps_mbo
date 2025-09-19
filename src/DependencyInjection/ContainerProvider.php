@@ -31,6 +31,10 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ContainerProvider
 {
     /**

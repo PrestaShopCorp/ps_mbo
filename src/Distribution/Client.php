@@ -22,22 +22,13 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Distribution;
 
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
-use Symfony\Component\Routing\Router;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class Client extends BaseClient
 {
-    /**
-     * @var Router|null
-     */
-    private $router;
-
-    public function setRouter(Router $router): self
-    {
-        $this->router = $router;
-
-        return $this;
-    }
-
     /**
      * Get a new key from Distribution API.
      *
@@ -46,42 +37,6 @@ class Client extends BaseClient
     public function retrieveNewKey(): \stdClass
     {
         return $this->processRequestAndDecode('shops/get-pub-key');
-    }
-
-    /**
-     * Retrieve the user menu from NEST Api
-     *
-     * @return false|\stdClass
-     */
-    public function getEmployeeMenu()
-    {
-        $languageIsoCode = \Context::getContext()->language->getIsoCode();
-        $cacheKey = __METHOD__ . $languageIsoCode . _PS_VERSION_;
-
-        if ($this->cacheProvider->contains($cacheKey)) {
-            return $this->cacheProvider->fetch($cacheKey);
-        }
-
-        $catalogUrlParams = [
-            'utm_mbo_source' => 'menu-user-back-office',
-        ];
-
-        $this->setQueryParams([
-            'isoLang' => $languageIsoCode,
-            'shopVersion' => _PS_VERSION_,
-            'catalogUrl' => $this->router ? $this->router->generate('admin_mbo_catalog_module', $catalogUrlParams, Router::ABSOLUTE_PATH) : '#',
-        ]);
-        try {
-            $conf = $this->processRequestAndDecode('shops/employee-menu');
-        } catch (\Throwable $e) {
-            return false;
-        }
-        if (empty($conf)) {
-            return false;
-        }
-        $this->cacheProvider->save($cacheKey, $conf, 60 * 60 * 24); // A day
-
-        return $this->cacheProvider->fetch($cacheKey);
     }
 
     /**

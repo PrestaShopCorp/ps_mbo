@@ -21,6 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Distribution\Config\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class CannotApplyConfigException extends \Exception
 {
 }

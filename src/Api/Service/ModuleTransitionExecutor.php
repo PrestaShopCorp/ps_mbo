@@ -38,6 +38,10 @@ use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ModuleTransitionExecutor implements ServiceExecutorInterface
 {
     const SERVICE = 'module';

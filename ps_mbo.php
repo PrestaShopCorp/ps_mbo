@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -87,9 +86,6 @@ class ps_mbo extends Module
         $this->name = 'ps_mbo';
         // This value must be hard-coded to respect Addons rules, so we must make sure that the const value is always synced with this one
         $this->version = '5.1.0';
-        if ($this->version !== self::VERSION) {
-            throw new PrestaShopException('The values from ps_mbo::$version and ps_mbo::VERSION must be identical');
-        }
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -310,7 +306,7 @@ class ps_mbo extends Module
         }
     }
 
-    public function installTables(?string $table = null): bool
+    public function installTables(string $table = null): bool
     {
         $sqlQueries = [];
 

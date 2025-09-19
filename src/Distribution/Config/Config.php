@@ -21,6 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Distribution\Config;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class Config
 {
     /**
@@ -59,7 +63,7 @@ class Config
         string $psVersion,
         string $mboVersion,
         bool $applied,
-        ?int $configId = null,
+        int $configId = null,
     ) {
         $this->configId = $configId;
         $this->configKey = $configKey;

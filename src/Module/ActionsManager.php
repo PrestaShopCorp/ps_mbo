@@ -27,6 +27,10 @@ use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentExceptio
 use PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ActionsManager
 {
     /**

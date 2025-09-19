@@ -21,8 +21,12 @@
 use PrestaShop\Module\Mbo\Api\Controller\AbstractAdminApiController;
 use PrestaShop\Module\Mbo\Api\Exception\IncompleteSignatureParamsException;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
-use PrestaShop\Module\Mbo\Api\Service\Factory as ExcutorsFactory;
+use PrestaShop\Module\Mbo\Api\Service\Factory as ExecutorsFactory;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 /**
  * This controller is responsible to execute actions on modules installed on the current shop.
@@ -33,7 +37,7 @@ class apiPsMboController extends AbstractAdminApiController
     /**
      * @return void
      */
-    public function postProcess()
+    public function postProcess(): void
     {
         $response = null;
         try {
@@ -41,7 +45,7 @@ class apiPsMboController extends AbstractAdminApiController
             if (empty($service)) {
                 throw new QueryParamsException('[service] parameter is required');
             }
-            /** @var ExcutorsFactory $executorsFactory */
+            /** @var ExecutorsFactory $executorsFactory */
             $executorsFactory = $this->module->get('mbo.api.service.factory');
 
             $response = $executorsFactory->build($service)->execute($this->module);

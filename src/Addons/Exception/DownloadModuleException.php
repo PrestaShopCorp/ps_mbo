@@ -20,6 +20,10 @@
 
 namespace PrestaShop\Module\Mbo\Addons\Exception;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class DownloadModuleException extends \Exception
 {
 }

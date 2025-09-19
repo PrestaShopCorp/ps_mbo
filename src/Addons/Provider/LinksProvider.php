@@ -29,6 +29,10 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Router;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class LinksProvider
 {
     public const DEFAULT_LANGUAGE = 'en';

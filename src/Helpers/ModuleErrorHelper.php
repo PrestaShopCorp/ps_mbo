@@ -24,6 +24,10 @@ namespace PrestaShop\Module\Mbo\Helpers;
 use PrestaShop\Module\Mbo\Exception\DownloadModuleException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class ModuleErrorHelper
 {
     /**
@@ -32,7 +36,7 @@ class ModuleErrorHelper
      *
      * @return \Exception
      */
-    public static function reportAndConvertError(\Exception $error, ?array $data = null): \Exception
+    public static function reportAndConvertError(\Exception $error, array $data = null): \Exception
     {
         ErrorHelper::reportError($error, $data);
 

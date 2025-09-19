@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -28,6 +27,10 @@ use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Tab\TabInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use ToolsCore as Tools;
+
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 trait UseDisplayDashboardTop
 {
@@ -78,6 +81,7 @@ trait UseDisplayDashboardTop
      * Hook displayDashboardTop.
      * Includes content just below the toolbar.
      *
+     * @param $params
      * @return string
      *
      * @throws \Exception
@@ -130,6 +134,7 @@ trait UseDisplayDashboardTop
      */
     protected function displayPushOnConfigurationPage(string $moduleName): string
     {
+        $defaultLinkText = $this->trans('PrestaShop Addons Marketplace', [], 'Modules.Mbo.Global');
         switch ($moduleName) {
             case 'contactform':
                 $this->smarty->assign([
@@ -143,7 +148,7 @@ trait UseDisplayDashboardTop
                         [],
                         'Modules.Mbo.Links'
                     ),
-                    'linkText' => $this->trans('PrestaShop Addons Marketplace', [], 'Modules.Mbo.Global'),
+                    'linkText' => $defaultLinkText,
                 ]);
                 break;
             case 'blockreassurance':
@@ -158,7 +163,7 @@ trait UseDisplayDashboardTop
                         [],
                         'Modules.Mbo.Links'
                     ),
-                    'linkText' => $this->trans('PrestaShop Addons Marketplace', [], 'Modules.Mbo.Global'),
+                    'linkText' => $defaultLinkText,
                 ]);
                 break;
             default:
@@ -173,7 +178,7 @@ trait UseDisplayDashboardTop
                         [],
                         'Modules.Mbo.Links'
                     ),
-                    'linkText' => $this->trans('PrestaShop Addons Marketplace', [], 'Modules.Mbo.Global'),
+                    'linkText' => $defaultLinkText,
                 ]);
         }
 

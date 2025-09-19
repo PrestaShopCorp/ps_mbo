@@ -20,6 +20,10 @@
 
 namespace PrestaShop\Module\Mbo\Tab;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 interface TabCollectionFactoryInterface
 {
     /**

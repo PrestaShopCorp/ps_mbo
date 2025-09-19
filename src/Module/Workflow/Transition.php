@@ -21,6 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class Transition implements TransitionInterface
 {
     /**

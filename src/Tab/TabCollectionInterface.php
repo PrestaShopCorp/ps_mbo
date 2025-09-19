@@ -23,6 +23,10 @@ namespace PrestaShop\Module\Mbo\Tab;
 use Countable;
 use IteratorAggregate;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 interface TabCollectionInterface extends \ArrayAccess, IteratorAggregate, Countable
 {
     /**

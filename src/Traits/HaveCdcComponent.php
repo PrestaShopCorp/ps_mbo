@@ -27,6 +27,10 @@ use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use ToolsCore as Tools;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait HaveCdcComponent
 {
     public function loadCdcMediaFilesForControllers(

@@ -28,6 +28,10 @@ use PrestaShop\Module\Mbo\Module\Exception\UnexpectedModuleSourceContentExceptio
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class FilesManager
 {
     /**

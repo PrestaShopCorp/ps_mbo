@@ -27,6 +27,10 @@ use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
 use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 trait UseActionGetAdminToolbarButtons
 {
     /**
