@@ -24,8 +24,10 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Tab\TabInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
 
 trait UseDisplayDashboardTop
 {
@@ -74,6 +76,10 @@ trait UseDisplayDashboardTop
             return '';
         }
         $this->alreadyProcessedPage = true;
+
+        if ($this->shouldDisplayModuleManagerMessage($params)) {
+            return $this->renderModuleManagerMessage();
+        }
 
         // Check if we are on a configuration page and if the module needs to have a push on this page
         $shouldDisplayMessageInConfigPage = isset($params['route'])
@@ -303,5 +309,43 @@ trait UseDisplayDashboardTop
         }
 
         return $title;
+    }
+
+    private function renderModuleManagerMessage(): string
+    {
+        try {
+            /** @var Environment|null $twig */
+            $twig = $this->get('twig');
+            /** @var ContextBuilder|null $contextBuilder */
+            $contextBuilder = $this->get(ContextBuilder::class);
+
+            if (null === $contextBuilder || null === $twig) {
+                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayAdminAfterHeader');
+            }
+
+            $extraParams = self::getCdcMediaUrl();
+
+            return $twig->render(
+                '@Modules/ps_mbo/views/templates/hook/twig/module_manager_message.html.twig', [
+                    'shop_context' => $contextBuilder->getViewContext(),
+                ] + $extraParams,
+            );
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+
+            return '';
+        }
+    }
+
+    private function shouldDisplayModuleManagerMessage($params = []): bool
+    {
+        return in_array(
+            $params['route'],
+            [
+                'admin_module_manage',
+                'admin_module_notification',
+                'admin_module_updates',
+            ]
+        );
     }
 }

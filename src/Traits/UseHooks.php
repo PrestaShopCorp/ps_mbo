@@ -34,7 +34,6 @@ trait UseHooks
     use Hooks\UseDisplayDashboardTop;
     use Hooks\UseActionBeforeInstallModule;
     use Hooks\UseActionGetAlternativeSearchPanels;
-    use Hooks\UseDisplayAdminAfterHeader;
     use Hooks\UseActionListModules;
     use Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
     use Hooks\UseActionBeforeUpgradeModule;
