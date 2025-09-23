@@ -4,6 +4,20 @@
 ![Build & Release draft](https://github.com/PrestaShopCorp/ps_mbo/workflows/Build%20&%20Release%20draft/badge.svg)
 [![GitHub license](https://img.shields.io/github/license/PrestaShopCorp/ps_mbo)](https://github.com/PrestaShopCorp/ps_mbo/LICENSE.md)
 
+## Table of Contents
+
+- [About](#about)
+- [Version Compatibility](#version-compatibility)
+- [Installation](#installation)
+- [Troubleshooting](#troubleshooting)
+- [Requirements](#requirements)
+- [Reporting issues](#reporting-issues)
+- [Multistore compatibility](#multistore-compatibility)
+- [Tools and helpers](#tools-and-helpers)
+- [Translations](#translations)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## About
 
 The module **ps_mbo** is the PrestaShop modules marketplace within your shop Backoffice.
@@ -14,7 +28,7 @@ It is responsible for :
 - Actions on modules : install, uninstall, upgrade, ...
 - Linking your backoffice to purchases made on Addons
 
-## ⚠️ Version Compatibility
+## Version Compatibility
 
 **Important**: Make sure to download the module version that matches your PrestaShop version.
 
@@ -34,7 +48,46 @@ It is responsible for :
 
 You can install it manually by downloading the latest release on https://github.com/PrestaShopCorp/ps_mbo/releases and uploading it through the Module manager page of your Backoffice.
 
-**Note :** An admin user (Prestashop Marketplace) is created when installing the module. This user is mandatory to allow the module to be callable by the external API.  
+**Note :** An admin user (Prestashop Marketplace) is created when installing the module. This user is mandatory to allow the module to be callable by the external API.
+
+## Troubleshooting
+
+### Update Issues
+
+During module updates, you may encounter various errors or unexpected behaviors. This typically occurs because the ps_mbo module is responsible for updating itself, which creates a technical challenge: the module remains loaded in PHP's cache/memory during the entire update process execution within a single PHP thread. This can lead to conflicts between the old cached version and the new files being deployed.
+
+### Solutions
+
+If you experience issues during or after an update, try the following solutions in order:
+
+#### 1. Clear Shop Cache
+
+**Via Back Office:**
+- Go to **Advanced Parameters > Performance** in your PrestaShop back office
+- Click **Clear cache** to flush all cached files
+- Test the module functionality
+
+**Alternative (Developer method):**
+- Delete all contents under `/var/cache/` folder in your PrestaShop installation
+- Load any page in your back office to trigger cache regeneration
+- Test the module functionality
+
+#### 2. Reinstall via Interface
+- Go to **Modules > Module Manager**
+- Find the **PrestaShop Marketplace in your Back Office** module
+- Click **Uninstall**
+- Click **Install** to reinstall the module
+- Test the module functionality
+
+#### 3. Complete Manual Reinstallation
+If the previous solutions don't work:
+- Delete the entire `/modules/ps_mbo/` folder from your PrestaShop installation
+- Clear the shop cache (see step 1)
+- Load any page in your back office to trigger cache regeneration
+- Download the latest compatible version from the [releases page](https://github.com/PrestaShopCorp/ps_mbo/releases) (refer to the [Version Compatibility](#version-compatibility) section)
+- Install the module via **Modules > Module Manager > Upload a module**
+
+> **Note**: In most cases, solution #1 or #2 will resolve the issue. Complete manual reinstallation should only be used as a last resort.
 
 ## Requirements
 
@@ -77,8 +130,8 @@ To contribute, you'll need to run the project locally :
 
 - Fork this repository
 - Create a branch from the version of MBO you want to patch
-  - You are a PrestaShop employee : 
-    - Install [MBO API and Vue server][mbo-api-and-vue] and follow instructions in the readme 
+  - You are a PrestaShop employee :
+    - Install [MBO API and Vue server][mbo-api-and-vue] and follow instructions in the readme
     - On MBO root folder, copy .env.dist to .env and replace the values to the ones matching your environment
   - You are an external contributor :
     - Get the .env file from the last released module.
@@ -94,14 +147,14 @@ Please respect the [coding standards][coding-standards]
 
 ## License
 
-This module is released under the [Academic Free License 3.0][AFL-3.0] 
+This module is released under the [Academic Free License 3.0][AFL-3.0]
 
 [report-issue]: https://github.com/PrestaShopCorp/ps_mbo/issues/new
 [prestashop]: https://www.prestashop.com/
 [ps_accounts]: https://github.com/PrestaShopCorp/ps_accounts
-[contribution-guidelines]: https://devdocs.prestashop.com/1.7/contribute/contribution-guidelines/project-modules/
+[contribution-guidelines]: https://devdocs.prestashop.com/9/contribute/contribution-guidelines/project-modules/
 [mbo-api-and-vue]: https://github.com/PrestaShopCorp/mbo.prestashop.com
-[coding-standards]: https://devdocs.prestashop.com/1.7/development/coding-standards/
+[coding-standards]: https://devdocs.prestashop.com/9/development/coding-standards/
 [AFL-3.0]: https://opensource.org/licenses/AFL-3.0
 [translations-docs]: docs/translations.md
 [tools-update-infos]: docs/tools-update-infos.md
