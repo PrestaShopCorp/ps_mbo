@@ -25,12 +25,57 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
-use PrestaShop\Module\Mbo\Tab\TabInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
 trait UseDisplayDashboardTop
 {
+    /**
+     * @var string
+     */
+    public static string $RECOMMENDED_BUTTON_TYPE = 'button';
+
+    /**
+     * @var string
+     */
+    public static string $RECOMMENDED_AFTER_CONTENT_TYPE = 'after_content';
+
+    /**
+     * @var string[]
+     */
+    public static array $TABS_WITH_RECOMMENDED_MODULES_BUTTON = [
+        'AdminOrders',
+        'AdminInvoices',
+        'AdminSlip',
+        'AdminDeliverySlip',
+        'AdminProducts',
+        'AdminFeatures',
+        'AdminManufacturers',
+        'AdminCartRules',
+        'AdminSpecificPriceRule',
+        'AdminCustomers',
+        'AdminCustomerThreads',
+        'AdminStats',
+        'AdminCmsContent',
+        'AdminImages',
+        'AdminShipping',
+        'AdminStatuses', // Shop Parameters > Order Settings > Statuses
+        'AdminGroups', // Shop Parameters > Customer Settings > Groups
+        'AdminContacts', // Shop Parameters > Contact > Contact
+        'AdminMeta', // Shop Parameters > Traffic & SEO > SEO & URLs
+        'AdminSearchConf', // Shop Parameters > Search > Search
+        'AdminAdminPreferences', // Advanced Parameters > Administration
+        'AdminEmails', // Advanced Parameters > E-mail
+    ];
+
+    /**
+     * @var string[]
+     */
+    public static array $TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT = [
+        'AdminPayment',
+        'AdminCarriers',
+    ];
+
     /**
      * Module with push content & link to addons on configuration page
      *
@@ -50,10 +95,7 @@ trait UseDisplayDashboardTop
      */
     protected bool $alreadyProcessedPage = false;
 
-    protected array $controllersWithRecommendedModules = [
-        TabInterface::RECOMMENDED_BUTTON_TYPE => TabInterface::TABS_WITH_RECOMMENDED_MODULES_BUTTON,
-        TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE => TabInterface::TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT,
-    ];
+    protected array $controllersWithRecommendedModules = [];
 
     protected static array $routeAfterContent = [
         'admin_carriers_index',
@@ -75,6 +117,10 @@ trait UseDisplayDashboardTop
         if ($this->alreadyProcessedPage) {
             return '';
         }
+        $this->controllersWithRecommendedModules = [
+            self::$RECOMMENDED_BUTTON_TYPE => self::$TABS_WITH_RECOMMENDED_MODULES_BUTTON,
+            self::$RECOMMENDED_AFTER_CONTENT_TYPE => self::$TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT,
+        ];
         $this->alreadyProcessedPage = true;
 
         if ($this->shouldDisplayModuleManagerMessage($params)) {
@@ -158,8 +204,8 @@ trait UseDisplayDashboardTop
      */
     protected function displayRecommendedModules(string $controller, array $hookParams): string
     {
-        $shouldAttachRecommendedModulesAfterContent = $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE);
-        $shouldAttachRecommendedModulesButton = $this->shouldAttachRecommendedModules(TabInterface::RECOMMENDED_BUTTON_TYPE);
+        $shouldAttachRecommendedModulesAfterContent = $this->shouldAttachRecommendedModules(self::$RECOMMENDED_AFTER_CONTENT_TYPE);
+        $shouldAttachRecommendedModulesButton = $this->shouldAttachRecommendedModules(self::$RECOMMENDED_BUTTON_TYPE);
 
         // Show only in content if index page
         $shouldDisplayAfterContent = isset($hookParams['route']) && in_array($hookParams['route'], self::$routeAfterContent);
@@ -220,10 +266,10 @@ trait UseDisplayDashboardTop
      */
     protected function shouldAttachRecommendedModules(string $type): bool
     {
-        if ($type === TabInterface::RECOMMENDED_BUTTON_TYPE) {
-            $modules = $this->controllersWithRecommendedModules[TabInterface::RECOMMENDED_BUTTON_TYPE];
-        } elseif ($type === TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE) {
-            $modules = $this->controllersWithRecommendedModules[TabInterface::RECOMMENDED_AFTER_CONTENT_TYPE];
+        if ($type === self::$RECOMMENDED_BUTTON_TYPE) {
+            $modules = $this->controllersWithRecommendedModules[self::$RECOMMENDED_BUTTON_TYPE];
+        } elseif ($type === self::$RECOMMENDED_AFTER_CONTENT_TYPE) {
+            $modules = $this->controllersWithRecommendedModules[self::$RECOMMENDED_AFTER_CONTENT_TYPE];
         } else {
             return false;
         }

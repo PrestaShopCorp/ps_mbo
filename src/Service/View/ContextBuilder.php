@@ -31,7 +31,6 @@ use PrestaShop\Module\Mbo\Helpers\UrlHelper;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\ModuleOverrideChecker;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
-use PrestaShop\Module\Mbo\Tab\TabInterface;
 use PrestaShop\PrestaShop\Adapter\Module\Module as CoreModule;
 use PrestaShop\PrestaShop\Core\Context\CountryContext;
 use PrestaShop\PrestaShop\Core\Context\CurrencyContext;
@@ -70,11 +69,11 @@ class ContextBuilder
         return $context;
     }
 
-    public function getRecommendedModulesContext(TabInterface $tab): array
+    public function getRecommendedModulesContext(string $tab): array
     {
         $context = $this->getCommonContextContent();
 
-        $context['prestaShop_controller_class_name'] = $tab->getLegacyClassName();
+        $context['prestaShop_controller_class_name'] = $tab;
 
         return $context;
     }
