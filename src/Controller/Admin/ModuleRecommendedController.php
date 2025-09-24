@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Controller\Admin;
 
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
-use PrestaShop\Module\Mbo\Tab\TabCollectionProvider;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -40,7 +39,6 @@ class ModuleRecommendedController extends PrestaShopAdminController
      */
     public function indexAction(
         Request $request,
-        TabCollectionProvider $tabCollectionProvider,
         ContextBuilder $contextBuilder,
     ): Response {
         $response = new JsonResponse();
@@ -55,9 +53,7 @@ class ModuleRecommendedController extends PrestaShopAdminController
 
                 return $this->redirectToRoute('admin_mbo_catalog_module', $routeParams);
             }
-            $tabCollection = $tabCollectionProvider->getTabCollection();
-            $tab = $tabCollection->getTab($tabClassName);
-            $context = $contextBuilder->getRecommendedModulesContext($tab);
+            $context = $contextBuilder->getRecommendedModulesContext($tabClassName);
             $context['recommendation_format'] = $request->get('recommendation_format');
             $response->setData([
                 'content' => $this->renderView(
