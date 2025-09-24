@@ -28,10 +28,8 @@ use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyC
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\Repository;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
-use PrestaShop\Module\Mbo\Tab\TabCollectionProviderInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShopBundle\Event\ModuleManagementEvent;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -41,54 +39,13 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
 {
     const WATERMARK_FILENAME = '/.info';
 
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-    /**
-     * @var Repository
-     */
-    protected $moduleRepository;
-    /**
-     * @var TabCollectionProviderInterface
-     */
-    protected $tabCollectionProvider;
-    /**
-     * @var ContextBuilder
-     */
-    private $contextBuilder;
-
-    /**
-     * @var Client
-     */
-    private $distributionClient;
-
-    /**
-     * @var AdminAuthenticationProvider
-     */
-    private $adminAuthenticationProvider;
-
-    /**
-     * @var VersionChangeApplyConfigCommandHandler
-     */
-    private $versionChangeApplyConfigCommandHandler;
-
     public function __construct(
-        LoggerInterface $logger,
-        Repository $moduleRepository,
-        TabCollectionProviderInterface $tabCollectionProvider,
-        ContextBuilder $contextBuilder,
-        Client $distributionClient,
-        AdminAuthenticationProvider $adminAuthenticationProvider,
-        VersionChangeApplyConfigCommandHandler $versionChangeApplyConfigCommandHandler,
+        private readonly Repository $moduleRepository,
+        private readonly ContextBuilder $contextBuilder,
+        private readonly Client $distributionClient,
+        private readonly AdminAuthenticationProvider $adminAuthenticationProvider,
+        private readonly VersionChangeApplyConfigCommandHandler $versionChangeApplyConfigCommandHandler,
     ) {
-        $this->logger = $logger;
-        $this->moduleRepository = $moduleRepository;
-        $this->tabCollectionProvider = $tabCollectionProvider;
-        $this->contextBuilder = $contextBuilder;
-        $this->distributionClient = $distributionClient;
-        $this->adminAuthenticationProvider = $adminAuthenticationProvider;
-        $this->versionChangeApplyConfigCommandHandler = $versionChangeApplyConfigCommandHandler;
     }
 
     public static function getSubscribedEvents(): array
@@ -124,7 +81,6 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
     public function clearCatalogCache(): void
     {
         $this->moduleRepository->clearCache();
-        $this->tabCollectionProvider->clearCache();
         $this->contextBuilder->clearCache();
     }
 
