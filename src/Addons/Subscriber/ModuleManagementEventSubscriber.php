@@ -174,6 +174,7 @@ class ModuleManagementEventSubscriber implements EventSubscriberInterface
         }
         $data['event_name'] = $eventName;
         $data['module_name'] = $event->getModule()->get('name');
+        $data['module_version'] = $event->getModule()->get('version');
 
         if (in_array($eventName, [
             ModuleManagementEvent::INSTALL,
