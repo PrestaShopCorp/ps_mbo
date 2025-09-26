@@ -31,12 +31,12 @@ use PrestaShop\Module\Mbo\Helpers\UrlHelper;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\ModuleOverrideChecker;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
-use PrestaShop\Module\Mbo\Tab\TabInterface;
 use PrestaShop\PrestaShop\Adapter\Module\Module as CoreModule;
 use PrestaShop\PrestaShop\Core\Context\CountryContext;
 use PrestaShop\PrestaShop\Core\Context\CurrencyContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
+use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
@@ -44,6 +44,8 @@ use Symfony\Component\Routing\Router;
 class ContextBuilder
 {
     public const DEFAULT_CURRENCY_CODE = 'EUR';
+
+    private ModuleCollection $modulesCollection;
 
     public function __construct(
         private readonly EmployeeContext $employeeContext,
@@ -67,11 +69,11 @@ class ContextBuilder
         return $context;
     }
 
-    public function getRecommendedModulesContext(TabInterface $tab): array
+    public function getRecommendedModulesContext(string $tab): array
     {
         $context = $this->getCommonContextContent();
 
-        $context['prestaShop_controller_class_name'] = $tab->getLegacyClassName();
+        $context['prestaShop_controller_class_name'] = $tab;
 
         return $context;
     }
@@ -265,12 +267,14 @@ class ContextBuilder
             return $this->cacheProvider->fetch($cacheKey);
         }
 
-        $installedModulesCollection = $this->moduleRepository->getList();
+        if (empty($this->modulesCollection)) {
+            $this->modulesCollection = $this->moduleRepository->getList();
+        }
 
         $installedModules = [];
 
         /** @var CoreModule $installedModule */
-        foreach ($installedModulesCollection as $installedModule) {
+        foreach ($this->modulesCollection as $installedModule) {
             $moduleAttributes = $installedModule->getAttributes();
             $moduleDiskAttributes = $installedModule->getDiskAttributes();
             $moduleDatabaseAttributes = $installedModule->getDatabaseAttributes();
@@ -335,12 +339,17 @@ class ContextBuilder
     private function getUpgradableModules(): array
     {
         $cacheKey = $this->getUpgradableModulesCacheKey();
-
         if ($this->cacheProvider->contains($cacheKey)) {
             return $this->cacheProvider->fetch($cacheKey);
         }
 
-        $upgradableModulesCollection = $this->moduleRepository->getUpgradableModules();
+        if (!empty($this->modulesCollection)) {
+            $upgradableModulesCollection = $this->modulesCollection->filter(static function (CoreModule $module) {
+                return $module->canBeUpgraded();
+            });
+        } else {
+            $upgradableModulesCollection = $this->moduleRepository->getUpgradableModules();
+        }
 
         $upgradableModules = [];
 

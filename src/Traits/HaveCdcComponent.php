@@ -23,61 +23,27 @@ namespace PrestaShop\Module\Mbo\Traits;
 
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
-use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use ToolsCore as Tools;
 
 trait HaveCdcComponent
 {
-    public function loadCdcMediaFilesForControllers(
-        array $controllers = [],
-        array $additionalJs = [],
-        array $additionalCss = [],
-    ): void {
-        if (in_array(Tools::getValue('controller'), $controllers)) {
-            $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error-templating.js');
-            $this->context->controller->addCss($this->getPathUri() . 'views/css/cdc-error-templating.css');
-
-            $cdcJsFile = getenv('MBO_CDC_URL');
-            if (!is_string($cdcJsFile) || empty($cdcJsFile)) {
-                $this->context->controller->addJs($this->getPathUri() . 'views/js/cdc-error.js');
-
-                return;
-            }
-
-            $this->context->controller->addJs($cdcJsFile);
-
-            foreach ($additionalJs as $jsPath) {
-                $this->context->controller->addJs($jsPath);
-            }
-            foreach ($additionalCss as $cssPath) {
-                $this->context->controller->addCSS($cssPath);
-            }
-        }
-    }
-
-    /**
-     * @return false|string
-     */
-    public function smartyDisplayTpl(string $tpl, array $additionalParams = [])
+    public function smartyDisplayTpl(string $tpl, array $additionalParams = []): string
     {
         try {
-            /** @var ContextBuilder|null $contextBuilder */
-            $contextBuilder = $this->get('mbo.cdc.context_builder');
             /** @var Router|null $router */
             $router = $this->get('router');
 
-            if (null === $router || null === $contextBuilder) {
+            if (null === $router) {
                 throw new ExpectedServiceNotFoundException('Some services not found in HaveCdcComponent');
             }
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
 
-            return false;
+            return '';
         }
+
         $this->context->smarty->assign(
             array_merge([
-                'shop_context' => json_encode($contextBuilder->getViewContext()),
                 'cdcErrorUrl' => $router->generate('admin_mbo_module_cdc_error'),
             ], $additionalParams)
         );

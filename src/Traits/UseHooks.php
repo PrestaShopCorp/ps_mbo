@@ -29,25 +29,14 @@ trait UseHooks
     use Hooks\UseDashboardZoneOne;
     use Hooks\UseDashboardZoneThree {
         Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
-        Hooks\UseDashboardZoneOne::loadCdcMediaFilesForControllers insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
     }
     use Hooks\UseDisplayAdminThemesListAfter;
     use Hooks\UseDisplayDashboardTop;
-    use Hooks\UseActionAdminControllerSetMedia;
     use Hooks\UseActionBeforeInstallModule;
-    use Hooks\UseActionGetAdminToolbarButtons;
     use Hooks\UseActionGetAlternativeSearchPanels;
-    use Hooks\UseDisplayAdminAfterHeader;
     use Hooks\UseActionListModules;
     use Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
     use Hooks\UseActionBeforeUpgradeModule;
-
-    /**
-     * @var array An array of method that can be called to register media in the actionAdminControllerSetMedia hook
-     *
-     * @see UseActionAdminControllerSetMedia
-     */
-    protected $adminControllerMediaMethods = [];
 
     /**
      * Try to call the "bootHookClassName" method on each hook class.
@@ -164,5 +153,27 @@ trait UseHooks
                 }
             }
         }
+    }
+
+    public static function getCdcMediaUrl(): array
+    {
+        $moduleUri = __PS_BASE_URI__ . 'modules/ps_mbo/';
+
+        $extraParams = [
+            'upload' => $moduleUri . 'views/js/upload_module_with_cdc.js?v=' . self::VERSION,
+            'cdc_error_templating_url' => $moduleUri . 'views/js/cdc-error-templating.js?v=' . self::VERSION,
+            'cdc_error_templating_css' => $moduleUri . 'views/css/cdc-error-templating.css?v=' . self::VERSION,
+            'cdc_script_not_found' => false,
+        ];
+
+        $cdcJsFile = getenv('MBO_CDC_URL');
+        if (!is_string($cdcJsFile) || empty($cdcJsFile)) {
+            $extraParams['cdc_script_not_found'] = true;
+            $extraParams['cdc_error_url'] = $moduleUri . 'views/js/cdc-error.js?v=' . self::VERSION;
+        } else {
+            $extraParams['cdc_url'] = $cdcJsFile;
+        }
+
+        return $extraParams;
     }
 }

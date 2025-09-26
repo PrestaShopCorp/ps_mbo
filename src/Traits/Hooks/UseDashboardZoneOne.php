@@ -18,14 +18,14 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
+use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
-use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
 
@@ -40,39 +40,31 @@ trait UseDashboardZoneOne
      */
     public function hookDashboardZoneOne()
     {
+        $extraParams = self::getCdcMediaUrl();
+
+        try {
+            /** @var ContextBuilder|null $contextBuilder */
+            $contextBuilder = $this->get('mbo.cdc.context_builder');
+
+            if (null === $contextBuilder) {
+                throw new ExpectedServiceNotFoundException('Some services not found in HaveCdcComponent');
+            }
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+
+            return '';
+        }
+
         return $this->smartyDisplayTpl('dashboard-zone-one.tpl', [
             'urlAccountsCdn' => $this->loadPsAccounts(),
-        ]);
-    }
-
-    /**
-     * @return void
-     *
-     * @throws \Exception
-     */
-    public function bootUseDashboardZoneOne(): void
-    {
-        if (method_exists($this, 'addAdminControllerMedia')) {
-            $this->addAdminControllerMedia('loadMediaDashboardZoneOne');
-        }
-    }
-
-    /**
-     * Add JS and CSS file
-     *
-     * @see UseActionAdminControllerSetMedia
-     *
-     * @return void
-     */
-    protected function loadMediaDashboardZoneOne(): void
-    {
-        $this->loadCdcMediaFilesForControllers(['AdminDashboard']);
+            'shop_context' => json_encode($contextBuilder->getViewContext()),
+        ] + $extraParams);
     }
 
     /**
      * @throws \PrestaShopDatabaseException
      */
-    public function useDashboardZoneOneExtraOperations()
+    public function useDashboardZoneOneExtraOperations(): void
     {
         // Update module position in Dashboard
         $query = 'SELECT id_hook FROM ' . _DB_PREFIX_ . "hook WHERE name = 'dashboardZoneOne'";
@@ -131,29 +123,5 @@ trait UseDashboardZoneOne
         }
 
         return $urlAccountsCdn;
-    }
-
-    /**
-     * Return true if ps_account is enabled
-     *
-     * @return bool
-     */
-    private function ensurePsAccountIsEnabled(): bool
-    {
-        /** @var Installer|null $accountsInstaller */
-        $accountsInstaller = $this->get(Installer::class);
-        if (!$accountsInstaller) {
-            return false;
-        }
-
-        $accountsEnabled = $accountsInstaller->isModuleEnabled();
-        if ($accountsEnabled) {
-            return true;
-        }
-
-        /** @var ModuleManager|null $moduleManager */
-        $moduleManager = $this->get('prestashop.module.manager');
-
-        return $moduleManager && $moduleManager->enable($accountsInstaller->getModuleName());
     }
 }

@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons;
 
-use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Controller\Admin\ModuleCatalogController;
 use PrestaShop\Module\Mbo\Security\PermissionCheckerInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -33,29 +32,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class Toolbar
 {
-    /**
-     * @var PermissionCheckerInterface
-     */
-    private $permissionChecker;
-
-    /**
-     * @var AddonsDataProvider
-     */
-    private $addonsDataProvider;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     public function __construct(
-        PermissionCheckerInterface $permissionChecker,
-        AddonsDataProvider $addonsDataProvider,
-        TranslatorInterface $translator,
+        private readonly PermissionCheckerInterface $permissionChecker,
+        private readonly TranslatorInterface $translator,
     ) {
-        $this->permissionChecker = $permissionChecker;
-        $this->addonsDataProvider = $addonsDataProvider;
-        $this->translator = $translator;
     }
 
     /**
@@ -72,10 +52,7 @@ class Toolbar
                 PageVoter::LEVEL_UPDATE,
             ]
         )) {
-            return array_merge(
-                $this->getAddModuleToolbar(),
-                $this->getConnectionToolbar()
-            );
+            return $this->getAddModuleToolbar();
         }
 
         return [];
@@ -105,48 +82,6 @@ class Toolbar
                     $this->translator->getLocale()
                 ),
             ],
-        ];
-    }
-
-    /**
-     * Returns button definition for Addons login/logout, depending on the user authentication status.
-     *
-     * @return array
-     */
-    public function getConnectionToolbar(): array
-    {
-        $toolbarButtons = [];
-
-        if (
-            $this->addonsDataProvider->isUserAuthenticated()
-            && $this->addonsDataProvider->isUserAuthenticatedOnAccounts()
-        ) {
-            $toolbarButtons['accounts_logout'] = $this->getAccountsStatusButton();
-        }
-
-        return $toolbarButtons;
-    }
-
-    public function getAccountsStatusButton(): ?array
-    {
-        if (!$this->addonsDataProvider->isUserAuthenticatedOnAccounts()) {
-            return null;
-        }
-
-        return [
-            'href' => '#',
-            'desc' => $this->translator->trans(
-                'Connected',
-                [],
-                'Modules.Mbo.Modulescatalog',
-                $this->translator->getLocale()
-            ),
-            'help' => $this->translator->trans(
-                'Connected as',
-                [],
-                'Modules.Mbo.Modulescatalog',
-                $this->translator->getLocale()
-            ) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail(),
         ];
     }
 }
