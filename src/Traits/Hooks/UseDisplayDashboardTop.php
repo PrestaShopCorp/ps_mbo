@@ -33,17 +33,17 @@ trait UseDisplayDashboardTop
     /**
      * @var string
      */
-    public static string $RECOMMENDED_BUTTON_TYPE = 'button';
+    public static string $recommendedButtonType = 'button';
 
     /**
      * @var string
      */
-    public static string $RECOMMENDED_AFTER_CONTENT_TYPE = 'after_content';
+    public static string $recommendedAfterContentType = 'after_content';
 
     /**
      * @var string[]
      */
-    public static array $TABS_WITH_RECOMMENDED_MODULES_BUTTON = [
+    public static array $tabsWithRecommendedButton = [
         'AdminOrders',
         'AdminInvoices',
         'AdminSlip',
@@ -71,7 +71,7 @@ trait UseDisplayDashboardTop
     /**
      * @var string[]
      */
-    public static array $TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT = [
+    public static array $tabsWithRecommendedAfterContent = [
         'AdminPayment',
         'AdminCarriers',
     ];
@@ -118,8 +118,8 @@ trait UseDisplayDashboardTop
             return '';
         }
         $this->controllersWithRecommendedModules = [
-            self::$RECOMMENDED_BUTTON_TYPE => self::$TABS_WITH_RECOMMENDED_MODULES_BUTTON,
-            self::$RECOMMENDED_AFTER_CONTENT_TYPE => self::$TABS_WITH_RECOMMENDED_MODULES_AFTER_CONTENT,
+            self::$recommendedButtonType => self::$tabsWithRecommendedButton,
+            self::$recommendedAfterContentType => self::$tabsWithRecommendedAfterContent,
         ];
         $this->alreadyProcessedPage = true;
 
@@ -204,8 +204,8 @@ trait UseDisplayDashboardTop
      */
     protected function displayRecommendedModules(string $controller, array $hookParams): string
     {
-        $shouldAttachRecommendedModulesAfterContent = $this->shouldAttachRecommendedModules(self::$RECOMMENDED_AFTER_CONTENT_TYPE);
-        $shouldAttachRecommendedModulesButton = $this->shouldAttachRecommendedModules(self::$RECOMMENDED_BUTTON_TYPE);
+        $shouldAttachRecommendedModulesAfterContent = $this->shouldAttachRecommendedModules(self::$recommendedAfterContentType);
+        $shouldAttachRecommendedModulesButton = $this->shouldAttachRecommendedModules(self::$recommendedButtonType);
 
         // Show only in content if index page
         $shouldDisplayAfterContent = isset($hookParams['route']) && in_array($hookParams['route'], self::$routeAfterContent);
@@ -266,10 +266,10 @@ trait UseDisplayDashboardTop
      */
     protected function shouldAttachRecommendedModules(string $type): bool
     {
-        if ($type === self::$RECOMMENDED_BUTTON_TYPE) {
-            $modules = $this->controllersWithRecommendedModules[self::$RECOMMENDED_BUTTON_TYPE];
-        } elseif ($type === self::$RECOMMENDED_AFTER_CONTENT_TYPE) {
-            $modules = $this->controllersWithRecommendedModules[self::$RECOMMENDED_AFTER_CONTENT_TYPE];
+        if ($type === self::$recommendedButtonType) {
+            $modules = $this->controllersWithRecommendedModules[self::$recommendedButtonType];
+        } elseif ($type === self::$recommendedAfterContentType) {
+            $modules = $this->controllersWithRecommendedModules[self::$recommendedAfterContentType];
         } else {
             return false;
         }

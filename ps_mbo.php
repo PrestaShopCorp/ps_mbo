@@ -42,18 +42,9 @@ class ps_mbo extends Module
     use PrestaShop\Module\Mbo\Traits\UseHooks;
     use PrestaShop\Module\Mbo\Traits\HaveConfigurationPage;
 
-    /**
-     * @var string
-     */
     public const VERSION = '5.2.0';
 
-    public const CONTROLLERS_WITH_CDC_SCRIPT = [
-        'AdminModulesNotifications',
-        'AdminModulesUpdates',
-        'AdminModulesManage',
-    ];
-
-    public $configurationList = [
+    public array $configurationList = [
         'PS_MBO_SHOP_ADMIN_UUID' => '', // 'ADMIN' because there will be only one for all shops in a multishop context
         'PS_MBO_LAST_PS_VERSION_API_CONFIG' => '',
     ];
