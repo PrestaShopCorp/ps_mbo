@@ -84,6 +84,7 @@ function upgrade_module_5_2_0(Module $module): bool
         mboUpgradeSafeUnlink($moduleDir . '/src/Traits/Hooks/UseActionGetAdminToolbarButtons.php');
         mboUpgradeSafeUnlink($moduleDir . '/src/Traits/Hooks/UseDisplayAdminAfterHeader.php');
         mboUpgradeSafeUnlink($moduleDir . '/views/css/connection-toolbar.css');
+        mboUpgradeSafeUnlink($moduleDir . '/views/css/module-catalog.css');
         mboUpgradeSafeUnlink($moduleDir . '/views/css/mbo-user-explanation.css');
         mboUpgradeSafeUnlink($moduleDir . '/views/js/connection-toolbar.js');
         mboUpgradeSafeUnlink($moduleDir . '/views/js/mbo-user-explanation.js');

@@ -160,7 +160,6 @@ trait UseHooks
         $moduleUri = __PS_BASE_URI__ . 'modules/ps_mbo/';
 
         $extraParams = [
-            'growl' => '/js/jquery/plugins/growl/jquery.growl.js?v=' . self::VERSION,
             'upload' => $moduleUri . 'views/js/upload_module_with_cdc.js?v=' . self::VERSION,
             'cdc_error_templating_url' => $moduleUri . 'views/js/cdc-error-templating.js?v=' . self::VERSION,
             'cdc_error_templating_css' => $moduleUri . 'views/css/cdc-error-templating.css?v=' . self::VERSION,
