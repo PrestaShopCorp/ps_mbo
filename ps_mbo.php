@@ -45,7 +45,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '5.1.0';
+    public const VERSION = '5.2.0';
 
     public const CONTROLLERS_WITH_CDC_SCRIPT = [
         'AdminModulesNotifications',
@@ -80,7 +80,7 @@ class ps_mbo extends Module
     {
         $this->name = 'ps_mbo';
         // This value must be hard-coded to respect Addons rules, so we must make sure that the const value is always synced with this one
-        $this->version = '5.1.0';
+        $this->version = '5.2.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
