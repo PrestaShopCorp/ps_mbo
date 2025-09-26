@@ -56,7 +56,6 @@ if (!function_exists('mboUpgradeDeleteFolderRecursively')) {
     }
 }
 if (!function_exists('mboUpgradeSafeUnlink')) {
-
     function mboUpgradeSafeUnlink(string $filePath): void
     {
         if (file_exists($filePath) && is_file($filePath)) {
@@ -72,7 +71,6 @@ if (!function_exists('mboUpgradeSafeUnlink')) {
  */
 function upgrade_module_5_2_0(Module $module): bool
 {
-
     $moduleDir = _PS_MODULE_DIR_ . 'ps_mbo';
 
     try {
