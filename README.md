@@ -56,9 +56,16 @@ You can install it manually by downloading the latest release on https://github.
 
 During module updates, you may encounter various errors or unexpected behaviors. This typically occurs because the ps_mbo module is responsible for updating itself, which creates a technical challenge: the module remains loaded in PHP's cache/memory during the entire update process execution within a single PHP thread. This can lead to conflicts between the old cached version and the new files being deployed.
 
-### Solutions
+### Common Symptoms
 
-If you experience issues during or after an update, try the following solutions in order:
+One of the most frequent issues is:
+- The update displays an error message such as "The ps_mbo module has not been updated"
+- Or the update appears to succeed with a success message
+- **But** the module still shows as requiring an update in the Module Manager
+
+In this specific case, the issue is often resolved by **simply clicking the Update button again**. Due to cache conflicts, the update scripts may need to run a second time with the newly cached files to complete successfully.
+
+If clicking Update again doesn't resolve the issue, or if you encounter other problems, try the following solutions in order:
 
 #### 1. Clear Shop Cache
 
