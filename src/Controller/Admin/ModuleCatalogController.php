@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Core\Security\Permission;
 use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts;
 use PrestaShop\PsAccountsInstaller\Installer\Installer;
 use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
+use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\HttpFoundation\Response;
 
 if (!defined('_PS_VERSION_')) {
@@ -73,17 +74,9 @@ class ModuleCatalogController extends PrestaShopAdminController
         $this->psAccountsInstaller = $psAccountsInstaller;
     }
 
-    /**
-     * Module Catalog page
-     *
-     * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="You do not have permission to update this.",
-     *     redirectRoute="admin_administration"
-     * )
-     *
-     * @return Response
-     */
+    #[AdminSecurity(
+        "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+    )]
     public function indexAction(): Response
     {
         $extraParams = \ps_mbo::getCdcMediaUrl();
