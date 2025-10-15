@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Handler\ErrorHandler;
 
+use PrestaShop\Module\Mbo\Helpers\EnvHelper;
 use Sentry\Client;
 use Sentry\State\Scope;
 use Sentry\UserDataBag;
@@ -48,7 +49,7 @@ class ErrorHandler implements ErrorHandlerInterface
 
     public function __construct()
     {
-        $this->dsn = getenv('SENTRY_CREDENTIALS');
+        $this->dsn = EnvHelper::getEnv('SENTRY_CREDENTIALS');
 
         if (empty($this->dsn)) {
             return;
@@ -58,7 +59,7 @@ class ErrorHandler implements ErrorHandlerInterface
             \Sentry\init([
                 'dsn' => $this->dsn,
                 'release' => \ps_mbo::VERSION,
-                'environment' => getenv('SENTRY_ENVIRONMENT'),
+                'environment' => EnvHelper::getEnv('SENTRY_ENVIRONMENT'),
                 'traces_sample_rate' => 0.5,
                 'sample_rate' => 0.5,
             ]);
@@ -66,9 +67,9 @@ class ErrorHandler implements ErrorHandlerInterface
             \Sentry\configureScope(function (Scope $scope): void {
                 $scope->setContext('shop info', [
                     'prestashop_version' => _PS_VERSION_,
-                    'mbo_cdc_url' => getenv('MBO_CDC_URL'),
-                    'distribution_api_url' => getenv('DISTRIBUTION_API_URL'),
-                    'addons_api_url' => getenv('ADDONS_API_URL'),
+                    'mbo_cdc_url' => EnvHelper::getEnv('MBO_CDC_URL'),
+                    'distribution_api_url' => EnvHelper::getEnv('DISTRIBUTION_API_URL'),
+                    'addons_api_url' => EnvHelper::getEnv('ADDONS_API_URL'),
                 ]);
             });
         } catch (\Throwable $e) {

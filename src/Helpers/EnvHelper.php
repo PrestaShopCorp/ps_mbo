@@ -21,24 +21,36 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Helpers;
 
+use Symfony\Component\Dotenv\Dotenv;
+
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class AddonsApiHelper
+class EnvHelper
 {
-    public static function addCustomHeaders(): array
+    public static function loadEnv(string $path): void
     {
-        $defaultCustomHeaders = [
-            'X-PrestaShop-MBO' => \ps_mbo::VERSION,
-        ];
-        $customHeaderKey = EnvHelper::getEnv('ADDONS_API_HEADER_KEY');
-        $customHeaderValue = EnvHelper::getEnv('ADDONS_API_HEADER_VALUE');
-
-        if (empty($customHeaderKey) || empty($customHeaderValue)) {
-            return $defaultCustomHeaders;
+        if (!file_exists($path)) {
+            return;
         }
 
-        return array_merge($defaultCustomHeaders, [$customHeaderKey => $customHeaderValue]);
+        $dotenv = new Dotenv();
+        if (function_exists('putenv')) {
+            $dotenv->usePutenv();
+        }
+
+        $dotenv->loadEnv($path);
+    }
+
+    public static function getEnv(string $key): mixed
+    {
+        $value = getenv($key);
+
+        if ($value === false && array_key_exists($key, $_ENV)) {
+            return $_ENV[$key];
+        }
+
+        return $value;
     }
 }
