@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits;
 
-use Db;
+use PrestaShop\Module\Mbo\Helpers\EnvHelper;
 use Symfony\Component\String\UnicodeString;
 
 if (!defined('_PS_VERSION_')) {
@@ -170,7 +170,7 @@ trait UseHooks
             'cdc_script_not_found' => false,
         ];
 
-        $cdcJsFile = getenv('MBO_CDC_URL');
+        $cdcJsFile = EnvHelper::getEnv('MBO_CDC_URL');
         if (!is_string($cdcJsFile) || empty($cdcJsFile)) {
             $extraParams['cdc_script_not_found'] = true;
             $extraParams['cdc_error_url'] = $moduleUri . 'views/js/cdc-error.js?v=' . self::VERSION;

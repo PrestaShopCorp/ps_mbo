@@ -31,10 +31,10 @@ if (file_exists($autoloadPath)) {
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
 use PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber;
 use PrestaShop\Module\Mbo\Helpers\Config;
+use PrestaShop\Module\Mbo\Helpers\EnvHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\Event\ModuleManagementEvent;
-use Symfony\Component\Dotenv\Dotenv;
 
 class ps_mbo extends Module
 {
@@ -381,16 +381,6 @@ class ps_mbo extends Module
      */
     private function loadEnv(): void
     {
-        $dotenv = new Dotenv();
-        $dotenv->usePutenv();
-        $dotenv->loadEnv(__DIR__ . '/.env');
-    }
-
-    private function isPsAccountEnabled(): bool
-    {
-        /** @var PrestaShop\PsAccountsInstaller\Installer\Installer|null $accountsInstaller */
-        $accountsInstaller = $this->get(PrestaShop\PsAccountsInstaller\Installer\Installer::class);
-
-        return null !== $accountsInstaller && $accountsInstaller->isModuleEnabled();
+        EnvHelper::loadEnv(__DIR__ . '/.env');
     }
 }

@@ -20,7 +20,7 @@
 
 namespace PrestaShop\Module\Mbo\Traits;
 
-use Configuration;
+use PrestaShop\Module\Mbo\Helpers\EnvHelper;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use Symfony\Component\Dotenv\Dotenv;
@@ -259,7 +259,7 @@ trait HaveConfigurationPage
 
         $helper->default_form_language = (int) \Configuration::get('PS_LANG_DEFAULT');
 
-        $currentCdcUrl = getenv('MBO_CDC_URL');
+        $currentCdcUrl = EnvHelper::getEnv('MBO_CDC_URL');
 
         if (strpos($currentCdcUrl, 'prestabulle') !== false) {
             preg_match('#(prestabulle(?:\d+))#', $currentCdcUrl, $matches);
@@ -274,7 +274,7 @@ trait HaveConfigurationPage
 
         $helper->fields_value['DISTRIBUTION_ENVIRONMENT'] = $currentMboValue;
 
-        $currentAddonsUrl = getenv('ADDONS_API_URL');
+        $currentAddonsUrl = EnvHelper::getEnv('ADDONS_API_URL');
 
         if (strpos($currentAddonsUrl, 'pod') !== false) {
             preg_match('#(pod(?:\d+))#', $currentAddonsUrl, $matches);
