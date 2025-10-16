@@ -20,7 +20,7 @@
 if (!defined('_PS_VERSION_')) {
     exit;
 }
-$rootDir = defined('_PS_ROOT_DIR_') ? _PS_ROOT_DIR_ : (getenv('_PS_ROOT_DIR_') ?? $_ENV['_PS_ROOT_DIR_']);
+$rootDir = defined('_PS_ROOT_DIR_') ? _PS_ROOT_DIR_ : (function_exists('putenv') ? getenv('_PS_ROOT_DIR_') : $_ENV['_PS_ROOT_DIR_']);
 if (!$rootDir) {
     $rootDir = __DIR__ . '/../../';
 }
