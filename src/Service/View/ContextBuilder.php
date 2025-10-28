@@ -216,7 +216,6 @@ class ContextBuilder
             'actions_url' => [
                 'install' => $this->generateActionUrl('install'),
                 'uninstall' => $this->generateActionUrl('uninstall'),
-                'delete' => $this->generateActionUrl('delete'),
                 'enable' => $this->generateActionUrl('enable'),
                 'disable' => $this->generateActionUrl('disable'),
                 'reset' => $this->generateActionUrl('reset'),
