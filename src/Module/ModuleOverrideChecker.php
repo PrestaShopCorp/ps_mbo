@@ -22,11 +22,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module;
 
-use Symfony\Component\Finder\Finder;
-
 class ModuleOverrideChecker
 {
     private $overrides = [];
+
+    /**
+     * @var array|null
+     */
+    private $fileListCache = null;
 
     /**
      * @var self|null
@@ -52,17 +55,21 @@ class ModuleOverrideChecker
 
     public function listOverridesFromPsDirectory(): array
     {
-        $finder = new Finder();
-        $finder->files()->in(_PS_OVERRIDE_DIR_)->name('*.php');
-
-        if (!$finder->hasResults()) {
-            return [];
+        if ($this->fileListCache !== null) {
+            return $this->extractOverridesFromFiles($this->fileListCache);
         }
 
         $fileList = [];
-        foreach ($finder as $file) {
-            $fileList[] = $file->getRelativePathname();
+
+        if (class_exists('\Symfony\Component\Finder\Finder')) {
+            $finder = new \Symfony\Component\Finder\Finder();
+            $finder->files()->in(_PS_OVERRIDE_DIR_)->name('*.php');
+            foreach ($finder as $file) {
+                $fileList[] = $file->getRelativePathname();
+            }
         }
+
+        $this->fileListCache = $fileList;
 
         return $this->extractOverridesFromFiles($fileList);
     }
@@ -106,6 +113,8 @@ class ModuleOverrideChecker
 
     public function resetOverrides(): array
     {
+        $this->fileListCache = null;
+
         return $this->overrides = [];
     }
 
