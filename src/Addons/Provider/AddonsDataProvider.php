@@ -24,12 +24,12 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Addons\Provider;
 
 use Exception;
-use GuzzleHttp\Exception\ClientException;
 use PrestaShop\Module\Mbo\Addons\ApiClient;
 use PrestaShop\Module\Mbo\Addons\Exception\DownloadModuleException;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUser;
 use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 
 /**
  * This class will provide data from Addons API
@@ -129,7 +129,7 @@ class AddonsDataProvider implements DataProviderInterface
                 'Error sent by Addons. You may be not allowed to download this module.'
                 : 'Error sent by Addons. You may need to be logged.';
 
-            if ($e instanceof ClientException) {
+            if ($e instanceof ClientExceptionInterface) {
                 throw new AddonsDownloadModuleException($e);
             }
             throw new DownloadModuleException($message, 0, $e);
@@ -195,9 +195,6 @@ class AddonsDataProvider implements DataProviderInterface
                 'Authorization' => 'Bearer ' . $authParams['bearer'],
             ]);
         }
-        if (null !== $authParams['credentials'] && is_array($authParams['credentials'])) {
-            $params = array_merge($authParams['credentials'], $params);
-        }
 
         if ($action === 'module_download') {
             $params['channel'] = $this->moduleChannel;
@@ -238,6 +235,20 @@ class AddonsDataProvider implements DataProviderInterface
         }
 
         return $authParams;
+    }
+
+    
+    public function getAuthenticationToken(): ?string
+    {
+        if ($this->isUserAuthenticated()) {
+            $credentials = $this->user->getCredentials();
+            if (null !== $credentials && array_key_exists('accounts_token', $credentials)) {
+                return $credentials['accounts_token'];
+            }
+        }
+
+        return null;
+
     }
 
     public function getAccountsShopUuid(): ?string

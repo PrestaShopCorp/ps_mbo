@@ -6,8 +6,11 @@ services:
     class: 'PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever'
     autowire: true
     arguments:
-      $addonsDataProvider: '@mbo.addons.data_provider'
-      $translator: '@translator'
+      - '@mbo.addons.data_provider'
+      - '@translator'
+      - '@Psr\Http\Client\ClientInterface'
+      - '@Psr\Http\Message\ServerRequestFactoryInterface'
+      - '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
     properties:
       cacheDir: "%kernel.cache_dir%"
 

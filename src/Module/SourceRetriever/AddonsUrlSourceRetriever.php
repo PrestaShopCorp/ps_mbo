@@ -21,17 +21,20 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Module\SourceRetriever;
 
-use GuzzleHttp\Psr7\Utils;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
 use PrestaShop\Module\Mbo\Helpers\AddonsApiHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\SourceNotCheckedException;
+use PrestaShop\Module\PsAccounts\Http\Exception\HttpException;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AddonsUrlSourceRetriever implements SourceRetrieverInterface
@@ -71,14 +74,23 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     private $handledSource;
 
     /**
-     * @var mixed
+     * @var string
      */
-    private $handledSourceCredentials;
+    private $shopUrl;
 
     /**
-     * @var HttpClientInterface
+     * @var array
+     */
+    private $headers;
+    /**
+     * @var ClientInterface
      */
     private $httpClient;
+
+    /**
+     * @var RequestFactoryInterface
+     */
+    protected $requestFactory;
 
     /**
      * @var TranslatorInterface
@@ -88,11 +100,16 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
     public function __construct(
         AddonsDataProvider $addonsDataProvider,
         TranslatorInterface $translator,
-        HttpClientInterface $httpClient
+        ClientInterface $httpClient,
+        RequestFactoryInterface $requestFactory,
+        ConfigurationInterface $configuration
     ) {
         $this->addonsDataProvider = $addonsDataProvider;
         $this->translator = $translator;
         $this->httpClient = $httpClient;
+        $this->requestFactory = $requestFactory;
+        $this->shopUrl = $configuration->get('_PS_BASE_URL_');
+        $this->headers = $this->buildHeaders();
     }
 
     public function assertCanBeDownloaded($source): bool
@@ -103,25 +120,18 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 
         $authenticatedQueryParameters = [];
         try {
-            $authenticatedQueryParameters = $this->computeAuthentication($source);
-            $source = $authenticatedQueryParameters['source'];
-            $options = $authenticatedQueryParameters['options'] ?? [];
-
-            if (empty($options['headers'])) {
-                $options['headers'] = [];
-            }
-            $options['headers'] = array_merge($options['headers'], AddonsApiHelper::addCustomHeaders());
-
-            $response = $this->httpClient->request('HEAD', $source, $options);
+            $source = $this->computeAddonsRequestUrl($source);
+            $response = $this->requestFromUrl('HEAD', $source, $this->headers);
         } catch (TransportExceptionInterface $e) {
             if ($e instanceof ClientExceptionInterface) {
-                try {
-                    $this->httpClient->request('GET', $source, $options);
-                } catch (ClientExceptionInterface $clientException) {
-                    throw ModuleErrorHelper::reportAndConvertError(new AddonsDownloadModuleException($clientException, $authenticatedQueryParameters), $authenticatedQueryParameters);
-                }
+                $this->requestFromUrl('GET', $source, $this->headers);
             }
-
+            
+            ErrorHelper::reportError($e);
+            
+            return false;
+        } catch (\Exception $e) {
+            throw ModuleErrorHelper::reportAndConvertError(new AddonsDownloadModuleException($clientException, $authenticatedQueryParameters), $authenticatedQueryParameters);
             ErrorHelper::reportError($e);
 
             return false;
@@ -135,20 +145,18 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 
         $headers = $response->getHeaders();
 
-        if (isset($headers['Content-Disposition'])
-            && preg_match(self::ZIP_FILENAME_PATTERN, reset($headers['Content-Disposition']), $moduleName) === 1
+        if (isset($headers['content-disposition'])
+            && preg_match(self::ZIP_FILENAME_PATTERN, reset($headers['content-disposition']), $moduleName) === 1
         ) {
             $this->moduleName = $moduleName[1];
         }
 
         if (!empty($this->moduleName)
             && $response->getStatusCode() === 200
-            && isset($headers['Content-Type'])
-            && reset($headers['Content-Type']) === 'application/zip'
+            && isset($headers['content-type'])
+            && reset($headers['content-type']) === 'application/zip'
         ) {
             $this->handledSource = $source;
-            $this->handledSourceCredentials = $options;
-
             return true;
         }
 
@@ -174,18 +182,27 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 
         $temporaryZipFilename = $temporaryFilename . '.zip';
         rename($temporaryFilename, $temporaryZipFilename);
-
-        if (!is_array($options['headers'])) {
-            $options['headers'] = [];
+        $fileHandle = fopen($temporaryZipFilename, 'wb');
+        if (false === $fileHandle) {
+            throw new \Exception('Failed to open temporary file to store downloaded source');
         }
-        $options['headers'] = array_merge($options['headers'], AddonsApiHelper::addCustomHeaders());
-        $resource = fopen($temporaryZipFilename, 'w');
-        $stream = Utils::streamFor($resource);
-        $this->httpClient->request(
-            'GET',
-            $this->handledSource,
-            array_merge(['sink' => $stream], $this->handledSourceCredentials, $options)
-        );
+
+        try {
+            $stream = $this->requestFromUrl(
+                'GET',
+                $this->handledSource,
+                $this->headers
+            )->getBody();
+            
+            while (!$stream->eof()) {
+                fwrite($fileHandle, $stream->read(8192));
+            }
+        } catch( \Exception $e) {
+            ErrorHelper::reportError($e);
+            throw $e;
+        } finally {
+            fclose($fileHandle);
+        }
 
         if (null !== $expectedModuleName) {
             $this->validate($temporaryZipFilename, $expectedModuleName);
@@ -227,13 +244,12 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 
     private function assertSourceHasBeenChecked($source): void
     {
-        $authenticatedQueryParameters = $this->computeAuthentication($source);
-        if ($authenticatedQueryParameters['source'] !== $this->handledSource) {
+        if ($this->computeAddonsRequestUrl($source) !== $this->handledSource) {
             throw new SourceNotCheckedException('Method assertCanBeDownloaded() should be called first');
         }
     }
 
-    private function computeAuthentication(string $source): array
+    private function computeAddonsRequestUrl(string $source): string
     {
         $url_parts = parse_url($source);
         if (is_array($url_parts) && isset($url_parts['query'])) {
@@ -241,34 +257,44 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         } else {
             $params = [];
         }
-
-        $requestOptions = [];
-        $authParams = $this->addonsDataProvider->getAuthenticationParams();
-        if (is_string($authParams['bearer'])) {
-            $requestOptions['headers'] = [
-                'Authorization' => 'Bearer ' . $authParams['bearer'],
-            ];
-
-            $accountsShopUuid = $this->addonsDataProvider->getAccountsShopUuid();
-            if (!empty($accountsShopUuid)) {
-                $requestOptions['accounts_shop_uuid'] = $accountsShopUuid;
-            }
-        }
-        if (is_array($authParams['credentials'])) {
-            $params = array_merge($authParams['credentials'], $params);
-        }
+        $params['shop_url'] = $this->shopUrl;
 
         $url_parts['query'] = urldecode(http_build_query($params));
-        $source = http_build_url($url_parts);
-
-        return [
-            'source' => $source,
-            'options' => $requestOptions,
-        ];
+        return http_build_url($url_parts);
     }
 
     private function isZipFile(string $file): bool
     {
         return is_file($file) && in_array(mime_content_type($file), self::AUTHORIZED_MIME);
+    }
+
+    private function requestFromUrl(string $method, string $url, array $headers): ResponseInterface
+    {
+        $request = $this->requestFactory->createRequest($method, $url);
+        foreach ($headers as $name => $value) {
+            $request = $request->withHeader($name, $value);
+        }
+        $response = $this->httpClient->sendRequest($request);
+        if ($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
+            throw new HttpException($response->getReasonPhrase(), $response->getStatusCode());
+        }
+
+        return $response;
+    }
+
+    private function buildHeaders(): array
+    {
+        $headers = [];
+        $authToken = $this->addonsDataProvider->getAuthenticationToken();
+        if ($authToken) {
+            $headers['Authorization'] = 'Bearer ' . $authToken;
+        }
+
+        $accountsShopUuid = $this->addonsDataProvider->getAccountsShopUuid();
+        if (!empty($accountsShopUuid)) {
+            $headers['accounts_shop_uuid'] = $accountsShopUuid;
+        }
+
+        return array_merge($headers, AddonsApiHelper::addCustomHeaders());
     }
 }
