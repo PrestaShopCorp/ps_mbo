@@ -87,7 +87,12 @@ class AccountsDataProvider
     public function getShopTokenV7(): string
     {
         try {
-            $shopToken = $this->getAccountsService()->getShopToken();
+            $accountsService = $this->getAccountsService();
+            if (method_exists($accountsService, 'getShopToken')) {
+                $shopToken = $accountsService->getShopToken();
+            } else {
+                $shopToken = null;
+            }
         } catch (\Exception $e) {
             $shopToken = null;
         }
