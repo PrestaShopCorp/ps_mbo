@@ -22,13 +22,25 @@ jobs:
   php-cs-fixer:
     name: PHP-CS-Fixer
     runs-on: ubuntu-latest
+    env:
+      _PS_ROOT_DIR_: '.'
     steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.2
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Run PHP-CS-Fixer
-        uses: prestashopcorp/github-action-php-cs-fixer@master
-        with:
-          other-cmds: '--config=.php-cs-fixer.dist.php'
+      - name: Validate composer config
+        run: composer validate --strict
+      - name: Composer Install
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
+      - name: Install dependencies
+        run: composer require symfony/dotenv
+      - name: Wait for services to be ready
+        run: sleep 5
+      - name: Run PHPCSFixer
+        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
   phpstan:
     name: PHPStan
     runs-on: ubuntu-latest
