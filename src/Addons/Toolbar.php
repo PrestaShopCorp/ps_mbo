@@ -146,7 +146,7 @@ class Toolbar
                 [],
                 'Modules.Mbo.Modulescatalog',
                 $this->translator->getLocale()
-            ) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail()
+            ) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail(),
         ];
     }
 }

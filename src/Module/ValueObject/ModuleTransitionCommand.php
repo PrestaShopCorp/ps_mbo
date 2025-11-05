@@ -75,9 +75,7 @@ class ModuleTransitionCommand
     public function __construct(string $command)
     {
         if (!in_array($command, self::MODULE_COMMANDS, true)) {
-            throw new UnknownModuleTransitionCommandException(
-                sprintf('Module transition command given %s is unknown.', $command)
-            );
+            throw new UnknownModuleTransitionCommandException(sprintf('Module transition command given %s is unknown.', $command));
         }
 
         $this->command = $command;

@@ -204,6 +204,7 @@ trait HaveTabs
      * If a tab is missing, it will be added. If a tab is not declared in the module, it will be removed.
      *
      * @return void
+     *
      * @throws \PrestaShopException
      */
     public function updateTabs(): void
@@ -217,7 +218,7 @@ trait HaveTabs
         //Flatten $tabData array
         $tabData = array_unique(array_map('current', $tabData));
         $currentModuleTabs = array_keys(static::$ADMIN_CONTROLLERS);
-        
+
         // First disable all the tabs to reset it all
         foreach ($tabData as $tabInDb) {
             try {

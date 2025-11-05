@@ -129,7 +129,6 @@ class AccountsDataProvider
             try {
                 $shopToken = $this->psAccountsService->getShopToken();
             } catch (\Exception $e) {
-                
             }
         }
 

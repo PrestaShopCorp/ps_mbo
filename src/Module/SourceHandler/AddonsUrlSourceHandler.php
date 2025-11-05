@@ -28,7 +28,7 @@ use PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler;
 
 class AddonsUrlSourceHandler implements SourceHandlerInterface
 {
-    private const URL_VALIDATION_REGEX = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{0,256}api-addons\\.prestashop\\.com(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";
+    private const URL_VALIDATION_REGEX = '/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{0,256}api-addons\\.prestashop\\.com(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/';
 
     private const ZIP_FILENAME_PATTERN = '/(\w+)\.zip\b/';
 

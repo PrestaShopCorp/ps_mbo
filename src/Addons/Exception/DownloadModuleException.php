@@ -22,5 +22,4 @@ namespace PrestaShop\Module\Mbo\Addons\Exception;
 
 class DownloadModuleException extends \Exception
 {
-
 }
