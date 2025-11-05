@@ -167,7 +167,7 @@ class BaseClient
         $response = json_decode($this->processRequest($uri, $method, $options));
 
         if (JSON_ERROR_NONE !== json_last_error()) {
-            return (object)$default;
+            return (object) $default;
         }
 
         return $response;

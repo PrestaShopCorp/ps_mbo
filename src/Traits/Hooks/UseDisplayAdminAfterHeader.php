@@ -132,9 +132,7 @@ trait UseDisplayAdminAfterHeader
             $contextBuilder = $this->get('mbo.cdc.context_builder');
 
             if (null === $contextBuilder || null === $twig) {
-                throw new ExpectedServiceNotFoundException(
-                    'Some services not found in UseDisplayAdminAfterHeader'
-                );
+                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayAdminAfterHeader');
             }
 
             return $twig->render(

@@ -44,9 +44,7 @@ trait UseDisplayAdminThemesListAfter
             $router = $this->get('router');
 
             if (null === $contextBuilder || null === $router) {
-                throw new ExpectedServiceNotFoundException(
-                    'Some services not found in UseDisplayAdminThemesListAfter'
-                );
+                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayAdminThemesListAfter');
             }
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);

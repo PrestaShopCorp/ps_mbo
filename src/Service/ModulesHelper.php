@@ -75,14 +75,14 @@ class ModulesHelper
 
         // We need to clear cache to get fresh data from addons. We clear it every 1h
         $cacheAge = $this->moduleRepository->getCacheAge();
-        if (null !== $cacheAge && ((time() - $cacheAge) > 60*60)) {
+        if (null !== $cacheAge && ((time() - $cacheAge) > 60 * 60)) {
             $this->moduleRepository->clearCache();
         }
 
         $module = $this->moduleRepository->getModule($moduleName);
 
         if (null !== $module) {
-            $availableVersion = (string)$module->get('version_available');
+            $availableVersion = (string) $module->get('version_available');
 
             // If the current installed version is >= than the one returned by Addons, an upgrade is available
             if (
@@ -111,7 +111,7 @@ class ModulesHelper
             'urls' => [
                 'install' => $installUrl,
                 'upgrade' => $upgradeUrl,
-            ]
+            ],
         ];
     }
 }

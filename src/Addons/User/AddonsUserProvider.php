@@ -35,9 +35,6 @@ class AddonsUserProvider
         $this->user = $user;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUser(): AddonsUser
     {
         return $this->user;

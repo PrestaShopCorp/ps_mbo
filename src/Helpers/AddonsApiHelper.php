@@ -20,6 +20,7 @@
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Helpers;
+
 class AddonsApiHelper
 {
     public static function addCustomHeaders(): array

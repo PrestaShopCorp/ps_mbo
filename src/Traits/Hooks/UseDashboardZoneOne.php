@@ -93,7 +93,7 @@ trait UseDashboardZoneOne
         try {
             $accountsFacade = $this->get('mbo.ps_accounts.facade');
             $accountsService = $accountsFacade->getPsAccountsService();
--           $this->ensurePsAccountIsEnabled();
+            -$this->ensurePsAccountIsEnabled();
         } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
             $accountsInstaller = $this->get('mbo.ps_accounts.installer');
             // Seems the module is not here, try to install it

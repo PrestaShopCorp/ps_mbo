@@ -22,7 +22,6 @@ namespace PrestaShop\Module\Mbo\Tests\Module;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
-use PrestaShop\Module\Mbo\Module\Workflow\ModuleStateMachine;
 use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
 
 class TransitionModuleTest extends TestCase

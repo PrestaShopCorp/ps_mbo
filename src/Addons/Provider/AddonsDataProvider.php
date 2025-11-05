@@ -238,7 +238,6 @@ class AddonsDataProvider implements DataProviderInterface
         }
 
         return $authParams;
-
     }
 
     public function getAccountsShopUuid(): ?string

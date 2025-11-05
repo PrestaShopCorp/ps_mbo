@@ -78,7 +78,7 @@ class FilesManager
     {
         try {
             $this->sourceHandlerFactory->getHandler($source);
-        } catch(SourceHandlerNotFoundException $e) {
+        } catch (SourceHandlerNotFoundException $e) {
             ErrorHelper::reportError($e);
             throw $e;
         } catch (Exception $e) {
@@ -103,8 +103,8 @@ class FilesManager
         if (is_dir($directory)) {
             $objects = scandir($directory);
             foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (is_dir($directory. DIRECTORY_SEPARATOR .$object) && !is_link($directory."/".$object)) {
+                if ($object != '.' && $object != '..') {
+                    if (is_dir($directory . DIRECTORY_SEPARATOR . $object) && !is_link($directory . '/' . $object)) {
                         $this->deleteDirectoryRecursively($directory . DIRECTORY_SEPARATOR . $object);
                     } else {
                         @unlink($directory . DIRECTORY_SEPARATOR . $object);
