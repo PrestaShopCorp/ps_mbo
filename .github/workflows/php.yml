@@ -28,17 +28,15 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.2
+          php-version: 7.4
       - name: Checkout
         uses: actions/checkout@v4
       - name: Validate composer config
         run: composer validate --strict
       - name: Composer Install
-        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
-      - name: Install dependencies
-        run: composer require symfony/dotenv
-      - name: Wait for services to be ready
-        run: sleep 5
+        run: composer install
+      - name: Clean cache
+        run: rm .php-cs-fixer.cache || true
       - name: Run PHPCSFixer
         run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
   phpstan:
