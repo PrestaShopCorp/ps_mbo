@@ -24,21 +24,21 @@ jobs:
     runs-on: ubuntu-latest
     env:
       _PS_ROOT_DIR_: '.'
+      PS_VERSION: '8.0.2'
+      PHP_VERSION: '7.4'
     steps:
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Validate composer config
-        run: composer validate --strict
       - name: Composer Install
-        run: composer install
-      - name: Clean cache
-        run: rm .php-cs-fixer.cache || true
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
+      - name: Wait for services to be ready
+        run: sleep 10
+      - name: Pull PrestaShop files
+        run: docker run -tid --rm -v ps-volume:/var/www/html -v $PWD:/var/www/html/modules/ps_mbo  -e _PS_ROOT_DIR_=/var/www/html -e DISABLE_MAKE=1 --workdir=/var/www/html/modules/ps_mbo --name container-php-cs-fixer prestashop/prestashop:$PS_VERSION-$PHP_VERSION
+      - name: Check vendor
+        run: docker ps && docker exec container-php-cs-fixer ls /var/www/html/vendor/symfony/symfony/src/Symfony/Component/Dotenv
       - name: Run PHPCSFixer
-        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+        run: docker exec -e _PS_ROOT_DIR_=/var/www/html -e DISABLE_MAKE=1 --workdir=/var/www/html/modules/ps_mbo container-php-cs-fixer ./vendor/bin/php-cs-fixer fix --dry-run --diff
   phpstan:
     name: PHPStan
     runs-on: ubuntu-latest
