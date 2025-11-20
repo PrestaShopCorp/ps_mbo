@@ -42,7 +42,7 @@ trait UseDisplayEmptyModuleCategoryExtraMessage
             /** @var LinksProvider $linksProvider */
             $linksProvider = $this->get('mbo.addons.links_provider');
 
-            if (null === $linksProvider || null === $twig) {
+            if (!$linksProvider || !$twig) {
                 throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayEmptyModuleCategoryExtraMessage');
             }
 

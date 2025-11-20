@@ -15,7 +15,7 @@
  *
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
+ * @license   https://opensource.org/licenses/AFL-3.0 AcademTranslatorInterfaceic Free License version 3.0
  */
 declare(strict_types=1);
 
@@ -94,15 +94,13 @@ class Toolbar
                 'desc' => $this->translator->trans(
                     'Upload a module',
                     [],
-                    'Modules.Mbo.Modulescatalog',
-                    $this->translator->getLocale()
+                    'Modules.Mbo.Modulescatalog'
                 ),
                 'icon' => 'cloud_upload',
                 'help' => $this->translator->trans(
                     'Upload a module',
                     [],
-                    'Modules.Mbo.Modulescatalog',
-                    $this->translator->getLocale()
+                    'Modules.Mbo.Modulescatalog'
                 ),
             ],
         ];
@@ -138,14 +136,12 @@ class Toolbar
             'desc' => $this->translator->trans(
                 'Connected',
                 [],
-                'Modules.Mbo.Modulescatalog',
-                $this->translator->getLocale()
+                'Modules.Mbo.Modulescatalog'
             ),
             'help' => $this->translator->trans(
                 'Connected as',
                 [],
-                'Modules.Mbo.Modulescatalog',
-                $this->translator->getLocale()
+                'Modules.Mbo.Modulescatalog'
             ) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail(),
         ];
     }

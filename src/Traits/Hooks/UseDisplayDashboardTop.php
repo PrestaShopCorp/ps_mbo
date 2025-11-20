@@ -239,6 +239,7 @@ trait UseDisplayDashboardTop
         $recommendedButtonType = TabInterface::RECOMMENDED_BUTTON_TYPE;
 
         // We want to "hide" recommended modules from this controller
+        // @phpstan-ignore booleanNot.alwaysFalse
         if (!$recommendedModulesDisplayed) {
             // If we are trying to display as button, hide the button
             if (

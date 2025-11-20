@@ -31,12 +31,12 @@ class ErrorHelper
     private static $errorHandler;
 
     /**
-     * @param \Exception $error
+     * @param \Throwable $error
      * @param array|null $data
      *
      * @return void
      */
-    public static function reportError(\Exception $error, ?array $data = null): void
+    public static function reportError(\Throwable $error, ?array $data = null): void
     {
         if (!self::$errorHandler instanceof ErrorHandlerInterface) {
             self::$errorHandler = new \PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler();

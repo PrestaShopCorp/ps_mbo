@@ -25,6 +25,7 @@ use Exception;
 use Sentry\Client;
 use Sentry\State\Scope;
 use Sentry\UserDataBag;
+use Throwable;
 
 class ErrorHandler implements ErrorHandlerInterface
 {
@@ -76,7 +77,7 @@ class ErrorHandler implements ErrorHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handle(Exception $error, ?array $data = []): void
+    public function handle(Throwable $error, ?array $data = []): void
     {
         if (empty($this->dsn)) {
             return;
