@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,6 +18,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Accounts\Provider;
@@ -63,9 +65,7 @@ class AccountsDataProvider
         }
 
         try {
-            /**
-             * @var UserTokenRepository $accountsUserTokenRepository
-             */
+            // @phpstan-ignore class.notFound
             $accountsUserTokenRepository = $this->getService(UserTokenRepository::class);
             $token = $accountsUserTokenRepository->getOrRefreshToken();
 
@@ -125,7 +125,7 @@ class AccountsDataProvider
         }
 
         $shopToken = null;
-        if ($this->psAccountsService && method_exists($this->psAccountsService, 'getShopToken')) {
+        if (method_exists($this->psAccountsService, 'getShopToken')) {
             try {
                 $shopToken = $this->psAccountsService->getShopToken();
             } catch (\Exception $e) {
@@ -174,13 +174,13 @@ class AccountsDataProvider
      */
     private function getService(string $serviceName)
     {
-        if (\Module::isInstalled($this->moduleName)) {
-            if ($this->checkPsAccountsVersion()) {
-                return \Module::getInstanceByName($this->moduleName)
-                    ->getService($serviceName);
-            }
+        $module = null;
+        if (\Module::isInstalled($this->moduleName) && $this->checkPsAccountsVersion()) {
+            $module = \Module::getInstanceByName($this->moduleName);
+        }
 
-            return null;
+        if ($module && method_exists($module, 'getService')) {
+            return $module->getService($serviceName);
         }
 
         return null;
