@@ -10,6 +10,6 @@ parameters:
   ignoreErrors:
     - '#^Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.$#'
     - '~^Parameter #1 \$modules of method PrestaShopBundle\\Service\\DataProvider\\Admin\\CategoriesProvider::getCategoriesMenu\(\) expects array|PrestaShop\\PrestaShop\\Core\\Addon\\AddonsCollection, PrestaShop\\Module\\Mbo\\Modules\\Collection given\.$~'
-    - '#^Class PrestaShop\\Module\\PsAccounts\\Repository\\UserTokenRepository not found.$#'
+    - '#class PrestaShop\\Module\\PsAccounts\\Repository\\UserTokenRepository.#'
 
   level: 5
