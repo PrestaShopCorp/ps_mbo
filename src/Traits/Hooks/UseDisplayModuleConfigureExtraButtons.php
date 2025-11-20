@@ -37,7 +37,7 @@ trait UseDisplayModuleConfigureExtraButtons
             /** @var Router $router */
             $router = $this->get('router');
 
-            if (null === $router) {
+            if (!$router) {
                 throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayModuleConfigureExtraButtons');
             }
         } catch (\Exception $e) {
