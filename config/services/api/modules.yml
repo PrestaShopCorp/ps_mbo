@@ -24,7 +24,6 @@ services:
     class: PrestaShop\Module\Mbo\Module\Workflow\TransitionApplier
     arguments:
       - '@mbo.modules.transitions_manager'
-      - '@translator'
 
   mbo.modules.module_status_transition_handler:
     class: 'PrestaShop\Module\Mbo\Module\CommandHandler\ModuleStatusTransitionCommandHandler'

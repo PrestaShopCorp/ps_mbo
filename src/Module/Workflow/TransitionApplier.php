@@ -27,7 +27,6 @@ use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Module\Workflow\Exception\UnknownTransitionException;
 use Symfony\Component\String\UnicodeString;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TransitionApplier
 {
@@ -36,17 +35,9 @@ class TransitionApplier
      */
     private $transitionsManager;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    public function __construct(
-        TransitionsManager $transitionsManager,
-        TranslatorInterface $translator
-    ) {
+    public function __construct(TransitionsManager $transitionsManager)
+    {
         $this->transitionsManager = $transitionsManager;
-        $this->translator = $translator;
     }
 
     /**
