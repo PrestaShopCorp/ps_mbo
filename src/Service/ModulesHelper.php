@@ -82,7 +82,7 @@ class ModulesHelper
         $module = $this->moduleRepository->getModule($moduleName);
 
         if (null !== $module) {
-            $availableVersion = (string) $module->get('version_available');
+            $availableVersion = $module->get('version_available');
 
             // If the current installed version is >= than the one returned by Addons, an upgrade is available
             if (
