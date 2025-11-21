@@ -20,7 +20,6 @@
 
 namespace PrestaShop\Module\Mbo\Api\Service;
 
-use http\Exception\InvalidArgumentException;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
@@ -35,6 +34,7 @@ use PrestaShop\Module\Mbo\Module\Exception\UnknownModuleTransitionCommandExcepti
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
+use Symfony\Component\HttpClient\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Tools;
 

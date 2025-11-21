@@ -42,8 +42,6 @@ class ErrorHelper
             self::$errorHandler = new \PrestaShop\Module\Mbo\Handler\ErrorHandler\ErrorHandler();
         }
 
-        if (self::$errorHandler) {
-            self::$errorHandler->handle($error, $data);
-        }
+        self::$errorHandler->handle($error, $data);
     }
 }
