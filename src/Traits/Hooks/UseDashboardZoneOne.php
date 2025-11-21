@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -17,6 +18,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
+
 declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
@@ -25,6 +27,10 @@ use Db;
 use Exception;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException as AccountsInstallerException;
+use PrestaShop\PsAccountsInstaller\Installer\Facade\PsAccounts as AccountsFacade;
+use PrestaShop\PsAccountsInstaller\Installer\Installer as AccountsInstaller;
 use PrestaShopDatabaseException;
 
 trait UseDashboardZoneOne
@@ -90,59 +96,84 @@ trait UseDashboardZoneOne
         $urlAccountsCdn = '';
         $accountsFacade = $accountsService = null;
 
-        try {
-            $accountsFacade = $this->get('mbo.ps_accounts.facade');
-            $accountsService = $accountsFacade->getPsAccountsService();
-            -$this->ensurePsAccountIsEnabled();
-        } catch (\PrestaShop\PsAccountsInstaller\Installer\Exception\InstallerException $e) {
-            $accountsInstaller = $this->get('mbo.ps_accounts.installer');
-            // Seems the module is not here, try to install it
-            $accountsInstaller->install();
-            $accountsFacade = $this->get('mbo.ps_accounts.facade');
-            try {
-                $accountsService = $accountsFacade->getPsAccountsService();
-            } catch (\Exception $e) {
-                // Installation seems to not work properly
-                $accountsService = $accountsFacade = null;
-                ErrorHelper::reportError($e);
-            }
+        if (!$this->ensurePsAccountIsEnabled()) {
+            return $urlAccountsCdn;
         }
 
-        if (null !== $accountsFacade && null !== $accountsService) {
-            try {
-                \Media::addJsDef([
-                    'contextPsAccounts' => $accountsFacade->getPsAccountsPresenter()
-                        ->present('ps_mbo'),
-                ]);
+        /** @var AccountsFacade $accountsFacade */
+        $accountsFacade = $this->get('mbo.ps_accounts.facade');
+        if (!$accountsFacade) {
+            return $urlAccountsCdn;
+        }
 
-                // Retrieve the PrestaShop Account CDN
-                $urlAccountsCdn = $accountsService->getAccountsCdn();
-            } catch (\Exception $e) {
-                ErrorHelper::reportError($e);
-            }
+        try {
+            $accountsService = $accountsFacade->getPsAccountsService();
+        } catch (AccountsInstallerException $e) {
+            ErrorHelper::reportError($e);
+
+            return $urlAccountsCdn;
+        }
+
+        try {
+            \Media::addJsDef([
+                'contextPsAccounts' => $accountsFacade->getPsAccountsPresenter()
+                    ->present('ps_mbo'),
+            ]);
+
+            // Retrieve the PrestaShop Account CDN
+            $urlAccountsCdn = $accountsService->getAccountsCdn();
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
         }
 
         return $urlAccountsCdn;
     }
 
     /**
-     * Return true if ps_account is enabled
+     * @param AccountsInstaller $accountsInstaller
+     * @param ModuleManager $moduleManager
+     *                                     Return true if ps_account is installed
+     *
+     * @return bool
+     */
+    private function installPsAccountsIfNeeded(AccountsInstaller $accountsInstaller, ModuleManager $moduleManager): bool
+    {
+        if ($accountsInstaller->isModuleInstalled() && $accountsInstaller->checkModuleVersion()) {
+            return true;
+        }
+
+        return $moduleManager->install($accountsInstaller->getModuleName());
+    }
+
+    /**
+     * @param AccountsInstaller $accountsInstaller
+     * @param ModuleManager $moduleManager
+     *                                     Return true if ps_account is enabled
+     *
+     * @return bool
+     */
+    private function enablePsAccountsIfNeeded(AccountsInstaller $accountsInstaller, ModuleManager $moduleManager): bool
+    {
+        if ($accountsInstaller->isModuleEnabled()) {
+            return true;
+        }
+
+        return $moduleManager->enable($accountsInstaller->getModuleName());
+    }
+
+    /**
+     * Ensure that ps_account is installed, updated and enabled
      *
      * @return bool
      */
     private function ensurePsAccountIsEnabled(): bool
     {
+        /** @var AccountsInstaller $accountsInstaller */
         $accountsInstaller = $this->get('mbo.ps_accounts.installer');
-        if (!$accountsInstaller) {
-            return false;
-        }
-
-        if ($accountsInstaller->isModuleEnabled() && $accountsInstaller->checkModuleVersion()) {
-            return true;
-        }
-
+        /** @var ModuleManager $moduleManager */
         $moduleManager = $this->get('prestashop.module.manager');
 
-        return $moduleManager->enable($accountsInstaller->getModuleName());
+        return $this->installPsAccountsIfNeeded($accountsInstaller, $moduleManager)
+            && $this->enablePsAccountsIfNeeded($accountsInstaller, $moduleManager);
     }
 }

@@ -35,6 +35,7 @@ use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Shop;
+use Symfony\Component\Cache\DoctrineProvider;
 use Tab;
 use Tools;
 use Twig\Environment;
@@ -161,7 +162,11 @@ trait UseDisplayAdminAfterHeader
 
         try {
             $requestStack = $this->get('request_stack');
-            if (null === $requestStack || null === $request = $requestStack->getCurrentRequest()) {
+            if (!$requestStack) {
+                throw new Exception('Unable to get request');
+            }
+            $request = $requestStack->getCurrentRequest();
+            if (!$request) {
                 throw new Exception('Unable to get request');
             }
         } catch (Exception $e) {
@@ -191,7 +196,11 @@ trait UseDisplayAdminAfterHeader
 
         try {
             $requestStack = $this->get('request_stack');
-            if (null === $requestStack || null === $request = $requestStack->getCurrentRequest()) {
+            if (!$requestStack) {
+                throw new Exception('Unable to get request');
+            }
+            $request = $requestStack->getCurrentRequest();
+            if (!$request) {
                 throw new Exception('Unable to get request');
             }
         } catch (Exception $e) {
@@ -329,7 +338,6 @@ trait UseDisplayAdminAfterHeader
 
     /**
      * @param string|bool $controllerName
-     * @param array $params
      *
      * @return void
      *
