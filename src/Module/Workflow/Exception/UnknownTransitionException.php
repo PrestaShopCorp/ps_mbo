@@ -28,7 +28,7 @@ class UnknownTransitionException extends \LogicException
      */
     private $context;
 
-    public function __construct(string $transitionName, array $context = [], Throwable $previous = null)
+    public function __construct(string $transitionName, array $context = [], \Throwable $previous = null)
     {
         parent::__construct(sprintf('Unknown module transition "%s"', $transitionName), 0, $previous);
 
