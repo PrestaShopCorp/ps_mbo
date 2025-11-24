@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Addons;
 
-use PrestaShop\Module\Mbo\Addons\Exception\ClientRequestException;
+use PrestaShop\Module\Mbo\Exception\ClientRequestException;
 use PrestaShop\Module\Mbo\Helpers\AddonsApiHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Psr\Http\Client\ClientExceptionInterface;

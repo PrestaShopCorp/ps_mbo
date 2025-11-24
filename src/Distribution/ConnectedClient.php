@@ -28,6 +28,7 @@ use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 class ConnectedClient extends BaseClient
 {
@@ -40,10 +41,11 @@ class ConnectedClient extends BaseClient
         string $apiUrl,
         ClientInterface $httpClient,
         RequestFactoryInterface $requestFactory,
+        StreamFactoryInterface $streamFactory,
         CacheProvider $cacheProvider,
         AddonsUserProvider $addonsUserProvider
     ) {
-        parent::__construct($apiUrl, $httpClient, $requestFactory, $cacheProvider);
+        parent::__construct($apiUrl, $httpClient, $requestFactory, $streamFactory, $cacheProvider);
         $this->user = $addonsUserProvider->getUser();
     }
 

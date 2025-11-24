@@ -21,7 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Distribution;
 
+use PrestaShop\Module\Mbo\Exception\ClientRequestException;
+use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use Psr\Http\Client\ClientExceptionInterface;
 use Symfony\Component\Routing\Router;
 
 class Client extends BaseClient
@@ -55,7 +58,8 @@ class Client extends BaseClient
      *
      * @return \stdClass
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws ClientExceptionInterface
+     * @throws ClientRequestException
      * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::registerShop
      */
     public function registerShop(array $params = []): \stdClass
@@ -72,7 +76,8 @@ class Client extends BaseClient
      *
      * @return \stdClass
      *
-     * @throws GuzzleException
+     * @throws ClientExceptionInterface
+     * @throws ClientRequestException
      */
     public function unregisterShop()
     {
@@ -89,7 +94,8 @@ class Client extends BaseClient
      *
      * @return \stdClass
      *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws ClientExceptionInterface
+     * @throws ClientRequestException
      * @usage \PrestaShop\Module\Mbo\Traits\HaveShopOnExternalService::updateShop
      */
     public function updateShop(array $params): \stdClass

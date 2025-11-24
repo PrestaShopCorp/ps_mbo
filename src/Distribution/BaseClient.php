@@ -27,6 +27,7 @@ use PrestaShop\Module\Mbo\Helpers\Config;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 class BaseClient
 {
@@ -46,6 +47,12 @@ class BaseClient
      * @var RequestFactoryInterface
      */
     protected $requestFactory;
+
+    /**
+     * @var StreamFactoryInterface
+     */
+    protected $streamFactory;
+
     /**
      * @var CacheProvider
      */
@@ -82,11 +89,13 @@ class BaseClient
         string $apiUrl,
         ClientInterface $httpClient,
         RequestFactoryInterface $requestFactory,
+        StreamFactoryInterface $streamFactory,
         CacheProvider $cacheProvider
     ) {
         $this->apiUrl = $apiUrl;
         $this->httpClient = $httpClient;
         $this->requestFactory = $requestFactory;
+        $this->streamFactory = $streamFactory;
         $this->cacheProvider = $cacheProvider;
     }
 
@@ -202,9 +211,9 @@ class BaseClient
 
         if (!empty($options['form_params'])) {
             if ($this->headers['Content-Type'] === 'application/x-www-form-urlencoded') {
-                $request = $request->withBody($this->createStream(urlencode(serialize($options['form_params']))));
+                $request = $request->withBody($this->streamFactory->createStream(urlencode(serialize($options['form_params']))));
             } else {
-                $request = $request->withBody($this->createStream(json_encode($options['form_params'])));
+                $request = $request->withBody($this->streamFactory->createStream(json_encode($options['form_params'])));
             }
         }
 
@@ -214,12 +223,5 @@ class BaseClient
         }
 
         return $response->getBody()->getContents();
-    }
-
-    private function createStream(string $content): \Psr\Http\Message\StreamInterface
-    {
-        $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory();
-
-        return $psr17Factory->createStream($content);
     }
 }

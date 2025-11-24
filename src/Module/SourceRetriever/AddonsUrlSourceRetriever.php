@@ -23,18 +23,17 @@ namespace PrestaShop\Module\Mbo\Module\SourceRetriever;
 
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
+use PrestaShop\Module\Mbo\Exception\ClientRequestException;
 use PrestaShop\Module\Mbo\Helpers\AddonsApiHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
 use PrestaShop\Module\Mbo\Module\Exception\SourceNotCheckedException;
-use PrestaShop\Module\PsAccounts\Http\Exception\HttpException;
-use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AddonsUrlSourceRetriever implements SourceRetrieverInterface
@@ -122,16 +121,9 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         try {
             $source = $this->computeAddonsRequestUrl($source);
             $response = $this->requestFromUrl('HEAD', $source, $this->headers);
-        } catch (TransportExceptionInterface $e) {
-            if ($e instanceof ClientExceptionInterface) {
-                $this->requestFromUrl('GET', $source, $this->headers);
-            }
-            
-            ErrorHelper::reportError($e);
-            
-            return false;
+        } catch (ClientException $e) {
+            throw ModuleErrorHelper::reportAndConvertError(new AddonsDownloadModuleException($e, $authenticatedQueryParameters), $authenticatedQueryParameters);
         } catch (\Exception $e) {
-            throw ModuleErrorHelper::reportAndConvertError(new AddonsDownloadModuleException($clientException, $authenticatedQueryParameters), $authenticatedQueryParameters);
             ErrorHelper::reportError($e);
 
             return false;
@@ -157,6 +149,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
             && reset($headers['content-type']) === 'application/zip'
         ) {
             $this->handledSource = $source;
+
             return true;
         }
 
@@ -193,11 +186,11 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
                 $this->handledSource,
                 $this->headers
             )->getBody();
-            
+
             while (!$stream->eof()) {
                 fwrite($fileHandle, $stream->read(8192));
             }
-        } catch( \Exception $e) {
+        } catch (\Exception $e) {
             ErrorHelper::reportError($e);
             throw $e;
         } finally {
@@ -260,6 +253,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         $params['shop_url'] = $this->shopUrl;
 
         $url_parts['query'] = urldecode(http_build_query($params));
+
         return http_build_url($url_parts);
     }
 
@@ -276,7 +270,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         }
         $response = $this->httpClient->sendRequest($request);
         if ($response->getStatusCode() < 200 || $response->getStatusCode() >= 300) {
-            throw new HttpException($response->getReasonPhrase(), $response->getStatusCode());
+            throw new ClientRequestException($response->getReasonPhrase(), $response->getStatusCode());
         }
 
         return $response;

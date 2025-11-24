@@ -22,7 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Exception;
 
 use Exception;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Component\HttpClient\Exception\ClientException;
 
 class AddonsDownloadModuleException extends Exception
 {
@@ -110,7 +110,7 @@ class AddonsDownloadModuleException extends Exception
         return $this->technicalErrorMessage;
     }
 
-    private function getErrorSentByAddons(ClientExceptionInterface $exception): array
+    private function getErrorSentByAddons(ClientException $exception): array
     {
         $rawContent = $exception->getResponse()->getContent();
         $jsonContent = json_decode($rawContent, true);
