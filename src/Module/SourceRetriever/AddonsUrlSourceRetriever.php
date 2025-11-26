@@ -24,6 +24,7 @@ namespace PrestaShop\Module\Mbo\Module\SourceRetriever;
 use PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider;
 use PrestaShop\Module\Mbo\Exception\AddonsDownloadModuleException;
 use PrestaShop\Module\Mbo\Exception\ClientRequestException;
+use PrestaShop\Module\Mbo\Exception\FileOperationException;
 use PrestaShop\Module\Mbo\Helpers\AddonsApiHelper;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Helpers\ModuleErrorHelper;
@@ -170,14 +171,14 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         // First save the file to filesystem
         $temporaryFilename = tempnam($this->cacheDir, 'mod');
         if (false === $temporaryFilename) {
-            throw new \Exception('Failed to create temporary file to store downloaded source');
+            throw new FileOperationException('Failed to create temporary file to store downloaded source');
         }
 
         $temporaryZipFilename = $temporaryFilename . '.zip';
         rename($temporaryFilename, $temporaryZipFilename);
         $fileHandle = fopen($temporaryZipFilename, 'wb');
         if (false === $fileHandle) {
-            throw new \Exception('Failed to open temporary file to store downloaded source');
+            throw new FileOperationException('Failed to open temporary file to store downloaded source');
         }
 
         try {

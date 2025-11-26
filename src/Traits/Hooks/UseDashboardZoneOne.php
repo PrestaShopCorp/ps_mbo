@@ -94,7 +94,6 @@ trait UseDashboardZoneOne
          * PrestaShop Account *
          * *******************/
         $urlAccountsCdn = '';
-        $accountsFacade = $accountsService = null;
 
         if (!$this->ensurePsAccountIsEnabled()) {
             return $urlAccountsCdn;
@@ -108,13 +107,6 @@ trait UseDashboardZoneOne
 
         try {
             $accountsService = $accountsFacade->getPsAccountsService();
-        } catch (AccountsInstallerException $e) {
-            ErrorHelper::reportError($e);
-
-            return $urlAccountsCdn;
-        }
-
-        try {
             \Media::addJsDef([
                 'contextPsAccounts' => $accountsFacade->getPsAccountsPresenter()
                     ->present('ps_mbo'),
@@ -122,6 +114,8 @@ trait UseDashboardZoneOne
 
             // Retrieve the PrestaShop Account CDN
             $urlAccountsCdn = $accountsService->getAccountsCdn();
+        } catch (AccountsInstallerException  $e) {
+            ErrorHelper::reportError($e);
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
         }

@@ -29,6 +29,7 @@ use Language;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
+use PrestaShop\Module\Mbo\Exception\RequestStackException;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
@@ -163,11 +164,11 @@ trait UseDisplayAdminAfterHeader
         try {
             $requestStack = $this->get('request_stack');
             if (!$requestStack) {
-                throw new Exception('Unable to get request');
+                throw new RequestStackException();
             }
             $request = $requestStack->getCurrentRequest();
             if (!$request) {
-                throw new Exception('Unable to get request');
+                throw new RequestStackException();
             }
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
@@ -197,11 +198,11 @@ trait UseDisplayAdminAfterHeader
         try {
             $requestStack = $this->get('request_stack');
             if (!$requestStack) {
-                throw new Exception('Unable to get request');
+                throw new RequestStackException();
             }
             $request = $requestStack->getCurrentRequest();
             if (!$request) {
-                throw new Exception('Unable to get request');
+                throw new RequestStackException();
             }
         } catch (Exception $e) {
             ErrorHelper::reportError($e);

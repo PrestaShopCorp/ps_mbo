@@ -31,6 +31,7 @@ class TransitionApplierTest extends AbstractTransitionTest
 {
     protected function setUp(): void
     {
+        // No setup required for this test class
     }
 
     /**
