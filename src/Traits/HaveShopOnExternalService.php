@@ -26,8 +26,8 @@ use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use PrestaShop\Module\Mbo\Distribution\Client;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\ConfigChangeCommand;
-use PrestaShop\Module\Mbo\Helpers\Uuid;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
+use PrestaShop\Module\Mbo\Helpers\Uuid;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use Shop;
 

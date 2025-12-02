@@ -17,12 +17,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
 $rootDir = defined('_PS_ROOT_DIR_') ? _PS_ROOT_DIR_ : getenv('_PS_ROOT_DIR_');
 if (!$rootDir) {
     $rootDir = __DIR__ . '/../../../';
 }
-
 require_once $rootDir . '/vendor/autoload.php';
 
 /**

@@ -23,6 +23,7 @@ services:
     arguments:
       - "%env(DISTRIBUTION_API_URL)%"
       - '@Psr\Http\Client\ClientInterface'
+      - '@Psr\Http\Message\StreamFactoryInterface'
       - '@Psr\Http\Message\ServerRequestFactoryInterface'
       - '@mbo.doctrine.cache.provider'
 
@@ -32,6 +33,7 @@ services:
     arguments:
       - "%env(DISTRIBUTION_API_URL)%"
       - '@Psr\Http\Client\ClientInterface'
+      - '@Psr\Http\Message\StreamFactoryInterface'
       - '@Psr\Http\Message\ServerRequestFactoryInterface'
       - '@mbo.doctrine.cache.provider'
       - '@=service("mbo.addons.user.provider")'

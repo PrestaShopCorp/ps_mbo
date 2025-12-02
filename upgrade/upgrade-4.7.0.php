@@ -17,7 +17,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
 $rootDir = defined('_PS_ROOT_DIR_') ? _PS_ROOT_DIR_ : getenv('_PS_ROOT_DIR_');
 if (!$rootDir) {
     $rootDir = __DIR__ . '/../../../';
@@ -40,10 +39,11 @@ function upgrade_module_4_7_0(Module $module): bool
 
     $shopDomain = array_filter(
         $domains,
-        function($domain) use($singleShop) {
+        function ($domain) use ($singleShop) {
             // Here we assume that every shop have a single domain (?)
             $domain = reset($domain);
-            return isset($domain['id_shop']) && (int)$singleShop->id === (int)$domain['id_shop'];
+
+            return isset($domain['id_shop']) && (int) $singleShop->id === (int) $domain['id_shop'];
         }
     );
 

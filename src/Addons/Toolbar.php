@@ -94,15 +94,13 @@ class Toolbar
                 'desc' => $this->translator->trans(
                     'Upload a module',
                     [],
-                    'Modules.Mbo.Modulescatalog',
-                    $this->translator->getLocale()
+                    'Modules.Mbo.Modulescatalog'
                 ),
                 'icon' => 'cloud_upload',
                 'help' => $this->translator->trans(
                     'Upload a module',
                     [],
-                    'Modules.Mbo.Modulescatalog',
-                    $this->translator->getLocale()
+                    'Modules.Mbo.Modulescatalog'
                 ),
             ],
         ];
@@ -138,15 +136,13 @@ class Toolbar
             'desc' => $this->translator->trans(
                 'Connected',
                 [],
-                'Modules.Mbo.Modulescatalog',
-                $this->translator->getLocale()
+                'Modules.Mbo.Modulescatalog'
             ),
             'help' => $this->translator->trans(
                 'Connected as',
                 [],
-                'Modules.Mbo.Modulescatalog',
-                $this->translator->getLocale()
-            ) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail()
+                'Modules.Mbo.Modulescatalog'
+            ) . ' &#013;&#010; ' . $this->addonsDataProvider->getAuthenticatedUserEmail(),
         ];
     }
 }

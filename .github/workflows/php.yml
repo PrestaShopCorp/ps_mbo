@@ -22,19 +22,30 @@ jobs:
   php-cs-fixer:
     name: PHP-CS-Fixer
     runs-on: ubuntu-latest
+    env:
+      _PS_ROOT_DIR_: '.'
+      PS_VERSION: '8.0.2'
+      PHP_VERSION: '7.4'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Run PHP-CS-Fixer
-        uses: prestashopcorp/github-action-php-cs-fixer@master
-        with:
-          other-cmds: '--config=.php-cs-fixer.dist.php'
+      - name: Composer Install
+        run: COMPOSER_PROCESS_TIMEOUT=600 composer install --ansi --prefer-dist --no-interaction --no-progress
+      - name: Wait for services to be ready
+        run: sleep 10
+      - name: Pull PrestaShop files
+        run: docker run -tid --rm -v ps-volume:/var/www/html -v $PWD:/var/www/html/modules/ps_mbo  -e _PS_ROOT_DIR_=/var/www/html -e DISABLE_MAKE=1 --workdir=/var/www/html/modules/ps_mbo --name container-php-cs-fixer prestashop/prestashop:$PS_VERSION-$PHP_VERSION
+      - name: Check vendor
+        run: docker ps && docker exec container-php-cs-fixer ls /var/www/html/vendor/symfony/symfony/src/Symfony/Component/Dotenv
+      - name: Run PHPCSFixer
+        run: docker exec -e _PS_ROOT_DIR_=/var/www/html -e DISABLE_MAKE=1 --workdir=/var/www/html/modules/ps_mbo container-php-cs-fixer ./vendor/bin/php-cs-fixer fix --dry-run --diff
   phpstan:
     name: PHPStan
     runs-on: ubuntu-latest
     strategy:
       matrix:
         presta-versions: ['8.0.2', '8.1.5']
+        php-versions: ['8.0', '8.1']
     steps:
       - name: Pull PrestaShop files (Tag ${{ matrix.presta-versions }})
         run: docker run -tid --rm -v ps-volume:/var/www/html --name temp-ps prestashop/prestashop:${{ matrix.presta-versions }}
@@ -52,9 +63,10 @@ jobs:
         with:
           path: ~/.composer/cache
           key: php-composer-cache
-      - run: composer install
-      - name : Run PHPStan
-        run: docker run --rm --volumes-from temp-ps -v $PWD:/web/module -e _PS_ROOT_DIR_=/var/www/html --workdir=/web/module phpstan/phpstan:0.11.19 analyse --configuration=/web/module/tests/phpstan/phpstan-${{ matrix.presta-versions }}.neon
+      - name: Install dependencies
+        run: composer install
+      - name: Run PHPStan
+        run: docker run --rm --volumes-from temp-ps -v $PWD:/var/www/html/modules/ps_mbo -e _PS_ROOT_DIR_=/var/www/html --workdir=/var/www/html/modules/ps_mbo ghcr.io/phpstan/phpstan:2-php${{ matrix.php-versions }} analyse --configuration=/var/www/html/modules/ps_mbo/tests/phpstan/phpstan-${{ matrix.presta-versions }}.neon
 
   phpunit:
     name: PHPUnit

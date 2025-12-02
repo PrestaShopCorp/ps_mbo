@@ -22,35 +22,35 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Exception;
 
 use Exception;
-use GuzzleHttp\Exception\ClientException;
+use Symfony\Component\HttpClient\Exception\ClientException;
 
 class AddonsDownloadModuleException extends Exception
 {
     private const UNKNOWN_ADDONS_CODE = '0030';
 
-    const WRONG_PARAMETERS              = '0000';
-    const WRONG_MODULE_KEY              = '0001';
-    const UNKNOWN_MODULE                = '0002';
-    const INVALID_CREDENTIALS           = '0003';
-    const INVALID_EMAIL_OR_PASSWORD     = '0004';
-    const ACCESS_DENIED                 = '0005';
-    const INVALID_PRODUCT_FILE          = '0006';
-    const TM_CURL_INVALID_LINK          = '0007';
-    const TM_INACTIVE_LINK              = '0008';
-    const TM_INVALID_ORDER              = '0009';
-    const INVALID_METHOD                = '0010';
-    const HTTPS_REQUIRED                = '0011';
-    const INVALID_AUTH                  = '0012';
-    const INVALID_EMAIL                 = '0013';
-    const INVALID_PARAMETERS            = '0014';
-    const METHOD_UNDEFINED              = '0015';
-    const KO_LABEL                      = '0016';
-    const SERVICE_UNAVAILABLE           = '0017';
-    const NO_ZIP_SERVICE                = '0018';
-    const WEBSITE_REFUSED               = '0019';
-    const NO_SELECTABLE_BUSINESS_CARE   = '0020';
+    const WRONG_PARAMETERS = '0000';
+    const WRONG_MODULE_KEY = '0001';
+    const UNKNOWN_MODULE = '0002';
+    const INVALID_CREDENTIALS = '0003';
+    const INVALID_EMAIL_OR_PASSWORD = '0004';
+    const ACCESS_DENIED = '0005';
+    const INVALID_PRODUCT_FILE = '0006';
+    const TM_CURL_INVALID_LINK = '0007';
+    const TM_INACTIVE_LINK = '0008';
+    const TM_INVALID_ORDER = '0009';
+    const INVALID_METHOD = '0010';
+    const HTTPS_REQUIRED = '0011';
+    const INVALID_AUTH = '0012';
+    const INVALID_EMAIL = '0013';
+    const INVALID_PARAMETERS = '0014';
+    const METHOD_UNDEFINED = '0015';
+    const KO_LABEL = '0016';
+    const SERVICE_UNAVAILABLE = '0017';
+    const NO_ZIP_SERVICE = '0018';
+    const WEBSITE_REFUSED = '0019';
+    const NO_SELECTABLE_BUSINESS_CARE = '0020';
 
-    public static $errors = array(
+    public static $errors = [
         self::WRONG_PARAMETERS => 'Wrong Parameters',
         self::WRONG_MODULE_KEY => 'Wrong module key',
         self::UNKNOWN_MODULE => 'Unknown module',
@@ -72,8 +72,7 @@ class AddonsDownloadModuleException extends Exception
         self::NO_ZIP_SERVICE => 'No download, Service',
         self::WEBSITE_REFUSED => 'Store URL not matching',
         self::NO_SELECTABLE_BUSINESS_CARE => 'No selectable support subscription',
-    );
-
+    ];
 
     /**
      * @var array
@@ -113,7 +112,7 @@ class AddonsDownloadModuleException extends Exception
 
     private function getErrorSentByAddons(ClientException $exception): array
     {
-        $rawContent = $exception->getResponse()->getBody()->getContents();
+        $rawContent = $exception->getResponse()->getContent();
         $jsonContent = json_decode($rawContent, true);
 
         $code = self::UNKNOWN_ADDONS_CODE;
@@ -132,7 +131,7 @@ class AddonsDownloadModuleException extends Exception
 
     private function getCustomizedMessage(array $addonsError): string
     {
-        switch($addonsError['http_code']) {
+        switch ($addonsError['http_code']) {
             case 460 + (int) self::WEBSITE_REFUSED:
                 return "Your store's URL doesn't match the one provided when the module was purchased.";
             case 460 + (int) self::NO_SELECTABLE_BUSINESS_CARE:

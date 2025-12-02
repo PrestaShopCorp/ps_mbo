@@ -20,6 +20,17 @@
 
 namespace PrestaShop\Module\Mbo\Module\Exception;
 
+use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
+
 class TransitionCommandToModuleStatusException extends \Exception
 {
+    public function __construct(ModuleStatusTransitionCommand $command)
+    {
+        $message = sprintf(
+            'The transition command cannot be mapped to a module "%s".',
+            $command->getModuleName()
+        );
+
+        parent::__construct($message);
+    }
 }

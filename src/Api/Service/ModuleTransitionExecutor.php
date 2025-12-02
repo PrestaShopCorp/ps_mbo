@@ -20,7 +20,6 @@
 
 namespace PrestaShop\Module\Mbo\Api\Service;
 
-use http\Exception\InvalidArgumentException;
 use PrestaShop\Module\Mbo\Api\Exception\QueryParamsException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\Command\ModuleStatusTransitionCommand;
@@ -35,6 +34,7 @@ use PrestaShop\Module\Mbo\Module\Exception\UnknownModuleTransitionCommandExcepti
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\ValueObject\ModuleTransitionCommand;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
+use Symfony\Component\HttpClient\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Tools;
 
@@ -152,7 +152,7 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
                 if (isset($components['pass'])) {
                     $composedUrl .= ':' . $components['pass'];
                 }
-                $composedUrl .=  '@';
+                $composedUrl .= '@';
             }
 
             $composedUrl .= $components['host'];
@@ -177,7 +177,7 @@ class ModuleTransitionExecutor implements ServiceExecutorInterface
         $adminToken = Tools::getValue('admin_token');
         $queryParams['_token'] = $adminToken;
 
-        $composedUrl .=  '?' . http_build_query($queryParams, '', '&');
+        $composedUrl .= '?' . http_build_query($queryParams, '', '&');
         if (isset($components['fragment']) && $components['fragment'] !== '') {
             /* This copy-paste from Symfony's UrlGenerator */
             $composedUrl .= '#' . strtr(rawurlencode($components['fragment']), ['%2F' => '/', '%3F' => '?']);

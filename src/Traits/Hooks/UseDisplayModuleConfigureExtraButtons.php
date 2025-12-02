@@ -37,13 +37,12 @@ trait UseDisplayModuleConfigureExtraButtons
             /** @var Router $router */
             $router = $this->get('router');
 
-            if (null === $router) {
-                throw new ExpectedServiceNotFoundException(
-                    'Some services not found in UseDisplayModuleConfigureExtraButtons'
-                );
+            if (!$router) {
+                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayModuleConfigureExtraButtons');
             }
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
+
             return '';
         }
         $this->smarty->assign([

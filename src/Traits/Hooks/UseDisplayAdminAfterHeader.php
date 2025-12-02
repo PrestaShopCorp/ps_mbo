@@ -29,12 +29,14 @@ use Language;
 use PrestaShop\Module\Mbo\Distribution\Config\Command\VersionChangeApplyConfigCommand;
 use PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
+use PrestaShop\Module\Mbo\Exception\RequestStackException;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use Shop;
+use Symfony\Component\Cache\DoctrineProvider;
 use Tab;
 use Tools;
 use Twig\Environment;
@@ -132,9 +134,7 @@ trait UseDisplayAdminAfterHeader
             $contextBuilder = $this->get('mbo.cdc.context_builder');
 
             if (null === $contextBuilder || null === $twig) {
-                throw new ExpectedServiceNotFoundException(
-                    'Some services not found in UseDisplayAdminAfterHeader'
-                );
+                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayAdminAfterHeader');
             }
 
             return $twig->render(
@@ -163,8 +163,12 @@ trait UseDisplayAdminAfterHeader
 
         try {
             $requestStack = $this->get('request_stack');
-            if (null === $requestStack || null === $request = $requestStack->getCurrentRequest()) {
-                throw new Exception('Unable to get request');
+            if (!$requestStack) {
+                throw new RequestStackException();
+            }
+            $request = $requestStack->getCurrentRequest();
+            if (!$request) {
+                throw new RequestStackException();
             }
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
@@ -193,8 +197,12 @@ trait UseDisplayAdminAfterHeader
 
         try {
             $requestStack = $this->get('request_stack');
-            if (null === $requestStack || null === $request = $requestStack->getCurrentRequest()) {
-                throw new Exception('Unable to get request');
+            if (!$requestStack) {
+                throw new RequestStackException();
+            }
+            $request = $requestStack->getCurrentRequest();
+            if (!$request) {
+                throw new RequestStackException();
             }
         } catch (Exception $e) {
             ErrorHelper::reportError($e);
@@ -331,7 +339,6 @@ trait UseDisplayAdminAfterHeader
 
     /**
      * @param string|bool $controllerName
-     * @param array $params
      *
      * @return void
      *

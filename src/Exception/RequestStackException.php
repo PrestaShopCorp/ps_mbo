@@ -23,6 +23,10 @@ namespace PrestaShop\Module\Mbo\Exception;
 
 use Exception;
 
-class ExpectedServiceNotFoundException extends Exception
+class RequestStackException extends Exception
 {
+    public function __construct($message = 'Unable to get request')
+    {
+        parent::__construct($message);
+    }
 }

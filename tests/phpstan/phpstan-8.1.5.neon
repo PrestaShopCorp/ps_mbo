@@ -2,12 +2,12 @@ parameters:
   bootstrapFiles:
     - bootstrap.php
   paths:
-    - src
-    - ps_mbo.php
+    - ../../src
+    - ../../ps_mbo.php
   dynamicConstantNames:
     - _PS_VERSION_
+    - ps_mbo::VERSION
   ignoreErrors:
-    - '#^Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface::dispatch\(\) invoked with 2 parameters, 1 required\.$#'
-    - '~^Parameter #1 \$modules of method PrestaShopBundle\\Service\\DataProvider\\Admin\\CategoriesProvider::getCategoriesMenu\(\) expects array|PrestaShop\\PrestaShop\\Core\\Addon\\AddonsCollection, PrestaShop\\Module\\Mbo\\Modules\\Collection given\.$~'
-
+    - '#Call to function method_exists\(\) with \$this\(ps_mbo\)#'
+  treatPhpDocTypesAsCertain: false
   level: 5

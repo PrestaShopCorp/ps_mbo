@@ -23,6 +23,6 @@ namespace PrestaShop\Module\Mbo\Exception;
 
 use Exception;
 
-class ExpectedServiceNotFoundException extends Exception
+class FileOperationException extends Exception
 {
 }

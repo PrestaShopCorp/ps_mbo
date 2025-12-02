@@ -35,6 +35,8 @@ use PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
+use PrestaShop\PsAccountsInstaller\Installer\Installer as AccountsInstaller;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Dotenv\Dotenv;
@@ -49,7 +51,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '4.14.0';
+    public const VERSION = '4.14.2';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminModulesManage',
@@ -94,7 +96,7 @@ class ps_mbo extends Module
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.14.0';
+        $this->version = '4.14.2';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -191,7 +193,9 @@ class ps_mbo extends Module
         // Execute them first
         foreach ($eventDispatcher->getListeners(ModuleManagementEvent::UNINSTALL) as $listener) {
             if ($listener[0] instanceof ModuleManagementEventSubscriber) {
-                $legacyModule = $this->get('prestashop.core.admin.module.repository')->getModule('ps_mbo');
+                /** @var ModuleRepository $moduleRepository */
+                $moduleRepository = $this->get('prestashop.core.admin.module.repository');
+                $legacyModule = $moduleRepository->getModule('ps_mbo');
                 $listener[0]->{(string) $listener[1]}(new ModuleManagementEvent($legacyModule));
             }
         }
@@ -461,8 +465,9 @@ class ps_mbo extends Module
 
     private function isPsAccountEnabled(): bool
     {
+        /** @var AccountsInstaller $accountsInstaller */
         $accountsInstaller = $this->get('mbo.ps_accounts.installer');
 
-        return null !== $accountsInstaller && $accountsInstaller->isModuleEnabled();
+        return $accountsInstaller->isModuleEnabled();
     }
 }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Module\Workflow;
 
 use Exception;
-use PrestaShop\Module\Mbo\Exception\DownloadModuleException;
 use PrestaShop\Module\Mbo\Module\Exception\TransitionFailedException;
 use PrestaShop\Module\Mbo\Module\TransitionModule;
 use PrestaShop\Module\Mbo\Service\HookExceptionHolder;
@@ -309,15 +308,7 @@ class TransitionsManager
                 TransitionInterface::STATUS_RESET
             ))->getTransitionName();
 
-            throw new TransitionFailedException(
-                $transitionName,
-                [
-                    'transition' => $transitionName,
-                    'moduleName' => $moduleName,
-                    'moduleVersion' => $transitionModule->getVersion(),
-                ],
-                new \Exception($error)
-            );
+            throw new TransitionFailedException($transitionName, ['transition' => $transitionName, 'moduleName' => $moduleName, 'moduleVersion' => $transitionModule->getVersion()], new \Exception($error));
         }
 
         return false;
@@ -375,15 +366,7 @@ class TransitionsManager
 
             $errorForHook = $this->hookExceptionHolder->getLastException('actionBeforeInstallModule');
 
-            throw $errorForHook ?? new TransitionFailedException(
-                $transitionName,
-                [
-                    'transition' => $transitionName,
-                    'moduleName' => $moduleName,
-                    'moduleVersion' => $transitionModule->getVersion(),
-                ],
-                new \Exception($error)
-            );
+            throw $errorForHook ?? new TransitionFailedException($transitionName, ['transition' => $transitionName, 'moduleName' => $moduleName, 'moduleVersion' => $transitionModule->getVersion()], new \Exception($error));
         }
 
         return false;

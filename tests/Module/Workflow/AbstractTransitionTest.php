@@ -197,7 +197,7 @@ abstract class AbstractTransitionTest extends TestCase
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
+                'active_on_mobile' => true,
             ], //module attributes
             ModuleTransitionCommand::MODULE_COMMAND_MOBILE_DISABLE, //transition command
             self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__ENABLED_MOBILE_DISABLED, //transitionName
@@ -210,7 +210,7 @@ abstract class AbstractTransitionTest extends TestCase
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
+                'active_on_mobile' => true,
             ], //module attributes
             ModuleTransitionCommand::MODULE_COMMAND_DISABLE, //transition command
             self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__DISABLED_MOBILE_ENABLED, //transitionName
@@ -223,7 +223,7 @@ abstract class AbstractTransitionTest extends TestCase
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
+                'active_on_mobile' => true,
             ], //module attributes
             ModuleTransitionCommand::MODULE_COMMAND_RESET, //transition command
             self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__RESET, //transitionName
@@ -236,7 +236,7 @@ abstract class AbstractTransitionTest extends TestCase
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
+                'active_on_mobile' => true,
             ], //module attributes
             ModuleTransitionCommand::MODULE_COMMAND_CONFIGURE, //transition command
             self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__CONFIGURED, //transitionName
@@ -249,7 +249,7 @@ abstract class AbstractTransitionTest extends TestCase
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
+                'active_on_mobile' => true,
             ], //module attributes
             ModuleTransitionCommand::MODULE_COMMAND_UPGRADE, //transition command
             self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__UPGRADED, //transitionName
@@ -262,7 +262,7 @@ abstract class AbstractTransitionTest extends TestCase
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
+                'active_on_mobile' => true,
             ], //module attributes
             ModuleTransitionCommand::MODULE_COMMAND_UNINSTALL, //transition command
             self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__UNINSTALLED, //transitionName
@@ -275,7 +275,7 @@ abstract class AbstractTransitionTest extends TestCase
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
+                'active_on_mobile' => true,
             ], //module attributes
             ModuleTransitionCommand::MODULE_COMMAND_MOBILE_DISABLE, //transition command
             self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__ENABLED_MOBILE_DISABLED, //transitionName

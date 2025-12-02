@@ -29,11 +29,9 @@ use Symfony\Component\String\UnicodeString;
 
 class TransitionApplierTest extends AbstractTransitionTest
 {
-    protected $translator;
-
     protected function setUp(): void
     {
-        $this->translator = $this->mockTranslator('Unfortunately, the module did not return additional details.', [], 'Admin.Modules.Notification', 'Unfortunately, the module did not return additional details.');
+        // No setup required for this test class
     }
 
     /**
@@ -62,7 +60,7 @@ class TransitionApplierTest extends AbstractTransitionTest
             ->with($module, [])
         ;
 
-        $transitionApplier = new TransitionApplier($transitionsManager, $this->translator);
+        $transitionApplier = new TransitionApplier($transitionsManager);
 
         // Application will throw an exception because transitionManager object is a mock
         $this->expectException(TransitionFailedException::class);
@@ -77,7 +75,7 @@ class TransitionApplierTest extends AbstractTransitionTest
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
+                'active_on_mobile' => true,
             ], //module attributes
             ModuleTransitionCommand::MODULE_COMMAND_MOBILE_DISABLE, //transition command
             self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__ENABLED_MOBILE_DISABLED, //transitionName
@@ -90,7 +88,7 @@ class TransitionApplierTest extends AbstractTransitionTest
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
+                'active_on_mobile' => true,
             ], //module attributes
             ModuleTransitionCommand::MODULE_COMMAND_DISABLE, //transition command
             self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__DISABLED_MOBILE_ENABLED, //transitionName
@@ -103,7 +101,7 @@ class TransitionApplierTest extends AbstractTransitionTest
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
+                'active_on_mobile' => true,
             ], //module attributes
             ModuleTransitionCommand::MODULE_COMMAND_RESET, //transition command
             self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__RESET, //transitionName
@@ -116,7 +114,7 @@ class TransitionApplierTest extends AbstractTransitionTest
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
+                'active_on_mobile' => true,
             ], //module attributes
             ModuleTransitionCommand::MODULE_COMMAND_CONFIGURE, //transition command
             self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__CONFIGURED, //transitionName
@@ -129,7 +127,7 @@ class TransitionApplierTest extends AbstractTransitionTest
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
+                'active_on_mobile' => true,
             ], //module attributes
             ModuleTransitionCommand::MODULE_COMMAND_UPGRADE, //transition command
             self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__UPGRADED, //transitionName
@@ -142,7 +140,7 @@ class TransitionApplierTest extends AbstractTransitionTest
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
+                'active_on_mobile' => true,
             ], //module attributes
             ModuleTransitionCommand::MODULE_COMMAND_UNINSTALL, //transition command
             self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__UNINSTALLED, //transitionName
@@ -155,7 +153,7 @@ class TransitionApplierTest extends AbstractTransitionTest
                 'version' => '1.0.0',
                 'installed' => true,
                 'active' => true,
-                'active_on_mobile' => true
+                'active_on_mobile' => true,
             ], //module attributes
             ModuleTransitionCommand::MODULE_COMMAND_MOBILE_DISABLE, //transition command
             self::TRANSITION_NAME_ENABLED_MOBILE_ENABLED__ENABLED_MOBILE_DISABLED, //transitionName
