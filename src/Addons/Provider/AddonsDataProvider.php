@@ -242,6 +242,22 @@ class AddonsDataProvider implements DataProviderInterface
         return $authParams;
     }
 
+    /**
+     * Returns authentication parameters for Addons API requests
+     * @return string|null
+     */
+    public function getAuthenticationToken(): ?string
+    {
+        if ($this->isUserAuthenticated()) {
+            $credentials = $this->user->getCredentials();
+            if (null !== $credentials && array_key_exists('accounts_token', $credentials)) {
+                return $credentials['accounts_token'];
+            }
+        }
+
+        return null;
+    }
+
     public function getAccountsShopUuid(): ?string
     {
         if (!$this->isUserAuthenticatedOnAccounts()) {

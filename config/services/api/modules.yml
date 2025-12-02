@@ -4,6 +4,12 @@ services:
 
   PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever:
     autowire: true
+    arguments:
+      $addonsDataProvider: '@PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider'
+      $translator: '@translator'
+      $httpClient: '@Psr\Http\Client\ClientInterface'
+      $requestFactory: '@Psr\Http\Message\ServerRequestFactoryInterface'
+      $configuration: '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
     properties:
       cacheDir: "%kernel.cache_dir%"
 

@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Addons\User;
 
 use PrestaShop\Module\Mbo\Accounts\Provider\AccountsDataProvider;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 if (!defined('_PS_VERSION_')) {
@@ -116,11 +117,15 @@ class AddonsUser implements UserInterface
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    private function getAccountsTokenFromSession()
+    private function getAccountsTokenFromSession(): ?string
     {
-        return $this->requestStack->getSession()->get('accounts_token');
+        try {
+            return $this->requestStack->getSession()->get('accounts_token');
+        } catch (SessionNotFoundException $e) {
+            return null;
+        }
     }
 
     /**
