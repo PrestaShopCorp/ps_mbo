@@ -37,10 +37,6 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-if (!defined('_PS_VERSION_')) {
-    exit;
-}
-
 class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 {
     private const URL_VALIDATION_REGEX = '/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{0,256}api-addons\\.prestashop\\.com(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/';
