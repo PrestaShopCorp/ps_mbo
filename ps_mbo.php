@@ -51,7 +51,7 @@ class ps_mbo extends Module
     /**
      * @var string
      */
-    public const VERSION = '4.14.1';
+    public const VERSION = '4.14.2';
 
     public const CONTROLLERS_WITH_CONNECTION_TOOLBAR = [
         'AdminModulesManage',
@@ -91,12 +91,17 @@ class ps_mbo extends Module
     public $moduleCacheDir;
 
     /**
+     * @var bool
+     */
+    private static $subscriberRegistered = false;
+
+    /**
      * Constructor.
      */
     public function __construct()
     {
         $this->name = 'ps_mbo';
-        $this->version = '4.14.1';
+        $this->version = '4.14.2';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
@@ -123,6 +128,11 @@ class ps_mbo extends Module
         }
 
         $this->loadEnv();
+
+        if (!self::$subscriberRegistered && $this->isAdminContext() && $this->shouldRegisterSubscriber()) {
+            $this->registerModuleManagementSubscriber();
+            self::$subscriberRegistered = true;
+        }
     }
 
     /**
@@ -469,5 +479,49 @@ class ps_mbo extends Module
         $accountsInstaller = $this->get('mbo.ps_accounts.installer');
 
         return $accountsInstaller->isModuleEnabled();
+    }
+
+    private function isAdminContext(): bool
+    {
+        return defined('_PS_ADMIN_DIR_');
+    }
+
+    private function shouldRegisterSubscriber(): bool
+    {
+        $values = \ToolsCore::getAllValues();
+        // Value is present when updating a module
+        if (empty($values['source'])) {
+            return false;
+        }
+
+        // If updating MBO, we don't want to register the subscriber
+        if (strpos($values['source'], '&id_module=39574&') !== false) {
+            return false;
+        }
+
+        return self::checkModuleStatus();
+    }
+
+    private function registerModuleManagementSubscriber(): void
+    {
+        try {
+            /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher */
+            $dispatcher = $this->get('event_dispatcher');
+
+            $subscriber = new \PrestaShop\Module\Mbo\Addons\Subscriber\ModuleManagementEventSubscriber(
+                $this->get('logger'),
+                $this->get('mbo.modules.repository'),
+                $this->get('mbo.tab.collection.provider'),
+                $this->get('mbo.cdc.context_builder'),
+                $this->get('mbo.cdc.client.distribution_api'),
+                $this->get('mbo.security.admin_authentication.provider'),
+                $this->get('mbo.distribution.api_version_change_config_apply_handler'),
+                $this->get('mbo.symfony_cache_clearer')
+            );
+
+            $dispatcher->addSubscriber($subscriber);
+        } catch (\Throwable $e) {
+            //Do nothing here
+        }
     }
 }
