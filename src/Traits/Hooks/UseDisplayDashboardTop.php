@@ -389,7 +389,11 @@ trait UseDisplayDashboardTop
     }
 
     private function shouldDisplayModuleManagerMessage($params = []): bool
-    {
+    {  
+        if (!isset($params['route'])) {
+            return false;
+        }
+        
         return in_array(
             $params['route'],
             [
