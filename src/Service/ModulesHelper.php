@@ -53,7 +53,7 @@ class ModulesHelper
 
     public function findForUpdates(string $moduleName): array
     {
-        $currentVersion = $availableVersion = $installUrl = $upgradeUrl = null;
+        $currentVersion = $availableVersion = $installUrl = $upgradeUrl = $uploadUrl = null;
         $upgradeAvailable = false;
 
         $db = \Db::getInstance();
@@ -108,6 +108,17 @@ class ModulesHelper
             }
         }
 
+        $uploadUrl = UrlHelper::transformToAbsoluteUrl(
+            $this->router->generate(
+                'admin_module_manage_action',
+                [
+                    'action' => 'upload',
+                    'module_name' => $moduleName,
+                ],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            )
+        );
+
         return [
             'current_version' => $currentVersion,
             'available_version' => $availableVersion,
@@ -115,6 +126,7 @@ class ModulesHelper
             'urls' => [
                 'install' => $installUrl,
                 'upgrade' => $upgradeUrl,
+                'upload' => $uploadUrl,
             ],
         ];
     }
