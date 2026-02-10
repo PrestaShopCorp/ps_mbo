@@ -1,6 +1,7 @@
 name: Build & Release
 
 on:
+  workflow_dispatch:
   pull_request:
     types: [opened, reopened]
   release:
@@ -40,7 +41,7 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
-    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     steps:
 
       - name: Retrieve from cache module folder
