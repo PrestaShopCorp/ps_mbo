@@ -40,9 +40,16 @@ trait HaveConfigurationPage
         'prestabulle' => [
             'cdc' => 'https://integration-assets.prestashop3.com/dst/mbo/#prestabulle#/mbo-cdc.umd.js',
             'api' => 'https://mbo-api-#prestabulle#.prestashop.com',
-            'addons' => 'https://addons-api-#pod#.prestashop.com',
+            'addons' => 'https://addons-api-#prestabulle#.prestashop.com',
             'sentry_url' => 'https://aa99f8a351b641af994ac50b01e14e20@o298402.ingest.sentry.io/6520457',
             'sentry_environment' => '#prestabulle#',
+        ],
+        'qa' => [
+            'cdc' => 'https://preproduction-assets.prestashop3.com/dst/mbo/v1/mbo-cdc.umd.js',
+            'api' => 'https://mbo-api-preprod.prestashop.com',
+            'addons' => 'http://api-addons-qa.prestashop.com',
+            'sentry_url' => 'https://aa99f8a351b641af994ac50b01e14e20@o298402.ingest.sentry.io/6520457',
+            'sentry_environment' => 'qa',
         ],
         'preprod' => [
             'cdc' => 'https://preproduction-assets.prestashop3.com/dst/mbo/v1/mbo-cdc.umd.js',
@@ -127,9 +134,9 @@ trait HaveConfigurationPage
         }
 
         // Get & build Addons env data
-        $newAddonsValue = Tools::getValue('ADDONS_ENVIRONMENT');
-        if (strpos($newAddonsValue, 'pod') !== false) {
-            $addonsUrl = str_replace('#pod#', $newAddonsValue, $this->environmentData['prestabulle']['addons']);
+        $newAddonsValue = \Tools::getValue('ADDONS_ENVIRONMENT');
+        if (strpos($newAddonsValue, 'prestabulle') !== false) {
+            $addonsUrl = str_replace('#prestabulle#', $newAddonsValue, $this->environmentData['prestabulle']['addons']);
         } else {
             $addonsUrl = $this->environmentData[$newAddonsValue]['addons'];
         }
@@ -200,14 +207,18 @@ trait HaveConfigurationPage
 
         for ($i = 1; $i < 10; ++$i) {
             $addonsOptionsValues[] = [
-                'value' => "pod$i",
-                'name' => "Pod $i",
+                'value' => "prestabulle$i",
+                'name' => "Prestabulle $i",
             ];
         }
         $addonsOptionsValues = array_merge($addonsOptionsValues, [
             [
                 'value' => 'preprod',
                 'name' => 'Preprod',
+            ],
+            [
+                'value' => 'qa',
+                'name' => 'QA',
             ],
             [
                 'value' => 'prod',
@@ -280,13 +291,15 @@ trait HaveConfigurationPage
 
         $currentAddonsUrl = getenv('ADDONS_API_URL');
 
-        if (strpos($currentAddonsUrl, 'pod') !== false) {
-            preg_match('#(pod(?:\d+))#', $currentAddonsUrl, $matches);
+        if (strpos($currentAddonsUrl, 'prestabulle') !== false) {
+            preg_match('#(prestabulle(?:\d+))#', $currentAddonsUrl, $matches);
             $currentAddonsValue = $matches[1];
         } elseif (strpos($currentAddonsUrl, 'preprod') !== false) {
             $currentAddonsValue = 'preprod';
         } elseif (strpos($currentAddonsUrl, 'local') !== false) {
             $currentAddonsValue = 'local';
+        } elseif (strpos($currentAddonsUrl, 'qa') !== false) {
+            $currentAddonsValue = 'qa';
         } else {
             $currentAddonsValue = 'prod';
         }
