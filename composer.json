@@ -25,7 +25,7 @@
     "symfony/workflow": "^6.4",
     "symfony/string": "^6.4",
     "prestashop/prestashop-accounts-installer": "^1.0",
-    "firebase/php-jwt": "^6.3",
+    "firebase/php-jwt": "^7.0",
     "symfony/dotenv": "^6.4"
   },
   "require-dev": {
