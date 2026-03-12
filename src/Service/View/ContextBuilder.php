@@ -192,6 +192,7 @@ class ContextBuilder
                 'disable' => $this->generateActionUrl('disable'),
                 'reset' => $this->generateActionUrl('reset'),
                 'upgrade' => $this->generateActionUrl('upgrade'),
+                'upload' => $this->generateActionUrl('upload'),
             ],
         ];
     }
