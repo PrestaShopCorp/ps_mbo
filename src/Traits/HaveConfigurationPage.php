@@ -76,14 +76,13 @@ trait HaveConfigurationPage
      */
     public function getContent(): string
     {
-        $output = $this->handleSaveForm();
+        $this->handleSaveForm();
 
-        return $output . $this->displayForm();
+        return $this->displayForm();
     }
 
-    private function handleSaveForm(): string
+    private function handleSaveForm()
     {
-        $output = '';
         if (\Tools::isSubmit('submit' . $this->name)) {
             $possibleEnvFiles = [
                 '.env',
@@ -100,14 +99,12 @@ trait HaveConfigurationPage
                 }
             }
             if ($correctEnvFile) {
-                $output .= $this->saveNewDotenvData($envFilePath);
+                $this->saveNewDotenvData($envFilePath);
             }
         }
-
-        return $output;
     }
 
-    private function saveNewDotenvData(string $envFilePath): string
+    private function saveNewDotenvData(string $envFilePath)
     {
         // Get & build MBO env data
         $newMboValue = \Tools::getValue('DISTRIBUTION_ENVIRONMENT');
@@ -156,16 +153,6 @@ trait HaveConfigurationPage
         if ($cacheClearer) {
             $cacheClearer->clear();
         }
-
-        $message = '<div style="padding-bottom: 15px;">Configuration updated to :
-            <ul><li>MBO : ' . ucfirst($newMboValue) . '</li>
-                <li>Addons : ' . ucfirst($newAddonsValue) . '</li>
-            </ul>';
-        $message .= '<b>Don\'t forget to reset the module.</b><br />';
-        $message .= '<form method="POST"><button type="submit" name="resetModule">Reset</button></form>';
-        $message .= '</div>';
-
-        return $message;
     }
 
     /**
