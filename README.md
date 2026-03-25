@@ -133,6 +133,12 @@ PrestaShop company is the only decision maker to integrate or not a contribution
 
 Just make sure to follow our [contribution guidelines][contribution-guidelines].
 
+On macOS, make sure you have `wget` installed:
+
+```bash
+brew install wget
+```
+
 To contribute, you'll need to run the project locally :
 
 - Fork this repository
