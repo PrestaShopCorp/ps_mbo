@@ -140,6 +140,7 @@ brew install wget
 brew install git
 brew install gh
 gh auth login
+gh auth status
 ```
 
 To contribute, you'll need to run the project locally :
