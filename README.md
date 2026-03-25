@@ -138,6 +138,7 @@ On macOS, make sure you have `wget` and `git` installed:
 ```bash
 brew install wget
 brew install git
+brew install gh
 ```
 
 To contribute, you'll need to run the project locally :
