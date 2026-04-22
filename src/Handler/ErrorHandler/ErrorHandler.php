@@ -62,6 +62,8 @@ class ErrorHandler implements ErrorHandlerInterface
                 'environment' => EnvHelper::getEnv('SENTRY_ENVIRONMENT'),
                 'traces_sample_rate' => 0.5,
                 'sample_rate' => 0.5,
+                'http_timeout' => 2,
+                'http_connect_timeout' => 1,
             ]);
 
             \Sentry\configureScope(function (Scope $scope): void {
