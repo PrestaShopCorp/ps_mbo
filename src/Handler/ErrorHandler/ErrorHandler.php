@@ -49,7 +49,7 @@ class ErrorHandler implements ErrorHandlerInterface
 
     public function __construct()
     {
-        $this->dsn = EnvHelper::getEnv('SENTRY_CREDENTIALS');
+        $this->dsn = EnvHelper::getEnv('PS_MBO_SENTRY_CREDENTIALS');
 
         if (empty($this->dsn)) {
             return;
@@ -59,7 +59,7 @@ class ErrorHandler implements ErrorHandlerInterface
             \Sentry\init([
                 'dsn' => $this->dsn,
                 'release' => \ps_mbo::VERSION,
-                'environment' => EnvHelper::getEnv('SENTRY_ENVIRONMENT'),
+                'environment' => EnvHelper::getEnv('PS_MBO_SENTRY_ENVIRONMENT'),
                 'traces_sample_rate' => 0.5,
                 'sample_rate' => 0.5,
             ]);

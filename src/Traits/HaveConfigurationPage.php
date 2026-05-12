@@ -140,9 +140,9 @@ trait HaveConfigurationPage
         $envData = preg_replace('#MBO_CDC_URL=".*"#', 'MBO_CDC_URL="' . $cdcUrl . '"', $envData);
         $envData = preg_replace('#DISTRIBUTION_API_URL=".*"#', 'DISTRIBUTION_API_URL="' . $apiUrl . '"', $envData);
         $envData = preg_replace('#ADDONS_API_URL=".*"#', 'ADDONS_API_URL="' . $addonsUrl . '"', $envData);
-        $envData = preg_replace('#SENTRY_CREDENTIALS=".*"#', 'SENTRY_CREDENTIALS="' . $sentryUrl . '"', $envData);
+        $envData = preg_replace('#PS_MBO_SENTRY_CREDENTIALS=".*"#', 'PS_MBO_SENTRY_CREDENTIALS="' . $sentryUrl . '"', $envData);
         $envData =
-            preg_replace('#SENTRY_ENVIRONMENT=".*"#', 'SENTRY_ENVIRONMENT="' . $sentryEnvironment . '"', $envData);
+            preg_replace('#PS_MBO_SENTRY_ENVIRONMENT=".*"#', 'PS_MBO_SENTRY_ENVIRONMENT="' . $sentryEnvironment . '"', $envData);
 
         // Update the .env file
         file_put_contents($envFilePath, $envData);
