@@ -120,8 +120,7 @@ ModuleManager::install($name, source=null)
 `SourceHandlerInterface` and is registered in the DI container so the source
 factory picks it up automatically when the caller provides an Addons URL.
 
-The hook is therefore a fallback: it covers call sites that don't pass a source
-(e.g. back-office module manager triggered by name).
+The hook is therefore a fallback: it covers call sites that don't pass a source.
 
 Symfony Workflow (`symfony/workflow`) models the allowed transitions between
 module states (installed, enabled, upgraded, etc.).
