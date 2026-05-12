@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: PHP syntax checker 8.1
         uses: prestashop/github-action-php-lint/8.1@master
       - name: PHP syntax checker 8.2
@@ -23,7 +23,7 @@ jobs:
           php-version: 8.1
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Validate composer config
         run: composer validate --strict
@@ -51,18 +51,18 @@ jobs:
           php-version: ${{ matrix.php-version }})
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # Add vendor folder in cache to make next builds faster
       - name: Cache vendor folder
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: vendor
           key: php-${{ hashFiles('composer.lock') }}
 
       # Add composer local folder in cache to make next builds faster
       - name: Cache composer folder
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ~/.composer/cache
           key: php-composer-cache
@@ -86,18 +86,18 @@ jobs:
           php-version: 8.1
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       # Add vendor folder in cache to make next builds faster
       - name: Cache vendor folder
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: vendor
           key: php-${{ hashFiles('composer.lock') }}
 
       # Add composer local folder in cache to make next builds faster
       - name: Cache composer folder
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.composer/cache
           key: php-composer-cache
