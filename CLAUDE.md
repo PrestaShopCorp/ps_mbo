@@ -94,18 +94,34 @@ that powered this feature. Treat as read-only legacy code.
 `ps_mbo` intercepts the native PS module manager install and upgrade flows to
 download zips from Addons transparently:
 
+Two distinct paths depending on whether a `$source` is provided to `ModuleManager`:
+
+**Path A - source provided (e.g. Addons URL):**
 ```
-PS module manager install/upgrade
-  -> hookActionBeforeInstallModule / hookActionBeforeUpgradeModule
-       -> ActionsManager::install(moduleId)
-            -> AddonsUrlSourceHandler::handle(addonsUrl)
-                 -> AddonsUrlSourceRetriever (downloads zip from Addons API)
-                 -> ZipSourceHandler (hands zip to PS native installer)
+ModuleManager::install($name, $source)
+  -> sourceFactory->getHandler($source)   // PS Core
+       -> AddonsUrlSourceHandler::canHandle($source) == true
+            -> AddonsUrlSourceRetriever::get($source)  (downloads zip)
+            -> ZipSourceHandler::handle($localZipPath)
+  hookActionBeforeInstallModule fires but does nothing (source already resolved)
 ```
 
-`src/Module/SourceHandler/AddonsUrlSourceHandler.php` implements PS's
-`SourceHandlerInterface`, so it integrates seamlessly with the module manager's
-source resolution pipeline.
+**Path B - no source (module name only, e.g. from the module manager UI):**
+```
+ModuleManager::install($name, source=null)
+  -> no SourceHandler invoked
+  -> hookActionBeforeInstallModule fires
+       -> ActionsManager::install(moduleId)
+            -> Addons API download by module ID
+            -> native PS installer picks up the local zip
+```
+
+`AddonsUrlSourceHandler` (`src/Module/SourceHandler/`) implements PS Core's
+`SourceHandlerInterface` and is registered in the DI container so the source
+factory picks it up automatically when the caller provides an Addons URL.
+
+The hook is therefore a fallback: it covers call sites that don't pass a source
+(e.g. back-office module manager triggered by name).
 
 Symfony Workflow (`symfony/workflow`) models the allowed transitions between
 module states (installed, enabled, upgraded, etc.).
