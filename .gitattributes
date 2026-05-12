@@ -1,0 +1,4 @@
+# Export-ignore: excluded from git archive exports and production artifacts
+.ai-tools/  export-ignore
+.claude/    export-ignore
+CLAUDE.md   export-ignore

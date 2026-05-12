@@ -1,0 +1,3 @@
+[submodule ".ai-tools"]
+	path = .ai-tools
+	url = git@github.com:PrestaShopCorp/marketplace-ai-tools.git
