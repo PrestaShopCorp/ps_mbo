@@ -8,11 +8,10 @@
    `mbo.prestashop.com` that renders the full Addons marketplace inside the PS
    back-office (module catalog, theme catalog, recommended modules).
 2. **Addons bridge**: acts as the intermediary between the shop and the Addons
-   platform for everything module-lifecycle related: surfacing available updates
-   in the module manager, intercepting install/upgrade requests to download zips
-   directly from Addons (`AddonsUrlSourceHandler` + `hookActionBeforeInstallModule`
-   / `hookActionBeforeUpgradeModule`), and enriching module lists with catalogue
-   metadata from the Distribution API.
+   platform for everything module-lifecycle related: intercepting install/upgrade
+   requests to download zips directly from Addons (`AddonsUrlSourceHandler` +
+   `hookActionBeforeInstallModule` / `hookActionBeforeUpgradeModule`), and
+   enriching module lists with catalogue metadata from the Distribution API.
 
 Ecosystem map: `.ai-tools/ECOSYSTEM_CONTEXT.md`
 
@@ -65,8 +64,7 @@ service initialization without a monolithic `__construct`.
 
 The Addons catalog UI is **not** built in this repo. It is a compiled JS bundle
 (`mbo-cdc.umd.js`) hosted on the MBO CDN (`MBO_CDC_URL` env var, default:
-`https://assets.prestashop3.com/dst/mbo/v1/mbo-cdc.umd.js`). The source lives
-in the `mbo.prestashop.com` repo.
+`https://assets.prestashop3.com/dst/mbo/v1/mbo-cdc.umd.js`).
 
 `ps_mbo` injects this bundle into the PS back-office via hook templates
 (Smarty `.tpl` files in `views/templates/hook/`). `HaveCdcComponent::smartyDisplayTpl()`
@@ -106,7 +104,7 @@ ModuleManager::install($name, $source)
   hookActionBeforeInstallModule fires but does nothing (source already resolved)
 ```
 
-**Path B - no source (module name only, e.g. from the module manager UI):**
+**Path B - no source (module name only):**
 ```
 ModuleManager::install($name, source=null)
   -> no SourceHandler invoked
@@ -158,7 +156,7 @@ All routes prefixed under `/mbo/`:
 
 | Prefix | Controller | Purpose |
 |--------|-----------|---------|
-| `/mbo/modules/catalog` | `ModuleCatalogController` | module catalog page/AJAX |
+| `/mbo/modules/catalog` | `ModuleCatalogController` | module catalog |
 | `/mbo/modules/recommended` | `ModuleRecommendedController` | recommended modules panel |
 | `/mbo/themes/catalog` | `ThemeCatalogController` | theme catalog |
 | `/mbo/addons` | `AddonsController` | Addons-specific routes |
@@ -227,7 +225,7 @@ all zip artifacts by CI and `make build-zip`.
 - The CDC URL is injected at runtime from the `.env` file; if the CDC JS
   fails to load, `admin_mbo_module_cdc_error` renders a graceful fallback page
 - `ConnectedClient` requires a valid PS Accounts token; anonymous shops silently
-  fall back to `Client` (limited catalogue, no purchase history)
+  fall back to `Client`
 - PHPStan config is in `tests/phpstan/`; baseline and custom rules live there
 - `apiPsMbo.php` and `src/Api/` are legacy v8 code (remote management API,
   removed in v9); do not extend or rely on them
