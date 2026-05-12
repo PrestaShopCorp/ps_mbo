@@ -7,15 +7,17 @@
 1. **Addons catalog UI**: injects a Cross Domain Component (CDC) served by
    `mbo.prestashop.com` that renders the full Addons marketplace inside the PS
    back-office (module catalog, theme catalog, recommended modules).
-2. **Remote module management**: exposes a signed HTTP API so that the MBO
-   back-end (`mbo.prestashop.com`) can remotely trigger module
-   install/upgrade/uninstall actions on a merchant shop.
+2. **Addons bridge**: acts as the intermediary between the shop and the Addons
+   platform for everything module-lifecycle related: surfacing available updates
+   in the module manager, intercepting install/upgrade requests to download zips
+   directly from Addons (`AddonsUrlSourceHandler` + `hookActionBeforeInstallModule`
+   / `hookActionBeforeUpgradeModule`), and enriching module lists with catalogue
+   metadata from the Distribution API.
 
 Ecosystem map: `.ai-tools/ECOSYSTEM_CONTEXT.md`
 
 Key upstream/downstream:
-- `mbo.prestashop.com` -> `ps_mbo`: serves the CDC JS bundle and calls the
-  remote API endpoint to manage modules
+- `mbo.prestashop.com` -> `ps_mbo`: serves the CDC JS bundle
 - `ps_mbo` -> Distribution API (`https://mbo-api.prestashop.com`): fetches
   module catalogue data (authenticated and anonymous)
 - `ps_mbo` -> Addons API (`https://api-addons.prestashop.com`): downloads
@@ -76,33 +78,34 @@ Hooks that inject CDC content:
 - `hookDashboardZoneThree`: module catalog page (secondary zone)
 - `hookDisplayAdminThemesListAfter`: theme catalog
 
-### Remote API endpoint
+### Legacy API controllers (v8 remnants)
 
-`controllers/admin/apiPsMbo.php` is a legacy-style PS controller that the MBO
-back-end calls to manage modules on the merchant's shop. Security relies on
-HMAC signature verification (action + module + admin token + action UUID,
-signed with a public key retrieved from the Distribution API). The
-`apiSecurityPsMbo.php` controller handles key rotation.
+`controllers/admin/apiPsMbo.php` and `apiSecurityPsMbo.php` are legacy-style PS
+controllers that implemented a signed remote management API in PS8 (allowed the
+MBO back-end to trigger module actions on the shop). This mechanism was removed
+in PS9 and these files are vestigial. Do not build on them.
 
-`src/Api/` contains:
-- `Controller/AbstractAdminApiController.php`: base class with signature
-  validation, CORS handling, JSON response helpers
-- `Service/ModuleTransitionExecutor.php`: executes install/upgrade/uninstall
-  transitions using Symfony Workflow
-- `Service/ConfigApplyExecutor.php`: applies remote config changes
-- `Service/Factory.php`: resolves which executor to invoke from `?service=` param
+`src/Api/` contains the supporting infrastructure (HMAC signature verification,
+`AbstractAdminApiController`, `ModuleTransitionExecutor`, `ConfigApplyExecutor`)
+that powered this feature. Treat as read-only legacy code.
 
 ### Module lifecycle (install/upgrade from Addons)
 
-`hookActionBeforeInstallModule` / `hookActionBeforeUpgradeModule` intercept PS
-module manager operations and download the zip from Addons before the native
-install runs:
+`ps_mbo` intercepts the native PS module manager install and upgrade flows to
+download zips from Addons transparently:
 
 ```
-hook -> ActionsManager::install(moduleId)
-          -> FilesManager (download zip from Addons API)
-          -> native PS install picks up the local zip
+PS module manager install/upgrade
+  -> hookActionBeforeInstallModule / hookActionBeforeUpgradeModule
+       -> ActionsManager::install(moduleId)
+            -> AddonsUrlSourceHandler::handle(addonsUrl)
+                 -> AddonsUrlSourceRetriever (downloads zip from Addons API)
+                 -> ZipSourceHandler (hands zip to PS native installer)
 ```
+
+`src/Module/SourceHandler/AddonsUrlSourceHandler.php` implements PS's
+`SourceHandlerInterface`, so it integrates seamlessly with the module manager's
+source resolution pipeline.
 
 Symfony Workflow (`symfony/workflow`) models the allowed transitions between
 module states (installed, enabled, upgraded, etc.).
@@ -211,6 +214,5 @@ all zip artifacts by CI and `make build-zip`.
 - `ConnectedClient` requires a valid PS Accounts token; anonymous shops silently
   fall back to `Client` (limited catalogue, no purchase history)
 - PHPStan config is in `tests/phpstan/`; baseline and custom rules live there
-- The HMAC signature in `apiPsMbo.php` includes `admin_token` (a PS back-office
-  token, not an Accounts token): this is separate from the Accounts JWT used for
-  the Distribution API
+- `apiPsMbo.php` and `src/Api/` are legacy v8 code (remote management API,
+  removed in v9); do not extend or rely on them
