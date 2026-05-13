@@ -23,6 +23,9 @@ build-zip:
 	rm -rf /tmp/ps_mbo/.editorconfig
 	rm -rf /tmp/ps_mbo/.git
 	rm -rf /tmp/ps_mbo/.github
+	rm -rf /tmp/ps_mbo/.ai-tools
+	rm -rf /tmp/ps_mbo/.claude
+	rm -rf /tmp/ps_mbo/CLAUDE.md
 	rm -rf /tmp/ps_mbo/_dev
 	rm -rf /tmp/ps_mbo/tests
 	rm -rf /tmp/ps_mbo/docker-compose.yml

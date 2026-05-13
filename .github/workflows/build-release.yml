@@ -76,6 +76,10 @@ jobs:
         run: |
           rm -f gha-*.json
 
+      - name: Remove AI context files
+        run: |
+          rm -rf .ai-tools/ .claude/ CLAUDE.md
+
       - name: Prepare the zip
         run: |
           cd ..
@@ -130,6 +134,10 @@ jobs:
           rm -f gha-*.json
           rm -f ./src/Traits/HaveConfigurationPage.php
           sed -i '/HaveConfigurationPage/d' ps_mbo.php
+
+      - name: Remove AI context files
+        run: |
+          rm -rf .ai-tools/ .claude/ CLAUDE.md
 
       - name: Prepare the production zip
         run: |
