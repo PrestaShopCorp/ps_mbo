@@ -10,7 +10,7 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'translations_update')
     steps:
       - name: Checkout module-translation-tool
-        uses: actions/checkout@v2.0.0
+        uses: actions/checkout@v6
         with:
           repository: PrestaShopCorp/module-translation-tool
           ref: main
