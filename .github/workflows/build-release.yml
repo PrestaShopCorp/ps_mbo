@@ -76,9 +76,10 @@ jobs:
         run: |
           rm -f gha-*.json
 
-      - name: Remove AI context files
+      - name: Remove dev-only files
         run: |
           rm -rf .ai-tools/ .claude/ CLAUDE.md
+          rm -f .t9n.yml .gitattributes .gitmodules
 
       - name: Prepare the zip
         run: |
@@ -135,9 +136,10 @@ jobs:
           rm -f ./src/Traits/HaveConfigurationPage.php
           sed -i '/HaveConfigurationPage/d' ps_mbo.php
 
-      - name: Remove AI context files
+      - name: Remove dev-only files
         run: |
           rm -rf .ai-tools/ .claude/ CLAUDE.md
+          rm -f .t9n.yml .gitattributes .gitmodules
 
       - name: Prepare the production zip
         run: |
