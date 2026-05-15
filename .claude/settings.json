@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(composer install)",
+      "Bash(composer install *)",
+      "Bash(composer require *)",
+      "Bash(composer update *)",
+      "Bash(composer remove *)",
+      "Bash(composer dump-autoload *)",
+      "Bash(composer test)",
+      "Bash(composer lint)",
+      "Bash(php -d date.timezone=UTC ./vendor/bin/phpunit *)",
+      "Bash(./vendor/bin/phpunit *)",
+      "Bash(./vendor/bin/phpstan *)",
+      "Bash(./vendor/bin/php-cs-fixer *)",
+      "Bash(make build-zip)",
+      "Bash(make build-zip-prod)"
+    ]
+  }
+}
