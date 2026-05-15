@@ -26,6 +26,9 @@ build-zip:
 	rm -rf /tmp/ps_mbo/.ai-tools
 	rm -rf /tmp/ps_mbo/.claude
 	rm -rf /tmp/ps_mbo/CLAUDE.md
+	rm -rf /tmp/ps_mbo/.t9n.yml
+	rm -rf /tmp/ps_mbo/.gitattributes
+	rm -rf /tmp/ps_mbo/.gitmodules
 	rm -rf /tmp/ps_mbo/_dev
 	rm -rf /tmp/ps_mbo/tests
 	rm -rf /tmp/ps_mbo/docker-compose.yml
