@@ -220,6 +220,14 @@ make build-zip            # local zip without dev artifacts
 AI context files (`.ai-tools/`, `.claude/`, `CLAUDE.md`) are excluded from
 all zip artifacts by CI and `make build-zip`.
 
+## Skills
+
+Project-specific skills live in `.claude/skills/`. Invoke them with the Skill tool or `/skill-name`:
+
+| Skill | Trigger |
+|-------|---------|
+| `release-versioning` | Version bump + GitHub release. Run when preparing a release. |
+
 ## Points of Attention
 
 - The CDC URL is injected at runtime from the `.env` file; if the CDC JS
