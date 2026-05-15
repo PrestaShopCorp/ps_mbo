@@ -140,10 +140,11 @@ git push origin 4.x
 gh release create v<new_version> \
   --title "v<new_version>" \
   --generate-notes \
-  --target 4.x
+  --target 4.x \
+  --latest=false
 ```
 
-Do NOT add `--latest` — this is a maintenance branch; the latest release remains on master/v5.
+`--latest=false` is required: GitHub automatically marks the most recently created release as "latest" even without the flag, which would override the canonical latest on master/v5.
 
 Output the release URL.
 
@@ -152,5 +153,5 @@ Output the release URL.
 - Never bump major (no 5.x from this branch — that is a separate codebase).
 - Tag format: `v<major>.<minor>.<patch>` (e.g., `v4.14.2`). Release name = tag name.
 - `--generate-notes` uses GitHub's auto-changelog from commits between the previous and new tag.
-- No `--latest` flag: 4.x is a maintenance branch; v5 (master) is the canonical latest.
+- Always pass `--latest=false`: GitHub auto-promotes any new release to "latest" regardless of the flag; 4.x is a maintenance branch and v5 (master) must remain the canonical latest.
 - If branch protection prevents direct push to 4.x: use `chore/bump-<new_version>` branch, open PR targeting `4.x`, merge, then run `gh release create` after merge.
