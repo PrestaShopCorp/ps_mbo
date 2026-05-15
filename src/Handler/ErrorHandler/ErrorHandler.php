@@ -46,7 +46,7 @@ class ErrorHandler implements ErrorHandlerInterface
 
     public function __construct()
     {
-        $this->dsn = getenv('SENTRY_CREDENTIALS');
+        $this->dsn = getenv('PS_MBO_SENTRY_CREDENTIALS');
 
         if (empty($this->dsn)) {
             return;
@@ -56,9 +56,11 @@ class ErrorHandler implements ErrorHandlerInterface
             \Sentry\init([
                 'dsn' => $this->dsn,
                 'release' => \ps_mbo::VERSION,
-                'environment' => getenv('SENTRY_ENVIRONMENT'),
+                'environment' => getenv('PS_MBO_SENTRY_ENVIRONMENT'),
                 'traces_sample_rate' => 0.5,
                 'sample_rate' => 0.5,
+                'http_timeout' => 2,
+                'http_connect_timeout' => 1,
             ]);
 
             \Sentry\configureScope(function (Scope $scope): void {
