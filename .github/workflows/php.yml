@@ -48,7 +48,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@2.37.1
         with:
-          php-version: ${{ matrix.php-version }})
+          php-version: ${{ matrix.php-version }}
 
       - name: Checkout
         uses: actions/checkout@v6
