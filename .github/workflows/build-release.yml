@@ -57,14 +57,14 @@ jobs:
         run: exit 1
 
       - name: Auth GCP
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@v3
         with:
           workload_identity_provider: ${{ secrets.WI_PROVIDER_PREPRODUCTION }}
           service_account: ${{ secrets.WI_SA_PREPRODUCTION }}
           project_id: ${{ env.GCP_PROJECT }}
 
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
+        uses: google-github-actions/setup-gcloud@v3
         with:
           project_id: ${{ env.GCP_PROJECT }}
 
@@ -88,7 +88,7 @@ jobs:
           zip -r ${{ github.event.repository.name }}.zip ${{ github.event.repository.name }}
 
       - name: Create & upload artifact for preprod
-        uses: 'actions/upload-artifact@v4'
+        uses: 'actions/upload-artifact@v7'
         with:
           name: ${{ github.event.repository.name }}.preprod
           path: /home/runner/work/ps_mbo/${{ github.event.repository.name }}.zip
@@ -115,14 +115,14 @@ jobs:
         run: exit 1
 
       - name: Auth GCP
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@v3
         with:
           workload_identity_provider: ${{ secrets.WI_PROVIDER_PRODUCTION }}
           service_account: ${{ secrets.WI_SA_PRODUCTION }}
           project_id: ${{ env.GCP_PROJECT }}
 
       - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
+        uses: google-github-actions/setup-gcloud@v3
         with:
           project_id: ${{ env.GCP_PROJECT }}
 
@@ -148,6 +148,6 @@ jobs:
           zip -r ${{ github.event.repository.name }}_${{ github.event.release.name }}.zip ${{ github.event.repository.name }}
 
       - name: Publish the production zip
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           files: ../${{ github.event.repository.name }}_${{ github.event.release.name }}.zip
