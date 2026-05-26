@@ -27,11 +27,15 @@ Every hook trait must follow this order:
 - Display hooks (`hookDisplay*`, `hookDashboard*`): return type `false|string`, return `''` on error (not `false`)
 - Action hooks (`hookAction*`): typically `void` or `array`; document expected shape if array
 
-## NEVER let an exception escape a hook
+## Exception handling in hooks
 
-A hook is called inside a PrestaShop workflow (module install, page render, module list build...). An uncaught exception propagates up and breaks the entire workflow for the merchant, not just this module.
+The rule differs by hook type.
 
-**Every hook method must be wrapped in a top-level try/catch(\Throwable).** No exception — checked or unchecked — may bubble out.
+### Display, list, and rendering hooks
+
+A hook is called inside a PrestaShop workflow (page render, module list build...). An uncaught exception propagates up and breaks the entire workflow for the merchant, not just this module.
+
+**Every display/list/rendering hook must be wrapped in a top-level try/catch(\Throwable).** No exception may bubble out.
 
 ```php
 // WRONG — exception escapes, breaks the PS workflow
@@ -58,6 +62,33 @@ public function hookActionListModules(array $params): array
 ```
 
 Return a safe neutral value on failure: `''` for display hooks, `[]` for hooks returning arrays, the unmodified input for hooks enriching a list.
+
+### Lifecycle hooks: `actionBeforeInstallModule` and `actionBeforeUpgradeModule`
+
+These hooks are the **exception to the rule above**. PS9 `ModuleController::moduleAction()` wraps the entire dispatch in a try/catch and surfaces `$e->getMessage()` as the JSON error message shown to the merchant. Throwing is the documented way to abort an install/upgrade with a translated, user-facing reason.
+
+**Do NOT wrap the top-level body in try/catch(\Throwable) for these hooks.** Swallowing the exception would let PS Core continue past a failed Addons download and produce an opaque failure for the merchant.
+
+Service retrieval failures may still be caught individually (to report the error), but exceptions from the business operation (Addons download, ActionsManager) must propagate.
+
+```php
+// CORRECT for actionBefore*Module
+public function hookActionBeforeInstallModule(array $params): void
+{
+    try {
+        $client = $this->get(ApiClient::class);
+        if (null === $client) {
+            throw new ExpectedServiceNotFoundException('...');
+        }
+    } catch (\Exception $e) {
+        ErrorHelper::reportError($e);
+        return;
+    }
+
+    // Let this throw: PS9 ModuleController catches it and surfaces getMessage() to the merchant
+    $actionsManager->install($moduleId);
+}
+```
 
 ## Boot method
 
