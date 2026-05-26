@@ -55,7 +55,7 @@ trait UseActionBeforeUpgradeModule
 
         try {
             /** @var ApiClient|null $addonsClient */
-            $addonsClient = $this->get('mbo.addons.client.api');
+            $addonsClient = $this->get(ApiClient::class);
             if (null === $addonsClient) {
                 throw new ExpectedServiceNotFoundException('Unable to get Addons ApiClient');
             }
