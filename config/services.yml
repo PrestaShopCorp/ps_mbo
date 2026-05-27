@@ -23,9 +23,6 @@ services:
     autowire: true
     autoconfigure: true
 
-  PrestaShop\Module\Mbo\Controller\Admin\ModuleSelectionController:
-    autowire: true
-
   PrestaShop\Module\Mbo\Controller\Admin\ModuleRecommendedController:
     autowire: true
     autoconfigure: true

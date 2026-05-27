@@ -29,7 +29,6 @@ use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
 use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeException;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -42,35 +41,6 @@ class AdminAuthenticationProvider
         private readonly ApiClientContext $apiClientContext,
         private readonly CacheProvider $cacheProvider,
     ) {
-    }
-
-    /**
-     * @param \Employee $apiUser
-     *
-     * @return \Cookie
-     *
-     * @throws CoreException
-     */
-    public function apiUserLogin(\Employee $apiUser): \Cookie
-    {
-        $cookie = new \Cookie('apiPsMbo');
-        $cookie->id_employee = (int) $apiUser->id;
-        // @phpstan-ignore-next-line
-        $cookie->email = $apiUser->email;
-        // @phpstan-ignore-next-line
-        $cookie->profile = $apiUser->id_profile;
-        $cookie->passwd = $apiUser->passwd;
-        // @phpstan-ignore-next-line
-        $cookie->remote_addr = $apiUser->remote_addr;
-        $cookie->registerSession(new \EmployeeSession());
-
-        if (!\Tools::getValue('stay_logged_in')) {
-            $cookie->last_activity = time();
-        }
-
-        $cookie->write();
-
-        return $cookie;
     }
 
     /**
@@ -112,7 +82,7 @@ class AdminAuthenticationProvider
             throw new UnauthorizedException('No employee or api client found');
         }
 
-        return \Tools::getAdminToken('apiPsMbo' . \Tab::getIdFromClassName('apiPsMbo') . $salt);
+        return \Tools::getAdminToken('ps_mbo' . $salt);
     }
 
     private function getJwtTokenCacheKey(): string

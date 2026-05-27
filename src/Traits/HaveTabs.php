@@ -75,18 +75,6 @@ trait HaveTabs
             'wording' => 'Themes Catalog',
             'wording_domain' => 'Modules.Mbo.Themescatalog',
         ],
-        'ApiPsMbo' => [
-            'name' => 'MBO Api',
-            'visible' => false,
-            'class_name' => 'ApiPsMbo',
-            'parent_class_name' => 'AdminParentModulesSf',
-        ],
-        'ApiSecurityPsMbo' => [
-            'name' => 'MBO Api Security',
-            'visible' => false,
-            'class_name' => 'ApiSecurityPsMbo',
-            'parent_class_name' => 'AdminParentModulesSf',
-        ],
     ];
 
     /**

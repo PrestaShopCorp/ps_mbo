@@ -17,33 +17,37 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
-
-use PrestaShop\Module\Mbo\Api\Config\Config;
-use PrestaShop\Module\Mbo\Api\Controller\AbstractAdminApiController;
-
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+$rootDir = defined('_PS_ROOT_DIR_') ? _PS_ROOT_DIR_ : getenv('_PS_ROOT_DIR_');
+if (!$rootDir) {
+    $rootDir = __DIR__ . '/../../../';
+}
+
+require_once $rootDir . '/vendor/autoload.php';
+
 /**
- * This controller only checks if the user is connected using the token given in parameter.
- * Note that if the token is valid, the user session is extended.
+ * @param ps_mbo $module
+ *
+ * @return bool
  */
-class apiSecurityPsMboController extends AbstractAdminApiController
+function upgrade_module_5_3_0(Module $module): bool
 {
-    public $type = Config::SECURITY_ME;
+    try {
+        // Remove legacy inbound API tabs (ApiPsMbo, ApiSecurityPsMbo) from ps_tab.
+        // updateTabs() diffs DB against $ADMIN_CONTROLLERS — tabs no longer declared are deleted.
+        $module->updateTabs();
 
-    /**
-     * @return void
-     */
-    public function postProcess(): void
-    {
-        $this->exitWithResponse([
-            'message' => 'User still connected',
-        ]);
-    }
+        // Clear cached JWTs: the token salt changed (no longer tied to ApiPsMbo tab id).
+        $authProvider = $module->get(\PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider::class);
+        if (null !== $authProvider) {
+            $authProvider->clearCache();
+        }
 
-    protected function authorize(): void
-    {
+        return true;
+    } catch (Exception $e) {
+        return true;
     }
 }

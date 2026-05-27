@@ -438,13 +438,11 @@ class Module implements ModuleInterface
 
     public function getStatus(): string
     {
-        return (new TransitionModule(
-            $this->get('name'),
-            $this->getVersion(),
+        return ModuleStatus::fromFlags(
             (bool) $this->database->get('installed'),
-            $this->isMobileActive(),
-            $this->isActive())
-        )->getStatus();
+            $this->isActive(),
+            $this->isMobileActive()
+        )->value;
     }
 
     private function getVersion(): string

@@ -22,7 +22,6 @@
     "ext-fileinfo": "*",
     "ext-json": "*",
     "sentry/sdk": "^3.3",
-    "symfony/workflow": "^6.4",
     "symfony/string": "^6.4",
     "prestashop/prestashop-accounts-installer": "^1.0",
     "firebase/php-jwt": "^7.0",

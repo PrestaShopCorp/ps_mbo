@@ -28,7 +28,7 @@ Key upstream/downstream:
 
 - PHP 8.1+, `declare(strict_types=1)` everywhere
 - PrestaShop 8.x / 9.x (entry guard: `version_compare(_PS_VERSION_, '8.0.2', '<')`)
-- Symfony 6.4 (DI container, Workflow, String components)
+- Symfony 6.4 (DI container, String components)
 - Guzzle HTTP (via PSR-18 interfaces) for outbound API calls
 - Smarty (hook templates) + Twig (Symfony controller views)
 - PHPUnit 9.x, PHP-CS-Fixer 3.x, PHPStan 1.x
@@ -76,17 +76,6 @@ Hooks that inject CDC content:
 - `hookDashboardZoneThree`: module catalog page (secondary zone)
 - `hookDisplayAdminThemesListAfter`: theme catalog
 
-### Legacy API controllers (v8 remnants)
-
-`controllers/admin/apiPsMbo.php` and `apiSecurityPsMbo.php` are legacy-style PS
-controllers that implemented a signed remote management API in PS8 (allowed the
-MBO back-end to trigger module actions on the shop). This mechanism was removed
-in PS9 and these files are vestigial. Do not build on them.
-
-`src/Api/` contains the supporting infrastructure (HMAC signature verification,
-`AbstractAdminApiController`, `ModuleTransitionExecutor`, `ConfigApplyExecutor`)
-that powered this feature. Treat as read-only legacy code.
-
 ### Module lifecycle (install/upgrade from Addons)
 
 `ps_mbo` intercepts the native PS module manager install and upgrade flows to
@@ -119,9 +108,6 @@ ModuleManager::install($name, source=null)
 factory picks it up automatically when the caller provides an Addons URL.
 
 The hook is therefore a fallback: it covers call sites that don't pass a source.
-
-Symfony Workflow (`symfony/workflow`) models the allowed transitions between
-module states (installed, enabled, upgraded, etc.).
 
 ### Module collection / catalogue
 
@@ -235,5 +221,4 @@ Project-specific skills live in `.claude/skills/`. Invoke them with the Skill to
 - `ConnectedClient` requires a valid PS Accounts token; anonymous shops silently
   fall back to `Client`
 - PHPStan config is in `tests/phpstan/`; baseline and custom rules live there
-- `apiPsMbo.php` and `src/Api/` are legacy v8 code (remote management API,
-  removed in v9); do not extend or rely on them
+- `src/Api/Security/AdminAuthenticationProvider.php` is the only survivor of the former v8 inbound API stack; it provides `getMboJWT()` and `getMboToken()` for outbound Distribution/Addons API auth only
