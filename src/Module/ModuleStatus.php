@@ -19,29 +19,41 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Api\Repository;
-
-use Symfony\Component\Finder\Finder;
+namespace PrestaShop\Module\Mbo\Module;
 
 if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class ModuleRepository
+enum ModuleStatus: string
 {
-    public function getInstalledModules(): array
-    {
-        $modules = [];
-        $modulesDirsList = (new Finder())->directories()
-            ->in(_PS_MODULE_DIR_)
-            ->depth('== 0')
-            ->exclude(['__MACOSX'])
-            ->ignoreVCS(true);
+    case UNINSTALLED = 'uninstalled';
+    case ENABLED_MOBILE_ENABLED = 'enabled__mobile_enabled';
+    case ENABLED_MOBILE_DISABLED = 'enabled__mobile_disabled';
+    case DISABLED_MOBILE_ENABLED = 'disabled__mobile_enabled';
+    case DISABLED_MOBILE_DISABLED = 'disabled__mobile_disabled';
+    case RESET = 'reset';
+    case UPGRADED = 'upgraded';
+    case CONFIGURED = 'configured';
 
-        foreach ($modulesDirsList as $moduleDir) {
-            $modules[] = $moduleDir->getFilename();
+    public static function fromFlags(bool $installed, bool $active, bool $mobileActive): self
+    {
+        if (!$installed) {
+            return self::UNINSTALLED;
         }
 
-        return $modules;
+        if ($active && $mobileActive) {
+            return self::ENABLED_MOBILE_ENABLED;
+        }
+
+        if ($active) {
+            return self::ENABLED_MOBILE_DISABLED;
+        }
+
+        if ($mobileActive) {
+            return self::DISABLED_MOBILE_ENABLED;
+        }
+
+        return self::DISABLED_MOBILE_DISABLED;
     }
 }

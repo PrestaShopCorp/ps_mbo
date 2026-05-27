@@ -29,7 +29,7 @@ use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\Module\Mbo\Helpers\UrlHelper;
 use PrestaShop\Module\Mbo\Module\Module;
 use PrestaShop\Module\Mbo\Module\ModuleOverrideChecker;
-use PrestaShop\Module\Mbo\Module\Workflow\TransitionInterface;
+use PrestaShop\Module\Mbo\Module\ModuleStatus;
 use PrestaShop\PrestaShop\Adapter\Module\Module as CoreModule;
 use PrestaShop\PrestaShop\Core\Context\CountryContext;
 use PrestaShop\PrestaShop\Core\Context\CurrencyContext;
@@ -86,7 +86,7 @@ class ContextBuilder
         $modules = [];
         // Filter : remove uninstalled modules
         foreach ($this->listInstalledModulesAndStatuses() as $installedModule) {
-            if ($installedModule['status'] !== TransitionInterface::STATUS_UNINSTALLED) {
+            if ($installedModule['status'] !== ModuleStatus::UNINSTALLED->value) {
                 $modules[] = $installedModule['name'];
             }
         }

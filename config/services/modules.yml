@@ -31,6 +31,17 @@ services:
   mbo.modules.actions_manager:
     alias: PrestaShop\Module\Mbo\Module\ActionsManager
 
+  PrestaShop\Module\Mbo\Module\SourceRetriever\AddonsUrlSourceRetriever:
+    autowire: true
+    arguments:
+      $addonsDataProvider: '@PrestaShop\Module\Mbo\Addons\Provider\AddonsDataProvider'
+      $translator: '@translator'
+      $httpClient: '@Psr\Http\Client\ClientInterface'
+      $requestFactory: '@Psr\Http\Message\ServerRequestFactoryInterface'
+      $configuration: '@PrestaShop\PrestaShop\Core\ConfigurationInterface'
+    properties:
+      cacheDir: "%kernel.cache_dir%"
+
   PrestaShop\Module\Mbo\Module\SourceHandler\AddonsUrlSourceHandler:
     autowire: true
     autoconfigure: true
