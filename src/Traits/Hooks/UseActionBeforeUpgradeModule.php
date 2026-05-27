@@ -27,6 +27,7 @@ use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Module\ActionsManager;
 use PrestaShop\Module\Mbo\Service\HookExceptionHolder;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
@@ -45,13 +46,30 @@ trait UseActionBeforeUpgradeModule
      */
     public function hookActionBeforeUpgradeModule(array $params): void
     {
-        if (isset($params['source']) && !$params['source']) {
-            $this->purgeCache();
-
+        if (!empty($params['source'])) {
             return;
         }
 
         $moduleName = (string) $params['moduleName'];
+
+        try {
+            /** @var ModuleDataProvider|null $moduleDataProvider */
+            $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
+            if (null !== $moduleDataProvider) {
+                $dbData = $moduleDataProvider->findByName($moduleName);
+                $onDiskModule = \Module::getInstanceByName($moduleName);
+                if (
+                    $onDiskModule !== false
+                    && isset($dbData['version'])
+                    && version_compare((string) $onDiskModule->version, $dbData['version'], '>')
+                ) {
+                    // Avoid double download if already downloaded by SourceHandler in another request (upload => upgrade)
+                    return;
+                }
+            }
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+        }
 
         try {
             /** @var ApiClient|null $addonsClient */
