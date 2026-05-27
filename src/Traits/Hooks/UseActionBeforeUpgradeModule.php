@@ -113,7 +113,7 @@ trait UseActionBeforeUpgradeModule
         try {
             /** @var ModuleDataProvider|null $moduleDataProvider */
             $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
-            if (null === $moduleDataProvider) {
+            if ($moduleDataProvider === null) {
                 return false;
             }
             $dbData = $moduleDataProvider->findByName($moduleName);
