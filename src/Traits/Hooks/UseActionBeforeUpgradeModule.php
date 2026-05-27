@@ -21,11 +21,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Addons\ApiClient;
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
-use PrestaShop\Module\Mbo\Module\ActionsManager;
-use PrestaShop\Module\Mbo\Service\HookExceptionHolder;
+use PrestaShop\Module\Mbo\Traits\HaveAddonsInstall;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
@@ -38,6 +36,7 @@ if (!defined('_PS_VERSION_')) {
 
 trait UseActionBeforeUpgradeModule
 {
+    use HaveAddonsInstall;
     /**
      * Hook actionBeforeUpgradeModule.
      *
@@ -56,53 +55,7 @@ trait UseActionBeforeUpgradeModule
             return;
         }
 
-        try {
-            /** @var ApiClient|null $addonsClient */
-            $addonsClient = $this->get(ApiClient::class);
-            if (null === $addonsClient) {
-                throw new ExpectedServiceNotFoundException('Unable to get Addons ApiClient');
-            }
-        } catch (\Exception $e) {
-            ErrorHelper::reportError($e);
-
-            return;
-        }
-
-        $moduleId = (int) \Tools::getValue('module_id');
-
-        if (!$moduleId) {
-            $addon = $addonsClient->getModuleByName($moduleName);
-
-            if (null === $addon || !isset($addon->product->id_product)) {
-                return;
-            }
-
-            $moduleId = (int) $addon->product->id_product;
-        }
-
-        try {
-            /** @var ActionsManager|null $actionsManager */
-            $actionsManager = $this->get('mbo.modules.actions_manager');
-            if (null === $actionsManager) {
-                throw new ExpectedServiceNotFoundException('Unable to get ActionsManager');
-            }
-        } catch (\Exception $e) {
-            ErrorHelper::reportError($e);
-
-            return;
-        }
-
-        try {
-            $actionsManager->install($moduleId);
-        } catch (\Exception $e) {
-            /** @var HookExceptionHolder $hookExceptionHolder */
-            $hookExceptionHolder = $this->get('mbo.hook_exception_holder');
-            if (null !== $hookExceptionHolder) {
-                $hookExceptionHolder->holdException('actionBeforeInstallModule', $e);
-            }
-
-            throw $e;
-        }
+        $this->downloadModuleFromAddons($moduleName);
 
         // Clear the cache after download to force reload module services
         $this->purgeCache();
