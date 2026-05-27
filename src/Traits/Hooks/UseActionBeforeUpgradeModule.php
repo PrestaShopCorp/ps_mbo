@@ -52,23 +52,8 @@ trait UseActionBeforeUpgradeModule
 
         $moduleName = (string) $params['moduleName'];
 
-        try {
-            /** @var ModuleDataProvider|null $moduleDataProvider */
-            $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
-            if (null !== $moduleDataProvider) {
-                $dbData = $moduleDataProvider->findByName($moduleName);
-                $onDiskModule = \Module::getInstanceByName($moduleName);
-                if (
-                    $onDiskModule !== false
-                    && isset($dbData['version'])
-                    && version_compare((string) $onDiskModule->version, $dbData['version'], '>')
-                ) {
-                    // Avoid double download if already downloaded by SourceHandler in another request (upload => upgrade)
-                    return;
-                }
-            }
-        } catch (\Exception $e) {
-            ErrorHelper::reportError($e);
+        if ($this->isAlreadyDownloaded($moduleName)) {
+            return;
         }
 
         try {
@@ -121,6 +106,27 @@ trait UseActionBeforeUpgradeModule
 
         // Clear the cache after download to force reload module services
         $this->purgeCache();
+    }
+
+    private function isAlreadyDownloaded(string $moduleName): bool
+    {
+        try {
+            /** @var ModuleDataProvider|null $moduleDataProvider */
+            $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
+            if (null === $moduleDataProvider) {
+                return false;
+            }
+            $dbData = $moduleDataProvider->findByName($moduleName);
+            $onDiskModule = \Module::getInstanceByName($moduleName);
+
+            return $onDiskModule !== false
+                && isset($dbData['version'])
+                && version_compare((string) $onDiskModule->version, $dbData['version'], '>');
+        } catch (\Exception $e) {
+            ErrorHelper::reportError($e);
+
+            return false;
+        }
     }
 
     private function purgeCache(): void
