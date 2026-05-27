@@ -204,7 +204,7 @@ class ContextBuilder
             'module_name' => ':module',
         ];
 
-        if (in_array($action, ['install', 'upgrade'])) {
+        if (in_array($action, ['install', 'upgrade', 'upload'])) {
             $params['id'] = '_module_id_';
             $params['source'] = '_download_url_';
         }
