@@ -39,7 +39,7 @@ docker run --rm --volumes-from temp-ps \
        -v $PWD:/var/www/html/modules/ps_mbo \
        -e _PS_ROOT_DIR_=/var/www/html \
        -e DISABLE_MAKE=1 \
-       --workdir=/var/www/html/modules/ps_mbo ghcr.io/phpstan/phpstan:1.10.45-php${PHP_VERSION} \
+       --workdir=/var/www/html/modules/ps_mbo ghcr.io/phpstan/phpstan:2-php${PHP_VERSION} \
        analyse \
        --error-format=github \
        --configuration=/var/www/html/modules/ps_mbo/tests/phpstan/phpstan-${PS_VERSION}.neon
