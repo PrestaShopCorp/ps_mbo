@@ -32,7 +32,7 @@ class DownloadModuleException extends \Exception
      */
     private $context;
 
-    public function __construct(array $context = [], \Throwable $previous = null)
+    public function __construct(array $context = [], ?\Throwable $previous = null)
     {
         parent::__construct('Cannot have source to download the module', 0, $previous);
 

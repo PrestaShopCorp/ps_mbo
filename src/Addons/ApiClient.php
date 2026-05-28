@@ -314,7 +314,7 @@ class ApiClient
      * @return mixed
      */
     public function processRequestAndReturn(
-        string $attributeToReturn = null,
+        ?string $attributeToReturn = null,
         string $method = self::HTTP_METHOD_GET,
         $default = [],
     ) {

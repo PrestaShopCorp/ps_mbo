@@ -138,7 +138,7 @@ class Module implements ModuleInterface
      * @param array|null $disk
      * @param array|null $database
      */
-    public function __construct(array $attributes = null, array $disk = null, array $database = null)
+    public function __construct(?array $attributes = null, ?array $disk = null, ?array $database = null)
     {
         $this->attributes = new ParameterBag($this->attributes_default);
         $this->disk = new ParameterBag($this->disk_default);

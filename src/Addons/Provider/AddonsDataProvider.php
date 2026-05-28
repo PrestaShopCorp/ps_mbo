@@ -103,7 +103,7 @@ class AddonsDataProvider implements DataProviderInterface
     public function __construct(
         ApiClient $apiClient,
         AddonsUser $user,
-        string $moduleChannel = null,
+        ?string $moduleChannel = null,
     ) {
         $this->marketplaceClient = $apiClient;
         $this->moduleChannel = $moduleChannel ?? self::ADDONS_API_MODULE_CHANNEL_STABLE;

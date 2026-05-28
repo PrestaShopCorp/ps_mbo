@@ -38,7 +38,7 @@ class ErrorHelper
      *
      * @return void
      */
-    public static function reportError(\Throwable $error, array $data = null): void
+    public static function reportError(\Throwable $error, ?array $data = null): void
     {
         if (!self::$errorHandler instanceof ErrorHandlerInterface) {
             self::$errorHandler = new ErrorHandler();

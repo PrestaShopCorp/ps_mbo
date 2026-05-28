@@ -292,7 +292,7 @@ class ps_mbo extends Module
         }
     }
 
-    public function installTables(string $table = null): bool
+    public function installTables(?string $table = null): bool
     {
         $sqlQueries = [];
 
