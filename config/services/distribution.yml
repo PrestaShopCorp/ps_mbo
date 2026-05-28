@@ -38,3 +38,27 @@ services:
       $httpClient: '@Psr\Http\Client\ClientInterface'
       $requestFactory: '@Psr\Http\Message\ServerRequestFactoryInterface'
       $cacheProvider: '@Doctrine\Common\Cache\Psr6\DoctrineProvider'
+
+  # Distribution config apply pipeline
+  PrestaShop\Module\Mbo\Distribution\Config\Factory:
+    autowire: true
+
+  PrestaShop\Module\Mbo\Distribution\Config\Applier:
+    autowire: true
+
+  PrestaShop\Module\Mbo\Distribution\Config\Appliers\ThemeCatalogMenuConfigApplier:
+    autowire: true
+
+  PrestaShop\Module\Mbo\Distribution\Config\Appliers\ModuleSelectionMenuConfigApplier:
+    autowire: true
+
+  PrestaShop\Module\Mbo\Distribution\Config\Appliers\Factory:
+    autowire: true
+    arguments:
+      - [
+          '@PrestaShop\Module\Mbo\Distribution\Config\Appliers\ThemeCatalogMenuConfigApplier',
+          '@PrestaShop\Module\Mbo\Distribution\Config\Appliers\ModuleSelectionMenuConfigApplier'
+        ]
+
+  PrestaShop\Module\Mbo\Distribution\Config\CommandHandler\VersionChangeApplyConfigCommandHandler:
+    autowire: true
