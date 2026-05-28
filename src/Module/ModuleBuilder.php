@@ -80,7 +80,7 @@ class ModuleBuilder implements ModuleBuilderInterface
         $this->moduleDirectory = $moduleDirectory;
     }
 
-    public function build(\stdClass $module, array $database = null): Module
+    public function build(\stdClass $module, ?array $database = null): Module
     {
         /* Convert module to array */
         $attributes = json_decode(json_encode($module), true);

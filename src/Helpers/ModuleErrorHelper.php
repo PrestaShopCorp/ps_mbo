@@ -36,7 +36,7 @@ class ModuleErrorHelper
      *
      * @return \Exception
      */
-    public static function reportAndConvertError(\Exception $error, array $data = null): \Exception
+    public static function reportAndConvertError(\Exception $error, ?array $data = null): \Exception
     {
         ErrorHelper::reportError($error, $data);
 

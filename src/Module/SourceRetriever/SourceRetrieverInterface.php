@@ -33,5 +33,5 @@ interface SourceRetrieverInterface
      *
      * @return string
      */
-    public function get($source, string $expectedModuleName = null, ?array $options = []): string;
+    public function get($source, ?string $expectedModuleName = null, ?array $options = []): string;
 }

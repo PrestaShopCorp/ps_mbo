@@ -42,7 +42,7 @@ class CollectionFactory
     /**
      * @return array<Module> retrieve a list of addons, regarding the $filters used
      */
-    protected function filter(array $modules, FiltersInterface $filters = null): array
+    protected function filter(array $modules, ?FiltersInterface $filters = null): array
     {
         $result = [];
         foreach ($modules as $key => $module) {
