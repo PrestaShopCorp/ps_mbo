@@ -445,14 +445,4 @@ class Module implements ModuleInterface
         )->value;
     }
 
-    private function getVersion(): string
-    {
-        $diskVersion = $this->disk->get('version');
-
-        if (null !== $diskVersion) {
-            return (string) $diskVersion;
-        }
-
-        return $this->database->get('version') ?? '';
-    }
 }
