@@ -23,7 +23,7 @@ namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Search\SearchPanel;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -43,7 +43,7 @@ trait UseActionGetAlternativeSearchPanels
     public function hookActionGetAlternativeSearchPanels(array $params): array
     {
         try {
-            /** @var UrlGeneratorInterface $router */
+            /** @var Router $router */
             $router = $this->getRequiredService('router');
 
             $catalogUrl = $router->generate('admin_mbo_catalog_module', []);
