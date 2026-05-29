@@ -19,7 +19,7 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\Module\Mbo\Traits\Hooks;
+namespace PrestaShop\Module\Mbo\Traits;
 
 use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 
