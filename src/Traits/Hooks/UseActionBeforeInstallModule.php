@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Traits\HaveAddonsInstall;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -44,11 +43,7 @@ trait UseActionBeforeInstallModule
     public function hookActionBeforeInstallModule(array $params): void
     {
         try {
-            /** @var ModuleDataProvider|null $moduleDataProvider */
-            $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
-            if (null === $moduleDataProvider) {
-                throw new ExpectedServiceNotFoundException('Unable to get ModuleDataProvider');
-            }
+            $moduleDataProvider = $this->getRequiredService(ModuleDataProvider::class);
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
 

@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -221,11 +220,8 @@ trait UseDisplayDashboardTop
         }
 
         try {
-            /** @var UrlGeneratorInterface|null $router */
-            $router = $this->get('prestashop.router');
-            if (null === $router) {
-                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayDashboardTop');
-            }
+            /** @var UrlGeneratorInterface $router */
+            $router = $this->getRequiredService('prestashop.router');
 
             $recommendedModulesUrl = $router->generate(
                 'admin_mbo_recommended_modules',
@@ -365,14 +361,8 @@ trait UseDisplayDashboardTop
     private function renderModuleManagerMessage(): string
     {
         try {
-            /** @var Environment|null $twig */
-            $twig = $this->get('twig');
-            /** @var ContextBuilder|null $contextBuilder */
-            $contextBuilder = $this->get(ContextBuilder::class);
-
-            if (null === $contextBuilder || null === $twig) {
-                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayAdminAfterHeader');
-            }
+            $twig = $this->getRequiredService(Environment::class);
+            $contextBuilder = $this->getRequiredService(ContextBuilder::class);
 
             $extraParams = self::getCdcMediaUrl();
 

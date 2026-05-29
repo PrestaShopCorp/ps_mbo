@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
@@ -41,14 +40,9 @@ trait UseDisplayAdminThemesListAfter
     public function hookDisplayAdminThemesListAfter(): string
     {
         try {
-            /** @var ContextBuilder|null $contextBuilder */
-            $contextBuilder = $this->get(ContextBuilder::class);
-            /** @var Router|null $router */
-            $router = $this->get('router');
-
-            if (null === $contextBuilder || null === $router) {
-                throw new ExpectedServiceNotFoundException('Some services not found in UseDisplayAdminThemesListAfter');
-            }
+            $contextBuilder = $this->getRequiredService(ContextBuilder::class);
+            /** @var Router $router */
+            $router = $this->getRequiredService('router');
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
 

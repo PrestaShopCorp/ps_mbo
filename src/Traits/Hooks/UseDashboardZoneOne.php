@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Service\View\ContextBuilder;
 use PrestaShop\Module\Mbo\Traits\HaveCdcComponent;
@@ -46,12 +45,7 @@ trait UseDashboardZoneOne
         $extraParams = self::getCdcMediaUrl();
 
         try {
-            /** @var ContextBuilder|null $contextBuilder */
-            $contextBuilder = $this->get('mbo.cdc.context_builder');
-
-            if (null === $contextBuilder) {
-                throw new ExpectedServiceNotFoundException('Some services not found in HaveCdcComponent');
-            }
+            $contextBuilder = $this->getRequiredService(ContextBuilder::class);
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
 
