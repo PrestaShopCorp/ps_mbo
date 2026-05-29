@@ -30,6 +30,7 @@ if (!defined('_PS_VERSION_')) {
 
 trait UseHooks
 {
+    use Hooks\ResolvesServices;
     use Hooks\UseDashboardZoneOne;
     use Hooks\UseDashboardZoneThree {
         Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
@@ -41,20 +42,6 @@ trait UseHooks
     use Hooks\UseActionListModules;
     use Hooks\UseDisplayEmptyModuleCategoryExtraMessage;
     use Hooks\UseActionBeforeUpgradeModule;
-
-    /**
-     * Try to call the "bootHookClassName" method on each hook class.
-     *
-     * @return void
-     */
-    protected function bootHooks(): void
-    {
-        foreach ($this->getTraitNames() as $traitName) {
-            if (method_exists($this, "boot{$traitName}")) {
-                $this->{"boot{$traitName}"}();
-            }
-        }
-    }
 
     /**
      * Try to call the "hookClassNameExtraOperations" method on each hook class.

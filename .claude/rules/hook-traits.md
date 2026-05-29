@@ -18,9 +18,9 @@ Every hook trait must follow this order:
 
 ## Service access
 
-- Always retrieve services via `$this->get(ServiceClass::class)`, never via `new`
-- After `$this->get()`, check for `null` and throw `ExpectedServiceNotFoundException` if required
-- Wrap service retrieval in try/catch; on exception call `ErrorHelper::reportError($e)` then return `''` (not `false`)
+- Retrieve required services via `$this->getRequiredService(ServiceClass::class)` (trait `Hooks\ResolvesServices`), never via `new`. It resolves from the container and throws `ExpectedServiceNotFoundException` when the service is missing, so callers no longer repeat the `get() + null-check + throw` boilerplate.
+- Use a `::class` reference where the service is registered by class name. PS-core ids without a class alias (e.g. the `router` service) are passed as a string id; keep a `@var` annotation on those calls for type narrowing.
+- Wrap service retrieval in try/catch; on exception call `ErrorHelper::reportError($e)` then return the safe neutral value (`''` for display hooks, not `false`).
 
 ## Hook return types
 
@@ -49,10 +49,7 @@ public function hookActionListModules(array $params): array
 public function hookActionListModules(array $params): array
 {
     try {
-        $service = $this->get(MyService::class);
-        if (null === $service) {
-            throw new ExpectedServiceNotFoundException('...');
-        }
+        $service = $this->getRequiredService(MyService::class);
         return $service->enrich($params['list']);
     } catch (\Throwable $e) {
         ErrorHelper::reportError($e);
@@ -76,10 +73,7 @@ Service retrieval failures may still be caught individually (to report the error
 public function hookActionBeforeInstallModule(array $params): void
 {
     try {
-        $client = $this->get(ApiClient::class);
-        if (null === $client) {
-            throw new ExpectedServiceNotFoundException('...');
-        }
+        $client = $this->getRequiredService(ApiClient::class);
     } catch (\Exception $e) {
         ErrorHelper::reportError($e);
         return;
@@ -89,10 +83,6 @@ public function hookActionBeforeInstallModule(array $params): void
     $actionsManager->install($moduleId);
 }
 ```
-
-## Boot method
-
-Each trait must have a `boot{TraitName}()` method (e.g. `bootUseDashboardZoneOne()`) called by `UseHooks::bootHooks()`. Put any per-hook service initialization here, not in the hook method itself.
 
 ## CDC-injecting hooks
 
