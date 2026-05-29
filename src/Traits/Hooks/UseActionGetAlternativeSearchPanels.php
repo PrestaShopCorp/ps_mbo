@@ -21,9 +21,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\PrestaShop\Core\Search\SearchPanel;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -43,10 +43,8 @@ trait UseActionGetAlternativeSearchPanels
     public function hookActionGetAlternativeSearchPanels(array $params): array
     {
         try {
-            $router = $this->context->controller->get('router');
-            if ($router == null) {
-                throw new ExpectedServiceNotFoundException('Unable to get router service');
-            }
+            /** @var UrlGeneratorInterface $router */
+            $router = $this->getRequiredService('router');
 
             $catalogUrl = $router->generate('admin_mbo_catalog_module', []);
         } catch (\Exception $e) {

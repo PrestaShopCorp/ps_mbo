@@ -93,10 +93,6 @@ class ps_mbo extends Module
                 'Modules.Mbo.Global'
             );
 
-        if (self::checkModuleStatus()) {
-            $this->bootHooks();
-        }
-
         $this->loadEnv();
     }
 

@@ -21,12 +21,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Traits\Hooks;
 
-use PrestaShop\Module\Mbo\Exception\ExpectedServiceNotFoundException;
 use PrestaShop\Module\Mbo\Helpers\ErrorHelper;
 use PrestaShop\Module\Mbo\Traits\HaveAddonsInstall;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
-use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 
@@ -64,11 +62,7 @@ trait UseActionBeforeUpgradeModule
     private function isAlreadyDownloaded(string $moduleName): bool
     {
         try {
-            /** @var ModuleDataProvider|null $moduleDataProvider */
-            $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
-            if ($moduleDataProvider === null) {
-                return false;
-            }
+            $moduleDataProvider = $this->getRequiredService(ModuleDataProvider::class);
             $dbData = $moduleDataProvider->findByName($moduleName);
             $onDiskModule = \Module::getInstanceByName($moduleName);
 
@@ -85,11 +79,7 @@ trait UseActionBeforeUpgradeModule
     private function purgeCache(): void
     {
         try {
-            /** @var CacheClearerInterface|null $cacheClearer */
-            $cacheClearer = $this->get(SymfonyCacheClearer::class);
-            if (null === $cacheClearer) {
-                throw new ExpectedServiceNotFoundException('Unable to get MboCacheClearer service');
-            }
+            $cacheClearer = $this->getRequiredService(SymfonyCacheClearer::class);
         } catch (\Exception $e) {
             ErrorHelper::reportError($e);
 
