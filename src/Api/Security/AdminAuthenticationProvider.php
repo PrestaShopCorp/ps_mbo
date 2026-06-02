@@ -82,7 +82,7 @@ class AdminAuthenticationProvider
             throw new UnauthorizedException('No employee or api client found');
         }
 
-        return \Tools::getAdminToken('ps_mbo' . $salt);
+        return \Tools::getAdminToken(\ps_mbo::MODULE_NAME . $salt);
     }
 
     private function getJwtTokenCacheKey(): string
