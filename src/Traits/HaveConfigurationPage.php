@@ -39,7 +39,7 @@ trait HaveConfigurationPage
         ],
         'prestabulle' => [
             'cdc' => 'https://integration-assets.prestashop3.com/dst/mbo/#prestabulle#/mbo-cdc.umd.js',
-            'api' => 'https://mbo-api-#prestabulle#.prestashop.com',
+            'api' => 'https://mbo-api.#prestabulle#.prestashop.com',
             'addons' => 'https://addons-api-#prestabulle#.prestashop.com',
             'sentry_url' => 'https://aa99f8a351b641af994ac50b01e14e20@o298402.ingest.sentry.io/6520457',
             'sentry_environment' => '#prestabulle#',
@@ -53,7 +53,7 @@ trait HaveConfigurationPage
         ],
         'preprod' => [
             'cdc' => 'https://preproduction-assets.prestashop3.com/dst/mbo/v1/mbo-cdc.umd.js',
-            'api' => 'https://mbo-api-preprod.prestashop.com',
+            'api' => 'https://mbo-api.preproduction.prestashop.com',
             'addons' => 'https://preprod-api-addons.prestashop.com',
             'sentry_url' => 'https://aa99f8a351b641af994ac50b01e14e20@o298402.ingest.sentry.io/6520457',
             'sentry_environment' => 'preproduction',
@@ -184,7 +184,7 @@ trait HaveConfigurationPage
             'name' => 'Local',
         ]];
 
-        for ($i = 1; $i < 10; ++$i) {
+        for ($i = 1; $i < 4; ++$i) {
             $mboOptionsValues[] = [
                 'value' => "prestabulle$i",
                 'name' => "Prestabulle $i",
