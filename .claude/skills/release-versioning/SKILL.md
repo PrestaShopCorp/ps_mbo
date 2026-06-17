@@ -1,6 +1,6 @@
 ---
 name: release-versioning
-description: "Version bump + GitHub release workflow for ps_mbo. Analyzes commits since last tag, proposes patch/minor bump, checks hooks for upgrade file need, commits the bump, then creates the GitHub release with auto-generated changelog."
+description: "Version bump + GitHub release workflow for ps_mbo. Analyzes commits since last tag, proposes patch/minor bump, checks hooks for upgrade file need, commits the bump, creates the GitHub release with auto-generated changelog, then produces a short non-technical changelog for the Addons Marketplace."
 ---
 
 # Release Versioning Workflow
@@ -144,6 +144,30 @@ gh release create v<new_version> \
 ```
 
 Output the release URL.
+
+## Step 7: Produce the Marketplace changelog
+
+The GitHub auto-notes are too technical for the Addons Marketplace. Generate a short,
+merchant-facing changelog from the same commits analyzed in Step 2.
+
+Rules for the Marketplace changelog:
+- English, plain language, no internal/technical terms (no class names, no PHP version
+  internals unless merchant-relevant, no refactor/CI/chore noise).
+- Group commits by merchant-visible benefit, not by commit type.
+- 2 to 4 bullet points max. Collapse internal-only work (refactor, ci, chore, build,
+  test, deps) into a single line like "Stability, performance, and security improvements."
+- Keep `feat:`/`fix:` user-facing changes as their own bullets, reworded as benefits.
+
+Output it in a fenced block titled `What's new in <new_version>` so it can be pasted
+directly into the Marketplace. Example shape:
+
+```
+What's new in <new_version>
+
+- <feature reworded as a merchant benefit>
+- <user-facing fix reworded>
+- Stability, performance, and security improvements.
+```
 
 ## Rules
 
