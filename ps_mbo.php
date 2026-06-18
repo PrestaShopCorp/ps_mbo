@@ -71,8 +71,8 @@ class ps_mbo extends Module
      */
     public function __construct()
     {
-        $this->name = self::MODULE_NAME;
         // This value must be hard-coded to respect Addons rules, so we must make sure that the const value is always synced with this one
+        $this->name = 'ps_mbo';
         $this->version = '5.3.0';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
