@@ -44,7 +44,7 @@ class ps_mbo extends Module
 
     public const MODULE_NAME = 'ps_mbo';
 
-    public const VERSION = '5.3.0';
+    public const VERSION = '5.3.1';
 
     public array $configurationList = [
         'PS_MBO_SHOP_ADMIN_UUID' => '', // 'ADMIN' because there will be only one for all shops in a multishop context
@@ -73,7 +73,7 @@ class ps_mbo extends Module
     {
         // This value must be hard-coded to respect Addons rules, so we must make sure that the const value is always synced with this one
         $this->name = 'ps_mbo';
-        $this->version = '5.3.0';
+        $this->version = '5.3.1';
         $this->author = 'PrestaShop';
         $this->tab = 'administration';
         $this->module_key = '6cad5414354fbef755c7df4ef1ab74eb';
