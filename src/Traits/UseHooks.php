@@ -30,7 +30,6 @@ if (!defined('_PS_VERSION_')) {
 
 trait UseHooks
 {
-    use ResolvesServices;
     use Hooks\UseDashboardZoneOne;
     use Hooks\UseDashboardZoneThree {
         Hooks\UseDashboardZoneOne::smartyDisplayTpl insteadof \PrestaShop\Module\Mbo\Traits\Hooks\UseDashboardZoneThree;
