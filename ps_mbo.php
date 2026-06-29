@@ -41,6 +41,7 @@ class ps_mbo extends Module
     use PrestaShop\Module\Mbo\Traits\HaveTabs;
     use PrestaShop\Module\Mbo\Traits\UseHooks;
     use PrestaShop\Module\Mbo\Traits\HaveConfigurationPage;
+    use PrestaShop\Module\Mbo\Traits\ResolvesServices;
 
     public const MODULE_NAME = 'ps_mbo';
 

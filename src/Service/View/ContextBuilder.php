@@ -184,17 +184,31 @@ class ContextBuilder
             'shop_business_sector' => $shopActivity['name'],
             'overrides_on_shop' => $overrideChecker->listOverridesFromPsDirectory(),
             'actions_token' => UrlHelper::getQueryParameterValue($mboResetUrl, '_token'),
-            'actions_url' => [
-                'install' => $this->generateActionUrl('install'),
-                'uninstall' => $this->generateActionUrl('uninstall'),
-                'delete' => $this->generateActionUrl('delete'),
-                'enable' => $this->generateActionUrl('enable'),
-                'disable' => $this->generateActionUrl('disable'),
-                'reset' => $this->generateActionUrl('reset'),
-                'upgrade' => $this->generateActionUrl('upgrade'),
-                'upload' => $this->generateActionUrl('upload'),
-            ],
+            'actions_url' => $this->getActionsUrl(),
         ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function getActionsUrl(): array
+    {
+        $actionsUrl = [
+            'install' => $this->generateActionUrl('install'),
+            'uninstall' => $this->generateActionUrl('uninstall'),
+            'delete' => $this->generateActionUrl('delete'),
+            'enable' => $this->generateActionUrl('enable'),
+            'disable' => $this->generateActionUrl('disable'),
+            'reset' => $this->generateActionUrl('reset'),
+            'upgrade' => $this->generateActionUrl('upgrade'),
+        ];
+
+        // The 'upload' action on route admin_module_manage_action exists only since PS 9.1.0
+        if (version_compare(_PS_VERSION_, '9.1.0', '>=')) {
+            $actionsUrl['upload'] = $this->generateActionUrl('upload');
+        }
+
+        return $actionsUrl;
     }
 
     private function generateActionUrl(string $action): string
