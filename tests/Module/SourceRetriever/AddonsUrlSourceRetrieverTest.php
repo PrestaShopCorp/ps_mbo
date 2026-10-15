@@ -38,6 +38,7 @@ class AddonsUrlSourceRetrieverTest extends TestCase
     {
         return [
             ['https://api-addons.prestashop.com/?method=module&id_module=1', true],
+            ['https://api-addons.prestashop.com?method=module&format=json&channel=stable&id_module=46347', true],
             ['http://api-addons.prestashop.com/fakemod.zip', true],
             ['https://www.api-addons.prestashop.com/fakemod.zip', true],
             ['https://preprod-api-addons.prestashop.com/fakemod.zip', true],
