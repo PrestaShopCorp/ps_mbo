@@ -41,6 +41,8 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 {
     private const URL_VALIDATION_REGEX = '/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{0,256}api-addons\\.prestashop\\.com(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/';
 
+    private const ADDONS_HOST_REGEX = '/^(?:[a-z0-9-]+[.-])?api-addons\\.prestashop\\.com$/i';
+
     private const MODULE_REGEX = '/^(.*)\/\1\.php$/i';
 
     private const ZIP_FILENAME_PATTERN = '/(\w+)\.zip\b/';
@@ -233,7 +235,17 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
 
     public static function assertIsAddonsUrl($source): bool
     {
-        return is_string($source) && 1 === preg_match(self::URL_VALIDATION_REGEX, $source);
+        if (!is_string($source) || 1 !== preg_match(self::URL_VALIDATION_REGEX, $source)) {
+            return false;
+        }
+
+        // PS Accounts credentials are sent to this URL: check the real host, not a substring (no userinfo trick)
+        $urlParts = parse_url($source);
+
+        return is_array($urlParts)
+            && !isset($urlParts['user'])
+            && !isset($urlParts['pass'])
+            && 1 === preg_match(self::ADDONS_HOST_REGEX, $urlParts['host'] ?? '');
     }
 
     private function assertSourceHasBeenChecked($source): void
