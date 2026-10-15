@@ -1,19 +1,55 @@
-<!-----------------------------------------------------------------------------
-Thank you for contributing to the MBO project! 
+<!-- Thank you for contributing to MBO! External contributors: fill in the TL;DR and Tests, the rest is optional. -->
 
-Please take the time to edit the "Answers" rows below with the necessary information.
------------------------------------------------------------------------------->
+**TL;DR** <!-- 3 lines max: what changes, for whom. -->
 
-| Questions         | Answers
-| ----------------- | -------------------------------------------------------
-| Branch?           | dev / master / 3.x
-| Description?      | Please be specific when describing the PR. <br> Every detail helps: Module and/or PS versions, browser/server configuration, etc. Feel free to add more information below this table.
-| Type?             | bug fix / improvement / new feature / refacto / critical
-| BC breaks?        | yes / no
-| Deprecations?     | yes / no
-| Fixed ticket?     | Fixes #{issue number here}.
-| How to test?      | Please indicate how to best verify that this PR is correct.
-| Possible impacts? | Please indicate what parts of the software we need to check to make sure everything is alright.
+<!-- Jira: https://prestashop-jira.atlassian.net/browse/SM-XXX -->
 
+<!-- Delete every section you have nothing sourced to put in. No "N/A". -->
 
-<!-- Click the form's "Preview" button to make sure the table is functional in GitHub. Thank you! -->
+<details><summary>Business impact</summary>
+
+</details>
+
+<details><summary>Tech</summary>
+
+</details>
+
+<details><summary>Tests</summary>
+
+✅ Verified:
+❌ Not verified:
+
+</details>
+
+<details><summary>Docs</summary>
+
+</details>
+
+<details><summary>Checklist</summary>
+
+- [ ] Compatible with PS 8.x and 9.x
+- [ ] Upgrade script in `upgrade/` if hooks, tabs or configuration keys changed
+- [ ] Display/list hooks never let an exception escape (`actionBefore*Module` may throw on purpose)
+- [ ] CLAUDE.md / `.claude/rules/` updated if a convention or a pitfall changed
+
+</details>
+
+<details><summary>🤖 Session log (for the AI reviewer)</summary>
+
+**Understood problem**:
+
+**Decisions**
+| Chosen | Rejected alternative | Reason |
+|---|---|---|
+
+**Human corrections**:
+
+**Assumptions**
+- ✅ verified:
+- ❓ not verified:
+
+**Deliberately out of scope**:
+
+**Dead ends**:
+
+</details>
