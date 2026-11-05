@@ -203,6 +203,12 @@ class AddonsDataProvider implements DataProviderInterface
 
         if ($action === 'module_download') {
             $params['channel'] = $this->moduleChannel;
+            $accountsShopUuid = $this->getAccountsShopUuid();
+            if (!empty($accountsShopUuid)) {
+                $this->marketplaceClient->setHeaders([
+                    'accounts_shop_uuid' => $accountsShopUuid,
+                ]);
+            }
         } elseif ($action === 'native_all') {
             $params['iso_code'] = 'all';
         }
