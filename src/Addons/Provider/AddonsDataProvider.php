@@ -244,6 +244,7 @@ class AddonsDataProvider implements DataProviderInterface
 
     /**
      * Returns authentication parameters for Addons API requests
+     *
      * @return string|null
      */
     public function getAuthenticationToken(): ?string

@@ -34,6 +34,7 @@ if (!defined('_PS_VERSION_')) {
 trait UseActionBeforeInstallModule
 {
     use HaveAddonsInstall;
+
     /**
      * Hook actionBeforeInstallModule.
      *

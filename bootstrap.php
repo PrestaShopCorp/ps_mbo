@@ -18,7 +18,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License version 3.0
  */
 if (!defined('_PS_VERSION_')) {
-    exit;
+    return;
 }
 $rootDir = defined('_PS_ROOT_DIR_') ? _PS_ROOT_DIR_ : (function_exists('putenv') ? getenv('_PS_ROOT_DIR_') : $_ENV['_PS_ROOT_DIR_']);
 if (!$rootDir) {
@@ -30,4 +30,4 @@ if (file_exists($rootAutoload)) {
     require_once $rootAutoload;
 }
 
-\PrestaShop\Module\Mbo\Helpers\EnvHelper::loadEnv(__DIR__ . '/.env');
+PrestaShop\Module\Mbo\Helpers\EnvHelper::loadEnv(__DIR__ . '/.env');

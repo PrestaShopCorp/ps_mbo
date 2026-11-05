@@ -32,7 +32,7 @@ class ModuleOverrideChecker
 {
     private array $overrides = [];
 
-    private static ?ModuleOverrideChecker $instance;
+    private static ?ModuleOverrideChecker $instance = null;
 
     private const CUSTOM_DEV = '_CUSTOM_DEV_';
     private const PATTERNS = [

@@ -138,7 +138,7 @@ final class Factory
                `applied`
             FROM ' . _DB_PREFIX_ . 'mbo_api_config';
 
-            /** @var array $results */
+            /** @var array|false $results */
             $results = $this->db->executeS($query);
 
             if (!is_array($results)) {

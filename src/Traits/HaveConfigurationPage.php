@@ -211,7 +211,7 @@ trait HaveConfigurationPage
             [
                 'value' => 'preprod',
                 'name' => 'Preprod',
-            ],[
+            ], [
                 'value' => 'qa',
                 'name' => 'QA',
             ],
