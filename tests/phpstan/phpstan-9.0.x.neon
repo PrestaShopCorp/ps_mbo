@@ -11,5 +11,7 @@ parameters:
     - _PS_VERSION_
     - ps_mbo::VERSION
   ignoreErrors:
-    - '#^Class PrestaShop\\Module\\PsAccounts\\Repository\\UserTokenRepository not found.$#'
+    # ps_accounts is not always present in the analysed PrestaShop install
+    - message: '#^Class PrestaShop\\Module\\PsAccounts\\Repository\\UserTokenRepository not found.$#'
+      reportUnmatched: false
   level: 5

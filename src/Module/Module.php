@@ -444,5 +444,4 @@ class Module implements ModuleInterface
             $this->isMobileActive()
         )->value;
     }
-
 }

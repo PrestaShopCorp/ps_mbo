@@ -31,5 +31,10 @@ if (!defined('__PS_BASE_URI__')) {
 
 require_once _PS_ROOT_DIR_ . '/vendor/autoload.php';
 
+// Module files exit when _PS_VERSION_ is undefined, which would end the test run silently with code 0
+if (!defined('_PS_VERSION_')) {
+    define('_PS_VERSION_', PrestaShop\PrestaShop\Core\Version::VERSION);
+}
+
 // Add module composer autoloader
 require __DIR__ . '/../vendor/autoload.php';

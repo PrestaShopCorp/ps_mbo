@@ -21,8 +21,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\Module\Mbo\Exception;
 
-use Exception;
-
-class FileOperationException extends Exception
+class FileOperationException extends \Exception
 {
 }

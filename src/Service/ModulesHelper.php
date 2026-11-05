@@ -90,8 +90,7 @@ class ModulesHelper
 
             // If the current installed version is >= than the one returned by Addons, an upgrade is available
             if (
-                null !== $availableVersion
-                && null !== $currentVersion
+                null !== $currentVersion
                 && version_compare($availableVersion, $currentVersion, 'gt')
             ) {
                 $upgradeAvailable = true;

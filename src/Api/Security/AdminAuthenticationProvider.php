@@ -24,7 +24,6 @@ namespace PrestaShop\Module\Mbo\Api\Security;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Firebase\JWT\JWT;
-use PrestaShop\Module\Mbo\Api\Exception\UnauthorizedException;
 use PrestaShop\Module\Mbo\Helpers\Config;
 use PrestaShop\PrestaShop\Core\Context\ApiClientContext;
 use PrestaShop\PrestaShop\Core\Context\EmployeeContext;
@@ -79,7 +78,7 @@ class AdminAuthenticationProvider
         } elseif ($this->apiClientContext->getApiClient()) {
             $salt = $this->apiClientContext->getApiClient()->getId();
         } else {
-            throw new UnauthorizedException('No employee or api client found');
+            throw new \RuntimeException('No employee or api client found');
         }
 
         return \Tools::getAdminToken(\ps_mbo::MODULE_NAME . $salt);

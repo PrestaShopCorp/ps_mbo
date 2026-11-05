@@ -110,6 +110,7 @@ trait UseDisplayDashboardTop
      * Includes content just below the toolbar.
      *
      * @param $params
+     *
      * @return string
      *
      * @throws \Exception
@@ -379,11 +380,11 @@ trait UseDisplayDashboardTop
     }
 
     private function shouldDisplayModuleManagerMessage($params = []): bool
-    {  
+    {
         if (!isset($params['route'])) {
             return false;
         }
-        
+
         return in_array(
             $params['route'],
             [

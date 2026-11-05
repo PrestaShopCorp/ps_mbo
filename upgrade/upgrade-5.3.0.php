@@ -52,7 +52,7 @@ function upgrade_module_5_3_0(Module $module): bool
         $module->updateTabs();
 
         // Clear cached JWTs: the token salt changed (no longer tied to ApiPsMbo tab id).
-        $authProvider = $module->get(\PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider::class);
+        $authProvider = $module->get(PrestaShop\Module\Mbo\Api\Security\AdminAuthenticationProvider::class);
         if (null !== $authProvider) {
             $authProvider->clearCache();
         }

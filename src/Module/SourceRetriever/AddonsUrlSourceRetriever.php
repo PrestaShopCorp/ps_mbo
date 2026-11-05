@@ -104,7 +104,7 @@ class AddonsUrlSourceRetriever implements SourceRetrieverInterface
         TranslatorInterface $translator,
         ClientInterface $httpClient,
         RequestFactoryInterface $requestFactory,
-        ConfigurationInterface $configuration
+        ConfigurationInterface $configuration,
     ) {
         $this->addonsDataProvider = $addonsDataProvider;
         $this->translator = $translator;

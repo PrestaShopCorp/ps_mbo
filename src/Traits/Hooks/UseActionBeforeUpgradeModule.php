@@ -35,6 +35,7 @@ if (!defined('_PS_VERSION_')) {
 trait UseActionBeforeUpgradeModule
 {
     use HaveAddonsInstall;
+
     /**
      * Hook actionBeforeUpgradeModule.
      *
