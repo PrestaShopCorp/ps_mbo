@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace PrestaShop\Module\Mbo\Distribution;
 
 use Doctrine\Common\Cache\CacheProvider;
+use Firebase\JWT\JWT;
 use PrestaShop\Module\Mbo\Addons\User\AddonsUserProvider;
 use PrestaShop\Module\Mbo\Addons\User\UserInterface;
 use PrestaShop\Module\Mbo\Helpers\Config;
@@ -68,7 +69,7 @@ class ConnectedClient extends BaseClient
             $credentials = $this->user->getCredentials(true);
 
             if (null !== $credentials && array_key_exists('accounts_token', $credentials)) {
-                $userCacheKey = md5($credentials['accounts_token']);
+                $userCacheKey = md5($this->getAccountId($credentials['accounts_token']));
 
                 $this->setQueryParams([
                     'accounts_token' => $credentials['accounts_token'],
@@ -102,5 +103,15 @@ class ConnectedClient extends BaseClient
         $this->cacheProvider->save($cacheKey, $modulesList, 60 * 60 * 24); // A day
 
         return $this->cacheProvider->fetch($cacheKey);
+    }
+
+    /**
+     * The accounts token is renewed every hour, its owner is not: key the one-day cache on the owner.
+     */
+    private function getAccountId(string $accountsToken): string
+    {
+        $payload = json_decode(JWT::urlsafeB64Decode(explode('.', $accountsToken)[1] ?? ''));
+
+        return $payload->sub ?? $accountsToken;
     }
 }
