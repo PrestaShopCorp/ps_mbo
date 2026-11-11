@@ -1,6 +1,39 @@
 name: PHP tests
 on: [pull_request]
 jobs:
+  dependency-php85-smoke:
+    name: Bundled dependency smoke on PHP 8.5
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: shivammathur/setup-php@2.37.1
+        with:
+          php-version: 8.5
+          extensions: bcmath
+      - run: composer install --no-dev --prefer-dist --no-interaction --no-progress
+      - name: Load dependencies and exercise promise outcomes without deprecations
+        run: |
+          php -d error_reporting=-1 <<'PHP'
+          <?php
+          set_error_handler(static function ($level, $message) {
+              if ($level === E_DEPRECATED) {
+                  throw new RuntimeException($message);
+              }
+              return false;
+          });
+          require 'vendor/autoload.php';
+          $promise = new GuzzleHttp\Promise\Promise();
+          $result = $promise->then(static fn ($value) => $value * 2);
+          $promise->resolve(7);
+          if ($result->wait() !== 14) {
+              throw new RuntimeException('Promise fulfillment changed');
+          }
+          $rejection = GuzzleHttp\Promise\Create::rejectionFor('synthetic');
+          if ($rejection->otherwise(static fn ($reason) => $reason)->wait() !== 'synthetic') {
+              throw new RuntimeException('Promise rejection changed');
+          }
+          echo "Dependency autoload and promise smoke passed\n";
+          PHP
   php-linter:
     name: PHP Syntax check 8.1 => 8.5
     runs-on: ubuntu-latest
