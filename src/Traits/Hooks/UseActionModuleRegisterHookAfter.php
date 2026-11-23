@@ -35,7 +35,7 @@ trait UseActionModuleRegisterHookAfter
             $hookName = (string) $params['hook_name'];
 
             // The MBO hook 'dashboardZoneTwo' must be at the max position
-            if ('DashboardZoneTwo' === mb_ucfirst($hookName)) {
+            if ('DashboardZoneTwo' === ucfirst($hookName)) {
                 $this->putMboDashboardZoneTwoAtLastPosition();
             }
         } catch (\Exception $e) {
