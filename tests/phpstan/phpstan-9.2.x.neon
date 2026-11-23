@@ -1,0 +1,2 @@
+includes:
+  - phpstan-9.0.x.neon
