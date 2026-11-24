@@ -27,36 +27,39 @@ if (!$rootDir) {
 
 require_once $rootDir . '/vendor/autoload.php';
 
-function deleteFolderRecursively(string $folderPath): void
-{
-    if (!is_dir($folderPath)) {
-        return;
-    }
-
-    $files = @scandir($folderPath);
-    if ($files === false) {
-        return;
-    }
-
-    $files = array_diff($files, ['.', '..']);
-
-    foreach ($files as $file) {
-        $filePath = $folderPath . DIRECTORY_SEPARATOR . $file;
-
-        if (is_dir($filePath)) {
-            deleteFolderRecursively($filePath);
-        } else {
-            safeUnlink($filePath);
+if (!function_exists('mboUpgradeDeleteFolderRecursively')) {
+    function mboUpgradeDeleteFolderRecursively(string $folderPath): void
+    {
+        if (!is_dir($folderPath)) {
+            return;
         }
+
+        $files = @scandir($folderPath);
+        if ($files === false) {
+            return;
+        }
+
+        $files = array_diff($files, ['.', '..']);
+
+        foreach ($files as $file) {
+            $filePath = $folderPath . DIRECTORY_SEPARATOR . $file;
+
+            if (is_dir($filePath)) {
+                mboUpgradeDeleteFolderRecursively($filePath);
+            } else {
+                mboUpgradeSafeUnlink($filePath);
+            }
+        }
+
+        @rmdir($folderPath);
     }
-
-    @rmdir($folderPath);
 }
-
-function safeUnlink(string $filePath): void
-{
-    if (file_exists($filePath) && is_file($filePath)) {
-        @unlink($filePath);
+if (!function_exists('mboUpgradeSafeUnlink')) {
+    function mboUpgradeSafeUnlink(string $filePath): void
+    {
+        if (file_exists($filePath) && is_file($filePath)) {
+            @unlink($filePath);
+        }
     }
 }
 
@@ -68,40 +71,40 @@ function upgrade_module_4_14_0()
     $moduleDir = _PS_MODULE_DIR_ . 'ps_mbo';
 
     try {
-        deleteFolderRecursively($moduleDir . '/src/EventSubscriber');
-        deleteFolderRecursively($moduleDir . '/src/ExternalContentProvider');
-        deleteFolderRecursively($moduleDir . '/src/RecommendedLink');
-        deleteFolderRecursively($moduleDir . '/src/RecommendedModule');
-        deleteFolderRecursively($moduleDir . '/views/templates/admin/controllers/module_catalog/Includes');
+        mboUpgradeDeleteFolderRecursively($moduleDir . '/src/EventSubscriber');
+        mboUpgradeDeleteFolderRecursively($moduleDir . '/src/ExternalContentProvider');
+        mboUpgradeDeleteFolderRecursively($moduleDir . '/src/RecommendedLink');
+        mboUpgradeDeleteFolderRecursively($moduleDir . '/src/RecommendedModule');
+        mboUpgradeDeleteFolderRecursively($moduleDir . '/views/templates/admin/controllers/module_catalog/Includes');
 
-        safeUnlink($moduleDir . '/autoload.php');
-        safeUnlink($moduleDir . '/config/services/eventbus.yml');
-        safeUnlink($moduleDir . '/config/services/http_clients.yml');
-        safeUnlink($moduleDir . '/gha-creds-8ca2dae6482597be.json');
-        safeUnlink($moduleDir . '/src/Addons/AddonsDataProvider.php');
-        safeUnlink($moduleDir . '/src/AddonsSelectionLinkProvider.php');
-        safeUnlink($moduleDir . '/src/ModuleCollectionDataProvider.php');
-        safeUnlink($moduleDir . '/src/Addons/User/CredentialsEncryptor.php');
-        safeUnlink($moduleDir . '/src/Controller/Admin/ModuleController.php');
-        safeUnlink($moduleDir . '/src/Controller/Admin/SecurityController.php');
-        safeUnlink($moduleDir . '/src/Distribution/AuthenticationProvider.php');
-        safeUnlink($moduleDir . '/src/UpgradeTracker.php');
-        safeUnlink($moduleDir . '/translations/de.php');
-        safeUnlink($moduleDir . '/translations/en.php');
-        safeUnlink($moduleDir . '/translations/es.php');
-        safeUnlink($moduleDir . '/translations/fr.php');
-        safeUnlink($moduleDir . '/translations/it.php');
-        safeUnlink($moduleDir . '/translations/nl.php');
-        safeUnlink($moduleDir . '/translations/pl.php');
-        safeUnlink($moduleDir . '/translations/pt.php');
-        safeUnlink($moduleDir . '/translations/ro.php');
-        safeUnlink($moduleDir . '/translations/ru.php');
-        safeUnlink($moduleDir . '/views/css/catalog.css');
-        safeUnlink($moduleDir . '/views/css/recommended-modules-lower-1.7.8.css');
-        safeUnlink($moduleDir . '/views/css/recommended-modules-since-1.7.8.css');
-        safeUnlink($moduleDir . '/views/img/no_result.svg');
-        safeUnlink($moduleDir . '/views/templates/admin/controllers/module_catalog/catalog_grid.html.twig');
-        safeUnlink($moduleDir . '/views/templates/admin/controllers/module_catalog/uninstalled-modules.html.twig');
+        mboUpgradeSafeUnlink($moduleDir . '/autoload.php');
+        mboUpgradeSafeUnlink($moduleDir . '/config/services/eventbus.yml');
+        mboUpgradeSafeUnlink($moduleDir . '/config/services/http_clients.yml');
+        mboUpgradeSafeUnlink($moduleDir . '/gha-creds-8ca2dae6482597be.json');
+        mboUpgradeSafeUnlink($moduleDir . '/src/Addons/AddonsDataProvider.php');
+        mboUpgradeSafeUnlink($moduleDir . '/src/AddonsSelectionLinkProvider.php');
+        mboUpgradeSafeUnlink($moduleDir . '/src/ModuleCollectionDataProvider.php');
+        mboUpgradeSafeUnlink($moduleDir . '/src/Addons/User/CredentialsEncryptor.php');
+        mboUpgradeSafeUnlink($moduleDir . '/src/Controller/Admin/ModuleController.php');
+        mboUpgradeSafeUnlink($moduleDir . '/src/Controller/Admin/SecurityController.php');
+        mboUpgradeSafeUnlink($moduleDir . '/src/Distribution/AuthenticationProvider.php');
+        mboUpgradeSafeUnlink($moduleDir . '/src/UpgradeTracker.php');
+        mboUpgradeSafeUnlink($moduleDir . '/translations/de.php');
+        mboUpgradeSafeUnlink($moduleDir . '/translations/en.php');
+        mboUpgradeSafeUnlink($moduleDir . '/translations/es.php');
+        mboUpgradeSafeUnlink($moduleDir . '/translations/fr.php');
+        mboUpgradeSafeUnlink($moduleDir . '/translations/it.php');
+        mboUpgradeSafeUnlink($moduleDir . '/translations/nl.php');
+        mboUpgradeSafeUnlink($moduleDir . '/translations/pl.php');
+        mboUpgradeSafeUnlink($moduleDir . '/translations/pt.php');
+        mboUpgradeSafeUnlink($moduleDir . '/translations/ro.php');
+        mboUpgradeSafeUnlink($moduleDir . '/translations/ru.php');
+        mboUpgradeSafeUnlink($moduleDir . '/views/css/catalog.css');
+        mboUpgradeSafeUnlink($moduleDir . '/views/css/recommended-modules-lower-1.7.8.css');
+        mboUpgradeSafeUnlink($moduleDir . '/views/css/recommended-modules-since-1.7.8.css');
+        mboUpgradeSafeUnlink($moduleDir . '/views/img/no_result.svg');
+        mboUpgradeSafeUnlink($moduleDir . '/views/templates/admin/controllers/module_catalog/catalog_grid.html.twig');
+        mboUpgradeSafeUnlink($moduleDir . '/views/templates/admin/controllers/module_catalog/uninstalled-modules.html.twig');
 
         return true;
     } catch (Exception $e) {
