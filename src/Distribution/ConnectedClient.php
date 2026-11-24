@@ -112,6 +112,6 @@ class ConnectedClient extends BaseClient
     {
         $payload = json_decode(JWT::urlsafeB64Decode(explode('.', $accountsToken)[1] ?? ''));
 
-        return $payload->sub ?? $accountsToken;
+        return is_string($payload->sub ?? null) && '' !== $payload->sub ? $payload->sub : $accountsToken;
     }
 }
